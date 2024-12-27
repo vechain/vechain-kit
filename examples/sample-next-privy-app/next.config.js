@@ -1,4 +1,4 @@
-const basePath = process.env.BASE_PATH ?? 'super-dapp-kit';
+const basePath = process.env.BASE_PATH ?? '/super-dapp-kit';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
