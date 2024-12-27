@@ -1,5 +1,5 @@
 <div align="center">
-    <h1><code>super-dapp-kit</code></h1>
+    <h1><code>vechain-kit</code></h1>
     <p>
         <strong>A TypeScript library that facilitates seamless interaction between VeChain wallets.</strong>
     </p>
