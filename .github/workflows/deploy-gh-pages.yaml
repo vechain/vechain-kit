@@ -48,7 +48,7 @@ jobs:
             - name: Copy Builds
               run: |
                   mkdir build
-                  cp -r examples/sample-next-privy-app/dist build/next
+                  cp -r examples/sample-next-privy-app/dist ./build
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
