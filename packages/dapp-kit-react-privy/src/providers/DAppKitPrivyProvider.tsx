@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext } from 'react';
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useState,
+    useCallback,
+} from 'react';
 import {
     PrivyProvider as BasePrivyProvider,
     WalletListEntry,
@@ -8,6 +14,7 @@ import { SmartAccountProvider } from '../hooks';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '../utils';
+import { ConnectModal, AccountModal } from '../components';
 
 type Props = {
     children: ReactNode;
@@ -39,6 +46,14 @@ type DAppKitPrivyConfig = {
     privyConfig: Props['privyConfig'];
     feeDelegationConfig: Props['feeDelegationConfig'];
     dappKitConfig: Props['dappKitConfig'];
+    // Connect Modal
+    openConnectModal: () => void;
+    closeConnectModal: () => void;
+    isConnectModalOpen: boolean;
+    // Account Modal
+    openAccountModal: () => void;
+    closeAccountModal: () => void;
+    isAccountModalOpen: boolean;
 };
 
 /**
@@ -70,6 +85,20 @@ export const DAppKitPrivyProvider = ({
     feeDelegationConfig,
     dappKitConfig,
 }: Props) => {
+    const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+    const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
+    const closeConnectModal = useCallback(
+        () => setIsConnectModalOpen(false),
+        [],
+    );
+
+    const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+    const openAccountModal = useCallback(() => setIsAccountModalOpen(true), []);
+    const closeAccountModal = useCallback(
+        () => setIsAccountModalOpen(false),
+        [],
+    );
+
     const loginMethods = [
         ...privyConfig.loginMethods,
         ...(privyConfig.ecosystemAppsID ?? []).map((appID) => `privy:${appID}`),
@@ -90,7 +119,17 @@ export const DAppKitPrivyProvider = ({
 
     return (
         <DAppKitPrivyContext.Provider
-            value={{ privyConfig, feeDelegationConfig, dappKitConfig }}
+            value={{
+                privyConfig,
+                feeDelegationConfig,
+                dappKitConfig,
+                openConnectModal,
+                closeConnectModal,
+                isConnectModalOpen,
+                openAccountModal,
+                closeAccountModal,
+                isAccountModalOpen,
+            }}
         >
             <ChakraProvider theme={Theme}>
                 <BasePrivyProvider
@@ -130,6 +169,15 @@ export const DAppKitPrivyProvider = ({
                             }
                         >
                             {children}
+                            <ConnectModal
+                                isOpen={isConnectModalOpen}
+                                onClose={closeConnectModal}
+                                logo={privyConfig.appearance.logo}
+                            />
+                            <AccountModal
+                                isOpen={isAccountModalOpen}
+                                onClose={closeAccountModal}
+                            />
                         </SmartAccountProvider>
                     </DAppKitProvider>
                 </BasePrivyProvider>
