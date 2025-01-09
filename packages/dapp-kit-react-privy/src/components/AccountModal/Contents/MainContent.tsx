@@ -13,7 +13,7 @@ import { useWallet, Wallet } from '../../../hooks';
 import { RxExit } from 'react-icons/rx';
 import { AddressDisplay, FadeInViewFromBottom } from '../../common';
 import { AccountModalContentTypes } from '../AccountModal';
-import { AccountSelector } from '../Components';
+import { AccountSelector, BalanceSection } from '../Components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -66,22 +66,24 @@ export const MainContent = ({ setCurrentContent, onClose, wallet }: Props) => {
                             <AddressDisplay wallet={wallet} />
                         )}
 
-                        <Button
-                            w={'full'}
-                            onClick={() => {
-                                disconnect();
-                                onClose();
-                            }}
-                            minH={'40px'}
-                            fontSize={'sm'}
-                            fontWeight={'400'}
-                            leftIcon={<RxExit color="#888888" />}
-                        >
-                            Logout
-                        </Button>
+                        <BalanceSection />
                     </VStack>
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter>
+                    <Button
+                        w={'full'}
+                        onClick={() => {
+                            disconnect();
+                            onClose();
+                        }}
+                        minH={'40px'}
+                        fontSize={'sm'}
+                        fontWeight={'400'}
+                        leftIcon={<RxExit color="#888888" />}
+                    >
+                        Logout
+                    </Button>
+                </ModalFooter>
             </Container>
         </FadeInViewFromBottom>
     );
