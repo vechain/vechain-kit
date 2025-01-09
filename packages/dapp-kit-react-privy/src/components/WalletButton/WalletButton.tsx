@@ -51,9 +51,21 @@ export const WalletButton = () => {
                             height={23}
                             borderRadius="50%"
                         />
-                        <Text fontSize="sm">
-                            {humanAddress(selectedAccount.address, 6, 4)}
-                        </Text>
+                        {selectedAccount.domain ? (
+                            <Text
+                                fontSize="sm"
+                                display={{ base: 'none', md: 'block' }}
+                            >
+                                {selectedAccount.domain}
+                            </Text>
+                        ) : (
+                            <Text
+                                fontSize="sm"
+                                display={{ base: 'none', md: 'block' }}
+                            >
+                                {humanAddress(selectedAccount.address, 6, 4)}
+                            </Text>
+                        )}
                     </HStack>
                 </Button>
             ) : (
