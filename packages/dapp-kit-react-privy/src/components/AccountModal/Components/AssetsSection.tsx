@@ -9,6 +9,8 @@ import {
     TabPanel,
     Icon,
     Image,
+    Box,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import { BiTransferAlt } from 'react-icons/bi';
 import { IoWalletOutline } from 'react-icons/io5';
@@ -26,13 +28,15 @@ const MotionVStack = motion(VStack);
 
 export const AssetsSection = () => {
     const { balances, prices } = useBalances();
+    const tabTextColor = useColorModeValue('blackAlpha.400', 'whiteAlpha.400');
 
     return (
         <VStack w="full" spacing={3} align="stretch">
-            <Tabs variant="soft-rounded" colorScheme="gray" size="sm">
+            <Tabs variant="soft-rounded" size="sm">
                 <TabList bg="blackAlpha.300" p={1} borderRadius="full">
                     <Tab
                         borderRadius="full"
+                        color={tabTextColor}
                         _selected={{
                             bg: 'white',
                             color: 'black',
@@ -43,6 +47,7 @@ export const AssetsSection = () => {
                     </Tab>
                     <Tab
                         borderRadius="full"
+                        color={tabTextColor}
                         _selected={{
                             bg: 'white',
                             color: 'black',
@@ -53,6 +58,7 @@ export const AssetsSection = () => {
                     </Tab>
                     <Tab
                         borderRadius="full"
+                        color={tabTextColor}
                         _selected={{
                             bg: 'white',
                             color: 'black',
@@ -191,7 +197,20 @@ const AssetRow = ({
                 alt={`${symbol} logo`}
                 boxSize="24px"
                 borderRadius="full"
-                fallbackSrc="https://via.placeholder.com/24"
+                fallback={
+                    <Box
+                        boxSize="24px"
+                        borderRadius="full"
+                        bg="whiteAlpha.200"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                    >
+                        <Text fontSize="10px" fontWeight="bold">
+                            {symbol.slice(0, 3)}
+                        </Text>
+                    </Box>
+                }
             />
             <Text fontSize="sm">{symbol}</Text>
         </HStack>

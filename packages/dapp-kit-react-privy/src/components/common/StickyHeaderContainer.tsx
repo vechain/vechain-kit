@@ -41,7 +41,7 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                         ? '0px 2px 13px -1px rgb(0 0 0 / 68%)'
                         : 'none'
                 }
-                transition="box-shadow 0.4s ease-in-out"
+                transition="box-shadow 0.2s ease-in-out"
             >
                 {children}
             </Box>

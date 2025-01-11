@@ -14,6 +14,8 @@ import {
     WalletSettingsContent,
     SmartAccountContent,
     AccountsListContent,
+    SendTokenContent,
+    SendTokenSummaryContent,
 } from './Contents';
 
 type Props = {
@@ -25,7 +27,27 @@ export type AccountModalContentTypes =
     | 'main'
     | 'settings'
     | 'smart-account'
-    | 'accounts';
+    | 'accounts'
+    | 'send-token'
+    | {
+          type: 'send-token-summary';
+          props: {
+              toAddressOrDomain: string;
+              resolvedDomain?: string;
+              amount: string;
+              selectedToken: {
+                  symbol: string;
+                  balance: string;
+                  address: string;
+                  numericBalance: number;
+                  price: number;
+              };
+              onSend: (address: string, amount: string) => void;
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+          };
+      };
 
 export const AccountModal = ({ isOpen, onClose }: Props) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
@@ -53,6 +75,13 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
     }, [isOpen]);
 
     const renderContent = () => {
+        if (
+            typeof currentContent === 'object' &&
+            currentContent.type === 'send-token-summary'
+        ) {
+            return <SendTokenSummaryContent {...currentContent.props} />;
+        }
+
         switch (currentContent) {
             case 'main':
                 return (
@@ -83,6 +112,13 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                         wallet={selectedAccount}
                     />
                 );
+            case 'send-token':
+                return (
+                    <SendTokenContent
+                        setCurrentContent={setCurrentContent}
+                        onSend={() => {}}
+                    />
+                );
         }
     };
 
@@ -94,8 +130,8 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             isCentered
             size="md"
             scrollBehavior="inside"
-            trapFocus={false}
-            autoFocus={false}
+            returnFocusOnClose={true}
+            preserveScrollBarGap={true}
         >
             <ModalOverlay />
 

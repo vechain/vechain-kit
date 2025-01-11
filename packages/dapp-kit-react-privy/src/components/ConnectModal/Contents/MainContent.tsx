@@ -26,7 +26,7 @@ import { VechainLogo } from '@/assets';
 import { CiCircleMore } from 'react-icons/ci';
 import { ConnectModalContents } from '../ConnectModal';
 import { IoIosFingerPrint } from 'react-icons/io';
-import { GiSolarSystem } from 'react-icons/gi';
+import { IoPlanet } from 'react-icons/io5';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import { useEffect } from 'react';
@@ -185,7 +185,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                             onClick={() => {
                                 setCurrentContent('ecosystem');
                             }}
-                            icon={GiSolarSystem}
+                            icon={IoPlanet}
                         />
 
                         <ConnectionButton
