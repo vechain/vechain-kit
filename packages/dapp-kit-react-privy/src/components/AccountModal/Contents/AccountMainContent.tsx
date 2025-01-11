@@ -8,19 +8,19 @@ import {
     VStack,
     useColorMode,
 } from '@chakra-ui/react';
-import { useWallet, Wallet } from '../../../hooks';
+import { useWallet, Wallet } from '@/hooks';
 import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
     VersionFooter,
-} from '../../common';
+} from '@/components/common';
 import { AccountModalContentTypes } from '../AccountModal';
 import {
     AccountSelector,
     AssetsSection,
     BalanceSection,
-    ActionButtonsSection,
-} from '../Components';
+    QuickActionsSection,
+} from '@/components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -30,7 +30,7 @@ type Props = {
     wallet: Wallet;
 };
 
-export const MainContent = ({ setCurrentContent, wallet }: Props) => {
+export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -76,7 +76,7 @@ export const MainContent = ({ setCurrentContent, wallet }: Props) => {
                             wallet={wallet}
                         />
                         <BalanceSection />
-                        <ActionButtonsSection />
+                        <QuickActionsSection />
                         <AssetsSection />
                     </VStack>
                 </ModalBody>

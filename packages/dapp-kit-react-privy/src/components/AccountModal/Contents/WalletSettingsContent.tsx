@@ -9,18 +9,18 @@ import {
     Text,
     Divider,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet, Wallet } from '../../../hooks';
+import { usePrivy, useWallet, Wallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { IoIosFingerPrint } from 'react-icons/io';
-import { ActionButton } from '../Components/ActionButton';
+import { ActionButton } from '@/components';
 import {
     AddressDisplay,
     ModalBackButton,
     StickyHeaderContainer,
-} from '../../common';
-import { useDAppKitPrivyConfig } from '../../../providers/DAppKitPrivyProvider';
-import { FadeInViewFromBottom } from '../../common';
+    FadeInViewFromBottom,
+} from '@/components/common';
+import { useDAppKitPrivyConfig } from '@/providers/DAppKitPrivyProvider';
 import { AccountModalContentTypes } from '../AccountModal';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';

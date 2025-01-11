@@ -1,12 +1,10 @@
 import { Button, HStack, Image, Text, useDisclosure } from '@chakra-ui/react';
-import { useWallet } from '../../hooks';
-import { ConnectModal } from '../ConnectModal';
-import { AccountModal } from '../AccountModal';
-import { useDAppKitPrivyConfig } from '../../providers/DAppKitPrivyProvider';
-import { humanAddress } from '../../utils';
+import { useWallet } from '@/hooks';
+import { ConnectModal, AccountModal, LoginLoadingModal } from '@/components';
+import { useDAppKitPrivyConfig } from '@/providers';
+import { humanAddress } from '@/utils';
 import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
-import { LoginLoadingModal } from '../LoginLoadingModal';
 
 export const WalletButton = () => {
     const { connection, selectedAccount } = useWallet();

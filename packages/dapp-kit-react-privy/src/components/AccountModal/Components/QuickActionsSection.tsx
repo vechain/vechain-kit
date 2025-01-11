@@ -4,7 +4,7 @@ import { BiPurchaseTag } from 'react-icons/bi';
 import { IoReceiptOutline } from 'react-icons/io5';
 import { FiSend } from 'react-icons/fi';
 
-export const ActionButtonsSection = () => {
+export const QuickActionsSection = () => {
     return (
         <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full">
             <IconButton

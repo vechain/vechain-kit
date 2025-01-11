@@ -7,14 +7,14 @@ import {
     ModalOverlay,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { useWallet } from '../../hooks';
+import { useWallet } from '@/hooks';
 import { useState, useEffect } from 'react';
 import {
-    MainContent,
+    AccountMainContent,
     WalletSettingsContent,
     SmartAccountContent,
+    AccountsListContent,
 } from './Contents';
-import { AccountsContent } from './Contents';
 
 type Props = {
     isOpen: boolean;
@@ -56,7 +56,7 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
         switch (currentContent) {
             case 'main':
                 return (
-                    <MainContent
+                    <AccountMainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                         wallet={selectedAccount}
@@ -77,7 +77,7 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 );
             case 'accounts':
                 return (
-                    <AccountsContent
+                    <AccountsListContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                         wallet={selectedAccount}

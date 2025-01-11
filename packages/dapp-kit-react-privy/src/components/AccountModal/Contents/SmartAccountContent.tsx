@@ -10,18 +10,18 @@ import {
     Link,
     Icon,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet } from '../../../hooks';
+import { usePrivy, useWallet } from '@/hooks';
 import React, { useState } from 'react';
-import { AddressDisplay } from '../../common/AddressDisplay';
 import { IoOpenOutline } from 'react-icons/io5';
 import {
+    AddressDisplay,
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
-} from '../../common';
+} from '@/components/common';
 import { AccountModalContentTypes } from '../AccountModal';
-import { getPicassoImage } from '../../../utils';
-import { ActionButton } from '../Components';
+import { getPicassoImage } from '@/utils';
+import { ActionButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { FaRegAddressCard, FaUserEdit } from 'react-icons/fa';
 

@@ -3,4 +3,4 @@ export * from './ActionButton';
 export * from './AccountSelector';
 export * from './BalanceSection';
 export * from './AssetsSection';
-export * from './ActionButtonsSection';
+export * from './QuickActionsSection';

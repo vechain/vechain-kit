@@ -12,11 +12,10 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { useCrossAppAccounts } from '@privy-io/react-auth';
-import { FadeInViewFromBottom } from '../../common';
-import { ModalBackButton } from '../../common';
+import { FadeInViewFromBottom, ModalBackButton } from '@/components/common';
 import { ConnectModalContents } from '../ConnectModal';
-import { useDAppKitPrivyConfig } from '../../../providers';
-import { useFetchAppInfo } from '../../../hooks/useFetchAppInfo';
+import { useDAppKitPrivyConfig } from '@/providers';
+import { useFetchAppInfo } from '@/hooks/useFetchAppInfo';
 import { GiSolarSystem } from 'react-icons/gi';
 
 type Props = {

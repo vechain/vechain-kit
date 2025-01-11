@@ -8,14 +8,14 @@ import {
     ModalHeader,
     useColorMode,
 } from '@chakra-ui/react';
-import { useWallet, Wallet } from '../../../hooks';
-import { AddressDisplay } from '../../common/AddressDisplay';
+import { useWallet, Wallet } from '@/hooks';
 import {
+    AddressDisplay,
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
-} from '../../common';
-import { AccountDetailsButton } from '../Components/AccountDetailsButton';
+} from '@/components/common';
+import { AccountDetailsButton } from '@/components';
 import { MdAccountCircle, MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountModalContentTypes } from '../AccountModal';
 import { HiOutlineWallet } from 'react-icons/hi2';
@@ -30,7 +30,7 @@ type Props = {
     wallet?: Wallet;
 };
 
-export const AccountsContent = ({ setCurrentContent, onClose }: Props) => {
+export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 

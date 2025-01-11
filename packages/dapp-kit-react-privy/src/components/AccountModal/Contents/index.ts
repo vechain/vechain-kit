@@ -1,4 +1,4 @@
-export * from './AccountsContent';
+export * from './AccountsListContent';
 export * from './WalletSettingsContent';
 export * from './SmartAccountContent';
-export * from './MainContent';
+export * from './AccountMainContent';
