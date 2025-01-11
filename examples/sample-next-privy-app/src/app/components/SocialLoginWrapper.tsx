@@ -36,7 +36,7 @@ export function SocialLoginWrapper({ children }: Props) {
                 ecosystemAppsID: [
                     'cm4wxxujb022fyujl7g0thb21', //vechain
                     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
-                    'clxdoatq601h35inz6qykgmai',
+                    'cm153hrup0817axti38avlfyg', //greencart
                 ],
                 allowPasskeyLinking: true,
             }}

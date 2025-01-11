@@ -1,5 +1,6 @@
 import {
     Button,
+    Icon,
     Image,
     ModalBody,
     ModalCloseButton,
@@ -16,6 +17,7 @@ import { ModalBackButton } from '../../common';
 import { ConnectModalContents } from '../ConnectModal';
 import { useDAppKitPrivyConfig } from '../../../providers';
 import { useFetchAppInfo } from '../../../hooks/useFetchAppInfo';
+import { GiSolarSystem } from 'react-icons/gi';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -61,8 +63,11 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
                 color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 justifyContent={'center'}
                 alignItems={'center'}
+                display={'flex'}
+                gap={2}
             >
-                Select wallet
+                <Icon as={GiSolarSystem} size={'20px'} />
+                Ecosystem
             </ModalHeader>
 
             <ModalBackButton onClick={() => setCurrentContent('main')} />

@@ -60,7 +60,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody w={'full'} pt={'80px'}>
+            <ModalBody w={'full'}>
                 <VStack justify={'center'} mb={10}>
                     <Image src={walletImage} maxW={'70px'} borderRadius="50%" />
                     <AddressDisplay wallet={smartAccount} />
@@ -120,7 +120,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                 <VStack mt={5} spacing={5}>
                     <ActionButton
                         title="Transfer ownership"
-                        description="Change the owner of your smart account"
+                        description="Transfer the ownership of your smart account to another wallet."
                         onClick={() => {
                             exportWallet();
                         }}
@@ -128,35 +128,6 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         rightIcon={MdOutlineNavigateNext}
                     />
 
-                    <ActionButton
-                        title="Choose account name"
-                        description="Give a nickname to your wallet to easily identify it."
-                        onClick={() => {
-                            // linkPasskey();
-                        }}
-                        showComingSoon={true}
-                        leftIcon={FaRegAddressCard}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-                    <ActionButton
-                        title="Choose account name"
-                        description="Give a nickname to your wallet to easily identify it."
-                        onClick={() => {
-                            // linkPasskey();
-                        }}
-                        showComingSoon={true}
-                        leftIcon={FaRegAddressCard}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-                    <ActionButton
-                        title="Transfer ownership"
-                        description="Change the owner of your smart account"
-                        onClick={() => {
-                            exportWallet();
-                        }}
-                        leftIcon={FaUserEdit}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
                     <ActionButton
                         title="Choose account name"
                         description="Give a nickname to your wallet to easily identify it."

@@ -1,5 +1,4 @@
 import {
-    Button,
     Container,
     Image,
     ModalBody,
@@ -10,8 +9,11 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { useWallet, Wallet } from '../../../hooks';
-import { RxExit } from 'react-icons/rx';
-import { AddressDisplay, FadeInViewFromBottom } from '../../common';
+import {
+    AddressDisplay,
+    FadeInViewFromBottom,
+    StickyHeaderContainer,
+} from '../../common';
 import { AccountModalContentTypes } from '../AccountModal';
 import { AccountSelector, BalanceSection } from '../Components';
 
@@ -23,22 +25,26 @@ type Props = {
     wallet: Wallet;
 };
 
-export const MainContent = ({ setCurrentContent, onClose, wallet }: Props) => {
+export const MainContent = ({ setCurrentContent, wallet }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { disconnect, connection } = useWallet();
+    const { connection } = useWallet();
 
     return (
         <FadeInViewFromBottom>
-            <ModalHeader
-                fontSize={'md'}
-                fontWeight={'500'}
-                textAlign={'center'}
-                color={isDark ? '#dfdfdd' : '#4d4d4d'}
-            >
-                {'Account'}
-            </ModalHeader>
+            <StickyHeaderContainer>
+                <ModalHeader
+                    w={'full'}
+                    fontSize={'md'}
+                    fontWeight={'500'}
+                    textAlign={'center'}
+                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                >
+                    {'Account'}
+                </ModalHeader>
+                <ModalCloseButton />
+            </StickyHeaderContainer>
             <VStack justify={'center'}>
                 <Image
                     src={wallet.image}
@@ -49,8 +55,6 @@ export const MainContent = ({ setCurrentContent, onClose, wallet }: Props) => {
                     objectFit="cover"
                 />
             </VStack>
-
-            <ModalCloseButton />
 
             <Container maxW={'container.lg'}>
                 <ModalBody w={'full'}>
@@ -69,21 +73,7 @@ export const MainContent = ({ setCurrentContent, onClose, wallet }: Props) => {
                         <BalanceSection />
                     </VStack>
                 </ModalBody>
-                <ModalFooter>
-                    <Button
-                        w={'full'}
-                        onClick={() => {
-                            disconnect();
-                            onClose();
-                        }}
-                        minH={'40px'}
-                        fontSize={'sm'}
-                        fontWeight={'400'}
-                        leftIcon={<RxExit color="#888888" />}
-                    >
-                        Logout
-                    </Button>
-                </ModalFooter>
+                <ModalFooter></ModalFooter>
             </Container>
         </FadeInViewFromBottom>
     );

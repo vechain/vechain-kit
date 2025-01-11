@@ -62,7 +62,7 @@ export const ActionButton = ({
                         justifyContent={'flex-start'}
                         alignItems={'flex-start'}
                     >
-                        <Text fontSize={'sm'} fontWeight={'400'}>
+                        <Text w={'full'} fontSize={'sm'} fontWeight={'400'}>
                             {title}
                         </Text>
 

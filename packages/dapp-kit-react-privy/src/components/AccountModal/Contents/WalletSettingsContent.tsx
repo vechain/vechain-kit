@@ -66,7 +66,7 @@ export const WalletSettingsContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody w={'full'} pt={'80px'}>
+            <ModalBody w={'full'}>
                 <VStack justify={'center'}>
                     <Image
                         src={account.image}
@@ -123,7 +123,7 @@ export const WalletSettingsContent = ({
 
                     <ActionButton
                         title="Disconnect"
-                        description="Disconnect from your wallet and logout"
+                        description="Disconnect and sign out from your wallet and smart account"
                         onClick={() => {
                             disconnect();
                             onLogoutSuccess();

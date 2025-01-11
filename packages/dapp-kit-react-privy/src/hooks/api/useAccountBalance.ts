@@ -16,7 +16,7 @@ export const getAccountBalance = async (
     };
 };
 export const getAccountBalanceQueryKey = (address?: string) => [
-    'ACCOUNT_BALANCE',
+    'VECHAIN_KIT_ACCOUNT_BALANCE',
     address,
 ];
 

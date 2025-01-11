@@ -25,7 +25,8 @@ import { FcGoogle } from 'react-icons/fc';
 import { VechainLogo } from '../../../assets';
 import { CiCircleMore } from 'react-icons/ci';
 import { ConnectModalContents } from '../ConnectModal';
-import { IoIosApps, IoIosFingerPrint } from 'react-icons/io';
+import { IoIosFingerPrint } from 'react-icons/io';
+import { GiSolarSystem } from 'react-icons/gi';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import { useEffect } from 'react';
@@ -169,6 +170,12 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
                         <ConnectionButton
                             isDark={isDark}
+                            onClick={handleLoginWithPasskey}
+                            icon={IoIosFingerPrint}
+                        />
+
+                        <ConnectionButton
+                            isDark={isDark}
                             onClick={openDappKitModal}
                             icon={HiOutlineWallet}
                         />
@@ -178,13 +185,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                             onClick={() => {
                                 setCurrentContent('ecosystem');
                             }}
-                            icon={IoIosApps}
-                        />
-
-                        <ConnectionButton
-                            isDark={isDark}
-                            onClick={handleLoginWithPasskey}
-                            icon={IoIosFingerPrint}
+                            icon={GiSolarSystem}
                         />
 
                         <ConnectionButton

@@ -1,4 +1,5 @@
 import {
+    Button,
     Grid,
     HStack,
     ModalBody,
@@ -19,6 +20,7 @@ import { MdAccountCircle, MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountModalContentTypes } from '../AccountModal';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import React from 'react';
+import { RxExit } from 'react-icons/rx';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -28,11 +30,12 @@ type Props = {
     wallet?: Wallet;
 };
 
-export const AccountsContent = ({ setCurrentContent }: Props) => {
+export const AccountsContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { connection, selectedAccount, connectedWallet } = useWallet();
+    const { connection, selectedAccount, connectedWallet, disconnect } =
+        useWallet();
 
     return (
         <FadeInViewFromBottom>
@@ -49,7 +52,7 @@ export const AccountsContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody w={'full'} pt={'80px'}>
+            <ModalBody w={'full'}>
                 <HStack justify={'space-between'} w={'full'}>
                     {connection.isConnectedWithPrivy ? (
                         <Grid
@@ -83,7 +86,21 @@ export const AccountsContent = ({ setCurrentContent }: Props) => {
                     )}
                 </HStack>
             </ModalBody>
-            <ModalFooter></ModalFooter>
+            <ModalFooter>
+                <Button
+                    w={'full'}
+                    onClick={() => {
+                        disconnect();
+                        onClose();
+                    }}
+                    minH={'40px'}
+                    fontSize={'sm'}
+                    fontWeight={'400'}
+                    leftIcon={<RxExit color="#888888" />}
+                >
+                    Logout
+                </Button>
+            </ModalFooter>
         </FadeInViewFromBottom>
     );
 };
