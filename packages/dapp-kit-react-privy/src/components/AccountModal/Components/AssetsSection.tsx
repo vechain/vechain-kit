@@ -72,7 +72,7 @@ export const AssetsSection = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.2 }}
-                            mt={8}
+                            mt={2}
                         >
                             <AssetRow
                                 symbol="VET"
@@ -95,7 +95,7 @@ export const AssetsSection = () => {
                                 usdValue={balances.vot3 * prices.b3tr}
                             />
                             <AssetRow
-                                symbol="VEB3TR"
+                                symbol="veB3TR"
                                 amount={balances.veB3tr}
                                 usdValue={balances.veB3tr * prices.b3tr}
                             />

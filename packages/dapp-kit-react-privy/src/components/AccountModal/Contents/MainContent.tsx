@@ -9,7 +9,11 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { useWallet, Wallet } from '../../../hooks';
-import { FadeInViewFromBottom, StickyHeaderContainer } from '../../common';
+import {
+    FadeInViewFromBottom,
+    StickyHeaderContainer,
+    VersionFooter,
+} from '../../common';
 import { AccountModalContentTypes } from '../AccountModal';
 import { AccountSelector, AssetsSection, BalanceSection } from '../Components';
 
@@ -46,7 +50,8 @@ export const MainContent = ({ setCurrentContent, wallet }: Props) => {
                     src={wallet.image}
                     w="120px"
                     h="120px"
-                    m={10}
+                    mt={10}
+                    mb={5}
                     borderRadius="full"
                     objectFit="cover"
                 />
@@ -70,7 +75,9 @@ export const MainContent = ({ setCurrentContent, wallet }: Props) => {
                         <AssetsSection />
                     </VStack>
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter>
+                    <VersionFooter />
+                </ModalFooter>
             </Container>
         </FadeInViewFromBottom>
     );
