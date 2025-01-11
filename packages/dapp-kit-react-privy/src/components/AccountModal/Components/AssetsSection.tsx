@@ -17,6 +17,7 @@ import { IoWalletOutline } from 'react-icons/io5';
 import { useBalances } from '../../../hooks';
 import { motion } from 'framer-motion';
 import { TOKEN_LOGOS } from '../../../utils';
+import { useRef } from 'react';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -29,10 +30,23 @@ const MotionVStack = motion(VStack);
 export const AssetsSection = () => {
     const { balances, prices } = useBalances();
     const tabTextColor = useColorModeValue('blackAlpha.400', 'whiteAlpha.400');
+    const tabPanelsRef = useRef<HTMLDivElement>(null);
+
+    const handleTabChange = () => {
+        // Wait for the next tick to ensure the content is rendered
+        setTimeout(() => {
+            if (tabPanelsRef.current) {
+                tabPanelsRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            }
+        }, 100);
+    };
 
     return (
         <VStack w="full" spacing={3} align="stretch">
-            <Tabs variant="soft-rounded" size="sm">
+            <Tabs variant="soft-rounded" size="sm" onChange={handleTabChange}>
                 <TabList bg="blackAlpha.300" p={1} borderRadius="full">
                     <Tab
                         borderRadius="full"
@@ -68,8 +82,7 @@ export const AssetsSection = () => {
                         Activity
                     </Tab>
                 </TabList>
-
-                <TabPanels>
+                <TabPanels ref={tabPanelsRef}>
                     <TabPanel p={0} pt={3}>
                         <MotionVStack
                             spacing={2}
