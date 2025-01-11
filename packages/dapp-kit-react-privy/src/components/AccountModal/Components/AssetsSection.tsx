@@ -39,7 +39,7 @@ export const AssetsSection = () => {
                         }}
                         flex={1}
                     >
-                        Tokens
+                        Assets
                     </Tab>
                     <Tab
                         borderRadius="full"
@@ -89,16 +89,20 @@ export const AssetsSection = () => {
                                 amount={balances.b3tr}
                                 usdValue={balances.b3tr * prices.b3tr}
                             />
-                            <AssetRow
-                                symbol="VOT3"
-                                amount={balances.vot3}
-                                usdValue={balances.vot3 * prices.b3tr}
-                            />
-                            <AssetRow
-                                symbol="veB3TR"
-                                amount={balances.veB3tr}
-                                usdValue={balances.veB3tr * prices.b3tr}
-                            />
+                            {balances.vot3 > 0 && (
+                                <AssetRow
+                                    symbol="VOT3"
+                                    amount={balances.vot3}
+                                    usdValue={balances.vot3 * prices.b3tr}
+                                />
+                            )}
+                            {balances.veB3tr > 0 && (
+                                <AssetRow
+                                    symbol="veB3TR"
+                                    amount={balances.veB3tr}
+                                    usdValue={balances.veB3tr * prices.b3tr}
+                                />
+                            )}
                         </MotionVStack>
                     </TabPanel>
                     <TabPanel p={0} pt={3}>
@@ -112,7 +116,7 @@ export const AssetsSection = () => {
                             mt={8}
                         >
                             <Icon
-                                as={BiTransferAlt}
+                                as={IoWalletOutline}
                                 boxSize={12}
                                 color="gray.500"
                                 p={2}
@@ -144,7 +148,7 @@ export const AssetsSection = () => {
                             mt={8}
                         >
                             <Icon
-                                as={IoWalletOutline}
+                                as={BiTransferAlt}
                                 boxSize={12}
                                 color="gray.500"
                                 p={2}

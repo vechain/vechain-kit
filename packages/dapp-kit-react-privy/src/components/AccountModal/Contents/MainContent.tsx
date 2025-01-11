@@ -15,7 +15,12 @@ import {
     VersionFooter,
 } from '../../common';
 import { AccountModalContentTypes } from '../AccountModal';
-import { AccountSelector, AssetsSection, BalanceSection } from '../Components';
+import {
+    AccountSelector,
+    AssetsSection,
+    BalanceSection,
+    ActionButtonsSection,
+} from '../Components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -70,8 +75,8 @@ export const MainContent = ({ setCurrentContent, wallet }: Props) => {
                             }}
                             wallet={wallet}
                         />
-
                         <BalanceSection />
+                        <ActionButtonsSection />
                         <AssetsSection />
                     </VStack>
                 </ModalBody>

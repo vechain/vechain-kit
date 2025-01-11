@@ -57,8 +57,8 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
     return (
         <FadeInViewFromBottom>
             <ModalHeader
-                fontSize={'sm'}
-                fontWeight={'200'}
+                fontSize={'md'}
+                fontWeight={'500'}
                 textAlign={'center'}
                 color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 justifyContent={'center'}
