@@ -24,9 +24,10 @@ import {
     useDAppKitPrivyColorMode,
     useConnectModal,
     useAccountModal,
+    useGetB3trBalance,
 } from '@vechain/dapp-kit-react-privy';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
-import { Interface } from 'ethers';
+import { Interface, ethers } from 'ethers';
 
 const HomePage = (): ReactElement => {
     const { toggleColorMode, colorMode } = useColorMode();
@@ -38,6 +39,9 @@ const HomePage = (): ReactElement => {
 
     const { open } = useConnectModal();
     const { open: openAccountModal } = useAccountModal();
+
+    const { data: b3trBalance, isLoading: b3trBalanceLoading } =
+        useGetB3trBalance(smartAccount.address);
 
     // A dummy tx sending 0 b3tr tokens
     const clauses = useMemo(() => {
@@ -138,6 +142,14 @@ const HomePage = (): ReactElement => {
                             <Text>
                                 Deployed: {smartAccount.isDeployed.toString()}
                             </Text>
+                            {b3trBalanceLoading ? (
+                                <Spinner />
+                            ) : (
+                                <Text>
+                                    B3TR Balance:{' '}
+                                    {ethers.formatEther(b3trBalance ?? '0')}
+                                </Text>
+                            )}
                         </Box>
                     )}
 
