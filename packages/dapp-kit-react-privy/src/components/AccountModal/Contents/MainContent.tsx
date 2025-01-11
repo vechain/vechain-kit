@@ -9,11 +9,7 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { useWallet, Wallet } from '../../../hooks';
-import {
-    AddressDisplay,
-    FadeInViewFromBottom,
-    StickyHeaderContainer,
-} from '../../common';
+import { FadeInViewFromBottom, StickyHeaderContainer } from '../../common';
 import { AccountModalContentTypes } from '../AccountModal';
 import { AccountSelector, AssetsSection, BalanceSection } from '../Components';
 
@@ -58,17 +54,17 @@ export const MainContent = ({ setCurrentContent, wallet }: Props) => {
 
             <Container maxW={'container.lg'}>
                 <ModalBody w={'full'}>
-                    <VStack w={'full'} spacing={5}>
-                        {connection.isConnectedWithPrivy ? (
-                            <AccountSelector
-                                onClick={() => {
+                    <VStack w={'full'} spacing={5} overflow={'hidden'}>
+                        <AccountSelector
+                            onClick={() => {
+                                if (connection.isConnectedWithPrivy) {
                                     setCurrentContent('accounts');
-                                }}
-                                wallet={wallet}
-                            />
-                        ) : (
-                            <AddressDisplay wallet={wallet} />
-                        )}
+                                } else {
+                                    setCurrentContent('settings');
+                                }
+                            }}
+                            wallet={wallet}
+                        />
 
                         <BalanceSection />
                         <AssetsSection />

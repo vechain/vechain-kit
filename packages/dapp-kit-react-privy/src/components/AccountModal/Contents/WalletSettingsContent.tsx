@@ -37,13 +37,15 @@ export const WalletSettingsContent = ({
     const { exportWallet, linkPasskey } = usePrivy();
     const { privyConfig } = useDAppKitPrivyConfig();
 
-    const { embeddedWallet, connection, crossAppWallet, disconnect } =
+    const { wallet, embeddedWallet, connection, crossAppWallet, disconnect } =
         useWallet();
 
-    // Privy always creates an embedded wallet, so if the user is connected with app we use the other
-    const account: Wallet = connection.isConnectedWithCrossAppPrivy
-        ? crossAppWallet
-        : embeddedWallet;
+    // If connected with Privy, use embedded or cross app wallet, otherwise use the connected wallet
+    const account: Wallet = connection.isConnectedWithPrivy
+        ? connection.isConnectedWithCrossAppPrivy
+            ? crossAppWallet
+            : embeddedWallet
+        : wallet;
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -61,7 +63,13 @@ export const WalletSettingsContent = ({
                 </ModalHeader>
 
                 <ModalBackButton
-                    onClick={() => setCurrentContent('accounts')}
+                    onClick={() => {
+                        if (connection.isConnectedWithPrivy) {
+                            setCurrentContent('accounts');
+                        } else {
+                            setCurrentContent('main');
+                        }
+                    }}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -84,28 +92,34 @@ export const WalletSettingsContent = ({
                 </VStack>
 
                 <VStack mt={5} w={'full'} spacing={5}>
-                    <ActionButton
-                        title="Backup your wallet"
-                        description="Upgrade wallet in Self-Custody by storing your Recovery Phrase and seamlessly importing it into a wallet provider."
-                        onClick={() => {
-                            exportWallet();
-                        }}
-                        hide={connection.isConnectedWithCrossAppPrivy}
-                        leftIcon={GiHouseKeys}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
+                    {connection.isConnectedWithPrivy && (
+                        <>
+                            <ActionButton
+                                title="Backup your wallet"
+                                description="Upgrade wallet in Self-Custody by storing your Recovery Phrase and seamlessly importing it into a wallet provider."
+                                onClick={() => {
+                                    exportWallet();
+                                }}
+                                hide={connection.isConnectedWithCrossAppPrivy}
+                                leftIcon={GiHouseKeys}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
 
-                    {privyConfig.allowPasskeyLinking && (
-                        <ActionButton
-                            title="Add passkey"
-                            description="Add a passkey to your account for future logins. If enabled, passkeys will always be available as a login method."
-                            onClick={() => {
-                                linkPasskey();
-                            }}
-                            hide={connection.isConnectedWithCrossAppPrivy}
-                            leftIcon={IoIosFingerPrint}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
+                            {privyConfig.allowPasskeyLinking && (
+                                <ActionButton
+                                    title="Add passkey"
+                                    description="Add a passkey to your account for future logins. If enabled, passkeys will always be available as a login method."
+                                    onClick={() => {
+                                        linkPasskey();
+                                    }}
+                                    hide={
+                                        connection.isConnectedWithCrossAppPrivy
+                                    }
+                                    leftIcon={IoIosFingerPrint}
+                                    rightIcon={MdOutlineNavigateNext}
+                                />
+                            )}
+                        </>
                     )}
 
                     <ActionButton
