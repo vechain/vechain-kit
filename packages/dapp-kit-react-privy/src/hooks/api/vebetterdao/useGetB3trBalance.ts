@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 // import { networkConfig } from '@repo/config';
-import { IB3TR__factory } from '../../contracts/typechain-types';
+import { IB3TR__factory } from '../../../contracts/typechain-types';
 
 const B3TRInterface = IB3TR__factory.createInterface();
 

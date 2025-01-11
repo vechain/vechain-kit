@@ -25,6 +25,14 @@ export const ACCOUNT_FACTORY_ADDRESSES = {
         '0x7EABA81B4F3741Ac381af7e025f3B6e0428F05Fb',
 } as const;
 
+export const TOKEN_LOGOS: Record<string, string> = {
+    VET: 'https://cryptologos.cc/logos/vechain-vet-logo.png',
+    VTHO: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3012.png',
+    B3TR: 'https://vechain.github.io/token-registry/assets/3d55edb42b09a634f7f2f26756a02571de901a5b.png',
+    VOT3: 'https://vechain.github.io/token-registry/assets/17ff70aa1d898bc97ad690dbfad1a3b5643f7e0b.png',
+    VEB3TR: 'https://vechain.github.io/token-registry/assets/1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
+};
+
 export const EXPLORER_URL = {
     '14018334920824264832118464179726739019961432051877733167310318607178':
         'https://vechainstats.com/transaction',

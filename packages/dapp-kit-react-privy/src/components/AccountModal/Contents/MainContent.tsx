@@ -15,7 +15,7 @@ import {
     StickyHeaderContainer,
 } from '../../common';
 import { AccountModalContentTypes } from '../AccountModal';
-import { AccountSelector, BalanceSection } from '../Components';
+import { AccountSelector, AssetsSection, BalanceSection } from '../Components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -71,6 +71,7 @@ export const MainContent = ({ setCurrentContent, wallet }: Props) => {
                         )}
 
                         <BalanceSection />
+                        <AssetsSection />
                     </VStack>
                 </ModalBody>
                 <ModalFooter></ModalFooter>
