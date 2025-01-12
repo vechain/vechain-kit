@@ -1,10 +1,13 @@
-import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
+import {
+    UseSendTransactionReturnValue,
+    useRefreshBalances,
+    useSendTransaction,
+} from '@/hooks';
 import { useCallback } from 'react';
 import { ERC20__factory } from '@/contracts/typechain-types';
 import { ethers } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
 import { isValidAddress } from '@/utils';
-import { getVeB3trBalanceQueryKey, getVot3BalanceQueryKey } from '../api';
 
 type useTransferERC20Props = {
     fromAddress: string;
@@ -13,7 +16,6 @@ type useTransferERC20Props = {
     tokenAddress: string;
     tokenName: string;
     onSuccess?: () => void;
-    invalidateCache?: boolean;
     onSuccessMessageTitle?: number;
 };
 
@@ -30,9 +32,9 @@ export const useTransferERC20 = ({
     tokenAddress,
     tokenName,
     onSuccess,
-    invalidateCache = true,
 }: useTransferERC20Props): useTransferERC20ReturnValue => {
     const queryClient = useQueryClient();
+    const { refresh } = useRefreshBalances();
 
     const buildClauses = useCallback(async () => {
         if (!receiverAddress || !amount || !isValidAddress(receiverAddress))
@@ -56,36 +58,9 @@ export const useTransferERC20 = ({
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        if (invalidateCache) {
-            // Invalidate cache
-            await queryClient.cancelQueries({
-                queryKey: getVot3BalanceQueryKey(fromAddress),
-            });
-            // Refetch queries
-            await queryClient.refetchQueries({
-                queryKey: getVot3BalanceQueryKey(fromAddress),
-            });
-
-            // Invalidate cache
-            await queryClient.cancelQueries({
-                queryKey: getVot3BalanceQueryKey(fromAddress),
-            });
-            // Refetch queries
-            await queryClient.refetchQueries({
-                queryKey: getVot3BalanceQueryKey(fromAddress),
-            });
-
-            // Invalidate cache
-            await queryClient.cancelQueries({
-                queryKey: getVeB3trBalanceQueryKey(fromAddress),
-            });
-            // Refetch queries
-            await queryClient.refetchQueries({
-                queryKey: getVeB3trBalanceQueryKey(fromAddress),
-            });
-        }
+        await refresh();
         onSuccess?.();
-    }, [onSuccess, invalidateCache, fromAddress, queryClient]);
+    }, [onSuccess, fromAddress, queryClient]);
 
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,

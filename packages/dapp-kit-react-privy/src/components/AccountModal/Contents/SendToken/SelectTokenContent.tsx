@@ -22,7 +22,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
 } from '../../../common';
-import { AccountModalContentTypes } from '../../AccountModal';
+import { AccountModalContentTypes } from '../../../AccountModal';
 import { useBalances } from '../../../../hooks';
 import { TOKEN_LOGOS } from '../../../../utils';
 import { useState } from 'react';

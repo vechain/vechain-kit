@@ -1,4 +1,8 @@
-import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
+import {
+    UseSendTransactionReturnValue,
+    useRefreshBalances,
+    useSendTransaction,
+} from '@/hooks';
 import { isValidAddress } from '@/utils';
 import { ethers } from 'ethers';
 import { useCallback } from 'react';
@@ -20,6 +24,8 @@ export const useTransferVET = ({
     amount,
     onSuccess,
 }: useTransferVETProps): useTransferVETReturnValue => {
+    const { refresh } = useRefreshBalances();
+
     const buildClauses = useCallback(async () => {
         if (!receiverAddress || !amount || !isValidAddress(receiverAddress))
             throw new Error('Invalid receiver address or amount');
@@ -53,7 +59,10 @@ export const useTransferVET = ({
             description: `Transfer ${amount} VET to ${receiverAddress}`,
             buttonText: 'Sign',
         },
-        onTxConfirmed: onSuccess,
+        onTxConfirmed: async () => {
+            await refresh();
+            onSuccess?.();
+        },
     });
 
     return {
