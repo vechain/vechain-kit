@@ -152,18 +152,27 @@ export const SendTokenSummaryContent = ({
                                         />
                                         <VStack align="start" spacing={0}>
                                             {selectedAccount.domain && (
+                                                <>
+                                                    <Text fontWeight="medium">
+                                                        {selectedAccount.domain}
+                                                    </Text>
+
+                                                    <Text
+                                                        fontSize="sm"
+                                                        color="gray.500"
+                                                    >
+                                                        {humanAddress(
+                                                            selectedAccount.address,
+                                                        )}
+                                                    </Text>
+                                                </>
+                                            )}
+
+                                            {!selectedAccount.domain && (
                                                 <Text fontWeight="medium">
-                                                    {selectedAccount.domain}
+                                                    {selectedAccount.address}
                                                 </Text>
                                             )}
-                                            <Text
-                                                fontSize="sm"
-                                                color="gray.500"
-                                            >
-                                                {humanAddress(
-                                                    selectedAccount.address,
-                                                )}
-                                            </Text>
                                         </VStack>
                                     </HStack>
                                 </Box>

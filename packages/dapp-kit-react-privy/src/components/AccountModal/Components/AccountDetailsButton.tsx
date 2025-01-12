@@ -70,7 +70,7 @@ export const AccountDetailsButton = ({
                         </Text>
                         {isActive && (
                             <Tag ml={1} size={'sm'} colorScheme={'green'}>
-                                Selected
+                                Active
                             </Tag>
                         )}
                     </HStack>

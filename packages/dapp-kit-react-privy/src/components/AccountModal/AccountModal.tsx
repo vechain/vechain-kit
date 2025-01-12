@@ -36,6 +36,7 @@ export type AccountModalContentTypes =
           props: {
               toAddressOrDomain: string;
               resolvedDomain?: string;
+              resolvedAddress?: string;
               amount: string;
               selectedToken: {
                   symbol: string;
@@ -139,7 +140,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             size="md"
             scrollBehavior="inside"
             returnFocusOnClose={true}
-            preserveScrollBarGap={true}
+            blockScrollOnMount={false}
+            trapFocus={false}
+            autoFocus={false}
+            closeOnOverlayClick={true}
         >
             <ModalOverlay />
 
