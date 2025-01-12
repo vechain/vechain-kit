@@ -1,4 +1,4 @@
-import { useDAppKitPrivyConfig } from '../providers/DAppKitPrivyProvider';
+import { useDAppKitPrivyConfig } from '@/providers';
 import { ReactNode } from 'react';
 
 export const useAccountModal = () => {

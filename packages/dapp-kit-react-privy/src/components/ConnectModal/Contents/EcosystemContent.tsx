@@ -15,7 +15,7 @@ import { useCrossAppAccounts } from '@privy-io/react-auth';
 import { FadeInViewFromBottom, ModalBackButton } from '@/components/common';
 import { ConnectModalContents } from '../ConnectModal';
 import { useDAppKitPrivyConfig } from '@/providers';
-import { useFetchAppInfo } from '@/hooks/useFetchAppInfo';
+import { useFetchAppInfo } from '@/hooks';
 import { GiSolarSystem } from 'react-icons/gi';
 
 type Props = {
