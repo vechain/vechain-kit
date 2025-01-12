@@ -10,13 +10,15 @@ import {
     Box,
     HStack,
     Image,
-    ModalFooter,
     Divider,
+    Alert,
+    AlertIcon,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
+    StickyFooterContainer,
 } from '../../../common';
 import { AccountModalContentTypes } from '../../AccountModal';
 import { compareAddresses, getPicassoImage, humanAddress } from '@/utils';
@@ -55,7 +57,7 @@ export const SendTokenSummaryContent = ({
 }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-    const { selectedAccount } = useWallet();
+    const { selectedAccount, connection } = useWallet();
 
     return (
         <FadeInViewFromBottom>
@@ -77,6 +79,18 @@ export const SendTokenSummaryContent = ({
             <Container maxW={'container.lg'}>
                 <ModalBody>
                     <VStack spacing={6} align="stretch" w="full">
+                        {connection.isConnectedWithPrivy && (
+                            <Alert
+                                status="warning"
+                                fontSize={'xs'}
+                                borderRadius={'xl'}
+                            >
+                                <AlertIcon />
+                                Sending to OceanX or other exchanges may result
+                                in loss of funds. Send the tokens to your
+                                VeWorld wallet first.
+                            </Alert>
+                        )}
                         {/* From/To Card */}
                         <Box
                             p={4}
@@ -152,17 +166,8 @@ export const SendTokenSummaryContent = ({
                                         </VStack>
                                     </HStack>
                                 </Box>
-                            </VStack>
-                        </Box>
 
-                        {/* Details Section */}
-                        <Box
-                            p={4}
-                            borderRadius="xl"
-                            bg={isDark ? '#00000021' : 'gray.50'}
-                        >
-                            {/* Amount */}
-                            <VStack align="stretch" spacing={4}>
+                                <Divider />
                                 <Box>
                                     <Text fontSize="sm" mb={2}>
                                         Amount
@@ -190,22 +195,19 @@ export const SendTokenSummaryContent = ({
                         </Box>
                     </VStack>
                 </ModalBody>
-
-                <ModalFooter px={4} pb={4}>
-                    <Button
-                        width="full"
-                        height="56px"
-                        variant="solid"
-                        borderRadius="xl"
-                        bg="#c8ff99"
-                        color="black"
-                        _hover={{ bg: '#b8ef89' }}
-                        onClick={() => onSend(toAddressOrDomain, amount)}
-                    >
-                        CONFIRM
-                    </Button>
-                </ModalFooter>
             </Container>
+            <StickyFooterContainer>
+                <Button
+                    width="full"
+                    height="60px"
+                    variant="solid"
+                    borderRadius="xl"
+                    colorScheme="blue"
+                    onClick={() => onSend(toAddressOrDomain, amount)}
+                >
+                    CONFIRM
+                </Button>
+            </StickyFooterContainer>
         </FadeInViewFromBottom>
     );
 };

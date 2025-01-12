@@ -213,6 +213,9 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                                 bg: isDark
                                                     ? 'whiteAlpha.800'
                                                     : 'blackAlpha.800',
+                                                color: isDark
+                                                    ? 'blackAlpha.700'
+                                                    : 'whiteAlpha.700',
                                             }}
                                             onClick={() =>
                                                 setIsSelectingToken(true)
@@ -272,6 +275,9 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                                 bg: isDark
                                                     ? 'whiteAlpha.800'
                                                     : 'blackAlpha.800',
+                                                color: isDark
+                                                    ? 'blackAlpha.700'
+                                                    : 'whiteAlpha.700',
                                             }}
                                             onClick={() =>
                                                 setIsSelectingToken(true)
