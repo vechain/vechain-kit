@@ -27,8 +27,8 @@ import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent } from './SelectTokenContent';
 import { TOKEN_LOGOS } from '@/utils';
 import { ZeroAddress } from 'ethers';
-import { useGetVetDomain } from '@/hooks';
 import { compareAddresses, isValidAddress } from '@/utils';
+import { useVechainDomain } from '@vechain/dapp-kit-react';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -62,8 +62,11 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
     const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [addressError, setAddressError] = useState<string | null>(null);
 
-    const { data: resolvedAddress, isLoading: isLoadingDomain } =
-        useGetVetDomain(toAddressOrDomain);
+    const {
+        domain: resolvedDomain,
+        address: resolvedAddress,
+        isLoading: isLoadingDomain,
+    } = useVechainDomain({ addressOrDomain: toAddressOrDomain });
 
     const validateAddress = useCallback(
         (value: string) => {
@@ -74,7 +77,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
 
             const isValidReceiver =
                 !compareAddresses(
-                    resolvedAddress?.address ?? ZeroAddress,
+                    resolvedAddress ?? ZeroAddress,
                     ZeroAddress,
                 ) || isValidAddress(value);
 
@@ -132,7 +135,8 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
             type: 'send-token-summary',
             props: {
                 toAddressOrDomain,
-                resolvedDomain: resolvedAddress?.domain,
+                resolvedDomain: resolvedDomain,
+                resolvedAddress: resolvedAddress,
                 amount,
                 selectedToken,
                 onSend,

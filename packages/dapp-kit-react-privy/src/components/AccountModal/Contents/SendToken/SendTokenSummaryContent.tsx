@@ -23,7 +23,7 @@ import {
     StickyFooterContainer,
 } from '../../../common';
 import { AccountModalContentTypes } from '../../AccountModal';
-import { compareAddresses, getPicassoImage, humanAddress } from '@/utils';
+import { getPicassoImage, humanAddress } from '@/utils';
 import { useWallet } from '@/hooks';
 import { useTransferERC20, useTransferVET } from '@/hooks';
 import { TransactionModal } from '../../../TransactionModal';
@@ -41,6 +41,7 @@ type Props = {
     onSend: (address: string, amount: string) => void;
     toAddressOrDomain: string;
     resolvedDomain?: string;
+    resolvedAddress?: string;
     amount: string;
     selectedToken: {
         symbol: string;
@@ -55,6 +56,7 @@ export const SendTokenSummaryContent = ({
     setCurrentContent,
     toAddressOrDomain,
     resolvedDomain,
+    resolvedAddress,
     amount,
     selectedToken,
 }: Props) => {
@@ -65,7 +67,7 @@ export const SendTokenSummaryContent = ({
 
     const transferERC20 = useTransferERC20({
         fromAddress: selectedAccount.address,
-        receiverAddress: resolvedDomain || toAddressOrDomain,
+        receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
@@ -73,7 +75,7 @@ export const SendTokenSummaryContent = ({
 
     const transferVET = useTransferVET({
         fromAddress: selectedAccount.address,
-        receiverAddress: resolvedDomain || toAddressOrDomain,
+        receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
     });
 
@@ -183,24 +185,29 @@ export const SendTokenSummaryContent = ({
                                             borderRadius="xl"
                                         />
                                         <VStack align="start" spacing={0}>
-                                            <Text fontWeight="medium">
-                                                {toAddressOrDomain}
-                                            </Text>
-
-                                            {resolvedDomain &&
-                                                !compareAddresses(
-                                                    resolvedDomain,
-                                                    toAddressOrDomain,
-                                                ) && (
+                                            {resolvedDomain && (
+                                                <>
+                                                    <Text fontWeight="medium">
+                                                        {resolvedDomain}
+                                                    </Text>
                                                     <Text
                                                         fontSize="sm"
                                                         color="gray.500"
                                                     >
                                                         {humanAddress(
-                                                            resolvedDomain,
+                                                            resolvedAddress ||
+                                                                toAddressOrDomain,
                                                         )}
                                                     </Text>
-                                                )}
+                                                </>
+                                            )}
+
+                                            {!resolvedDomain && (
+                                                <Text fontWeight="medium">
+                                                    {resolvedAddress ||
+                                                        toAddressOrDomain}
+                                                </Text>
+                                            )}
                                         </VStack>
                                     </HStack>
                                 </Box>
