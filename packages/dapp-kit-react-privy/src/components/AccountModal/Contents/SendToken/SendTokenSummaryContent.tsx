@@ -13,6 +13,7 @@ import {
     Divider,
     Alert,
     AlertIcon,
+    ModalFooter,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
@@ -197,16 +198,18 @@ export const SendTokenSummaryContent = ({
                 </ModalBody>
             </Container>
             <StickyFooterContainer>
-                <Button
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
-                    colorScheme="blue"
-                    onClick={() => onSend(toAddressOrDomain, amount)}
-                >
-                    CONFIRM
-                </Button>
+                <ModalFooter px={6} py={0}>
+                    <Button
+                        width="full"
+                        height="60px"
+                        variant="solid"
+                        borderRadius="xl"
+                        colorScheme="blue"
+                        onClick={() => onSend(toAddressOrDomain, amount)}
+                    >
+                        CONFIRM
+                    </Button>
+                </ModalFooter>
             </StickyFooterContainer>
         </FadeInViewFromBottom>
     );
