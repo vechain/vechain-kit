@@ -1,7 +1,7 @@
 import { Grid, Icon, IconButton } from '@chakra-ui/react';
 import { MdSwapHoriz } from 'react-icons/md';
 import { BsLightningCharge } from 'react-icons/bs';
-import { IoReceiptOutline } from 'react-icons/io5';
+import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../AccountModal';
 
@@ -33,12 +33,18 @@ export const QuickActionsSection = ({ setCurrentContent }: Props) => {
                 icon={<Icon as={MdSwapHoriz} boxSize={5} opacity={0.5} />}
             />
             <IconButton
-                disabled
                 variant="selector"
                 h="auto"
                 py={3}
                 aria-label="Receive"
-                icon={<Icon as={IoReceiptOutline} boxSize={5} opacity={0.5} />}
+                icon={
+                    <Icon
+                        as={FaRegArrowAltCircleDown}
+                        boxSize={5}
+                        opacity={0.5}
+                    />
+                }
+                onClick={() => setCurrentContent('receive-token')}
             />
             <IconButton
                 variant="selector"

@@ -3,3 +3,4 @@ export * from './WalletSettingsContent';
 export * from './SmartAccountContent';
 export * from './AccountsListContent';
 export * from './SendToken';
+export * from './ReceiveTokenContent';

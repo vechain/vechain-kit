@@ -16,6 +16,7 @@ import {
     AccountsListContent,
     SendTokenContent,
     SendTokenSummaryContent,
+    ReceiveTokenContent,
 } from './Contents';
 
 type Props = {
@@ -29,6 +30,7 @@ export type AccountModalContentTypes =
     | 'smart-account'
     | 'accounts'
     | 'send-token'
+    | 'receive-token'
     | {
           type: 'send-token-summary';
           props: {
@@ -117,6 +119,12 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                     <SendTokenContent
                         setCurrentContent={setCurrentContent}
                         onSend={() => {}}
+                    />
+                );
+            case 'receive-token':
+                return (
+                    <ReceiveTokenContent
+                        setCurrentContent={setCurrentContent}
                     />
                 );
         }

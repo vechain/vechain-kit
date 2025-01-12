@@ -35,7 +35,8 @@
         "ethers": "^6.13.5",
         "framer-motion": "^11.15.0",
         "net": "^1.0.2",
-        "react-icons": "^5.4.0"
+        "react-icons": "^5.4.0",
+        "react-qrcode-logo": "^3.0.0"
     },
     "devDependencies": {
         "@types/react": "^18.2.28",
