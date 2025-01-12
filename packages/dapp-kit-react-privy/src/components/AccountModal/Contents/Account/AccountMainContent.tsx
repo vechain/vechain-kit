@@ -14,7 +14,7 @@ import {
     StickyHeaderContainer,
     VersionFooter,
 } from '@/components/common';
-import { AccountModalContentTypes } from '../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     AssetsSection,

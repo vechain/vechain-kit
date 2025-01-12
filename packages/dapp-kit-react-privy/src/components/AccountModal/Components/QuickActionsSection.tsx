@@ -3,7 +3,7 @@ import { MdSwapHoriz } from 'react-icons/md';
 import { BsLightningCharge } from 'react-icons/bs';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
-import { AccountModalContentTypes } from '../AccountModal';
+import { AccountModalContentTypes } from '../Types';
 
 type Props = {
     setCurrentContent: React.Dispatch<

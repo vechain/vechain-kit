@@ -6,9 +6,9 @@ import {
     Link,
     Icon,
 } from '@chakra-ui/react';
-import { ShareButtons } from '../ShareButtons';
+import { ShareButtons } from '../Components/ShareButtons';
 import { ReactNode } from 'react';
-import { ModalAnimation } from '../ModalAnimation';
+import { ModalAnimation } from '../Components/ModalAnimation';
 import { motion } from 'framer-motion';
 import { useSmartAccount } from '../../../hooks';
 import { EXPLORER_URL } from '../../../utils';

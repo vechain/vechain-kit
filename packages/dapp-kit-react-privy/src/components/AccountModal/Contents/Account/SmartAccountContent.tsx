@@ -19,7 +19,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
-import { AccountModalContentTypes } from '../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { ActionButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';

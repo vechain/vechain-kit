@@ -21,7 +21,7 @@ import {
     FadeInViewFromBottom,
 } from '@/components/common';
 import { useDAppKitPrivyConfig } from '@/providers/DAppKitPrivyProvider';
-import { AccountModalContentTypes } from '../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 

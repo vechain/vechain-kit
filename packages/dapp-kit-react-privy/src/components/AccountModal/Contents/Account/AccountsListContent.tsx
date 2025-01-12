@@ -17,7 +17,7 @@ import {
 } from '@/components/common';
 import { AccountDetailsButton } from '@/components';
 import { MdAccountCircle, MdOutlineNavigateNext } from 'react-icons/md';
-import { AccountModalContentTypes } from '../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import React from 'react';
 import { RxExit } from 'react-icons/rx';

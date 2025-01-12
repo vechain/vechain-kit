@@ -8,7 +8,7 @@ import {
     Icon,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { ModalAnimation } from '../ModalAnimation';
+import { ModalAnimation } from '../Components/ModalAnimation';
 import { motion } from 'framer-motion';
 import { useSmartAccount } from '../../../hooks';
 import { EXPLORER_URL } from '../../../utils';

@@ -15,7 +15,7 @@ import {
     StickyHeaderContainer,
     AddressDisplay,
 } from '@/components/common';
-import { AccountModalContentTypes } from '../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
 
 type Props = {

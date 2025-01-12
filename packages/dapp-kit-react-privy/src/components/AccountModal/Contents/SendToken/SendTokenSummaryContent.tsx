@@ -22,7 +22,7 @@ import {
     StickyHeaderContainer,
     StickyFooterContainer,
 } from '../../../common';
-import { AccountModalContentTypes } from '../../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage, humanAddress } from '@/utils';
 import { useWallet } from '@/hooks';
 import { useTransferERC20, useTransferVET } from '@/hooks';

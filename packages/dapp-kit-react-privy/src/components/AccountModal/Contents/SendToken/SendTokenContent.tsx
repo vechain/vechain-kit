@@ -22,7 +22,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
 } from '@/components';
-import { AccountModalContentTypes } from '../../AccountModal';
+import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent } from './SelectTokenContent';
 import { TOKEN_LOGOS } from '@/utils';

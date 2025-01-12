@@ -9,7 +9,7 @@ export type ConfirmationModalContentProps = {
 export const ConfirmationModalContent = ({
     title = 'Waiting for confirmation',
 }: ConfirmationModalContentProps) => {
-    const { isConnectedWithPrivy } = useWallet();
+    const { connection } = useWallet();
     return (
         <VStack align={'center'} p={6} gap={6}>
             <Heading size="md">{title}</Heading>
@@ -17,7 +17,7 @@ export const ConfirmationModalContent = ({
             <Spinner my={10} size="xl" />
 
             <Text fontSize="sm" align={'center'}>
-                {isConnectedWithPrivy
+                {connection.isConnectedWithPrivy
                     ? 'Please do not close this window, it will take just a few seconds.'
                     : 'Please confirm the transaction in your wallet.'}
             </Text>
