@@ -8,3 +8,4 @@ export * from './api/smartAccount/useGetSmartAccountAddress';
 export * from './api';
 export * from './modals';
 export * from './transactions';
+export * from './useRefreshBalances';

@@ -11,13 +11,15 @@ import {
     Image,
     Box,
     useColorModeValue,
+    Button,
 } from '@chakra-ui/react';
 import { BiTransferAlt } from 'react-icons/bi';
-import { IoWalletOutline } from 'react-icons/io5';
+import { IoWalletOutline, IoRefresh } from 'react-icons/io5';
 import { useBalances } from '../../../hooks';
 import { motion } from 'framer-motion';
 import { TOKEN_LOGOS } from '../../../utils';
 import { useRef } from 'react';
+import { useRefreshBalances } from '../../../hooks/useRefreshBalances';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -29,6 +31,7 @@ const MotionVStack = motion(VStack);
 
 export const AssetsSection = () => {
     const { balances, prices } = useBalances();
+    const { refresh } = useRefreshBalances();
     const tabTextColor = useColorModeValue('blackAlpha.400', 'whiteAlpha.400');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
@@ -47,41 +50,48 @@ export const AssetsSection = () => {
     return (
         <VStack w="full" spacing={3} align="stretch">
             <Tabs variant="soft-rounded" size="sm" onChange={handleTabChange}>
-                <TabList bg="blackAlpha.300" p={1} borderRadius="full">
-                    <Tab
+                <HStack justify="space-between" align="center">
+                    <TabList
+                        bg="blackAlpha.300"
+                        p={1}
                         borderRadius="full"
-                        color={tabTextColor}
-                        _selected={{
-                            bg: 'white',
-                            color: 'black',
-                        }}
                         flex={1}
                     >
-                        Assets
-                    </Tab>
-                    <Tab
-                        borderRadius="full"
-                        color={tabTextColor}
-                        _selected={{
-                            bg: 'white',
-                            color: 'black',
-                        }}
-                        flex={1}
-                    >
-                        NFTs
-                    </Tab>
-                    <Tab
-                        borderRadius="full"
-                        color={tabTextColor}
-                        _selected={{
-                            bg: 'white',
-                            color: 'black',
-                        }}
-                        flex={1}
-                    >
-                        Activity
-                    </Tab>
-                </TabList>
+                        <Tab
+                            borderRadius="full"
+                            color={tabTextColor}
+                            _selected={{
+                                bg: 'white',
+                                color: 'black',
+                            }}
+                            flex={1}
+                        >
+                            Assets
+                        </Tab>
+                        <Tab
+                            borderRadius="full"
+                            color={tabTextColor}
+                            _selected={{
+                                bg: 'white',
+                                color: 'black',
+                            }}
+                            flex={1}
+                        >
+                            NFTs
+                        </Tab>
+                        <Tab
+                            borderRadius="full"
+                            color={tabTextColor}
+                            _selected={{
+                                bg: 'white',
+                                color: 'black',
+                            }}
+                            flex={1}
+                        >
+                            Activity
+                        </Tab>
+                    </TabList>
+                </HStack>
                 <TabPanels ref={tabPanelsRef}>
                     <TabPanel p={0} pt={3}>
                         <MotionVStack
@@ -122,6 +132,21 @@ export const AssetsSection = () => {
                                     usdValue={balances.veB3tr * prices.b3tr}
                                 />
                             )}
+                            <HStack justify="flex-end" px={2}>
+                                <Button
+                                    aria-label="Refresh balances"
+                                    size="sm"
+                                    variant="link"
+                                    onClick={() => refresh()}
+                                >
+                                    <HStack spacing={2}>
+                                        <Icon as={IoRefresh} />
+                                        <Text fontSize="sm" fontWeight="bold">
+                                            Refresh
+                                        </Text>
+                                    </HStack>
+                                </Button>
+                            </HStack>
                         </MotionVStack>
                     </TabPanel>
                     <TabPanel p={0} pt={3}>
