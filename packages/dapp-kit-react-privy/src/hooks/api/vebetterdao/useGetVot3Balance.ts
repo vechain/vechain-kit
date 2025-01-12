@@ -12,7 +12,7 @@ export const getVot3Balance = async (
         VOT3Interface.getFunction('balanceOf').format('json');
 
     const res = await thor
-        .account('0x5ef79995FE8a89e0812330E4378eB2660ceDe699')
+        .account('0x76Ca782B59C74d088C7D2Cce2f211BC00836c602')
         .method(JSON.parse(functionFragment))
         .call(address);
 

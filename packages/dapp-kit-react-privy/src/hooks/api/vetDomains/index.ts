@@ -1,1 +1,2 @@
-export * from './useVechainDomain';
+export * from './useGetVetDomain';
+export * from './useCachedVechainDomain';

@@ -3,7 +3,7 @@
 import { usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { useSmartAccount } from './useSmartAccount';
-import { useVechainDomain } from '@/hooks';
+import { useCachedVeChainDomain } from '@/hooks';
 import { getPicassoImage } from '../utils';
 
 export type Wallet = {
@@ -105,24 +105,29 @@ export const useWallet = (): UseWalletReturnType => {
         : smartAccount.address;
 
     // Use cached domain lookups for each address
-    const walletDomain = useVechainDomain(dappKitAccount ?? '').data?.domain;
-    const smartAccountDomain = useVechainDomain(smartAccount.address ?? '').data
-        ?.domain;
-    const embeddedWalletDomain = useVechainDomain(privyEmbeddedWallet ?? '')
-        .data?.domain;
-    const crossAppAccountDomain = useVechainDomain(
+    const walletDomain = useCachedVeChainDomain(dappKitAccount ?? '')
+        .domainResult.domain;
+    const smartAccountDomain = useCachedVeChainDomain(
+        smartAccount.address ?? '',
+    ).domainResult.domain;
+    const embeddedWalletDomain = useCachedVeChainDomain(
+        privyEmbeddedWallet ?? '',
+    ).domainResult.domain;
+    const crossAppAccountDomain = useCachedVeChainDomain(
         crossAppAccount?.embeddedWallets?.[0]?.address ?? '',
-    ).data?.domain;
+    ).domainResult.domain;
 
     const selectedAccount = {
         address: selectedAddress ?? '',
-        domain: useVechainDomain(selectedAddress ?? '').data?.domain,
+        domain: useCachedVeChainDomain(selectedAddress ?? '').domainResult
+            .domain,
         image: getPicassoImage(selectedAddress ?? ''),
     };
 
     const connectedWallet = {
         address: connectedWalletAddress ?? '',
-        domain: useVechainDomain(connectedWalletAddress ?? '').data?.domain,
+        domain: useCachedVeChainDomain(connectedWalletAddress ?? '')
+            .domainResult.domain,
         image: getPicassoImage(connectedWalletAddress ?? ''),
     };
 

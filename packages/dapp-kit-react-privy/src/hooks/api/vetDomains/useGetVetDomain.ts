@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVechainDomain as useBaseVechainDomain } from '@vechain/dapp-kit-react';
+import { useVechainDomain } from '@vechain/dapp-kit-react';
 
 interface VeChainDomainResult {
     address?: string;
@@ -8,16 +8,16 @@ interface VeChainDomainResult {
     isLoading: boolean;
 }
 
-export const getVechainDomainQueryKey = (addressOrDomain: string) => [
+export const getVetDomainQueryKey = (addressOrDomain: string) => [
     'VECHAIN_KIT_DOMAIN',
     addressOrDomain,
 ];
 
-export const useVechainDomain = (addressOrDomain: string) => {
-    const baseResult = useBaseVechainDomain({ addressOrDomain });
+export const useGetVetDomain = (addressOrDomain: string) => {
+    const baseResult = useVechainDomain({ addressOrDomain });
 
     return useQuery<VeChainDomainResult>({
-        queryKey: getVechainDomainQueryKey(addressOrDomain),
+        queryKey: getVetDomainQueryKey(addressOrDomain),
         queryFn: () => baseResult,
         enabled: !!addressOrDomain,
         // Cache the domain for 24 hours

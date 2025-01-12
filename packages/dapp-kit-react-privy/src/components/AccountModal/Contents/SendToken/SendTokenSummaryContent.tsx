@@ -14,6 +14,7 @@ import {
     Alert,
     AlertIcon,
     ModalFooter,
+    useDisclosure,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
@@ -24,6 +25,8 @@ import {
 import { AccountModalContentTypes } from '../../AccountModal';
 import { compareAddresses, getPicassoImage, humanAddress } from '@/utils';
 import { useWallet } from '@/hooks';
+import { useTransferERC20, useTransferVET } from '@/hooks';
+import { TransactionModal } from '../../../TransactionModal';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -50,7 +53,6 @@ type Props = {
 
 export const SendTokenSummaryContent = ({
     setCurrentContent,
-    onSend,
     toAddressOrDomain,
     resolvedDomain,
     amount,
@@ -59,6 +61,37 @@ export const SendTokenSummaryContent = ({
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { selectedAccount, connection } = useWallet();
+    const transactionModal = useDisclosure();
+
+    const transferERC20 = useTransferERC20({
+        fromAddress: selectedAccount.address,
+        receiverAddress: resolvedDomain || toAddressOrDomain,
+        amount,
+        tokenAddress: selectedToken.address,
+        tokenName: selectedToken.symbol,
+    });
+
+    const transferVET = useTransferVET({
+        fromAddress: selectedAccount.address,
+        receiverAddress: resolvedDomain || toAddressOrDomain,
+        amount,
+    });
+
+    const handleSend = async () => {
+        transactionModal.onOpen();
+        try {
+            if (selectedToken.symbol === 'VET') {
+                await transferVET.sendTransaction();
+            } else {
+                await transferERC20.sendTransaction();
+            }
+        } catch (error) {
+            console.error('Transaction failed:', error);
+        }
+    };
+
+    const { status, error, txReceipt } =
+        selectedToken.symbol === 'VET' ? transferVET : transferERC20;
 
     return (
         <FadeInViewFromBottom>
@@ -99,7 +132,11 @@ export const SendTokenSummaryContent = ({
                             bg={isDark ? '#00000021' : 'gray.50'}
                         >
                             {/* From Section */}
-                            <VStack align="stretch" spacing={4}>
+                            <VStack
+                                align="stretch"
+                                spacing={4}
+                                wordBreak={'break-all'}
+                            >
                                 <Box>
                                     <Text fontSize="sm" mb={2}>
                                         From
@@ -205,12 +242,24 @@ export const SendTokenSummaryContent = ({
                         variant="solid"
                         borderRadius="xl"
                         colorScheme="blue"
-                        onClick={() => onSend(toAddressOrDomain, amount)}
+                        onClick={handleSend}
                     >
                         CONFIRM
                     </Button>
                 </ModalFooter>
             </StickyFooterContainer>
+
+            <TransactionModal
+                isOpen={transactionModal.isOpen}
+                onClose={() => {
+                    transactionModal.onClose();
+                    setCurrentContent('main');
+                }}
+                status={status}
+                txId={txReceipt?.meta.txID}
+                errorDescription={error?.reason ?? 'Unknown error'}
+                showExplorerButton={true}
+            />
         </FadeInViewFromBottom>
     );
 };

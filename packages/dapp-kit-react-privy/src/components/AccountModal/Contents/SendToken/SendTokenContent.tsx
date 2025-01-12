@@ -21,13 +21,13 @@ import {
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
-} from '../../../common';
+} from '@/components';
 import { AccountModalContentTypes } from '../../AccountModal';
 import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent } from './SelectTokenContent';
 import { TOKEN_LOGOS } from '@/utils';
 import { ZeroAddress } from 'ethers';
-import { useVechainDomain } from '@vechain/dapp-kit-react';
+import { useGetVetDomain } from '@/hooks';
 import { compareAddresses, isValidAddress } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -62,9 +62,8 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
     const [selectedToken, setSelectedToken] = useState<Token | null>(null);
     const [addressError, setAddressError] = useState<string | null>(null);
 
-    const { address: resolvedAddress } = useVechainDomain({
-        addressOrDomain: toAddressOrDomain,
-    });
+    const { data: resolvedAddress, isLoading: isLoadingDomain } =
+        useGetVetDomain(toAddressOrDomain);
 
     const validateAddress = useCallback(
         (value: string) => {
@@ -75,7 +74,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
 
             const isValidReceiver =
                 !compareAddresses(
-                    resolvedAddress ?? ZeroAddress,
+                    resolvedAddress?.address ?? ZeroAddress,
                     ZeroAddress,
                 ) || isValidAddress(value);
 
@@ -133,7 +132,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
             type: 'send-token-summary',
             props: {
                 toAddressOrDomain,
-                resolvedDomain: resolvedAddress,
+                resolvedDomain: resolvedAddress?.domain,
                 amount,
                 selectedToken,
                 onSend,
@@ -393,7 +392,8 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                     !amount ||
                                     !toAddressOrDomain ||
                                     !!error ||
-                                    !!addressError
+                                    !!addressError ||
+                                    isLoadingDomain
                                 }
                                 onClick={handleSend}
                             >
