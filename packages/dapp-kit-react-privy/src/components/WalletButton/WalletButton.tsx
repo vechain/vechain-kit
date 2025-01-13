@@ -5,9 +5,11 @@ import { useDAppKitPrivyConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
+import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 export const WalletButton = () => {
     const { connection, selectedAccount } = useWallet();
+    const { setSource, connect } = useDappKitWallet();
     const { authenticated, user, createWallet } = usePrivy();
 
     const connectModal = useDisclosure();
@@ -16,6 +18,17 @@ export const WalletButton = () => {
     const { privyConfig } = useDAppKitPrivyConfig();
 
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
+
+    const handleConnect = () => {
+        // Social login does not work inside veworld explorer,
+        // so we need to force connection to veworld
+        if (connection.isInAppBrowser) {
+            setSource('veworld');
+            connect();
+        } else {
+            connectModal.onOpen();
+        }
+    };
 
     // If the user authenticates directly with google, we need to wait for success
     // and if it's first time we create an embedded wallet for the user
@@ -67,7 +80,7 @@ export const WalletButton = () => {
                     </HStack>
                 </Button>
             ) : (
-                <Button onClick={connectModal.onOpen}>Login</Button>
+                <Button onClick={handleConnect}>Login</Button>
             )}
 
             <ConnectModal

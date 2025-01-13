@@ -10,8 +10,6 @@ import {
 import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { EcosystemContent } from './Contents/EcosystemContent';
-import { useWallet } from '@/hooks';
-import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 type Props = {
     isOpen: boolean;
@@ -37,26 +35,11 @@ export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContents>('main');
 
-    const { connection } = useWallet();
-    const { setSource, connect } = useDappKitWallet();
-
     useEffect(() => {
         if (isOpen) {
             setCurrentContent('main');
         }
     }, [isOpen]);
-
-    // Social login does not work inside veworld explorer, so we need to force connection to veworld
-    useEffect(() => {
-        if (connection.isInAppBrowser && !connection.isConnected) {
-            // close the modal
-            onClose();
-
-            // open connection to veworld
-            setSource('veworld');
-            connect();
-        }
-    }, [connection.isInAppBrowser, connection.isConnected]);
 
     const renderContent = () => {
         switch (currentContent) {
