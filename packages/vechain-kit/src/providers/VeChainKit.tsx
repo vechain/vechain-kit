@@ -43,7 +43,7 @@ type Props = {
     dappKitConfig: DAppKitUIOptions;
 };
 
-type DAppKitPrivyConfig = {
+type VeChainKitConfig = {
     privyConfig: Props['privyConfig'];
     feeDelegationConfig: Props['feeDelegationConfig'];
     dappKitConfig: Props['dappKitConfig'];
@@ -60,19 +60,15 @@ type DAppKitPrivyConfig = {
 /**
  * Context to store the Privy and DAppKit configs so that they can be used by the hooks/components
  */
-export const DAppKitPrivyContext = createContext<DAppKitPrivyConfig | null>(
-    null,
-);
+export const VeChainKitContext = createContext<VeChainKitConfig | null>(null);
 
 /**
  * Hook to get the Privy and DAppKit configs
  */
-export const useDAppKitPrivyConfig = () => {
-    const context = useContext(DAppKitPrivyContext);
+export const useVeChainKitConfig = () => {
+    const context = useContext(VeChainKitContext);
     if (!context) {
-        throw new Error(
-            'useDAppKitPrivyConfig must be used within DAppKitPrivyProvider',
-        );
+        throw new Error('useVeChainKitConfig must be used within VeChainKit');
     }
     return context;
 };
@@ -80,7 +76,7 @@ export const useDAppKitPrivyConfig = () => {
 /**
  * Provider to wrap the application with Privy and DAppKit
  */
-export const DAppKitPrivyProvider = ({
+export const VeChainKit = ({
     children,
     privyConfig,
     feeDelegationConfig,
@@ -120,7 +116,7 @@ export const DAppKitPrivyProvider = ({
 
     return (
         <EnsureQueryClient>
-            <DAppKitPrivyContext.Provider
+            <VeChainKitContext.Provider
                 value={{
                     privyConfig,
                     feeDelegationConfig,
@@ -184,7 +180,7 @@ export const DAppKitPrivyProvider = ({
                         </DAppKitProvider>
                     </BasePrivyProvider>
                 </ChakraProvider>
-            </DAppKitPrivyContext.Provider>
+            </VeChainKitContext.Provider>
         </EnsureQueryClient>
     );
 };

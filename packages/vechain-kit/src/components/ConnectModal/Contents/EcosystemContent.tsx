@@ -14,7 +14,7 @@ import {
 import { useCrossAppAccounts } from '@privy-io/react-auth';
 import { FadeInViewFromBottom, ModalBackButton } from '@/components/common';
 import { ConnectModalContents } from '../ConnectModal';
-import { useDAppKitPrivyConfig } from '@/providers';
+import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
 import { GiSolarSystem } from 'react-icons/gi';
 
@@ -36,7 +36,7 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
         onClose();
     };
 
-    const { privyConfig } = useDAppKitPrivyConfig();
+    const { privyConfig } = useVeChainKitConfig();
     const { data: appsInfo, isLoading } = useFetchAppInfo(
         privyConfig?.ecosystemAppsID || [],
     );

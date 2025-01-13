@@ -18,7 +18,7 @@ import {
     useLoginWithOAuth,
     useLoginWithPasskey,
 } from '@privy-io/react-auth';
-import { useDAppKitPrivyConfig } from '@/providers';
+import { useVeChainKitConfig } from '@/providers';
 import { FadeInViewFromBottom, VersionFooter } from '@/components/common';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { FcGoogle } from 'react-icons/fc';
@@ -46,7 +46,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
-    const { privyConfig } = useDAppKitPrivyConfig();
+    const { privyConfig } = useVeChainKitConfig();
 
     // View more login
     const { login: viewMoreLogin } = usePrivy();

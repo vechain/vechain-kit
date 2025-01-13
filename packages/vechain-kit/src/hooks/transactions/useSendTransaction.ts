@@ -4,7 +4,7 @@ import { useTxReceipt } from '../useTxReceipt';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { Transaction } from 'thor-devkit';
-import { useDAppKitPrivyConfig } from '../../providers/DAppKitPrivyProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKit';
 import { useWallet } from '../useWallet';
 import { useSmartAccount } from '../useSmartAccount';
 import {
@@ -126,7 +126,7 @@ export const useSendTransaction = ({
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const { vendor, thor } = useConnex();
-    const { dappKitConfig, feeDelegationConfig } = useDAppKitPrivyConfig();
+    const { dappKitConfig, feeDelegationConfig } = useVeChainKitConfig();
     const nodeUrl = dappKitConfig.nodeUrl;
 
     const { connection } = useWallet();

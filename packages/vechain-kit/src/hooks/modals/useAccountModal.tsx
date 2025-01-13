@@ -1,4 +1,4 @@
-import { useDAppKitPrivyConfig } from '@/providers';
+import { useVeChainKitConfig } from '@/providers';
 import { ReactNode } from 'react';
 
 export const useAccountModal = () => {
@@ -6,7 +6,7 @@ export const useAccountModal = () => {
         openAccountModal: open,
         closeAccountModal: close,
         isAccountModalOpen: isOpen,
-    } = useDAppKitPrivyConfig();
+    } = useVeChainKitConfig();
     return { open, close, isOpen };
 };
 

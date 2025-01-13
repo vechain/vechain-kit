@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 // 2. Code splitting - this component will only be loaded when needed, reducing initial bundle size
 // 3. The 'ssr: false' option ensures this component is only rendered on the client side
 const VeChainKit = dynamic(
-    async () => (await import('@vechain/vechain-kit')).DAppKitPrivyProvider,
+    async () => (await import('@vechain/vechain-kit')).VeChainKit,
     {
         ssr: false,
     },

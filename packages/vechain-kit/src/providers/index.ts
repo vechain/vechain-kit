@@ -1,1 +1,1 @@
-export * from './DAppKitPrivyProvider';
+export * from './VeChainKit';

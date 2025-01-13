@@ -20,7 +20,7 @@ import {
     StickyHeaderContainer,
     FadeInViewFromBottom,
 } from '@/components/common';
-import { useDAppKitPrivyConfig } from '@/providers/DAppKitPrivyProvider';
+import { useVeChainKitConfig } from '@/providers/VeChainKit';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
@@ -35,7 +35,7 @@ export const WalletSettingsContent = ({
     onLogoutSuccess,
 }: Props) => {
     const { exportWallet, linkPasskey } = usePrivy();
-    const { privyConfig } = useDAppKitPrivyConfig();
+    const { privyConfig } = useVeChainKitConfig();
 
     const { wallet, embeddedWallet, connection, crossAppWallet, disconnect } =
         useWallet();
