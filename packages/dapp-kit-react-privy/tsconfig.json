@@ -18,7 +18,27 @@
         "strict": true,
         "resolveJsonModule": true,
         // React
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+          "@/*": ["src/*"],
+          "@components": ["src/components"],
+          "@components/*": ["src/components/*"],
+          "@hooks": ["src/hooks"],
+          "@hooks/*": ["src/hooks/*"],
+          "@utils": ["src/utils"],
+          "@utils/*": ["src/utils/*"],
+          "@common": ["src/components/common"],
+          "@common/*": ["src/components/common/*"],
+          "@theme": ["src/theme"],
+          "@theme/*": ["src/theme/*"],      
+          "@contracts": ["src/contracts"],
+          "@contracts/*": ["src/contracts/*"],
+          "@assets": ["src/assets"],
+          "@assets/*": ["src/assets/*"],
+          "@providers": ["src/providers"],
+          "@providers/*": ["src/providers/*"],
+      },
     },
     "include": ["src/**/*.ts", "test/**/*.test.ts", "eslint.config.mjs"]
 }

@@ -1,15 +1,17 @@
 import { ReactNode, useMemo } from 'react';
-import { ConfirmationModalContent } from './ConfirmationModalContent';
-import { ErrorModalContent } from './ErrorModalContent';
-import { LoadingModalContent } from './LoadingModalContent';
-import { SuccessModalContent } from './SuccessModalContent';
+import {
+    ConfirmationModalContent,
+    ErrorModalContent,
+    LoadingModalContent,
+    SuccessModalContent,
+} from './Contents';
 import {
     Modal,
     ModalContentProps,
     ModalOverlay,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { CustomModalContent } from './CustomModalContent';
+import { CustomModalContent } from './Contents/CustomModalContent';
 
 export type TransactionModalProps = {
     isOpen: boolean;

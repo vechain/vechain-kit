@@ -13,6 +13,7 @@ import {
     VStack,
     Box,
     Spinner,
+    Grid,
 } from '@chakra-ui/react';
 import {
     useWallet,
@@ -21,9 +22,12 @@ import {
     TransactionModal,
     TransactionToast,
     useDAppKitPrivyColorMode,
-} from '@vechain/dapp-kit-react-privy';
+    useConnectModal,
+    useAccountModal,
+    useGetB3trBalance,
+} from '@vechain/vechain-kit';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
-import { Interface } from 'ethers';
+import { Interface, ethers } from 'ethers';
 
 const HomePage = (): ReactElement => {
     const { toggleColorMode, colorMode } = useColorMode();
@@ -32,6 +36,12 @@ const HomePage = (): ReactElement => {
 
     const { connection, selectedAccount, connectedWallet, smartAccount } =
         useWallet();
+
+    const { open } = useConnectModal();
+    const { open: openAccountModal } = useAccountModal();
+
+    const { data: b3trBalance, isLoading: b3trBalanceLoading } =
+        useGetB3trBalance(smartAccount.address);
 
     // A dummy tx sending 0 b3tr tokens
     const clauses = useMemo(() => {
@@ -93,10 +103,10 @@ const HomePage = (): ReactElement => {
 
     if (!connection.isConnected) {
         return (
-            <Container>
-                <HStack justifyContent={'center'}>
-                    <WalletButton />
-                </HStack>
+            <Container justifyContent={'center'}>
+                <VStack>
+                    <Button onClick={open}>Login</Button>
+                </VStack>
             </Container>
         );
     }
@@ -132,6 +142,14 @@ const HomePage = (): ReactElement => {
                             <Text>
                                 Deployed: {smartAccount.isDeployed.toString()}
                             </Text>
+                            {b3trBalanceLoading ? (
+                                <Spinner />
+                            ) : (
+                                <Text>
+                                    B3TR Balance:{' '}
+                                    {ethers.formatEther(b3trBalance ?? '0')}
+                                </Text>
+                            )}
                         </Box>
                     )}
 
@@ -154,7 +172,17 @@ const HomePage = (): ReactElement => {
                             <b>Test actions</b>
                         </Heading>
                         <HStack mt={4} spacing={4}>
-                            <HStack mt={4} spacing={4}>
+                            <Grid
+                                mt={4}
+                                templateColumns={[
+                                    'repeat(2, 1fr)',
+                                    'repeat(3, 1fr)',
+                                ]}
+                                gap={4}
+                            >
+                                <Button onClick={openAccountModal}>
+                                    Account Modal
+                                </Button>
                                 <Button
                                     onClick={handleTransactionWithToast}
                                     isLoading={isTransactionPending}
@@ -169,7 +197,7 @@ const HomePage = (): ReactElement => {
                                 >
                                     Tx with modal
                                 </Button>
-                            </HStack>
+                            </Grid>
                         </HStack>
                     </Box>
                 </VStack>

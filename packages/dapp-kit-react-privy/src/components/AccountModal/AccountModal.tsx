@@ -7,25 +7,23 @@ import {
     ModalOverlay,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { useWallet } from '../../hooks';
+import { useWallet } from '@/hooks';
 import { useState, useEffect } from 'react';
 import {
-    MainContent,
+    AccountMainContent,
     WalletSettingsContent,
     SmartAccountContent,
+    AccountsListContent,
+    SendTokenContent,
+    SendTokenSummaryContent,
+    ReceiveTokenContent,
 } from './Contents';
-import { AccountsContent } from './Contents';
+import { AccountModalContentTypes } from './Types/Types';
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
 };
-
-export type AccountModalContentTypes =
-    | 'main'
-    | 'settings'
-    | 'smart-account'
-    | 'accounts';
 
 export const AccountModal = ({ isOpen, onClose }: Props) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
@@ -53,10 +51,17 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
     }, [isOpen]);
 
     const renderContent = () => {
+        if (
+            typeof currentContent === 'object' &&
+            currentContent.type === 'send-token-summary'
+        ) {
+            return <SendTokenSummaryContent {...currentContent.props} />;
+        }
+
         switch (currentContent) {
             case 'main':
                 return (
-                    <MainContent
+                    <AccountMainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                         wallet={selectedAccount}
@@ -77,10 +82,23 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 );
             case 'accounts':
                 return (
-                    <AccountsContent
+                    <AccountsListContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                         wallet={selectedAccount}
+                    />
+                );
+            case 'send-token':
+                return (
+                    <SendTokenContent
+                        setCurrentContent={setCurrentContent}
+                        onSend={() => {}}
+                    />
+                );
+            case 'receive-token':
+                return (
+                    <ReceiveTokenContent
+                        setCurrentContent={setCurrentContent}
                     />
                 );
         }
@@ -92,10 +110,13 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             isOpen={isOpen}
             onClose={onClose}
             isCentered
-            size="sm"
+            size="md"
             scrollBehavior="inside"
+            returnFocusOnClose={true}
+            blockScrollOnMount={false}
             trapFocus={false}
             autoFocus={false}
+            closeOnOverlayClick={true}
         >
             <ModalOverlay />
 

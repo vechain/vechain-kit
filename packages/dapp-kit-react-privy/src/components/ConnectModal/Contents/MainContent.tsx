@@ -18,20 +18,21 @@ import {
     useLoginWithOAuth,
     useLoginWithPasskey,
 } from '@privy-io/react-auth';
-import { useDAppKitPrivyConfig } from '../../../providers/DAppKitPrivyProvider';
-import { FadeInViewFromBottom, VersionFooter } from '../../common';
+import { useDAppKitPrivyConfig } from '@/providers';
+import { FadeInViewFromBottom, VersionFooter } from '@/components/common';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { FcGoogle } from 'react-icons/fc';
-import { VechainLogo } from '../../../assets';
+import { VechainLogo } from '@/assets';
 import { CiCircleMore } from 'react-icons/ci';
 import { ConnectModalContents } from '../ConnectModal';
-import { IoIosApps, IoIosFingerPrint } from 'react-icons/io';
+import { IoIosFingerPrint } from 'react-icons/io';
+import { IoPlanet } from 'react-icons/io5';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import { useEffect } from 'react';
-import { useWallet } from '../../../hooks';
+import { useWallet } from '@/hooks';
 // import { EmailLoginButton } from '../Components/EmailLoginButton';
-import { ConnectionButton } from '../Components';
+import { ConnectionButton } from '@/components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -169,6 +170,12 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
                         <ConnectionButton
                             isDark={isDark}
+                            onClick={handleLoginWithPasskey}
+                            icon={IoIosFingerPrint}
+                        />
+
+                        <ConnectionButton
+                            isDark={isDark}
                             onClick={openDappKitModal}
                             icon={HiOutlineWallet}
                         />
@@ -178,13 +185,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                             onClick={() => {
                                 setCurrentContent('ecosystem');
                             }}
-                            icon={IoIosApps}
-                        />
-
-                        <ConnectionButton
-                            isDark={isDark}
-                            onClick={handleLoginWithPasskey}
-                            icon={IoIosFingerPrint}
+                            icon={IoPlanet}
                         />
 
                         <ConnectionButton

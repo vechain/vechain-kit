@@ -3,7 +3,7 @@
 import { usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { useSmartAccount } from './useSmartAccount';
-import { useCachedVeChainDomain } from './useCachedVechainDomain';
+import { useCachedVeChainDomain } from '@/hooks';
 import { getPicassoImage } from '../utils';
 
 export type Wallet = {
@@ -51,6 +51,7 @@ export type UseWalletReturnType = {
         isConnectedWithCrossAppPrivy: boolean;
         isLoadingPrivyConnection: boolean;
         source: ConnectionSource;
+        isInAppBrowser: boolean;
     };
 
     // Disconnect function
@@ -173,6 +174,8 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithCrossAppPrivy: isCrossAppPrivyAccount,
             isLoadingPrivyConnection: !ready,
             source: connectionSource,
+            isInAppBrowser:
+                (window.vechain && window.vechain.isInAppBrowser) ?? false,
         },
         disconnect,
     };

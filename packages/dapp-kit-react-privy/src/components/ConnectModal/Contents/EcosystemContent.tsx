@@ -1,5 +1,6 @@
 import {
     Button,
+    Icon,
     Image,
     ModalBody,
     ModalCloseButton,
@@ -11,11 +12,11 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { useCrossAppAccounts } from '@privy-io/react-auth';
-import { FadeInViewFromBottom } from '../../common';
-import { ModalBackButton } from '../../common';
+import { FadeInViewFromBottom, ModalBackButton } from '@/components/common';
 import { ConnectModalContents } from '../ConnectModal';
-import { useDAppKitPrivyConfig } from '../../../providers';
-import { useFetchAppInfo } from '../../../hooks/useFetchAppInfo';
+import { useDAppKitPrivyConfig } from '@/providers';
+import { useFetchAppInfo } from '@/hooks';
+import { GiSolarSystem } from 'react-icons/gi';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -55,14 +56,17 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
     return (
         <FadeInViewFromBottom>
             <ModalHeader
-                fontSize={'sm'}
-                fontWeight={'200'}
+                fontSize={'md'}
+                fontWeight={'500'}
                 textAlign={'center'}
                 color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 justifyContent={'center'}
                 alignItems={'center'}
+                display={'flex'}
+                gap={2}
             >
-                Select wallet
+                <Icon as={GiSolarSystem} size={'20px'} />
+                Ecosystem
             </ModalHeader>
 
             <ModalBackButton onClick={() => setCurrentContent('main')} />

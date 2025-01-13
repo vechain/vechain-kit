@@ -64,7 +64,7 @@ export const EmailCodeVerificationModal = ({
             isOpen={isOpen}
             onClose={onClose}
             isCentered
-            size={'sm'}
+            size={'md'}
             trapFocus={false}
         >
             <ModalOverlay />

@@ -3,3 +3,4 @@ export * from './ModalBackButton';
 export * from './AddressDisplay';
 export * from './VersionFooter';
 export * from './StickyHeaderContainer';
+export * from './StickyFooterContainer';

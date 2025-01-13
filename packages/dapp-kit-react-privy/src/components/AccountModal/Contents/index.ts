@@ -1,4 +1,3 @@
-export * from './AccountsContent';
-export * from './WalletSettingsContent';
-export * from './SmartAccountContent';
-export * from './MainContent';
+export * from './Account';
+export * from './SendToken';
+export * from './Receive';

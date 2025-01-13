@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext } from 'react';
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useState,
+    useCallback,
+} from 'react';
 import {
     PrivyProvider as BasePrivyProvider,
     WalletListEntry,
@@ -8,6 +14,8 @@ import { SmartAccountProvider } from '../hooks';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '../utils';
+import { ConnectModal, AccountModal } from '../components';
+import { EnsureQueryClient } from './EnsureQueryClient';
 
 type Props = {
     children: ReactNode;
@@ -39,6 +47,14 @@ type DAppKitPrivyConfig = {
     privyConfig: Props['privyConfig'];
     feeDelegationConfig: Props['feeDelegationConfig'];
     dappKitConfig: Props['dappKitConfig'];
+    // Connect Modal
+    openConnectModal: () => void;
+    closeConnectModal: () => void;
+    isConnectModalOpen: boolean;
+    // Account Modal
+    openAccountModal: () => void;
+    closeAccountModal: () => void;
+    isAccountModalOpen: boolean;
 };
 
 /**
@@ -69,7 +85,21 @@ export const DAppKitPrivyProvider = ({
     privyConfig,
     feeDelegationConfig,
     dappKitConfig,
-}: Props) => {
+}: Omit<Props, 'queryClient'>) => {
+    const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+    const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
+    const closeConnectModal = useCallback(
+        () => setIsConnectModalOpen(false),
+        [],
+    );
+
+    const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+    const openAccountModal = useCallback(() => setIsAccountModalOpen(true), []);
+    const closeAccountModal = useCallback(
+        () => setIsAccountModalOpen(false),
+        [],
+    );
+
     const loginMethods = [
         ...privyConfig.loginMethods,
         ...(privyConfig.ecosystemAppsID ?? []).map((appID) => `privy:${appID}`),
@@ -89,51 +119,72 @@ export const DAppKitPrivyProvider = ({
     }
 
     return (
-        <DAppKitPrivyContext.Provider
-            value={{ privyConfig, feeDelegationConfig, dappKitConfig }}
-        >
-            <ChakraProvider theme={Theme}>
-                <BasePrivyProvider
-                    appId={privyConfig.appId}
-                    clientId={privyConfig.clientId}
-                    config={{
-                        loginMethodsAndOrder: {
-                            // @ts-ignore
-                            primary: loginMethods,
-                        },
-                        appearance: privyConfig.appearance,
-                        embeddedWallets: {
-                            createOnLogin:
-                                privyConfig.embeddedWallets?.createOnLogin ??
-                                'all-users',
-                        },
-                    }}
-                    allowPasskeyLinking={privyConfig.allowPasskeyLinking}
-                >
-                    <DAppKitProvider
-                        nodeUrl={dappKitConfig.nodeUrl}
-                        genesis={dappKitConfig.genesis}
-                        usePersistence
-                        walletConnectOptions={
-                            dappKitConfig.walletConnectOptions
-                        }
-                        themeMode={dappKitConfig.themeMode}
-                        themeVariables={{
-                            '--vdk-modal-z-index': '1000000',
+        <EnsureQueryClient>
+            <DAppKitPrivyContext.Provider
+                value={{
+                    privyConfig,
+                    feeDelegationConfig,
+                    dappKitConfig,
+                    openConnectModal,
+                    closeConnectModal,
+                    isConnectModalOpen,
+                    openAccountModal,
+                    closeAccountModal,
+                    isAccountModalOpen,
+                }}
+            >
+                <ChakraProvider theme={Theme}>
+                    <BasePrivyProvider
+                        appId={privyConfig.appId}
+                        clientId={privyConfig.clientId}
+                        config={{
+                            loginMethodsAndOrder: {
+                                // @ts-ignore
+                                primary: loginMethods,
+                            },
+                            appearance: privyConfig.appearance,
+                            embeddedWallets: {
+                                createOnLogin:
+                                    privyConfig.embeddedWallets
+                                        ?.createOnLogin ?? 'all-users',
+                            },
                         }}
+                        allowPasskeyLinking={privyConfig.allowPasskeyLinking}
                     >
-                        <SmartAccountProvider
+                        <DAppKitProvider
                             nodeUrl={dappKitConfig.nodeUrl}
-                            delegatorUrl={feeDelegationConfig.delegatorUrl}
-                            delegateAllTransactions={
-                                feeDelegationConfig.delegateAllTransactions
+                            genesis={dappKitConfig.genesis}
+                            usePersistence
+                            walletConnectOptions={
+                                dappKitConfig.walletConnectOptions
                             }
+                            themeMode={dappKitConfig.themeMode}
+                            themeVariables={{
+                                '--vdk-modal-z-index': '1000000',
+                            }}
                         >
-                            {children}
-                        </SmartAccountProvider>
-                    </DAppKitProvider>
-                </BasePrivyProvider>
-            </ChakraProvider>
-        </DAppKitPrivyContext.Provider>
+                            <SmartAccountProvider
+                                nodeUrl={dappKitConfig.nodeUrl}
+                                delegatorUrl={feeDelegationConfig.delegatorUrl}
+                                delegateAllTransactions={
+                                    feeDelegationConfig.delegateAllTransactions
+                                }
+                            >
+                                {children}
+                                <ConnectModal
+                                    isOpen={isConnectModalOpen}
+                                    onClose={closeConnectModal}
+                                    logo={privyConfig.appearance.logo}
+                                />
+                                <AccountModal
+                                    isOpen={isAccountModalOpen}
+                                    onClose={closeAccountModal}
+                                />
+                            </SmartAccountProvider>
+                        </DAppKitProvider>
+                    </BasePrivyProvider>
+                </ChakraProvider>
+            </DAppKitPrivyContext.Provider>
+        </EnsureQueryClient>
     );
 };

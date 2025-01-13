@@ -2,7 +2,7 @@
 
 import { Text, Icon, HStack, Button } from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
-import { Wallet } from '../../../hooks';
+import { Wallet, useWallet } from '../../../hooks';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useState } from 'react';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
@@ -15,6 +15,7 @@ type Props = {
 
 export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
     const [copied, setCopied] = useState(false);
+    const { connection } = useWallet();
 
     const copyToClipboard = async (textToCopy: string) => {
         await navigator.clipboard.writeText(textToCopy);
@@ -39,7 +40,13 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
                         {wallet.domain || humanAddress(wallet.address, 6, 4)}
                     </Text>
 
-                    <Icon boxSize={5} as={IoIosArrowDown} cursor="pointer" />
+                    {connection.isConnectedWithPrivy && (
+                        <Icon
+                            boxSize={5}
+                            as={IoIosArrowDown}
+                            cursor="pointer"
+                        />
+                    )}
                 </HStack>
             </Button>
 

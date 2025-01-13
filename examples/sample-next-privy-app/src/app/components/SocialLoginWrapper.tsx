@@ -4,8 +4,7 @@ import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 
 const DAppKitPrivyProvider = dynamic(
-    async () =>
-        (await import('@vechain/dapp-kit-react-privy')).DAppKitPrivyProvider,
+    async () => (await import('@vechain/vechain-kit')).DAppKitPrivyProvider,
     {
         ssr: false,
     },
@@ -36,7 +35,7 @@ export function SocialLoginWrapper({ children }: Props) {
                 ecosystemAppsID: [
                     'cm4wxxujb022fyujl7g0thb21', //vechain
                     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
-                    'clxdoatq601h35inz6qykgmai',
+                    'cm153hrup0817axti38avlfyg', //greencart
                 ],
                 allowPasskeyLinking: true,
             }}

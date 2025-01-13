@@ -1,5 +1,5 @@
 {
-    "name": "sample-next-privy-app",
+    "name": "sample-next-vechain-kit-app",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -11,9 +11,7 @@
         "@chakra-ui/react": "2.8.2",
         "@emotion/react": "^11.13.5",
         "@emotion/styled": "^11.13.5",
-        "@vechain/dapp-kit": "*",
-        "@vechain/dapp-kit-react": "*",
-        "@vechain/dapp-kit-react-privy": "*",
+        "@vechain/vechain-kit": "*",
         "next": ">=14.2.15",
         "react": "^18",
         "react-dom": "^18"
