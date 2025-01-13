@@ -17,7 +17,7 @@ export const AssetsSection = () => {
     const tabTextColor = useColorModeValue('blackAlpha.400', 'whiteAlpha.400');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
-    const handleTabChange = () => {
+    const scrollToContent = () => {
         setTimeout(() => {
             if (tabPanelsRef.current) {
                 tabPanelsRef.current.scrollIntoView({
@@ -30,7 +30,7 @@ export const AssetsSection = () => {
 
     return (
         <VStack w="full" spacing={3} align="stretch">
-            <Tabs variant="soft-rounded" size="sm" onChange={handleTabChange}>
+            <Tabs variant="soft-rounded" size="sm" onChange={scrollToContent}>
                 <HStack justify="space-between" align="center">
                     <TabList
                         bg="blackAlpha.300"
@@ -46,6 +46,7 @@ export const AssetsSection = () => {
                                 color: 'black',
                             }}
                             flex={1}
+                            onClick={scrollToContent}
                         >
                             Assets
                         </Tab>
