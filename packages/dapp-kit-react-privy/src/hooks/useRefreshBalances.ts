@@ -4,7 +4,7 @@ import {
     getAccountBalanceQueryKey,
     getB3trBalanceQueryKey,
     getVot3BalanceQueryKey,
-    getVeB3trBalanceQueryKey,
+    getVeDelegateBalanceQueryKey,
     getTokenUsdPriceQueryKey,
 } from './api';
 
@@ -27,7 +27,7 @@ export const useRefreshBalances = () => {
                 queryKey: getVot3BalanceQueryKey(address),
             }),
             queryClient.cancelQueries({
-                queryKey: getVeB3trBalanceQueryKey(address),
+                queryKey: getVeDelegateBalanceQueryKey(address),
             }),
             queryClient.cancelQueries({
                 queryKey: getTokenUsdPriceQueryKey('VET'),
@@ -52,7 +52,7 @@ export const useRefreshBalances = () => {
                 queryKey: getVot3BalanceQueryKey(address),
             }),
             queryClient.refetchQueries({
-                queryKey: getVeB3trBalanceQueryKey(address),
+                queryKey: getVeDelegateBalanceQueryKey(address),
             }),
             queryClient.refetchQueries({
                 queryKey: getTokenUsdPriceQueryKey('VET'),

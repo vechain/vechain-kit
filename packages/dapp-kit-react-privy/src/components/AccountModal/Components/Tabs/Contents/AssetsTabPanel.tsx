@@ -42,11 +42,11 @@ export const AssetsTabPanel = () => {
                     usdValue={balances.vot3 * prices.b3tr}
                 />
             )}
-            {balances.veB3tr > 0 && (
+            {balances.veDelegate > 0 && (
                 <AssetRow
-                    symbol="veB3TR"
-                    amount={balances.veB3tr}
-                    usdValue={balances.veB3tr * prices.b3tr}
+                    symbol="veDelegate"
+                    amount={balances.veDelegate}
+                    usdValue={balances.veDelegate * prices.b3tr}
                 />
             )}
             <HStack justify="flex-end" px={2}>

@@ -1,1 +1,1 @@
-export * from './useGetVeB3trBalance';
+export * from './useGetVeDelegateBalance';

@@ -2,7 +2,7 @@ import { useAccountBalance } from './';
 import {
     useGetB3trBalance,
     useGetVot3Balance,
-    useGetVeB3trBalance,
+    useGetVeDelegateBalance,
     useGetTokenUsdPrice,
 } from './';
 import { ethers } from 'ethers';
@@ -28,8 +28,8 @@ export const useBalances = () => {
         selectedAccount?.address,
     );
 
-    const { data: veB3trBalance, isLoading: veB3trLoading } =
-        useGetVeB3trBalance(selectedAccount?.address);
+    const { data: veDelegateBalance, isLoading: veDelegateLoading } =
+        useGetVeDelegateBalance(selectedAccount?.address);
 
     const isLoading =
         vetLoading ||
@@ -37,7 +37,7 @@ export const useBalances = () => {
         vot3Loading ||
         vetUsdPriceLoading ||
         b3trUsdPriceLoading ||
-        veB3trLoading ||
+        veDelegateLoading ||
         vthoUsdPriceLoading;
 
     const balances = {
@@ -45,7 +45,7 @@ export const useBalances = () => {
         vtho: Number(vetData?.energy || 0),
         b3tr: Number(ethers.formatEther(b3trBalance || '0')),
         vot3: Number(ethers.formatEther(vot3Balance || '0')),
-        veB3tr: Number(ethers.formatEther(veB3trBalance || '0')),
+        veDelegate: Number(ethers.formatEther(veDelegateBalance || '0')),
     };
 
     const prices = {
@@ -59,7 +59,7 @@ export const useBalances = () => {
         balances.b3tr * prices.b3tr +
         balances.vot3 * prices.b3tr +
         balances.vtho * prices.vtho +
-        balances.veB3tr * prices.b3tr;
+        balances.veDelegate * prices.b3tr;
 
     return {
         isLoading,

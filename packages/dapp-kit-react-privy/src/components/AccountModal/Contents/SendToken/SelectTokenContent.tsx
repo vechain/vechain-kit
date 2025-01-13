@@ -86,10 +86,10 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
             price: prices.b3tr,
         },
         {
-            symbol: 'veB3TR',
-            balance: balances.veB3tr.toString(),
-            address: '0x420dFe6B7Bc605Ce61E9839c8c0E745870A6CDE0',
-            numericBalance: balances.veB3tr,
+            symbol: 'veDelegate',
+            balance: balances.veDelegate.toString(),
+            address: '0xD3f7b82Df5705D34f64C634d2dEf6B1cB3116950',
+            numericBalance: balances.veDelegate,
             price: prices.b3tr,
         },
     ];

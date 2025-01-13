@@ -7,13 +7,13 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
 });
 
-export const BalanceSection = () => {
+export const BalanceSection = ({ mb }: { mb?: number }) => {
     const { isLoading, totalBalance } = useBalances();
 
-    if (isLoading) return <Spinner mt={4} />;
+    if (isLoading) return <Spinner mt={4} mb={mb} />;
 
     return (
-        <VStack w="full" spacing={2} mt={4}>
+        <VStack w="full" spacing={2} mt={4} mb={mb}>
             <Heading textAlign="center" size={'2xl'} fontWeight={'500'}>
                 ${compactFormatter.format(totalBalance)}
             </Heading>

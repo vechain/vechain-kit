@@ -64,7 +64,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
 
             <Container maxW={'container.lg'}>
                 <ModalBody w={'full'}>
-                    <VStack w={'full'} spacing={5} overflow={'hidden'}>
+                    <VStack w={'full'} spacing={2} overflow={'hidden'}>
                         <AccountSelector
                             onClick={() => {
                                 if (connection.isConnectedWithPrivy) {
@@ -75,7 +75,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             }}
                             wallet={wallet}
                         />
-                        <BalanceSection />
+                        <BalanceSection mb={2} />
                         <QuickActionsSection
                             setCurrentContent={setCurrentContent}
                         />
