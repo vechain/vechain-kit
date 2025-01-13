@@ -7,9 +7,9 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { ModalAnimation } from '../Components/ModalAnimation';
 import { useSmartAccount } from '../../../hooks';
 import { EXPLORER_URL } from '../../../utils';
+import { FadeInViewFromBottom } from '@/components/common';
 
 export type LoadingModalContentProps = {
     title?: ReactNode;
@@ -25,7 +25,7 @@ export const LoadingModalContent = ({
     const { chainId } = useSmartAccount();
     const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
     return (
-        <ModalAnimation>
+        <FadeInViewFromBottom>
             <ModalCloseButton top={4} right={4} />
             <VStack align={'center'} p={6}>
                 <Heading size="md">{title}</Heading>
@@ -50,6 +50,6 @@ export const LoadingModalContent = ({
                     </Text>
                 )}
             </VStack>
-        </ModalAnimation>
+        </FadeInViewFromBottom>
     );
 };

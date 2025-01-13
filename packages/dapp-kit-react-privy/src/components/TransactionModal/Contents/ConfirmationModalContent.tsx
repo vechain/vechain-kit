@@ -1,6 +1,7 @@
 import { Heading, VStack, Text, Spinner } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useWallet } from '../../../hooks';
+import { FadeInViewFromBottom } from '@/components/common';
 
 export type ConfirmationModalContentProps = {
     title?: ReactNode;
@@ -11,16 +12,18 @@ export const ConfirmationModalContent = ({
 }: ConfirmationModalContentProps) => {
     const { connection } = useWallet();
     return (
-        <VStack align={'center'} p={6} gap={6}>
-            <Heading size="md">{title}</Heading>
+        <FadeInViewFromBottom>
+            <VStack align={'center'} p={6} gap={6}>
+                <Heading size="md">{title}</Heading>
 
-            <Spinner my={10} size="xl" />
+                <Spinner my={10} size="xl" />
 
-            <Text fontSize="sm" align={'center'}>
-                {connection.isConnectedWithPrivy
-                    ? 'Please do not close this window, it will take just a few seconds.'
-                    : 'Please confirm the transaction in your wallet.'}
-            </Text>
-        </VStack>
+                <Text fontSize="sm" align={'center'}>
+                    {connection.isConnectedWithPrivy
+                        ? 'Please do not close this window, it will take just a few seconds.'
+                        : 'Please confirm the transaction in your wallet.'}
+                </Text>
+            </VStack>
+        </FadeInViewFromBottom>
     );
 };

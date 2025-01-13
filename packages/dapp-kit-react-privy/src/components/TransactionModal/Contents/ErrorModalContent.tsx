@@ -8,11 +8,11 @@ import {
     Icon,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { ModalAnimation } from '../Components/ModalAnimation';
 import { motion } from 'framer-motion';
 import { useSmartAccount } from '../../../hooks';
 import { EXPLORER_URL } from '../../../utils';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import { FadeInViewFromBottom } from '@/components/common';
 
 export type ErrorModalContentProps = {
     title?: ReactNode;
@@ -35,7 +35,7 @@ export const ErrorModalContent = ({
     const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
 
     return (
-        <ModalAnimation>
+        <FadeInViewFromBottom>
             <ModalCloseButton top={4} right={4} />
             <VStack align={'center'} p={6} gap={0}>
                 <Heading size="md">{title}</Heading>
@@ -75,6 +75,6 @@ export const ErrorModalContent = ({
                     )}
                 </VStack>
             </VStack>
-        </ModalAnimation>
+        </FadeInViewFromBottom>
     );
 };
