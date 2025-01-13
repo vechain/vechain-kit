@@ -170,7 +170,9 @@ export const SendTokenSummaryContent = ({
 
                                             {!selectedAccount.domain && (
                                                 <Text fontWeight="medium">
-                                                    {selectedAccount.address}
+                                                    {humanAddress(
+                                                        selectedAccount.address,
+                                                    )}
                                                 </Text>
                                             )}
                                         </VStack>

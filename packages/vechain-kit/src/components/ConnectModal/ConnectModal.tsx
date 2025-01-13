@@ -1,15 +1,9 @@
 'use client';
 
-import {
-    Modal,
-    ModalContent,
-    ModalContentProps,
-    ModalOverlay,
-    useMediaQuery,
-} from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { EcosystemContent } from './Contents/EcosystemContent';
+import { BaseModal } from '@/components/common';
 
 type Props = {
     isOpen: boolean;
@@ -20,18 +14,6 @@ type Props = {
 export type ConnectModalContents = 'main' | 'ecosystem' | 'email-verification';
 
 export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
-    const [isDesktop] = useMediaQuery('(min-width: 768px)');
-    const _modalContentProps = isDesktop
-        ? {}
-        : {
-              position: 'fixed',
-              bottom: '0px',
-              mb: '0',
-              maxW: '2xl',
-              borderRadius: '24px 24px 0px 0px',
-              overflowY: 'scroll',
-              overflowX: 'hidden',
-          };
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContents>('main');
 
@@ -62,18 +44,8 @@ export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
     };
 
     return (
-        <Modal
-            motionPreset={isDesktop ? 'none' : 'slideInBottom'}
-            isOpen={isOpen}
-            onClose={onClose}
-            isCentered
-            size={'md'}
-            trapFocus={false}
-        >
-            <ModalOverlay />
-            <ModalContent {...(_modalContentProps as ModalContentProps)}>
-                {renderContent()}
-            </ModalContent>
-        </Modal>
+        <BaseModal isOpen={isOpen} onClose={onClose}>
+            {renderContent()}
+        </BaseModal>
     );
 };

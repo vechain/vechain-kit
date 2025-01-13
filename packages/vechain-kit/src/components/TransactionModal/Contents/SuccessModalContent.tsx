@@ -1,10 +1,14 @@
 import {
-    Heading,
     Text,
     VStack,
     ModalCloseButton,
     Link,
     Icon,
+    ModalHeader,
+    useColorMode,
+    ModalFooter,
+    Container,
+    ModalBody,
 } from '@chakra-ui/react';
 import { ShareButtons } from '../Components/ShareButtons';
 import { ReactNode } from 'react';
@@ -12,7 +16,10 @@ import { motion } from 'framer-motion';
 import { useSmartAccount } from '../../../hooks';
 import { EXPLORER_URL } from '../../../utils';
 import { FcCheckmark } from 'react-icons/fc';
-import { FadeInViewFromBottom } from '@/components/common';
+import {
+    FadeInViewFromBottom,
+    StickyHeaderContainer,
+} from '@/components/common';
 
 export type SuccessModalContentProps = {
     title?: ReactNode;
@@ -39,6 +46,9 @@ export const SuccessModalContent = ({
     txId,
     socialDescriptionEncoded,
 }: SuccessModalContentProps) => {
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
+
     const { chainId } = useSmartAccount();
     const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
 
@@ -47,39 +57,60 @@ export const SuccessModalContent = ({
 
     return (
         <FadeInViewFromBottom>
-            <ModalCloseButton top={4} right={4} />
-            <VStack align={'center'} p={6}>
-                <Heading size="md">{title}</Heading>
-                <motion.div
-                    transition={{
-                        duration: 4,
-                        ease: 'easeInOut',
-                        repeat: Infinity,
-                    }}
-                    animate={{
-                        scale: [1, 1.1, 1],
-                    }}
+            <StickyHeaderContainer>
+                <ModalHeader
+                    fontSize={'md'}
+                    fontWeight={'500'}
+                    textAlign={'center'}
+                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    <Icon as={FcCheckmark} fontSize={'100px'} />
-                </motion.div>
-                {showExplorerButton && txId && (
-                    <Link
-                        href={`${explorerUrl}/${txId}`}
-                        isExternal
-                        color="gray.500"
-                        fontSize={'14px'}
-                        textDecoration={'underline'}
-                    >
-                        {'View it on the explorer'}
-                    </Link>
-                )}
-                {showSocialButtons && (
-                    <VStack>
-                        <Text fontSize="sm">{'Share your transaction'}</Text>
-                        <ShareButtons descriptionEncoded={socialDescription} />
+                    {title}
+                </ModalHeader>
+                <ModalCloseButton />
+            </StickyHeaderContainer>
+            <Container maxW={'container.lg'}>
+                <ModalBody>
+                    <VStack align={'center'} p={6}>
+                        <motion.div
+                            transition={{
+                                duration: 4,
+                                ease: 'easeInOut',
+                                repeat: Infinity,
+                            }}
+                            animate={{
+                                scale: [1, 1.1, 1],
+                            }}
+                        >
+                            <Icon as={FcCheckmark} fontSize={'100px'} />
+                        </motion.div>
+
+                        {showSocialButtons && (
+                            <VStack>
+                                <Text fontSize="sm">
+                                    {'Share your transaction'}
+                                </Text>
+                                <ShareButtons
+                                    descriptionEncoded={socialDescription}
+                                />
+                            </VStack>
+                        )}
                     </VStack>
-                )}
-            </VStack>
+                </ModalBody>
+
+                <ModalFooter justifyContent={'center'}>
+                    {showExplorerButton && txId && (
+                        <Link
+                            href={`${explorerUrl}/${txId}`}
+                            isExternal
+                            color="gray.500"
+                            fontSize={'14px'}
+                            textDecoration={'underline'}
+                        >
+                            {'View it on the explorer'}
+                        </Link>
+                    )}
+                </ModalFooter>
+            </Container>
         </FadeInViewFromBottom>
     );
 };

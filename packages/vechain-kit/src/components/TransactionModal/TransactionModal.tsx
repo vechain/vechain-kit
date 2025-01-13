@@ -5,13 +5,7 @@ import {
     LoadingModalContent,
     SuccessModalContent,
 } from './Contents';
-import {
-    Modal,
-    ModalContentProps,
-    ModalOverlay,
-    useMediaQuery,
-} from '@chakra-ui/react';
-import { CustomModalContent } from './Contents/CustomModalContent';
+import { BaseModal } from '../common/BaseModal';
 
 export type TransactionModalProps = {
     isOpen: boolean;
@@ -46,17 +40,6 @@ export const TransactionModal = ({
     showExplorerButton,
     txId,
 }: TransactionModalProps) => {
-    const [isDesktop] = useMediaQuery('(min-width: 768px)');
-    const _modalContentProps = isDesktop
-        ? {}
-        : {
-              position: 'fixed',
-              bottom: '0',
-              mb: '0',
-              maxW: '2xl',
-              borderRadius: '24px 24px 0px 0px',
-          };
-
     const modalContent = useMemo(() => {
         if (status === 'pending')
             return <ConfirmationModalContent title={confirmationTitle} />;
@@ -104,21 +87,18 @@ export const TransactionModal = ({
         showSocialButtons,
         socialDescriptionEncoded,
     ]);
+
     if (!modalContent) return null;
 
     return (
-        <Modal
+        <BaseModal
             isOpen={isOpen}
             onClose={onClose}
+            size="sm"
             trapFocus={false}
             closeOnOverlayClick={status !== 'pending'}
-            isCentered={true}
-            size="sm"
         >
-            <ModalOverlay />
-            <CustomModalContent {...(_modalContentProps as ModalContentProps)}>
-                {modalContent}
-            </CustomModalContent>
-        </Modal>
+            {modalContent}
+        </BaseModal>
     );
 };

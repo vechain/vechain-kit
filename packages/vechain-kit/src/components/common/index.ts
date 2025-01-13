@@ -4,3 +4,4 @@ export * from './AddressDisplay';
 export * from './VersionFooter';
 export * from './StickyHeaderContainer';
 export * from './StickyFooterContainer';
+export * from './BaseModal';
