@@ -1,8 +1,7 @@
 import { HStack, Icon, Text, Button, VStack } from '@chakra-ui/react';
 import { IoRefresh } from 'react-icons/io5';
-import { useBalances } from '../../../../../hooks';
+import { useBalances, useRefreshBalances } from '@/hooks';
 import { motion } from 'framer-motion';
-import { useRefreshBalances } from '../../../../../hooks/useRefreshBalances';
 import { AssetRow } from './AssetRow';
 
 const MotionVStack = motion(VStack);
@@ -56,13 +55,11 @@ export const AssetsTabPanel = () => {
                     size="sm"
                     variant="link"
                     onClick={() => refresh()}
+                    leftIcon={<Icon as={IoRefresh} />}
                 >
-                    <HStack spacing={2}>
-                        <Icon as={IoRefresh} />
-                        <Text fontSize="sm" fontWeight="bold">
-                            Refresh
-                        </Text>
-                    </HStack>
+                    <Text fontSize="sm" fontWeight="bold">
+                        Refresh
+                    </Text>
                 </Button>
             </HStack>
         </MotionVStack>
