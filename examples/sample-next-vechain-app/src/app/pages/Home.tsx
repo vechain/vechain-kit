@@ -112,19 +112,8 @@ export default function Home(): ReactElement {
     }
 
     return (
-        <Container>
-            <HStack justifyContent={'space-between'}>
-                <WalletButton />
-
-                <Button
-                    onClick={() => {
-                        toggleDAppKitPrivyColorMode();
-                        toggleColorMode();
-                    }}
-                >
-                    {colorMode === 'dark' ? 'Light' : 'Dark'}
-                </Button>
-            </HStack>
+        <Container maxW="container.md" justifyContent={'center'}>
+            <WalletButton />
 
             <Stack
                 mt={10}
@@ -169,7 +158,7 @@ export default function Home(): ReactElement {
 
                     <Box mt={4}>
                         <Heading size={'md'}>
-                            <b>Test actions</b>
+                            <b>Test</b>
                         </Heading>
                         <HStack mt={4} spacing={4}>
                             <Grid
@@ -180,6 +169,14 @@ export default function Home(): ReactElement {
                                 ]}
                                 gap={4}
                             >
+                                <Button
+                                    onClick={() => {
+                                        toggleDAppKitPrivyColorMode();
+                                        toggleColorMode();
+                                    }}
+                                >
+                                    {colorMode === 'dark' ? 'Light' : 'Dark'}
+                                </Button>
                                 <Button onClick={openAccountModal}>
                                     Account Modal
                                 </Button>
