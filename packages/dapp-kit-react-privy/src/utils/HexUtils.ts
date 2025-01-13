@@ -62,6 +62,7 @@ export const compare = (hex1: string, hex2: string): boolean => {
             removePrefix(hex1).toLowerCase() ===
             removePrefix(hex2).toLowerCase()
         );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
         return false;
     }
