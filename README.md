@@ -92,16 +92,20 @@ yarn test:e2e:headless
 
 ## Publishing
 
+1. Prepare the release, this will check out the release branch, install dependencies, build packages, test and update the package versions
+
 ```bash
-# prepare the release, this will check out the release branch, install dependencies, build packages, test and update the package versions
 yarn prepare:release X.Y.Z
 ```
 
-Create the PR for the release branch `vX.Y.Z`.
+This will create a release branch called `vX.Y.Z` and update the package versions in the `package.json` files.
 
-When the PR is merged, create the release on github called `X.Y.Z`, it will automatically tag the commit with the version `X.Y.Z`.
+2. Create the PR for the release branch `vX.Y.Z`.
+
+3. When the PR is merged, create the release on github called `X.Y.Z`, it will automatically tag the commit with the version `X.Y.Z`.
+
+4. Publish the release
 
 ```bash
-# publish the release
 yarn publish:release X.Y.Z
 ```
