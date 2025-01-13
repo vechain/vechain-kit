@@ -29,7 +29,7 @@ import {
 import { b3trAbi, b3trMainnetAddress } from '../constants';
 import { Interface, ethers } from 'ethers';
 
-const HomePage = (): ReactElement => {
+export default function Home(): ReactElement {
     const { toggleColorMode, colorMode } = useColorMode();
     const { toggleColorMode: toggleDAppKitPrivyColorMode } =
         useDAppKitPrivyColorMode();
@@ -223,6 +223,4 @@ const HomePage = (): ReactElement => {
             />
         </Container>
     );
-};
-
-export default HomePage;
+}

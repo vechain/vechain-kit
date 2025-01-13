@@ -4,9 +4,9 @@ import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
 
-const SocialLoginWrapper = dynamic(
+const VechainKitProvider = dynamic(
     async () =>
-        (await import('./components/SocialLoginWrapper')).SocialLoginWrapper,
+        (await import('./providers/VechainKitProvider')).VechainKitProvider,
     {
         ssr: false,
     },
@@ -27,8 +27,10 @@ export default function RootLayout({
                 <title>Privy Next JS</title>
             </head>
             <body>
+                {/* Chakra UI Provider */}
                 <ChakraProvider>
-                    <SocialLoginWrapper>{children}</SocialLoginWrapper>
+                    {/* VechainKit Provider */}
+                    <VechainKitProvider>{children}</VechainKitProvider>
                 </ChakraProvider>
             </body>
         </html>

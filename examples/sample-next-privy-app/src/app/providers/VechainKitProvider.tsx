@@ -3,7 +3,11 @@
 import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 
-const DAppKitPrivyProvider = dynamic(
+// Dynamic import is used here for several reasons:
+// 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
+// 2. Code splitting - this component will only be loaded when needed, reducing initial bundle size
+// 3. The 'ssr: false' option ensures this component is only rendered on the client side
+const VeChainKit = dynamic(
     async () => (await import('@vechain/vechain-kit')).DAppKitPrivyProvider,
     {
         ssr: false,
@@ -14,10 +18,10 @@ interface Props {
     children: React.ReactNode;
 }
 
-export function SocialLoginWrapper({ children }: Props) {
+export function VechainKitProvider({ children }: Props) {
     const { colorMode } = useColorMode();
     return (
-        <DAppKitPrivyProvider
+        <VeChainKit
             privyConfig={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
@@ -88,6 +92,6 @@ export function SocialLoginWrapper({ children }: Props) {
             }}
         >
             {children}
-        </DAppKitPrivyProvider>
+        </VeChainKit>
     );
 }
