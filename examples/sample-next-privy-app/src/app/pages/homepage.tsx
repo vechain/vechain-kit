@@ -25,7 +25,7 @@ import {
     useConnectModal,
     useAccountModal,
     useGetB3trBalance,
-} from '@vechain/dapp-kit-react-privy';
+} from '@vechain/vechain-kit';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
 import { Interface, ethers } from 'ethers';
 

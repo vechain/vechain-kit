@@ -4,8 +4,7 @@ import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 
 const DAppKitPrivyProvider = dynamic(
-    async () =>
-        (await import('@vechain/dapp-kit-react-privy')).DAppKitPrivyProvider,
+    async () => (await import('@vechain/vechain-kit')).DAppKitPrivyProvider,
     {
         ssr: false,
     },

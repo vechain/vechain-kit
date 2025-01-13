@@ -4530,7 +4530,7 @@
     randombytes "^2.1.0"
     thor-devkit "^2.0.5"
 
-"@vechain/dapp-kit-react@*":
+"@vechain/dapp-kit-react@1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@vechain/dapp-kit-react/-/dapp-kit-react-1.3.0.tgz#71ae106bf62e74c6c0499b811c38e003336e110d"
   integrity sha512-k3vqUZE7gKyXHH1EaiJx0GlrFurTrk21wwmpApI7Akl+hwcWBgkuJIqdGjViwh7ifEJN+N/4GA49Du6bHyJeFQ==

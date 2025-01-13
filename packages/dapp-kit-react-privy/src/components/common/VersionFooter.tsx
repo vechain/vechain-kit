@@ -1,5 +1,4 @@
 import { HStack, Link, StackProps, useColorMode } from '@chakra-ui/react';
-import React from 'react';
 import { VechainLogoHorizontal } from '../../assets';
 import packageJson from '../../../package.json';
 
@@ -23,7 +22,7 @@ export const VersionFooter = ({ ...props }: Props) => {
                 fontWeight={'800'}
                 opacity={0.4}
                 textAlign={'left'}
-                href={`https://github.com/vechain/vechain-dapp-kit/releases/tag/${packageJson.version}`}
+                href={`https://github.com/vechain/vechain-kit/releases/tag/${packageJson.version}`}
                 isExternal
             >
                 v{packageJson.version}
