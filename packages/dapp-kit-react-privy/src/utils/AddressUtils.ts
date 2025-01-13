@@ -21,6 +21,7 @@ export const compareAddresses = (
 
     try {
         return HexUtils.normalize(address1) === HexUtils.normalize(address2);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
         return false;
     }
@@ -51,6 +52,7 @@ export const isValidAddress = (addr: string | undefined | null): boolean => {
         if (typeof addr !== "string") return false;
         address.toChecksumed(HexUtils.addPrefix(addr));
         return true;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
         return false;
     }
