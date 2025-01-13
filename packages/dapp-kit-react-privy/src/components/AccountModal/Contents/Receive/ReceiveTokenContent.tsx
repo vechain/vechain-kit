@@ -63,7 +63,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                             Copy your address or scan this QR code
                         </Text>
 
-                        <Text fontSize="xs" textAlign="center" color="gray.500">
+                        <Text fontSize="xs" textAlign="center" opacity={0.5}>
                             This address only supports VeChain assets.
                         </Text>
                     </VStack>

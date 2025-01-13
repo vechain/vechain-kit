@@ -159,7 +159,7 @@ export const SendTokenSummaryContent = ({
 
                                                     <Text
                                                         fontSize="sm"
-                                                        color="gray.500"
+                                                        opacity={0.5}
                                                     >
                                                         {humanAddress(
                                                             selectedAccount.address,
@@ -201,7 +201,7 @@ export const SendTokenSummaryContent = ({
                                                     </Text>
                                                     <Text
                                                         fontSize="sm"
-                                                        color="gray.500"
+                                                        opacity={0.5}
                                                     >
                                                         {humanAddress(
                                                             resolvedAddress ||
@@ -236,7 +236,7 @@ export const SendTokenSummaryContent = ({
                                             )}{' '}
                                             {selectedToken.symbol}
                                         </Text>
-                                        <Text fontSize="sm" color="gray.500">
+                                        <Text fontSize="sm" opacity={0.5}>
                                             ≈ $
                                             {compactFormatter.format(
                                                 Number(amount) *

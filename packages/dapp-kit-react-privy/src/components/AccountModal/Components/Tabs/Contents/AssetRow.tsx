@@ -40,7 +40,7 @@ export const AssetRow = ({ symbol, amount, usdValue }: AssetRowProps) => (
         </HStack>
         <Text fontSize="sm">
             {compactFormatter.format(amount)}
-            <Text as="span" color="gray.500">
+            <Text as="span" opacity={0.5}>
                 {' '}
                 (${compactFormatter.format(usdValue)})
             </Text>

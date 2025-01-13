@@ -18,7 +18,7 @@ export const NFTsTabPanel = () => {
             <Icon
                 as={IoWalletOutline}
                 boxSize={12}
-                color="gray.500"
+                opacity={0.5}
                 p={2}
                 bg="whiteAlpha.100"
                 borderRadius="xl"
@@ -27,7 +27,7 @@ export const NFTsTabPanel = () => {
                 <Text fontSize="lg" fontWeight="500">
                     Coming soon
                 </Text>
-                <Text fontSize="sm" color="gray.500" textAlign="center">
+                <Text fontSize="sm" opacity={0.5} textAlign="center">
                     Stay tuned for our upcoming NFT feature
                 </Text>
             </VStack>
