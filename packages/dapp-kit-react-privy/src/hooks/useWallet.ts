@@ -51,6 +51,7 @@ export type UseWalletReturnType = {
         isConnectedWithCrossAppPrivy: boolean;
         isLoadingPrivyConnection: boolean;
         source: ConnectionSource;
+        isInAppBrowser: boolean;
     };
 
     // Disconnect function
@@ -173,6 +174,8 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithCrossAppPrivy: isCrossAppPrivyAccount,
             isLoadingPrivyConnection: !ready,
             source: connectionSource,
+            isInAppBrowser:
+                (window.vechain && window.vechain.isInAppBrowser) ?? false,
         },
         disconnect,
     };
