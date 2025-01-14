@@ -14,22 +14,17 @@ import {
 import { useCrossAppAccounts } from '@privy-io/react-auth';
 import {
     FadeInViewFromBottom,
-    ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
-import { ConnectModalContents } from '../ConnectModal';
 import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
 import { GiSolarSystem } from 'react-icons/gi';
 
 type Props = {
-    setCurrentContent: React.Dispatch<
-        React.SetStateAction<ConnectModalContents>
-    >;
     onClose: () => void;
 };
 
-export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
+export const EcosystemContent = ({ onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -73,7 +68,6 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
                     <Icon as={GiSolarSystem} size={'20px'} />
                     Ecosystem
                 </ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

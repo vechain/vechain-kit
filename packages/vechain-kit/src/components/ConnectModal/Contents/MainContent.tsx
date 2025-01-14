@@ -35,7 +35,7 @@ import { IoPlanet } from 'react-icons/io5';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import React, { useEffect } from 'react';
-import { useWallet } from '@/hooks';
+import { useWallet, useEcosystemModal } from '@/hooks';
 // import { EmailLoginButton } from '../Components/EmailLoginButton';
 import { ConnectionButton, EmailLoginButton } from '@/components';
 
@@ -47,12 +47,12 @@ type Props = {
     logo?: string;
 };
 
-export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
+export const MainContent = ({ onClose, logo }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
     const { loginScreenUI } = useVeChainKitConfig();
-
+    const { open: openEcosystemModal } = useEcosystemModal();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
 
@@ -221,9 +221,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
                             <ConnectionButton
                                 isDark={isDark}
-                                onClick={() => {
-                                    setCurrentContent('ecosystem');
-                                }}
+                                onClick={openEcosystemModal}
                                 icon={IoPlanet}
                             />
 

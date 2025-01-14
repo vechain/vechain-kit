@@ -14,7 +14,7 @@ import { SmartAccountProvider } from '../hooks';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '../utils';
-import { ConnectModal, AccountModal } from '../components';
+import { ConnectModal, AccountModal, EcosystemModal } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
 
 type Props = {
@@ -61,6 +61,10 @@ type VeChainKitConfig = {
     openAccountModal: () => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
+    // Ecosystem Modal
+    openEcosystemModal: () => void;
+    closeEcosystemModal: () => void;
+    isEcosystemModalOpen: boolean;
 };
 
 /**
@@ -103,6 +107,16 @@ export const VeChainKit = ({
         [],
     );
 
+    const [isEcosystemModalOpen, setIsEcosystemModalOpen] = useState(false);
+    const openEcosystemModal = useCallback(
+        () => setIsEcosystemModalOpen(true),
+        [],
+    );
+    const closeEcosystemModal = useCallback(
+        () => setIsEcosystemModalOpen(false),
+        [],
+    );
+
     const loginMethods = [
         ...privyConfig.loginMethods,
         ...(privyConfig.ecosystemAppsID ?? []).map((appID) => `privy:${appID}`),
@@ -134,6 +148,9 @@ export const VeChainKit = ({
                     openAccountModal,
                     closeAccountModal,
                     isAccountModalOpen,
+                    openEcosystemModal,
+                    closeEcosystemModal,
+                    isEcosystemModalOpen,
                     loginScreenUI,
                 }}
             >
@@ -165,6 +182,24 @@ export const VeChainKit = ({
                             themeMode={dappKitConfig.themeMode}
                             themeVariables={{
                                 '--vdk-modal-z-index': '1000000',
+
+                                // Dark mode colors
+                                '--vdk-color-dark-primary': '#1f1f1e',
+                                '--vdk-color-dark-primary-hover': '#3c3c39',
+                                '--vdk-color-dark-primary-active': '#4a4a46',
+                                '--vdk-color-dark-secondary': '#2d2d2d',
+
+                                // Light mode colors
+                                '--vdk-color-light-primary': '#ffffff',
+                                '--vdk-color-light-primary-hover': '#f2f2f2',
+                                '--vdk-color-light-primary-active': '#eaeaea',
+                                '--vdk-color-light-secondary': '#f7f7f7',
+
+                                // Font settings
+                                '--vdk-font-family': 'var(--chakra-fonts-body)',
+                                '--vdk-font-size-medium': '14px',
+                                '--vdk-font-size-large': '16px',
+                                '--vdk-font-weight-medium': '500',
                             }}
                         >
                             <SmartAccountProvider
@@ -183,6 +218,10 @@ export const VeChainKit = ({
                                 <AccountModal
                                     isOpen={isAccountModalOpen}
                                     onClose={closeAccountModal}
+                                />
+                                <EcosystemModal
+                                    isOpen={isEcosystemModalOpen}
+                                    onClose={closeEcosystemModal}
                                 />
                             </SmartAccountProvider>
                         </DAppKitProvider>
