@@ -10,7 +10,7 @@ import {
     WalletListEntry,
 } from '@privy-io/react-auth';
 import { DAppKitProvider, DAppKitUIOptions } from '@vechain/dapp-kit-react';
-import { SmartAccountProvider } from '../hooks';
+import { PrivyProvider } from './PrivyProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '../utils';
@@ -202,7 +202,7 @@ export const VeChainKit = ({
                                 '--vdk-font-weight-medium': '500',
                             }}
                         >
-                            <SmartAccountProvider
+                            <PrivyProvider
                                 nodeUrl={dappKitConfig.nodeUrl}
                                 delegatorUrl={feeDelegationConfig.delegatorUrl}
                                 delegateAllTransactions={
@@ -223,7 +223,7 @@ export const VeChainKit = ({
                                     isOpen={isEcosystemModalOpen}
                                     onClose={closeEcosystemModal}
                                 />
-                            </SmartAccountProvider>
+                            </PrivyProvider>
                         </DAppKitProvider>
                     </BasePrivyProvider>
                 </ChakraProvider>

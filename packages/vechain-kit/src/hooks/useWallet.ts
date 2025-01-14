@@ -2,9 +2,9 @@
 
 import { usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { useSmartAccount } from './useSmartAccount';
+import { usePrivyProvider } from '@/providers';
 import { useCachedVeChainDomain } from '@/hooks';
-import { getPicassoImage } from '../utils';
+import { getPicassoImage } from '@/utils';
 
 export type Wallet = {
     address: string;
@@ -62,7 +62,7 @@ export const useWallet = (): UseWalletReturnType => {
     const { user, authenticated, logout, ready } = usePrivy();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDappKitWallet();
-    const smartAccount = useSmartAccount();
+    const smartAccount = usePrivyProvider();
 
     // Connection states
     const isConnectedWithDappKit = !!dappKitAccount;

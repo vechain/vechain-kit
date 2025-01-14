@@ -6,7 +6,7 @@ import { useConnex } from '@vechain/dapp-kit-react';
 import { Transaction } from 'thor-devkit';
 import { useVeChainKitConfig } from '../../providers/VeChainKit';
 import { useWallet } from '../useWallet';
-import { useSmartAccount } from '../useSmartAccount';
+import { usePrivyProvider } from '@/providers';
 import {
     EnhancedClause,
     TransactionStatus,
@@ -130,7 +130,7 @@ export const useSendTransaction = ({
     const nodeUrl = dappKitConfig.nodeUrl;
 
     const { connection } = useWallet();
-    const smartAccount = useSmartAccount();
+    const smartAccount = usePrivyProvider();
 
     /**
      * Convert the clauses to the format expected by the vendor

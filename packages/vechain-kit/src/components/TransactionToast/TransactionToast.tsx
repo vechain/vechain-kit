@@ -11,8 +11,8 @@ import {
     Button,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { useSmartAccount } from '../../hooks';
-import { EXPLORER_URL, TransactionStatusErrorType } from '../../utils';
+import { usePrivyProvider } from '@/providers';
+import { EXPLORER_URL, TransactionStatusErrorType } from '@/utils';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';
@@ -43,7 +43,7 @@ export const TransactionToast = ({
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { chainId } = useSmartAccount();
+    const { chainId } = usePrivyProvider();
     const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
 
     const statusConfig: Record<string, StatusConfig> = {

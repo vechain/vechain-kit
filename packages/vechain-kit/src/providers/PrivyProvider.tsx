@@ -22,7 +22,7 @@ import {
     ACCOUNT_FACTORY_ADDRESSES,
 } from '../utils';
 
-export interface SmartAccountContextType {
+export interface PrivyProviderContextType {
     address: string | undefined;
     owner: string | undefined;
     embeddedWallet: ConnectedWallet | undefined;
@@ -42,7 +42,7 @@ export interface SmartAccountContextType {
     chainId: string;
 }
 
-const VechainAccountContext = createContext<SmartAccountContextType | null>(
+const PrivyProviderContext = createContext<PrivyProviderContextType | null>(
     null,
 );
 
@@ -59,7 +59,7 @@ const VechainAccountContext = createContext<SmartAccountContextType | null>(
  * When sending a transaction this provider will check if the smart account is deployed and if not,
  * it will deploy it.
  */
-export const SmartAccountProvider = ({
+export const PrivyProvider = ({
     children,
     nodeUrl,
     delegatorUrl,
@@ -378,7 +378,7 @@ export const SmartAccountProvider = ({
     };
 
     return (
-        <VechainAccountContext.Provider
+        <PrivyProviderContext.Provider
             value={{
                 address: smartAccountAddress,
                 owner,
@@ -395,16 +395,14 @@ export const SmartAccountProvider = ({
             }}
         >
             {children}
-        </VechainAccountContext.Provider>
+        </PrivyProviderContext.Provider>
     );
 };
 
-export const useSmartAccount = () => {
-    const context = useContext(VechainAccountContext);
+export const usePrivyProvider = () => {
+    const context = useContext(PrivyProviderContext);
     if (!context) {
-        throw new Error(
-            'useSmartAccount must be used within a SmartAccountProvider',
-        );
+        throw new Error('usePrivyProvider must be used within a PrivyProvider');
     }
     return context;
 };

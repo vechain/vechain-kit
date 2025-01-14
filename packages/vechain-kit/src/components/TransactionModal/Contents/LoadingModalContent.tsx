@@ -10,8 +10,8 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { useSmartAccount } from '../../../hooks';
-import { EXPLORER_URL } from '../../../utils';
+import { usePrivyProvider } from '@/providers';
+import { EXPLORER_URL } from '@/utils';
 import { FadeInViewFromBottom } from '@/components/common';
 import { StickyHeaderContainer } from '@/components/common';
 
@@ -26,7 +26,7 @@ export const LoadingModalContent = ({
     showExplorerButton,
     txId,
 }: LoadingModalContentProps) => {
-    const { chainId } = useSmartAccount();
+    const { chainId } = usePrivyProvider();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];

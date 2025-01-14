@@ -3,8 +3,6 @@ export { useConnex } from '@vechain/dapp-kit-react';
 export { useColorMode as useDAppKitPrivyColorMode } from '@chakra-ui/react';
 export * from './useWallet';
 export * from './useTxReceipt';
-export * from './useSmartAccount';
-export * from './api/smartAccount/useGetSmartAccountAddress';
 export * from './api';
 export * from './modals';
 export * from './transactions';
