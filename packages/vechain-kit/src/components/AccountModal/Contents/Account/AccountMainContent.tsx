@@ -8,7 +8,7 @@ import {
     VStack,
     useColorMode,
 } from '@chakra-ui/react';
-import { useWallet, Wallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
@@ -21,6 +21,7 @@ import {
     BalanceSection,
     QuickActionsSection,
 } from '@/components';
+import { Wallet } from '@/types';
 
 type Props = {
     setCurrentContent: React.Dispatch<

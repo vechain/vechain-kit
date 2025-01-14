@@ -5,12 +5,9 @@ import {
     useState,
     useCallback,
 } from 'react';
-import {
-    PrivyProvider as BasePrivyProvider,
-    WalletListEntry,
-} from '@privy-io/react-auth';
+import { PrivyProvider, WalletListEntry } from '@privy-io/react-auth';
 import { DAppKitProvider, DAppKitUIOptions } from '@vechain/dapp-kit-react';
-import { PrivyProvider } from './PrivyProvider';
+import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '../utils';
@@ -155,7 +152,7 @@ export const VeChainKit = ({
                 }}
             >
                 <ChakraProvider theme={Theme}>
-                    <BasePrivyProvider
+                    <PrivyProvider
                         appId={privyConfig.appId}
                         clientId={privyConfig.clientId}
                         config={{
@@ -202,7 +199,7 @@ export const VeChainKit = ({
                                 '--vdk-font-weight-medium': '500',
                             }}
                         >
-                            <PrivyProvider
+                            <PrivyWalletProvider
                                 nodeUrl={dappKitConfig.nodeUrl}
                                 delegatorUrl={feeDelegationConfig.delegatorUrl}
                                 delegateAllTransactions={
@@ -223,9 +220,9 @@ export const VeChainKit = ({
                                     isOpen={isEcosystemModalOpen}
                                     onClose={closeEcosystemModal}
                                 />
-                            </PrivyProvider>
+                            </PrivyWalletProvider>
                         </DAppKitProvider>
-                    </BasePrivyProvider>
+                    </PrivyProvider>
                 </ChakraProvider>
             </VeChainKitContext.Provider>
         </EnsureQueryClient>

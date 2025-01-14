@@ -6,14 +6,14 @@ import {
     getVot3BalanceQueryKey,
     getVeDelegateBalanceQueryKey,
     getTokenUsdPriceQueryKey,
-} from './api';
+} from '..';
 
 export const useRefreshBalances = () => {
     const queryClient = useQueryClient();
-    const { selectedAccount } = useWallet();
+    const { account } = useWallet();
 
     const refresh = async () => {
-        const address = selectedAccount?.address;
+        const address = account?.address ?? '';
 
         // First invalidate all queries
         await Promise.all([

@@ -2,11 +2,11 @@
 
 import { Text, Icon, HStack, Button } from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
-import { Wallet, useWallet } from '../../../hooks';
+import { useWallet } from '@/hooks';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useState } from 'react';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
-
+import { Wallet } from '@/types';
 type Props = {
     wallet: Wallet;
     size?: string;
@@ -37,7 +37,8 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
             >
                 <HStack spacing={4} align="center">
                     <Text fontSize={size} fontWeight="500">
-                        {wallet.domain || humanAddress(wallet.address, 6, 4)}
+                        {wallet.domain ||
+                            humanAddress(wallet.address ?? '', 6, 4)}
                     </Text>
 
                     {connection.isConnectedWithPrivy && (
@@ -57,7 +58,7 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
                 onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    copyToClipboard(wallet.address);
+                    copyToClipboard(wallet.address ?? '');
                 }}
             >
                 <Icon

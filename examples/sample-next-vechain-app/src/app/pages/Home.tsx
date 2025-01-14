@@ -34,8 +34,7 @@ export default function Home(): ReactElement {
     const { toggleColorMode: toggleDAppKitPrivyColorMode } =
         useDAppKitPrivyColorMode();
 
-    const { connection, selectedAccount, connectedWallet, smartAccount } =
-        useWallet();
+    const { connection, account, connectedWallet, smartAccount } = useWallet();
 
     const { open } = useConnectModal();
     const { open: openAccountModal } = useAccountModal();
@@ -70,7 +69,7 @@ export default function Home(): ReactElement {
         isTransactionPending,
         error,
     } = useSendTransaction({
-        signerAccountAddress: selectedAccount?.address,
+        signerAccountAddress: account?.address,
         privyUIOptions: {
             title: 'Sign to confirm',
             description:

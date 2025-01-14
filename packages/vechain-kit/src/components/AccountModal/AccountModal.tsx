@@ -20,7 +20,7 @@ type Props = {
 };
 
 export const AccountModal = ({ isOpen, onClose }: Props) => {
-    const { selectedAccount } = useWallet();
+    const { account } = useWallet();
     const [currentContent, setCurrentContent] =
         useState<AccountModalContentTypes>('main');
 
@@ -44,7 +44,7 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                     <AccountMainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        wallet={selectedAccount}
+                        wallet={account}
                     />
                 );
             case 'settings':
@@ -65,7 +65,7 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                     <AccountsListContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        wallet={selectedAccount}
+                        wallet={account}
                     />
                 );
             case 'send-token':

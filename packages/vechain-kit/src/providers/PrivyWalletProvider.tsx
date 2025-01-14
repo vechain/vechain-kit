@@ -21,12 +21,12 @@ import {
     randomTransactionUser,
     ACCOUNT_FACTORY_ADDRESSES,
 } from '../utils';
+import { useGetChainId, useSmartAccount } from '@/hooks';
 
-export interface PrivyProviderContextType {
-    address: string | undefined;
-    owner: string | undefined;
-    embeddedWallet: ConnectedWallet | undefined;
-    isDeployed: boolean;
+export interface PrivyWalletProviderContextType {
+    embeddedWallet?: ConnectedWallet;
+    accountFactory: string;
+    delegateAllTransactions: boolean;
     sendTransaction: (tx: {
         txClauses: Connex.VM.Clause[];
         title?: string;
@@ -34,17 +34,10 @@ export interface PrivyProviderContextType {
         buttonText?: string;
     }) => Promise<string>;
     exportWallet: () => Promise<void>;
-    thor: ThorClient;
-    nodeUrl: string;
-    delegatorUrl: string;
-    accountFactory: string;
-    delegateAllTransactions: boolean;
-    chainId: string;
 }
 
-const PrivyProviderContext = createContext<PrivyProviderContextType | null>(
-    null,
-);
+const PrivyWalletProviderContext =
+    createContext<PrivyWalletProviderContextType | null>(null);
 
 /**
  * This provider is responsible for retrieving the smart account address
@@ -59,7 +52,7 @@ const PrivyProviderContext = createContext<PrivyProviderContextType | null>(
  * When sending a transaction this provider will check if the smart account is deployed and if not,
  * it will deploy it.
  */
-export const PrivyProvider = ({
+export const PrivyWalletProvider = ({
     children,
     nodeUrl,
     delegatorUrl,
@@ -76,13 +69,10 @@ export const PrivyProvider = ({
     const embeddedWallet = wallets.find(
         (wallet) => wallet.walletClientType === 'privy',
     );
-    const [smartAccountAddress, setSmartAccountAddress] = useState<
-        string | undefined
-    >();
-    const [owner, setOwner] = useState<string | undefined>();
-    const [chainId, setChainId] = useState('');
+
+    const { data: chainId } = useGetChainId();
+
     const thor = ThorClient.at(nodeUrl);
-    const [isDeployed, setIsDeployed] = useState(false);
     const [accountFactory, setAccountFactory] = useState<string>();
 
     const isCrossAppPrivyAccount = Boolean(
@@ -95,94 +85,7 @@ export const PrivyProvider = ({
         : //@ts-ignore
           user?.linkedAccounts?.[0]?.address ?? user?.wallet?.address;
 
-    /**
-     * Set the owner address to the connected account
-     */
-    useEffect(() => {
-        setOwner(connectedAccount);
-    }, [connectedAccount]);
-
-    /**
-     * Load the smartAccountAddress of the account abstraction wallet identified by
-     * the embedded wallet of Privy.
-     */
-    useEffect(() => {
-        if (
-            !embeddedWallet ||
-            !accountFactory ||
-            !nodeUrl ||
-            !delegatorUrl ||
-            !connectedAccount
-        ) {
-            setSmartAccountAddress(undefined);
-            setIsDeployed(false);
-            return;
-        }
-
-        thor.contracts
-            .executeCall(
-                accountFactory,
-                ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
-                    'getAccountAddress',
-                ),
-                [connectedAccount],
-            )
-            .then((accountAddress) => {
-                setSmartAccountAddress(String(accountAddress.result.plain));
-            })
-            .catch((e) => {
-                console.error('error', e);
-                /* ignore */
-            });
-    }, [
-        embeddedWallet,
-        thor,
-        accountFactory,
-        nodeUrl,
-        delegatorUrl,
-        connectedAccount,
-    ]);
-
-    /**
-     * Identify the current chain id from its genesis block
-     */
-    useEffect(() => {
-        thor.blocks
-            .getGenesisBlock()
-            .then((genesis) => {
-                if (genesis?.id) {
-                    const chainIdValue = BigInt(genesis.id).toString();
-                    setChainId(chainIdValue);
-                }
-            })
-            .catch((error) => {
-                console.error('Failed to get genesis block:', error);
-            });
-    }, [thor]);
-
-    /**
-     * Reset smartAccountAddress when embedded wallet vanishes
-     */
-    useEffect(() => {
-        if (!embeddedWallet) {
-            setSmartAccountAddress(undefined);
-        }
-    }, [embeddedWallet]);
-
-    /**
-     * Check if the smart account is deployed
-     */
-    useEffect(() => {
-        if (!smartAccountAddress) {
-            return;
-        }
-
-        thor.accounts
-            .getAccount(Address.of(smartAccountAddress))
-            .then((account) => {
-                setIsDeployed(account.hasCode);
-            });
-    }, [smartAccountAddress, thor]);
+    const { data: smartAccount } = useSmartAccount(connectedAccount);
 
     /**
      * Set the account factory address based on the chain ID
@@ -213,7 +116,7 @@ export const PrivyProvider = ({
         description?: string;
         buttonText?: string;
     }): Promise<string> => {
-        if (!smartAccountAddress || !embeddedWallet || !connectedAccount) {
+        if (!smartAccount || !embeddedWallet || !connectedAccount) {
             throw new Error('Address or embedded wallet is missing');
         }
 
@@ -224,7 +127,7 @@ export const PrivyProvider = ({
                     name: 'Wallet',
                     version: '1',
                     chainId: chainId as unknown as number, // convert chainId to a number
-                    verifyingContract: smartAccountAddress,
+                    verifyingContract: smartAccount.address ?? '',
                 },
                 types: {
                     ExecuteWithAuthorization: [
@@ -285,11 +188,7 @@ export const PrivyProvider = ({
         const clauses = [];
 
         // if the account smartAccountAddress has no code yet, it's not been deployed/created yet
-        const { hasCode: isDeployed } = await thor.accounts.getAccount(
-            Address.of(smartAccountAddress),
-        );
-        setIsDeployed(isDeployed);
-        if (!isDeployed) {
+        if (!smartAccount.isDeployed) {
             clauses.push(
                 Clause.callFunction(
                     Address.of(accountFactory ?? ''),
@@ -304,7 +203,7 @@ export const PrivyProvider = ({
         dataToSign.forEach((data, index) => {
             clauses.push(
                 Clause.callFunction(
-                    Address.of(smartAccountAddress),
+                    Address.of(smartAccount.address ?? ''),
                     ABIContract.ofAbi(SimpleAccountABI).getFunction(
                         'executeWithAuthorization',
                     ),
@@ -378,31 +277,26 @@ export const PrivyProvider = ({
     };
 
     return (
-        <PrivyProviderContext.Provider
+        <PrivyWalletProviderContext.Provider
             value={{
-                address: smartAccountAddress,
-                owner,
                 accountFactory: accountFactory ?? '',
-                nodeUrl,
-                delegatorUrl,
                 embeddedWallet,
                 sendTransaction,
                 exportWallet,
-                thor,
-                isDeployed,
                 delegateAllTransactions,
-                chainId,
             }}
         >
             {children}
-        </PrivyProviderContext.Provider>
+        </PrivyWalletProviderContext.Provider>
     );
 };
 
-export const usePrivyProvider = () => {
-    const context = useContext(PrivyProviderContext);
+export const usePrivyWalletProvider = () => {
+    const context = useContext(PrivyWalletProviderContext);
     if (!context) {
-        throw new Error('usePrivyProvider must be used within a PrivyProvider');
+        throw new Error(
+            'usePrivyWalletProvider must be used within a PrivyWalletProvider',
+        );
     }
     return context;
 };

@@ -8,7 +8,7 @@ import {
     ModalHeader,
     useColorMode,
 } from '@chakra-ui/react';
-import { useWallet, Wallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import {
     AddressDisplay,
     FadeInViewFromBottom,
@@ -21,6 +21,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import React from 'react';
 import { RxExit } from 'react-icons/rx';
+import { Wallet } from '@/types';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -34,8 +35,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { connection, selectedAccount, connectedWallet, disconnect } =
-        useWallet();
+    const { connection, account, connectedWallet, disconnect } = useWallet();
 
     return (
         <FadeInViewFromBottom>
@@ -63,7 +63,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                             >
                                 <AccountDetailsButton
                                     title="Smart Account"
-                                    address={selectedAccount.address ?? ''}
+                                    address={account.address ?? ''}
                                     isActive
                                     onClick={() => {
                                         setCurrentContent('smart-account');
@@ -73,7 +73,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                 />
                                 <AccountDetailsButton
                                     title="Wallet"
-                                    address={connectedWallet?.address}
+                                    address={connectedWallet?.address ?? ''}
                                     onClick={() => {
                                         setCurrentContent('settings');
                                     }}

@@ -3,8 +3,8 @@
 import { Text, VStack, Icon, HStack } from '@chakra-ui/react';
 import { useState } from 'react';
 import { IoCopyOutline, IoCheckmarkOutline } from 'react-icons/io5';
-import { humanAddress } from '../../utils';
-import { Wallet } from '../../hooks';
+import { humanAddress } from '@/utils';
+import { Wallet } from '@/types';
 
 type Props = {
     wallet: Wallet;
@@ -61,7 +61,7 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                         <HStack>
                             <Text fontSize={'sm'}>
                                 {'('}
-                                {humanAddress(wallet.address, 8, 7)}
+                                {humanAddress(wallet.address ?? '', 8, 7)}
                                 {')'}
                             </Text>
                             <Icon
@@ -70,7 +70,10 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                                 as={copied ? IoCheckmarkOutline : IoCopyOutline}
                                 cursor="pointer"
                                 onClick={() =>
-                                    copyToClipboard(wallet.address, setCopied)
+                                    copyToClipboard(
+                                        wallet.address ?? '',
+                                        setCopied,
+                                    )
                                 }
                             />
                         </HStack>
@@ -78,7 +81,7 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                 ) : (
                     <HStack>
                         <Text fontSize={size}>
-                            {humanAddress(wallet.address, 6, 4)}
+                            {humanAddress(wallet.address ?? '', 6, 4)}
                         </Text>
                         <Icon
                             boxSize={3}
@@ -86,7 +89,7 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                             as={copied ? IoCheckmarkOutline : IoCopyOutline}
                             cursor="pointer"
                             onClick={() =>
-                                copyToClipboard(wallet.address, setCopied)
+                                copyToClipboard(wallet.address ?? '', setCopied)
                             }
                         />
                     </HStack>

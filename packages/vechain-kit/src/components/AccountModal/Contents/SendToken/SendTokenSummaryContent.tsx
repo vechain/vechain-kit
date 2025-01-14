@@ -64,11 +64,11 @@ export const SendTokenSummaryContent = ({
 }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-    const { selectedAccount, connection } = useWallet();
+    const { account, connection } = useWallet();
     const transactionModal = useDisclosure();
 
     const transferERC20 = useTransferERC20({
-        fromAddress: selectedAccount.address,
+        fromAddress: account.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         tokenAddress: selectedToken.address,
@@ -76,7 +76,7 @@ export const SendTokenSummaryContent = ({
     });
 
     const transferVET = useTransferVET({
-        fromAddress: selectedAccount.address,
+        fromAddress: account.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
     });
@@ -150,21 +150,19 @@ export const SendTokenSummaryContent = ({
                                         </Text>
                                         <HStack minH={'50px'}>
                                             <Image
-                                                src={selectedAccount.image}
+                                                src={account.image ?? ''}
                                                 alt="From account"
                                                 boxSize="20px"
                                                 borderRadius="xl"
                                             />
                                             <VStack align="start" spacing={0}>
-                                                {selectedAccount.domain && (
+                                                {account.domain && (
                                                     <>
                                                         <Text
                                                             fontWeight="medium"
                                                             fontSize="sm"
                                                         >
-                                                            {
-                                                                selectedAccount.domain
-                                                            }
+                                                            {account.domain}
                                                         </Text>
 
                                                         <Text
@@ -172,19 +170,21 @@ export const SendTokenSummaryContent = ({
                                                             opacity={0.5}
                                                         >
                                                             {humanAddress(
-                                                                selectedAccount.address,
+                                                                account.address ??
+                                                                    '',
                                                             )}
                                                         </Text>
                                                     </>
                                                 )}
 
-                                                {!selectedAccount.domain && (
+                                                {!account.domain && (
                                                     <Text
                                                         fontWeight="medium"
                                                         fontSize="sm"
                                                     >
                                                         {humanAddress(
-                                                            selectedAccount.address,
+                                                            account.address ??
+                                                                '',
                                                             4,
                                                             4,
                                                         )}
@@ -261,7 +261,8 @@ export const SendTokenSummaryContent = ({
                                             </VStack>
                                             <Image
                                                 src={getPicassoImage(
-                                                    toAddressOrDomain,
+                                                    resolvedAddress ||
+                                                        toAddressOrDomain,
                                                 )}
                                                 alt="To account"
                                                 boxSize="20px"

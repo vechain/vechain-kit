@@ -13,13 +13,13 @@ import {
 import { ShareButtons } from '../Components/ShareButtons';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { usePrivyProvider } from '@/providers';
 import { EXPLORER_URL } from '@/utils';
 import { FcCheckmark } from 'react-icons/fc';
 import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
 } from '@/components/common';
+import { useGetChainId } from '@/hooks';
 
 export type SuccessModalContentProps = {
     title?: ReactNode;
@@ -49,7 +49,7 @@ export const SuccessModalContent = ({
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { chainId } = usePrivyProvider();
+    const { data: chainId } = useGetChainId();
     const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
 
     const socialDescription =

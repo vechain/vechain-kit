@@ -1,2 +1,2 @@
 export * from './VeChainKit';
-export * from './PrivyProvider';
+export * from './PrivyWalletProvider';

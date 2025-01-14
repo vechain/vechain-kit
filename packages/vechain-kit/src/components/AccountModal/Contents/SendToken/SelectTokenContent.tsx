@@ -22,10 +22,10 @@ import {
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
-} from '../../../common';
-import { AccountModalContentTypes } from '../../../AccountModal';
-import { useBalances } from '../../../../hooks';
-import { TOKEN_LOGOS } from '../../../../utils';
+} from '@/components/common';
+import { AccountModalContentTypes } from '@/components';
+import { useBalances } from '@/hooks';
+import { TOKEN_LOGOS } from '@/utils';
 import { useState } from 'react';
 
 type Token = {

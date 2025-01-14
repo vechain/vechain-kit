@@ -2,43 +2,31 @@
 
 import { usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { usePrivyProvider } from '@/providers';
-import { useCachedVeChainDomain } from '@/hooks';
+import { useCachedVeChainDomain, useGetChainId } from '@/hooks';
 import { getPicassoImage } from '@/utils';
-
-export type Wallet = {
-    address: string;
-    domain: string | undefined;
-    image: string;
-};
-
-export type SmartAccount = Wallet & {
-    isDeployed: boolean;
-    owner: string;
-};
-
-export type ConnectionSource = {
-    type: 'privy' | 'wallet' | 'privy-cross-app';
-    displayName: string;
-};
+import { ConnectionSource, SmartAccount, Wallet } from '@/types';
+import { useSmartAccount } from '.';
+import { ThorClient } from '@vechain/sdk-network';
+import { useVeChainKitConfig } from '@/providers';
 
 export type UseWalletReturnType = {
-    // When user connects with a wallet
-    wallet: Wallet;
+    // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
+    account: Wallet;
 
-    // wallet created by the social login provider
-    embeddedWallet: Wallet;
-
-    // Wallet of the user connected with a cross app provider
-    crossAppWallet: Wallet;
+    // The wallet in use between dappKitWallet, embeddedWallet and crossAppWallet
+    connectedWallet: Wallet;
 
     // Every user connected with privy has one
     smartAccount: SmartAccount;
 
-    // Currently is always the smart account if connected with privy
-    selectedAccount: Wallet;
-    // Privy wallet or veworld wallet
-    connectedWallet: Wallet;
+    // When user connects with a wallet
+    dappKitWallet?: Wallet;
+
+    // wallet created by the social login provider
+    embeddedWallet?: Wallet;
+
+    // Wallet of the user connected with a cross app provider
+    crossAppWallet?: Wallet;
 
     // Privy user if user is connected with privy
     privyUser: User | null;
@@ -52,6 +40,10 @@ export type UseWalletReturnType = {
         isLoadingPrivyConnection: boolean;
         source: ConnectionSource;
         isInAppBrowser: boolean;
+        thor: ThorClient;
+        nodeUrl: string;
+        delegatorUrl: string;
+        chainId?: string;
     };
 
     // Disconnect function
@@ -59,10 +51,11 @@ export type UseWalletReturnType = {
 };
 
 export const useWallet = (): UseWalletReturnType => {
+    const { dappKitConfig, feeDelegationConfig } = useVeChainKitConfig();
     const { user, authenticated, logout, ready } = usePrivy();
+    const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDappKitWallet();
-    const smartAccount = usePrivyProvider();
 
     // Connection states
     const isConnectedWithDappKit = !!dappKitAccount;
@@ -70,6 +63,14 @@ export const useWallet = (): UseWalletReturnType => {
     const isConnected = isConnectedWithDappKit || isConnectedWithPrivy;
     const isCrossAppPrivyAccount = Boolean(
         user?.linkedAccounts?.some((account) => account.type === 'cross_app'),
+    );
+
+    // Get embedded wallet
+    const privyEmbeddedWallet = user?.wallet?.address;
+
+    // Get smart account
+    const { data: smartAccount } = useSmartAccount(
+        isConnectedWithPrivy ? privyEmbeddedWallet ?? '' : dappKitAccount ?? '',
     );
 
     // Connection type
@@ -93,23 +94,36 @@ export const useWallet = (): UseWalletReturnType => {
         (account) => account.type === 'cross_app',
     );
 
-    // Get embedded wallet
-    const privyEmbeddedWallet = user?.wallet?.address;
-
     // Get connected and selected accounts
     const connectedWalletAddress = isConnectedWithDappKit
         ? dappKitAccount
-        : smartAccount.owner;
+        : isCrossAppPrivyAccount
+        ? crossAppAccount?.embeddedWallets?.[0]?.address
+        : privyEmbeddedWallet;
 
     const selectedAddress = isConnectedWithDappKit
         ? dappKitAccount
-        : smartAccount.address;
+        : smartAccount?.address ?? '';
+
+    const account = {
+        address: selectedAddress ?? null,
+        domain: useCachedVeChainDomain(selectedAddress ?? '').domainResult
+            .domain,
+        image: getPicassoImage(selectedAddress ?? ''),
+    };
+
+    const connectedWallet = {
+        address: connectedWalletAddress ?? null,
+        domain: useCachedVeChainDomain(connectedWalletAddress ?? '')
+            .domainResult.domain,
+        image: getPicassoImage(connectedWalletAddress ?? ''),
+    };
 
     // Use cached domain lookups for each address
     const walletDomain = useCachedVeChainDomain(dappKitAccount ?? '')
         .domainResult.domain;
     const smartAccountDomain = useCachedVeChainDomain(
-        smartAccount.address ?? '',
+        smartAccount?.address ?? '',
     ).domainResult.domain;
     const embeddedWalletDomain = useCachedVeChainDomain(
         privyEmbeddedWallet ?? '',
@@ -117,20 +131,6 @@ export const useWallet = (): UseWalletReturnType => {
     const crossAppAccountDomain = useCachedVeChainDomain(
         crossAppAccount?.embeddedWallets?.[0]?.address ?? '',
     ).domainResult.domain;
-
-    const selectedAccount = {
-        address: selectedAddress ?? '',
-        domain: useCachedVeChainDomain(selectedAddress ?? '').domainResult
-            .domain,
-        image: getPicassoImage(selectedAddress ?? ''),
-    };
-
-    const connectedWallet = {
-        address: connectedWalletAddress ?? '',
-        domain: useCachedVeChainDomain(connectedWalletAddress ?? '')
-            .domainResult.domain,
-        image: getPicassoImage(connectedWalletAddress ?? ''),
-    };
 
     // Disconnect function
     const disconnect = async () => {
@@ -142,29 +142,37 @@ export const useWallet = (): UseWalletReturnType => {
     };
 
     return {
-        wallet: {
-            address: dappKitAccount ?? '',
-            domain: walletDomain ?? '',
-            image: getPicassoImage(selectedAccount.address),
-        },
+        account,
         smartAccount: {
-            address: smartAccount.address ?? '',
-            domain: smartAccountDomain ?? '',
-            image: getPicassoImage(selectedAccount.address),
-            isDeployed: smartAccount.isDeployed,
-            owner: smartAccount.owner ?? '',
+            address: smartAccount?.address ?? null,
+            domain: smartAccountDomain,
+            image: getPicassoImage(smartAccount?.address ?? ''),
+            isDeployed: smartAccount?.isDeployed ?? false,
         },
-        embeddedWallet: {
-            address: privyEmbeddedWallet ?? '',
-            domain: embeddedWalletDomain ?? '',
-            image: getPicassoImage(selectedAccount.address),
-        },
-        crossAppWallet: {
-            address: crossAppAccount?.embeddedWallets?.[0]?.address ?? '',
-            domain: crossAppAccountDomain ?? '',
-            image: getPicassoImage(selectedAccount.address),
-        },
-        selectedAccount,
+        dappKitWallet: isConnectedWithDappKit
+            ? {
+                  address: dappKitAccount,
+                  domain: walletDomain,
+                  image: getPicassoImage(dappKitAccount ?? ''),
+              }
+            : undefined,
+        embeddedWallet: privyEmbeddedWallet
+            ? {
+                  address: privyEmbeddedWallet,
+                  domain: embeddedWalletDomain,
+                  image: getPicassoImage(privyEmbeddedWallet),
+              }
+            : undefined,
+        crossAppWallet: crossAppAccount?.embeddedWallets?.[0]?.address
+            ? {
+                  address: crossAppAccount?.embeddedWallets?.[0]?.address,
+                  domain: crossAppAccountDomain,
+                  image: getPicassoImage(
+                      crossAppAccount?.embeddedWallets?.[0]?.address,
+                  ),
+              }
+            : undefined,
+
         connectedWallet,
         privyUser: user,
         connection: {
@@ -176,6 +184,10 @@ export const useWallet = (): UseWalletReturnType => {
             source: connectionSource,
             isInAppBrowser:
                 (window.vechain && window.vechain.isInAppBrowser) ?? false,
+            thor: ThorClient.at(dappKitConfig.nodeUrl),
+            nodeUrl: dappKitConfig.nodeUrl,
+            delegatorUrl: feeDelegationConfig.delegatorUrl,
+            chainId: chainId,
         },
         disconnect,
     };

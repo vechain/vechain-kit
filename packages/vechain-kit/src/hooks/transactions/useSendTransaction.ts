@@ -5,8 +5,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { Transaction } from 'thor-devkit';
 import { useVeChainKitConfig } from '../../providers/VeChainKit';
-import { useWallet } from '../useWallet';
-import { usePrivyProvider } from '@/providers';
+import { useWallet } from '../api/wallet/useWallet';
+import { usePrivyWalletProvider } from '@/providers';
 import {
     EnhancedClause,
     TransactionStatus,
@@ -130,7 +130,7 @@ export const useSendTransaction = ({
     const nodeUrl = dappKitConfig.nodeUrl;
 
     const { connection } = useWallet();
-    const smartAccount = usePrivyProvider();
+    const privyWalletProvider = usePrivyWalletProvider();
 
     /**
      * Convert the clauses to the format expected by the vendor
@@ -175,7 +175,7 @@ export const useSendTransaction = ({
     const sendTransaction = useCallback(
         async (clauses: EnhancedClause[]) => {
             if (connection.isConnectedWithPrivy) {
-                return await smartAccount.sendTransaction({
+                return await privyWalletProvider.sendTransaction({
                     txClauses: clauses,
                     ...privyUIOptions,
                 });
@@ -216,7 +216,13 @@ export const useSendTransaction = ({
             }
             return transaction.request();
         },
-        [vendor, signerAccountAddress, suggestedMaxGas, nodeUrl, smartAccount],
+        [
+            vendor,
+            signerAccountAddress,
+            suggestedMaxGas,
+            nodeUrl,
+            privyWalletProvider,
+        ],
     );
 
     /**

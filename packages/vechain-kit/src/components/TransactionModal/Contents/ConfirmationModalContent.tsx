@@ -1,6 +1,6 @@
 import { VStack, Text, Spinner } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { useWallet } from '../../../hooks';
+import { useWallet } from '@/hooks';
 import { FadeInViewFromBottom } from '@/components/common';
 import {
     ModalHeader,

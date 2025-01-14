@@ -1,4 +1,4 @@
-import { Box, HStack, Link } from '@chakra-ui/react';
+import { Box, HStack, Link, useColorMode } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa6';
@@ -38,6 +38,9 @@ type Props = {
 };
 
 export const ShareButtons = ({ descriptionEncoded }: Props) => {
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
+
     return (
         <HStack gap={2}>
             <BouncingAnimation>
@@ -45,7 +48,11 @@ export const ShareButtons = ({ descriptionEncoded }: Props) => {
                     href={`${TWITTER_INJECT}${descriptionEncoded}`}
                     isExternal
                 >
-                    <Box bg={'lightgrey'} p={2} borderRadius={'full'}>
+                    <Box
+                        bg={isDark ? 'blackAlpha.700' : 'lightgrey'}
+                        p={2}
+                        borderRadius={'full'}
+                    >
                         <RiTwitterXFill size={22} />
                     </Box>
                 </Link>
