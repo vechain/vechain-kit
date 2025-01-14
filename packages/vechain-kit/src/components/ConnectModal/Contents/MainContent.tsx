@@ -44,14 +44,13 @@ type Props = {
         React.SetStateAction<ConnectModalContents>
     >;
     onClose: () => void;
-    logo?: string;
 };
 
-export const MainContent = ({ onClose, logo }: Props) => {
+export const MainContent = ({ onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
-    const { loginScreenUI } = useVeChainKitConfig();
+    const { loginModalUI } = useVeChainKitConfig();
     const { open: openEcosystemModal } = useEcosystemModal();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
@@ -101,11 +100,11 @@ export const MainContent = ({ onClose, logo }: Props) => {
                 <ModalCloseButton mt={'5px'} />
             </StickyHeaderContainer>
 
-            {loginScreenUI?.logo && (
+            {loginModalUI?.logo && (
                 <FadeInViewFromBottom>
                     <HStack justify={'center'}>
                         <Image
-                            src={logo || '/images/favicon.png'}
+                            src={loginModalUI.logo || '/images/favicon.png'}
                             maxW={'180px'}
                             maxH={'90px'}
                             m={10}
@@ -117,7 +116,7 @@ export const MainContent = ({ onClose, logo }: Props) => {
 
             <FadeInViewFromBottom>
                 <ModalBody>
-                    {loginScreenUI?.description && (
+                    {loginModalUI?.description && (
                         <HStack
                             spacing={4}
                             w={'full'}
@@ -129,7 +128,7 @@ export const MainContent = ({ onClose, logo }: Props) => {
                                 fontSize={'sm'}
                                 fontWeight={'200'}
                             >
-                                {loginScreenUI?.description}
+                                {loginModalUI?.description}
                             </Text>
                         </HStack>
                     )}
@@ -140,7 +139,7 @@ export const MainContent = ({ onClose, logo }: Props) => {
                             gap={2}
                             w={'full'}
                         >
-                            {loginScreenUI?.preferredLoginMethods?.map(
+                            {loginModalUI?.preferredLoginMethods?.map(
                                 (method, index) => (
                                     <React.Fragment key={method}>
                                         {method === 'email' && (
@@ -170,8 +169,7 @@ export const MainContent = ({ onClose, logo }: Props) => {
                                         )}
 
                                         {index !==
-                                            (loginScreenUI
-                                                ?.preferredLoginMethods
+                                            (loginModalUI?.preferredLoginMethods
                                                 ?.length ?? 0) -
                                                 1 && (
                                             <GridItem colSpan={4} w={'full'}>

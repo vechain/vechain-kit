@@ -35,7 +35,7 @@ export const WalletSettingsContent = ({
     onLogoutSuccess,
 }: Props) => {
     const { exportWallet, linkPasskey } = usePrivy();
-    const { privyConfig } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
 
     const { connectedWallet, connection, disconnect } = useWallet();
 
@@ -104,7 +104,7 @@ export const WalletSettingsContent = ({
                                     rightIcon={MdOutlineNavigateNext}
                                 />
 
-                                {privyConfig.allowPasskeyLinking && (
+                                {privy.allowPasskeyLinking && (
                                     <ActionButton
                                         title="Add passkey"
                                         description="Add a passkey to your account for future logins. If enabled, passkeys will always be available as a login method."

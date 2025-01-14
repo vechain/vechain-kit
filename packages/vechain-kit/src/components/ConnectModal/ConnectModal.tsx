@@ -7,12 +7,11 @@ import { BaseModal } from '@/components/common';
 type Props = {
     isOpen: boolean;
     onClose: () => void;
-    logo?: string;
 };
 
 export type ConnectModalContents = 'main' | 'email-verification';
 
-export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
+export const ConnectModal = ({ isOpen, onClose }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContents>('main');
 
@@ -29,7 +28,6 @@ export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
                     <MainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        logo={logo}
                     />
                 );
         }

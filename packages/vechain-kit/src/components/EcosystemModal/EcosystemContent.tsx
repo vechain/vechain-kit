@@ -35,9 +35,9 @@ export const EcosystemContent = ({ onClose }: Props) => {
         onClose();
     };
 
-    const { privyConfig } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
     const { data: appsInfo, isLoading } = useFetchAppInfo(
-        privyConfig?.ecosystemAppsID || [],
+        privy.ecosystemAppsID || [],
     );
 
     // useEffect(() => {
@@ -47,7 +47,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
     //         authenticated
     //     ) {
     //         linkCrossAppAccount({
-    //             appId: `${privyConfig?.ecosystemAppsID?.[0]}`,
+    //             appId: `${privy?.ecosystemAppsID?.[0]}`,
     //         });
     //     }
     // }, [connection.source.type, crossAppLogin, authenticated]);

@@ -17,8 +17,8 @@ export const getChainIdQueryKey = () => ['VECHAIN_KIT_CHAIN_ID'];
  * @returns  The account balance
  */
 export const useGetChainId = () => {
-    const { dappKitConfig } = useVeChainKitConfig();
-    const thor = ThorClient.at(dappKitConfig.nodeUrl);
+    const { network } = useVeChainKitConfig();
+    const thor = ThorClient.at(network.nodeUrl);
 
     return useQuery({
         queryKey: getChainIdQueryKey(),

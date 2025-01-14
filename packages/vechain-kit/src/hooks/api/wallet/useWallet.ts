@@ -51,7 +51,7 @@ export type UseWalletReturnType = {
 };
 
 export const useWallet = (): UseWalletReturnType => {
-    const { dappKitConfig, feeDelegationConfig } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
@@ -184,9 +184,9 @@ export const useWallet = (): UseWalletReturnType => {
             source: connectionSource,
             isInAppBrowser:
                 (window.vechain && window.vechain.isInAppBrowser) ?? false,
-            thor: ThorClient.at(dappKitConfig.nodeUrl),
-            nodeUrl: dappKitConfig.nodeUrl,
-            delegatorUrl: feeDelegationConfig.delegatorUrl,
+            thor: ThorClient.at(network.nodeUrl),
+            nodeUrl: network.nodeUrl,
+            delegatorUrl: feeDelegation.delegatorUrl,
             chainId: chainId,
         },
         disconnect,

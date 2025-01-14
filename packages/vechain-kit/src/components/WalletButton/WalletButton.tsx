@@ -1,7 +1,6 @@
 import { Button, HStack, Image, Text, useDisclosure } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { ConnectModal, AccountModal, LoginLoadingModal } from '@/components';
-import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
@@ -14,8 +13,6 @@ export const WalletButton = () => {
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
-
-    const { privyConfig } = useVeChainKitConfig();
 
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
 
@@ -86,7 +83,6 @@ export const WalletButton = () => {
             <ConnectModal
                 isOpen={connectModal.isOpen}
                 onClose={connectModal.onClose}
-                logo={privyConfig.appearance.logo}
             />
 
             <AccountModal

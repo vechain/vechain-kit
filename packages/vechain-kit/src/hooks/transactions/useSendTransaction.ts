@@ -126,8 +126,8 @@ export const useSendTransaction = ({
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const { vendor, thor } = useConnex();
-    const { dappKitConfig, feeDelegationConfig } = useVeChainKitConfig();
-    const nodeUrl = dappKitConfig.nodeUrl;
+    const { network, feeDelegation } = useVeChainKitConfig();
+    const nodeUrl = network.nodeUrl;
 
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
@@ -183,10 +183,8 @@ export const useSendTransaction = ({
 
             let transaction = vendor.sign('tx', clauses);
 
-            if (feeDelegationConfig.delegateAllTransactions) {
-                transaction = transaction.delegate(
-                    feeDelegationConfig.delegatorUrl,
-                );
+            if (feeDelegation.delegateAllTransactions) {
+                transaction = transaction.delegate(feeDelegation.delegatorUrl);
             }
 
             if (signerAccountAddress) {
