@@ -10,12 +10,11 @@ import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
-import { PrivyLoginMethod } from '../utils';
+import { PrivyLoginMethod } from '@/types';
 import { ConnectModal, AccountModal, EcosystemModal } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
-    type Genesis,
     type WalletSource as DAppKitWalletSource,
 } from '@vechain/dapp-kit';
 import { type WalletConnectOptions } from '@vechain/dapp-kit-react';
@@ -24,6 +23,8 @@ import {
     type CustomizedStyle,
     type I18n,
 } from '@vechain/dapp-kit-ui';
+import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
 
 type Props = {
     children: ReactNode;
@@ -66,8 +67,8 @@ type Props = {
     i18n?: I18n;
     language?: string;
     network: {
-        nodeUrl: string;
-        genesis?: Genesis;
+        type: NETWORK_TYPE;
+        nodeUrl?: string;
         requireCertificate?: boolean;
         connectionCertificate?: {
             message?: Connex.Vendor.CertMessage;
@@ -219,8 +220,11 @@ export const VeChainKit = ({
                         allowPasskeyLinking={privy.allowPasskeyLinking}
                     >
                         <DAppKitProvider
-                            nodeUrl={network.nodeUrl}
-                            genesis={network.genesis}
+                            nodeUrl={
+                                network.nodeUrl ??
+                                getConfig(network.type).nodeUrl
+                            }
+                            genesis={getConfig(network.type).network.genesis}
                             i18n={i18n}
                             language={language}
                             logLevel={dappKit.logLevel}
@@ -252,7 +256,10 @@ export const VeChainKit = ({
                             }}
                         >
                             <PrivyWalletProvider
-                                nodeUrl={network.nodeUrl}
+                                nodeUrl={
+                                    network.nodeUrl ??
+                                    getConfig(network.type).nodeUrl
+                                }
                                 delegatorUrl={feeDelegation.delegatorUrl}
                                 delegateAllTransactions={
                                     feeDelegation.delegateAllTransactions

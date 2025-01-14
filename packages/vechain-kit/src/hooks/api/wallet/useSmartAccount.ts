@@ -1,19 +1,26 @@
 import { SimpleAccountFactoryABI } from '@/assets';
-import { THOR_CLIENT } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { ABIContract, Address } from '@vechain/sdk-core';
-
+import { useGetNodeUrl } from '../useGetNodeUrl';
+import { ThorClient } from '@vechain/sdk-network';
+import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
 export interface SmartAccountReturnType {
     address: string | undefined;
     isDeployed: boolean;
 }
-export const getSmartAccount = async (ownerAddress?: string) => {
+export const getSmartAccount = async (
+    thor: ThorClient,
+    network: NETWORK_TYPE,
+    ownerAddress?: string,
+) => {
     if (!ownerAddress) {
         return { address: undefined };
     }
 
-    const account = await THOR_CLIENT.contracts.executeCall(
-        '0xC06Ad8573022e2BE416CA89DA47E8c592971679A',
+    const account = await thor.contracts.executeCall(
+        getConfig(network).accountFactoryAddress,
         ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
             'getAccountAddress',
         ),
@@ -21,7 +28,7 @@ export const getSmartAccount = async (ownerAddress?: string) => {
     );
 
     const isDeployed = (
-        await THOR_CLIENT.accounts.getAccount(
+        await thor.accounts.getAccount(
             Address.of(String(account.result.array?.[0])),
         )
     ).hasCode;
@@ -37,9 +44,13 @@ export const getSmartAccountQueryKey = (ownerAddress?: string) => {
 };
 
 export const useSmartAccount = (ownerAddress?: string) => {
+    const { network } = useVeChainKitConfig();
+    const nodeUrl = useGetNodeUrl();
+    const thor = ThorClient.at(nodeUrl);
+
     return useQuery({
         queryKey: getSmartAccountQueryKey(ownerAddress),
-        queryFn: () => getSmartAccount(ownerAddress),
-        enabled: !!ownerAddress,
+        queryFn: () => getSmartAccount(thor, network.type, ownerAddress),
+        enabled: !!ownerAddress && !!network.type && !!thor,
     });
 };

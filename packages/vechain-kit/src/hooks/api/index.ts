@@ -6,3 +6,4 @@ export * from './privy';
 export * from './vetDomains';
 export * from './wallet';
 export * from './useGetChainId';
+export * from './useGetNodeUrl';

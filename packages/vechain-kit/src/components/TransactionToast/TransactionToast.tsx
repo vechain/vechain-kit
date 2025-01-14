@@ -11,7 +11,8 @@ import {
     Button,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { EXPLORER_URL, TransactionStatusErrorType } from '@/utils';
+import { EXPLORER_URL } from '@/utils';
+import { TransactionStatusErrorType } from '@/types';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';

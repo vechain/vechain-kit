@@ -1,17 +1,15 @@
 'use client';
 
-import { useTxReceipt } from '../useTxReceipt';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { Transaction } from 'thor-devkit';
-import { useVeChainKitConfig } from '../../providers/VeChainKit';
-import { useWallet } from '../api/wallet/useWallet';
-import { usePrivyWalletProvider } from '@/providers';
+import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import {
     EnhancedClause,
     TransactionStatus,
     TransactionStatusErrorType,
-} from '../../utils';
+} from '@/types';
+import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
 
 const estimateTxGasWithNext = async (
     clauses: Connex.VM.Clause[],
@@ -126,8 +124,8 @@ export const useSendTransaction = ({
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const { vendor, thor } = useConnex();
-    const { network, feeDelegation } = useVeChainKitConfig();
-    const nodeUrl = network.nodeUrl;
+    const { feeDelegation } = useVeChainKitConfig();
+    const nodeUrl = useGetNodeUrl();
 
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();

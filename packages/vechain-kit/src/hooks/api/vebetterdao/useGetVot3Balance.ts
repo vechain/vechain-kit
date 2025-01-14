@@ -1,18 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { IVOT3__factory } from '../../../contracts/typechain-types';
+import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
 
 const VOT3Interface = IVOT3__factory.createInterface();
 
 export const getVot3Balance = async (
     thor: Connex.Thor,
+    network: NETWORK_TYPE,
     address?: string,
 ): Promise<string> => {
     const functionFragment =
         VOT3Interface.getFunction('balanceOf').format('json');
 
     const res = await thor
-        .account('0x76Ca782B59C74d088C7D2Cce2f211BC00836c602')
+        .account(getConfig(network).vot3ContractAddress)
         .method(JSON.parse(functionFragment))
         .call(address);
 
@@ -28,10 +32,11 @@ export const getVot3BalanceQueryKey = (address?: string) => [
 
 export const useGetVot3Balance = (address?: string) => {
     const { thor } = useConnex();
+    const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getVot3BalanceQueryKey(address),
-        queryFn: async () => getVot3Balance(thor, address),
-        enabled: !!thor && !!address,
+        queryFn: async () => getVot3Balance(thor, network.type, address),
+        enabled: !!thor && !!address && !!network.type,
     });
 };

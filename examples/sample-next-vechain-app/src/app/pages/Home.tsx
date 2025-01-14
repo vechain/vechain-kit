@@ -40,7 +40,7 @@ export default function Home(): ReactElement {
     const { open: openAccountModal } = useAccountModal();
 
     const { data: b3trBalance, isLoading: b3trBalanceLoading } =
-        useGetB3trBalance(smartAccount.address);
+        useGetB3trBalance(smartAccount.address ?? undefined);
 
     // A dummy tx sending 0 b3tr tokens
     const clauses = useMemo(() => {
@@ -153,6 +153,7 @@ export default function Home(): ReactElement {
                             <b>Connection</b>
                         </Heading>
                         <Text>Type: {connection.source.type}</Text>
+                        <Text>Network: {connection.network}</Text>
                     </Box>
 
                     <Box mt={4}>

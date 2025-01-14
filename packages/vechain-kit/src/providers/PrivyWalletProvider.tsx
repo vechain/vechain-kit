@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 import {
     useCrossAppAccounts,
     usePrivy,
@@ -16,12 +16,11 @@ import {
     signerUtils,
 } from '@vechain/sdk-network';
 import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
-import {
-    ExecuteWithAuthorizationSignData,
-    randomTransactionUser,
-    ACCOUNT_FACTORY_ADDRESSES,
-} from '../utils';
+import { randomTransactionUser } from '../utils';
+import { ExecuteWithAuthorizationSignData } from '@/types';
 import { useGetChainId, useSmartAccount } from '@/hooks';
+import { getConfig } from '@/config';
+import { useVeChainKitConfig } from './VeChainKit';
 
 export interface PrivyWalletProviderContextType {
     embeddedWallet?: ConnectedWallet;
@@ -70,10 +69,10 @@ export const PrivyWalletProvider = ({
         (wallet) => wallet.walletClientType === 'privy',
     );
 
+    const { network } = useVeChainKitConfig();
     const { data: chainId } = useGetChainId();
 
     const thor = ThorClient.at(nodeUrl);
-    const [accountFactory, setAccountFactory] = useState<string>();
 
     const isCrossAppPrivyAccount = Boolean(
         user?.linkedAccounts?.some((account) => account.type === 'cross_app'),
@@ -86,19 +85,6 @@ export const PrivyWalletProvider = ({
           user?.linkedAccounts?.[0]?.address ?? user?.wallet?.address;
 
     const { data: smartAccount } = useSmartAccount(connectedAccount);
-
-    /**
-     * Set the account factory address based on the chain ID
-     */
-    useEffect(() => {
-        if (!chainId) return;
-
-        setAccountFactory(
-            ACCOUNT_FACTORY_ADDRESSES[
-                chainId as keyof typeof ACCOUNT_FACTORY_ADDRESSES
-            ],
-        );
-    }, [chainId]);
 
     /**
      * Send a transaction on vechain by asking the privy wallet to sign a typed data content
@@ -191,7 +177,7 @@ export const PrivyWalletProvider = ({
         if (!smartAccount.isDeployed) {
             clauses.push(
                 Clause.callFunction(
-                    Address.of(accountFactory ?? ''),
+                    Address.of(getConfig(network.type).accountFactoryAddress),
                     ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
                         'createAccount',
                     ),
@@ -279,7 +265,7 @@ export const PrivyWalletProvider = ({
     return (
         <PrivyWalletProviderContext.Provider
             value={{
-                accountFactory: accountFactory ?? '',
+                accountFactory: getConfig(network.type).accountFactoryAddress,
                 embeddedWallet,
                 sendTransaction,
                 exportWallet,

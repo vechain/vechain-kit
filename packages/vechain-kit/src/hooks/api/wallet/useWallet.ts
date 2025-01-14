@@ -2,12 +2,12 @@
 
 import { usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { useCachedVeChainDomain, useGetChainId } from '@/hooks';
+import { useCachedVeChainDomain, useGetChainId, useGetNodeUrl } from '@/hooks';
 import { getPicassoImage } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '.';
-import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -40,10 +40,10 @@ export type UseWalletReturnType = {
         isLoadingPrivyConnection: boolean;
         source: ConnectionSource;
         isInAppBrowser: boolean;
-        thor: ThorClient;
         nodeUrl: string;
         delegatorUrl: string;
         chainId?: string;
+        network: NETWORK_TYPE;
     };
 
     // Disconnect function
@@ -51,11 +51,13 @@ export type UseWalletReturnType = {
 };
 
 export const useWallet = (): UseWalletReturnType => {
-    const { network, feeDelegation } = useVeChainKitConfig();
+    const { feeDelegation, network } = useVeChainKitConfig();
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDappKitWallet();
+
+    const nodeUrl = useGetNodeUrl();
 
     // Connection states
     const isConnectedWithDappKit = !!dappKitAccount;
@@ -184,10 +186,10 @@ export const useWallet = (): UseWalletReturnType => {
             source: connectionSource,
             isInAppBrowser:
                 (window.vechain && window.vechain.isInAppBrowser) ?? false,
-            thor: ThorClient.at(network.nodeUrl),
-            nodeUrl: network.nodeUrl,
+            nodeUrl,
             delegatorUrl: feeDelegation.delegatorUrl,
             chainId: chainId,
+            network: network.type,
         },
         disconnect,
     };

@@ -1,6 +1,6 @@
-import { useVeChainKitConfig } from '@/providers';
 import { useQuery } from '@tanstack/react-query';
 import { ThorClient } from '@vechain/sdk-network';
+import { useGetNodeUrl } from './useGetNodeUrl';
 
 export const getChainId = async (thor: ThorClient) => {
     const genesisBlock = await thor.blocks.getGenesisBlock();
@@ -17,8 +17,8 @@ export const getChainIdQueryKey = () => ['VECHAIN_KIT_CHAIN_ID'];
  * @returns  The account balance
  */
 export const useGetChainId = () => {
-    const { network } = useVeChainKitConfig();
-    const thor = ThorClient.at(network.nodeUrl);
+    const nodeUrl = useGetNodeUrl();
+    const thor = ThorClient.at(nodeUrl);
 
     return useQuery({
         queryKey: getChainIdQueryKey(),

@@ -3,6 +3,9 @@ import { useConnex } from '@vechain/dapp-kit-react';
 // import { networkConfig } from "@repo/config";
 import { IVechainEnergyOracleV1__factory } from '../../../contracts/typechain-types';
 import { BigNumber } from 'bignumber.js';
+import { getConfig } from '@/config';
+import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 const OracleInterface = IVechainEnergyOracleV1__factory.createInterface();
 
 // Create an enum or object for supported price feed IDs
@@ -18,12 +21,13 @@ export type SupportedToken = keyof typeof PRICE_FEED_IDS;
 export const getTokenUsdPrice = async (
     thor: Connex.Thor,
     token: SupportedToken,
+    network: NETWORK_TYPE,
 ): Promise<number> => {
     const functionFragment =
         OracleInterface.getFunction('getLatestValue').format('json');
 
     const res = await thor
-        .account('0x49eC7192BF804Abc289645ca86F1eD01a6C17713')
+        .account(getConfig(network).oracleContractAddress)
         .method(JSON.parse(functionFragment))
         .call(PRICE_FEED_IDS[token]);
 
@@ -38,10 +42,11 @@ export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
 
 export const useGetTokenUsdPrice = (token: SupportedToken) => {
     const { thor } = useConnex();
+    const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getTokenUsdPriceQueryKey(token),
-        queryFn: async () => getTokenUsdPrice(thor, token),
-        enabled: !!thor,
+        queryFn: async () => getTokenUsdPrice(thor, token, network.type),
+        enabled: !!thor && !!network.type,
     });
 };
