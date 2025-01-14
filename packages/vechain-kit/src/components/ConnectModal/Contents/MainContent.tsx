@@ -1,4 +1,5 @@
 import {
+    Divider,
     Grid,
     GridItem,
     HStack,
@@ -33,10 +34,10 @@ import { IoIosFingerPrint } from 'react-icons/io';
 import { IoPlanet } from 'react-icons/io5';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 // import { EmailLoginButton } from '../Components/EmailLoginButton';
-import { ConnectionButton } from '@/components';
+import { ConnectionButton, EmailLoginButton } from '@/components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -50,7 +51,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
-    const { privyConfig } = useVeChainKitConfig();
+    const { loginScreenUI } = useVeChainKitConfig();
 
     // View more login
     const { login: viewMoreLogin } = usePrivy();
@@ -100,71 +101,91 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                 <ModalCloseButton mt={'5px'} />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <HStack justify={'center'}>
-                    <Image
-                        src={logo || '/images/favicon.png'}
-                        maxW={'180px'}
-                        maxH={'90px'}
-                        m={10}
-                        alt="logo"
-                    />
-                </HStack>
-            </FadeInViewFromBottom>
+            {loginScreenUI?.logo && (
+                <FadeInViewFromBottom>
+                    <HStack justify={'center'}>
+                        <Image
+                            src={logo || '/images/favicon.png'}
+                            maxW={'180px'}
+                            maxH={'90px'}
+                            m={10}
+                            alt="logo"
+                        />
+                    </HStack>
+                </FadeInViewFromBottom>
+            )}
 
             <FadeInViewFromBottom>
                 <ModalBody>
-                    <HStack
-                        spacing={4}
-                        w={'full'}
-                        justify={'center'}
-                        mb={'24px'}
-                    >
-                        <Text
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                            fontSize={'sm'}
-                            fontWeight={'200'}
+                    {loginScreenUI?.description && (
+                        <HStack
+                            spacing={4}
+                            w={'full'}
+                            justify={'center'}
+                            mb={'24px'}
                         >
-                            {'Select a login method'}
-                        </Text>
-                    </HStack>
+                            <Text
+                                color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                                fontSize={'sm'}
+                                fontWeight={'200'}
+                            >
+                                {loginScreenUI?.description}
+                            </Text>
+                        </HStack>
+                    )}
+
                     <Stack spacing={4} w={'full'} align={'center'}>
                         <Grid
                             templateColumns="repeat(4, 1fr)"
                             gap={2}
                             w={'full'}
                         >
-                            {/* {privyConfig?.loginMethods?.includes('email') && (
-                            <>
-                                <GridItem colSpan={4} w={'full'}>
-                                    <EmailLoginButton />
-                                </GridItem>
-                                <GridItem colSpan={4} w={'full'}>
-                                    <HStack>
-                                        <Divider />
-                                        <Text fontSize={'xs'}>or</Text>
-                                        <Divider />
-                                    </HStack>
-                                </GridItem>
-                            </>
-                        )} */}
-                            {privyConfig?.loginMethods?.includes('google') && (
-                                <GridItem colSpan={4} w={'full'}>
-                                    <ConnectionButton
-                                        isDark={isDark}
-                                        onClick={() => {
-                                            initOAuth({ provider: 'google' });
-                                        }}
-                                        leftIcon={
-                                            <Icon
-                                                as={FcGoogle}
-                                                w={'25px'}
-                                                h={'25px'}
-                                            />
-                                        }
-                                        text="Continue with Google"
-                                    />
-                                </GridItem>
+                            {loginScreenUI?.preferredLoginMethods?.map(
+                                (method, index) => (
+                                    <React.Fragment key={method}>
+                                        {method === 'email' && (
+                                            <GridItem colSpan={4} w={'full'}>
+                                                <EmailLoginButton />
+                                            </GridItem>
+                                        )}
+                                        {method === 'google' && (
+                                            <GridItem colSpan={4} w={'full'}>
+                                                <ConnectionButton
+                                                    isDark={isDark}
+                                                    onClick={() =>
+                                                        initOAuth({
+                                                            provider: 'google',
+                                                        })
+                                                    }
+                                                    leftIcon={
+                                                        <Icon
+                                                            as={FcGoogle}
+                                                            w={'25px'}
+                                                            h={'25px'}
+                                                        />
+                                                    }
+                                                    text="Continue with Google"
+                                                />
+                                            </GridItem>
+                                        )}
+
+                                        {index !==
+                                            (loginScreenUI
+                                                ?.preferredLoginMethods
+                                                ?.length ?? 0) -
+                                                1 && (
+                                            <GridItem colSpan={4} w={'full'}>
+                                                <HStack>
+                                                    <Divider />
+                                                    <Text fontSize={'xs'}>
+                                                        or
+                                                    </Text>
+                                                    <Divider />
+                                                </HStack>
+                                            </GridItem>
+                                        )}
+                                    </React.Fragment>
+                                ),
                             )}
 
                             <GridItem colSpan={4} w={'full'}>
@@ -173,7 +194,6 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                                     onClick={async () => {
                                         await loginWithCrossAppAccount({
                                             appId: VECHAIN_PRIVY_APP_ID,
-                                            // appId: 'clz41gcg00e4ay75dmq3uzzgr',
                                         });
                                         onClose();
                                     }}

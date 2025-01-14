@@ -41,12 +41,18 @@ type Props = {
         delegateAllTransactions: boolean;
     };
     dappKitConfig: DAppKitUIOptions;
+    loginScreenUI?: {
+        logo?: string;
+        description?: string;
+        preferredLoginMethods?: Array<'email' | 'google'>;
+    };
 };
 
 type VeChainKitConfig = {
     privyConfig: Props['privyConfig'];
     feeDelegationConfig: Props['feeDelegationConfig'];
     dappKitConfig: Props['dappKitConfig'];
+    loginScreenUI?: Props['loginScreenUI'];
     // Connect Modal
     openConnectModal: () => void;
     closeConnectModal: () => void;
@@ -81,6 +87,7 @@ export const VeChainKit = ({
     privyConfig,
     feeDelegationConfig,
     dappKitConfig,
+    loginScreenUI,
 }: Omit<Props, 'queryClient'>) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
@@ -127,6 +134,7 @@ export const VeChainKit = ({
                     openAccountModal,
                     closeAccountModal,
                     isAccountModalOpen,
+                    loginScreenUI,
                 }}
             >
                 <ChakraProvider theme={Theme}>

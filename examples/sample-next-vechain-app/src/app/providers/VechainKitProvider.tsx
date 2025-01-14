@@ -90,6 +90,9 @@ export function VechainKitProvider({ children }: Props) {
                     },
                 },
             }}
+            loginScreenUI={{
+                preferredLoginMethods: ['email', 'google'],
+            }}
         >
             {children}
         </VeChainKit>
