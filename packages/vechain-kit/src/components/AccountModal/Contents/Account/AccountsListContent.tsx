@@ -51,56 +51,57 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
-
-            <ModalBody w={'full'}>
-                <HStack justify={'space-between'} w={'full'}>
-                    {connection.isConnectedWithPrivy ? (
-                        <Grid
-                            gap={2}
-                            templateColumns={['repeat(1, 1fr)']}
-                            w="100%"
-                            h="100%"
-                        >
-                            <AccountDetailsButton
-                                title="Smart Account"
-                                address={selectedAccount.address ?? ''}
-                                isActive
-                                onClick={() => {
-                                    setCurrentContent('smart-account');
-                                }}
-                                leftIcon={MdAccountCircle}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                            <AccountDetailsButton
-                                title="Wallet"
-                                address={connectedWallet?.address}
-                                onClick={() => {
-                                    setCurrentContent('settings');
-                                }}
-                                leftIcon={HiOutlineWallet}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                        </Grid>
-                    ) : (
-                        <AddressDisplay wallet={connectedWallet} />
-                    )}
-                </HStack>
-            </ModalBody>
-            <ModalFooter>
-                <Button
-                    w={'full'}
-                    onClick={() => {
-                        disconnect();
-                        onClose();
-                    }}
-                    minH={'40px'}
-                    fontSize={'sm'}
-                    fontWeight={'400'}
-                    leftIcon={<RxExit color="#888888" />}
-                >
-                    Logout
-                </Button>
-            </ModalFooter>
+            <FadeInViewFromBottom>
+                <ModalBody w={'full'}>
+                    <HStack justify={'space-between'} w={'full'}>
+                        {connection.isConnectedWithPrivy ? (
+                            <Grid
+                                gap={2}
+                                templateColumns={['repeat(1, 1fr)']}
+                                w="100%"
+                                h="100%"
+                            >
+                                <AccountDetailsButton
+                                    title="Smart Account"
+                                    address={selectedAccount.address ?? ''}
+                                    isActive
+                                    onClick={() => {
+                                        setCurrentContent('smart-account');
+                                    }}
+                                    leftIcon={MdAccountCircle}
+                                    rightIcon={MdOutlineNavigateNext}
+                                />
+                                <AccountDetailsButton
+                                    title="Wallet"
+                                    address={connectedWallet?.address}
+                                    onClick={() => {
+                                        setCurrentContent('settings');
+                                    }}
+                                    leftIcon={HiOutlineWallet}
+                                    rightIcon={MdOutlineNavigateNext}
+                                />
+                            </Grid>
+                        ) : (
+                            <AddressDisplay wallet={connectedWallet} />
+                        )}
+                    </HStack>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        w={'full'}
+                        onClick={() => {
+                            disconnect();
+                            onClose();
+                        }}
+                        minH={'40px'}
+                        fontSize={'sm'}
+                        fontWeight={'400'}
+                        leftIcon={<RxExit color="#888888" />}
+                    >
+                        Logout
+                    </Button>
+                </ModalFooter>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

@@ -44,32 +44,41 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack spacing={6} align="center" w="full">
-                        <AddressDisplay wallet={selectedAccount} size="lg" />
-                        <QRCode
-                            value={selectedAccount.address}
-                            size={200}
-                            removeQrCodeBehindLogo={true}
-                            eyeRadius={4}
-                            logoPaddingStyle={'circle'}
-                            style={{
-                                borderRadius: '16px',
-                            }}
-                        />
+            <FadeInViewFromBottom>
+                <Container maxW={'container.lg'}>
+                    <ModalBody>
+                        <VStack spacing={6} align="center" w="full">
+                            <AddressDisplay
+                                wallet={selectedAccount}
+                                size="lg"
+                            />
+                            <QRCode
+                                value={selectedAccount.address}
+                                size={200}
+                                removeQrCodeBehindLogo={true}
+                                eyeRadius={4}
+                                logoPaddingStyle={'circle'}
+                                style={{
+                                    borderRadius: '16px',
+                                }}
+                            />
 
-                        <Text fontSize="sm" textAlign="center">
-                            Copy your address or scan this QR code
-                        </Text>
+                            <Text fontSize="sm" textAlign="center">
+                                Copy your address or scan this QR code
+                            </Text>
 
-                        <Text fontSize="xs" textAlign="center" opacity={0.5}>
-                            This address only supports VeChain assets.
-                        </Text>
-                    </VStack>
-                </ModalBody>
-                <ModalFooter></ModalFooter>
-            </Container>
+                            <Text
+                                fontSize="xs"
+                                textAlign="center"
+                                opacity={0.5}
+                            >
+                                This address only supports VeChain assets.
+                            </Text>
+                        </VStack>
+                    </ModalBody>
+                    <ModalFooter></ModalFooter>
+                </Container>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

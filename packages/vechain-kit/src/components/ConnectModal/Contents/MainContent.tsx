@@ -19,7 +19,11 @@ import {
     useLoginWithPasskey,
 } from '@privy-io/react-auth';
 import { useVeChainKitConfig } from '@/providers';
-import { FadeInViewFromBottom, VersionFooter } from '@/components/common';
+import {
+    FadeInViewFromBottom,
+    StickyHeaderContainer,
+    VersionFooter,
+} from '@/components/common';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { FcGoogle } from 'react-icons/fc';
 import { VechainLogo } from '@/assets';
@@ -84,38 +88,53 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
     return (
         <FadeInViewFromBottom>
-            <ModalHeader
-                fontSize={'md'}
-                fontWeight={'500'}
-                textAlign={'center'}
-                color={isDark ? '#dfdfdd' : '#4d4d4d'}
-            >
-                {'Log in or sign up'}
-            </ModalHeader>
-            <HStack justify={'center'}>
-                <Image
-                    src={logo || '/images/favicon.png'}
-                    maxW={'180px'}
-                    maxH={'90px'}
-                    m={10}
-                    alt="logo"
-                />
-            </HStack>
+            <StickyHeaderContainer>
+                <ModalHeader
+                    fontSize={'md'}
+                    fontWeight={'500'}
+                    textAlign={'center'}
+                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                >
+                    {'Log in or sign up'}
+                </ModalHeader>
+                <ModalCloseButton mt={'5px'} />
+            </StickyHeaderContainer>
 
-            <ModalCloseButton mt={'5px'} />
-            <ModalBody>
-                <HStack spacing={4} w={'full'} justify={'center'} mb={'24px'}>
-                    <Text
-                        color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        fontSize={'sm'}
-                        fontWeight={'200'}
-                    >
-                        {'Select a login method'}
-                    </Text>
+            <FadeInViewFromBottom>
+                <HStack justify={'center'}>
+                    <Image
+                        src={logo || '/images/favicon.png'}
+                        maxW={'180px'}
+                        maxH={'90px'}
+                        m={10}
+                        alt="logo"
+                    />
                 </HStack>
-                <Stack spacing={4} w={'full'} align={'center'}>
-                    <Grid templateColumns="repeat(4, 1fr)" gap={2} w={'full'}>
-                        {/* {privyConfig?.loginMethods?.includes('email') && (
+            </FadeInViewFromBottom>
+
+            <FadeInViewFromBottom>
+                <ModalBody>
+                    <HStack
+                        spacing={4}
+                        w={'full'}
+                        justify={'center'}
+                        mb={'24px'}
+                    >
+                        <Text
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                            fontSize={'sm'}
+                            fontWeight={'200'}
+                        >
+                            {'Select a login method'}
+                        </Text>
+                    </HStack>
+                    <Stack spacing={4} w={'full'} align={'center'}>
+                        <Grid
+                            templateColumns="repeat(4, 1fr)"
+                            gap={2}
+                            w={'full'}
+                        >
+                            {/* {privyConfig?.loginMethods?.includes('email') && (
                             <>
                                 <GridItem colSpan={4} w={'full'}>
                                     <EmailLoginButton />
@@ -129,77 +148,78 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                                 </GridItem>
                             </>
                         )} */}
-                        {privyConfig?.loginMethods?.includes('google') && (
+                            {privyConfig?.loginMethods?.includes('google') && (
+                                <GridItem colSpan={4} w={'full'}>
+                                    <ConnectionButton
+                                        isDark={isDark}
+                                        onClick={() => {
+                                            initOAuth({ provider: 'google' });
+                                        }}
+                                        leftIcon={
+                                            <Icon
+                                                as={FcGoogle}
+                                                w={'25px'}
+                                                h={'25px'}
+                                            />
+                                        }
+                                        text="Continue with Google"
+                                    />
+                                </GridItem>
+                            )}
+
                             <GridItem colSpan={4} w={'full'}>
                                 <ConnectionButton
                                     isDark={isDark}
-                                    onClick={() => {
-                                        initOAuth({ provider: 'google' });
+                                    onClick={async () => {
+                                        await loginWithCrossAppAccount({
+                                            appId: VECHAIN_PRIVY_APP_ID,
+                                            // appId: 'clz41gcg00e4ay75dmq3uzzgr',
+                                        });
+                                        onClose();
                                     }}
                                     leftIcon={
-                                        <Icon
-                                            as={FcGoogle}
-                                            w={'25px'}
-                                            h={'25px'}
+                                        <VechainLogo
+                                            boxSize={'20px'}
+                                            isDark={isDark}
                                         />
                                     }
-                                    text="Continue with Google"
+                                    text="Login with VeChain"
                                 />
                             </GridItem>
-                        )}
 
-                        <GridItem colSpan={4} w={'full'}>
                             <ConnectionButton
                                 isDark={isDark}
-                                onClick={async () => {
-                                    await loginWithCrossAppAccount({
-                                        appId: VECHAIN_PRIVY_APP_ID,
-                                        // appId: 'clz41gcg00e4ay75dmq3uzzgr',
-                                    });
-                                    onClose();
-                                }}
-                                leftIcon={
-                                    <VechainLogo
-                                        boxSize={'20px'}
-                                        isDark={isDark}
-                                    />
-                                }
-                                text="Login with VeChain"
+                                onClick={handleLoginWithPasskey}
+                                icon={IoIosFingerPrint}
                             />
-                        </GridItem>
 
-                        <ConnectionButton
-                            isDark={isDark}
-                            onClick={handleLoginWithPasskey}
-                            icon={IoIosFingerPrint}
-                        />
+                            <ConnectionButton
+                                isDark={isDark}
+                                onClick={openDappKitModal}
+                                icon={HiOutlineWallet}
+                            />
 
-                        <ConnectionButton
-                            isDark={isDark}
-                            onClick={openDappKitModal}
-                            icon={HiOutlineWallet}
-                        />
+                            <ConnectionButton
+                                isDark={isDark}
+                                onClick={() => {
+                                    setCurrentContent('ecosystem');
+                                }}
+                                icon={IoPlanet}
+                            />
 
-                        <ConnectionButton
-                            isDark={isDark}
-                            onClick={() => {
-                                setCurrentContent('ecosystem');
-                            }}
-                            icon={IoPlanet}
-                        />
+                            <ConnectionButton
+                                isDark={isDark}
+                                onClick={viewMoreLogin}
+                                icon={CiCircleMore}
+                            />
+                        </Grid>
+                    </Stack>
+                </ModalBody>
 
-                        <ConnectionButton
-                            isDark={isDark}
-                            onClick={viewMoreLogin}
-                            icon={CiCircleMore}
-                        />
-                    </Grid>
-                </Stack>
-            </ModalBody>
-
-            <ModalFooter>
-                <VersionFooter />
-            </ModalFooter>
+                <ModalFooter>
+                    <VersionFooter />
+                </ModalFooter>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

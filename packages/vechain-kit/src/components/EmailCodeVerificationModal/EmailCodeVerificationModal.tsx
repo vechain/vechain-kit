@@ -14,7 +14,11 @@ import {
     Container,
 } from '@chakra-ui/react';
 import { MdEmail } from 'react-icons/md';
-import { FadeInViewFromBottom, BaseModal } from '../common';
+import {
+    FadeInViewFromBottom,
+    BaseModal,
+    StickyHeaderContainer,
+} from '../common';
 import { useEffect, useState } from 'react';
 import { useLoginWithEmail } from '@privy-io/react-auth';
 
@@ -58,7 +62,7 @@ export const EmailCodeVerificationModal = ({
             size="md"
             trapFocus={false}
         >
-            <FadeInViewFromBottom>
+            <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'sm'}
                     fontWeight={'200'}
@@ -70,6 +74,9 @@ export const EmailCodeVerificationModal = ({
                     Enter confirmation code
                 </ModalHeader>
                 <ModalCloseButton />
+            </StickyHeaderContainer>
+
+            <FadeInViewFromBottom>
                 <Container maxW={'container.lg'}>
                     <ModalBody>
                         <VStack spacing={2}>

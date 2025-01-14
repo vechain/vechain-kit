@@ -35,18 +35,21 @@ export const ConfirmationModalContent = ({
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack align={'center'} p={6} gap={6}>
-                        <Spinner my={10} size="xl" />
-                        <Text fontSize="sm" align={'center'}>
-                            {connection.isConnectedWithPrivy
-                                ? 'Please do not close this window, it will take just a few seconds.'
-                                : 'Please confirm the transaction in your wallet.'}
-                        </Text>
-                    </VStack>
-                </ModalBody>
-            </Container>
+
+            <FadeInViewFromBottom>
+                <Container maxW={'container.lg'}>
+                    <ModalBody>
+                        <VStack align={'center'} p={6} gap={6}>
+                            <Spinner my={10} size="xl" />
+                            <Text fontSize="sm" align={'center'}>
+                                {connection.isConnectedWithPrivy
+                                    ? 'Please do not close this window, it will take just a few seconds.'
+                                    : 'Please confirm the transaction in your wallet.'}
+                            </Text>
+                        </VStack>
+                    </ModalBody>
+                </Container>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

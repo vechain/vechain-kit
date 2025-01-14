@@ -383,29 +383,30 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                 )}
                             </VStack>
                         </Box>
-
-                        <ModalFooter px={0}>
-                            <Button
-                                width="full"
-                                height="60px"
-                                variant="solid"
-                                borderRadius="xl"
-                                colorScheme="blue"
-                                isDisabled={
-                                    !selectedToken ||
-                                    !amount ||
-                                    !toAddressOrDomain ||
-                                    !!error ||
-                                    !!addressError ||
-                                    isLoadingDomain
-                                }
-                                onClick={handleSend}
-                            >
-                                {selectedToken ? 'Send' : 'Select Token'}
-                            </Button>
-                        </ModalFooter>
                     </VStack>
                 </ModalBody>
+                <ModalFooter px={0}>
+                    <Container maxW={'container.lg'}>
+                        <Button
+                            width="full"
+                            height="60px"
+                            variant="solid"
+                            borderRadius="xl"
+                            colorScheme="blue"
+                            isDisabled={
+                                !selectedToken ||
+                                !amount ||
+                                !toAddressOrDomain ||
+                                !!error ||
+                                !!addressError ||
+                                isLoadingDomain
+                            }
+                            onClick={handleSend}
+                        >
+                            {selectedToken ? 'Send' : 'Select Token'}
+                        </Button>
+                    </Container>
+                </ModalFooter>
             </Container>
         </FadeInViewFromBottom>
     );

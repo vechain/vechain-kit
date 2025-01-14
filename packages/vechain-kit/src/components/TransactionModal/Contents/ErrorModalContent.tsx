@@ -53,52 +53,55 @@ export const ErrorModalContent = ({
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack align={'center'} p={6} gap={0}>
-                        <VStack gap={4}>
-                            <motion.div
-                                transition={{
-                                    duration: 4,
-                                    ease: 'easeInOut',
-                                    repeat: Infinity,
-                                }}
-                                animate={{
-                                    scale: [1, 1.1, 1],
-                                }}
-                            >
-                                <Icon
-                                    as={MdOutlineErrorOutline}
-                                    color={'red'}
-                                    fontSize={'100px'}
-                                />
-                            </motion.div>
-                            {description && (
-                                <Text size="sm">{description}</Text>
-                            )}
-                            {showExplorerButton && txId && (
-                                <Link
-                                    href={`${explorerUrl}/transactions/${txId}`}
-                                    isExternal
-                                    color="gray.500"
-                                    fontSize={'14px'}
-                                    textDecoration={'underline'}
+
+            <FadeInViewFromBottom>
+                <Container maxW={'container.lg'}>
+                    <ModalBody>
+                        <VStack align={'center'} p={6} gap={0}>
+                            <VStack gap={4}>
+                                <motion.div
+                                    transition={{
+                                        duration: 4,
+                                        ease: 'easeInOut',
+                                        repeat: Infinity,
+                                    }}
+                                    animate={{
+                                        scale: [1, 1.1, 1],
+                                    }}
                                 >
-                                    {'View it on the explorer'}
-                                </Link>
-                            )}
-                            {showTryAgainButton && (
-                                <Button
-                                    variant={'outline'}
-                                    onClick={onTryAgain}
-                                >
-                                    {'Try again'}
-                                </Button>
-                            )}
+                                    <Icon
+                                        as={MdOutlineErrorOutline}
+                                        color={'red'}
+                                        fontSize={'100px'}
+                                    />
+                                </motion.div>
+                                {description && (
+                                    <Text size="sm">{description}</Text>
+                                )}
+                                {showExplorerButton && txId && (
+                                    <Link
+                                        href={`${explorerUrl}/transactions/${txId}`}
+                                        isExternal
+                                        color="gray.500"
+                                        fontSize={'14px'}
+                                        textDecoration={'underline'}
+                                    >
+                                        {'View it on the explorer'}
+                                    </Link>
+                                )}
+                                {showTryAgainButton && (
+                                    <Button
+                                        variant={'outline'}
+                                        onClick={onTryAgain}
+                                    >
+                                        {'Try again'}
+                                    </Button>
+                                )}
+                            </VStack>
                         </VStack>
-                    </VStack>
-                </ModalBody>
-            </Container>
+                    </ModalBody>
+                </Container>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

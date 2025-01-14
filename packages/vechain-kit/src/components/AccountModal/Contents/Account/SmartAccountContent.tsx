@@ -60,87 +60,94 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody w={'full'}>
-                <VStack justify={'center'} mb={10}>
-                    <Image src={walletImage} maxW={'70px'} borderRadius="50%" />
-                    <AddressDisplay wallet={smartAccount} />
-                </VStack>
+            <FadeInViewFromBottom>
+                <ModalBody w={'full'}>
+                    <VStack justify={'center'} mb={10}>
+                        <Image
+                            src={walletImage}
+                            maxW={'70px'}
+                            borderRadius="50%"
+                        />
+                        <AddressDisplay wallet={smartAccount} />
+                    </VStack>
 
-                <VStack align="stretch" textAlign={'center'}>
-                    <Text fontSize={'sm'} opacity={0.5}>
-                        To allow you a smooth onboarding on VeChain we are
-                        helping you manage a wallet.
-                    </Text>
+                    <VStack align="stretch" textAlign={'center'}>
+                        <Text fontSize={'sm'} opacity={0.5}>
+                            To allow you a smooth onboarding on VeChain we are
+                            helping you manage a wallet.
+                        </Text>
 
-                    {isExpanded && (
-                        <FadeInViewFromBottom>
-                            <VStack>
-                                <Text fontSize={'sm'} opacity={0.5}>
-                                    You have full control and ownership of this
-                                    wallet, accessible through your selected
-                                    login method.
-                                </Text>
+                        {isExpanded && (
+                            <FadeInViewFromBottom>
+                                <VStack>
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        You have full control and ownership of
+                                        this wallet, accessible through your
+                                        selected login method.
+                                    </Text>
 
-                                <Text fontSize={'sm'} opacity={0.5}>
-                                    You can backup your wallet by exporting your
-                                    private key. This will allow you to restore
-                                    your wallet if you lose your login method.
-                                </Text>
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        You can backup your wallet by exporting
+                                        your private key. This will allow you to
+                                        restore your wallet if you lose your
+                                        login method.
+                                    </Text>
 
-                                <Text fontSize={'sm'} opacity={0.5}>
-                                    To experience the full blockchain
-                                    experience, transfer your assets to{' '}
-                                    <Link
-                                        href="https://www.veworld.net/"
-                                        isExternal
-                                        color="gray.500"
-                                        fontSize={'14px'}
-                                        textDecoration={'underline'}
-                                    >
-                                        VeWorld Wallet{' '}
-                                        <Icon ml={1} as={IoOpenOutline} />
-                                    </Link>
-                                    .
-                                </Text>
-                            </VStack>
-                        </FadeInViewFromBottom>
-                    )}
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        To experience the full blockchain
+                                        experience, transfer your assets to{' '}
+                                        <Link
+                                            href="https://www.veworld.net/"
+                                            isExternal
+                                            color="gray.500"
+                                            fontSize={'14px'}
+                                            textDecoration={'underline'}
+                                        >
+                                            VeWorld Wallet{' '}
+                                            <Icon ml={1} as={IoOpenOutline} />
+                                        </Link>
+                                        .
+                                    </Text>
+                                </VStack>
+                            </FadeInViewFromBottom>
+                        )}
 
-                    <Link
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        color="gray.500"
-                        fontSize={'sm'}
-                        transition={'all 0.2s'}
-                        _hover={{ textDecoration: 'none' }}
-                    >
-                        {isExpanded ? 'Read less' : 'Read more'}
-                    </Link>
-                </VStack>
+                        <Link
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            color="gray.500"
+                            fontSize={'sm'}
+                            transition={'all 0.2s'}
+                            _hover={{ textDecoration: 'none' }}
+                        >
+                            {isExpanded ? 'Read less' : 'Read more'}
+                        </Link>
+                    </VStack>
 
-                <VStack mt={5} spacing={5}>
-                    <ActionButton
-                        title="Transfer ownership"
-                        description="Transfer the ownership of your smart account to another wallet."
-                        onClick={() => {
-                            exportWallet();
-                        }}
-                        leftIcon={FaUserEdit}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
+                    <VStack mt={5} spacing={5}>
+                        <ActionButton
+                            title="Transfer ownership"
+                            description="Transfer the ownership of your smart account to another wallet."
+                            onClick={() => {
+                                exportWallet();
+                            }}
+                            leftIcon={FaUserEdit}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
 
-                    <ActionButton
-                        title="Choose account name"
-                        description="Give a nickname to your wallet to easily identify it."
-                        onClick={() => {
-                            // linkPasskey();
-                        }}
-                        showComingSoon={true}
-                        leftIcon={FaRegAddressCard}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-                </VStack>
-            </ModalBody>
-            <ModalFooter></ModalFooter>
+                        <ActionButton
+                            title="Choose account name"
+                            description="Give a nickname to your wallet to easily identify it."
+                            onClick={() => {
+                                // linkPasskey();
+                            }}
+                            showComingSoon={true}
+                            leftIcon={FaRegAddressCard}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    </VStack>
+                </ModalBody>
+                <ModalFooter></ModalFooter>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

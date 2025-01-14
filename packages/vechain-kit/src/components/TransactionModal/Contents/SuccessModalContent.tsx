@@ -68,49 +68,52 @@ export const SuccessModalContent = ({
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack align={'center'} p={6}>
-                        <motion.div
-                            transition={{
-                                duration: 4,
-                                ease: 'easeInOut',
-                                repeat: Infinity,
-                            }}
-                            animate={{
-                                scale: [1, 1.1, 1],
-                            }}
-                        >
-                            <Icon as={FcCheckmark} fontSize={'100px'} />
-                        </motion.div>
 
-                        {showSocialButtons && (
-                            <VStack>
-                                <Text fontSize="sm">
-                                    {'Share your transaction'}
-                                </Text>
-                                <ShareButtons
-                                    descriptionEncoded={socialDescription}
-                                />
-                            </VStack>
+            <FadeInViewFromBottom>
+                <Container maxW={'container.lg'}>
+                    <ModalBody>
+                        <VStack align={'center'} p={6}>
+                            <motion.div
+                                transition={{
+                                    duration: 4,
+                                    ease: 'easeInOut',
+                                    repeat: Infinity,
+                                }}
+                                animate={{
+                                    scale: [1, 1.1, 1],
+                                }}
+                            >
+                                <Icon as={FcCheckmark} fontSize={'100px'} />
+                            </motion.div>
+
+                            {showSocialButtons && (
+                                <VStack>
+                                    <Text fontSize="sm">
+                                        {'Share your transaction'}
+                                    </Text>
+                                    <ShareButtons
+                                        descriptionEncoded={socialDescription}
+                                    />
+                                </VStack>
+                            )}
+                        </VStack>
+                    </ModalBody>
+
+                    <ModalFooter justifyContent={'center'}>
+                        {showExplorerButton && txId && (
+                            <Link
+                                href={`${explorerUrl}/${txId}`}
+                                isExternal
+                                color="gray.500"
+                                fontSize={'14px'}
+                                textDecoration={'underline'}
+                            >
+                                {'View it on the explorer'}
+                            </Link>
                         )}
-                    </VStack>
-                </ModalBody>
-
-                <ModalFooter justifyContent={'center'}>
-                    {showExplorerButton && txId && (
-                        <Link
-                            href={`${explorerUrl}/${txId}`}
-                            isExternal
-                            color="gray.500"
-                            fontSize={'14px'}
-                            textDecoration={'underline'}
-                        >
-                            {'View it on the explorer'}
-                        </Link>
-                    )}
-                </ModalFooter>
-            </Container>
+                    </ModalFooter>
+                </Container>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

@@ -7,6 +7,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { BaseModal } from '../common/BaseModal';
+import { FadeInViewFromBottom, StickyHeaderContainer } from '../common';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -25,16 +26,20 @@ export const LoginLoadingModal = ({
             trapFocus={false}
             autoFocus={false}
         >
-            <ModalHeader />
-            <ModalBody>
-                <VStack w={'full'} justifyContent={'center'}>
-                    <Spinner />
-                    <Text mt={4} fontSize="sm">
-                        Connecting...
-                    </Text>
-                </VStack>
-            </ModalBody>
-            <ModalFooter />
+            <StickyHeaderContainer>
+                <ModalHeader />
+            </StickyHeaderContainer>
+            <FadeInViewFromBottom>
+                <ModalBody>
+                    <VStack w={'full'} justifyContent={'center'}>
+                        <Spinner />
+                        <Text mt={4} fontSize="sm">
+                            Connecting...
+                        </Text>
+                    </VStack>
+                </ModalBody>
+                <ModalFooter />
+            </FadeInViewFromBottom>
         </BaseModal>
     );
 };

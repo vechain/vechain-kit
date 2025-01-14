@@ -12,7 +12,11 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { useCrossAppAccounts } from '@privy-io/react-auth';
-import { FadeInViewFromBottom, ModalBackButton } from '@/components/common';
+import {
+    FadeInViewFromBottom,
+    ModalBackButton,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { ConnectModalContents } from '../ConnectModal';
 import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
@@ -55,68 +59,78 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
 
     return (
         <FadeInViewFromBottom>
-            <ModalHeader
-                fontSize={'md'}
-                fontWeight={'500'}
-                textAlign={'center'}
-                color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                justifyContent={'center'}
-                alignItems={'center'}
-                display={'flex'}
-                gap={2}
-            >
-                <Icon as={GiSolarSystem} size={'20px'} />
-                Ecosystem
-            </ModalHeader>
+            <StickyHeaderContainer>
+                <ModalHeader
+                    fontSize={'md'}
+                    fontWeight={'500'}
+                    textAlign={'center'}
+                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                    justifyContent={'center'}
+                    alignItems={'center'}
+                    display={'flex'}
+                    gap={2}
+                >
+                    <Icon as={GiSolarSystem} size={'20px'} />
+                    Ecosystem
+                </ModalHeader>
+                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                <ModalCloseButton />
+            </StickyHeaderContainer>
 
-            <ModalBackButton onClick={() => setCurrentContent('main')} />
-            <ModalCloseButton />
-            <ModalBody>
-                {isLoading && (
-                    <VStack minH={'200px'} w={'full'} justifyContent={'center'}>
-                        <Spinner />
-                    </VStack>
-                )}
+            <FadeInViewFromBottom>
+                <ModalBody>
+                    {isLoading && (
+                        <VStack
+                            minH={'200px'}
+                            w={'full'}
+                            justifyContent={'center'}
+                        >
+                            <Spinner />
+                        </VStack>
+                    )}
 
-                {!isLoading && appsInfo && (
-                    <VStack spacing={4} w={'full'} pb={6}>
-                        {Object.entries(appsInfo).map(([appId, appInfo]) => (
-                            <Button
-                                key={appId}
-                                fontSize={'14px'}
-                                fontWeight={'400'}
-                                backgroundColor={
-                                    isDark ? 'transparent' : '#ffffff'
-                                }
-                                border={`1px solid ${
-                                    isDark ? '#ffffff29' : '#ebebeb'
-                                }`}
-                                p={6}
-                                borderRadius={16}
-                                w={'full'}
-                                onClick={() =>
-                                    connectWithVebetterDaoApps(appId)
-                                }
-                            >
-                                <Image
-                                    src={appInfo.logo_url}
-                                    alt={appInfo.name}
-                                    w={'30px'}
-                                />
-                                <Text ml={5}>{appInfo.name}</Text>
-                            </Button>
-                        ))}
-                    </VStack>
-                )}
+                    {!isLoading && appsInfo && (
+                        <VStack spacing={4} w={'full'} pb={6}>
+                            {Object.entries(appsInfo).map(
+                                ([appId, appInfo]) => (
+                                    <Button
+                                        key={appId}
+                                        fontSize={'14px'}
+                                        fontWeight={'400'}
+                                        backgroundColor={
+                                            isDark ? 'transparent' : '#ffffff'
+                                        }
+                                        border={`1px solid ${
+                                            isDark ? '#ffffff29' : '#ebebeb'
+                                        }`}
+                                        p={6}
+                                        borderRadius={16}
+                                        w={'full'}
+                                        onClick={() =>
+                                            connectWithVebetterDaoApps(appId)
+                                        }
+                                    >
+                                        <Image
+                                            src={appInfo.logo_url}
+                                            alt={appInfo.name}
+                                            w={'30px'}
+                                        />
+                                        <Text ml={5}>{appInfo.name}</Text>
+                                    </Button>
+                                ),
+                            )}
+                        </VStack>
+                    )}
 
-                {!isLoading && !appsInfo && (
-                    <Text>
-                        No application from VeChain ecosystem is available to
-                        login.
-                    </Text>
-                )}
-            </ModalBody>
-            <ModalFooter></ModalFooter>
+                    {!isLoading && !appsInfo && (
+                        <Text>
+                            No application from VeChain ecosystem is available
+                            to login.
+                        </Text>
+                    )}
+                </ModalBody>
+                <ModalFooter></ModalFooter>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

@@ -50,42 +50,47 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <VStack justify={'center'}>
-                <Image
-                    src={wallet.image}
-                    w="120px"
-                    h="120px"
-                    mt={10}
-                    mb={5}
-                    borderRadius="full"
-                    objectFit="cover"
-                />
-            </VStack>
 
-            <Container maxW={'container.lg'}>
-                <ModalBody w={'full'}>
-                    <VStack w={'full'} spacing={3} overflow={'hidden'}>
-                        <AccountSelector
-                            onClick={() => {
-                                if (connection.isConnectedWithPrivy) {
-                                    setCurrentContent('accounts');
-                                } else {
-                                    setCurrentContent('settings');
-                                }
-                            }}
-                            wallet={wallet}
-                        />
-                        <BalanceSection mb={4} />
-                        <QuickActionsSection
-                            setCurrentContent={setCurrentContent}
-                        />
-                        <AssetsSection />
-                    </VStack>
-                </ModalBody>
-                <ModalFooter>
-                    <VersionFooter />
-                </ModalFooter>
-            </Container>
+            <FadeInViewFromBottom>
+                <VStack justify={'center'}>
+                    <Image
+                        src={wallet.image}
+                        w="120px"
+                        h="120px"
+                        mt={10}
+                        mb={5}
+                        borderRadius="full"
+                        objectFit="cover"
+                    />
+                </VStack>
+            </FadeInViewFromBottom>
+
+            <FadeInViewFromBottom>
+                <Container maxW={'container.lg'}>
+                    <ModalBody w={'full'}>
+                        <VStack w={'full'} spacing={3} overflow={'hidden'}>
+                            <AccountSelector
+                                onClick={() => {
+                                    if (connection.isConnectedWithPrivy) {
+                                        setCurrentContent('accounts');
+                                    } else {
+                                        setCurrentContent('settings');
+                                    }
+                                }}
+                                wallet={wallet}
+                            />
+                            <BalanceSection mb={4} />
+                            <QuickActionsSection
+                                setCurrentContent={setCurrentContent}
+                            />
+                            <AssetsSection />
+                        </VStack>
+                    </ModalBody>
+                    <ModalFooter>
+                        <VersionFooter />
+                    </ModalFooter>
+                </Container>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };

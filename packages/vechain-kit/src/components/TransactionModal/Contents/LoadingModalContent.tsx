@@ -44,32 +44,35 @@ export const LoadingModalContent = ({
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack align={'center'} p={6}>
-                        <Spinner my={10} size="xl" />
-                        {showExplorerButton && txId && (
-                            <Link
-                                href={`${explorerUrl}/transactions/${txId}`}
-                                isExternal
-                                color="gray.500"
-                                fontSize={'14px'}
-                                textDecoration={'underline'}
-                            >
-                                {'View it on the explorer'}
-                            </Link>
-                        )}
 
-                        {!txId && (
-                            <Text fontSize="sm" align={'center'}>
-                                {
-                                    'This may take a few seconds. You can close this window and check the status later.'
-                                }
-                            </Text>
-                        )}
-                    </VStack>
-                </ModalBody>
-            </Container>
+            <FadeInViewFromBottom>
+                <Container maxW={'container.lg'}>
+                    <ModalBody>
+                        <VStack align={'center'} p={6}>
+                            <Spinner my={10} size="xl" />
+                            {showExplorerButton && txId && (
+                                <Link
+                                    href={`${explorerUrl}/transactions/${txId}`}
+                                    isExternal
+                                    color="gray.500"
+                                    fontSize={'14px'}
+                                    textDecoration={'underline'}
+                                >
+                                    {'View it on the explorer'}
+                                </Link>
+                            )}
+
+                            {!txId && (
+                                <Text fontSize="sm" align={'center'}>
+                                    {
+                                        'This may take a few seconds. You can close this window and check the status later.'
+                                    }
+                                </Text>
+                            )}
+                        </VStack>
+                    </ModalBody>
+                </Container>
+            </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
 };
