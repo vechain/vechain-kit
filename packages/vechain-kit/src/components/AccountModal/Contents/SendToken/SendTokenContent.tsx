@@ -1,5 +1,4 @@
 import {
-    Container,
     ModalBody,
     ModalCloseButton,
     ModalHeader,
@@ -172,8 +171,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
-
-            <Container maxW={'container.lg'}>
+            <FadeInViewFromBottom>
                 <ModalBody>
                     <VStack spacing={1} align="stretch" position="relative">
                         <Box
@@ -385,29 +383,29 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                         </Box>
                     </VStack>
                 </ModalBody>
-                <ModalFooter px={0}>
-                    <Container maxW={'container.lg'}>
-                        <Button
-                            width="full"
-                            height="60px"
-                            variant="solid"
-                            borderRadius="xl"
-                            colorScheme="blue"
-                            isDisabled={
-                                !selectedToken ||
-                                !amount ||
-                                !toAddressOrDomain ||
-                                !!error ||
-                                !!addressError ||
-                                isLoadingDomain
-                            }
-                            onClick={handleSend}
-                        >
-                            {selectedToken ? 'Send' : 'Select Token'}
-                        </Button>
-                    </Container>
-                </ModalFooter>
-            </Container>
+            </FadeInViewFromBottom>
+
+            <ModalFooter>
+                <Button
+                    px={4}
+                    width="full"
+                    height="60px"
+                    variant="solid"
+                    borderRadius="xl"
+                    colorScheme="blue"
+                    isDisabled={
+                        !selectedToken ||
+                        !amount ||
+                        !toAddressOrDomain ||
+                        !!error ||
+                        !!addressError ||
+                        isLoadingDomain
+                    }
+                    onClick={handleSend}
+                >
+                    {selectedToken ? 'Send' : 'Select Token'}
+                </Button>
+            </ModalFooter>
         </FadeInViewFromBottom>
     );
 };

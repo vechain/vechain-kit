@@ -1,5 +1,4 @@
 import {
-    Container,
     ModalBody,
     ModalCloseButton,
     ModalHeader,
@@ -15,6 +14,8 @@ import {
     AlertIcon,
     ModalFooter,
     useDisclosure,
+    Center,
+    Icon,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
@@ -27,6 +28,7 @@ import { getPicassoImage, humanAddress } from '@/utils';
 import { useWallet } from '@/hooks';
 import { useTransferERC20, useTransferVET } from '@/hooks';
 import { TransactionModal } from '../../../TransactionModal';
+import { FiArrowRight } from 'react-icons/fi';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -113,55 +115,60 @@ export const SendTokenSummaryContent = ({
             </StickyHeaderContainer>
 
             <FadeInViewFromBottom>
-                <Container maxW={'container.lg'}>
-                    <ModalBody>
-                        <VStack spacing={6} align="stretch" w="full">
-                            {connection.isConnectedWithPrivy && (
-                                <Alert
-                                    status="warning"
-                                    fontSize={'xs'}
-                                    borderRadius={'xl'}
-                                >
-                                    <AlertIcon />
-                                    Sending to OceanX or other exchanges may
-                                    result in loss of funds. Send the tokens to
-                                    your VeWorld wallet first.
-                                </Alert>
-                            )}
-                            {/* From/To Card */}
-                            <Box
-                                p={4}
-                                borderRadius="xl"
-                                bg={isDark ? '#00000021' : 'gray.50'}
+                <ModalBody>
+                    <VStack spacing={6} align="stretch" w="full">
+                        {connection.isConnectedWithPrivy && (
+                            <Alert
+                                status="warning"
+                                fontSize={'xs'}
+                                borderRadius={'xl'}
                             >
-                                {/* From Section */}
-                                <VStack
-                                    align="stretch"
+                                <AlertIcon />
+                                Sending to OceanX or other exchanges may result
+                                in loss of funds. Send the tokens to your
+                                VeWorld wallet first.
+                            </Alert>
+                        )}
+                        {/* From/To Card */}
+                        <Box
+                            p={4}
+                            borderRadius="xl"
+                            bg={isDark ? '#00000021' : 'gray.50'}
+                        >
+                            <VStack spacing={4} w="full">
+                                <HStack
+                                    alignItems="center"
                                     spacing={4}
                                     wordBreak={'break-all'}
+                                    w="full"
+                                    justifyContent="space-between"
                                 >
-                                    <Box>
+                                    {/* From Section */}
+                                    <Box w="50%" justifyContent="flex-start">
                                         <Text fontSize="sm" mb={2}>
                                             From
                                         </Text>
-                                        <HStack>
+                                        <HStack minH={'50px'}>
                                             <Image
                                                 src={selectedAccount.image}
                                                 alt="From account"
-                                                boxSize="40px"
+                                                boxSize="20px"
                                                 borderRadius="xl"
                                             />
                                             <VStack align="start" spacing={0}>
                                                 {selectedAccount.domain && (
                                                     <>
-                                                        <Text fontWeight="medium">
+                                                        <Text
+                                                            fontWeight="medium"
+                                                            fontSize="sm"
+                                                        >
                                                             {
                                                                 selectedAccount.domain
                                                             }
                                                         </Text>
 
                                                         <Text
-                                                            fontSize="sm"
+                                                            fontSize="xs"
                                                             opacity={0.5}
                                                         >
                                                             {humanAddress(
@@ -172,9 +179,14 @@ export const SendTokenSummaryContent = ({
                                                 )}
 
                                                 {!selectedAccount.domain && (
-                                                    <Text fontWeight="medium">
+                                                    <Text
+                                                        fontWeight="medium"
+                                                        fontSize="sm"
+                                                    >
                                                         {humanAddress(
                                                             selectedAccount.address,
+                                                            4,
+                                                            4,
                                                         )}
                                                     </Text>
                                                 )}
@@ -182,30 +194,51 @@ export const SendTokenSummaryContent = ({
                                         </HStack>
                                     </Box>
 
-                                    <Divider />
+                                    {/* Arrow Icon */}
+                                    <Center
+                                        bg={isDark ? '#262626' : 'gray.100'}
+                                        borderRadius="xl"
+                                        mt={7}
+                                        w="40px"
+                                        h="35px"
+                                        zIndex={2}
+                                    >
+                                        <Icon
+                                            as={FiArrowRight}
+                                            boxSize={4}
+                                            opacity={0.5}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'gray.600'
+                                            }
+                                        />
+                                    </Center>
 
                                     {/* To Section */}
-                                    <Box>
-                                        <Text fontSize="sm" mb={2}>
+                                    <Box w="50%" justifyContent="flex-end">
+                                        <Text
+                                            fontSize="sm"
+                                            mb={2}
+                                            textAlign="right"
+                                        >
                                             To
                                         </Text>
-                                        <HStack>
-                                            <Image
-                                                src={getPicassoImage(
-                                                    toAddressOrDomain,
-                                                )}
-                                                alt="To account"
-                                                boxSize="40px"
-                                                borderRadius="xl"
-                                            />
-                                            <VStack align="start" spacing={0}>
+                                        <HStack
+                                            minH={'50px'}
+                                            justifyContent="flex-end"
+                                        >
+                                            <VStack align="end" spacing={0}>
                                                 {resolvedDomain && (
                                                     <>
-                                                        <Text fontWeight="medium">
+                                                        <Text
+                                                            fontWeight="medium"
+                                                            fontSize="sm"
+                                                        >
                                                             {resolvedDomain}
                                                         </Text>
                                                         <Text
-                                                            fontSize="sm"
+                                                            fontSize="xs"
                                                             opacity={0.5}
                                                         >
                                                             {humanAddress(
@@ -217,48 +250,59 @@ export const SendTokenSummaryContent = ({
                                                 )}
 
                                                 {!resolvedDomain && (
-                                                    <Text fontWeight="medium">
+                                                    <Text
+                                                        fontWeight="medium"
+                                                        fontSize="sm"
+                                                    >
                                                         {resolvedAddress ||
                                                             toAddressOrDomain}
                                                     </Text>
                                                 )}
                                             </VStack>
-                                        </HStack>
-                                    </Box>
-
-                                    <Divider />
-                                    <Box>
-                                        <Text fontSize="sm" mb={2}>
-                                            Amount
-                                        </Text>
-                                        <HStack>
-                                            <Text
-                                                fontSize="xl"
-                                                fontWeight="semibold"
-                                            >
-                                                {compactFormatter.format(
-                                                    Number(amount),
-                                                )}{' '}
-                                                {selectedToken.symbol}
-                                            </Text>
-                                            <Text fontSize="sm" opacity={0.5}>
-                                                ≈ $
-                                                {compactFormatter.format(
-                                                    Number(amount) *
-                                                        selectedToken.price,
+                                            <Image
+                                                src={getPicassoImage(
+                                                    toAddressOrDomain,
                                                 )}
-                                            </Text>
+                                                alt="To account"
+                                                boxSize="20px"
+                                                borderRadius="xl"
+                                            />
                                         </HStack>
                                     </Box>
-                                </VStack>
-                            </Box>
-                        </VStack>
-                    </ModalBody>
-                </Container>
+                                </HStack>
+                                <Divider />
+                                <Box w="full" justifyContent="flex-start">
+                                    <Text fontSize="sm" mb={2}>
+                                        Amount
+                                    </Text>
+                                    <HStack>
+                                        <Text
+                                            fontSize="xl"
+                                            fontWeight="semibold"
+                                        >
+                                            {compactFormatter.format(
+                                                Number(amount),
+                                            )}{' '}
+                                            {selectedToken.symbol}
+                                        </Text>
+                                        <Text fontSize="sm" opacity={0.5}>
+                                            ≈ $
+                                            {compactFormatter.format(
+                                                Number(amount) *
+                                                    selectedToken.price,
+                                            )}
+                                        </Text>
+                                    </HStack>
+                                </Box>
+                            </VStack>
+                        </Box>
+                    </VStack>
+                </ModalBody>
 
                 <StickyFooterContainer>
-                    <ModalFooter px={6} py={0}>
+                    <ModalFooter py={0}>
                         <Button
+                            px={4}
                             width="full"
                             height="60px"
                             variant="solid"
