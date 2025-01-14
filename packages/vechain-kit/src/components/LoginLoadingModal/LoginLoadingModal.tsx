@@ -27,15 +27,20 @@ export const LoginLoadingModal = ({
             autoFocus={false}
         >
             <StickyHeaderContainer>
-                <ModalHeader />
+                <ModalHeader>
+                    <Text fontSize="sm">Connecting...</Text>
+                </ModalHeader>
             </StickyHeaderContainer>
             <FadeInViewFromBottom>
                 <ModalBody>
-                    <VStack w={'full'} justifyContent={'center'}>
-                        <Spinner />
-                        <Text mt={4} fontSize="sm">
-                            Connecting...
-                        </Text>
+                    <VStack
+                        w={'full'}
+                        justifyContent={'center'}
+                        minH={'100px'}
+                        alignItems={'center'}
+                        spacing={4}
+                    >
+                        <Spinner size="xl" />
                     </VStack>
                 </ModalBody>
                 <ModalFooter />
