@@ -13,132 +13,60 @@
 
 ## Introduction
 
-The VeChain DAppKit is a TypeScript library that facilitates seamless interaction between VeChain wallets (VeWorld, sync2)
-and dApps, enhancing user experience and developer convenience. Please refer to [VeChain Docs](https://docs.vechain.org/developer-resources/sdks-and-providers/dapp-kit) for full documentation and usage.
+VeChain Kit is a TypeScript library that simplifies wallet connections for VeChain applications. It provides a unified interface for multiple wallet providers including VeWorld, Sync2, Privy, and Login with VeChain.
+
+This kit also provides components and hooks for reading and writing to the VeChainThor blockchain.
+
+Currently only supported for React and NextJS.
+
+For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg).
+
+### We currently only support React and Next.js.
 
 ## Table of Contents
 
--   [Why ?](#why-)
--   [Key features](#key-features)
--   [Contributing](#contributing)
--   [Sample Projects](#sample-projects)
--   [Branching Strategy](#branching-strategy)
 -   [Setting up for local development](#setting-up-for-local-development)
-    -   [Prerequisites](#prerequisites)
-    -   [Install & build dependencies](#install--build-dependencies)
-    -   [Run in Dev Mode](#run-in-dev-mode)
--   [Further Documentation & Usage](#further-documentation--usage)
+-   [Branching Strategy](#branching-strategy)
+-   [E2E Testing](#e2e-testing)
+-   [Publishing](#publishing)
 
-## Why ?
-
--   Allow easy interaction with all wallets.
--   Currently, Connex only plays nice with Sync / Sync2
--   Enable a better UX for users
-
-## Key features
-
-1. **Wallet Connectivity**: Key components that handle interaction with VeWorld and Sync 2.
-
-2. **Customizable UI**: Ability to totally customize the UI of components.
-
-3. **User Experience**: Consistent experience with Ethereum and other chains.
-
-4. **Developer friendly**: Easy to adopt with proper documentation.
-
----
-
-## Contributing
-
-Please refer to the [Contributing Guide](./CONTRIBUTING.md) for more information on how to contribute to the project.
-
----
-
-## Sample Projects
-
-https://github.com/vechain/vechain-dapp-kit/assets/150018882/5cc133ae-4c6b-4e08-8cff-0e09b6ca43aa
-
--   Look at some live demos here:
-    -   [VueJs Demo](https://vechain.github.io/vechain-dapp-kit/vue/)
-    -   [VanillaJS Demo](https://vechain.github.io/vechain-dapp-kit/vanilla/)
--   Refer to the [apps](./examples) folder for sample projects.
-
----
-
-## Branching Strategy
-
-Welcome to our project! Here's an overview of our branching strategy.
-
----
-
-### Branch Types
-
--   **main**: The main branch represents the production-ready code. Only stable and tested features should be merged into
-    this branch. Once ready for publishing, a new tag should be created from this branch.
-
----
-
-## Setting up for local development
+# Setting up for local development
 
 ### Prerequisites
 
 -   Node.js >= 18.17
 -   Yarn >= 1.22.10
 
-### Install & build dependencies
+You will need to have 3 terminals open:
+
+1. In terminal 1, run the command to install all dependencies, both in the `vechain-kit` and `examples` folders. Run this command every time you add dependencies to the project.
 
 ```bash
 yarn install:all
 ```
 
-### Run in Dev Mode
+2. In terminal 2, enter in 'packages/vechain-kit' and run the command to keep your build in sync with the code you are developing.
+
+```bash
+yarn watch
+```
+
+3. In terminal 3, enter in 'examples/sample-next-privy-app' and run the command to start the NextJS app.
 
 ```bash
 yarn dev
 ```
 
-## Useful scripts
+## Branching Strategy
 
-### Test
+Welcome to our project! Here's an overview of our branching strategy.
 
-```bash
-yarn test
-```
+### Branch Types
 
-### Clean project
+-   **main**: The main branch represents the production-ready code. Only stable and tested features should be merged into
+    this branch. Once ready for publishing, a new tag should be created from this branch.
 
-```bash
-yarn clean
-```
-
-### Purge project
-
--   Runs yarn clean and removes all node_modules
-
-```bash
-yarn purge
-```
-
-### Install yarn packages
-
-```bash
-yarn
-```
-
-### Build dependencies
-
-```bash
-yarn build:deps
-```
-
-### Build release
-
-```bash
-yarn build
-```
-
----
-
-### E2E Testing
+## E2E Testing
 
 We utilize Cucumber.js with Selenium for end-to-end (E2E) testing. To conduct these tests, you'll require the ChromeDriver. Here's how to install it:
 
@@ -162,26 +90,22 @@ Alternatively, you can run headless tests directly in the console using:
 yarn test:e2e:headless
 ```
 
----
-
-## Further Documentation & Usage
-
--   Please refer to [VeChain Docs](https://docs.vechain.org/developer-resources/sdks-and-providers) for more information
-    on how to use the library.
-
----
-
 ## Publishing
 
-Create the PR for the release branch `vX.Y.Z`.
-
-When the PR is merged, create the release on github called `X.Y.Z`, it will automatically tag the commit with the version `X.Y.Z`.
+1. Prepare the release, this will check out the release branch, install dependencies, build packages, test and update the package versions
 
 ```bash
-# publish the release
-yarn publish:release X.Y.Z
+yarn prepare:release X.Y.Z
 ```
 
-## Release
+This will create a release branch called `vX.Y.Z` and update the package versions in the `package.json` files.
 
-changeset
+2. Create the PR for the release branch `vX.Y.Z`.
+
+3. When the PR is merged, create the release on github called `X.Y.Z`, it will automatically tag the commit with the version `X.Y.Z`.
+
+4. Publish the release
+
+```bash
+yarn publish:release X.Y.Z
+```
