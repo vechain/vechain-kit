@@ -25,7 +25,7 @@ jobs:
     # Single deploy job since we're just deploying
     deploy:
         env:
-            BASE_PATH: '/vechain-kit'
+            BASE_PATH: '/sample-next-vechain-app'
             NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
             NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
