@@ -8,7 +8,6 @@ import {
 import { PrivyProvider, WalletListEntry } from '@privy-io/react-auth';
 import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
-import { ConfigProvider } from './ConfigProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '@/types';
@@ -177,125 +176,115 @@ export const VeChainKit = ({
     return (
         <EnsureQueryClient>
             <ReactQueryDevtools initialIsOpen={false} />
-            <ConfigProvider>
+            <VeChainKitContext.Provider
+                value={{
+                    privy,
+                    feeDelegation,
+                    dappKit,
+                    loginModalUI,
+                    darkMode,
+                    i18n,
+                    language,
+                    network,
+                    openConnectModal,
+                    closeConnectModal,
+                    isConnectModalOpen,
+                    openAccountModal,
+                    closeAccountModal,
+                    isAccountModalOpen,
+                    openEcosystemModal,
+                    closeEcosystemModal,
+                    isEcosystemModalOpen,
+                }}
+            >
                 <ChakraProvider theme={Theme}>
-                    <VeChainKitContext.Provider
-                        value={{
-                            privy,
-                            feeDelegation,
-                            dappKit,
-                            loginModalUI,
-                            darkMode,
-                            i18n,
-                            language,
-                            network,
-                            openConnectModal,
-                            closeConnectModal,
-                            isConnectModalOpen,
-                            openAccountModal,
-                            closeAccountModal,
-                            isAccountModalOpen,
-                            openEcosystemModal,
-                            closeEcosystemModal,
-                            isEcosystemModalOpen,
+                    <PrivyProvider
+                        appId={privy.appId}
+                        clientId={privy.clientId}
+                        config={{
+                            loginMethodsAndOrder: {
+                                // @ts-ignore
+                                primary: loginMethods,
+                            },
+                            appearance: {
+                                theme: darkMode ? 'dark' : 'light',
+                                walletList: privy.appearance.walletList,
+                                accentColor: privy.appearance.accentColor,
+                                loginMessage: privy.appearance.loginMessage,
+                                logo: privy.appearance.logo,
+                            },
+                            embeddedWallets: {
+                                createOnLogin:
+                                    privy.embeddedWallets?.createOnLogin ??
+                                    'all-users',
+                            },
                         }}
+                        allowPasskeyLinking={privy.allowPasskeyLinking}
                     >
-                        <PrivyProvider
-                            appId={privy.appId}
-                            clientId={privy.clientId}
-                            config={{
-                                loginMethodsAndOrder: {
-                                    // @ts-ignore
-                                    primary: loginMethods,
-                                },
-                                appearance: {
-                                    theme: darkMode ? 'dark' : 'light',
-                                    walletList: privy.appearance.walletList,
-                                    accentColor: privy.appearance.accentColor,
-                                    loginMessage: privy.appearance.loginMessage,
-                                    logo: privy.appearance.logo,
-                                },
-                                embeddedWallets: {
-                                    createOnLogin:
-                                        privy.embeddedWallets?.createOnLogin ??
-                                        'all-users',
-                                },
+                        <DAppKitProvider
+                            nodeUrl={
+                                network.nodeUrl ??
+                                getConfig(network.type).nodeUrl
+                            }
+                            genesis={getConfig(network.type).network.genesis}
+                            i18n={i18n}
+                            language={language}
+                            logLevel={dappKit.logLevel}
+                            modalParent={dappKit.modalParent}
+                            onSourceClick={dappKit.onSourceClick}
+                            usePersistence={dappKit.usePersistence ?? true}
+                            walletConnectOptions={dappKit.walletConnectOptions}
+                            themeMode={darkMode ? 'DARK' : 'LIGHT'}
+                            themeVariables={{
+                                '--vdk-modal-z-index': '1000000',
+
+                                // Dark mode colors
+                                '--vdk-color-dark-primary': '#1f1f1e',
+                                '--vdk-color-dark-primary-hover': '#3c3c39',
+                                '--vdk-color-dark-primary-active': '#4a4a46',
+                                '--vdk-color-dark-secondary': '#2d2d2d',
+
+                                // Light mode colors
+                                '--vdk-color-light-primary': '#ffffff',
+                                '--vdk-color-light-primary-hover': '#f2f2f2',
+                                '--vdk-color-light-primary-active': '#eaeaea',
+                                '--vdk-color-light-secondary': '#f7f7f7',
+
+                                // Font settings
+                                '--vdk-font-family': 'var(--chakra-fonts-body)',
+                                '--vdk-font-size-medium': '14px',
+                                '--vdk-font-size-large': '16px',
+                                '--vdk-font-weight-medium': '500',
                             }}
-                            allowPasskeyLinking={privy.allowPasskeyLinking}
                         >
-                            <DAppKitProvider
+                            <PrivyWalletProvider
                                 nodeUrl={
                                     network.nodeUrl ??
                                     getConfig(network.type).nodeUrl
                                 }
-                                genesis={
-                                    getConfig(network.type).network.genesis
+                                delegatorUrl={feeDelegation.delegatorUrl}
+                                delegateAllTransactions={
+                                    feeDelegation.delegateAllTransactions
                                 }
-                                i18n={i18n}
-                                language={language}
-                                logLevel={dappKit.logLevel}
-                                modalParent={dappKit.modalParent}
-                                onSourceClick={dappKit.onSourceClick}
-                                usePersistence={dappKit.usePersistence ?? true}
-                                walletConnectOptions={
-                                    dappKit.walletConnectOptions
-                                }
-                                themeMode={darkMode ? 'DARK' : 'LIGHT'}
-                                themeVariables={{
-                                    '--vdk-modal-z-index': '1000000',
-
-                                    // Dark mode colors
-                                    '--vdk-color-dark-primary': '#1f1f1e',
-                                    '--vdk-color-dark-primary-hover': '#3c3c39',
-                                    '--vdk-color-dark-primary-active':
-                                        '#4a4a46',
-                                    '--vdk-color-dark-secondary': '#2d2d2d',
-
-                                    // Light mode colors
-                                    '--vdk-color-light-primary': '#ffffff',
-                                    '--vdk-color-light-primary-hover':
-                                        '#f2f2f2',
-                                    '--vdk-color-light-primary-active':
-                                        '#eaeaea',
-                                    '--vdk-color-light-secondary': '#f7f7f7',
-
-                                    // Font settings
-                                    '--vdk-font-family':
-                                        'var(--chakra-fonts-body)',
-                                    '--vdk-font-size-medium': '14px',
-                                    '--vdk-font-size-large': '16px',
-                                    '--vdk-font-weight-medium': '500',
-                                }}
                             >
-                                <PrivyWalletProvider
-                                    nodeUrl={
-                                        network.nodeUrl ??
-                                        getConfig(network.type).nodeUrl
-                                    }
-                                    delegatorUrl={feeDelegation.delegatorUrl}
-                                    delegateAllTransactions={
-                                        feeDelegation.delegateAllTransactions
-                                    }
-                                >
-                                    {children}
-                                    <ConnectModal
-                                        isOpen={isConnectModalOpen}
-                                        onClose={closeConnectModal}
-                                    />
-                                    <AccountModal
-                                        isOpen={isAccountModalOpen}
-                                        onClose={closeAccountModal}
-                                    />
-                                    <EcosystemModal
-                                        isOpen={isEcosystemModalOpen}
-                                        onClose={closeEcosystemModal}
-                                    />
-                                </PrivyWalletProvider>
-                            </DAppKitProvider>
-                        </PrivyProvider>
-                    </VeChainKitContext.Provider>
+                                {children}
+                                <ConnectModal
+                                    isOpen={isConnectModalOpen}
+                                    onClose={closeConnectModal}
+                                />
+                                <AccountModal
+                                    isOpen={isAccountModalOpen}
+                                    onClose={closeAccountModal}
+                                />
+                                <EcosystemModal
+                                    isOpen={isEcosystemModalOpen}
+                                    onClose={closeEcosystemModal}
+                                />
+                            </PrivyWalletProvider>
+                        </DAppKitProvider>
+                    </PrivyProvider>
                 </ChakraProvider>
-            </ConfigProvider>
+            </VeChainKitContext.Provider>
         </EnsureQueryClient>
     );
 };

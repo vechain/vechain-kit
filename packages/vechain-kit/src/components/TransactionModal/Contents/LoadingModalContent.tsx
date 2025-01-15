@@ -10,9 +10,10 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { usePrivyWalletProvider } from '@/providers';
+import { EXPLORER_URL } from '@/utils';
 import { FadeInViewFromBottom } from '@/components/common';
 import { StickyHeaderContainer } from '@/components/common';
-import { getConfig } from '@/config';
 
 export type LoadingModalContentProps = {
     title?: ReactNode;
@@ -25,9 +26,10 @@ export const LoadingModalContent = ({
     showExplorerButton,
     txId,
 }: LoadingModalContentProps) => {
+    const { chainId } = usePrivyWalletProvider();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-    const { explorerUrl } = getConfig();
+    const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
 
     return (
         <FadeInViewFromBottom>

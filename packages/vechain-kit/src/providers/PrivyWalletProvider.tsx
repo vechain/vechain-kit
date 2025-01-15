@@ -140,7 +140,7 @@ export const PrivyWalletProvider = ({
 
         // request signatures using privy
         const signatures: string[] = await Promise.all(
-            dataToSign.map(async (data, index) => {
+            dataToSign.map((data, index) => {
                 const txClause = txClauses[index];
                 if (!txClause) {
                     throw new Error(
@@ -154,22 +154,18 @@ export const PrivyWalletProvider = ({
                     });
                 } else {
                     const funcData = txClause.data;
-                    return (
-                        await signTypedData(data, {
-                            uiOptions: {
-                                title,
-                                description:
-                                    description ??
-                                    (typeof funcData === 'object' &&
-                                    funcData !== null &&
-                                    'functionName' in funcData
-                                        ? (funcData as { functionName: string })
-                                              .functionName
-                                        : ' '),
-                                buttonText,
-                            },
-                        })
-                    ).signature;
+                    return signTypedData(data, {
+                        title,
+                        description:
+                            description ??
+                            (typeof funcData === 'object' &&
+                            funcData !== null &&
+                            'functionName' in funcData
+                                ? (funcData as { functionName: string })
+                                      .functionName
+                                : ' '),
+                        buttonText,
+                    });
                 }
             }),
         );

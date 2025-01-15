@@ -11,11 +11,13 @@ import {
     Button,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
+import { EXPLORER_URL } from '@/utils';
 import { TransactionStatusErrorType } from '@/types';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';
-import { getConfig } from '@/config';
+import { useGetChainId } from '@/hooks';
+
 export type TransactionToastProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -42,7 +44,8 @@ export const TransactionToast = ({
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { explorerUrl } = getConfig();
+    const { data: chainId } = useGetChainId();
+    const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
 
     const statusConfig: Record<string, StatusConfig> = {
         pending: {

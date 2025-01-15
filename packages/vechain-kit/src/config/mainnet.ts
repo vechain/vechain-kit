@@ -39,7 +39,6 @@ const config: AppConfig = {
             transactions: [],
         },
     },
-    explorerUrl: 'https://vechainstats.com/transaction',
     //VeBetterDAO
     b3trContractAddress: '0x5ef79995FE8a89e0812330E4378eB2660ceDe699',
     vot3ContractAddress: '0x76Ca782B59C74d088C7D2Cce2f211BC00836c602',

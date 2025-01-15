@@ -63,6 +63,5 @@ const config: AppConfig = {
             transactions: [],
         },
     },
-    explorerUrl: 'https://explore-testnet.vechain.org',
 };
 export default config;
