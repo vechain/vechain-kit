@@ -1,4 +1,4 @@
-import { HStack, Image, Text, Box } from '@chakra-ui/react';
+import { HStack, Image, Text, Box, Button, VStack } from '@chakra-ui/react';
 import { TOKEN_LOGOS } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -14,8 +14,16 @@ type AssetRowProps = {
 };
 
 export const AssetRow = ({ symbol, amount, usdValue }: AssetRowProps) => (
-    <HStack justify="space-between" px={2} py={1}>
-        <HStack spacing={2}>
+    <Button
+        height="72px"
+        variant="ghost"
+        justifyContent="space-between"
+        p={4}
+        w="100%"
+        cursor="default"
+        _hover={{ bg: 'whiteAlpha.100' }}
+    >
+        <HStack>
             <Image
                 src={TOKEN_LOGOS[symbol]}
                 alt={`${symbol} logo`}
@@ -36,14 +44,13 @@ export const AssetRow = ({ symbol, amount, usdValue }: AssetRowProps) => (
                     </Box>
                 }
             />
-            <Text fontSize="sm">{symbol}</Text>
+            <Text>{symbol}</Text>
         </HStack>
-        <Text fontSize="sm">
-            {compactFormatter.format(amount)}
-            <Text as="span" opacity={0.5}>
-                {' '}
-                (${compactFormatter.format(usdValue)})
+        <VStack align="flex-end" spacing={0}>
+            <Text>{compactFormatter.format(amount)}</Text>
+            <Text fontSize="sm" color="gray.500">
+                ${compactFormatter.format(usdValue)}
             </Text>
-        </Text>
-    </HStack>
+        </VStack>
+    </Button>
 );
