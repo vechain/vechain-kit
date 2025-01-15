@@ -3,10 +3,10 @@
 import { Text, Icon, HStack, Button } from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
 import { useWallet } from '@/hooks';
-import { IoIosArrowDown } from 'react-icons/io';
 import { useState } from 'react';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
 import { Wallet } from '@/types';
+import { MdOutlineNavigateNext } from 'react-icons/md';
 type Props = {
     wallet: Wallet;
     size?: string;
@@ -28,6 +28,22 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
     return (
         <HStack>
             <Button
+                p={2}
+                px={4}
+                variant="selector"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    copyToClipboard(wallet.address ?? '');
+                }}
+            >
+                <Icon
+                    boxSize={5}
+                    as={copied ? IoCheckmarkOutline : IoCopyOutline}
+                />
+            </Button>
+
+            <Button
                 w="fit-content"
                 h="fit-content"
                 p={2}
@@ -44,27 +60,12 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
                     {connection.isConnectedWithPrivy && (
                         <Icon
                             boxSize={5}
-                            as={IoIosArrowDown}
+                            as={MdOutlineNavigateNext}
                             cursor="pointer"
+                            opacity={0.5}
                         />
                     )}
                 </HStack>
-            </Button>
-
-            <Button
-                p={2}
-                px={4}
-                variant="selector"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    copyToClipboard(wallet.address ?? '');
-                }}
-            >
-                <Icon
-                    boxSize={5}
-                    as={copied ? IoCheckmarkOutline : IoCopyOutline}
-                />
             </Button>
         </HStack>
     );

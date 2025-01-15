@@ -15,9 +15,9 @@ import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 
 export const AssetsSection = () => {
     const tabListBgColor = useColorModeValue('#000000d1', '#f4f4f4');
-    const tabTextColor = useColorModeValue('white', '#000000d1');
+    const tabTextColor = useColorModeValue('white', '#1f1f1e');
     const tabTextSelectedColor = useColorModeValue('#000000d1', '#ffffffeb');
-    const tabBgSelectedColor = useColorModeValue('white', '#000000d1');
+    const tabBgSelectedColor = useColorModeValue('white', '#1f1f1e');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
     const scrollToContent = () => {
