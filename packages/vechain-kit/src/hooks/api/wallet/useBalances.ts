@@ -1,17 +1,17 @@
-import { useAccountBalance } from './';
+import { useAccountBalance } from '..';
 import {
     useGetB3trBalance,
     useGetVot3Balance,
     useGetVeDelegateBalance,
     useGetTokenUsdPrice,
-} from './';
+} from '..';
 import { ethers } from 'ethers';
-import { useWallet } from '../';
+import { useWallet } from '../..';
 
 export const useBalances = () => {
-    const { selectedAccount } = useWallet();
+    const { account } = useWallet();
     const { data: vetData, isLoading: vetLoading } = useAccountBalance(
-        selectedAccount?.address,
+        account?.address ?? '',
     );
     const { data: vetUsdPrice, isLoading: vetUsdPriceLoading } =
         useGetTokenUsdPrice('VET');
@@ -19,17 +19,17 @@ export const useBalances = () => {
         useGetTokenUsdPrice('VTHO');
 
     const { data: b3trBalance, isLoading: b3trLoading } = useGetB3trBalance(
-        selectedAccount?.address,
+        account?.address ?? '',
     );
     const { data: b3trUsdPrice, isLoading: b3trUsdPriceLoading } =
         useGetTokenUsdPrice('B3TR');
 
     const { data: vot3Balance, isLoading: vot3Loading } = useGetVot3Balance(
-        selectedAccount?.address,
+        account?.address ?? '',
     );
 
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
-        useGetVeDelegateBalance(selectedAccount?.address);
+        useGetVeDelegateBalance(account?.address ?? '');
 
     const isLoading =
         vetLoading ||

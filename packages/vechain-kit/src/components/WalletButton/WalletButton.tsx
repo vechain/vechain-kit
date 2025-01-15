@@ -1,21 +1,18 @@
 import { Button, HStack, Image, Text, useDisclosure } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { ConnectModal, AccountModal, LoginLoadingModal } from '@/components';
-import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 export const WalletButton = () => {
-    const { connection, selectedAccount } = useWallet();
+    const { connection, account } = useWallet();
     const { setSource, connect } = useDappKitWallet();
     const { authenticated, user, createWallet } = usePrivy();
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
-
-    const { privyConfig } = useVeChainKitConfig();
 
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
 
@@ -56,25 +53,25 @@ export const WalletButton = () => {
                     <HStack>
                         <Image
                             className="address-icon mobile"
-                            src={selectedAccount.image}
+                            src={account.image ?? ''}
                             alt="wallet"
                             width={23}
                             height={23}
                             borderRadius="50%"
                         />
-                        {selectedAccount.domain ? (
+                        {account.domain ? (
                             <Text
                                 fontSize="sm"
                                 display={{ base: 'none', md: 'block' }}
                             >
-                                {selectedAccount.domain}
+                                {account.domain}
                             </Text>
                         ) : (
                             <Text
                                 fontSize="sm"
                                 display={{ base: 'none', md: 'block' }}
                             >
-                                {humanAddress(selectedAccount.address, 6, 4)}
+                                {humanAddress(account.address ?? '', 6, 4)}
                             </Text>
                         )}
                     </HStack>
@@ -86,7 +83,6 @@ export const WalletButton = () => {
             <ConnectModal
                 isOpen={connectModal.isOpen}
                 onClose={connectModal.onClose}
-                logo={privyConfig.appearance.logo}
             />
 
             <AccountModal

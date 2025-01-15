@@ -32,12 +32,12 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Use Node v16 & GitHub registry
-              uses: actions/setup-node@v3
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
 
-            - name: Build React App
+            - name: Build App
               run: |
                   yarn install:all
                   yarn build
@@ -45,16 +45,10 @@ jobs:
             - name: Setup Pages
               uses: actions/configure-pages@v5
 
-            - name: Copy Builds
-              run: |
-                  mkdir build
-                  cp -r examples/sample-next-vechain-app/dist ./build
-
             - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+              uses: actions/upload-pages-artifact@v1
               with:
-                  # Upload build
-                  path: './build'
+                  path: './examples/sample-next-vechain-app/dist'
 
             - name: Deploy to GitHub Pages
               id: deployment

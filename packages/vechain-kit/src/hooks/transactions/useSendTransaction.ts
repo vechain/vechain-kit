@@ -1,17 +1,15 @@
 'use client';
 
-import { useTxReceipt } from '../useTxReceipt';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { Transaction } from 'thor-devkit';
-import { useVeChainKitConfig } from '../../providers/VeChainKit';
-import { useWallet } from '../useWallet';
-import { useSmartAccount } from '../useSmartAccount';
+import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import {
     EnhancedClause,
     TransactionStatus,
     TransactionStatusErrorType,
-} from '../../utils';
+} from '@/types';
+import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
 
 const estimateTxGasWithNext = async (
     clauses: Connex.VM.Clause[],
@@ -126,11 +124,11 @@ export const useSendTransaction = ({
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const { vendor, thor } = useConnex();
-    const { dappKitConfig, feeDelegationConfig } = useVeChainKitConfig();
-    const nodeUrl = dappKitConfig.nodeUrl;
+    const { feeDelegation } = useVeChainKitConfig();
+    const nodeUrl = useGetNodeUrl();
 
     const { connection } = useWallet();
-    const smartAccount = useSmartAccount();
+    const privyWalletProvider = usePrivyWalletProvider();
 
     /**
      * Convert the clauses to the format expected by the vendor
@@ -175,7 +173,7 @@ export const useSendTransaction = ({
     const sendTransaction = useCallback(
         async (clauses: EnhancedClause[]) => {
             if (connection.isConnectedWithPrivy) {
-                return await smartAccount.sendTransaction({
+                return await privyWalletProvider.sendTransaction({
                     txClauses: clauses,
                     ...privyUIOptions,
                 });
@@ -183,10 +181,8 @@ export const useSendTransaction = ({
 
             let transaction = vendor.sign('tx', clauses);
 
-            if (feeDelegationConfig.delegateAllTransactions) {
-                transaction = transaction.delegate(
-                    feeDelegationConfig.delegatorUrl,
-                );
+            if (feeDelegation.delegateAllTransactions) {
+                transaction = transaction.delegate(feeDelegation.delegatorUrl);
             }
 
             if (signerAccountAddress) {
@@ -216,7 +212,13 @@ export const useSendTransaction = ({
             }
             return transaction.request();
         },
-        [vendor, signerAccountAddress, suggestedMaxGas, nodeUrl, smartAccount],
+        [
+            vendor,
+            signerAccountAddress,
+            suggestedMaxGas,
+            nodeUrl,
+            privyWalletProvider,
+        ],
     );
 
     /**

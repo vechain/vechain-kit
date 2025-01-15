@@ -1,4 +1,4 @@
-import { isValidAddress } from '../../utils';
+import { isValidAddress } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { ethers } from 'ethers';

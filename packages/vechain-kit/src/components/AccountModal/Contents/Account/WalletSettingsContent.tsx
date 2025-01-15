@@ -9,7 +9,7 @@ import {
     Text,
     Divider,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet, Wallet } from '@/hooks';
+import { usePrivy, useWallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { IoIosFingerPrint } from 'react-icons/io';
@@ -35,17 +35,9 @@ export const WalletSettingsContent = ({
     onLogoutSuccess,
 }: Props) => {
     const { exportWallet, linkPasskey } = usePrivy();
-    const { privyConfig } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
 
-    const { wallet, embeddedWallet, connection, crossAppWallet, disconnect } =
-        useWallet();
-
-    // If connected with Privy, use embedded or cross app wallet, otherwise use the connected wallet
-    const account: Wallet = connection.isConnectedWithPrivy
-        ? connection.isConnectedWithCrossAppPrivy
-            ? crossAppWallet
-            : embeddedWallet
-        : wallet;
+    const { connectedWallet, connection, disconnect } = useWallet();
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -78,11 +70,11 @@ export const WalletSettingsContent = ({
                 <ModalBody w={'full'}>
                     <VStack justify={'center'}>
                         <Image
-                            src={account.image}
+                            src={connectedWallet.image}
                             maxW={'70px'}
                             borderRadius="50%"
                         />
-                        <AddressDisplay wallet={account} />
+                        <AddressDisplay wallet={connectedWallet} />
                     </VStack>
 
                     <VStack align="stretch" spacing={5} mt={2}>
@@ -112,7 +104,7 @@ export const WalletSettingsContent = ({
                                     rightIcon={MdOutlineNavigateNext}
                                 />
 
-                                {privyConfig.allowPasskeyLinking && (
+                                {privy.allowPasskeyLinking && (
                                     <ActionButton
                                         title="Add passkey"
                                         description="Add a passkey to your account for future logins. If enabled, passkeys will always be available as a login method."

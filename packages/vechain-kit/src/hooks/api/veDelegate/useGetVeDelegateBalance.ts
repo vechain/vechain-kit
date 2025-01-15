@@ -2,18 +2,22 @@ import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 // import { networkConfig } from '@repo/config';
 import { IERC20__factory } from '../../../contracts/typechain-types';
+import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
 
 const ERC20Interface = IERC20__factory.createInterface();
 
 export const getVeDelegateBalance = async (
     thor: Connex.Thor,
+    network: NETWORK_TYPE,
     address?: string,
 ): Promise<string> => {
     const functionFragment =
         ERC20Interface.getFunction('balanceOf').format('json');
 
     const res = await thor
-        .account('0xD3f7b82Df5705D34f64C634d2dEf6B1cB3116950')
+        .account(getConfig(network).veDelegateTokenContractAddress)
         .method(JSON.parse(functionFragment))
         .call(address);
 
@@ -29,10 +33,11 @@ export const getVeDelegateBalanceQueryKey = (address?: string) => [
 
 export const useGetVeDelegateBalance = (address?: string) => {
     const { thor } = useConnex();
+    const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getVeDelegateBalanceQueryKey(address),
-        queryFn: async () => getVeDelegateBalance(thor, address),
-        enabled: !!thor && !!address,
+        queryFn: async () => getVeDelegateBalance(thor, network.type, address),
+        enabled: !!thor && !!address && !!network.type,
     });
 };

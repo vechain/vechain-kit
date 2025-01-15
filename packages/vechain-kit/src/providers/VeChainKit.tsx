@@ -5,26 +5,35 @@ import {
     useState,
     useCallback,
 } from 'react';
-import {
-    PrivyProvider as BasePrivyProvider,
-    WalletListEntry,
-} from '@privy-io/react-auth';
-import { DAppKitProvider, DAppKitUIOptions } from '@vechain/dapp-kit-react';
-import { SmartAccountProvider } from '../hooks';
+import { PrivyProvider, WalletListEntry } from '@privy-io/react-auth';
+import { DAppKitProvider } from '@vechain/dapp-kit-react';
+import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
-import { PrivyLoginMethod } from '../utils';
+import { PrivyLoginMethod } from '@/types';
 import { ConnectModal, AccountModal } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
+import {
+    type LogLevel,
+    type WalletSource as DAppKitWalletSource,
+} from '@vechain/dapp-kit';
+import { type WalletConnectOptions } from '@vechain/dapp-kit-react';
+import {
+    type SourceInfo,
+    type CustomizedStyle,
+    type I18n,
+} from '@vechain/dapp-kit-ui';
+import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 type Props = {
     children: ReactNode;
-    privyConfig: {
+    privy: {
         appId: string;
         clientId: string;
         appearance: {
             walletList: WalletListEntry[];
-            theme: 'dark' | 'light';
             accentColor: `#${string}`;
             loginMessage: string;
             logo: string;
@@ -36,23 +45,48 @@ type Props = {
         ecosystemAppsID?: string[];
         allowPasskeyLinking?: boolean;
     };
-    feeDelegationConfig: {
+    feeDelegation: {
         delegatorUrl: string;
         delegateAllTransactions: boolean;
     };
-    dappKitConfig: DAppKitUIOptions;
-    loginScreenUI?: {
+    dappKit: {
+        allowedWallets?: DAppKitWalletSource[];
+        walletConnectOptions?: WalletConnectOptions;
+        usePersistence?: boolean;
+        useFirstDetectedSource?: boolean;
+        logLevel?: LogLevel;
+        themeVariables?: CustomizedStyle;
+        modalParent?: HTMLElement;
+        onSourceClick?: (source?: SourceInfo) => void;
+    };
+    loginModalUI?: {
         logo?: string;
         description?: string;
         preferredLoginMethods?: Array<'email' | 'google'>;
     };
+    darkMode?: boolean;
+    i18n?: I18n;
+    language?: string;
+    network: {
+        type: NETWORK_TYPE;
+        nodeUrl?: string;
+        requireCertificate?: boolean;
+        connectionCertificate?: {
+            message?: Connex.Vendor.CertMessage;
+            options?: Connex.Signer.CertOptions;
+        };
+    };
 };
 
 type VeChainKitConfig = {
-    privyConfig: Props['privyConfig'];
-    feeDelegationConfig: Props['feeDelegationConfig'];
-    dappKitConfig: Props['dappKitConfig'];
-    loginScreenUI?: Props['loginScreenUI'];
+    privy: Props['privy'];
+    feeDelegation: Props['feeDelegation'];
+    dappKit: Props['dappKit'];
+    loginModalUI?: Props['loginModalUI'];
+    darkMode?: Props['darkMode'];
+    i18n?: Props['i18n'];
+    language?: Props['language'];
+    network: Props['network'];
     // Connect Modal
     openConnectModal: () => void;
     closeConnectModal: () => void;
@@ -61,6 +95,14 @@ type VeChainKitConfig = {
     openAccountModal: () => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
+    // Transaction Modal
+    openTransactionModal: () => void;
+    closeTransactionModal: () => void;
+    isTransactionModalOpen: boolean;
+    // Transaction Toast
+    openTransactionToast: () => void;
+    closeTransactionToast: () => void;
+    isTransactionToastOpen: boolean;
 };
 
 /**
@@ -84,10 +126,14 @@ export const useVeChainKitConfig = () => {
  */
 export const VeChainKit = ({
     children,
-    privyConfig,
-    feeDelegationConfig,
-    dappKitConfig,
-    loginScreenUI,
+    privy,
+    feeDelegation,
+    dappKit,
+    loginModalUI,
+    darkMode = false,
+    i18n,
+    language,
+    network,
 }: Omit<Props, 'queryClient'>) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
@@ -103,90 +149,153 @@ export const VeChainKit = ({
         [],
     );
 
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+    const openTransactionModal = useCallback(
+        () => setIsTransactionModalOpen(true),
+        [],
+    );
+    const closeTransactionModal = useCallback(
+        () => setIsTransactionModalOpen(false),
+        [],
+    );
+
+    const [isTransactionToastOpen, setIsTransactionToastOpen] = useState(false);
+    const openTransactionToast = useCallback(
+        () => setIsTransactionToastOpen(true),
+        [],
+    );
+    const closeTransactionToast = useCallback(
+        () => setIsTransactionToastOpen(false),
+        [],
+    );
+
     const loginMethods = [
-        ...privyConfig.loginMethods,
-        ...(privyConfig.ecosystemAppsID ?? []).map((appID) => `privy:${appID}`),
-    ];
+        ...privy.loginMethods,
+        ...(privy.ecosystemAppsID ?? []).map((appID) => `privy:${appID}`),
+    ].slice(0, 4); // Limit is 4 login methods
 
     // Set the color mode in localStorage to match the Privy theme
     if (
         !localStorage.getItem('chakra-ui-color-mode') ||
         localStorage.getItem('chakra-ui-color-mode') !==
-            privyConfig.appearance.theme
+            (darkMode ? 'dark' : 'light')
     ) {
         localStorage.setItem(
             'chakra-ui-color-mode',
-            privyConfig.appearance.theme,
+            darkMode ? 'dark' : 'light',
         );
         localStorage.setItem('chakra-ui-color-mode-default', 'set');
     }
 
     return (
         <EnsureQueryClient>
+            <ReactQueryDevtools initialIsOpen={false} />
             <VeChainKitContext.Provider
                 value={{
-                    privyConfig,
-                    feeDelegationConfig,
-                    dappKitConfig,
+                    privy,
+                    feeDelegation,
+                    dappKit,
+                    loginModalUI,
+                    darkMode,
+                    i18n,
+                    language,
+                    network,
                     openConnectModal,
                     closeConnectModal,
                     isConnectModalOpen,
                     openAccountModal,
                     closeAccountModal,
                     isAccountModalOpen,
-                    loginScreenUI,
+                    openTransactionModal,
+                    closeTransactionModal,
+                    isTransactionModalOpen,
+                    openTransactionToast,
+                    closeTransactionToast,
+                    isTransactionToastOpen,
                 }}
             >
                 <ChakraProvider theme={Theme}>
-                    <BasePrivyProvider
-                        appId={privyConfig.appId}
-                        clientId={privyConfig.clientId}
+                    <PrivyProvider
+                        appId={privy.appId}
+                        clientId={privy.clientId}
                         config={{
                             loginMethodsAndOrder: {
                                 // @ts-ignore
                                 primary: loginMethods,
                             },
-                            appearance: privyConfig.appearance,
+                            appearance: {
+                                theme: darkMode ? 'dark' : 'light',
+                                walletList: privy.appearance.walletList,
+                                accentColor: privy.appearance.accentColor,
+                                loginMessage: privy.appearance.loginMessage,
+                                logo: privy.appearance.logo,
+                            },
                             embeddedWallets: {
                                 createOnLogin:
-                                    privyConfig.embeddedWallets
-                                        ?.createOnLogin ?? 'all-users',
+                                    privy.embeddedWallets?.createOnLogin ??
+                                    'all-users',
                             },
                         }}
-                        allowPasskeyLinking={privyConfig.allowPasskeyLinking}
+                        allowPasskeyLinking={privy.allowPasskeyLinking}
                     >
                         <DAppKitProvider
-                            nodeUrl={dappKitConfig.nodeUrl}
-                            genesis={dappKitConfig.genesis}
-                            usePersistence
-                            walletConnectOptions={
-                                dappKitConfig.walletConnectOptions
+                            nodeUrl={
+                                network.nodeUrl ??
+                                getConfig(network.type).nodeUrl
                             }
-                            themeMode={dappKitConfig.themeMode}
+                            genesis={getConfig(network.type).network.genesis}
+                            i18n={i18n}
+                            language={language}
+                            logLevel={dappKit.logLevel}
+                            modalParent={dappKit.modalParent}
+                            onSourceClick={dappKit.onSourceClick}
+                            usePersistence={dappKit.usePersistence ?? true}
+                            walletConnectOptions={dappKit.walletConnectOptions}
+                            themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={{
                                 '--vdk-modal-z-index': '1000000',
+
+                                // Dark mode colors
+                                '--vdk-color-dark-primary': '#1f1f1e',
+                                '--vdk-color-dark-primary-hover': '#3c3c39',
+                                '--vdk-color-dark-primary-active': '#4a4a46',
+                                '--vdk-color-dark-secondary': '#2d2d2d',
+
+                                // Light mode colors
+                                '--vdk-color-light-primary': '#ffffff',
+                                '--vdk-color-light-primary-hover': '#f2f2f2',
+                                '--vdk-color-light-primary-active': '#eaeaea',
+                                '--vdk-color-light-secondary': '#f7f7f7',
+
+                                // Font settings
+                                '--vdk-font-family': 'var(--chakra-fonts-body)',
+                                '--vdk-font-size-medium': '14px',
+                                '--vdk-font-size-large': '16px',
+                                '--vdk-font-weight-medium': '500',
                             }}
                         >
-                            <SmartAccountProvider
-                                nodeUrl={dappKitConfig.nodeUrl}
-                                delegatorUrl={feeDelegationConfig.delegatorUrl}
+                            <PrivyWalletProvider
+                                nodeUrl={
+                                    network.nodeUrl ??
+                                    getConfig(network.type).nodeUrl
+                                }
+                                delegatorUrl={feeDelegation.delegatorUrl}
                                 delegateAllTransactions={
-                                    feeDelegationConfig.delegateAllTransactions
+                                    feeDelegation.delegateAllTransactions
                                 }
                             >
                                 {children}
                                 <ConnectModal
                                     isOpen={isConnectModalOpen}
                                     onClose={closeConnectModal}
-                                    logo={privyConfig.appearance.logo}
                                 />
                                 <AccountModal
                                     isOpen={isAccountModalOpen}
                                     onClose={closeAccountModal}
                                 />
-                            </SmartAccountProvider>
+                            </PrivyWalletProvider>
                         </DAppKitProvider>
-                    </BasePrivyProvider>
+                    </PrivyProvider>
                 </ChakraProvider>
             </VeChainKitContext.Provider>
         </EnsureQueryClient>

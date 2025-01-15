@@ -11,11 +11,12 @@ import {
     Button,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { useSmartAccount } from '../../hooks';
-import { EXPLORER_URL, TransactionStatusErrorType } from '../../utils';
+import { TransactionStatusErrorType } from '@/types';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import { useVeChainKitConfig } from '@/providers';
+import { getConfig } from '@/config';
 
 export type TransactionToastProps = {
     isOpen: boolean;
@@ -43,8 +44,8 @@ export const TransactionToast = ({
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { chainId } = useSmartAccount();
-    const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
+    const { network } = useVeChainKitConfig();
+    const explorerUrl = getConfig(network.type).explorerUrl;
 
     const statusConfig: Record<string, StatusConfig> = {
         pending: {

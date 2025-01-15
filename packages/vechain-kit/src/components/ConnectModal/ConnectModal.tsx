@@ -2,18 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
-import { EcosystemContent } from './Contents/EcosystemContent';
 import { BaseModal } from '@/components/common';
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
-    logo?: string;
 };
 
-export type ConnectModalContents = 'main' | 'ecosystem' | 'email-verification';
+export type ConnectModalContents = 'main' | 'email-verification';
 
-export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
+export const ConnectModal = ({ isOpen, onClose }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContents>('main');
 
@@ -28,14 +26,6 @@ export const ConnectModal = ({ isOpen, onClose, logo }: Props) => {
             case 'main':
                 return (
                     <MainContent
-                        setCurrentContent={setCurrentContent}
-                        onClose={onClose}
-                        logo={logo}
-                    />
-                );
-            case 'ecosystem':
-                return (
-                    <EcosystemContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                     />

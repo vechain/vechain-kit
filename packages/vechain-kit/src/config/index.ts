@@ -1,0 +1,41 @@
+import localConfig from './solo';
+import testnetConfig from './testnet';
+import mainnetConfig from './mainnet';
+import { Network, NETWORK_TYPE } from './network';
+
+export type AppConfig = {
+    ipfsFetchingService: string;
+    b3trContractAddress: string;
+    vot3ContractAddress: string;
+    b3trGovernorAddress: string;
+    timelockContractAddress: string;
+    xAllocationPoolContractAddress: string;
+    xAllocationVotingContractAddress: string;
+    emissionsContractAddress: string;
+    voterRewardsContractAddress: string;
+    galaxyMemberContractAddress: string;
+    treasuryContractAddress: string;
+    x2EarnAppsContractAddress: string;
+    x2EarnCreatorContractAddress: string;
+    x2EarnRewardsPoolContractAddress: string;
+    nodeManagementContractAddress: string;
+    veBetterPassportContractAddress: string;
+    veDelegate: string;
+    veDelegateVotes: string;
+    veDelegateTokenContractAddress: string;
+    oracleContractAddress: string;
+    accountFactoryAddress: string;
+    cleanifyCampaignsContractAddress: string;
+    cleanifyChallengesContractAddress: string;
+    nodeUrl: string;
+    indexerUrl?: string;
+    network: Network;
+    explorerUrl: string;
+};
+
+export const getConfig = (env: NETWORK_TYPE): AppConfig => {
+    if (env === 'solo') return localConfig;
+    if (env === 'test') return testnetConfig;
+    if (env === 'main') return mainnetConfig;
+    throw new Error(`Unsupported NETWORK_TYPE ${env}`);
+};

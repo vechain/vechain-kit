@@ -94,7 +94,6 @@ export const TransactionModal = ({
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
-            size="sm"
             trapFocus={false}
             closeOnOverlayClick={status !== 'pending'}
         >

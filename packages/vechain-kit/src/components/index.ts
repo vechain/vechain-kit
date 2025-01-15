@@ -5,3 +5,4 @@ export * from './TransactionToast';
 export * from './AccountModal';
 export * from './common';
 export * from './LoginLoadingModal';
+export * from './EcosystemModal';

@@ -27,7 +27,7 @@ type Props = {
 export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-    const { selectedAccount } = useWallet();
+    const { account } = useWallet();
 
     return (
         <FadeInViewFromBottom>
@@ -48,12 +48,9 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                 <Container maxW={'container.lg'}>
                     <ModalBody>
                         <VStack spacing={6} align="center" w="full">
-                            <AddressDisplay
-                                wallet={selectedAccount}
-                                size="lg"
-                            />
+                            <AddressDisplay wallet={account} size="lg" />
                             <QRCode
-                                value={selectedAccount.address}
+                                value={account.address ?? ''}
                                 size={200}
                                 removeQrCodeBehindLogo={true}
                                 eyeRadius={4}

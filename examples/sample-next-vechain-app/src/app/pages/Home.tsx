@@ -9,7 +9,6 @@ import {
     Stack,
     Text,
     useColorMode,
-    useDisclosure,
     VStack,
     Box,
     Spinner,
@@ -19,8 +18,10 @@ import {
     useWallet,
     useSendTransaction,
     WalletButton,
-    TransactionModal,
+    useTransactionModal,
+    useTransactionToast,
     TransactionToast,
+    TransactionModal,
     useDAppKitPrivyColorMode,
     useConnectModal,
     useAccountModal,
@@ -34,14 +35,41 @@ export default function Home(): ReactElement {
     const { toggleColorMode: toggleDAppKitPrivyColorMode } =
         useDAppKitPrivyColorMode();
 
-    const { connection, selectedAccount, connectedWallet, smartAccount } =
-        useWallet();
+    const { connection, account, connectedWallet, smartAccount } = useWallet();
 
     const { open } = useConnectModal();
     const { open: openAccountModal } = useAccountModal();
 
     const { data: b3trBalance, isLoading: b3trBalanceLoading } =
-        useGetB3trBalance(smartAccount.address);
+        useGetB3trBalance(smartAccount.address ?? undefined);
+
+    const {
+        sendTransaction,
+        status,
+        txReceipt,
+        resetStatus,
+        isTransactionPending,
+        error,
+    } = useSendTransaction({
+        signerAccountAddress: account?.address,
+        privyUIOptions: {
+            title: 'Sign to confirm',
+            description:
+                'This is a test transaction performing a transfer of 0 B3TR tokens from your smart account.',
+            buttonText: 'Sign',
+        },
+    });
+
+    const {
+        open: openTransactionModal,
+        close: closeTransactionModal,
+        isOpen: isTransactionModalOpen,
+    } = useTransactionModal();
+    const {
+        open: openTransactionToast,
+        close: closeTransactionToast,
+        isOpen: isTransactionToastOpen,
+    } = useTransactionToast();
 
     // A dummy tx sending 0 b3tr tokens
     const clauses = useMemo(() => {
@@ -62,32 +90,13 @@ export default function Home(): ReactElement {
         return clausesArray;
     }, [connectedWallet.address]);
 
-    const {
-        sendTransaction,
-        status,
-        txReceipt,
-        resetStatus,
-        isTransactionPending,
-        error,
-    } = useSendTransaction({
-        signerAccountAddress: selectedAccount?.address,
-        privyUIOptions: {
-            title: 'Sign to confirm',
-            description:
-                'This is a test transaction performing a transfer of 0 B3TR tokens from your smart account.',
-            buttonText: 'Sign',
-        },
-    });
-
-    const transactionToast = useDisclosure();
     const handleTransactionWithToast = useCallback(async () => {
-        transactionToast.onOpen();
+        openTransactionToast();
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-    const transactionModal = useDisclosure();
     const handleTransactionWithModal = useCallback(async () => {
-        transactionModal.onOpen();
+        openTransactionModal();
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
@@ -154,6 +163,7 @@ export default function Home(): ReactElement {
                             <b>Connection</b>
                         </Heading>
                         <Text>Type: {connection.source.type}</Text>
+                        <Text>Network: {connection.network}</Text>
                     </Box>
 
                     <Box mt={4}>
@@ -201,8 +211,8 @@ export default function Home(): ReactElement {
             </Stack>
 
             <TransactionToast
-                isOpen={transactionToast.isOpen}
-                onClose={transactionToast.onClose}
+                isOpen={isTransactionToastOpen}
+                onClose={closeTransactionToast}
                 status={status}
                 error={error}
                 txReceipt={txReceipt}
@@ -210,8 +220,8 @@ export default function Home(): ReactElement {
             />
 
             <TransactionModal
-                isOpen={transactionModal.isOpen}
-                onClose={transactionModal.onClose}
+                isOpen={isTransactionModalOpen}
+                onClose={closeTransactionModal}
                 status={status}
                 txId={txReceipt?.meta.txID}
                 errorDescription={error?.reason ?? 'Unknown error'}

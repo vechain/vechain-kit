@@ -14,22 +14,17 @@ import {
 import { useCrossAppAccounts } from '@privy-io/react-auth';
 import {
     FadeInViewFromBottom,
-    ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
-import { ConnectModalContents } from '../ConnectModal';
 import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
-import { GiSolarSystem } from 'react-icons/gi';
+import { IoPlanet } from 'react-icons/io5';
 
 type Props = {
-    setCurrentContent: React.Dispatch<
-        React.SetStateAction<ConnectModalContents>
-    >;
     onClose: () => void;
 };
 
-export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
+export const EcosystemContent = ({ onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -40,9 +35,9 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
         onClose();
     };
 
-    const { privyConfig } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
     const { data: appsInfo, isLoading } = useFetchAppInfo(
-        privyConfig?.ecosystemAppsID || [],
+        privy.ecosystemAppsID || [],
     );
 
     // useEffect(() => {
@@ -52,7 +47,7 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
     //         authenticated
     //     ) {
     //         linkCrossAppAccount({
-    //             appId: `${privyConfig?.ecosystemAppsID?.[0]}`,
+    //             appId: `${privy?.ecosystemAppsID?.[0]}`,
     //         });
     //     }
     // }, [connection.source.type, crossAppLogin, authenticated]);
@@ -70,15 +65,24 @@ export const EcosystemContent = ({ setCurrentContent, onClose }: Props) => {
                     display={'flex'}
                     gap={2}
                 >
-                    <Icon as={GiSolarSystem} size={'20px'} />
-                    Ecosystem
+                    <Icon as={IoPlanet} size={'20px'} />
+                    Login with Ecosystem
                 </ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
             <FadeInViewFromBottom>
                 <ModalBody>
+                    <Text
+                        fontSize={'12px'}
+                        fontWeight={'400'}
+                        opacity={0.5}
+                        mb={4}
+                        textAlign={'center'}
+                    >
+                        By logging in with Ecosystem, you can login with your
+                        wallet created on other apps in the VeChain ecosystem.
+                    </Text>
                     {isLoading && (
                         <VStack
                             minH={'200px'}

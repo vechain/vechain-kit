@@ -1,3 +1,18 @@
+export type Wallet = {
+    address: string | null;
+    domain?: string;
+    image?: string;
+};
+
+export type SmartAccount = Wallet & {
+    isDeployed: boolean;
+};
+
+export type ConnectionSource = {
+    type: 'privy' | 'wallet' | 'privy-cross-app';
+    displayName: string;
+};
+
 /**
  * Data that the Privy user must sign in order to execute a transaction
  * by authorizing the Smart Account contract
@@ -61,13 +76,6 @@ export type EnhancedClause = Connex.VM.Clause & {
 };
 
 export type PrivyAppInfo = {
-    name: string;
-    logo_url: string;
-    description?: string;
-};
-
-export type SocialInfo = {
-    code: string;
     name: string;
     logo_url: string;
     description?: string;

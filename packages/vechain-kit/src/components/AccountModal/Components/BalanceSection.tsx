@@ -1,5 +1,5 @@
 import { Heading, Spinner, VStack, Text } from '@chakra-ui/react';
-import { useBalances } from '../../../hooks';
+import { useBalances } from '@/hooks';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',

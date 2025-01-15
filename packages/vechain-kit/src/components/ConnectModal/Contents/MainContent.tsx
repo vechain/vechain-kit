@@ -12,6 +12,7 @@ import {
     Stack,
     Text,
     useColorMode,
+    useDisclosure,
 } from '@chakra-ui/react';
 import {
     useCrossAppAccounts,
@@ -37,22 +38,25 @@ import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import React, { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 // import { EmailLoginButton } from '../Components/EmailLoginButton';
-import { ConnectionButton, EmailLoginButton } from '@/components';
+import {
+    ConnectionButton,
+    EcosystemModal,
+    EmailLoginButton,
+} from '@/components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<ConnectModalContents>
     >;
     onClose: () => void;
-    logo?: string;
 };
 
-export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
+export const MainContent = ({ onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    const ecosystemModal = useDisclosure();
     const { connection } = useWallet();
-    const { loginScreenUI } = useVeChainKitConfig();
-
+    const { loginModalUI } = useVeChainKitConfig();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
 
@@ -61,6 +65,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
     // Login with Vechain - Cross app account login
     const { loginWithCrossAppAccount } = useCrossAppAccounts();
+
     // Passkey login
     const { loginWithPasskey } = useLoginWithPasskey();
     const handleLoginWithPasskey = async () => {
@@ -101,11 +106,11 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                 <ModalCloseButton mt={'5px'} />
             </StickyHeaderContainer>
 
-            {loginScreenUI?.logo && (
+            {loginModalUI?.logo && (
                 <FadeInViewFromBottom>
                     <HStack justify={'center'}>
                         <Image
-                            src={logo || '/images/favicon.png'}
+                            src={loginModalUI.logo || '/images/favicon.png'}
                             maxW={'180px'}
                             maxH={'90px'}
                             m={10}
@@ -117,7 +122,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
             <FadeInViewFromBottom>
                 <ModalBody>
-                    {loginScreenUI?.description && (
+                    {loginModalUI?.description && (
                         <HStack
                             spacing={4}
                             w={'full'}
@@ -129,7 +134,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                                 fontSize={'sm'}
                                 fontWeight={'200'}
                             >
-                                {loginScreenUI?.description}
+                                {loginModalUI?.description}
                             </Text>
                         </HStack>
                     )}
@@ -140,7 +145,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                             gap={2}
                             w={'full'}
                         >
-                            {loginScreenUI?.preferredLoginMethods?.map(
+                            {loginModalUI?.preferredLoginMethods?.map(
                                 (method, index) => (
                                     <React.Fragment key={method}>
                                         {method === 'email' && (
@@ -170,8 +175,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                                         )}
 
                                         {index !==
-                                            (loginScreenUI
-                                                ?.preferredLoginMethods
+                                            (loginModalUI?.preferredLoginMethods
                                                 ?.length ?? 0) -
                                                 1 && (
                                             <GridItem colSpan={4} w={'full'}>
@@ -221,9 +225,7 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
 
                             <ConnectionButton
                                 isDark={isDark}
-                                onClick={() => {
-                                    setCurrentContent('ecosystem');
-                                }}
+                                onClick={ecosystemModal.onOpen}
                                 icon={IoPlanet}
                             />
 
@@ -231,6 +233,10 @@ export const MainContent = ({ setCurrentContent, onClose, logo }: Props) => {
                                 isDark={isDark}
                                 onClick={viewMoreLogin}
                                 icon={CiCircleMore}
+                            />
+                            <EcosystemModal
+                                isOpen={ecosystemModal.isOpen}
+                                onClose={ecosystemModal.onClose}
                             />
                         </Grid>
                     </Stack>

@@ -42,8 +42,9 @@ export const BaseModal = ({
               mb: '0',
               maxW: '2xl',
               borderRadius: '24px 24px 0px 0px',
-              overflowY: 'scroll',
+              overflowY: 'auto',
               overflowX: 'hidden',
+              scrollBehavior: 'smooth',
           };
 
     return (
