@@ -30,7 +30,7 @@ const config: AppConfig = {
         '0x22d19ACBD2cBf6b2B6C546395c26B9Cb448248BF',
     cleanifyChallengesContractAddress:
         '0x8Cc885DC3e5c376632CCEA0e8e1a51F1B3572442',
-    indexerUrl: 'https://b3tr.testnet.vechain.org/api/v1',
+    indexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
     nodeUrl: 'https://testnet.vechain.org',
     network: {
         id: 'testnet',

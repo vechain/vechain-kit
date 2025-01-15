@@ -25,6 +25,7 @@ import {
 } from '@vechain/dapp-kit-ui';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 type Props = {
     children: ReactNode;
@@ -174,6 +175,7 @@ export const VeChainKit = ({
 
     return (
         <EnsureQueryClient>
+            <ReactQueryDevtools initialIsOpen={false} />
             <VeChainKitContext.Provider
                 value={{
                     privy,
@@ -230,7 +232,7 @@ export const VeChainKit = ({
                             logLevel={dappKit.logLevel}
                             modalParent={dappKit.modalParent}
                             onSourceClick={dappKit.onSourceClick}
-                            usePersistence={dappKit.usePersistence}
+                            usePersistence={dappKit.usePersistence ?? true}
                             walletConnectOptions={dappKit.walletConnectOptions}
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={{

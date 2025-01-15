@@ -1,7 +1,7 @@
 import { AppConfig } from '.';
 const config: AppConfig = {
     ipfsFetchingService: 'https://api.gateway-proxy.vechain.org/ipfs',
-    indexerUrl: 'https://b3tr.mainnet.vechain.org/api/v1',
+    indexerUrl: 'https://indexer.mainnet.vechain.org/api/v1',
     nodeUrl: 'https://mainnet.vechain.org',
     network: {
         id: 'main',
