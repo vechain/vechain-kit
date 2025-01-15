@@ -22,7 +22,6 @@ export const LoginLoadingModal = ({
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
-            size="xs"
             trapFocus={false}
             autoFocus={false}
         >

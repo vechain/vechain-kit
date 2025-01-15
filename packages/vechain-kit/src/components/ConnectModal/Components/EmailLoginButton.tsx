@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useLoginWithEmail } from '@privy-io/react-auth';
 import { useState } from 'react';
-import { MdEmail } from 'react-icons/md';
+import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 
 export const EmailLoginButton = () => {
@@ -35,8 +35,8 @@ export const EmailLoginButton = () => {
                 <InputGroup size="lg" w="full">
                     <InputLeftElement pointerEvents="none" height="100%" pl={4}>
                         <Icon
-                            as={MdEmail}
-                            color={isDark ? 'whiteAlpha.600' : 'gray.400'}
+                            as={LuMail}
+                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.700'}
                             w={'20px'}
                             h={'20px'}
                         />
@@ -46,7 +46,7 @@ export const EmailLoginButton = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         variant={'loginIn'}
-                        fontSize={'14px'}
+                        fontSize={'16px'}
                         fontWeight={'400'}
                         backgroundColor={isDark ? 'transparent' : '#ffffff'}
                         border={`1px solid ${isDark ? '#ffffff0a' : '#ebebeb'}`}

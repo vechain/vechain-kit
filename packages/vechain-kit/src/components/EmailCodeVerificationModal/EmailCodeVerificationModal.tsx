@@ -56,20 +56,17 @@ export const EmailCodeVerificationModal = ({
     }, [code]);
 
     return (
-        <BaseModal
-            isOpen={isOpen}
-            onClose={onClose}
-            size="md"
-            trapFocus={false}
-        >
+        <BaseModal isOpen={isOpen} onClose={onClose} trapFocus={false}>
             <StickyHeaderContainer>
                 <ModalHeader
-                    fontSize={'sm'}
-                    fontWeight={'200'}
+                    fontSize={'md'}
+                    fontWeight={'500'}
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                     justifyContent={'center'}
                     alignItems={'center'}
+                    display={'flex'}
+                    gap={2}
                 >
                     Enter confirmation code
                 </ModalHeader>
