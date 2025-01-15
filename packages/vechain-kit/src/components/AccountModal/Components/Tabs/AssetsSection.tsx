@@ -14,7 +14,10 @@ import { NFTsTabPanel } from './Contents/NFTsTabPanel';
 import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 
 export const AssetsSection = () => {
-    const tabTextColor = useColorModeValue('white', 'whiteAlpha.400');
+    const tabListBgColor = useColorModeValue('#000000d1', '#f4f4f4');
+    const tabTextColor = useColorModeValue('white', '#000000d1');
+    const tabTextSelectedColor = useColorModeValue('#000000d1', '#ffffffeb');
+    const tabBgSelectedColor = useColorModeValue('white', '#000000d1');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
     const scrollToContent = () => {
@@ -33,7 +36,7 @@ export const AssetsSection = () => {
             <Tabs variant="soft-rounded" size="sm" onChange={scrollToContent}>
                 <HStack justify="space-between" align="center">
                     <TabList
-                        bg="rgb(0 0 0 / 79%)"
+                        bg={tabListBgColor}
                         p={1}
                         borderRadius="full"
                         flex={1}
@@ -42,8 +45,8 @@ export const AssetsSection = () => {
                             borderRadius="full"
                             color={tabTextColor}
                             _selected={{
-                                bg: 'white',
-                                color: 'black',
+                                bg: tabBgSelectedColor,
+                                color: tabTextSelectedColor,
                             }}
                             flex={1}
                             onClick={scrollToContent}
@@ -54,8 +57,8 @@ export const AssetsSection = () => {
                             borderRadius="full"
                             color={tabTextColor}
                             _selected={{
-                                bg: 'white',
-                                color: 'black',
+                                bg: tabBgSelectedColor,
+                                color: tabTextSelectedColor,
                             }}
                             flex={1}
                         >
@@ -65,8 +68,8 @@ export const AssetsSection = () => {
                             borderRadius="full"
                             color={tabTextColor}
                             _selected={{
-                                bg: 'white',
-                                color: 'black',
+                                bg: tabBgSelectedColor,
+                                color: tabTextSelectedColor,
                             }}
                             flex={1}
                         >
