@@ -7,11 +7,4 @@ export const TOKEN_LOGOS: Record<string, string> = {
         'https://vechain.github.io/token-registry/assets/1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
 };
 
-export const EXPLORER_URL = {
-    '14018334920824264832118464179726739019961432051877733167310318607178':
-        'https://vechainstats.com/transaction',
-    '1176455790972829965191905223412607679856028701100105089447013101863':
-        'https://explore-testnet.vechain.org/transactions',
-} as const;
-
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';

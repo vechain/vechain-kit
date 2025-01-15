@@ -30,6 +30,7 @@ export type AppConfig = {
     nodeUrl: string;
     indexerUrl?: string;
     network: Network;
+    explorerUrl: string;
 };
 
 export const getConfig = (env: NETWORK_TYPE): AppConfig => {

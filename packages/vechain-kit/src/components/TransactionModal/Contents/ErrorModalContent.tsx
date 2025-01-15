@@ -12,11 +12,11 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { usePrivyWalletProvider } from '@/providers';
-import { EXPLORER_URL } from '@/utils';
+import { useVeChainKitConfig } from '@/providers';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { FadeInViewFromBottom } from '@/components/common';
 import { StickyHeaderContainer } from '@/components/common';
+import { getConfig } from '@/config';
 
 export type ErrorModalContentProps = {
     title?: ReactNode;
@@ -35,10 +35,10 @@ export const ErrorModalContent = ({
     showExplorerButton,
     txId,
 }: ErrorModalContentProps) => {
-    const { chainId } = usePrivyWalletProvider();
+    const { network } = useVeChainKitConfig();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-    const explorerUrl = EXPLORER_URL[chainId as keyof typeof EXPLORER_URL];
+    const explorerUrl = getConfig(network.type).explorerUrl;
 
     return (
         <FadeInViewFromBottom>
@@ -80,7 +80,7 @@ export const ErrorModalContent = ({
                                 )}
                                 {showExplorerButton && txId && (
                                     <Link
-                                        href={`${explorerUrl}/transactions/${txId}`}
+                                        href={`${explorerUrl}/${txId}`}
                                         isExternal
                                         color="gray.500"
                                         fontSize={'14px'}
