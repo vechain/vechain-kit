@@ -5,9 +5,10 @@ import {
     Spinner,
     Text,
     VStack,
+    useColorMode,
 } from '@chakra-ui/react';
 import { BaseModal } from '../common/BaseModal';
-import { FadeInViewFromBottom, StickyHeaderContainer } from '../common';
+import { FadeInViewFromBottom } from '../common';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -18,6 +19,9 @@ export const LoginLoadingModal = ({
     isOpen,
     onClose,
 }: LoginLoadingModalProps) => {
+    const { colorMode } = useColorMode();
+    const isDark = colorMode === 'dark';
+
     return (
         <BaseModal
             isOpen={isOpen}
@@ -25,11 +29,19 @@ export const LoginLoadingModal = ({
             trapFocus={false}
             autoFocus={false}
         >
-            <StickyHeaderContainer>
-                <ModalHeader>
-                    <Text fontSize="sm">Connecting...</Text>
-                </ModalHeader>
-            </StickyHeaderContainer>
+            <ModalHeader
+                fontSize={'md'}
+                fontWeight={'500'}
+                textAlign={'center'}
+                color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                display={'flex'}
+                gap={2}
+            >
+                <Text fontSize="sm">Connecting...</Text>
+            </ModalHeader>
+
             <FadeInViewFromBottom>
                 <ModalBody>
                     <VStack
