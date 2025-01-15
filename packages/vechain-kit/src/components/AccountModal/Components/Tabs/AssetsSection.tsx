@@ -14,7 +14,7 @@ import { NFTsTabPanel } from './Contents/NFTsTabPanel';
 import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 
 export const AssetsSection = () => {
-    const tabTextColor = useColorModeValue('blackAlpha.400', 'whiteAlpha.400');
+    const tabTextColor = useColorModeValue('white', 'whiteAlpha.400');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
     const scrollToContent = () => {
@@ -33,7 +33,7 @@ export const AssetsSection = () => {
             <Tabs variant="soft-rounded" size="sm" onChange={scrollToContent}>
                 <HStack justify="space-between" align="center">
                     <TabList
-                        bg="blackAlpha.300"
+                        bg="rgb(0 0 0 / 79%)"
                         p={1}
                         borderRadius="full"
                         flex={1}

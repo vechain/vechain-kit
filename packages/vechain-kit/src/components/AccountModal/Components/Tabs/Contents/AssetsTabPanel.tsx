@@ -1,24 +1,12 @@
-import { HStack, Icon, Text, Button, VStack } from '@chakra-ui/react';
-import { IoRefresh } from 'react-icons/io5';
-import { useBalances, useRefreshBalances } from '@/hooks';
+import { VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { AssetRow } from './AssetRow';
-import { useState } from 'react';
+import { useBalances } from '@/hooks';
 
 const MotionVStack = motion(VStack);
 
 export const AssetsTabPanel = () => {
     const { balances, prices } = useBalances();
-    const { refresh } = useRefreshBalances();
-    const [isRefreshing, setIsRefreshing] = useState(false);
-
-    const handleRefresh = async () => {
-        setIsRefreshing(true);
-        await refresh();
-        setTimeout(() => {
-            setIsRefreshing(false);
-        }, 1500);
-    };
 
     return (
         <MotionVStack
@@ -59,21 +47,6 @@ export const AssetsTabPanel = () => {
                     usdValue={balances.veDelegate * prices.b3tr}
                 />
             )}
-            <HStack justify="flex-end" px={2}>
-                <Button
-                    aria-label="Refresh balances"
-                    size="sm"
-                    variant="link"
-                    onClick={handleRefresh}
-                    leftIcon={<Icon as={IoRefresh} />}
-                    isLoading={isRefreshing}
-                    loadingText="Refreshing"
-                >
-                    <Text fontSize="sm" fontWeight="bold">
-                        Refresh
-                    </Text>
-                </Button>
-            </HStack>
         </MotionVStack>
     );
 };
