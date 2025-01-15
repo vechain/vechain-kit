@@ -21,6 +21,7 @@ interface ActionButtonProps {
     backgroundColor?: string;
     border?: string;
     hide?: boolean;
+    _hover?: object;
     showComingSoon?: boolean;
 }
 
@@ -34,6 +35,7 @@ export const ActionButton = ({
     hide = false,
     showComingSoon = false,
     backgroundColor,
+    _hover,
 }: ActionButtonProps) => {
     return (
         <FadeInView>
@@ -46,6 +48,7 @@ export const ActionButton = ({
                 display={hide ? 'none' : 'flex'}
                 isDisabled={showComingSoon}
                 bgColor={backgroundColor}
+                _hover={_hover}
             >
                 <HStack w={'full'} justify={'space-between'}>
                     <Box minW={'40px'}>
@@ -74,6 +77,7 @@ export const ActionButton = ({
                             wordBreak={'break-word'}
                             whiteSpace={'normal'}
                             w={'full'}
+                            pr={rightIcon ? '0px' : '10px'}
                         >
                             {description}
                         </Text>
@@ -83,9 +87,16 @@ export const ActionButton = ({
                             </Tag>
                         )}
                     </VStack>
-                    <VStack minW={'40px'} justifyContent={'flex-end'}>
-                        <Icon as={rightIcon} fontSize={'20px'} opacity={0.5} />
-                    </VStack>
+
+                    {rightIcon && (
+                        <VStack minW={'40px'} justifyContent={'flex-end'}>
+                            <Icon
+                                as={rightIcon}
+                                fontSize={'20px'}
+                                opacity={0.5}
+                            />
+                        </VStack>
+                    )}
                 </HStack>
             </Button>
         </FadeInView>

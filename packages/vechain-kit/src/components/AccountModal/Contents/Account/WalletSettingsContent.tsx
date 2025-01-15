@@ -142,8 +142,10 @@ export const WalletSettingsContent = ({
                                 onLogoutSuccess();
                             }}
                             leftIcon={RxExit}
-                            rightIcon={MdOutlineNavigateNext}
                             backgroundColor={'#ff00000f'}
+                            _hover={{
+                                bg: '#ff00001a',
+                            }}
                         />
                     </VStack>
                 </ModalBody>
