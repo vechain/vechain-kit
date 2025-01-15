@@ -38,9 +38,10 @@ export const BalanceSection = ({ mb }: { mb?: number }) => {
             <Heading textAlign="center" size={'2xl'} fontWeight={'500'}>
                 ${compactFormatter.format(totalBalance)}
             </Heading>
-            <HStack justify="center" px={2} mt={2} position="absolute">
+            <HStack justify="center" px={2} mt={2}>
                 <Button
                     aria-label="Refresh balances"
+                    position="absolute"
                     size="sm"
                     variant="link"
                     onClick={handleRefresh}
