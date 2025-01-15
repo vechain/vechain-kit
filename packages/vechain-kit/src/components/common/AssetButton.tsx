@@ -1,4 +1,12 @@
-import { HStack, Image, Text, Box, Button, VStack } from '@chakra-ui/react';
+import {
+    Button,
+    HStack,
+    Image,
+    Text,
+    Box,
+    VStack,
+    ButtonProps,
+} from '@chakra-ui/react';
 import { TOKEN_LOGOS } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -7,21 +15,32 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
 });
 
-type AssetRowProps = {
+type AssetButtonProps = ButtonProps & {
     symbol: string;
     amount: number;
     usdValue: number;
+    isDisabled?: boolean;
 };
 
-export const AssetRow = ({ symbol, amount, usdValue }: AssetRowProps) => (
+export const AssetButton = ({
+    symbol,
+    amount,
+    usdValue,
+    isDisabled,
+    ...buttonProps
+}: AssetButtonProps) => (
     <Button
         height="72px"
         variant="ghost"
         justifyContent="space-between"
         p={4}
         w="100%"
-        cursor="default"
-        _hover={{ bg: 'whiteAlpha.100' }}
+        opacity={isDisabled ? 0.5 : 1}
+        _disabled={{
+            cursor: 'not-allowed',
+            opacity: 0.5,
+        }}
+        {...buttonProps}
     >
         <HStack>
             <Image

@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { AssetRow } from './AssetRow';
 import { useBalances } from '@/hooks';
+import { AssetButton } from '@/components/common';
 
 const MotionVStack = motion(VStack);
 
@@ -18,30 +18,30 @@ export const AssetsTabPanel = () => {
             transition={{ duration: 0.2 }}
             mt={2}
         >
-            <AssetRow
+            <AssetButton
                 symbol="VET"
                 amount={balances.vet}
                 usdValue={balances.vet * prices.vet}
             />
-            <AssetRow
+            <AssetButton
                 symbol="VTHO"
                 amount={balances.vtho}
                 usdValue={balances.vtho * prices.vtho}
             />
-            <AssetRow
+            <AssetButton
                 symbol="B3TR"
                 amount={balances.b3tr}
                 usdValue={balances.b3tr * prices.b3tr}
             />
             {balances.vot3 > 0 && (
-                <AssetRow
+                <AssetButton
                     symbol="VOT3"
                     amount={balances.vot3}
                     usdValue={balances.vot3 * prices.b3tr}
                 />
             )}
             {balances.veDelegate > 0 && (
-                <AssetRow
+                <AssetButton
                     symbol="veDelegate"
                     amount={balances.veDelegate}
                     usdValue={balances.veDelegate * prices.b3tr}

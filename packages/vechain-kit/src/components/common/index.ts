@@ -5,3 +5,4 @@ export * from './VersionFooter';
 export * from './StickyHeaderContainer';
 export * from './StickyFooterContainer';
 export * from './BaseModal';
+export * from './AssetButton';
