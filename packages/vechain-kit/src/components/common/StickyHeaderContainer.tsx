@@ -38,7 +38,7 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 zIndex={1000}
                 boxShadow={
                     hasContentBelow
-                        ? '0px 2px 13px -1px rgb(0 0 0 / 68%)'
+                        ? '0px 3px 1px 1px rgb(0 0 0 / 21%)'
                         : 'none'
                 }
                 transition="box-shadow 0.2s ease-in-out"
