@@ -14,7 +14,7 @@ import { NFTsTabPanel } from './Contents/NFTsTabPanel';
 import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 
 export const AssetsSection = () => {
-    const tabListBgColor = useColorModeValue('#000000d1', '#f4f4f4');
+    const tabListBgColor = useColorModeValue('#00000030', '#878786');
     const tabTextColor = useColorModeValue('white', '#1f1f1e');
     const tabTextSelectedColor = useColorModeValue('#000000d1', '#ffffffeb');
     const tabBgSelectedColor = useColorModeValue('white', '#1f1f1e');

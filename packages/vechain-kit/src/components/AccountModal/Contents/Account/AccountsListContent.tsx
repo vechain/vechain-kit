@@ -88,14 +88,17 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                 </ModalBody>
                 <ModalFooter>
                     <Button
-                        w={'full'}
                         onClick={() => {
                             disconnect();
                             onClose();
                         }}
-                        minH={'40px'}
                         fontSize={'sm'}
                         fontWeight={'400'}
+                        px={4}
+                        width="full"
+                        height="60px"
+                        variant="solid"
+                        borderRadius="xl"
                         leftIcon={<RxExit color="#888888" />}
                     >
                         Logout

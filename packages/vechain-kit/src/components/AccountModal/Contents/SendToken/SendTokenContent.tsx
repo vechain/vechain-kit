@@ -392,7 +392,6 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                     height="60px"
                     variant="solid"
                     borderRadius="xl"
-                    colorScheme="blue"
                     isDisabled={
                         !selectedToken ||
                         !amount ||
