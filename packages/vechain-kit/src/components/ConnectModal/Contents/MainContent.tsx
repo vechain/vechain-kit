@@ -12,6 +12,7 @@ import {
     Stack,
     Text,
     useColorMode,
+    useDisclosure,
 } from '@chakra-ui/react';
 import {
     useCrossAppAccounts,
@@ -35,9 +36,13 @@ import { IoPlanet } from 'react-icons/io5';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import React, { useEffect } from 'react';
-import { useWallet, useEcosystemModal } from '@/hooks';
+import { useWallet } from '@/hooks';
 // import { EmailLoginButton } from '../Components/EmailLoginButton';
-import { ConnectionButton, EmailLoginButton } from '@/components';
+import {
+    ConnectionButton,
+    EcosystemModal,
+    EmailLoginButton,
+} from '@/components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -49,9 +54,9 @@ type Props = {
 export const MainContent = ({ onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    const ecosystemModal = useDisclosure();
     const { connection } = useWallet();
     const { loginModalUI } = useVeChainKitConfig();
-    const { open: openEcosystemModal } = useEcosystemModal();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
 
@@ -60,6 +65,7 @@ export const MainContent = ({ onClose }: Props) => {
 
     // Login with Vechain - Cross app account login
     const { loginWithCrossAppAccount } = useCrossAppAccounts();
+
     // Passkey login
     const { loginWithPasskey } = useLoginWithPasskey();
     const handleLoginWithPasskey = async () => {
@@ -219,7 +225,7 @@ export const MainContent = ({ onClose }: Props) => {
 
                             <ConnectionButton
                                 isDark={isDark}
-                                onClick={openEcosystemModal}
+                                onClick={ecosystemModal.onOpen}
                                 icon={IoPlanet}
                             />
 
@@ -227,6 +233,10 @@ export const MainContent = ({ onClose }: Props) => {
                                 isDark={isDark}
                                 onClick={viewMoreLogin}
                                 icon={CiCircleMore}
+                            />
+                            <EcosystemModal
+                                isOpen={ecosystemModal.isOpen}
+                                onClose={ecosystemModal.onClose}
                             />
                         </Grid>
                     </Stack>

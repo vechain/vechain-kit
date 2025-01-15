@@ -18,7 +18,7 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
-import { GiSolarSystem } from 'react-icons/gi';
+import { IoPlanet } from 'react-icons/io5';
 
 type Props = {
     onClose: () => void;
@@ -65,14 +65,24 @@ export const EcosystemContent = ({ onClose }: Props) => {
                     display={'flex'}
                     gap={2}
                 >
-                    <Icon as={GiSolarSystem} size={'20px'} />
-                    Ecosystem
+                    <Icon as={IoPlanet} size={'20px'} />
+                    Login with Ecosystem
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
             <FadeInViewFromBottom>
                 <ModalBody>
+                    <Text
+                        fontSize={'12px'}
+                        fontWeight={'400'}
+                        opacity={0.5}
+                        mb={4}
+                        textAlign={'center'}
+                    >
+                        By logging in with Ecosystem, you can login with your
+                        wallet created on other apps in the VeChain ecosystem.
+                    </Text>
                     {isLoading && (
                         <VStack
                             minH={'200px'}

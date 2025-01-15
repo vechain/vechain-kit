@@ -11,7 +11,7 @@ import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Theme } from '../theme';
 import { PrivyLoginMethod } from '@/types';
-import { ConnectModal, AccountModal, EcosystemModal } from '../components';
+import { ConnectModal, AccountModal } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
@@ -95,10 +95,14 @@ type VeChainKitConfig = {
     openAccountModal: () => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
-    // Ecosystem Modal
-    openEcosystemModal: () => void;
-    closeEcosystemModal: () => void;
-    isEcosystemModalOpen: boolean;
+    // Transaction Modal
+    openTransactionModal: () => void;
+    closeTransactionModal: () => void;
+    isTransactionModalOpen: boolean;
+    // Transaction Toast
+    openTransactionToast: () => void;
+    closeTransactionToast: () => void;
+    isTransactionToastOpen: boolean;
 };
 
 /**
@@ -145,13 +149,23 @@ export const VeChainKit = ({
         [],
     );
 
-    const [isEcosystemModalOpen, setIsEcosystemModalOpen] = useState(false);
-    const openEcosystemModal = useCallback(
-        () => setIsEcosystemModalOpen(true),
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+    const openTransactionModal = useCallback(
+        () => setIsTransactionModalOpen(true),
         [],
     );
-    const closeEcosystemModal = useCallback(
-        () => setIsEcosystemModalOpen(false),
+    const closeTransactionModal = useCallback(
+        () => setIsTransactionModalOpen(false),
+        [],
+    );
+
+    const [isTransactionToastOpen, setIsTransactionToastOpen] = useState(false);
+    const openTransactionToast = useCallback(
+        () => setIsTransactionToastOpen(true),
+        [],
+    );
+    const closeTransactionToast = useCallback(
+        () => setIsTransactionToastOpen(false),
         [],
     );
 
@@ -192,9 +206,12 @@ export const VeChainKit = ({
                     openAccountModal,
                     closeAccountModal,
                     isAccountModalOpen,
-                    openEcosystemModal,
-                    closeEcosystemModal,
-                    isEcosystemModalOpen,
+                    openTransactionModal,
+                    closeTransactionModal,
+                    isTransactionModalOpen,
+                    openTransactionToast,
+                    closeTransactionToast,
+                    isTransactionToastOpen,
                 }}
             >
                 <ChakraProvider theme={Theme}>
@@ -275,10 +292,6 @@ export const VeChainKit = ({
                                 <AccountModal
                                     isOpen={isAccountModalOpen}
                                     onClose={closeAccountModal}
-                                />
-                                <EcosystemModal
-                                    isOpen={isEcosystemModalOpen}
-                                    onClose={closeEcosystemModal}
                                 />
                             </PrivyWalletProvider>
                         </DAppKitProvider>

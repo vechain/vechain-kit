@@ -1,16 +1,16 @@
 import { useVeChainKitConfig } from '@/providers';
 import { ReactNode } from 'react';
 
-export const useEcosystemModal = () => {
+export const useTransactionModal = () => {
     const {
-        openEcosystemModal: open,
-        closeEcosystemModal: close,
-        isEcosystemModalOpen: isOpen,
+        openTransactionModal: open,
+        closeTransactionModal: close,
+        isTransactionModalOpen: isOpen,
     } = useVeChainKitConfig();
     return { open, close, isOpen };
 };
 
-export const EcosystemModalProvider = ({
+export const TransactionModalProvider = ({
     children,
 }: {
     children: ReactNode;
