@@ -14,10 +14,11 @@ import { NFTsTabPanel } from './Contents/NFTsTabPanel';
 import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 
 export const AssetsSection = () => {
-    const tabListBgColor = useColorModeValue('#00000030', '#878786');
-    const tabTextColor = useColorModeValue('white', '#1f1f1e');
-    const tabTextSelectedColor = useColorModeValue('#000000d1', '#ffffffeb');
-    const tabBgSelectedColor = useColorModeValue('white', '#1f1f1e');
+    const tabBgColor = useColorModeValue('white', '#1f1f1e');
+    const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
+    const tabTextColor = useColorModeValue('#4d4d4d', '#dfdfdd');
+    const tabTextSelectedColor = useColorModeValue('#000000', '#ffffff');
+    const tabSelectedBgColor = useColorModeValue('#f7f7f7', '#3c3c39');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
     const scrollToContent = () => {
@@ -36,42 +37,62 @@ export const AssetsSection = () => {
             <Tabs variant="soft-rounded" size="sm" onChange={scrollToContent}>
                 <HStack justify="space-between" align="center">
                     <TabList
-                        bg={tabListBgColor}
-                        p={1}
-                        borderRadius="full"
+                        bg={tabBgColor}
+                        p={2}
+                        borderRadius="xl"
                         flex={1}
+                        border={`1px solid ${tabBorderColor}`}
+                        gap={2}
                     >
                         <Tab
-                            borderRadius="full"
+                            borderRadius="lg"
                             color={tabTextColor}
                             _selected={{
-                                bg: tabBgSelectedColor,
+                                bg: tabSelectedBgColor,
                                 color: tabTextSelectedColor,
+                                fontWeight: '500',
                             }}
                             flex={1}
                             onClick={scrollToContent}
+                            transition="all 0.2s"
+                            _hover={{
+                                bg: tabSelectedBgColor,
+                                opacity: 0.8,
+                            }}
                         >
                             Assets
                         </Tab>
                         <Tab
-                            borderRadius="full"
+                            borderRadius="lg"
                             color={tabTextColor}
                             _selected={{
-                                bg: tabBgSelectedColor,
+                                bg: tabSelectedBgColor,
                                 color: tabTextSelectedColor,
+                                fontWeight: '500',
                             }}
                             flex={1}
+                            transition="all 0.2s"
+                            _hover={{
+                                bg: tabSelectedBgColor,
+                                opacity: 0.8,
+                            }}
                         >
                             NFTs
                         </Tab>
                         <Tab
-                            borderRadius="full"
+                            borderRadius="lg"
                             color={tabTextColor}
                             _selected={{
-                                bg: tabBgSelectedColor,
+                                bg: tabSelectedBgColor,
                                 color: tabTextSelectedColor,
+                                fontWeight: '500',
                             }}
                             flex={1}
+                            transition="all 0.2s"
+                            _hover={{
+                                bg: tabSelectedBgColor,
+                                opacity: 0.8,
+                            }}
                         >
                             Activity
                         </Tab>
