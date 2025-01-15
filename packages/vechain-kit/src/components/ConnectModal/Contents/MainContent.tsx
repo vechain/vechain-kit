@@ -60,6 +60,7 @@ export const MainContent = ({ onClose }: Props) => {
 
     // Login with Vechain - Cross app account login
     const { loginWithCrossAppAccount } = useCrossAppAccounts();
+
     // Passkey login
     const { loginWithPasskey } = useLoginWithPasskey();
     const handleLoginWithPasskey = async () => {

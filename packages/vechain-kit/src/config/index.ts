@@ -1,7 +1,30 @@
+import { Network, NETWORK_TYPE } from './network';
+import { useConfig } from '@/providers/ConfigProvider';
+import { useVeChainKitConfig } from '@/providers';
 import localConfig from './solo';
 import testnetConfig from './testnet';
 import mainnetConfig from './mainnet';
-import { Network, NETWORK_TYPE } from './network';
+
+export const getConfig = (env?: NETWORK_TYPE) => {
+    try {
+        const { getConfig: getConfigFromContext } = useConfig();
+        const { network } = useVeChainKitConfig();
+
+        if (!env) env = network.type;
+        return getConfigFromContext(env);
+    } catch (e) {
+        // Fallback to direct config if context is not available
+        if (!env)
+            throw new Error(
+                'Network type is required when context is not available',
+            );
+
+        if (env === 'solo') return localConfig;
+        if (env === 'test') return testnetConfig;
+        if (env === 'main') return mainnetConfig;
+        throw new Error(`Unsupported NETWORK_TYPE ${env} ${e}`);
+    }
+};
 
 export type AppConfig = {
     ipfsFetchingService: string;
@@ -30,11 +53,5 @@ export type AppConfig = {
     nodeUrl: string;
     indexerUrl?: string;
     network: Network;
-};
-
-export const getConfig = (env: NETWORK_TYPE): AppConfig => {
-    if (env === 'solo') return localConfig;
-    if (env === 'test') return testnetConfig;
-    if (env === 'main') return mainnetConfig;
-    throw new Error(`Unsupported NETWORK_TYPE ${env}`);
+    explorerUrl: string;
 };
