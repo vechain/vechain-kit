@@ -67,12 +67,21 @@ export const useWallet = (): UseWalletReturnType => {
         user?.linkedAccounts?.some((account) => account.type === 'cross_app'),
     );
 
+    // Get cross app account
+    const crossAppAccount = user?.linkedAccounts.find(
+        (account) => account.type === 'cross_app',
+    );
+
     // Get embedded wallet
     const privyEmbeddedWallet = user?.wallet?.address;
 
     // Get smart account
     const { data: smartAccount } = useSmartAccount(
-        isConnectedWithPrivy ? privyEmbeddedWallet ?? '' : dappKitAccount ?? '',
+        isCrossAppPrivyAccount
+            ? crossAppAccount?.embeddedWallets?.[0]?.address
+            : isConnectedWithPrivy
+            ? privyEmbeddedWallet
+            : dappKitAccount ?? '',
     );
 
     // Connection type
@@ -90,11 +99,6 @@ export const useWallet = (): UseWalletReturnType => {
               type: 'privy',
               displayName: 'Social',
           };
-
-    // Get cross app account
-    const crossAppAccount = user?.linkedAccounts.find(
-        (account) => account.type === 'cross_app',
-    );
 
     // Get connected and selected accounts
     const connectedWalletAddress = isConnectedWithDappKit
