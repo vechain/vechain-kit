@@ -8,6 +8,8 @@ import {
     useColorMode,
     Text,
     Divider,
+    Link,
+    Icon,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
@@ -24,6 +26,8 @@ import { useVeChainKitConfig } from '@/providers/VeChainKit';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
+import { IoOpenOutline } from 'react-icons/io5';
+import { useState } from 'react';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -41,6 +45,8 @@ export const WalletSettingsContent = ({
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
         <FadeInViewFromBottom>
@@ -77,7 +83,7 @@ export const WalletSettingsContent = ({
                         <AddressDisplay wallet={connectedWallet} />
                     </VStack>
 
-                    <VStack align="stretch" spacing={5} mt={2}>
+                    <VStack align="stretch" textAlign={'center'} mt={5}>
                         <Text
                             fontSize={'sm'}
                             opacity={0.5}
@@ -86,9 +92,69 @@ export const WalletSettingsContent = ({
                             This is your main wallet and identity. Please be
                             sure to keep it safe and backed up.
                         </Text>
+                        {connection.isConnectedWithPrivy && (
+                            <>
+                                {isExpanded && (
+                                    <FadeInViewFromBottom>
+                                        {connection.isConnectedWithPrivy && (
+                                            <>
+                                                <Text
+                                                    fontSize={'sm'}
+                                                    opacity={0.5}
+                                                >
+                                                    You're using an Embedded
+                                                    Wallet created and secured
+                                                    by Privy, accessable though
+                                                    your preffered login
+                                                    methods, ensuring a seamless
+                                                    VeChain experience.
+                                                </Text>
+
+                                                <Text
+                                                    fontSize={'sm'}
+                                                    opacity={0.5}
+                                                >
+                                                    We highly recommend
+                                                    exporting your private key
+                                                    to back up your wallet. This
+                                                    ensures you can restore it
+                                                    if needed or transfer it to
+                                                    self-custody using{' '}
+                                                    <Link
+                                                        href="https://www.veworld.net/"
+                                                        isExternal
+                                                        color="gray.500"
+                                                        fontSize={'14px'}
+                                                        textDecoration={
+                                                            'underline'
+                                                        }
+                                                    >
+                                                        VeWorld Wallet{' '}
+                                                        <Icon
+                                                            ml={1}
+                                                            as={IoOpenOutline}
+                                                        />
+                                                    </Link>
+                                                    .
+                                                </Text>
+                                            </>
+                                        )}
+                                    </FadeInViewFromBottom>
+                                )}
+                                <Link
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    color="gray.500"
+                                    fontSize={'sm'}
+                                    transition={'all 0.2s'}
+                                    _hover={{ textDecoration: 'none' }}
+                                >
+                                    {isExpanded ? 'Read less' : 'Read more'}
+                                </Link>
+                            </>
+                        )}
                     </VStack>
 
-                    <VStack mt={5} w={'full'} spacing={5}>
+                    <VStack mt={10} w={'full'} spacing={5}>
                         {connection.isConnectedWithPrivy && (
                             <>
                                 <ActionButton

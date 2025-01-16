@@ -8,11 +8,9 @@ import {
     Text,
     useColorMode,
     Link,
-    Icon,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import React, { useState } from 'react';
-import { IoOpenOutline } from 'react-icons/io5';
 import {
     AddressDisplay,
     FadeInViewFromBottom,
@@ -32,7 +30,7 @@ type Props = {
 };
 
 export const SmartAccountContent = ({ setCurrentContent }: Props) => {
-    const { smartAccount } = useWallet();
+    const { smartAccount, connection } = useWallet();
     const { exportWallet } = usePrivy();
 
     const walletImage = getPicassoImage(smartAccount.address ?? '');
@@ -62,7 +60,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
 
             <FadeInViewFromBottom>
                 <ModalBody w={'full'}>
-                    <VStack justify={'center'} mb={10}>
+                    <VStack justify={'center'}>
                         <Image
                             src={walletImage}
                             maxW={'70px'}
@@ -71,42 +69,30 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         <AddressDisplay wallet={smartAccount} />
                     </VStack>
 
-                    <VStack align="stretch" textAlign={'center'}>
+                    <VStack align="stretch" textAlign={'center'} mt={5}>
                         <Text fontSize={'sm'} opacity={0.5}>
-                            To allow you a smooth onboarding on VeChain we are
-                            helping you manage a wallet.
+                            Your smart account is your gateway to blockchain
+                            interactions.
                         </Text>
 
                         {isExpanded && (
                             <FadeInViewFromBottom>
                                 <VStack>
-                                    <Text fontSize={'sm'} opacity={0.5}>
-                                        You have full control and ownership of
-                                        this wallet, accessible through your
-                                        selected login method.
-                                    </Text>
+                                    {connection.isConnectedWithPrivy && (
+                                        <Text fontSize={'sm'} opacity={0.5}>
+                                            You're using an Embedded Wallet
+                                            secured by your social login method,
+                                            which acts as a master controller of
+                                            your smart account, ensuring a
+                                            seamless VeChain experience with
+                                            full ownership and control.
+                                        </Text>
+                                    )}
 
                                     <Text fontSize={'sm'} opacity={0.5}>
-                                        You can backup your wallet by exporting
-                                        your private key. This will allow you to
-                                        restore your wallet if you lose your
-                                        login method.
-                                    </Text>
-
-                                    <Text fontSize={'sm'} opacity={0.5}>
-                                        To experience the full blockchain
-                                        experience, transfer your assets to{' '}
-                                        <Link
-                                            href="https://www.veworld.net/"
-                                            isExternal
-                                            color="gray.500"
-                                            fontSize={'14px'}
-                                            textDecoration={'underline'}
-                                        >
-                                            VeWorld Wallet{' '}
-                                            <Icon ml={1} as={IoOpenOutline} />
-                                        </Link>
-                                        .
+                                        Transfer the ownership of your Smart
+                                        Account to make your main wallet active
+                                        again.
                                     </Text>
                                 </VStack>
                             </FadeInViewFromBottom>
@@ -123,10 +109,10 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         </Link>
                     </VStack>
 
-                    <VStack mt={5} spacing={5}>
+                    <VStack mt={10} spacing={5}>
                         <ActionButton
                             title="Transfer ownership"
-                            description="Transfer the ownership of your smart account to another wallet."
+                            description="Change the owner of your smart account."
                             onClick={() => {
                                 exportWallet();
                             }}
@@ -135,8 +121,8 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         />
 
                         <ActionButton
-                            title="Choose account name"
-                            description="Give a nickname to your wallet to easily identify it."
+                            title="Manage account name"
+                            description="Give a nickname to your wallet address to easily identify it."
                             onClick={() => {
                                 // linkPasskey();
                             }}

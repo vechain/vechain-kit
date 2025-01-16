@@ -1,16 +1,18 @@
 import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
     Button,
     Grid,
-    HStack,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
     ModalHeader,
     useColorMode,
+    VStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import {
-    AddressDisplay,
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
@@ -35,7 +37,9 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { connection, account, connectedWallet, disconnect } = useWallet();
+    const { account, connectedWallet, disconnect, smartAccount } = useWallet();
+
+    const hasActiveSmartAccount = smartAccount.isDeployed;
 
     return (
         <FadeInViewFromBottom>
@@ -53,14 +57,32 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
             </StickyHeaderContainer>
             <FadeInViewFromBottom>
                 <ModalBody w={'full'}>
-                    <HStack justify={'space-between'} w={'full'}>
-                        {connection.isConnectedWithPrivy ? (
-                            <Grid
-                                gap={2}
-                                templateColumns={['repeat(1, 1fr)']}
-                                w="100%"
-                                h="100%"
+                    <VStack justify={'space-between'} w={'full'}>
+                        {hasActiveSmartAccount && (
+                            <Alert
+                                status="info"
+                                variant="subtle"
+                                mb={4}
+                                borderRadius={'lg'}
                             >
+                                <AlertIcon />
+                                <AlertDescription
+                                    fontSize={'sm'}
+                                    lineHeight={'1.2'}
+                                >
+                                    You own a Smart Account, which has
+                                    precedence over your wallet and is set as
+                                    active.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+                        <Grid
+                            gap={2}
+                            templateColumns={['repeat(1, 1fr)']}
+                            w="100%"
+                            h="100%"
+                        >
+                            {hasActiveSmartAccount && (
                                 <AccountDetailsButton
                                     title="Smart Account"
                                     address={account.address ?? ''}
@@ -71,20 +93,18 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                     leftIcon={MdAccountCircle}
                                     rightIcon={MdOutlineNavigateNext}
                                 />
-                                <AccountDetailsButton
-                                    title="Wallet"
-                                    address={connectedWallet?.address ?? ''}
-                                    onClick={() => {
-                                        setCurrentContent('settings');
-                                    }}
-                                    leftIcon={HiOutlineWallet}
-                                    rightIcon={MdOutlineNavigateNext}
-                                />
-                            </Grid>
-                        ) : (
-                            <AddressDisplay wallet={connectedWallet} />
-                        )}
-                    </HStack>
+                            )}
+                            <AccountDetailsButton
+                                title="Wallet"
+                                address={connectedWallet?.address ?? ''}
+                                onClick={() => {
+                                    setCurrentContent('settings');
+                                }}
+                                leftIcon={HiOutlineWallet}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
+                        </Grid>
+                    </VStack>
                 </ModalBody>
                 <ModalFooter>
                     <Button
