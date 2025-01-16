@@ -35,7 +35,9 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { connection } = useWallet();
+    const { smartAccount } = useWallet();
+
+    const hasActiveSmartAccount = smartAccount?.isDeployed;
 
     return (
         <FadeInViewFromBottom>
@@ -72,7 +74,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         <VStack w={'full'} spacing={3} overflow={'hidden'}>
                             <AccountSelector
                                 onClick={() => {
-                                    if (connection.isConnectedWithPrivy) {
+                                    if (hasActiveSmartAccount) {
                                         setCurrentContent('accounts');
                                     } else {
                                         setCurrentContent('settings');
