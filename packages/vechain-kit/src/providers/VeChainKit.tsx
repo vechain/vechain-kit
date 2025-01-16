@@ -28,7 +28,7 @@ import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-type Props = {
+export type VechainKitProps = {
     children: ReactNode;
     privy?: {
         appId: string;
@@ -80,15 +80,15 @@ type Props = {
 };
 
 type VeChainKitConfig = {
-    privy?: Props['privy'];
+    privy?: VechainKitProps['privy'];
     privyEcosystemAppIDS: string[];
-    feeDelegation: Props['feeDelegation'];
-    dappKit: Props['dappKit'];
-    loginModalUI?: Props['loginModalUI'];
-    darkMode?: Props['darkMode'];
-    i18n?: Props['i18n'];
-    language?: Props['language'];
-    network: Props['network'];
+    feeDelegation: VechainKitProps['feeDelegation'];
+    dappKit: VechainKitProps['dappKit'];
+    loginModalUI?: VechainKitProps['loginModalUI'];
+    darkMode?: VechainKitProps['darkMode'];
+    i18n?: VechainKitProps['i18n'];
+    language?: VechainKitProps['language'];
+    network: VechainKitProps['network'];
     privySocialLoginEnabled: boolean;
     // Connect Modal
     openConnectModal: () => void;
@@ -138,7 +138,7 @@ export const VeChainKit = ({
     language,
     network,
     privyEcosystemAppIDS,
-}: Omit<Props, 'queryClient'>) => {
+}: Omit<VechainKitProps, 'queryClient'>) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
     const closeConnectModal = useCallback(

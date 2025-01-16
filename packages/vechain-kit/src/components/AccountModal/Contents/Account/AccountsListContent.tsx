@@ -65,9 +65,9 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                 mb={4}
                                 borderRadius={'lg'}
                             >
-                                <AlertIcon />
+                                <AlertIcon boxSize={'16px'} />
                                 <AlertDescription
-                                    fontSize={'sm'}
+                                    fontSize={'xs'}
                                     lineHeight={'1.2'}
                                 >
                                     You own a Smart Account, which has priority

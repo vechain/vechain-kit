@@ -68,11 +68,6 @@ export const AccountDetailsButton = ({
                         <Text fontSize={'sm'} fontWeight={'400'}>
                             {title}
                         </Text>
-                        {isActive && (
-                            <Tag ml={1} size={'sm'} colorScheme={'green'}>
-                                Active
-                            </Tag>
-                        )}
                     </HStack>
                     <Text
                         fontSize={'sm'}
@@ -87,7 +82,14 @@ export const AccountDetailsButton = ({
                     </Text>
                 </VStack>
                 <VStack minW={'40px'} justifyContent={'flex-end'}>
-                    <Icon as={rightIcon} fontSize={'20px'} opacity={0.5} />
+                    <HStack>
+                        {isActive && (
+                            <Tag ml={1} size={'sm'} colorScheme={'green'}>
+                                Active
+                            </Tag>
+                        )}
+                        <Icon as={rightIcon} fontSize={'20px'} opacity={0.5} />
+                    </HStack>
                 </VStack>
             </HStack>
         </Button>

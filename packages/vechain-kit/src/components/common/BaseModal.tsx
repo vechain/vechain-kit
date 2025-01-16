@@ -4,8 +4,9 @@ import {
     ModalContentProps,
     ModalOverlay,
     useMediaQuery,
+    FocusLock,
 } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 type BaseModalProps = {
     isOpen: boolean;
@@ -18,6 +19,7 @@ type BaseModalProps = {
     closeOnOverlayClick?: boolean;
     blockScrollOnMount?: boolean;
     autoFocus?: boolean;
+    initialFocusRef?: React.RefObject<HTMLElement>;
 };
 
 export const BaseModal = ({
@@ -27,10 +29,11 @@ export const BaseModal = ({
     size = 'sm',
     isCentered = true,
     motionPreset = 'slideInBottom',
-    trapFocus = false,
+    trapFocus = true,
     closeOnOverlayClick = true,
     blockScrollOnMount = true,
-    autoFocus = false,
+    autoFocus = true,
+    initialFocusRef,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
 
@@ -47,6 +50,13 @@ export const BaseModal = ({
               scrollBehavior: 'smooth',
           };
 
+    // Ensure proper focus management
+    useEffect(() => {
+        if (isOpen && initialFocusRef?.current) {
+            initialFocusRef.current.focus();
+        }
+    }, [isOpen, initialFocusRef]);
+
     return (
         <Modal
             motionPreset={isDesktop ? 'none' : motionPreset}
@@ -57,12 +67,19 @@ export const BaseModal = ({
             scrollBehavior="inside"
             returnFocusOnClose={true}
             blockScrollOnMount={blockScrollOnMount}
-            trapFocus={trapFocus}
-            autoFocus={autoFocus}
             closeOnOverlayClick={closeOnOverlayClick}
+            autoFocus={autoFocus}
         >
             <ModalOverlay />
-            <ModalContent {...modalContentProps}>{children}</ModalContent>
+            <FocusLock isDisabled={!trapFocus} restoreFocus>
+                <ModalContent
+                    role="dialog"
+                    aria-modal="true"
+                    {...modalContentProps}
+                >
+                    {children}
+                </ModalContent>
+            </FocusLock>
         </Modal>
     );
 };

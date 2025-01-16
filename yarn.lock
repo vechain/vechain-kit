@@ -3483,10 +3483,10 @@
   dependencies:
     zod "^3.21.4"
 
-"@privy-io/cross-app-connect@^0.1.1":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@privy-io/cross-app-connect/-/cross-app-connect-0.1.2.tgz#d38bd612d1552fb18e291cbaa5a0b3a268dc218e"
-  integrity sha512-P/cs9Y1iVXqcBB31K/7h1gWLFzOFdByPP24fDTstONwA9n3a4M0Wa20MBtXSbjp6xqcncjdL/5BKZNkM+eSKrQ==
+"@privy-io/cross-app-connect@^0.1.2":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@privy-io/cross-app-connect/-/cross-app-connect-0.1.3.tgz#d616631211b246815ba9821591ad5530b8b9224b"
+  integrity sha512-crCswhF8OPmynpI0o3iSsJFMTQvO7gUK+TUYVCnxdp2oQhknn4y7v/0c2qTlXIEco1Vdsx9oruhkCWLsrM9vfg==
   dependencies:
     "@noble/curves" "^1.5.0"
     "@noble/hashes" "1.3.2"

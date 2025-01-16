@@ -70,9 +70,12 @@ export function VechainKitProvider({ children }: Props) {
                     },
                 },
             }}
-            // loginModalUI={{
-            //     preferredLoginMethods: ['email', 'google'],
-            // }}
+            loginModalUI={{
+                preferredLoginMethods: ['email', 'google'],
+                logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
+                description:
+                    'Choose between social login through VeChain or by connecting your wallet.',
+            }}
             darkMode={isDarkMode}
             language="en"
             network={{

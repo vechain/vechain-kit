@@ -1,6 +1,6 @@
 import { Button, HStack, Image, Text, useDisclosure } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
-import { ConnectModal, AccountModal, LoginLoadingModal } from '@/components';
+import { ConnectModal, AccountModal } from '@/components';
 import { humanAddress } from '@/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
@@ -86,11 +86,6 @@ export const WalletButton = () => {
             <AccountModal
                 isOpen={accountModal.isOpen}
                 onClose={accountModal.onClose}
-            />
-
-            <LoginLoadingModal
-                isOpen={connection.isConnecting}
-                onClose={() => {}}
             />
         </>
     );
