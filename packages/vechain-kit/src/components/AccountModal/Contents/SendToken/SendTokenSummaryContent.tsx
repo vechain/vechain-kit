@@ -327,6 +327,8 @@ export const SendTokenSummaryContent = ({
                 txId={txReceipt?.meta.txID}
                 errorDescription={error?.reason ?? 'Unknown error'}
                 showExplorerButton={true}
+                showSocialButtons={true}
+                showTryAgainButton={true}
             />
         </FadeInViewFromBottom>
     );

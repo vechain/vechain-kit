@@ -2,7 +2,7 @@ import { Button, HStack, Image, Text, useDisclosure } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { ConnectModal, AccountModal, LoginLoadingModal } from '@/components';
 import { humanAddress } from '@/utils';
-import { useLoginWithOAuth, usePrivy } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
@@ -13,8 +13,6 @@ export const WalletButton = () => {
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
-
-    const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
 
     const handleConnect = () => {
         // Social login does not work inside veworld explorer,
@@ -36,7 +34,7 @@ export const WalletButton = () => {
             await createWallet();
         };
 
-        if (authenticated && !isLoadingLoginOAuth && !embeddedWallet) {
+        if (authenticated && !connection.isConnecting && !embeddedWallet) {
             try {
                 asyncCreateWallet();
             } catch (error) {
@@ -44,7 +42,7 @@ export const WalletButton = () => {
                 console.error(error);
             }
         }
-    }, [authenticated, isLoadingLoginOAuth, user]);
+    }, [authenticated, connection, user]);
 
     return (
         <>
@@ -91,7 +89,7 @@ export const WalletButton = () => {
             />
 
             <LoginLoadingModal
-                isOpen={isLoadingLoginOAuth}
+                isOpen={connection.isConnecting}
                 onClose={() => {}}
             />
         </>

@@ -9,7 +9,7 @@ export type SmartAccount = Wallet & {
 };
 
 export type ConnectionSource = {
-    type: 'privy' | 'wallet' | 'privy-cross-app';
+    type: 'privy' | 'wallet' | 'privy-cross-app' | 'privy-vechain';
     displayName: string;
 };
 
@@ -76,9 +76,18 @@ export type EnhancedClause = Connex.VM.Clause & {
 };
 
 export type PrivyAppInfo = {
+    id: string;
     name: string;
     logo_url: string;
-    description?: string;
+    icon_url: string | null;
+    terms_and_conditions_url: string;
+    privacy_policy_url: string;
+    theme: string;
+    accent_color: string;
+    wallet_auth: boolean;
+    email_auth: boolean;
+    google_oauth: boolean;
+    twitter_oauth: boolean;
 };
 
 export type PrivyLoginMethod =

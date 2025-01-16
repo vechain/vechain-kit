@@ -3,7 +3,6 @@ import {
     Grid,
     GridItem,
     HStack,
-    Icon,
     Image,
     ModalBody,
     ModalCloseButton,
@@ -15,7 +14,6 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import {
-    useCrossAppAccounts,
     usePrivy,
     useLoginWithOAuth,
     useLoginWithPasskey,
@@ -34,7 +32,6 @@ import { ConnectModalContents } from '../ConnectModal';
 import { IoIosFingerPrint } from 'react-icons/io';
 import { IoPlanet } from 'react-icons/io5';
 import { useWalletModal } from '@vechain/dapp-kit-react';
-import { VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import React, { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 // import { EmailLoginButton } from '../Components/EmailLoginButton';
@@ -42,7 +39,10 @@ import {
     ConnectionButton,
     EcosystemModal,
     EmailLoginButton,
+    LoginLoadingModal,
 } from '@/components';
+import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
+import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -56,7 +56,7 @@ export const MainContent = ({ onClose }: Props) => {
     const isDark = colorMode === 'dark';
     const ecosystemModal = useDisclosure();
     const { connection } = useWallet();
-    const { loginModalUI } = useVeChainKitConfig();
+    const { loginModalUI, privySocialLoginEnabled } = useVeChainKitConfig();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
 
@@ -64,7 +64,7 @@ export const MainContent = ({ onClose }: Props) => {
     const { open: openDappKitModal } = useWalletModal();
 
     // Login with Vechain - Cross app account login
-    const { loginWithCrossAppAccount } = useCrossAppAccounts();
+    const { login: loginWithVeChain } = usePrivyCrossAppSdk();
 
     // Passkey login
     const { loginWithPasskey } = useLoginWithPasskey();
@@ -145,63 +145,76 @@ export const MainContent = ({ onClose }: Props) => {
                             gap={2}
                             w={'full'}
                         >
-                            {loginModalUI?.preferredLoginMethods?.map(
-                                (method, index) => (
-                                    <React.Fragment key={method}>
-                                        {method === 'email' && (
-                                            <GridItem colSpan={4} w={'full'}>
-                                                <EmailLoginButton />
-                                            </GridItem>
-                                        )}
-                                        {method === 'google' && (
-                                            <GridItem colSpan={4} w={'full'}>
-                                                <ConnectionButton
-                                                    isDark={isDark}
-                                                    onClick={() =>
-                                                        initOAuth({
-                                                            provider: 'google',
-                                                        })
-                                                    }
-                                                    leftIcon={
-                                                        <Icon
-                                                            as={FcGoogle}
-                                                            w={'25px'}
-                                                            h={'25px'}
-                                                        />
-                                                    }
-                                                    text="Continue with Google"
-                                                />
-                                            </GridItem>
-                                        )}
+                            {privySocialLoginEnabled &&
+                                loginModalUI?.preferredLoginMethods?.map(
+                                    (method, index) => (
+                                        <React.Fragment key={method}>
+                                            {method === 'email' && (
+                                                <GridItem
+                                                    colSpan={4}
+                                                    w={'full'}
+                                                >
+                                                    <EmailLoginButton />
+                                                </GridItem>
+                                            )}
+                                            {method === 'google' && (
+                                                <GridItem
+                                                    colSpan={4}
+                                                    w={'full'}
+                                                >
+                                                    <ConnectionButton
+                                                        isDark={isDark}
+                                                        onClick={() =>
+                                                            initOAuth({
+                                                                provider:
+                                                                    'google',
+                                                            })
+                                                        }
+                                                        icon={FcGoogle}
+                                                        text="Continue with Google"
+                                                    />
+                                                </GridItem>
+                                            )}
 
-                                        {index !==
-                                            (loginModalUI?.preferredLoginMethods
-                                                ?.length ?? 0) -
-                                                1 && (
-                                            <GridItem colSpan={4} w={'full'}>
-                                                <HStack>
-                                                    <Divider />
-                                                    <Text fontSize={'xs'}>
-                                                        or
-                                                    </Text>
-                                                    <Divider />
-                                                </HStack>
-                                            </GridItem>
-                                        )}
-                                    </React.Fragment>
-                                ),
-                            )}
+                                            {index !==
+                                                (loginModalUI
+                                                    ?.preferredLoginMethods
+                                                    ?.length ?? 0) -
+                                                    1 && (
+                                                <GridItem
+                                                    colSpan={4}
+                                                    w={'full'}
+                                                >
+                                                    <HStack>
+                                                        <Divider />
+                                                        <Text fontSize={'xs'}>
+                                                            or
+                                                        </Text>
+                                                        <Divider />
+                                                    </HStack>
+                                                </GridItem>
+                                            )}
+                                        </React.Fragment>
+                                    ),
+                                )}
 
                             <GridItem colSpan={4} w={'full'}>
                                 <ConnectionButton
                                     isDark={isDark}
                                     onClick={async () => {
-                                        await loginWithCrossAppAccount({
-                                            appId: VECHAIN_PRIVY_APP_ID,
-                                        });
-                                        onClose();
+                                        try {
+                                            await loginWithVeChain(
+                                                VECHAIN_PRIVY_APP_ID,
+                                            );
+                                            onClose(); // Close the modal only after successful connection
+                                        } catch (error) {
+                                            console.error(
+                                                'Login failed:',
+                                                error,
+                                            );
+                                        }
                                     }}
-                                    leftIcon={
+                                    customIcon={
                                         <VechainLogo
                                             boxSize={'20px'}
                                             isDark={isDark}
@@ -211,32 +224,66 @@ export const MainContent = ({ onClose }: Props) => {
                                 />
                             </GridItem>
 
-                            <ConnectionButton
-                                isDark={isDark}
-                                onClick={handleLoginWithPasskey}
-                                icon={IoIosFingerPrint}
-                            />
+                            {privySocialLoginEnabled && (
+                                <GridItem colSpan={1} w={'full'}>
+                                    <ConnectionButton
+                                        isDark={isDark}
+                                        onClick={handleLoginWithPasskey}
+                                        icon={IoIosFingerPrint}
+                                    />
+                                </GridItem>
+                            )}
 
-                            <ConnectionButton
-                                isDark={isDark}
-                                onClick={openDappKitModal}
-                                icon={HiOutlineWallet}
-                            />
+                            <GridItem
+                                colSpan={privySocialLoginEnabled ? 1 : 2}
+                                w={'full'}
+                            >
+                                <ConnectionButton
+                                    isDark={isDark}
+                                    onClick={openDappKitModal}
+                                    icon={HiOutlineWallet}
+                                    text={
+                                        !privySocialLoginEnabled
+                                            ? 'Connect Wallet'
+                                            : undefined
+                                    }
+                                />
+                            </GridItem>
 
-                            <ConnectionButton
-                                isDark={isDark}
-                                onClick={ecosystemModal.onOpen}
-                                icon={IoPlanet}
-                            />
+                            <GridItem
+                                colSpan={privySocialLoginEnabled ? 1 : 2}
+                                w={'full'}
+                            >
+                                <ConnectionButton
+                                    isDark={isDark}
+                                    onClick={ecosystemModal.onOpen}
+                                    icon={IoPlanet}
+                                    text={
+                                        !privySocialLoginEnabled
+                                            ? 'Ecosystem'
+                                            : undefined
+                                    }
+                                />
+                            </GridItem>
 
-                            <ConnectionButton
-                                isDark={isDark}
-                                onClick={viewMoreLogin}
-                                icon={CiCircleMore}
-                            />
+                            {privySocialLoginEnabled && (
+                                <GridItem colSpan={1} w={'full'}>
+                                    <ConnectionButton
+                                        isDark={isDark}
+                                        onClick={viewMoreLogin}
+                                        icon={CiCircleMore}
+                                    />
+                                </GridItem>
+                            )}
+
                             <EcosystemModal
                                 isOpen={ecosystemModal.isOpen}
                                 onClose={ecosystemModal.onClose}
+                            />
+
+                            <LoginLoadingModal
+                                isOpen={connection.isConnecting}
+                                onClose={() => {}}
                             />
                         </Grid>
                     </Stack>

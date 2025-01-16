@@ -62,7 +62,10 @@ export const WalletSettingsContent = ({
 
                 <ModalBackButton
                     onClick={() => {
-                        if (connection.isConnectedWithPrivy) {
+                        if (
+                            connection.isConnectedWithPrivy ||
+                            connection.isConnectedWithCrossApp
+                        ) {
                             setCurrentContent('accounts');
                         } else {
                             setCurrentContent('main');
@@ -163,14 +166,12 @@ export const WalletSettingsContent = ({
                                     onClick={() => {
                                         exportWallet();
                                     }}
-                                    hide={
-                                        connection.isConnectedWithCrossAppPrivy
-                                    }
+                                    hide={connection.isConnectedWithCrossApp}
                                     leftIcon={GiHouseKeys}
                                     rightIcon={MdOutlineNavigateNext}
                                 />
 
-                                {privy.allowPasskeyLinking && (
+                                {privy?.allowPasskeyLinking && (
                                     <ActionButton
                                         title="Add passkey"
                                         description="Add a passkey to your account for future logins. If enabled, passkeys will always be available as a login method."
@@ -178,7 +179,7 @@ export const WalletSettingsContent = ({
                                             linkPasskey();
                                         }}
                                         hide={
-                                            connection.isConnectedWithCrossAppPrivy
+                                            connection.isConnectedWithCrossApp
                                         }
                                         leftIcon={IoIosFingerPrint}
                                         rightIcon={MdOutlineNavigateNext}

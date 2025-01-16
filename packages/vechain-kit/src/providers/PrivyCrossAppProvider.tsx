@@ -1,0 +1,157 @@
+import React, { useCallback, useRef, useState } from 'react';
+import { toPrivyWalletConnector } from '@privy-io/cross-app-connect/rainbow-kit';
+import {
+    useConnect,
+    useDisconnect,
+    createConfig,
+    useSignMessage,
+    useSignTypedData,
+    WagmiProvider,
+    http,
+    useAccount,
+} from 'wagmi';
+import { SignTypedDataParameters } from '@wagmi/core';
+import { VECHAIN_PRIVY_APP_ID } from '../utils';
+import { defineChain } from 'viem';
+
+export const vechain = defineChain({
+    id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
+    name: 'Vechain',
+    nativeCurrency: { name: 'VeChain', symbol: 'VET', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://mainnet.vechain.org'],
+        },
+    },
+    blockExplorers: {
+        default: {
+            name: 'Vechain Explorer',
+            url: 'https://explore.vechain.org',
+        },
+        vechainStats: {
+            name: 'Vechain Stats',
+            url: 'https://vechainstats.com',
+        },
+    },
+});
+
+export const vechainConnector = () => {
+    return toPrivyWalletConnector({
+        id: VECHAIN_PRIVY_APP_ID,
+        name: 'VeChain',
+        iconUrl:
+            'https://imagedelivery.net/oHBRUd2clqykxgDWmeAyLg/661dd77c-2f9d-40e7-baa1-f4e24fd7bf00/icon',
+        smartWalletMode: false,
+    });
+};
+
+interface PrivyCrossAppProviderProps {
+    privyEcosystemAppIDS: string[];
+    children: React.ReactNode;
+}
+
+export const PrivyCrossAppProvider = ({
+    privyEcosystemAppIDS,
+    children,
+}: PrivyCrossAppProviderProps) => {
+    // Use useRef to store the config to prevent recreation on re-renders
+    const wagmiConfigRef = useRef(
+        createConfig({
+            chains: [vechain],
+            ssr: true,
+            connectors: [
+                vechainConnector(),
+                ...privyEcosystemAppIDS.map((appId) =>
+                    toPrivyWalletConnector({
+                        id: appId,
+                        name: '',
+                        iconUrl: '',
+                    }),
+                ),
+            ],
+            transports: { [vechain.id]: http() },
+            multiInjectedProviderDiscovery: false,
+        }),
+    );
+
+    return (
+        <WagmiProvider config={wagmiConfigRef.current}>
+            {children}
+        </WagmiProvider>
+    );
+};
+
+export const usePrivyCrossAppSdk = () => {
+    const { connectAsync, connectors } = useConnect();
+    const { signTypedDataAsync } = useSignTypedData();
+    const { signMessageAsync } = useSignMessage();
+    const { disconnectAsync } = useDisconnect();
+    const { isConnected } = useAccount();
+
+    // Add local state to track connection
+    const [isConnecting, setIsConnecting] = useState(false);
+    const [connectionError, setConnectionError] = useState<Error | null>(null);
+
+    const logout = useCallback(async () => {
+        try {
+            if (isConnected) {
+                await disconnectAsync();
+                // Force a state update after disconnect
+                window.dispatchEvent(new Event('wallet_disconnected'));
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+            throw error;
+        }
+    }, [disconnectAsync, isConnected]);
+
+    const login = useCallback(
+        async (appID: string) => {
+            try {
+                setIsConnecting(true);
+                setConnectionError(null);
+
+                const connector = connectors.find(
+                    (c) => c.id === (appID || VECHAIN_PRIVY_APP_ID),
+                );
+
+                if (!connector) {
+                    throw new Error('Connector not found');
+                }
+
+                const result = await connectAsync({ connector });
+                return result;
+            } catch (error) {
+                setConnectionError(error as Error);
+                throw error;
+            } finally {
+                setIsConnecting(false);
+            }
+        },
+        [connectAsync, connectors],
+    );
+
+    // Keep the other methods unchanged
+    const signMessage = useCallback(
+        async (message: string) => {
+            return signMessageAsync({ message });
+        },
+        [signMessageAsync],
+    );
+
+    const signTypedData = useCallback(
+        async (data: SignTypedDataParameters) => {
+            return await signTypedDataAsync(data);
+        },
+        [signTypedDataAsync],
+    );
+
+    return {
+        login,
+        logout,
+        signMessage,
+        signTypedData,
+        isConnecting,
+        connectionError,
+    };
+};

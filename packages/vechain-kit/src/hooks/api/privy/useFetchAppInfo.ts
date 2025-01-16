@@ -1,20 +1,5 @@
+import { PrivyAppInfo } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-
-interface PrivyAppInfo {
-    id: string;
-    name: string;
-    logo_url: string;
-    icon_url: string | null;
-    terms_and_conditions_url: string;
-    privacy_policy_url: string;
-    theme: string;
-    accent_color: string;
-    wallet_auth: boolean;
-    email_auth: boolean;
-    google_oauth: boolean;
-    twitter_oauth: boolean;
-    // Add other fields as needed
-}
 
 export const fetchPrivyAppInfo = async (
     appId: string,
