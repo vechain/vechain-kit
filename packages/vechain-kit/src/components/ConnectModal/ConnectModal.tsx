@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 
@@ -12,6 +12,7 @@ type Props = {
 export type ConnectModalContents = 'main' | 'email-verification';
 
 export const ConnectModal = ({ isOpen, onClose }: Props) => {
+    const initialFocusRef = useRef<HTMLButtonElement>(null);
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContents>('main');
 
@@ -34,7 +35,11 @@ export const ConnectModal = ({ isOpen, onClose }: Props) => {
     };
 
     return (
-        <BaseModal isOpen={isOpen} onClose={onClose}>
+        <BaseModal
+            isOpen={isOpen}
+            onClose={onClose}
+            initialFocusRef={initialFocusRef}
+        >
             {renderContent()}
         </BaseModal>
     );

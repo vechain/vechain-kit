@@ -21,7 +21,6 @@ import {
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
-    StickyFooterContainer,
 } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage, humanAddress } from '@/utils';
@@ -299,23 +298,23 @@ export const SendTokenSummaryContent = ({
                         </Box>
                     </VStack>
                 </ModalBody>
-
-                <StickyFooterContainer>
-                    <ModalFooter py={0}>
-                        <Button
-                            px={4}
-                            width="full"
-                            height="60px"
-                            variant="solid"
-                            borderRadius="xl"
-                            colorScheme="blue"
-                            onClick={handleSend}
-                        >
-                            CONFIRM
-                        </Button>
-                    </ModalFooter>
-                </StickyFooterContainer>
             </FadeInViewFromBottom>
+
+            {/* <StickyFooterContainer> */}
+            <ModalFooter>
+                <Button
+                    px={4}
+                    width="full"
+                    height="60px"
+                    variant="solid"
+                    borderRadius="xl"
+                    colorScheme="blue"
+                    onClick={handleSend}
+                >
+                    CONFIRM
+                </Button>
+            </ModalFooter>
+            {/* </StickyFooterContainer> */}
 
             <TransactionModal
                 isOpen={transactionModal.isOpen}
