@@ -47,11 +47,11 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
                 w="fit-content"
                 h="fit-content"
                 p={2}
-                px={4}
+                pl={4}
                 onClick={onClick}
                 variant="selector"
             >
-                <HStack spacing={4} align="center">
+                <HStack spacing={2} align="center">
                     <Text fontSize={size} fontWeight="500">
                         {wallet.domain ||
                             humanAddress(wallet.address ?? '', 6, 4)}
