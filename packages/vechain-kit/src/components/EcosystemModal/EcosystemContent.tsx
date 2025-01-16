@@ -11,7 +11,6 @@ import {
     VStack,
     useColorMode,
 } from '@chakra-ui/react';
-import { useCrossAppAccounts } from '@privy-io/react-auth';
 import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
@@ -19,6 +18,7 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
 import { IoPlanet } from 'react-icons/io5';
+import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 
 type Props = {
     onClose: () => void;
@@ -28,29 +28,17 @@ export const EcosystemContent = ({ onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { loginWithCrossAppAccount } = useCrossAppAccounts();
+    // const { loginWithCrossAppAccount } = useCrossAppAccounts();
+    // Login with Vechain - Cross app account login
+    const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
 
     const connectWithVebetterDaoApps = async (appId: string) => {
-        await loginWithCrossAppAccount({ appId });
+        await loginWithCrossApp(appId);
         onClose();
     };
 
-    const { privy } = useVeChainKitConfig();
-    const { data: appsInfo, isLoading } = useFetchAppInfo(
-        privy.ecosystemAppsID || [],
-    );
-
-    // useEffect(() => {
-    //     if (
-    //         connection.source.type === 'privy-cross-app' &&
-    //         crossAppLogin &&
-    //         authenticated
-    //     ) {
-    //         linkCrossAppAccount({
-    //             appId: `${privy?.ecosystemAppsID?.[0]}`,
-    //         });
-    //     }
-    // }, [connection.source.type, crossAppLogin, authenticated]);
+    const { privyEcosystemAppIDS } = useVeChainKitConfig();
+    const { data: appsInfo, isLoading } = useFetchAppInfo(privyEcosystemAppIDS);
 
     return (
         <FadeInViewFromBottom>

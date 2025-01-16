@@ -76,7 +76,9 @@ export const ErrorModalContent = ({
                                     />
                                 </motion.div>
                                 {description && (
-                                    <Text size="sm">{description}</Text>
+                                    <Text size="sm" textAlign={'center'}>
+                                        {description}
+                                    </Text>
                                 )}
                                 {showExplorerButton && txId && (
                                     <Link

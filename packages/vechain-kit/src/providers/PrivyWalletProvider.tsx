@@ -1,12 +1,7 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import {
-    useCrossAppAccounts,
-    usePrivy,
-    useWallets,
-    type ConnectedWallet,
-} from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { encodeFunctionData } from 'viem';
 import { ABIContract, Address, Clause } from '@vechain/sdk-core';
 import {
@@ -18,12 +13,13 @@ import {
 import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
 import { randomTransactionUser } from '../utils';
 import { ExecuteWithAuthorizationSignData } from '@/types';
-import { useGetChainId, useSmartAccount } from '@/hooks';
+import { useGetChainId, useSmartAccount, useWallet } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKit';
+import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
+import { SignTypedDataParameters } from '@wagmi/core';
 
 export interface PrivyWalletProviderContextType {
-    embeddedWallet?: ConnectedWallet;
     accountFactory: string;
     delegateAllTransactions: boolean;
     sendTransaction: (tx: {
@@ -62,29 +58,18 @@ export const PrivyWalletProvider = ({
     delegatorUrl: string;
     delegateAllTransactions: boolean;
 }) => {
-    const { signTypedData, exportWallet, user } = usePrivy();
-    const { signTypedData: signTypedDataCrossApp } = useCrossAppAccounts();
-    const { wallets } = useWallets();
-    const embeddedWallet = wallets.find(
-        (wallet) => wallet.walletClientType === 'privy',
-    );
+    const { signTypedData, exportWallet } = usePrivy();
+    const { signTypedData: signTypedDataVeChain } = usePrivyCrossAppSdk();
+    const { connection, connectedWallet } = useWallet();
 
     const { network } = useVeChainKitConfig();
     const { data: chainId } = useGetChainId();
 
     const thor = ThorClient.at(nodeUrl);
 
-    const isCrossAppPrivyAccount = Boolean(
-        user?.linkedAccounts?.some((account) => account.type === 'cross_app'),
+    const { data: smartAccount } = useSmartAccount(
+        connectedWallet.address ?? '',
     );
-
-    const connectedAccount = isCrossAppPrivyAccount
-        ? //@ts-ignore
-          user?.linkedAccounts?.[0]?.embeddedWallets?.[0]?.address
-        : //@ts-ignore
-          user?.linkedAccounts?.[0]?.address ?? user?.wallet?.address;
-
-    const { data: smartAccount } = useSmartAccount(connectedAccount);
 
     /**
      * Send a transaction on vechain by asking the privy wallet to sign a typed data content
@@ -102,7 +87,12 @@ export const PrivyWalletProvider = ({
         description?: string;
         buttonText?: string;
     }): Promise<string> => {
-        if (!smartAccount || !embeddedWallet || !connectedAccount) {
+        if (
+            !smartAccount ||
+            (smartAccount && !smartAccount.address) ||
+            !connectedWallet ||
+            (connectedWallet && !connectedWallet.address)
+        ) {
             throw new Error('Address or embedded wallet is missing');
         }
 
@@ -113,7 +103,7 @@ export const PrivyWalletProvider = ({
                     name: 'Wallet',
                     version: '1',
                     chainId: chainId as unknown as number, // convert chainId to a number
-                    verifyingContract: smartAccount.address ?? '',
+                    verifyingContract: smartAccount.address,
                 },
                 types: {
                     ExecuteWithAuthorization: [
@@ -122,6 +112,12 @@ export const PrivyWalletProvider = ({
                         { name: 'data', type: 'bytes' },
                         { name: 'validAfter', type: 'uint256' },
                         { name: 'validBefore', type: 'uint256' },
+                    ],
+                    EIP712Domain: [
+                        { name: 'name', type: 'string' },
+                        { name: 'version', type: 'string' },
+                        { name: 'chainId', type: 'uint256' },
+                        { name: 'verifyingContract', type: 'address' },
                     ],
                 },
                 primaryType: 'ExecuteWithAuthorization',
@@ -148,29 +144,30 @@ export const PrivyWalletProvider = ({
                     );
                 }
 
-                if (isCrossAppPrivyAccount) {
-                    return signTypedDataCrossApp(data, {
-                        address: connectedAccount,
-                    });
-                } else {
-                    const funcData = txClause.data;
-                    return (
-                        await signTypedData(data, {
-                            uiOptions: {
-                                title,
-                                description:
-                                    description ??
-                                    (typeof funcData === 'object' &&
-                                    funcData !== null &&
-                                    'functionName' in funcData
-                                        ? (funcData as { functionName: string })
-                                              .functionName
-                                        : ' '),
-                                buttonText,
-                            },
-                        })
-                    ).signature;
+                if (connection.isConnectedWithCrossApp) {
+                    return signTypedDataVeChain({
+                        ...data,
+                        address: connectedWallet.address as `0x${string}`,
+                    } as SignTypedDataParameters);
                 }
+
+                const funcData = txClause.data;
+                return (
+                    await signTypedData(data, {
+                        uiOptions: {
+                            title,
+                            description:
+                                description ??
+                                (typeof funcData === 'object' &&
+                                funcData !== null &&
+                                'functionName' in funcData
+                                    ? (funcData as { functionName: string })
+                                          .functionName
+                                    : ' '),
+                            buttonText,
+                        },
+                    })
+                ).signature;
             }),
         );
 
@@ -185,7 +182,7 @@ export const PrivyWalletProvider = ({
                     ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
                         'createAccount',
                     ),
-                    [connectedAccount], // set the Privy wallet address as the owner of the smart account
+                    [connectedWallet.address ?? ''], // set the Privy wallet address as the owner of the smart account
                 ),
             );
         }
@@ -212,7 +209,7 @@ export const PrivyWalletProvider = ({
         // estimate the gas fees for the transaction
         const gasResult = await thor.gas.estimateGas(
             clauses,
-            connectedAccount,
+            connectedWallet.address ?? '',
             {
                 gasPadding: 1,
             },
@@ -270,7 +267,6 @@ export const PrivyWalletProvider = ({
         <PrivyWalletProviderContext.Provider
             value={{
                 accountFactory: getConfig(network.type).accountFactoryAddress,
-                embeddedWallet,
                 sendTransaction,
                 exportWallet,
                 delegateAllTransactions,

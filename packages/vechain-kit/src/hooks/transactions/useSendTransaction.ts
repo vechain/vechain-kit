@@ -172,7 +172,10 @@ export const useSendTransaction = ({
      */
     const sendTransaction = useCallback(
         async (clauses: EnhancedClause[]) => {
-            if (connection.isConnectedWithPrivy) {
+            if (
+                connection.isConnectedWithPrivy ||
+                connection.isConnectedWithCrossApp
+            ) {
                 return await privyWalletProvider.sendTransaction({
                     txClauses: clauses,
                     ...privyUIOptions,

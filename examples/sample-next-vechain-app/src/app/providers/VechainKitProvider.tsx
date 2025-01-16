@@ -24,26 +24,28 @@ export function VechainKitProvider({ children }: Props) {
 
     return (
         <VeChainKit
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: ['google', 'twitter', 'sms', 'email'],
-                appearance: {
-                    walletList: ['metamask', 'rainbow'],
-                    accentColor: '#696FFD',
-                    loginMessage: 'Select a social media profile',
-                    logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-                ecosystemAppsID: [
-                    'cm4wxxujb022fyujl7g0thb21', //vechain
-                    'clz41gcg00e4ay75dmq3uzzgr', //cleanify
-                    'cm153hrup0817axti38avlfyg', //greencart
-                ],
-                allowPasskeyLinking: true,
-            }}
+            // privy={{
+            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+            //     loginMethods: ['google', 'twitter', 'sms', 'email'],
+            //     appearance: {
+            //         walletList: ['metamask', 'rainbow'],
+            //         accentColor: '#696FFD',
+            //         loginMessage: 'Select a social media profile',
+            //         logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
+            //     },
+            //     embeddedWallets: {
+            //         createOnLogin: 'all-users',
+            //     },
+
+            //     allowPasskeyLinking: true,
+            // }}
+
+            privyEcosystemAppIDS={[
+                'cm4wxxujb022fyujl7g0thb21', //vechain
+                'clz41gcg00e4ay75dmq3uzzgr', //cleanify
+                'cm153hrup0817axti38avlfyg', //greencart
+            ]}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: true,
@@ -68,9 +70,9 @@ export function VechainKitProvider({ children }: Props) {
                     },
                 },
             }}
-            loginModalUI={{
-                preferredLoginMethods: ['email', 'google'],
-            }}
+            // loginModalUI={{
+            //     preferredLoginMethods: ['email', 'google'],
+            // }}
             darkMode={isDarkMode}
             language="en"
             network={{

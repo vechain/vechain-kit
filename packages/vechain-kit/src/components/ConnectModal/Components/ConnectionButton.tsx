@@ -1,23 +1,23 @@
 import { Button, Icon, Text } from '@chakra-ui/react';
-import { IconType } from 'react-icons';
 import { ReactElement } from 'react';
+import { IconType } from 'react-icons';
 
 interface ConnectionButtonProps {
     isDark: boolean;
     onClick: () => void;
     text?: string;
-    leftIcon?: ReactElement;
     icon?: IconType;
+    customIcon?: ReactElement;
 }
 
 export const ConnectionButton = ({
     isDark,
     onClick,
-    leftIcon,
     text,
     icon,
+    customIcon,
 }: ConnectionButtonProps) => {
-    if (!text && icon) {
+    if (!text) {
         return (
             <Button
                 variant={'loginIn'}
@@ -30,12 +30,16 @@ export const ConnectionButton = ({
                 w={'full'}
                 onClick={onClick}
             >
-                <Icon as={icon} w={'20px'} h={'20px'} />
+                {customIcon ? (
+                    customIcon
+                ) : (
+                    <Icon as={icon} w={'20px'} h={'20px'} />
+                )}
             </Button>
         );
     }
 
-    if (leftIcon) {
+    if (text) {
         return (
             <Button
                 variant={'loginIn'}
@@ -47,7 +51,13 @@ export const ConnectionButton = ({
                 borderRadius={16}
                 w={'full'}
                 onClick={onClick}
-                leftIcon={leftIcon}
+                leftIcon={
+                    customIcon ? (
+                        customIcon
+                    ) : (
+                        <Icon as={icon} w={'25px'} h={'25px'} />
+                    )
+                }
             >
                 {text && <Text>{text}</Text>}
             </Button>

@@ -70,9 +70,8 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                     fontSize={'sm'}
                                     lineHeight={'1.2'}
                                 >
-                                    You own a Smart Account, which has
-                                    precedence over your wallet and is set as
-                                    active.
+                                    You own a Smart Account, which has priority
+                                    over your wallet and is set as active.
                                 </AlertDescription>
                             </Alert>
                         )}
