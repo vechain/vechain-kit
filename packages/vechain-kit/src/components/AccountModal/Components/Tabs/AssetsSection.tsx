@@ -50,7 +50,6 @@ export const AssetsSection = () => {
                             _selected={{
                                 bg: tabSelectedBgColor,
                                 color: tabTextSelectedColor,
-                                fontWeight: '500',
                             }}
                             flex={1}
                             onClick={scrollToContent}
@@ -68,7 +67,6 @@ export const AssetsSection = () => {
                             _selected={{
                                 bg: tabSelectedBgColor,
                                 color: tabTextSelectedColor,
-                                fontWeight: '500',
                             }}
                             flex={1}
                             transition="all 0.2s"
@@ -85,7 +83,6 @@ export const AssetsSection = () => {
                             _selected={{
                                 bg: tabSelectedBgColor,
                                 color: tabTextSelectedColor,
-                                fontWeight: '500',
                             }}
                             flex={1}
                             transition="all 0.2s"
