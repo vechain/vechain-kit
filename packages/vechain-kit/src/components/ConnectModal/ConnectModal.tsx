@@ -38,7 +38,7 @@ export const ConnectModal = ({ isOpen, onClose }: Props) => {
             isOpen={isOpen}
             onClose={onClose}
             allowExternalFocus={true}
-            blockScrollOnMount={false}
+            blockScrollOnMount={true}
         >
             {renderContent()}
         </BaseModal>

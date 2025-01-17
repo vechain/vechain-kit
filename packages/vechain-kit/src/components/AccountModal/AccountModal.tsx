@@ -90,7 +90,12 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
     };
 
     return (
-        <BaseModal isOpen={isOpen} onClose={onClose}>
+        <BaseModal
+            isOpen={isOpen}
+            onClose={onClose}
+            allowExternalFocus={true}
+            blockScrollOnMount={true}
+        >
             {renderContent()}
         </BaseModal>
     );
