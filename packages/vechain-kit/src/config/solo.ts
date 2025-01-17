@@ -30,6 +30,8 @@ const config: AppConfig = {
         '0x7a11D63338576aE8c038868433ea199d7E5319A6',
     cleanifyChallengesContractAddress:
         '0xa58681692AdDD2e8E37f9113D40Bb9253C03F65e',
+    veWorldSubdomainClaimerContractAddress:
+        '0x0000000000000000000000000000000000000000',
     indexerUrl: 'https://b3tr.testnet.vechain.org/api/v1',
     nodeUrl: 'http://localhost:8669',
     network: {

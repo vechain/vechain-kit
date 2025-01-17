@@ -73,5 +73,7 @@ const config: AppConfig = {
         '0x7a11D63338576aE8c038868433ea199d7E5319A6',
     cleanifyChallengesContractAddress:
         '0xa58681692AdDD2e8E37f9113D40Bb9253C03F65e',
+    veWorldSubdomainClaimerContractAddress:
+        '0xa4173c32fe8a61a8fd0d0234675b559fc360446a',
 };
 export default config;

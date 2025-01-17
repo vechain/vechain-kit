@@ -27,6 +27,7 @@ export type AppConfig = {
     accountFactoryAddress: string;
     cleanifyCampaignsContractAddress: string;
     cleanifyChallengesContractAddress: string;
+    veWorldSubdomainClaimerContractAddress: string;
     nodeUrl: string;
     indexerUrl?: string;
     network: Network;

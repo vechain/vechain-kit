@@ -32,3 +32,4 @@ export type { X2EarnCreator } from './X2EarnCreator';
 export type { X2EarnRewardsPool } from './X2EarnRewardsPool';
 export type { XAllocationPool } from './XAllocationPool';
 export type { XAllocationVoting } from './XAllocationVoting';
+export type { SubdomainClaimer } from './SubdomainClaimer';
