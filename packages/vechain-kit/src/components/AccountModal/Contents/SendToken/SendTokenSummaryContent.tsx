@@ -122,7 +122,7 @@ export const SendTokenSummaryContent = ({
             <FadeInViewFromBottom>
                 <ModalBody>
                     <VStack spacing={6} align="stretch" w="full">
-                        {connection.isConnectedWithPrivy && (
+                        {connection.isConnectedWithSocialLogin && (
                             <Alert
                                 status="warning"
                                 fontSize={'xs'}

@@ -71,7 +71,7 @@ export const ConfirmationModalContent = ({
                                 </>
                             ) : (
                                 <Text fontSize="sm" align={'center'}>
-                                    {connection.isConnectedWithPrivy
+                                    {connection.isConnectedWithSocialLogin
                                         ? 'Please do not close this window, it will take just a few seconds.'
                                         : 'Please confirm the transaction in your wallet.'}
                                 </Text>

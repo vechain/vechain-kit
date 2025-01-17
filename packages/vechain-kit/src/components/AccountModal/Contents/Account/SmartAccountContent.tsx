@@ -9,7 +9,7 @@ import {
     useColorMode,
     Link,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import React, { useState } from 'react';
 import {
     AddressDisplay,
@@ -21,7 +21,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { ActionButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { FaRegAddressCard, FaUserEdit } from 'react-icons/fa';
+import { FaRegAddressCard } from 'react-icons/fa';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -31,7 +31,7 @@ type Props = {
 
 export const SmartAccountContent = ({ setCurrentContent }: Props) => {
     const { smartAccount, connection } = useWallet();
-    const { exportWallet } = usePrivy();
+    // const { exportWallet } = usePrivy();
 
     const walletImage = getPicassoImage(smartAccount.address ?? '');
 
@@ -78,7 +78,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         {isExpanded && (
                             <FadeInViewFromBottom>
                                 <VStack>
-                                    {connection.isConnectedWithPrivy && (
+                                    {connection.isConnectedWithSocialLogin && (
                                         <Text fontSize={'sm'} opacity={0.5}>
                                             You're using an Embedded Wallet
                                             secured by your social login method,
@@ -110,7 +110,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                     </VStack>
 
                     <VStack mt={10} spacing={5}>
-                        <ActionButton
+                        {/* <ActionButton
                             title="Transfer ownership"
                             description="Change the owner of your smart account."
                             onClick={() => {
@@ -118,7 +118,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                             }}
                             leftIcon={FaUserEdit}
                             rightIcon={MdOutlineNavigateNext}
-                        />
+                        /> */}
 
                         <ActionButton
                             title="Choose account name"

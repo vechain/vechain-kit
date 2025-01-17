@@ -174,7 +174,7 @@ export const useSendTransaction = ({
             },
         ) => {
             if (
-                connection.isConnectedWithPrivy ||
+                connection.isConnectedWithSocialLogin ||
                 connection.isConnectedWithCrossApp
             ) {
                 return await privyWalletProvider.sendTransaction({

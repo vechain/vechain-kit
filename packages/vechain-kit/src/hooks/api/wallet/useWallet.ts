@@ -38,9 +38,10 @@ export type UseWalletReturnType = {
     connection: {
         isConnected: boolean;
         isConnecting: boolean;
-        isConnectedWithPrivy: boolean;
+        isConnectedWithSocialLogin: boolean;
         isConnectedWithDappKit: boolean;
         isConnectedWithCrossApp: boolean;
+        isConnectedWithPrivy: boolean;
         isLoadingPrivyConnection: boolean;
         source: ConnectionSource;
         isInAppBrowser: boolean;
@@ -73,7 +74,9 @@ export const useWallet = (): UseWalletReturnType => {
 
     // Connection states
     const isConnectedWithDappKit = !!dappKitAccount;
-    const isConnectedWithPrivy = authenticated && !!user;
+    const isConnectedWithSocialLogin = authenticated && !!user;
+    const isConnectedWithPrivy =
+        isConnectedWithSocialLogin || isConnectedWithCrossApp;
 
     const isConnecting =
         isConnectingWithCrossApp ||
@@ -85,10 +88,14 @@ export const useWallet = (): UseWalletReturnType => {
     useEffect(() => {
         setIsConnected(
             isConnectedWithDappKit ||
-                isConnectedWithPrivy ||
+                isConnectedWithSocialLogin ||
                 isConnectedWithCrossApp,
         );
-    }, [isConnectedWithDappKit, isConnectedWithPrivy, isConnectedWithCrossApp]);
+    }, [
+        isConnectedWithDappKit,
+        isConnectedWithSocialLogin,
+        isConnectedWithCrossApp,
+    ]);
 
     // Get embedded wallet
     const privyEmbeddedWallet = user?.wallet?.address;
@@ -154,7 +161,7 @@ export const useWallet = (): UseWalletReturnType => {
         try {
             if (isConnectedWithDappKit) {
                 await dappKitDisconnect();
-            } else if (isConnectedWithPrivy) {
+            } else if (isConnectedWithSocialLogin) {
                 await logout();
             } else if (isConnectedWithCrossApp) {
                 await disconnectCrossApp();
@@ -167,7 +174,7 @@ export const useWallet = (): UseWalletReturnType => {
     }, [
         isConnectedWithDappKit,
         dappKitDisconnect,
-        isConnectedWithPrivy,
+        isConnectedWithSocialLogin,
         logout,
         isConnectedWithCrossApp,
         disconnectCrossApp,
@@ -208,10 +215,11 @@ export const useWallet = (): UseWalletReturnType => {
         connection: {
             isConnecting,
             isConnected,
-            isConnectedWithPrivy,
+            isConnectedWithSocialLogin,
             isConnectedWithDappKit,
             isConnectedWithCrossApp,
             isLoadingPrivyConnection: !ready,
+            isConnectedWithPrivy,
             source: connectionSource,
             isInAppBrowser:
                 (window.vechain && window.vechain.isInAppBrowser) ?? false,
