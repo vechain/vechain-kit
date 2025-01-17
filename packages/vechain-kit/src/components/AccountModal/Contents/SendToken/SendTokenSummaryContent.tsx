@@ -132,58 +132,48 @@ export const SendTokenSummaryContent = ({
                             </Alert>
                         )}
                         {/* From/To Card */}
-                        <Box
-                            p={4}
-                            borderRadius="xl"
-                            bg={isDark ? '#00000021' : 'gray.50'}
-                        >
-                            <VStack spacing={4} w="full">
-                                <AddressDisplayCard
-                                    label="From"
-                                    address={account.address ?? ''}
-                                    domain={account.domain}
-                                    imageSrc={account.image ?? ''}
-                                    imageAlt="From account"
-                                />
 
-                                <AddressDisplayCard
-                                    label="To"
-                                    address={
-                                        resolvedAddress || toAddressOrDomain
-                                    }
-                                    domain={resolvedDomain}
-                                    imageSrc={getPicassoImage(
-                                        resolvedAddress || toAddressOrDomain,
-                                    )}
-                                    imageAlt="To account"
-                                />
+                        <VStack spacing={4} w="full">
+                            <AddressDisplayCard
+                                label="From"
+                                address={account.address ?? ''}
+                                domain={account.domain}
+                                imageSrc={account.image ?? ''}
+                                imageAlt="From account"
+                            />
 
-                                <Divider />
-                                <Box w="full" justifyContent="flex-start">
-                                    <Text fontSize="sm" mb={2}>
-                                        Amount
+                            <AddressDisplayCard
+                                label="To"
+                                address={resolvedAddress || toAddressOrDomain}
+                                domain={resolvedDomain}
+                                imageSrc={getPicassoImage(
+                                    resolvedAddress || toAddressOrDomain,
+                                )}
+                                imageAlt="To account"
+                            />
+
+                            <Divider />
+                            <Box w="full" justifyContent="flex-start">
+                                <Text fontSize="sm" fontWeight="bold" mb={2}>
+                                    Amount
+                                </Text>
+                                <HStack>
+                                    <Text fontSize="xl" fontWeight="semibold">
+                                        {summaryFormatter.format(
+                                            Number(amount),
+                                        )}{' '}
+                                        {selectedToken.symbol}
                                     </Text>
-                                    <HStack>
-                                        <Text
-                                            fontSize="xl"
-                                            fontWeight="semibold"
-                                        >
-                                            {summaryFormatter.format(
-                                                Number(amount),
-                                            )}{' '}
-                                            {selectedToken.symbol}
-                                        </Text>
-                                        <Text fontSize="sm" opacity={0.5}>
-                                            ≈ $
-                                            {compactFormatter.format(
-                                                Number(amount) *
-                                                    selectedToken.price,
-                                            )}
-                                        </Text>
-                                    </HStack>
-                                </Box>
-                            </VStack>
-                        </Box>
+                                    <Text fontSize="sm" opacity={0.5}>
+                                        ≈ $
+                                        {compactFormatter.format(
+                                            Number(amount) *
+                                                selectedToken.price,
+                                        )}
+                                    </Text>
+                                </HStack>
+                            </Box>
+                        </VStack>
                     </VStack>
                 </ModalBody>
             </FadeInViewFromBottom>

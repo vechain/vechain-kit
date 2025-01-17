@@ -124,11 +124,17 @@ export const WalletSettingsContent = ({
                                                 '_blank',
                                             );
                                         }}
+                                        _hover={{
+                                            cursor: 'pointer',
+                                        }}
                                         isDark={isDark}
                                         w={'50px'}
                                     />
                                     <Icon as={TbAmpersand} ml={2} />
                                     <VechainLogoHorizontal
+                                        _hover={{
+                                            cursor: 'pointer',
+                                        }}
                                         onClick={() => {
                                             window.open(
                                                 'https://www.vechain.org/',

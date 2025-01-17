@@ -36,7 +36,7 @@ export const AddressDisplayCard = ({
             bg={isDark ? '#ffffff0f' : 'gray.50'}
             wordBreak="break-word"
         >
-            <Text fontSize="sm" mb={2}>
+            <Text fontSize="sm" fontWeight="bold" mb={2}>
                 {label}
             </Text>
             <HStack minH={'50px'}>
