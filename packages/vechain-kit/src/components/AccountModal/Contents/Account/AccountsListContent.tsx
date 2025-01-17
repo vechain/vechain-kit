@@ -24,6 +24,7 @@ import { HiOutlineWallet } from 'react-icons/hi2';
 import React from 'react';
 import { RxExit } from 'react-icons/rx';
 import { Wallet } from '@/types';
+import { compareAddresses } from '@/utils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -40,6 +41,10 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { account, connectedWallet, disconnect, smartAccount } = useWallet();
 
     const hasActiveSmartAccount = smartAccount.isDeployed;
+    const activeWalletIsSmartAccount = compareAddresses(
+        smartAccount?.address ?? '',
+        account?.address ?? '',
+    );
 
     return (
         <FadeInViewFromBottom>
@@ -58,23 +63,25 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
             <FadeInViewFromBottom>
                 <ModalBody w={'full'}>
                     <VStack justify={'space-between'} w={'full'}>
-                        {hasActiveSmartAccount && (
-                            <Alert
-                                status="info"
-                                variant="subtle"
-                                mb={4}
-                                borderRadius={'lg'}
-                            >
-                                <AlertIcon boxSize={'16px'} />
-                                <AlertDescription
-                                    fontSize={'xs'}
-                                    lineHeight={'1.2'}
+                        {hasActiveSmartAccount &&
+                            activeWalletIsSmartAccount && (
+                                <Alert
+                                    status="info"
+                                    variant="subtle"
+                                    mb={4}
+                                    borderRadius={'lg'}
                                 >
-                                    You own a Smart Account, which has priority
-                                    over your wallet and is set as active.
-                                </AlertDescription>
-                            </Alert>
-                        )}
+                                    <AlertIcon boxSize={'16px'} />
+                                    <AlertDescription
+                                        fontSize={'xs'}
+                                        lineHeight={'1.2'}
+                                    >
+                                        You own a Smart Account, which has
+                                        priority over your wallet and is set as
+                                        active.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
                         <Grid
                             gap={2}
                             templateColumns={['repeat(1, 1fr)']}
@@ -84,8 +91,8 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                             {hasActiveSmartAccount && (
                                 <AccountDetailsButton
                                     title="Smart Account"
-                                    address={account.address ?? ''}
-                                    isActive
+                                    address={smartAccount?.address ?? ''}
+                                    isActive={activeWalletIsSmartAccount}
                                     onClick={() => {
                                         setCurrentContent('smart-account');
                                     }}
@@ -96,6 +103,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                             <AccountDetailsButton
                                 title="Wallet"
                                 address={connectedWallet?.address ?? ''}
+                                isActive={!activeWalletIsSmartAccount}
                                 onClick={() => {
                                     setCurrentContent('settings');
                                 }}
