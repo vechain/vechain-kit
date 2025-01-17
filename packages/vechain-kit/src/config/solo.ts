@@ -32,6 +32,11 @@ const config: AppConfig = {
         '0xa58681692AdDD2e8E37f9113D40Bb9253C03F65e',
     veWorldSubdomainClaimerContractAddress:
         '0x0000000000000000000000000000000000000000',
+    vetDomainsContractAddress: '0x0000000000000000000000000000000000000000',
+    vetDomainsPublicResolverAddress:
+        '0x0000000000000000000000000000000000000000',
+    vetDomainsReverseRegistrarAddress:
+        '0x5c970901a587BA3932C835D4ae5FAE2BEa7e78Bc',
     indexerUrl: 'https://b3tr.testnet.vechain.org/api/v1',
     nodeUrl: 'http://localhost:8669',
     network: {

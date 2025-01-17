@@ -31,7 +31,7 @@ export const ErrorModalContent = ({
     title = 'Something went wrong',
     description = 'Something went wrong 😕',
     showTryAgainButton = false,
-    onTryAgain = () => {},
+    onTryAgain,
     showExplorerButton,
     txId,
 }: ErrorModalContentProps) => {
@@ -88,10 +88,10 @@ export const ErrorModalContent = ({
                                         fontSize={'14px'}
                                         textDecoration={'underline'}
                                     >
-                                        {'View it on the explorer'}
+                                        {'View transaction on the explorer'}
                                     </Link>
                                 )}
-                                {showTryAgainButton && (
+                                {showTryAgainButton && onTryAgain && (
                                     <Button
                                         variant={'outline'}
                                         onClick={onTryAgain}

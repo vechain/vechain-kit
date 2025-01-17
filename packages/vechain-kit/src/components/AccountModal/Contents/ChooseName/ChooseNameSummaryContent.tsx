@@ -24,6 +24,7 @@ import { useWallet } from '@/hooks';
 import { TransactionModal } from '@/components/TransactionModal';
 import { FiArrowDown } from 'react-icons/fi';
 import { humanAddress } from '@/utils';
+import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -39,14 +40,23 @@ export const ChooseNameSummaryContent = ({
     const { account } = useWallet();
     const transactionModal = useDisclosure();
 
+    const { sendTransaction, status, txReceipt, error } =
+        useClaimVeWorldSubdomain({
+            subdomain: name,
+            domain: 'veworld.vet',
+            onSuccess: () => {
+                transactionModal.onClose();
+                setCurrentContent('main');
+            },
+        });
+
     const handleConfirm = async () => {
         transactionModal.onOpen();
         try {
-            // TODO: Add actual name registration logic
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            setCurrentContent('main');
+            await sendTransaction();
         } catch (error) {
             console.error('Transaction failed:', error);
+            transactionModal.onClose();
         }
     };
 
@@ -180,7 +190,9 @@ export const ChooseNameSummaryContent = ({
                     transactionModal.onClose();
                     setCurrentContent('main');
                 }}
-                status="pending"
+                status={status}
+                txId={txReceipt?.meta.txID}
+                errorDescription={error?.reason ?? 'Unknown error'}
                 showExplorerButton={true}
                 showSocialButtons={true}
                 showTryAgainButton={true}

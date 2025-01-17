@@ -33,3 +33,4 @@ export type { X2EarnRewardsPool } from './X2EarnRewardsPool';
 export type { XAllocationPool } from './XAllocationPool';
 export type { XAllocationVoting } from './XAllocationVoting';
 export type { SubdomainClaimer } from './SubdomainClaimer';
+export type { MockENS } from './mocks/MockENS';

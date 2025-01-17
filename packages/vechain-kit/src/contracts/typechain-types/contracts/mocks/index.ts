@@ -6,3 +6,4 @@ export type { vechainNodes };
 export type { MockERC721Receiver } from './MockERC721Receiver';
 export type { MyERC1155 } from './MyERC1155';
 export type { MyERC721 } from './MyERC721';
+export type { MockENS } from './MockENS';

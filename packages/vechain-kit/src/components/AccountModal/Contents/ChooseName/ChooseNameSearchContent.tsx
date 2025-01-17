@@ -19,6 +19,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
+import { useEnsRecordExists } from '@/hooks';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -36,19 +37,25 @@ export const ChooseNameSearchContent = ({
     const [isAvailable, setIsAvailable] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
 
-    // Simulated check - replace with actual domain availability check
+    const { data: domainData, isLoading } = useEnsRecordExists(
+        name,
+        'veworld.vet',
+    );
+
     useEffect(() => {
         if (!hasInteracted) return;
 
         if (name.length < 3) {
             setError('Name must be at least 3 characters long');
             setIsAvailable(false);
-        } else {
+        } else if (domainData?.address) {
+            setError('This domain is already taken');
+            setIsAvailable(false);
+        } else if (!isLoading) {
             setError(null);
-            // TODO: Add actual availability check
             setIsAvailable(true);
         }
-    }, [name, hasInteracted]);
+    }, [name, hasInteracted, domainData, isLoading]);
 
     const handleContinue = () => {
         if (isAvailable && !error) {
