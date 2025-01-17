@@ -5,6 +5,7 @@ export type AccountModalContentTypes =
     | 'accounts'
     | 'send-token'
     | 'receive-token'
+    | 'swap-token'
     | {
           type: 'send-token-summary';
           props: {

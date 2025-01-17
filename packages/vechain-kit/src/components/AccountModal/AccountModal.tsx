@@ -11,6 +11,7 @@ import {
     SendTokenContent,
     SendTokenSummaryContent,
     ReceiveTokenContent,
+    SwapTokenContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 
@@ -80,6 +81,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                     <ReceiveTokenContent
                         setCurrentContent={setCurrentContent}
                     />
+                );
+            case 'swap-token':
+                return (
+                    <SwapTokenContent setCurrentContent={setCurrentContent} />
                 );
         }
     };

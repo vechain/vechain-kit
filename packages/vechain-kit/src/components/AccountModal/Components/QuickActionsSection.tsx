@@ -25,12 +25,12 @@ export const QuickActionsSection = ({ setCurrentContent }: Props) => {
                 icon={<Icon as={BsLightningCharge} boxSize={5} opacity={0.5} />}
             />
             <IconButton
-                disabled
                 variant="selector"
                 h="auto"
                 py={3}
                 aria-label="Swap"
                 icon={<Icon as={MdSwapHoriz} boxSize={5} opacity={0.5} />}
+                onClick={() => setCurrentContent('swap-token')}
             />
             <IconButton
                 variant="selector"
