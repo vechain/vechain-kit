@@ -1,3 +1,6 @@
+import { ChooseNameSearchContentProps } from '../Contents';
+import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
+
 export type AccountModalContentTypes =
     | 'main'
     | 'settings'
@@ -6,23 +9,12 @@ export type AccountModalContentTypes =
     | 'send-token'
     | 'receive-token'
     | 'swap-token'
+    | 'choose-name'
     | {
           type: 'send-token-summary';
-          props: {
-              toAddressOrDomain: string;
-              resolvedDomain?: string;
-              resolvedAddress?: string;
-              amount: string;
-              selectedToken: {
-                  symbol: string;
-                  balance: string;
-                  address: string;
-                  numericBalance: number;
-                  price: number;
-              };
-              onSend: (address: string, amount: string) => void;
-              setCurrentContent: React.Dispatch<
-                  React.SetStateAction<AccountModalContentTypes>
-              >;
-          };
+          props: SendTokenSummaryContentProps;
+      }
+    | {
+          type: 'choose-name-search';
+          props: ChooseNameSearchContentProps;
       };

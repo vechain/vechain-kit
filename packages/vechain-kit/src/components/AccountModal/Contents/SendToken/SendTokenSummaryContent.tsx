@@ -35,7 +35,7 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
 });
 
-type Props = {
+export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -60,7 +60,7 @@ export const SendTokenSummaryContent = ({
     resolvedAddress,
     amount,
     selectedToken,
-}: Props) => {
+}: SendTokenSummaryContentProps) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { account, connection } = useWallet();

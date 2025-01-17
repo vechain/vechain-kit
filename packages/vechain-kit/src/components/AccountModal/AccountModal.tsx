@@ -12,6 +12,8 @@ import {
     SendTokenSummaryContent,
     ReceiveTokenContent,
     SwapTokenContent,
+    ChooseNameContent,
+    ChooseNameSearchContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 
@@ -32,11 +34,17 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
     }, [isOpen]);
 
     const renderContent = () => {
-        if (
-            typeof currentContent === 'object' &&
-            currentContent.type === 'send-token-summary'
-        ) {
-            return <SendTokenSummaryContent {...currentContent.props} />;
+        if (typeof currentContent === 'object') {
+            switch (currentContent.type) {
+                case 'send-token-summary':
+                    return (
+                        <SendTokenSummaryContent {...currentContent.props} />
+                    );
+                case 'choose-name-search':
+                    return (
+                        <ChooseNameSearchContent {...currentContent.props} />
+                    );
+            }
         }
 
         switch (currentContent) {
@@ -85,6 +93,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             case 'swap-token':
                 return (
                     <SwapTokenContent setCurrentContent={setCurrentContent} />
+                );
+            case 'choose-name':
+                return (
+                    <ChooseNameContent setCurrentContent={setCurrentContent} />
                 );
         }
     };

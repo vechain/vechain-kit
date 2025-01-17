@@ -193,9 +193,8 @@ export const WalletSettingsContent = ({
                             title="Choose account name"
                             description="Give a nickname to your wallet to easily identify it."
                             onClick={() => {
-                                // linkPasskey();
+                                setCurrentContent('choose-name');
                             }}
-                            showComingSoon={true}
                             leftIcon={FaRegAddressCard}
                             rightIcon={MdOutlineNavigateNext}
                         />
