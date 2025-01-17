@@ -6,6 +6,7 @@ import {
     SuccessModalContent,
 } from './Contents';
 import { BaseModal } from '../common/BaseModal';
+import { TransactionProgress } from '@/types';
 
 export type TransactionModalProps = {
     isOpen: boolean;
@@ -22,6 +23,7 @@ export type TransactionModalProps = {
     onTryAgain?: () => void;
     showExplorerButton?: boolean;
     txId?: string;
+    progress?: TransactionProgress;
 };
 
 export const TransactionModal = ({
@@ -39,10 +41,16 @@ export const TransactionModal = ({
     onTryAgain,
     showExplorerButton,
     txId,
+    progress,
 }: TransactionModalProps) => {
     const modalContent = useMemo(() => {
         if (status === 'pending')
-            return <ConfirmationModalContent title={confirmationTitle} />;
+            return (
+                <ConfirmationModalContent
+                    title={confirmationTitle}
+                    progress={progress}
+                />
+            );
         if (status === 'waitingConfirmation')
             return (
                 <LoadingModalContent
@@ -86,6 +94,7 @@ export const TransactionModal = ({
         successTitle,
         showSocialButtons,
         socialDescriptionEncoded,
+        progress,
     ]);
 
     if (!modalContent) return null;

@@ -12,12 +12,13 @@ import {
 } from '@vechain/sdk-network';
 import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
 import { randomTransactionUser } from '../utils';
-import { ExecuteWithAuthorizationSignData } from '@/types';
+import { EnhancedClause, ExecuteWithAuthorizationSignData } from '@/types';
 import { useGetChainId, useSmartAccount, useWallet } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKit';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
+import { TransactionProgress } from '@/types';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
@@ -27,6 +28,7 @@ export interface PrivyWalletProviderContextType {
         title?: string;
         description?: string;
         buttonText?: string;
+        onProgress?: (progress: TransactionProgress) => void;
     }) => Promise<string>;
     exportWallet: () => Promise<void>;
 }
@@ -81,11 +83,13 @@ export const PrivyWalletProvider = ({
         title = 'Sign Transaction',
         description,
         buttonText = 'Sign',
+        onProgress,
     }: {
         txClauses: Connex.VM.Clause[];
         title?: string;
         description?: string;
         buttonText?: string;
+        onProgress?: (progress: TransactionProgress) => void;
     }): Promise<string> => {
         if (
             !smartAccount ||
@@ -96,7 +100,169 @@ export const PrivyWalletProvider = ({
             throw new Error('Address or embedded wallet is missing');
         }
 
-        // build the object to be signed, containing all information & instructions
+        // If using cross-app connection, handle clauses individually
+        if (connection.isConnectedWithCrossApp) {
+            let lastTxId = '';
+            const totalSteps = txClauses.length;
+
+            // Process clauses one by one
+            for (let i = 0; i < txClauses.length; i++) {
+                const txClause = txClauses[i];
+
+                // Update progress with the comment if it exists
+                onProgress?.({
+                    currentStep: i + 1,
+                    totalSteps,
+                    currentStepDescription:
+                        (txClause as EnhancedClause).comment ||
+                        `Processing transaction ${i + 1} of ${totalSteps}`,
+                });
+
+                // Strip the comment before using the clause for the transaction
+                const strippedClause = {
+                    to: txClause.to,
+                    value: txClause.value,
+                    data: txClause.data,
+                };
+
+                const dataToSign: ExecuteWithAuthorizationSignData = {
+                    domain: {
+                        name: 'Wallet',
+                        version: '1',
+                        chainId: chainId as unknown as number,
+                        verifyingContract: smartAccount.address,
+                    },
+                    types: {
+                        ExecuteWithAuthorization: [
+                            { name: 'to', type: 'address' },
+                            { name: 'value', type: 'uint256' },
+                            { name: 'data', type: 'bytes' },
+                            { name: 'validAfter', type: 'uint256' },
+                            { name: 'validBefore', type: 'uint256' },
+                        ],
+                        EIP712Domain: [
+                            { name: 'name', type: 'string' },
+                            { name: 'version', type: 'string' },
+                            { name: 'chainId', type: 'uint256' },
+                            { name: 'verifyingContract', type: 'address' },
+                        ],
+                    },
+                    primaryType: 'ExecuteWithAuthorization',
+                    message: {
+                        validAfter: 0,
+                        validBefore: Math.floor(Date.now() / 1000) + 60,
+                        to: strippedClause.to,
+                        value: String(strippedClause.value),
+                        data:
+                            (typeof strippedClause.data === 'object' &&
+                            'abi' in strippedClause.data
+                                ? encodeFunctionData(strippedClause.data)
+                                : strippedClause.data) || '0x',
+                    },
+                };
+
+                const signature = await signTypedDataVeChain({
+                    ...dataToSign,
+                    address: connectedWallet.address as `0x${string}`,
+                } as SignTypedDataParameters);
+
+                const clauses = [];
+
+                // If smart account not deployed and this is the first clause, add deployment clause
+                if (!smartAccount.isDeployed && !lastTxId) {
+                    clauses.push(
+                        Clause.callFunction(
+                            Address.of(
+                                getConfig(network.type).accountFactoryAddress,
+                            ),
+                            ABIContract.ofAbi(
+                                SimpleAccountFactoryABI,
+                            ).getFunction('createAccount'),
+                            [connectedWallet.address ?? ''],
+                        ),
+                    );
+                }
+
+                // Add the execution clause
+                clauses.push(
+                    Clause.callFunction(
+                        Address.of(smartAccount.address ?? ''),
+                        ABIContract.ofAbi(SimpleAccountABI).getFunction(
+                            'executeWithAuthorization',
+                        ),
+                        [
+                            dataToSign.message.to as `0x${string}`,
+                            BigInt(dataToSign.message.value),
+                            dataToSign.message.data as `0x${string}`,
+                            BigInt(dataToSign.message.validAfter),
+                            BigInt(dataToSign.message.validBefore),
+                            signature as `0x${string}`,
+                        ],
+                    ),
+                );
+
+                // Handle the transaction for this clause
+                const gasResult = await thor.gas.estimateGas(
+                    clauses,
+                    connectedWallet.address ?? '',
+                    {
+                        gasPadding: 1,
+                    },
+                );
+
+                const txBody = await thor.transactions.buildTransactionBody(
+                    clauses,
+                    gasResult.totalGas,
+                    { isDelegated: true },
+                );
+
+                const wallet = new ProviderInternalBaseWallet(
+                    [
+                        {
+                            privateKey: Buffer.from(
+                                randomTransactionUser.privateKey.slice(2),
+                                'hex',
+                            ),
+                            address: randomTransactionUser.address,
+                        },
+                    ],
+                    { delegator: { delegatorUrl } },
+                );
+
+                const providerWithDelegationEnabled = new VeChainProvider(
+                    thor,
+                    wallet,
+                    true,
+                );
+                const signer = await providerWithDelegationEnabled.getSigner(
+                    randomTransactionUser.address,
+                );
+                const txInput =
+                    signerUtils.transactionBodyToTransactionRequestInput(
+                        txBody,
+                        randomTransactionUser.address,
+                    );
+                const rawDelegateSigned = await signer!.signTransaction(
+                    txInput,
+                );
+
+                const { id } = (await fetch(`${nodeUrl}/transactions`, {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        raw: rawDelegateSigned,
+                    }),
+                }).then((res) => res.json())) as { id: string };
+
+                lastTxId = id;
+            }
+
+            return lastTxId;
+        }
+
+        // Original code for non-cross-app connections
         const dataToSign: ExecuteWithAuthorizationSignData[] = txClauses.map(
             (txData) => ({
                 domain: {

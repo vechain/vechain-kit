@@ -35,6 +35,12 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
 });
 
+const summaryFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 18,
+});
+
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -288,7 +294,7 @@ export const SendTokenSummaryContent = ({
                                             fontSize="xl"
                                             fontWeight="semibold"
                                         >
-                                            {compactFormatter.format(
+                                            {summaryFormatter.format(
                                                 Number(amount),
                                             )}{' '}
                                             {selectedToken.symbol}

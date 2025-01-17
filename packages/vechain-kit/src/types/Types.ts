@@ -29,6 +29,10 @@ export type ExecuteWithAuthorizationSignData = {
             name: string;
             type: string;
         }[];
+        EIP712Domain: {
+            name: string;
+            type: string;
+        }[];
     };
     primaryType: string;
     message: {
@@ -105,3 +109,9 @@ export type PrivyLoginMethod =
     | 'apple'
     | 'farcaster'
     | 'telegram';
+
+export type TransactionProgress = {
+    currentStep: number;
+    totalSteps: number;
+    currentStepDescription?: string;
+};

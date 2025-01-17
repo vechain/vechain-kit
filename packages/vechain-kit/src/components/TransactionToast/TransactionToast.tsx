@@ -9,14 +9,16 @@ import {
     Spinner,
     useColorMode,
     Button,
+    Progress,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { TransactionStatusErrorType } from '@/types';
+import { TransactionStatusErrorType, TransactionProgress } from '@/types';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useWallet } from '@/hooks';
 
 export type TransactionToastProps = {
     isOpen: boolean;
@@ -25,6 +27,7 @@ export type TransactionToastProps = {
     txReceipt: any;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
+    progress?: TransactionProgress;
 };
 
 type StatusConfig = {
@@ -40,10 +43,11 @@ export const TransactionToast = ({
     txReceipt,
     error,
     resetStatus,
+    progress,
 }: TransactionToastProps) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-
+    const { connection } = useWallet();
     const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
 
@@ -97,6 +101,27 @@ export const TransactionToast = ({
                 <VStack w={'full'} align={'flex-start'} spacing={2}>
                     <Heading size={'xs'}>{config.title}</Heading>
 
+                    {connection.isConnectedWithCrossApp &&
+                        progress &&
+                        status === 'pending' && (
+                            <VStack w="full" spacing={2}>
+                                <Progress
+                                    value={
+                                        (progress.currentStep /
+                                            progress.totalSteps) *
+                                        100
+                                    }
+                                    width="100%"
+                                    size="xs"
+                                    borderRadius="xl"
+                                />
+                                <Text fontSize="xs" color="gray.500">
+                                    {progress.currentStepDescription ||
+                                        `Step ${progress.currentStep} of ${progress.totalSteps}`}
+                                </Text>
+                            </VStack>
+                        )}
+
                     {error && <Text fontSize={'xs'}>{error.reason}</Text>}
 
                     {txReceipt && status !== 'pending' && (
@@ -111,7 +136,14 @@ export const TransactionToast = ({
                 </VStack>
             </HStack>
         );
-    }, [status, txReceipt, explorerUrl, error]);
+    }, [
+        status,
+        txReceipt,
+        explorerUrl,
+        error,
+        progress,
+        connection.isConnectedWithCrossApp,
+    ]);
 
     if (!toastContent || !isOpen) return null;
 
