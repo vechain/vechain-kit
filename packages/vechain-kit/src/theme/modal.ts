@@ -8,7 +8,7 @@ const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(parts.keys);
 
 const variants = {
-    base: (props: StyleFunctionProps) =>
+    vechainKitBase: (props: StyleFunctionProps) =>
         definePartsStyle({
             dialog: {
                 scrollbarWidth: 'none',
@@ -23,7 +23,7 @@ const variants = {
                 borderRadius: '50%',
             },
         }),
-    transactionToast: (props: StyleFunctionProps) =>
+    vechainKitTransactionToast: (props: StyleFunctionProps) =>
         definePartsStyle({
             dialog: {
                 borderRadius: '15px',
@@ -52,6 +52,6 @@ const variants = {
 export const modalTheme = defineMultiStyleConfig({
     variants,
     defaultProps: {
-        variant: 'base',
+        variant: 'vechainKitBase',
     },
 });

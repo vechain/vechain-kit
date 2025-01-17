@@ -171,6 +171,8 @@ export const SendTokenSummaryContent = ({
                                                             {humanAddress(
                                                                 account.address ??
                                                                     '',
+                                                                2,
+                                                                4,
                                                             )}
                                                         </Text>
                                                     </>
@@ -184,7 +186,7 @@ export const SendTokenSummaryContent = ({
                                                         {humanAddress(
                                                             account.address ??
                                                                 '',
-                                                            4,
+                                                            2,
                                                             4,
                                                         )}
                                                     </Text>
@@ -243,6 +245,8 @@ export const SendTokenSummaryContent = ({
                                                             {humanAddress(
                                                                 resolvedAddress ||
                                                                     toAddressOrDomain,
+                                                                2,
+                                                                4,
                                                             )}
                                                         </Text>
                                                     </>
@@ -253,8 +257,12 @@ export const SendTokenSummaryContent = ({
                                                         fontWeight="medium"
                                                         fontSize="sm"
                                                     >
-                                                        {resolvedAddress ||
-                                                            toAddressOrDomain}
+                                                        {humanAddress(
+                                                            resolvedAddress ||
+                                                                toAddressOrDomain,
+                                                            2,
+                                                            4,
+                                                        )}
                                                     </Text>
                                                 )}
                                             </VStack>

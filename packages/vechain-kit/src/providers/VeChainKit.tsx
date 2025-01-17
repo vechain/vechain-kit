@@ -10,7 +10,7 @@ import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { ChakraProvider } from '@chakra-ui/react';
-import { Theme } from '../theme';
+import { VechainKitTheme } from '../theme';
 import { PrivyLoginMethod } from '@/types';
 import { ConnectModal, AccountModal } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
@@ -231,7 +231,7 @@ export const VeChainKit = ({
                         isTransactionToastOpen,
                     }}
                 >
-                    <ChakraProvider theme={Theme}>
+                    <ChakraProvider theme={VechainKitTheme}>
                         <PrivyProvider
                             appId={privyAppId}
                             clientId={privyClientId}

@@ -13,5 +13,6 @@ const themeConfig: ThemeConfig = {
         Card: cardTheme,
         Button: buttonTheme,
     },
+    cssVarPrefix: 'vechainKit',
 };
-export const Theme = extendTheme(themeConfig);
+export const VechainKitTheme = extendTheme(themeConfig);

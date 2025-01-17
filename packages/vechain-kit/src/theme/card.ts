@@ -8,7 +8,7 @@ const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(parts.keys);
 
 const variants = {
-    base: (props: StyleFunctionProps) =>
+    vechainKitBase: (props: StyleFunctionProps) =>
         definePartsStyle({
             body: {
                 borderRadius: '12px',
@@ -25,6 +25,6 @@ const variants = {
 export const cardTheme = defineMultiStyleConfig({
     variants,
     defaultProps: {
-        variant: 'base', // default is solid
+        variant: 'vechainKitBase', // default is solid
     },
 });

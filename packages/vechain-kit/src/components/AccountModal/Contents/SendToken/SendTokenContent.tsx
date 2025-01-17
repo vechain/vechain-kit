@@ -364,12 +364,17 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                 <InputGroup size="lg">
                                     <Input
                                         placeholder="Type the receiver address or domain"
+                                        _placeholder={{
+                                            fontSize: 'md',
+                                            fontWeight: 'normal',
+                                        }}
                                         value={toAddressOrDomain}
                                         onChange={(e) => {
                                             setToAddress(e.target.value);
                                             setAddressError(null);
                                         }}
-                                        fontSize="md"
+                                        fontSize="lg"
+                                        fontWeight="bold"
                                         variant="unstyled"
                                         isInvalid={!!addressError}
                                     />
