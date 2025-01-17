@@ -4,26 +4,20 @@ import {
     ModalHeader,
     VStack,
     Button,
-    Text,
     useColorMode,
     Box,
-    HStack,
-    Image,
     ModalFooter,
     useDisclosure,
-    Icon,
-    Center,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
+    AddressDisplayCard,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
 import { TransactionModal } from '@/components/TransactionModal';
-import { FiArrowDown } from 'react-icons/fi';
-import { humanAddress } from '@/utils';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 
 type Props = {
@@ -89,80 +83,24 @@ export const ChooseNameSummaryContent = ({
                         borderRadius="xl"
                         bg={isDark ? '#00000021' : 'gray.50'}
                     >
-                        <VStack spacing={6} w="full" textAlign={'center'}>
-                            {/* Current Section */}
-                            <VStack
-                                w="full"
-                                justifyContent={'center'}
-                                spacing={0}
-                            >
-                                <Text fontSize="sm">Current</Text>
-                                <HStack
-                                    minH={'50px'}
-                                    justifyContent={'center'}
-                                    alignItems={'center'}
-                                >
-                                    <Image
-                                        src={account.image ?? ''}
-                                        alt="Current account"
-                                        boxSize="20px"
-                                        borderRadius="xl"
-                                    />
-                                    <Text fontWeight="medium" fontSize="sm">
-                                        {account.domain
-                                            ? account.domain
-                                            : humanAddress(
-                                                  account.address ?? '',
-                                                  6,
-                                                  4,
-                                              )}
-                                    </Text>
-                                </HStack>
-                            </VStack>
+                        <VStack spacing={4} w="full">
+                            <AddressDisplayCard
+                                label="Current"
+                                address={account.address ?? ''}
+                                domain={account.domain}
+                                imageSrc={account.image ?? ''}
+                                imageAlt="Current account"
+                                hideAddress={true}
+                            />
 
-                            {/* Arrow Icon */}
-                            <Center
-                                position="relative"
-                                marginX="auto"
-                                bg={isDark ? '#262626' : 'gray.100'}
-                                borderRadius="xl"
-                                w="40px"
-                                h="40px"
-                                zIndex={2}
-                            >
-                                <Icon
-                                    as={FiArrowDown}
-                                    boxSize={5}
-                                    opacity={0.5}
-                                    color={
-                                        isDark ? 'whiteAlpha.700' : 'gray.600'
-                                    }
-                                />
-                            </Center>
-
-                            {/* New Name Section */}
-                            <VStack
-                                w="full"
-                                justifyContent={'center'}
-                                spacing={0}
-                            >
-                                <Text fontSize="sm">New Name</Text>
-                                <HStack
-                                    minH={'50px'}
-                                    justifyContent={'center'}
-                                    alignItems={'center'}
-                                >
-                                    <Image
-                                        src={account.image ?? ''}
-                                        alt="Account"
-                                        boxSize="20px"
-                                        borderRadius="xl"
-                                    />
-                                    <Text fontWeight="medium" fontSize="sm">
-                                        {name}.veworld.vet
-                                    </Text>
-                                </HStack>
-                            </VStack>
+                            <AddressDisplayCard
+                                label="New Name"
+                                address={account.address ?? ''}
+                                domain={`${name}.veworld.vet`}
+                                imageSrc={account.image ?? ''}
+                                imageAlt="Account"
+                                hideAddress={true}
+                            />
                         </VStack>
                     </Box>
                 </ModalBody>

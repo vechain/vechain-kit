@@ -40,6 +40,8 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
+    const hasExistingDomain = !!smartAccount.domain;
+
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
@@ -121,10 +123,24 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         /> */}
 
                         <ActionButton
-                            title="Choose account name"
+                            title={
+                                hasExistingDomain
+                                    ? 'Change account name'
+                                    : 'Choose account name'
+                            }
                             description="Give a nickname to your wallet to easily identify it."
                             onClick={() => {
-                                setCurrentContent('choose-name');
+                                if (hasExistingDomain) {
+                                    setCurrentContent({
+                                        type: 'choose-name-search',
+                                        props: {
+                                            name: '',
+                                            setCurrentContent,
+                                        },
+                                    });
+                                } else {
+                                    setCurrentContent('choose-name');
+                                }
                             }}
                             leftIcon={FaRegAddressCard}
                             rightIcon={MdOutlineNavigateNext}

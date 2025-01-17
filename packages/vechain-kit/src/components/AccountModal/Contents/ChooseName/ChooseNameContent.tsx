@@ -36,7 +36,7 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                     Choose your account name
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
+                    onClick={() => setCurrentContent('smart-account')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

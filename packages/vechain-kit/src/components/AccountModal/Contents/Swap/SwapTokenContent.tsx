@@ -38,7 +38,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Swap Token
+                    Swap
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
