@@ -44,10 +44,6 @@ export const ChooseNameSummaryContent = ({
         useClaimVeWorldSubdomain({
             subdomain: name,
             domain: 'veworld.vet',
-            onSuccess: () => {
-                transactionModal.onClose();
-                setCurrentContent('main');
-            },
         });
 
     const handleConfirm = async () => {
