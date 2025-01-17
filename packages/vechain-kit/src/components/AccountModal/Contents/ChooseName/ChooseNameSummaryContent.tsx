@@ -113,11 +113,13 @@ export const ChooseNameSummaryContent = ({
                                         borderRadius="xl"
                                     />
                                     <Text fontWeight="medium" fontSize="sm">
-                                        {humanAddress(
-                                            account.address ?? '',
-                                            6,
-                                            4,
-                                        )}
+                                        {account.domain
+                                            ? account.domain
+                                            : humanAddress(
+                                                  account.address ?? '',
+                                                  6,
+                                                  4,
+                                              )}
                                     </Text>
                                 </HStack>
                             </VStack>
