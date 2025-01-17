@@ -4,9 +4,8 @@ import {
     ModalContentProps,
     ModalOverlay,
     useMediaQuery,
-    FocusLock,
 } from '@chakra-ui/react';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 
 type BaseModalProps = {
     isOpen: boolean;
@@ -20,6 +19,7 @@ type BaseModalProps = {
     blockScrollOnMount?: boolean;
     autoFocus?: boolean;
     initialFocusRef?: React.RefObject<HTMLElement>;
+    allowExternalFocus?: boolean;
 };
 
 export const BaseModal = ({
@@ -29,11 +29,9 @@ export const BaseModal = ({
     size = 'sm',
     isCentered = true,
     motionPreset = 'slideInBottom',
-    trapFocus = true,
     closeOnOverlayClick = true,
-    blockScrollOnMount = true,
-    autoFocus = true,
-    initialFocusRef,
+    blockScrollOnMount = false,
+    allowExternalFocus = false,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
 
@@ -50,13 +48,6 @@ export const BaseModal = ({
               scrollBehavior: 'smooth',
           };
 
-    // Ensure proper focus management
-    useEffect(() => {
-        if (isOpen && initialFocusRef?.current) {
-            initialFocusRef.current.focus();
-        }
-    }, [isOpen, initialFocusRef]);
-
     return (
         <Modal
             motionPreset={isDesktop ? 'none' : motionPreset}
@@ -65,21 +56,22 @@ export const BaseModal = ({
             isCentered={isCentered}
             size={size}
             scrollBehavior="inside"
-            returnFocusOnClose={true}
+            returnFocusOnClose={false}
             blockScrollOnMount={blockScrollOnMount}
             closeOnOverlayClick={closeOnOverlayClick}
-            autoFocus={autoFocus}
+            preserveScrollBarGap={true}
+            portalProps={{ containerRef: undefined }}
+            trapFocus={!allowExternalFocus}
+            autoFocus={!allowExternalFocus}
         >
             <ModalOverlay />
-            <FocusLock isDisabled={!trapFocus} restoreFocus>
-                <ModalContent
-                    role="dialog"
-                    aria-modal="true"
-                    {...modalContentProps}
-                >
-                    {children}
-                </ModalContent>
-            </FocusLock>
+            <ModalContent
+                role="dialog"
+                aria-modal={!allowExternalFocus}
+                {...modalContentProps}
+            >
+                {children}
+            </ModalContent>
         </Modal>
     );
 };

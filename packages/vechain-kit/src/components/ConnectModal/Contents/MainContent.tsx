@@ -46,7 +46,7 @@ export const MainContent = ({ onClose }: Props) => {
         if (connection.isConnected) {
             onClose();
         }
-    }, [connection.isConnected]);
+    }, [connection.isConnected, onClose]);
 
     return (
         <FadeInViewFromBottom>

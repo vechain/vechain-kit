@@ -275,7 +275,7 @@ export const VeChainKit = ({
                                 }
                                 themeMode={darkMode ? 'DARK' : 'LIGHT'}
                                 themeVariables={{
-                                    '--vdk-modal-z-index': '1000000',
+                                    '--vdk-modal-z-index': '10000',
 
                                     // Dark mode colors
                                     '--vdk-color-dark-primary': '#1f1f1e',
