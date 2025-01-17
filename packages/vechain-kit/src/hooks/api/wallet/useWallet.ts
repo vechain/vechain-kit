@@ -107,7 +107,7 @@ export const useWallet = (): UseWalletReturnType => {
     const connectionSource: ConnectionSource = isConnectedWithCrossApp
         ? {
               type: 'privy-cross-app',
-              displayName: 'App',
+              displayName: 'Ecosystem',
           }
         : isConnectedWithDappKit
         ? {

@@ -82,9 +82,9 @@ export const AccountDetailsButton = ({
                     </Text>
                 </VStack>
                 <VStack minW={'40px'} justifyContent={'flex-end'}>
-                    <HStack>
+                    <HStack justifyContent={'flex-end'} minW={'40px'}>
                         {isActive && (
-                            <Tag ml={1} size={'sm'} colorScheme={'green'}>
+                            <Tag size={'sm'} colorScheme={'green'}>
                                 Active
                             </Tag>
                         )}

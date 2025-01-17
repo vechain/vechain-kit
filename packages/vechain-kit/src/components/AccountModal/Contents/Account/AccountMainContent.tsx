@@ -22,6 +22,7 @@ import {
     QuickActionsSection,
 } from '@/components';
 import { Wallet } from '@/types';
+import { compareAddresses } from '@/utils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,9 +36,12 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { smartAccount } = useWallet();
+    const { smartAccount, account } = useWallet();
 
-    const hasActiveSmartAccount = smartAccount?.isDeployed;
+    const activeWalletIsSmartAccount = compareAddresses(
+        smartAccount?.address ?? '',
+        account?.address ?? '',
+    );
 
     return (
         <FadeInViewFromBottom>
@@ -74,7 +78,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         <VStack w={'full'} spacing={3} overflow={'hidden'}>
                             <AccountSelector
                                 onClick={() => {
-                                    if (hasActiveSmartAccount) {
+                                    if (activeWalletIsSmartAccount) {
                                         setCurrentContent('accounts');
                                     } else {
                                         setCurrentContent('settings');

@@ -40,7 +40,6 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
 
     const { account, connectedWallet, disconnect, smartAccount } = useWallet();
 
-    const hasActiveSmartAccount = smartAccount.isDeployed;
     const activeWalletIsSmartAccount = compareAddresses(
         smartAccount?.address ?? '',
         account?.address ?? '',
@@ -63,32 +62,30 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
             <FadeInViewFromBottom>
                 <ModalBody w={'full'}>
                     <VStack justify={'space-between'} w={'full'}>
-                        {hasActiveSmartAccount &&
-                            activeWalletIsSmartAccount && (
-                                <Alert
-                                    status="info"
-                                    variant="subtle"
-                                    mb={4}
-                                    borderRadius={'lg'}
+                        {activeWalletIsSmartAccount && (
+                            <Alert
+                                status="info"
+                                variant="subtle"
+                                mb={4}
+                                borderRadius={'lg'}
+                            >
+                                <AlertIcon boxSize={'16px'} />
+                                <AlertDescription
+                                    fontSize={'xs'}
+                                    lineHeight={'1.2'}
                                 >
-                                    <AlertIcon boxSize={'16px'} />
-                                    <AlertDescription
-                                        fontSize={'xs'}
-                                        lineHeight={'1.2'}
-                                    >
-                                        You own a Smart Account, which has
-                                        priority over your wallet and is set as
-                                        active.
-                                    </AlertDescription>
-                                </Alert>
-                            )}
+                                    You own a Smart Account, which has priority
+                                    over your wallet and is set as active.
+                                </AlertDescription>
+                            </Alert>
+                        )}
                         <Grid
                             gap={2}
                             templateColumns={['repeat(1, 1fr)']}
                             w="100%"
                             h="100%"
                         >
-                            {hasActiveSmartAccount && (
+                            {activeWalletIsSmartAccount && (
                                 <AccountDetailsButton
                                     title="Smart Account"
                                     address={smartAccount?.address ?? ''}
