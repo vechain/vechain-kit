@@ -10,6 +10,7 @@ import {
     Divider,
     Link,
     Icon,
+    Button,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
@@ -157,7 +158,7 @@ export const WalletSettingsContent = ({
                         )}
                     </VStack>
 
-                    <VStack mt={10} w={'full'} spacing={5}>
+                    <VStack mt={5} w={'full'} spacing={5}>
                         {connection.isConnectedWithPrivy && (
                             <>
                                 <ActionButton
@@ -201,7 +202,7 @@ export const WalletSettingsContent = ({
 
                         <Divider />
 
-                        <ActionButton
+                        {/* <ActionButton
                             title="Disconnect"
                             description="Disconnect and sign out from your wallet and smart account"
                             onClick={() => {
@@ -213,7 +214,23 @@ export const WalletSettingsContent = ({
                             _hover={{
                                 bg: '#ff00001a',
                             }}
-                        />
+                        /> */}
+                        <Button
+                            onClick={() => {
+                                disconnect();
+                                onLogoutSuccess();
+                            }}
+                            fontSize={'sm'}
+                            fontWeight={'400'}
+                            px={4}
+                            width="full"
+                            height="60px"
+                            variant="solid"
+                            borderRadius="xl"
+                            leftIcon={<RxExit color="#888888" />}
+                        >
+                            Logout
+                        </Button>
                     </VStack>
                 </ModalBody>
                 <ModalFooter></ModalFooter>
