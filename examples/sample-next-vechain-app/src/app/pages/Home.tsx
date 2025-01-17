@@ -122,7 +122,10 @@ export default function Home(): ReactElement {
 
     return (
         <Container maxW="container.md" justifyContent={'center'}>
-            <WalletButton />
+            <WalletButton
+                mobileVariant="iconDomainAndAddress"
+                desktopVariant="iconAndDomain"
+            />
 
             <Stack
                 mt={10}
