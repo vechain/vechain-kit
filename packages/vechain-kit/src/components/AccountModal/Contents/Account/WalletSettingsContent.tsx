@@ -188,16 +188,17 @@ export const WalletSettingsContent = ({
                                 )}
                             </>
                         )}
-
-                        <ActionButton
-                            title="Choose account name"
-                            description="Give a nickname to your wallet to easily identify it."
-                            onClick={() => {
-                                setCurrentContent('choose-name');
-                            }}
-                            leftIcon={FaRegAddressCard}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
+                        {connection.isConnectedWithDappKit && (
+                            <ActionButton
+                                title="Choose account name"
+                                description="Give a nickname to your wallet to easily identify it."
+                                onClick={() => {
+                                    setCurrentContent('choose-name');
+                                }}
+                                leftIcon={FaRegAddressCard}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
+                        )}
 
                         <Divider />
 

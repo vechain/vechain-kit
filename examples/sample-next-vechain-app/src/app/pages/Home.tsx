@@ -52,12 +52,6 @@ export default function Home(): ReactElement {
         error,
     } = useSendTransaction({
         signerAccountAddress: account?.address,
-        privyUIOptions: {
-            title: 'Sign to confirm',
-            description:
-                'This is a test transaction performing a transfer of 0 B3TR tokens from your smart account.',
-            buttonText: 'Sign',
-        },
     });
 
     const {
