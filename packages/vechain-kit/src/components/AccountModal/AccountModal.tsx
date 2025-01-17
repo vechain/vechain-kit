@@ -14,6 +14,7 @@ import {
     SwapTokenContent,
     ChooseNameContent,
     ChooseNameSearchContent,
+    ChooseNameSummaryContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 
@@ -43,6 +44,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 case 'choose-name-search':
                     return (
                         <ChooseNameSearchContent {...currentContent.props} />
+                    );
+                case 'choose-name-summary':
+                    return (
+                        <ChooseNameSummaryContent {...currentContent.props} />
                     );
             }
         }

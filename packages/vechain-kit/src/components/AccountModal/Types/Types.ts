@@ -1,4 +1,3 @@
-import { ChooseNameSearchContentProps } from '../Contents';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 
 export type AccountModalContentTypes =
@@ -16,5 +15,15 @@ export type AccountModalContentTypes =
       }
     | {
           type: 'choose-name-search';
-          props: ChooseNameSearchContentProps;
+          props: {
+              name: string;
+              setCurrentContent: (content: AccountModalContentTypes) => void;
+          };
+      }
+    | {
+          type: 'choose-name-summary';
+          props: {
+              name: string;
+              setCurrentContent: (content: AccountModalContentTypes) => void;
+          };
       };

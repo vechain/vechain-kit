@@ -53,7 +53,7 @@ export const ChooseNameSearchContent = ({
     const handleContinue = () => {
         if (isAvailable && !error) {
             setCurrentContent({
-                type: 'choose-name-search',
+                type: 'choose-name-summary',
                 props: {
                     name,
                     setCurrentContent,
