@@ -15,10 +15,11 @@ import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 import { AccountModalContentTypes } from '../../Types';
 
 type Props = {
+    mt?: number;
     setCurrentContent: (content: AccountModalContentTypes) => void;
 };
 
-export const AssetsSection = ({ setCurrentContent }: Props) => {
+export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
     const tabBgColor = useColorModeValue('white', '#1f1f1e');
     const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
     const tabTextColor = useColorModeValue('#4d4d4d', '#dfdfdd');
@@ -38,7 +39,7 @@ export const AssetsSection = ({ setCurrentContent }: Props) => {
     };
 
     return (
-        <VStack w="full" spacing={3} align="stretch">
+        <VStack w="full" spacing={3} align="stretch" mt={mt}>
             <Tabs variant="soft-rounded" size="sm" onChange={scrollToContent}>
                 <HStack justify="space-between" align="center">
                     <TabList

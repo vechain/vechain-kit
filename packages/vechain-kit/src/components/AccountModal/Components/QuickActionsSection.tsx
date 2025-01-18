@@ -6,14 +6,15 @@ import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 
 type Props = {
+    mt?: number;
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
 };
 
-export const QuickActionsSection = ({ setCurrentContent }: Props) => {
+export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     return (
-        <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full">
+        <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full" mt={mt}>
             <IconButton
                 disabled
                 variant="selector"

@@ -69,7 +69,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
             <FadeInViewFromBottom>
                 <Container maxW={'container.lg'}>
                     <ModalBody w={'full'}>
-                        <VStack w={'full'} spacing={3} overflow={'hidden'}>
+                        <VStack w={'full'} spacing={10} overflow={'hidden'}>
                             <AccountSelector
                                 onClick={() => {
                                     if (smartAccount.isActive) {
@@ -80,7 +80,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                                 }}
                                 wallet={wallet}
                             />
-                            <BalanceSection mb={4} />
+                            <BalanceSection />
                             <QuickActionsSection
                                 setCurrentContent={setCurrentContent}
                             />
