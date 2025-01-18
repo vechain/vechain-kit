@@ -93,7 +93,7 @@ export const ErrorModalContent = ({
                                 )}
                                 {showTryAgainButton && onTryAgain && (
                                     <Button
-                                        variant={'outline'}
+                                        variant="secondary"
                                         onClick={onTryAgain}
                                     >
                                         {'Try again'}

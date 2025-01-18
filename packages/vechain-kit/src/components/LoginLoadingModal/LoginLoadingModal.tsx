@@ -124,16 +124,7 @@ const LoadingContent = ({
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && (
-                    <Button
-                        fontSize={'sm'}
-                        fontWeight={'400'}
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
-                        onClick={onTryAgain}
-                    >
+                    <Button variant="secondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         Try again
                     </Button>
@@ -210,16 +201,7 @@ const ErrorContent = ({
                 </VStack>
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
-                <Button
-                    fontSize={'sm'}
-                    fontWeight={'400'}
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
-                    onClick={onTryAgain}
-                >
+                <Button variant="secondary" onClick={onTryAgain}>
                     <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                     Try again
                 </Button>

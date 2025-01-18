@@ -112,30 +112,9 @@ export const WalletSettingsContent = ({
                                     Secured by
                                 </Text>
                                 <HStack justify={'center'}>
-                                    <PrivyLogo
-                                        onClick={() => {
-                                            window.open(
-                                                'https://www.privy.io/',
-                                                '_blank',
-                                            );
-                                        }}
-                                        _hover={{
-                                            cursor: 'pointer',
-                                        }}
-                                        isDark={isDark}
-                                        w={'50px'}
-                                    />
+                                    <PrivyLogo isDark={isDark} w={'50px'} />
                                     <Icon as={TbAmpersand} ml={2} />
                                     <VechainLogoHorizontal
-                                        _hover={{
-                                            cursor: 'pointer',
-                                        }}
-                                        onClick={() => {
-                                            window.open(
-                                                'https://www.vechain.org/',
-                                                '_blank',
-                                            );
-                                        }}
                                         isDark={isDark}
                                         w={'69px'}
                                     />
@@ -277,13 +256,7 @@ export const WalletSettingsContent = ({
                                 disconnect();
                                 onLogoutSuccess();
                             }}
-                            fontSize={'sm'}
-                            fontWeight={'400'}
-                            px={4}
-                            width="full"
-                            height="60px"
-                            variant="solid"
-                            borderRadius="xl"
+                            variant="secondary"
                             leftIcon={<RxExit color="#888888" />}
                         >
                             Logout

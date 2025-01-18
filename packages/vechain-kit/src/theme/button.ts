@@ -55,6 +55,32 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
+    secondary: defineStyle(() => ({
+        fontSize: 'sm',
+        fontWeight: '400',
+        px: 4,
+        width: 'full',
+        height: '60px',
+        borderRadius: 'xl',
+        bg: 'transparent',
+        border: '1px solid',
+        borderColor: 'gray.200',
+        color: 'gray.700',
+        _hover: {
+            bg: 'gray.50',
+            _disabled: {
+                bg: 'transparent',
+            },
+        },
+        _dark: {
+            borderColor: 'whiteAlpha.200',
+            color: 'whiteAlpha.900',
+            _hover: {
+                bg: 'whiteAlpha.50',
+            },
+        },
+        transition: 'all 0.2s',
+    })),
 };
 
 export const buttonTheme = defineStyleConfig({
