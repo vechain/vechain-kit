@@ -50,14 +50,9 @@ export default function Home(): ReactElement {
         resetStatus,
         isTransactionPending,
         error,
+        progress,
     } = useSendTransaction({
         signerAccountAddress: account?.address,
-        privyUIOptions: {
-            title: 'Sign to confirm',
-            description:
-                'This is a test transaction performing a transfer of 0 B3TR tokens from your smart account.',
-            buttonText: 'Sign',
-        },
     });
 
     const {
@@ -87,6 +82,18 @@ export default function Home(): ReactElement {
             comment: `Transfer ${0} B3TR to `,
             abi: abi.getFunction('transfer'),
         });
+
+        clausesArray.push({
+            to: b3trMainnetAddress,
+            value: '0x0',
+            data: abi.encodeFunctionData('transfer', [
+                connectedWallet.address,
+                '1', // 1 B3TR (in wei)
+            ]),
+            comment: `Transfer ${0.000001} B3TR to `,
+            abi: abi.getFunction('transfer'),
+        });
+
         return clausesArray;
     }, [connectedWallet.address]);
 
@@ -188,7 +195,9 @@ export default function Home(): ReactElement {
                                         toggleColorMode();
                                     }}
                                 >
-                                    {colorMode === 'dark' ? 'Light' : 'Dark'}
+                                    {colorMode === 'dark'
+                                        ? 'Light mode'
+                                        : 'Dark mode'}
                                 </Button>
                                 <Button onClick={openAccountModal}>
                                     Account Modal
@@ -220,12 +229,14 @@ export default function Home(): ReactElement {
                 error={error}
                 txReceipt={txReceipt}
                 resetStatus={resetStatus}
+                progress={progress}
             />
 
             <TransactionModal
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
                 status={status}
+                progress={progress}
                 txId={txReceipt?.meta.txID}
                 errorDescription={error?.reason ?? 'Unknown error'}
                 showSocialButtons={true}

@@ -8,26 +8,23 @@ import {
     useColorMode,
     Box,
     HStack,
-    Image,
     Divider,
     Alert,
     AlertIcon,
     ModalFooter,
     useDisclosure,
-    Center,
-    Icon,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
-} from '../../../common';
+    AddressDisplayCard,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { getPicassoImage, humanAddress } from '@/utils';
+import { getPicassoImage } from '@/utils';
 import { useWallet } from '@/hooks';
 import { useTransferERC20, useTransferVET } from '@/hooks';
-import { TransactionModal } from '../../../TransactionModal';
-import { FiArrowRight } from 'react-icons/fi';
+import { TransactionModal } from '@/components';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -35,7 +32,13 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
 });
 
-type Props = {
+const summaryFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 18,
+});
+
+export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -60,7 +63,7 @@ export const SendTokenSummaryContent = ({
     resolvedAddress,
     amount,
     selectedToken,
-}: Props) => {
+}: SendTokenSummaryContentProps) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { account, connection } = useWallet();
@@ -116,7 +119,7 @@ export const SendTokenSummaryContent = ({
             <FadeInViewFromBottom>
                 <ModalBody>
                     <VStack spacing={6} align="stretch" w="full">
-                        {connection.isConnectedWithPrivy && (
+                        {connection.isConnectedWithSocialLogin && (
                             <Alert
                                 status="warning"
                                 fontSize={'xs'}
@@ -129,181 +132,48 @@ export const SendTokenSummaryContent = ({
                             </Alert>
                         )}
                         {/* From/To Card */}
-                        <Box
-                            p={4}
-                            borderRadius="xl"
-                            bg={isDark ? '#00000021' : 'gray.50'}
-                        >
-                            <VStack spacing={4} w="full">
-                                <HStack
-                                    alignItems="center"
-                                    spacing={4}
-                                    wordBreak={'break-all'}
-                                    w="full"
-                                    justifyContent="space-between"
-                                >
-                                    {/* From Section */}
-                                    <Box w="50%" justifyContent="flex-start">
-                                        <Text fontSize="sm" mb={2}>
-                                            From
-                                        </Text>
-                                        <HStack minH={'50px'}>
-                                            <Image
-                                                src={account.image ?? ''}
-                                                alt="From account"
-                                                boxSize="20px"
-                                                borderRadius="xl"
-                                            />
-                                            <VStack align="start" spacing={0}>
-                                                {account.domain && (
-                                                    <>
-                                                        <Text
-                                                            fontWeight="medium"
-                                                            fontSize="sm"
-                                                        >
-                                                            {account.domain}
-                                                        </Text>
 
-                                                        <Text
-                                                            fontSize="xs"
-                                                            opacity={0.5}
-                                                        >
-                                                            {humanAddress(
-                                                                account.address ??
-                                                                    '',
-                                                                2,
-                                                                4,
-                                                            )}
-                                                        </Text>
-                                                    </>
-                                                )}
+                        <VStack spacing={4} w="full">
+                            <AddressDisplayCard
+                                label="From"
+                                address={account.address ?? ''}
+                                domain={account.domain}
+                                imageSrc={account.image ?? ''}
+                                imageAlt="From account"
+                            />
 
-                                                {!account.domain && (
-                                                    <Text
-                                                        fontWeight="medium"
-                                                        fontSize="sm"
-                                                    >
-                                                        {humanAddress(
-                                                            account.address ??
-                                                                '',
-                                                            2,
-                                                            4,
-                                                        )}
-                                                    </Text>
-                                                )}
-                                            </VStack>
-                                        </HStack>
-                                    </Box>
+                            <AddressDisplayCard
+                                label="To"
+                                address={resolvedAddress || toAddressOrDomain}
+                                domain={resolvedDomain}
+                                imageSrc={getPicassoImage(
+                                    resolvedAddress || toAddressOrDomain,
+                                )}
+                                imageAlt="To account"
+                            />
 
-                                    {/* Arrow Icon */}
-                                    <Center
-                                        bg={isDark ? '#262626' : 'gray.100'}
-                                        borderRadius="xl"
-                                        mt={7}
-                                        w="40px"
-                                        h="35px"
-                                        zIndex={2}
-                                    >
-                                        <Icon
-                                            as={FiArrowRight}
-                                            boxSize={4}
-                                            opacity={0.5}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'gray.600'
-                                            }
-                                        />
-                                    </Center>
-
-                                    {/* To Section */}
-                                    <Box w="50%" justifyContent="flex-end">
-                                        <Text
-                                            fontSize="sm"
-                                            mb={2}
-                                            textAlign="right"
-                                        >
-                                            To
-                                        </Text>
-                                        <HStack
-                                            minH={'50px'}
-                                            justifyContent="flex-end"
-                                        >
-                                            <VStack align="end" spacing={0}>
-                                                {resolvedDomain && (
-                                                    <>
-                                                        <Text
-                                                            fontWeight="medium"
-                                                            fontSize="sm"
-                                                        >
-                                                            {resolvedDomain}
-                                                        </Text>
-                                                        <Text
-                                                            fontSize="xs"
-                                                            opacity={0.5}
-                                                        >
-                                                            {humanAddress(
-                                                                resolvedAddress ||
-                                                                    toAddressOrDomain,
-                                                                2,
-                                                                4,
-                                                            )}
-                                                        </Text>
-                                                    </>
-                                                )}
-
-                                                {!resolvedDomain && (
-                                                    <Text
-                                                        fontWeight="medium"
-                                                        fontSize="sm"
-                                                    >
-                                                        {humanAddress(
-                                                            resolvedAddress ||
-                                                                toAddressOrDomain,
-                                                            2,
-                                                            4,
-                                                        )}
-                                                    </Text>
-                                                )}
-                                            </VStack>
-                                            <Image
-                                                src={getPicassoImage(
-                                                    resolvedAddress ||
-                                                        toAddressOrDomain,
-                                                )}
-                                                alt="To account"
-                                                boxSize="20px"
-                                                borderRadius="xl"
-                                            />
-                                        </HStack>
-                                    </Box>
-                                </HStack>
-                                <Divider />
-                                <Box w="full" justifyContent="flex-start">
-                                    <Text fontSize="sm" mb={2}>
-                                        Amount
+                            <Divider />
+                            <Box w="full" justifyContent="flex-start">
+                                <Text fontSize="sm" fontWeight="bold" mb={2}>
+                                    Amount
+                                </Text>
+                                <HStack>
+                                    <Text fontSize="xl" fontWeight="semibold">
+                                        {summaryFormatter.format(
+                                            Number(amount),
+                                        )}{' '}
+                                        {selectedToken.symbol}
                                     </Text>
-                                    <HStack>
-                                        <Text
-                                            fontSize="xl"
-                                            fontWeight="semibold"
-                                        >
-                                            {compactFormatter.format(
-                                                Number(amount),
-                                            )}{' '}
-                                            {selectedToken.symbol}
-                                        </Text>
-                                        <Text fontSize="sm" opacity={0.5}>
-                                            ≈ $
-                                            {compactFormatter.format(
-                                                Number(amount) *
-                                                    selectedToken.price,
-                                            )}
-                                        </Text>
-                                    </HStack>
-                                </Box>
-                            </VStack>
-                        </Box>
+                                    <Text fontSize="sm" opacity={0.5}>
+                                        ≈ $
+                                        {compactFormatter.format(
+                                            Number(amount) *
+                                                selectedToken.price,
+                                        )}
+                                    </Text>
+                                </HStack>
+                            </Box>
+                        </VStack>
                     </VStack>
                 </ModalBody>
             </FadeInViewFromBottom>

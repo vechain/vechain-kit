@@ -22,3 +22,4 @@ export { IXAllocationVotingGovernor__factory } from './IXAllocationVotingGoverno
 export { IVeDelegatePool__factory } from './IVeDelegatePool__factory';
 export { IVeDelegateVotes__factory } from './IVeDelegateVotes__factory';
 export { IVechainEnergyOracleV1__factory } from './IVechainEnergyOracleV1__factory';
+export { IReverseRegistrar__factory } from './IReverseRegistrar__factory';

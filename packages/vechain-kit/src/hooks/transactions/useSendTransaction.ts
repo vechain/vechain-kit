@@ -8,6 +8,7 @@ import {
     EnhancedClause,
     TransactionStatus,
     TransactionStatusErrorType,
+    TransactionProgress,
 } from '@/types';
 import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
 
@@ -98,6 +99,7 @@ export type UseSendTransactionReturnValue = {
     status: TransactionStatus;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
+    progress?: TransactionProgress;
 };
 
 /**
@@ -152,16 +154,7 @@ export const useSendTransaction = ({
             parsedClauses = clauses;
         }
 
-        if (connection.isConnectedWithPrivy) {
-            return parsedClauses.map((clause) => {
-                return {
-                    to: clause.to ?? '',
-                    value: clause.value,
-                    data: clause.data ?? '',
-                };
-            });
-        }
-
+        // Don't strip the comment here anymore, just return the clauses
         return parsedClauses;
     }
 
@@ -171,14 +164,23 @@ export const useSendTransaction = ({
      * @returns see {@link UseSendTransactionReturnValue}
      */
     const sendTransaction = useCallback(
-        async (clauses: EnhancedClause[]) => {
+        async (
+            clauses: EnhancedClause[],
+            options?: {
+                title?: string;
+                description?: string;
+                buttonText?: string;
+                onProgress?: (progress: TransactionProgress) => void;
+            },
+        ) => {
             if (
-                connection.isConnectedWithPrivy ||
+                connection.isConnectedWithSocialLogin ||
                 connection.isConnectedWithCrossApp
             ) {
                 return await privyWalletProvider.sendTransaction({
                     txClauses: clauses,
                     ...privyUIOptions,
+                    ...options,
                 });
             }
 
@@ -221,6 +223,7 @@ export const useSendTransaction = ({
             suggestedMaxGas,
             nodeUrl,
             privyWalletProvider,
+            privyUIOptions,
         ],
     );
 
@@ -236,6 +239,9 @@ export const useSendTransaction = ({
         string | null
     >(null);
 
+    // Add progress state
+    const [progress, setProgress] = useState<TransactionProgress>();
+
     const sendTransactionAdapter = useCallback(
         async (_clauses?: EnhancedClause[]): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
@@ -245,6 +251,10 @@ export const useSendTransaction = ({
                 setSendTransactionError(null);
                 const response = await sendTransaction(
                     await convertClauses(_clauses ?? []),
+                    {
+                        ...privyUIOptions,
+                        onProgress: setProgress,
+                    },
                 );
                 // If we send the transaction with the smart account, we get the txid as a string
                 if (typeof response === 'string') {
@@ -259,12 +269,12 @@ export const useSendTransaction = ({
                     error instanceof Error ? error.message : String(error),
                 );
                 onTxFailedOrCancelled?.();
-                // throw error;
             } finally {
                 setSendTransactionPending(false);
+                setProgress(undefined);
             }
         },
-        [sendTransaction, clauses, convertClauses],
+        [sendTransaction, clauses, convertClauses, privyUIOptions],
     );
 
     /**
@@ -405,5 +415,6 @@ export const useSendTransaction = ({
         status,
         resetStatus,
         error,
+        progress,
     };
 };

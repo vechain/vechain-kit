@@ -73,5 +73,12 @@ const config: AppConfig = {
         '0x7a11D63338576aE8c038868433ea199d7E5319A6',
     cleanifyChallengesContractAddress:
         '0xa58681692AdDD2e8E37f9113D40Bb9253C03F65e',
+    veWorldSubdomainClaimerContractAddress:
+        '0xa4173c32fe8a61a8fd0d0234675b559fc360446a',
+    vetDomainsContractAddress: '0xa9231da8BF8D10e2df3f6E03Dd5449caD600129b',
+    vetDomainsPublicResolverAddress:
+        '0xabac49445584C8b6c1472b030B1076Ac3901D7cf',
+    vetDomainsReverseRegistrarAddress:
+        '0x5c970901a587BA3932C835D4ae5FAE2BEa7e78Bc',
 };
 export default config;

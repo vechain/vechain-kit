@@ -10,6 +10,7 @@ import {
     ModalHeader,
     useColorMode,
     VStack,
+    IconButton,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import {
@@ -25,6 +26,8 @@ import React from 'react';
 import { RxExit } from 'react-icons/rx';
 import { Wallet } from '@/types';
 import { compareAddresses } from '@/utils';
+import { useSmartAccountAlert } from '@/hooks';
+import { IoCloseCircle } from 'react-icons/io5';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -39,6 +42,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const isDark = colorMode === 'dark';
 
     const { account, connectedWallet, disconnect, smartAccount } = useWallet();
+    const { isAlertVisible, hideAlert } = useSmartAccountAlert();
 
     const activeWalletIsSmartAccount = compareAddresses(
         smartAccount?.address ?? '',
@@ -62,21 +66,33 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
             <FadeInViewFromBottom>
                 <ModalBody w={'full'}>
                     <VStack justify={'space-between'} w={'full'}>
-                        {activeWalletIsSmartAccount && (
+                        {activeWalletIsSmartAccount && isAlertVisible && (
                             <Alert
                                 status="info"
                                 variant="subtle"
                                 mb={4}
                                 borderRadius={'lg'}
+                                pr={8}
+                                position="relative"
                             >
                                 <AlertIcon boxSize={'16px'} />
                                 <AlertDescription
                                     fontSize={'xs'}
                                     lineHeight={'1.2'}
                                 >
-                                    You own a Smart Account, which has priority
-                                    over your wallet and is set as active.
+                                    You own a Smart Account and it has priority
+                                    over your wallet.
                                 </AlertDescription>
+                                <IconButton
+                                    position="absolute"
+                                    right={1}
+                                    top={1}
+                                    size="sm"
+                                    variant="ghost"
+                                    icon={<IoCloseCircle />}
+                                    onClick={hideAlert}
+                                    aria-label="Close alert"
+                                />
                             </Alert>
                         )}
                         <Grid

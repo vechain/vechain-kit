@@ -34,11 +34,17 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                bg={isDark ? '#1f1f1e' : 'white'}
+                bg={
+                    isDark
+                        ? 'rgba(31, 31, 30, 0.8)'
+                        : 'rgba(255, 255, 255, 0.8)'
+                }
+                backdropFilter={'blur(12px)'}
+                style={{ WebkitBackdropFilter: 'blur(12px)' }}
                 zIndex={1000}
                 boxShadow={
                     hasContentBelow
-                        ? '0px 3px 1px 1px rgb(0 0 0 / 21%)'
+                        ? '0px 3px 1px 1px rgb(0 0 0 / 10%)'
                         : 'none'
                 }
                 transition="box-shadow 0.2s ease-in-out"

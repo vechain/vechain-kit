@@ -6,6 +6,7 @@ export type Wallet = {
 
 export type SmartAccount = Wallet & {
     isDeployed: boolean;
+    isActive: boolean;
 };
 
 export type ConnectionSource = {
@@ -26,6 +27,10 @@ export type ExecuteWithAuthorizationSignData = {
     };
     types: {
         ExecuteWithAuthorization: {
+            name: string;
+            type: string;
+        }[];
+        EIP712Domain: {
             name: string;
             type: string;
         }[];
@@ -105,3 +110,9 @@ export type PrivyLoginMethod =
     | 'apple'
     | 'farcaster'
     | 'telegram';
+
+export type TransactionProgress = {
+    currentStep: number;
+    totalSteps: number;
+    currentStepDescription?: string;
+};

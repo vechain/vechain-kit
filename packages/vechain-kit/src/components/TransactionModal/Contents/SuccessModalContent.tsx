@@ -108,7 +108,7 @@ export const SuccessModalContent = ({
                                 fontSize={'14px'}
                                 textDecoration={'underline'}
                             >
-                                {'View it on the explorer'}
+                                {'View transaction on the explorer'}
                             </Link>
                         )}
                     </ModalFooter>

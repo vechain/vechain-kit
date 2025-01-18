@@ -9,7 +9,7 @@ import {
     useColorMode,
     Link,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import React, { useState } from 'react';
 import {
     AddressDisplay,
@@ -21,7 +21,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { ActionButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { FaRegAddressCard, FaUserEdit } from 'react-icons/fa';
+import { FaRegAddressCard } from 'react-icons/fa';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -31,7 +31,7 @@ type Props = {
 
 export const SmartAccountContent = ({ setCurrentContent }: Props) => {
     const { smartAccount, connection } = useWallet();
-    const { exportWallet } = usePrivy();
+    // const { exportWallet } = usePrivy();
 
     const walletImage = getPicassoImage(smartAccount.address ?? '');
 
@@ -39,6 +39,8 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
     const isDark = colorMode === 'dark';
 
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const hasExistingDomain = !!smartAccount.domain;
 
     return (
         <FadeInViewFromBottom>
@@ -78,7 +80,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         {isExpanded && (
                             <FadeInViewFromBottom>
                                 <VStack>
-                                    {connection.isConnectedWithPrivy && (
+                                    {connection.isConnectedWithSocialLogin && (
                                         <Text fontSize={'sm'} opacity={0.5}>
                                             You're using an Embedded Wallet
                                             secured by your social login method,
@@ -110,7 +112,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                     </VStack>
 
                     <VStack mt={10} spacing={5}>
-                        <ActionButton
+                        {/* <ActionButton
                             title="Transfer ownership"
                             description="Change the owner of your smart account."
                             onClick={() => {
@@ -118,15 +120,28 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                             }}
                             leftIcon={FaUserEdit}
                             rightIcon={MdOutlineNavigateNext}
-                        />
+                        /> */}
 
                         <ActionButton
-                            title="Manage account name"
-                            description="Give a nickname to your wallet address to easily identify it."
+                            title={
+                                hasExistingDomain
+                                    ? 'Change account name'
+                                    : 'Choose account name'
+                            }
+                            description="Give a nickname to your wallet to easily identify it."
                             onClick={() => {
-                                // linkPasskey();
+                                if (hasExistingDomain) {
+                                    setCurrentContent({
+                                        type: 'choose-name-search',
+                                        props: {
+                                            name: '',
+                                            setCurrentContent,
+                                        },
+                                    });
+                                } else {
+                                    setCurrentContent('choose-name');
+                                }
                             }}
-                            showComingSoon={true}
                             leftIcon={FaRegAddressCard}
                             rightIcon={MdOutlineNavigateNext}
                         />

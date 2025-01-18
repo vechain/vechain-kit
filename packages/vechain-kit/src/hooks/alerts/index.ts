@@ -1,0 +1,1 @@
+export { useSmartAccountAlert } from './useSmartAccountAlert';

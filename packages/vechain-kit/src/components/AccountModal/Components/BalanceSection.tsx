@@ -34,7 +34,7 @@ export const BalanceSection = ({ mb }: { mb?: number }) => {
     if (isLoading) return <Spinner mt={4} mb={mb} />;
 
     return (
-        <VStack w="full" spacing={2} mt={4} mb={mb}>
+        <VStack w="full" spacing={2} mt={4} mb={mb} onClick={handleRefresh}>
             <Heading textAlign="center" size={'2xl'} fontWeight={'500'}>
                 ${compactFormatter.format(totalBalance)}
             </Heading>

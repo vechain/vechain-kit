@@ -12,8 +12,14 @@ import { useRef } from 'react';
 import { AssetsTabPanel } from './Contents/AssetsTabPanel';
 import { NFTsTabPanel } from './Contents/NFTsTabPanel';
 import { ActivityTabPanel } from './Contents/ActivityTabPanel';
+import { AccountModalContentTypes } from '../../Types';
 
-export const AssetsSection = () => {
+type Props = {
+    mt?: number;
+    setCurrentContent: (content: AccountModalContentTypes) => void;
+};
+
+export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
     const tabBgColor = useColorModeValue('white', '#1f1f1e');
     const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
     const tabTextColor = useColorModeValue('#4d4d4d', '#dfdfdd');
@@ -33,7 +39,7 @@ export const AssetsSection = () => {
     };
 
     return (
-        <VStack w="full" spacing={3} align="stretch">
+        <VStack w="full" spacing={3} align="stretch" mt={mt}>
             <Tabs variant="soft-rounded" size="sm" onChange={scrollToContent}>
                 <HStack justify="space-between" align="center">
                     <TabList
@@ -100,7 +106,11 @@ export const AssetsSection = () => {
                         <AssetsTabPanel />
                     </TabPanel>
                     <TabPanel p={0} pt={3}>
-                        <NFTsTabPanel />
+                        <NFTsTabPanel
+                            onOpenReceiveModal={() =>
+                                setCurrentContent('receive-token')
+                            }
+                        />
                     </TabPanel>
                     <TabPanel p={0} pt={3}>
                         <ActivityTabPanel />

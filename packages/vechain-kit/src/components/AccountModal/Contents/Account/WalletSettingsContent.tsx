@@ -11,6 +11,7 @@ import {
     Link,
     Icon,
     Button,
+    HStack,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
@@ -29,6 +30,8 @@ import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import { IoOpenOutline } from 'react-icons/io5';
 import { useState } from 'react';
+import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
+import { TbAmpersand } from 'react-icons/tb';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -49,6 +52,8 @@ export const WalletSettingsContent = ({
 
     const [isExpanded, setIsExpanded] = useState(false);
 
+    const hasExistingDomain = !!connectedWallet.domain;
+
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
@@ -64,7 +69,7 @@ export const WalletSettingsContent = ({
                 <ModalBackButton
                     onClick={() => {
                         if (
-                            connection.isConnectedWithPrivy ||
+                            connection.isConnectedWithSocialLogin ||
                             connection.isConnectedWithCrossApp
                         ) {
                             setCurrentContent('accounts');
@@ -88,19 +93,61 @@ export const WalletSettingsContent = ({
                     </VStack>
 
                     <VStack align="stretch" textAlign={'center'} mt={5}>
-                        <Text
-                            fontSize={'sm'}
-                            opacity={0.5}
-                            textAlign={'center'}
-                        >
-                            This is your main wallet and identity. Please be
-                            sure to keep it safe and backed up.
-                        </Text>
+                        {connection.isConnectedWithCrossApp && (
+                            <Text
+                                fontSize={'sm'}
+                                opacity={0.5}
+                                textAlign={'center'}
+                            >
+                                This is your main wallet and identity. Please be
+                                sure to keep it safe and backed up. Go to
+                                VeChain to manage your wallet and security
+                                settings.
+                            </Text>
+                        )}
+
                         {connection.isConnectedWithPrivy && (
+                            <VStack mt={2} opacity={0.5}>
+                                <Text fontSize={'sm'} textAlign={'center'}>
+                                    Secured by
+                                </Text>
+                                <HStack justify={'center'}>
+                                    <PrivyLogo
+                                        onClick={() => {
+                                            window.open(
+                                                'https://www.privy.io/',
+                                                '_blank',
+                                            );
+                                        }}
+                                        _hover={{
+                                            cursor: 'pointer',
+                                        }}
+                                        isDark={isDark}
+                                        w={'50px'}
+                                    />
+                                    <Icon as={TbAmpersand} ml={2} />
+                                    <VechainLogoHorizontal
+                                        _hover={{
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => {
+                                            window.open(
+                                                'https://www.vechain.org/',
+                                                '_blank',
+                                            );
+                                        }}
+                                        isDark={isDark}
+                                        w={'69px'}
+                                    />
+                                </HStack>
+                            </VStack>
+                        )}
+
+                        {connection.isConnectedWithSocialLogin && (
                             <>
                                 {isExpanded && (
                                     <FadeInViewFromBottom>
-                                        {connection.isConnectedWithPrivy && (
+                                        {connection.isConnectedWithSocialLogin && (
                                             <>
                                                 <Text
                                                     fontSize={'sm'}
@@ -159,7 +206,7 @@ export const WalletSettingsContent = ({
                     </VStack>
 
                     <VStack mt={5} w={'full'} spacing={5}>
-                        {connection.isConnectedWithPrivy && (
+                        {connection.isConnectedWithSocialLogin && (
                             <>
                                 <ActionButton
                                     title="Backup your wallet"
@@ -188,17 +235,27 @@ export const WalletSettingsContent = ({
                                 )}
                             </>
                         )}
-
-                        <ActionButton
-                            title="Choose account name"
-                            description="Give a nickname to your wallet to easily identify it."
-                            onClick={() => {
-                                // linkPasskey();
-                            }}
-                            showComingSoon={true}
-                            leftIcon={FaRegAddressCard}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
+                        {connection.isConnectedWithDappKit && (
+                            <ActionButton
+                                title="Choose account name"
+                                description="Give a nickname to your wallet to easily identify it."
+                                onClick={() => {
+                                    if (hasExistingDomain) {
+                                        setCurrentContent({
+                                            type: 'choose-name-search',
+                                            props: {
+                                                name: '',
+                                                setCurrentContent,
+                                            },
+                                        });
+                                    } else {
+                                        setCurrentContent('choose-name');
+                                    }
+                                }}
+                                leftIcon={FaRegAddressCard}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
+                        )}
 
                         <Divider />
 

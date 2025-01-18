@@ -30,6 +30,13 @@ const config: AppConfig = {
         '0x22d19ACBD2cBf6b2B6C546395c26B9Cb448248BF',
     cleanifyChallengesContractAddress:
         '0x8Cc885DC3e5c376632CCEA0e8e1a51F1B3572442',
+    veWorldSubdomainClaimerContractAddress:
+        '0xe5af50e7ad1aaab4fbe4efbb2b30f764013918b3',
+    vetDomainsContractAddress: '0xcBFB30c1F267914816668d53AcBA7bA7c9806D13',
+    vetDomainsPublicResolverAddress:
+        '0xA6eFd130085a127D090ACb0b100294aD1079EA6f',
+    vetDomainsReverseRegistrarAddress:
+        '0x6878f1aD5e3015310CfE5B38d7B7071C5D8818Ca',
     indexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
     nodeUrl: 'https://testnet.vechain.org',
     network: {

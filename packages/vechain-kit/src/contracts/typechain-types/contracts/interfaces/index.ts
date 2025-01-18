@@ -22,3 +22,4 @@ export type { IXAllocationVotingGovernor } from './IXAllocationVotingGovernor';
 export type { IVeDelegatePool } from './IVeDelegatePool';
 export type { IVeDelegateVotes } from './IVeDelegateVotes';
 export type { IVechainEnergyOracleV1 } from './IVechainEnergyOracleV1';
+export type { IReverseRegistrar } from './IReverseRegistrar';

@@ -16,7 +16,7 @@ export const ConnectedWallet = ({
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
 
     return (
-        <Button onClick={onOpen} p={'0px 10px'} minH={'45px'}>
+        <Button onClick={onOpen} p={'0px 13px'} minH={'45px'}>
             <HStack>
                 <Image
                     className="address-icon mobile"
