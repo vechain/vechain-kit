@@ -33,7 +33,7 @@ export const ChooseNameSummaryContent = ({
     const { account } = useWallet();
     const transactionModal = useDisclosure();
 
-    const { sendTransaction, status, txReceipt, error } =
+    const { sendTransaction, status, txReceipt, error, progress } =
         useClaimVeWorldSubdomain({
             subdomain: name,
             domain: 'veworld.vet',
@@ -124,6 +124,7 @@ export const ChooseNameSummaryContent = ({
                 showExplorerButton={true}
                 showSocialButtons={true}
                 showTryAgainButton={true}
+                progress={progress}
             />
         </FadeInViewFromBottom>
     );

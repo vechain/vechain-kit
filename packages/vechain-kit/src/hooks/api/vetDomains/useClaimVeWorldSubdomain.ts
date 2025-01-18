@@ -12,6 +12,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
+import { humanAddress } from '@/utils';
 
 type useClaimVeWorldSubdomainProps = {
     subdomain: string;
@@ -48,7 +49,7 @@ export const useClaimVeWorldSubdomain = ({
                 subdomain,
                 getConfig(network.type).vetDomainsPublicResolverAddress,
             ]),
-            comment: `Claim ${subdomain}`,
+            comment: `Claim VeChain subdomain: ${subdomain}.${domain}`,
             abi: SubdomainClaimerInterface.getFunction('claim'),
         });
 
@@ -58,12 +59,16 @@ export const useClaimVeWorldSubdomain = ({
             data: ReverseRegistrarInterface.encodeFunctionData('setName', [
                 subdomain + '.' + domain,
             ]),
-            comment: `Set name ${subdomain}.${domain}`,
+            comment: `Set ${subdomain}.${domain} as the VeChain nickname of the account ${humanAddress(
+                account.address ?? '',
+                4,
+                4,
+            )}`,
             abi: ReverseRegistrarInterface.getFunction('setName'),
         });
 
         return clausesArray;
-    }, [subdomain]);
+    }, [subdomain, domain, account.address]);
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
