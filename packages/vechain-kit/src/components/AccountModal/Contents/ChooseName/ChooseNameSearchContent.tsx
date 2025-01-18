@@ -19,7 +19,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
-import { useEnsRecordExists } from '@/hooks';
+import { useEnsRecordExists, useWallet } from '@/hooks';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -30,6 +30,7 @@ export const ChooseNameSearchContent = ({
     name: initialName,
     setCurrentContent,
 }: ChooseNameSearchContentProps) => {
+    const { account, connection } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const [name, setName] = useState(initialName);
@@ -81,7 +82,14 @@ export const ChooseNameSearchContent = ({
                     Choose Name
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() => setCurrentContent('choose-name')}
+                    onClick={() =>
+                        // if the user has a domain, go to accounts
+                        connection.isConnectedWithDappKit
+                            ? setCurrentContent('settings')
+                            : account.domain
+                            ? setCurrentContent('smart-account')
+                            : setCurrentContent('choose-name')
+                    }
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

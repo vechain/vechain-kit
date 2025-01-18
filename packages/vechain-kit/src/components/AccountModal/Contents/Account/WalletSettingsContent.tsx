@@ -52,6 +52,8 @@ export const WalletSettingsContent = ({
 
     const [isExpanded, setIsExpanded] = useState(false);
 
+    const hasExistingDomain = !!connectedWallet.domain;
+
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
@@ -91,23 +93,16 @@ export const WalletSettingsContent = ({
                     </VStack>
 
                     <VStack align="stretch" textAlign={'center'} mt={5}>
-                        {connection.isConnectedWithDappKit && (
-                            <Text
-                                fontSize={'sm'}
-                                opacity={0.5}
-                                textAlign={'center'}
-                            >
-                                This is your main wallet and identity. Please be
-                                sure to keep it safe and backed up.
-                            </Text>
-                        )}
                         {connection.isConnectedWithCrossApp && (
                             <Text
                                 fontSize={'sm'}
                                 opacity={0.5}
                                 textAlign={'center'}
                             >
-                                This is your main wallet and identity.
+                                This is your main wallet and identity. Please be
+                                sure to keep it safe and backed up. Go to
+                                VeChain to manage your wallet and security
+                                settings.
                             </Text>
                         )}
 
@@ -245,7 +240,17 @@ export const WalletSettingsContent = ({
                                 title="Choose account name"
                                 description="Give a nickname to your wallet to easily identify it."
                                 onClick={() => {
-                                    setCurrentContent('choose-name');
+                                    if (hasExistingDomain) {
+                                        setCurrentContent({
+                                            type: 'choose-name-search',
+                                            props: {
+                                                name: '',
+                                                setCurrentContent,
+                                            },
+                                        });
+                                    } else {
+                                        setCurrentContent('choose-name');
+                                    }
                                 }}
                                 leftIcon={FaRegAddressCard}
                                 rightIcon={MdOutlineNavigateNext}

@@ -15,12 +15,14 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
+import { useWallet } from '@/hooks';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
 };
 
 export const ChooseNameContent = ({ setCurrentContent }: Props) => {
+    const { smartAccount, connection } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -36,7 +38,13 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                     Choose your account name
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() => setCurrentContent('smart-account')}
+                    onClick={() =>
+                        smartAccount.isActive
+                            ? setCurrentContent('smart-account')
+                            : connection.isConnectedWithDappKit
+                            ? setCurrentContent('settings')
+                            : setCurrentContent('accounts')
+                    }
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

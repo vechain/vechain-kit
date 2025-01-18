@@ -3,7 +3,7 @@
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { useCachedVeChainDomain, useGetChainId, useGetNodeUrl } from '@/hooks';
-import { getPicassoImage } from '@/utils';
+import { compareAddresses, getPicassoImage } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '.';
 import { useVeChainKitConfig } from '@/providers';
@@ -144,6 +144,7 @@ export const useWallet = (): UseWalletReturnType => {
         image: getPicassoImage(connectedWalletAddress ?? ''),
     };
 
+    //TODO: add isLoading for each domain
     // Use cached domain lookups for each address
     const walletDomain = useCachedVeChainDomain(dappKitAccount ?? '')
         .domainResult.domain;
@@ -180,6 +181,11 @@ export const useWallet = (): UseWalletReturnType => {
         disconnectCrossApp,
     ]);
 
+    const hasActiveSmartAccount =
+        !!smartAccount?.address &&
+        !!account?.address &&
+        compareAddresses(smartAccount?.address, account?.address);
+
     return {
         account,
         smartAccount: {
@@ -187,6 +193,7 @@ export const useWallet = (): UseWalletReturnType => {
             domain: smartAccountDomain,
             image: getPicassoImage(smartAccount?.address ?? ''),
             isDeployed: smartAccount?.isDeployed ?? false,
+            isActive: hasActiveSmartAccount,
         },
         dappKitWallet: isConnectedWithDappKit
             ? {
