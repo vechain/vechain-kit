@@ -32,6 +32,29 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
+    primary: defineStyle(() => ({
+        fontSize: 'sm',
+        fontWeight: '400',
+        px: 4,
+        width: 'full',
+        height: '60px',
+        borderRadius: 'xl',
+        bg: '#2B6CB0',
+        color: 'white',
+        _hover: {
+            bg: '#2C5282',
+            _disabled: {
+                bg: '#2B6CB0',
+            },
+        },
+        _dark: {
+            bg: '#3182CE',
+            _hover: {
+                bg: '#2B6CB0',
+            },
+        },
+        transition: 'all 0.2s',
+    })),
 };
 
 export const buttonTheme = defineStyleConfig({

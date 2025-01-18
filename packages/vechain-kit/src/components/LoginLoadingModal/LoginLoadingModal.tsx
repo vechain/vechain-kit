@@ -5,18 +5,19 @@ import {
     Spinner,
     VStack,
     useColorMode,
-    Container,
     ModalCloseButton,
     Text,
     ModalFooter,
     Icon,
+    Button,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
 } from '@/components/common';
-import { MdOutlineErrorOutline } from 'react-icons/md';
+import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -24,6 +25,7 @@ type LoginLoadingModalProps = {
     error?: string;
     title?: string;
     loadingText?: string;
+    onTryAgain?: () => void;
 };
 
 export const LoginLoadingModal = ({
@@ -32,6 +34,7 @@ export const LoginLoadingModal = ({
     error,
     title,
     loadingText,
+    onTryAgain = () => {},
 }: LoginLoadingModalProps) => {
     return (
         <BaseModal
@@ -41,9 +44,17 @@ export const LoginLoadingModal = ({
             autoFocus={false}
         >
             {error ? (
-                <ErrorContent error={error} onClose={onClose} />
+                <ErrorContent
+                    error={error}
+                    onClose={onClose}
+                    onTryAgain={onTryAgain}
+                />
             ) : (
-                <LoadingContent loadingText={loadingText} title={title} />
+                <LoadingContent
+                    loadingText={loadingText}
+                    title={title}
+                    onTryAgain={onTryAgain}
+                />
             )}
         </BaseModal>
     );
@@ -52,12 +63,23 @@ export const LoginLoadingModal = ({
 const LoadingContent = ({
     loadingText,
     title,
+    onTryAgain,
 }: {
     loadingText?: string;
     title?: string;
+    onTryAgain?: () => void;
 }) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+    const [showTimeout, setShowTimeout] = React.useState(false);
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowTimeout(true);
+        }, 7000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <FadeInViewFromBottom>
@@ -72,26 +94,51 @@ const LoadingContent = ({
                 </ModalHeader>
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack
-                        align={'center'}
-                        p={6}
-                        gap={0}
-                        w={'full'}
-                        justifyContent={'center'}
-                        minH={'150px'}
-                    >
-                        <Spinner size="xl" />
-                    </VStack>
-                    {loadingText && (
-                        <Text size="sm" textAlign={'center'}>
-                            {loadingText}
+            <ModalBody>
+                <VStack
+                    align={'center'}
+                    p={6}
+                    gap={0}
+                    w={'full'}
+                    justifyContent={'center'}
+                    minH={'150px'}
+                >
+                    <Spinner size="xl" />
+                </VStack>
+                {loadingText && !showTimeout && (
+                    <Text size="sm" textAlign={'center'}>
+                        {loadingText}
+                    </Text>
+                )}
+                {showTimeout && (
+                    <VStack mt={4} spacing={2}>
+                        <Text color="orange.300" size="sm" textAlign={'center'}>
+                            This is taking longer than expected.
                         </Text>
-                    )}
-                </ModalBody>
-                <ModalFooter />
-            </Container>
+                        <Text size="sm" textAlign={'center'}>
+                            You may want to try establishing the connection
+                            again.
+                        </Text>
+                    </VStack>
+                )}
+            </ModalBody>
+            <ModalFooter justifyContent={'center'}>
+                {showTimeout && (
+                    <Button
+                        fontSize={'sm'}
+                        fontWeight={'400'}
+                        px={4}
+                        width="full"
+                        height="60px"
+                        variant="solid"
+                        borderRadius="xl"
+                        onClick={onTryAgain}
+                    >
+                        <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
+                        Try again
+                    </Button>
+                )}
+            </ModalFooter>
         </FadeInViewFromBottom>
     );
 };
@@ -99,9 +146,11 @@ const LoadingContent = ({
 const ErrorContent = ({
     error,
     onClose,
+    onTryAgain,
 }: {
     error: string;
     onClose: () => void;
+    onTryAgain: () => void;
 }) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -124,41 +173,57 @@ const ErrorContent = ({
                 />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'}>
-                <ModalBody>
-                    <VStack
-                        align={'center'}
-                        p={6}
-                        gap={0}
-                        w={'full'}
-                        justifyContent={'center'}
-                        minH={'100px'}
+            <ModalBody>
+                <VStack
+                    align={'center'}
+                    p={6}
+                    w={'full'}
+                    justifyContent={'center'}
+                    minH={'100px'}
+                    gap={4}
+                >
+                    <motion.div
+                        transition={{
+                            duration: 4,
+                            ease: 'easeInOut',
+                            repeat: Infinity,
+                        }}
+                        animate={{
+                            scale: [1, 1.1, 1],
+                        }}
                     >
-                        <VStack gap={4}>
-                            <motion.div
-                                transition={{
-                                    duration: 4,
-                                    ease: 'easeInOut',
-                                    repeat: Infinity,
-                                }}
-                                animate={{
-                                    scale: [1, 1.1, 1],
-                                }}
-                            >
-                                <Icon
-                                    as={MdOutlineErrorOutline}
-                                    color={'red'}
-                                    fontSize={'60px'}
-                                />
-                            </motion.div>
-                        </VStack>
-                    </VStack>
-                    <Text size="sm" textAlign={'center'}>
+                        <Icon
+                            as={MdOutlineErrorOutline}
+                            color={'red'}
+                            fontSize={'60px'}
+                            opacity={0.5}
+                        />
+                    </motion.div>
+                    <Text
+                        w={'full'}
+                        color="red.500"
+                        size="sm"
+                        textAlign={'center'}
+                    >
                         {error}
                     </Text>
-                </ModalBody>
-                <ModalFooter />
-            </Container>
+                </VStack>
+            </ModalBody>
+            <ModalFooter justifyContent={'center'}>
+                <Button
+                    fontSize={'sm'}
+                    fontWeight={'400'}
+                    px={4}
+                    width="full"
+                    height="60px"
+                    variant="solid"
+                    borderRadius="xl"
+                    onClick={onTryAgain}
+                >
+                    <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
+                    Try again
+                </Button>
+            </ModalFooter>
         </FadeInViewFromBottom>
     );
 };

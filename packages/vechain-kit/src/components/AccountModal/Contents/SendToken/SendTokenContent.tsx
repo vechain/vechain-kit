@@ -392,11 +392,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
 
             <ModalFooter>
                 <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
+                    variant="primary"
                     isDisabled={
                         !selectedToken ||
                         !amount ||

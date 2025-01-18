@@ -45,7 +45,7 @@ jobs:
 
             - name: Build App
               env:
-                  NODE_OPTIONS: "--max-old-space-size=8192"
+                  NODE_OPTIONS: '--max-old-space-size=8192'
               run: |
                   yarn install:all
                   yarn build

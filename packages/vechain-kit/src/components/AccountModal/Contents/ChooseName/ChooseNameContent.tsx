@@ -78,10 +78,7 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                         </VStack>
 
                         <Button
-                            width="full"
-                            height="60px"
-                            variant="solid"
-                            borderRadius="xl"
+                            variant="primary"
                             onClick={() =>
                                 setCurrentContent({
                                     type: 'choose-name-search',

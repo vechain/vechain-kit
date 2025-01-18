@@ -49,6 +49,7 @@ export const VeChainLoginButton = ({ isDark }: Props) => {
                 onClose={() => {
                     loginLoadingModal.onClose();
                 }}
+                onTryAgain={handleLoginWithVeChain}
                 error={loginError}
                 title="Connecting with VeChain"
                 loadingText="Please approve the request in the connection request window..."
