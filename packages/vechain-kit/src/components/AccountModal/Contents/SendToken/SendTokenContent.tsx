@@ -392,7 +392,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
 
             <ModalFooter>
                 <Button
-                    variant="primary"
+                    variant="secondary"
                     isDisabled={
                         !selectedToken ||
                         !amount ||

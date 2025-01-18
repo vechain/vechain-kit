@@ -132,13 +132,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                             disconnect();
                             onClose();
                         }}
-                        fontSize={'sm'}
-                        fontWeight={'400'}
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
+                        variant="secondary"
                         leftIcon={<RxExit color="#888888" />}
                     >
                         Logout
