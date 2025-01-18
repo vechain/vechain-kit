@@ -216,7 +216,11 @@ export const WalletSettingsContent = ({
                         )}
                         {connection.isConnectedWithDappKit && (
                             <ActionButton
-                                title="Choose account name"
+                                title={
+                                    hasExistingDomain
+                                        ? 'Change account name'
+                                        : 'Choose account name'
+                                }
                                 description="Give a nickname to your wallet to easily identify it."
                                 onClick={() => {
                                     if (hasExistingDomain) {
