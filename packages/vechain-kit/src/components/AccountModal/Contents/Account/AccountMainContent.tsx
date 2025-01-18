@@ -84,7 +84,9 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             <QuickActionsSection
                                 setCurrentContent={setCurrentContent}
                             />
-                            <AssetsSection />
+                            <AssetsSection
+                                setCurrentContent={setCurrentContent}
+                            />
                         </VStack>
                     </ModalBody>
                     <ModalFooter>

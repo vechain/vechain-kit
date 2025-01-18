@@ -1,10 +1,14 @@
-import { Icon, Text, VStack } from '@chakra-ui/react';
+import { Icon, Text, VStack, Button } from '@chakra-ui/react';
 import { IoWalletOutline } from 'react-icons/io5';
 import { motion } from 'framer-motion';
 
 const MotionVStack = motion(VStack);
 
-export const NFTsTabPanel = () => {
+type Props = {
+    onOpenReceiveModal: () => void;
+};
+
+export const NFTsTabPanel = ({ onOpenReceiveModal }: Props) => {
     return (
         <MotionVStack
             spacing={4}
@@ -30,6 +34,14 @@ export const NFTsTabPanel = () => {
                 <Text fontSize="sm" opacity={0.5} textAlign="center">
                     Stay tuned for our upcoming NFT feature
                 </Text>
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onOpenReceiveModal}
+                    mt={2}
+                >
+                    Receive tokens
+                </Button>
             </VStack>
         </MotionVStack>
     );
