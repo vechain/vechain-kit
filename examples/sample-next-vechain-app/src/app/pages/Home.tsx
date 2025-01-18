@@ -26,6 +26,7 @@ import {
     useConnectModal,
     useAccountModal,
     useGetB3trBalance,
+    humanAddress,
 } from '@vechain/vechain-kit';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
 import { Interface, ethers } from 'ethers';
@@ -79,7 +80,9 @@ export default function Home(): ReactElement {
                 connectedWallet.address,
                 '0', // 1 B3TR (in wei)
             ]),
-            comment: `Transfer ${0} B3TR to `,
+            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
+                connectedWallet.address,
+            )}`,
             abi: abi.getFunction('transfer'),
         });
 
@@ -90,7 +93,9 @@ export default function Home(): ReactElement {
                 connectedWallet.address,
                 '1', // 1 B3TR (in wei)
             ]),
-            comment: `Transfer ${0.000001} B3TR to `,
+            comment: `This is a second close demonstrating multiclause with privy-corssapp. Transfer ${0.000001} B3TR to ${humanAddress(
+                connectedWallet.address,
+            )}`,
             abi: abi.getFunction('transfer'),
         });
 
@@ -241,6 +246,7 @@ export default function Home(): ReactElement {
                 errorDescription={error?.reason ?? 'Unknown error'}
                 showSocialButtons={true}
                 showExplorerButton={true}
+                onTryAgain={handleTransactionWithModal}
             />
         </Container>
     );

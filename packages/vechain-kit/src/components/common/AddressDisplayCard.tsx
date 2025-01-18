@@ -31,7 +31,7 @@ export const AddressDisplayCard = ({
     return (
         <Box
             w="full"
-            p={4}
+            p={2}
             borderRadius="lg"
             bg={isDark ? '#ffffff0f' : 'gray.50'}
             wordBreak="break-word"

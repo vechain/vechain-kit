@@ -6,13 +6,13 @@ import {
     Button,
     Text,
     useColorMode,
-    Box,
     HStack,
     Divider,
     Alert,
     AlertIcon,
     ModalFooter,
     useDisclosure,
+    Icon,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
@@ -25,6 +25,7 @@ import { getPicassoImage } from '@/utils';
 import { useWallet } from '@/hooks';
 import { useTransferERC20, useTransferVET } from '@/hooks';
 import { TransactionModal } from '@/components';
+import { GiConfirmed } from 'react-icons/gi';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -153,12 +154,26 @@ export const SendTokenSummaryContent = ({
                             />
 
                             <Divider />
-                            <Box w="full" justifyContent="flex-start">
-                                <Text fontSize="sm" fontWeight="bold" mb={2}>
+                            <VStack
+                                spacing={0}
+                                w="full"
+                                justifyContent="flex-start"
+                                p={2}
+                            >
+                                <Text
+                                    fontSize="sm"
+                                    fontWeight="light"
+                                    textAlign="left"
+                                    w="full"
+                                >
                                     Amount
                                 </Text>
-                                <HStack>
-                                    <Text fontSize="xl" fontWeight="semibold">
+                                <HStack justifyContent="flex-start" w="full">
+                                    <Text
+                                        fontSize="xl"
+                                        fontWeight="semibold"
+                                        textAlign="left"
+                                    >
                                         {summaryFormatter.format(
                                             Number(amount),
                                         )}{' '}
@@ -172,7 +187,7 @@ export const SendTokenSummaryContent = ({
                                         )}
                                     </Text>
                                 </HStack>
-                            </Box>
+                            </VStack>
                         </VStack>
                     </VStack>
                 </ModalBody>
@@ -188,6 +203,7 @@ export const SendTokenSummaryContent = ({
                     borderRadius="xl"
                     colorScheme="blue"
                     onClick={handleSend}
+                    rightIcon={<Icon as={GiConfirmed} />}
                 >
                     CONFIRM
                 </Button>
@@ -206,6 +222,7 @@ export const SendTokenSummaryContent = ({
                 showExplorerButton={true}
                 showSocialButtons={true}
                 showTryAgainButton={true}
+                onTryAgain={handleSend}
             />
         </FadeInViewFromBottom>
     );

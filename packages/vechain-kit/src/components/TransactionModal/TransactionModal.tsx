@@ -49,6 +49,7 @@ export const TransactionModal = ({
                 <ConfirmationModalContent
                     title={confirmationTitle}
                     progress={progress}
+                    onTryAgain={onTryAgain}
                 />
             );
         if (status === 'waitingConfirmation')
@@ -57,6 +58,7 @@ export const TransactionModal = ({
                     title={pendingTitle}
                     showExplorerButton={showExplorerButton}
                     txId={txId}
+                    onTryAgain={onTryAgain}
                 />
             );
         if (status === 'error')

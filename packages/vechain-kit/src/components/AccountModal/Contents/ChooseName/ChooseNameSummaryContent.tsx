@@ -125,6 +125,7 @@ export const ChooseNameSummaryContent = ({
                 showSocialButtons={true}
                 showTryAgainButton={true}
                 progress={progress}
+                onTryAgain={handleConfirm}
             />
         </FadeInViewFromBottom>
     );
