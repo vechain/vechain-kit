@@ -38,7 +38,7 @@ export const ChooseNameSearchContent = ({
     const [isAvailable, setIsAvailable] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
 
-    const { data: domainData, isLoading } = useEnsRecordExists(
+    const { data: ensRecordExists, isLoading } = useEnsRecordExists(
         name,
         'veworld.vet',
     );
@@ -49,14 +49,14 @@ export const ChooseNameSearchContent = ({
         if (name.length < 3) {
             setError('Name must be at least 3 characters long');
             setIsAvailable(false);
-        } else if (domainData?.address) {
+        } else if (ensRecordExists) {
             setError('This domain is already taken');
             setIsAvailable(false);
         } else if (!isLoading) {
             setError(null);
             setIsAvailable(true);
         }
-    }, [name, hasInteracted, domainData, isLoading]);
+    }, [name, hasInteracted, ensRecordExists, isLoading]);
 
     const handleContinue = () => {
         if (isAvailable && !error) {

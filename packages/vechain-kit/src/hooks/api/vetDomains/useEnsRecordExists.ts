@@ -2,16 +2,9 @@ import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { MockENS__factory } from '@/contracts/typechain-types/factories/contracts/mocks/MockENS__factory';
 import { useVeChainKitConfig } from '@/providers';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { ethers } from 'ethers';
-
-interface VeChainDomainResult {
-    address?: string;
-    domain?: string;
-    isValidAddressOrDomain: boolean;
-    isLoading: boolean;
-}
 
 const MockENSInterface = MockENS__factory.createInterface();
 
@@ -19,9 +12,10 @@ const getEnsRecordExists = async (
     thor: Connex.Thor,
     network: NETWORK_TYPE,
     name: string,
-    node: string,
-) => {
-    const hashedNode = ethers.keccak256(ethers.toUtf8Bytes(node));
+): Promise<boolean> => {
+    // .veworld.vet
+    const hashedNode =
+        '0x571e15b4bbf879cf28e5075190137be8e18500e3d38543bf0cbcdb54e00b02cc';
 
     // First hash the label using keccak256(bytes(name))
     const labelHash = ethers.keccak256(ethers.toUtf8Bytes(name));
@@ -43,20 +37,20 @@ const getEnsRecordExists = async (
     return res.decoded[0];
 };
 
-export const getEnsRecordExistsQueryKey = (name: string, node: string) => [
-    'VECHAIN_KIT_ENS_RECORD_EXISTS',
-
+export const getEnsRecordExistsQueryKey = (name: string) => [
+    'VECHAIN_KIT_ENS_RECORD_VE_WORLD_EXISTS',
     name,
-    node,
 ];
 
-export const useEnsRecordExists = (name: string, node: string) => {
+export const useEnsRecordExists = (
+    name: string,
+): UseQueryResult<boolean, Error> => {
     const { thor } = useConnex();
     const { network } = useVeChainKitConfig();
 
-    return useQuery<VeChainDomainResult>({
-        queryKey: getEnsRecordExistsQueryKey(name, node),
-        queryFn: () => getEnsRecordExists(thor, network.type, name, node),
-        enabled: !!name && !!node,
+    return useQuery({
+        queryKey: getEnsRecordExistsQueryKey(name),
+        queryFn: () => getEnsRecordExists(thor, network.type, name),
+        enabled: !!name,
     });
 };
