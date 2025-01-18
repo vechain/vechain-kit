@@ -38,10 +38,7 @@ export const ChooseNameSearchContent = ({
     const [isAvailable, setIsAvailable] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
 
-    const { data: ensRecordExists, isLoading } = useEnsRecordExists(
-        name,
-        'veworld.vet',
-    );
+    const { data: ensRecordExists, isLoading } = useEnsRecordExists(name);
 
     useEffect(() => {
         if (!hasInteracted) return;

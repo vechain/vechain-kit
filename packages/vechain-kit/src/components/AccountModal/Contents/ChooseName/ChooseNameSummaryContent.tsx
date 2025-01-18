@@ -7,6 +7,7 @@ import {
     useColorMode,
     ModalFooter,
     useDisclosure,
+    Icon,
 } from '@chakra-ui/react';
 import {
     FadeInViewFromBottom,
@@ -18,6 +19,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
 import { TransactionModal } from '@/components/TransactionModal';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
+import { GiConfirmed } from 'react-icons/gi';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -107,6 +109,7 @@ export const ChooseNameSummaryContent = ({
                     borderRadius="xl"
                     colorScheme="blue"
                     onClick={handleConfirm}
+                    rightIcon={<Icon as={GiConfirmed} />}
                 >
                     CONFIRM
                 </Button>
