@@ -7,7 +7,12 @@ export default defineConfig({
     format: 'esm',
     minify: true,
     sourcemap: true,
-    dts: true,
+    dts: {
+        // Splitting type definitions into chunks
+        chunks: true,
+        // Increase memory limit for type generation
+        memoryLimit: 8192
+    },
     clean: true,
     external: ['react']
 });
