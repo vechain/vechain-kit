@@ -17,7 +17,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
-import { useFetchAppInfo } from '@/hooks';
+import { useFetchAppInfo, useCrossAppConnectionCache } from '@/hooks';
 import { IoPlanet } from 'react-icons/io5';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
@@ -36,6 +36,8 @@ export const EcosystemContent = ({ onClose }: Props) => {
     const [selectedApp, setSelectedApp] = useState<string>();
     const loginLoadingModal = useDisclosure();
 
+    const { setConnectionCache } = useCrossAppConnectionCache();
+
     const { privyEcosystemAppIDS } = useVeChainKitConfig();
     const { data: appsInfo, isLoading } = useFetchAppInfo(privyEcosystemAppIDS);
 
@@ -50,8 +52,17 @@ export const EcosystemContent = ({ onClose }: Props) => {
         try {
             setLoginError(undefined);
             setSelectedApp(appName);
+
             await loginWithCrossApp(appId);
             loginLoadingModal.onClose();
+
+            // Store the appId along with the connection info
+            setConnectionCache({
+                name: appName,
+                logoUrl: appsInfo?.[appId]?.logo_url,
+                appId: appId,
+            });
+
             onClose();
         } catch (error) {
             console.error(t('Login failed:'), error);

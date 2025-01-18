@@ -194,12 +194,7 @@ const ErrorContent = ({
                             opacity={0.5}
                         />
                     </motion.div>
-                    <Text
-                        w={'full'}
-                        color="red.500"
-                        size="sm"
-                        textAlign={'center'}
-                    >
+                    <Text w={'full'} size="sm" textAlign={'center'}>
                         {error}
                     </Text>
                 </VStack>

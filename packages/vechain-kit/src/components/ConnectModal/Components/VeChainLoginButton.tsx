@@ -6,6 +6,7 @@ import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { useCrossAppConnectionCache, useFetchAppInfo } from '@/hooks';
 
 type Props = {
     isDark: boolean;
@@ -16,12 +17,24 @@ export const VeChainLoginButton = ({ isDark }: Props) => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
     const [loginError, setLoginError] = useState<string>();
     const loginLoadingModal = useDisclosure();
+    const { data: appsInfo } = useFetchAppInfo([VECHAIN_PRIVY_APP_ID]);
+
+    const { setConnectionCache } = useCrossAppConnectionCache();
 
     const handleLoginWithVeChain = async () => {
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);
+
             await loginWithVeChain(VECHAIN_PRIVY_APP_ID);
+
+            // Store the appId along with the connection info
+            setConnectionCache({
+                name: t('VeChain'),
+                logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
+                appId: VECHAIN_PRIVY_APP_ID,
+            });
+
             loginLoadingModal.onClose();
         } catch (error) {
             console.error(t('Login failed:'), error);

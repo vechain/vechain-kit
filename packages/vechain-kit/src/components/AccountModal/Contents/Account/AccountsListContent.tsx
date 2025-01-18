@@ -11,6 +11,7 @@ import {
     useColorMode,
     VStack,
     IconButton,
+    Image,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import {
@@ -29,6 +30,7 @@ import { compareAddresses } from '@/utils';
 import { useSmartAccountAlert } from '@/hooks';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
+import { useCrossAppConnectionCache } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -43,13 +45,17 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const { account, connectedWallet, disconnect, smartAccount } = useWallet();
+    const { account, connectedWallet, disconnect, smartAccount, connection } =
+        useWallet();
     const { isAlertVisible, hideAlert } = useSmartAccountAlert();
 
     const activeWalletIsSmartAccount = compareAddresses(
         smartAccount?.address ?? '',
         account?.address ?? '',
     );
+
+    const { getConnectionCache } = useCrossAppConnectionCache();
+    const connectionCache = getConnectionCache();
 
     return (
         <FadeInViewFromBottom>
@@ -117,13 +123,40 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                 />
                             )}
                             <AccountDetailsButton
-                                title={t('Wallet')}
+                                title={
+                                    connection.isConnectedWithCrossApp &&
+                                    connectionCache
+                                        ? connectionCache.ecosystemApp.name +
+                                          ' ' +
+                                          t('Wallet')
+                                        : t('Wallet')
+                                }
                                 address={connectedWallet?.address ?? ''}
                                 isActive={!activeWalletIsSmartAccount}
                                 onClick={() => {
                                     setCurrentContent('settings');
                                 }}
-                                leftIcon={HiOutlineWallet}
+                                leftIcon={
+                                    connection.isConnectedWithCrossApp &&
+                                    connectionCache?.ecosystemApp?.logoUrl
+                                        ? () => (
+                                              <Image
+                                                  src={
+                                                      connectionCache
+                                                          .ecosystemApp?.logoUrl
+                                                  }
+                                                  alt={
+                                                      connectionCache
+                                                          .ecosystemApp?.name ??
+                                                      'ecosystem app logo'
+                                                  }
+                                                  width={28}
+                                                  boxSize={'28px'}
+                                                  justifySelf={'center'}
+                                              />
+                                          )
+                                        : HiOutlineWallet
+                                }
                                 rightIcon={MdOutlineNavigateNext}
                             />
                         </Grid>

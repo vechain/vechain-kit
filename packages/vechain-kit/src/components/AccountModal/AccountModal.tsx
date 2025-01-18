@@ -18,6 +18,7 @@ import {
     FAQContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
+import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 
 type Props = {
     isOpen: boolean;
@@ -107,6 +108,12 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             case 'faq':
                 return (
                     <FAQContent onGoBack={() => setCurrentContent('main')} />
+                );
+            case 'connection-details':
+                return (
+                    <ConnectionDetailsContent
+                        onGoBack={() => setCurrentContent('settings')}
+                    />
                 );
         }
     };

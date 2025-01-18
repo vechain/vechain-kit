@@ -116,3 +116,12 @@ export type TransactionProgress = {
     totalSteps: number;
     currentStepDescription?: string;
 };
+
+export interface CrossAppConnectionCache {
+    timestamp: number;
+    ecosystemApp: {
+        name: string;
+        logoUrl?: string;
+        appId: string;
+    };
+}

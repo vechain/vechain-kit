@@ -9,6 +9,7 @@ export type AccountModalContentTypes =
     | 'send-token'
     | 'receive-token'
     | 'swap-token'
+    | 'connection-details'
     | 'choose-name'
     | {
           type: 'send-token-summary';

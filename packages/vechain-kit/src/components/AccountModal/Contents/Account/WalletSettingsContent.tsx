@@ -8,7 +8,6 @@ import {
     useColorMode,
     Text,
     Divider,
-    Link,
     Icon,
     Button,
     HStack,
@@ -27,12 +26,12 @@ import {
 import { useVeChainKitConfig } from '@/providers/VeChainKit';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import { RxExit } from 'react-icons/rx';
-import { IoOpenOutline } from 'react-icons/io5';
-import { useState } from 'react';
 import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
-import { TbAmpersand } from 'react-icons/tb';
+import { PiLineVertical } from 'react-icons/pi';
 import { useTranslation } from 'react-i18next';
+import { useCrossAppConnectionCache } from '@/hooks';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -47,12 +46,12 @@ export const WalletSettingsContent = ({
     const { exportWallet, linkPasskey } = usePrivy();
     const { privy } = useVeChainKitConfig();
 
-    const { connectedWallet, connection, disconnect } = useWallet();
+    const { getConnectionCache } = useCrossAppConnectionCache();
+    const connectionCache = getConnectionCache();
 
+    const { connectedWallet, connection, disconnect } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-
-    const [isExpanded, setIsExpanded] = useState(false);
 
     const hasExistingDomain = !!connectedWallet.domain;
 
@@ -95,89 +94,42 @@ export const WalletSettingsContent = ({
                     </VStack>
 
                     <VStack align="stretch" textAlign={'center'} mt={5}>
-                        {connection.isConnectedWithCrossApp && (
-                            <Text
-                                fontSize={'sm'}
-                                opacity={0.5}
-                                textAlign={'center'}
-                            >
-                                {t(
-                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.',
-                                )}
-                            </Text>
-                        )}
-
                         {connection.isConnectedWithPrivy && (
-                            <VStack mt={2} opacity={0.5}>
-                                <Text fontSize={'sm'} textAlign={'center'}>
-                                    {t('Secured by')}
-                                </Text>
+                            <VStack
+                                mt={2}
+                                opacity={0.5}
+                                _hover={{
+                                    cursor: 'pointer',
+                                    opacity: 0.7,
+                                    transition: 'all 0.5s',
+                                }}
+                                onClick={() => {
+                                    setCurrentContent('connection-details');
+                                }}
+                            >
+                                <HStack
+                                    textAlign={'center'}
+                                    alignItems={'center'}
+                                    justify={'center'}
+                                    w={'full'}
+                                >
+                                    <Icon
+                                        as={AiOutlineQuestionCircle}
+                                        size={'xs'}
+                                    />
+                                    <Text fontSize={'xs'} fontWeight={'800'}>
+                                        {t('Secured by')}
+                                    </Text>
+                                </HStack>
                                 <HStack justify={'center'}>
                                     <PrivyLogo isDark={isDark} w={'50px'} />
-                                    <Icon as={TbAmpersand} ml={2} />
+                                    <Icon as={PiLineVertical} ml={2} />
                                     <VechainLogoHorizontal
                                         isDark={isDark}
                                         w={'69px'}
                                     />
                                 </HStack>
                             </VStack>
-                        )}
-
-                        {connection.isConnectedWithSocialLogin && (
-                            <>
-                                {isExpanded && (
-                                    <FadeInViewFromBottom>
-                                        {connection.isConnectedWithSocialLogin && (
-                                            <>
-                                                <Text
-                                                    fontSize={'sm'}
-                                                    opacity={0.5}
-                                                >
-                                                    {t(
-                                                        'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
-                                                    )}
-                                                </Text>
-
-                                                <Text
-                                                    fontSize={'sm'}
-                                                    opacity={0.5}
-                                                >
-                                                    {t(
-                                                        'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
-                                                    )}
-                                                    <Link
-                                                        href="https://www.veworld.net/"
-                                                        isExternal
-                                                        color="gray.500"
-                                                        fontSize={'14px'}
-                                                        textDecoration={
-                                                            'underline'
-                                                        }
-                                                    >
-                                                        {t('VeWorld Wallet')}
-                                                        <Icon
-                                                            ml={1}
-                                                            as={IoOpenOutline}
-                                                        />
-                                                    </Link>
-                                                    .
-                                                </Text>
-                                            </>
-                                        )}
-                                    </FadeInViewFromBottom>
-                                )}
-                                <Link
-                                    onClick={() => setIsExpanded(!isExpanded)}
-                                    color="gray.500"
-                                    fontSize={'sm'}
-                                    transition={'all 0.2s'}
-                                    _hover={{ textDecoration: 'none' }}
-                                >
-                                    {isExpanded
-                                        ? t('Read less')
-                                        : t('Read more')}
-                                </Link>
-                            </>
                         )}
                     </VStack>
 

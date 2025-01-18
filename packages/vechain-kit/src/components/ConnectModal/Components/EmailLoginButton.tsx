@@ -18,6 +18,7 @@ export const EmailLoginButton = () => {
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
+
     // Email login
     const [email, setEmail] = useState('');
 

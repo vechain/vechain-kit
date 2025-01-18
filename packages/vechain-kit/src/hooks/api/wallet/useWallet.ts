@@ -11,6 +11,7 @@ import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useState } from 'react';
+import { useCrossAppConnectionCache } from '@/hooks';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -84,32 +85,6 @@ export const useWallet = (): UseWalletReturnType => {
         isLoadingLoginOAuth;
 
     const [isConnected, setIsConnected] = useState(false);
-
-    useEffect(() => {
-        setIsConnected(
-            isConnectedWithDappKit ||
-                isConnectedWithSocialLogin ||
-                isConnectedWithCrossApp,
-        );
-    }, [
-        isConnectedWithDappKit,
-        isConnectedWithSocialLogin,
-        isConnectedWithCrossApp,
-    ]);
-
-    // Get embedded wallet
-    const privyEmbeddedWallet = user?.wallet?.address;
-
-    // Get connected and selected accounts
-    const connectedWalletAddress = isConnectedWithDappKit
-        ? dappKitAccount
-        : isConnectedWithCrossApp
-        ? crossAppAddress
-        : privyEmbeddedWallet;
-
-    // Get smart account
-    const { data: smartAccount } = useSmartAccount(connectedWalletAddress);
-
     // Connection type
     const connectionSource: ConnectionSource = isConnectedWithCrossApp
         ? {
@@ -125,6 +100,35 @@ export const useWallet = (): UseWalletReturnType => {
               type: 'privy',
               displayName: 'Social',
           };
+
+    const { clearConnectionCache } = useCrossAppConnectionCache();
+
+    useEffect(() => {
+        const isNowConnected =
+            isConnectedWithDappKit ||
+            isConnectedWithSocialLogin ||
+            isConnectedWithCrossApp;
+
+        setIsConnected(isNowConnected);
+    }, [
+        isConnectedWithDappKit,
+        isConnectedWithSocialLogin,
+        isConnectedWithCrossApp,
+        connectionSource,
+    ]);
+
+    // Get embedded wallet
+    const privyEmbeddedWallet = user?.wallet?.address;
+
+    // Get connected and selected accounts
+    const connectedWalletAddress = isConnectedWithDappKit
+        ? dappKitAccount
+        : isConnectedWithCrossApp
+        ? crossAppAddress
+        : privyEmbeddedWallet;
+
+    // Get smart account
+    const { data: smartAccount } = useSmartAccount(connectedWalletAddress);
 
     // TODO: here we will need to check if the owner of the wallet owns a smart account
     const activeAddress = isConnectedWithDappKit
@@ -163,8 +167,9 @@ export const useWallet = (): UseWalletReturnType => {
             } else if (isConnectedWithCrossApp) {
                 await disconnectCrossApp();
             }
+            clearConnectionCache();
             window.dispatchEvent(new Event('wallet_disconnected'));
-            setIsConnected(false); // Explicitly update the state
+            setIsConnected(false);
         } catch (error) {
             console.error('Error during disconnect:', error);
         }
@@ -175,6 +180,7 @@ export const useWallet = (): UseWalletReturnType => {
         logout,
         isConnectedWithCrossApp,
         disconnectCrossApp,
+        clearConnectionCache,
     ]);
 
     const hasActiveSmartAccount =

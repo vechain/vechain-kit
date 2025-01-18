@@ -6,3 +6,4 @@ export * from './api';
 export * from './modals';
 export * from './transactions';
 export * from './alerts';
+export * from './useCrossAppConnectionCache';
