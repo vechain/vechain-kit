@@ -31,6 +31,7 @@ export type AppConfig = {
     vetDomainsContractAddress: string;
     vetDomainsPublicResolverAddress: string;
     vetDomainsReverseRegistrarAddress: string;
+    vnsResolverAddress: string;
     nodeUrl: string;
     indexerUrl?: string;
     network: Network;

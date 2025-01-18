@@ -36,7 +36,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
                 </Text>
             )}
             <Text
-                mt={account.domain ? '5px' : 0}
+                mt={account.domain ? '1px' : 0}
                 fontSize={account.domain ? 'xs' : 'sm'}
                 fontWeight={account.domain ? '400' : 'bold'}
                 w="100%"

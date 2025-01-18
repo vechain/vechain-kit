@@ -37,6 +37,7 @@ const config: AppConfig = {
         '0xA6eFd130085a127D090ACb0b100294aD1079EA6f',
     vetDomainsReverseRegistrarAddress:
         '0x6878f1aD5e3015310CfE5B38d7B7071C5D8818Ca',
+    vnsResolverAddress: '0xc403b8EA53F707d7d4de095f0A20bC491Cf2bc94',
     indexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
     nodeUrl: 'https://testnet.vechain.org',
     network: {

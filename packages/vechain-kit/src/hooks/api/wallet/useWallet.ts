@@ -2,7 +2,7 @@
 
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { useCachedVeChainDomain, useGetChainId, useGetNodeUrl } from '@/hooks';
+import { useVechainDomain, useGetChainId, useGetNodeUrl } from '@/hooks';
 import { compareAddresses, getPicassoImage } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '.';
@@ -133,29 +133,25 @@ export const useWallet = (): UseWalletReturnType => {
 
     const account = {
         address: activeAddress ?? null,
-        domain: useCachedVeChainDomain(activeAddress ?? '').domainResult.domain,
+        domain: useVechainDomain(activeAddress ?? '').data?.domain,
         image: getPicassoImage(activeAddress ?? ''),
     };
 
     const connectedWallet = {
         address: connectedWalletAddress ?? null,
-        domain: useCachedVeChainDomain(connectedWalletAddress ?? '')
-            .domainResult.domain,
+        domain: useVechainDomain(connectedWalletAddress ?? '').data?.domain,
         image: getPicassoImage(connectedWalletAddress ?? ''),
     };
 
     //TODO: add isLoading for each domain
     // Use cached domain lookups for each address
-    const walletDomain = useCachedVeChainDomain(dappKitAccount ?? '')
-        .domainResult.domain;
-    const smartAccountDomain = useCachedVeChainDomain(
-        smartAccount?.address ?? '',
-    ).domainResult.domain;
-    const embeddedWalletDomain = useCachedVeChainDomain(
-        privyEmbeddedWallet ?? '',
-    ).domainResult.domain;
-    const crossAppAccountDomain = useCachedVeChainDomain(crossAppAddress ?? '')
-        .domainResult.domain;
+    const walletDomain = useVechainDomain(dappKitAccount ?? '').data?.domain;
+    const smartAccountDomain = useVechainDomain(smartAccount?.address ?? '')
+        .data?.domain;
+    const embeddedWalletDomain = useVechainDomain(privyEmbeddedWallet ?? '')
+        .data?.domain;
+    const crossAppAccountDomain = useVechainDomain(crossAppAddress ?? '').data
+        ?.domain;
 
     // Modify the disconnect function to ensure state updates
     const disconnect = useCallback(async () => {

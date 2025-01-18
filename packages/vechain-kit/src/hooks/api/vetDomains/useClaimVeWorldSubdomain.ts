@@ -1,6 +1,6 @@
 import {
     UseSendTransactionReturnValue,
-    getVetDomainQueryKey,
+    getVechainDomainQueryKey,
     useSendTransaction,
     useWallet,
 } from '@/hooks';
@@ -72,29 +72,36 @@ export const useClaimVeWorldSubdomain = ({
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        // Clear the domain cache
-        localStorage.removeItem('vechainDomainCache');
-
         // Invalidate immediately without refetching
-        queryClient.invalidateQueries({
-            queryKey: getVetDomainQueryKey(account.address ?? ''),
+        queryClient.cancelQueries({
+            queryKey: getVechainDomainQueryKey(account.address ?? ''),
             refetchType: 'none',
         });
 
-        queryClient.invalidateQueries({
-            queryKey: getVetDomainQueryKey(subdomain + '.' + domain),
+        queryClient.cancelQueries({
+            queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
             refetchType: 'none',
         });
 
         // Refetch after 3 seconds
         setTimeout(() => {
+            queryClient.cancelQueries({
+                queryKey: getVechainDomainQueryKey(account.address ?? ''),
+                refetchType: 'none',
+            });
+
+            queryClient.cancelQueries({
+                queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
+                refetchType: 'none',
+            });
+
             queryClient.refetchQueries({
-                queryKey: getVetDomainQueryKey(account.address ?? ''),
+                queryKey: getVechainDomainQueryKey(account.address ?? ''),
             });
             queryClient.refetchQueries({
-                queryKey: getVetDomainQueryKey(subdomain + '.' + domain),
+                queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
             });
-        }, 5000);
+        }, 2000);
 
         onSuccess?.();
     }, [onSuccess, subdomain, domain, queryClient, account.address]);
@@ -102,8 +109,8 @@ export const useClaimVeWorldSubdomain = ({
     const result = useSendTransaction({
         signerAccountAddress: account.address,
         privyUIOptions: {
-            title: 'Sign to confirm',
-            description: `Claim ${subdomain}`,
+            title: 'Sign to claim your VeChain nickname',
+            description: `Claim ${subdomain} as your VeChain nickname`,
             buttonText: 'Sign',
         },
         onTxConfirmed: handleOnSuccess,
