@@ -27,6 +27,7 @@ import { PasskeyLoginButton } from '../Components/PasskeyLoginButton';
 import { DappKitButton } from '../Components/DappKitButton';
 import { EcosystemButton } from '../Components/EcosystemButton';
 import { PrivyButton } from '../Components/PrivyButton';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -36,6 +37,8 @@ type Props = {
 };
 
 export const MainContent = ({ setCurrentContent, onClose }: Props) => {
+    const { t } = useTranslation();
+
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
@@ -59,7 +62,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {'Log in or sign up'}
+                    {t('Log in or sign up')}
                 </ModalHeader>
                 <ModalCloseButton mt={'5px'} />
             </StickyHeaderContainer>
@@ -93,7 +96,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                                 fontWeight={'200'}
                                 textAlign={'center'}
                             >
-                                {loginModalUI?.description}
+                                {t(loginModalUI?.description)}
                             </Text>
                         </HStack>
                     )}

@@ -11,6 +11,7 @@ import {
     HStack,
     Heading,
     Tag,
+    Select,
 } from '@chakra-ui/react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import {
@@ -21,6 +22,8 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { VechainLogoHorizontal } from '@/assets';
 import { FAQAccordion } from './FAQAccordion';
+import { useTranslation } from 'react-i18next';
+import { supportedLanguages } from '../../../../../i18n';
 
 type Props = {
     onGoBack: () => void;
@@ -29,8 +32,19 @@ type Props = {
 export const FAQContent = ({ onGoBack }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-
     const { network } = useVeChainKitConfig();
+    const { i18n, t } = useTranslation();
+
+    // Language names mapping
+    const languageNames = {
+        en: 'English',
+        de: 'Deutsch',
+        it: 'Italiano',
+        fr: 'Français',
+        es: 'Español',
+        zh: '中文',
+        ja: '日本語',
+    };
 
     return (
         <FadeInViewFromBottom>
@@ -41,7 +55,7 @@ export const FAQContent = ({ onGoBack }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Info
+                    {t('Info')}
                 </ModalHeader>
                 <ModalBackButton onClick={onGoBack} />
                 <ModalCloseButton />
@@ -62,13 +76,13 @@ export const FAQContent = ({ onGoBack }: Props) => {
                                 opacity={0.7}
                                 textAlign={'center'}
                             >
-                                Welcome! Here you can manage your wallet, send
-                                tokens, and interact with the VeChain blockchain
-                                and its applications.
+                                {t(
+                                    'Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.',
+                                )}
                             </Text>
                         </VStack>
 
-                        <HStack justify={'center'}>
+                        <HStack justify={'center'} spacing={2}>
                             <Tag
                                 size={'sm'}
                                 colorScheme={'blue'}
@@ -76,8 +90,36 @@ export const FAQContent = ({ onGoBack }: Props) => {
                                 justifyContent={'center'}
                                 padding={'10px'}
                             >
-                                Network: {network.type}
+                                {t('Network')}: {network.type}
                             </Tag>
+                            <Select
+                                borderRadius={'md'}
+                                size="sm"
+                                width="auto"
+                                value={i18n.language}
+                                onChange={(e) =>
+                                    i18n.changeLanguage(e.target.value)
+                                }
+                                bg={isDark ? 'whiteAlpha.200' : 'gray.100'}
+                                borderColor={
+                                    isDark ? 'whiteAlpha.300' : 'gray.200'
+                                }
+                                _hover={{
+                                    borderColor: isDark
+                                        ? 'whiteAlpha.400'
+                                        : 'gray.300',
+                                }}
+                            >
+                                {supportedLanguages.map((lang) => (
+                                    <option key={lang} value={lang}>
+                                        {
+                                            languageNames[
+                                                lang as keyof typeof languageNames
+                                            ]
+                                        }
+                                    </option>
+                                ))}
+                            </Select>
                         </HStack>
 
                         <Heading
@@ -87,7 +129,7 @@ export const FAQContent = ({ onGoBack }: Props) => {
                             mt={4}
                             mb={1}
                         >
-                            Frequently asked questions
+                            {t('Frequently asked questions')}
                         </Heading>
 
                         <FAQAccordion />
@@ -102,7 +144,7 @@ export const FAQContent = ({ onGoBack }: Props) => {
                             height="60px"
                             mt={4}
                         >
-                            For developers
+                            {t('For developers')}
                         </Button>
                     </VStack>
                 </ModalBody>

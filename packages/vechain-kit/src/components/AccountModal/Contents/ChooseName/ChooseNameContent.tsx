@@ -16,12 +16,14 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { useWallet } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
 };
 
 export const ChooseNameContent = ({ setCurrentContent }: Props) => {
+    const { t } = useTranslation();
     const { smartAccount, connection } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -35,7 +37,7 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Choose your account name
+                    {t('Choose your account name')}
                 </ModalHeader>
                 <ModalBackButton
                     onClick={() =>
@@ -64,7 +66,7 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                                 fontWeight="500"
                                 textAlign="center"
                             >
-                                Finally say goodbye to 0x addresses
+                                {t('Finally say goodbye to 0x addresses')}
                             </Text>
                             <Text
                                 fontSize="md"
@@ -72,8 +74,9 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                                 textAlign="center"
                                 px={4}
                             >
-                                Name your account to make it easier to exchange
-                                assets
+                                {t(
+                                    'Name your account to make it easier to exchange assets',
+                                )}
                             </Text>
                         </VStack>
 
@@ -89,7 +92,7 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                                 })
                             }
                         >
-                            Choose name
+                            {t('Choose name')}
                         </Button>
                     </VStack>
                 </ModalBody>

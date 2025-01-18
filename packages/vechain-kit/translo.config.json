@@ -1,0 +1,21 @@
+{
+    "translationPath": "./src/languages",
+    "languages": [
+        { "name": "English", "code": "en" },
+        { "name": "German", "code": "de" },
+        { "name": "Italian", "code": "it" },
+        { "name": "French", "code": "fr" },
+        { "name": "Spanish", "code": "es" },
+        { "name": "Chinese", "code": "zh" },
+        { "name": "Japanese", "code": "ja" }
+    ],
+    "fixedWords": {
+        "it": {
+            "smart account": "smart account",
+            "Smart Account": "Smart Account"
+        }
+    },
+    "mainLanguage": "en",
+    "sortMainLanguageFileAlphabetically": true,
+    "sortTargetLanguageFilesAlphabetically": true
+}

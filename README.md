@@ -90,6 +90,16 @@ Alternatively, you can run headless tests directly in the console using:
 yarn test:e2e:headless
 ```
 
+## Translating
+
+```bash
+cd packages/vechain-kit
+yarn translate
+```
+
+This will complete all the missing translations in the `en.json` file.
+In order to translate the file, you will need to create a `.env` inside the `packages/vechain-kit` folder with the `OPENAI_API_KEY` set to your OpenAI API key.
+
 ## Publishing
 
 1. Prepare the release, this will check out the release branch, install dependencies, build packages, test and update the package versions

@@ -6,11 +6,14 @@ import { useEffect } from 'react';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletButtonProps } from './types';
+import { useTranslation } from 'react-i18next';
 
 export const WalletButton = ({
     mobileVariant = 'iconAndDomain',
     desktopVariant = 'iconAndDomain',
 }: WalletButtonProps) => {
+    const { t } = useTranslation();
+
     const { connection } = useWallet();
     const { setSource, connect } = useDappKitWallet();
     const { authenticated, user, createWallet } = usePrivy();
@@ -52,7 +55,7 @@ export const WalletButton = ({
                     onOpen={accountModal.onOpen}
                 />
             ) : (
-                <Button onClick={handleConnect}>Login</Button>
+                <Button onClick={handleConnect}>{t('Login')}</Button>
             )}
 
             <ConnectModal

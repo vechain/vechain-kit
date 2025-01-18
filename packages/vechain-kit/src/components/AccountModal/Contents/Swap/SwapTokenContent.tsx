@@ -18,6 +18,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export const SwapTokenContent = ({ setCurrentContent }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -38,7 +40,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Swap
+                    {t('Swap')}
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -57,11 +59,9 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                             />
 
                             <Text fontSize="sm" textAlign="center">
-                                BetterSwap is VeChain's trusted decentralized
-                                exchange (DEX) for seamless token swaps.
-                                Effortlessly trade VeChain assets in a secure,
-                                fast, and user-friendly environment. Click below
-                                to get started!
+                                {t(
+                                    "BetterSwap is VeChain's trusted decentralized exchange (DEX) for seamless token swaps. Effortlessly trade VeChain assets in a secure, fast, and user-friendly environment. Click below to get started!",
+                                )}
                             </Text>
                         </VStack>
                     </ModalBody>
@@ -79,7 +79,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                         window.open('https://swap.tbc.vet/', '_blank');
                     }}
                 >
-                    Launch BetterSwap
+                    {t('Launch BetterSwap')}
                     <Icon as={FaExternalLinkAlt} ml={2} />
                 </Button>
             </ModalFooter>

@@ -22,12 +22,14 @@ import { IoPlanet } from 'react-icons/io5';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     onClose: () => void;
 };
 
 export const EcosystemContent = ({ onClose }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const [loginError, setLoginError] = useState<string>();
@@ -52,11 +54,11 @@ export const EcosystemContent = ({ onClose }: Props) => {
             loginLoadingModal.onClose();
             onClose();
         } catch (error) {
-            console.error('Login failed:', error);
+            console.error(t('Login failed:'), error);
             setLoginError(
                 error instanceof Error
                     ? error.message
-                    : 'Failed to connect with ecosystem app',
+                    : t('Failed to connect with ecosystem app'),
             );
         }
     };
@@ -76,7 +78,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
                         gap={2}
                     >
                         <Icon as={IoPlanet} size={'20px'} />
-                        Ecosystem Login
+                        {t('Ecosystem Login')}
                     </ModalHeader>
                     <ModalCloseButton />
                 </StickyHeaderContainer>
@@ -104,8 +106,9 @@ export const EcosystemContent = ({ onClose }: Props) => {
                             mb={4}
                             textAlign={'center'}
                         >
-                            Use your existing VeChain wallet from other
-                            ecosystem apps to sign in seamlessly.
+                            {t(
+                                'Use your existing VeChain wallet from other ecosystem apps to sign in seamlessly.',
+                            )}
                         </Text>
                         {isLoading && (
                             <VStack
@@ -157,8 +160,9 @@ export const EcosystemContent = ({ onClose }: Props) => {
 
                         {!isLoading && !appsInfo && (
                             <Text>
-                                No application from VeChain ecosystem is
-                                available to login.
+                                {t(
+                                    'No application from VeChain ecosystem is available to login.',
+                                )}
                             </Text>
                         )}
                     </ModalBody>
@@ -172,8 +176,10 @@ export const EcosystemContent = ({ onClose }: Props) => {
                     loginLoadingModal.onClose();
                 }}
                 error={loginError}
-                title={`Connecting with ${selectedApp}`}
-                loadingText="Please approve the request in the connection request window..."
+                title={`${t('Connecting with')} ${selectedApp}`}
+                loadingText={t(
+                    'Please approve the request in the connection request window...',
+                )}
             />
         </>
     );

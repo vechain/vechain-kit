@@ -2,10 +2,12 @@ import { VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { useBalances } from '@/hooks';
 import { AssetButton } from '@/components/common';
+import { useTranslation } from 'react-i18next';
 
 const MotionVStack = motion(VStack);
 
 export const AssetsTabPanel = () => {
+    const { t } = useTranslation();
     const { balances, prices } = useBalances();
 
     // Create array of base assets

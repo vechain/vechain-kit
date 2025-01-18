@@ -20,6 +20,7 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useTranslation } from 'react-i18next';
 
 export type SuccessModalContentProps = {
     title?: ReactNode;
@@ -40,12 +41,13 @@ export type SuccessModalContentProps = {
  * @returns {React.ReactElement} The SuccessModalContent component
  */
 export const SuccessModalContent = ({
-    title = 'Transaction completed!',
+    title,
     showSocialButtons = false,
     showExplorerButton = false,
     txId,
     socialDescriptionEncoded,
 }: SuccessModalContentProps) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -64,7 +66,7 @@ export const SuccessModalContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {title}
+                    {title ?? t('Transaction completed!')}
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -89,7 +91,7 @@ export const SuccessModalContent = ({
                             {showSocialButtons && (
                                 <VStack>
                                     <Text fontSize="sm">
-                                        {'Share your transaction'}
+                                        {t('Share your transaction')}
                                     </Text>
                                     <ShareButtons
                                         descriptionEncoded={socialDescription}
@@ -108,7 +110,7 @@ export const SuccessModalContent = ({
                                 fontSize={'14px'}
                                 textDecoration={'underline'}
                             >
-                                {'View transaction on the explorer'}
+                                {t('View transaction on the explorer')}
                             </Link>
                         )}
                     </ModalFooter>

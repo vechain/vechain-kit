@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
 import { MdOutlineRefresh } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 export type ConfirmationModalContentProps = {
     title?: ReactNode;
@@ -28,10 +29,11 @@ export type ConfirmationModalContentProps = {
 };
 
 export const ConfirmationModalContent = ({
-    title = 'Waiting for confirmation',
+    title,
     progress,
     onTryAgain,
 }: ConfirmationModalContentProps) => {
+    const { t } = useTranslation();
     const { connection } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -55,7 +57,7 @@ export const ConfirmationModalContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {title}
+                    {title || t('Waiting for confirmation')}
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -77,8 +79,8 @@ export const ConfirmationModalContent = ({
                                         borderRadius="xl"
                                     />
                                     <Text fontSize="sm" align={'center'}>
-                                        Step {progress.currentStep} of{' '}
-                                        {progress.totalSteps}
+                                        {t('Step')} {progress.currentStep}{' '}
+                                        {t('of')} {progress.totalSteps}
                                     </Text>
                                     {progress.currentStepDescription && (
                                         <Text
@@ -95,7 +97,9 @@ export const ConfirmationModalContent = ({
                                             align={'center'}
                                             color="orange.300"
                                         >
-                                            This is taking longer than expected.
+                                            {t(
+                                                'This is taking longer than expected.',
+                                            )}
                                         </Text>
                                     )}
                                 </>
@@ -104,8 +108,12 @@ export const ConfirmationModalContent = ({
                                     {!showTimeout ? (
                                         <Text fontSize="sm" align={'center'}>
                                             {connection.isConnectedWithSocialLogin
-                                                ? 'Please do not close this window, it will take just a few seconds.'
-                                                : 'Please confirm the transaction in your wallet.'}
+                                                ? t(
+                                                      'Please do not close this window, it will take just a few seconds.',
+                                                  )
+                                                : t(
+                                                      'Please confirm the transaction in your wallet.',
+                                                  )}
                                         </Text>
                                     ) : (
                                         <VStack mt={4} spacing={2}>
@@ -114,15 +122,17 @@ export const ConfirmationModalContent = ({
                                                 size="sm"
                                                 textAlign={'center'}
                                             >
-                                                This is taking longer than
-                                                expected.
+                                                {t(
+                                                    'This is taking longer than expected.',
+                                                )}
                                             </Text>
                                             <Text
                                                 size="sm"
                                                 textAlign={'center'}
                                             >
-                                                You may want to try establishing
-                                                the transaction again.
+                                                {t(
+                                                    'You may want to try establishing the transaction again.',
+                                                )}
                                             </Text>
                                         </VStack>
                                     )}
@@ -137,7 +147,7 @@ export const ConfirmationModalContent = ({
                 {showTimeout && onTryAgain && (
                     <Button variant="secondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
-                        Try again
+                        {t('Try again')}
                     </Button>
                 )}
             </ModalFooter>

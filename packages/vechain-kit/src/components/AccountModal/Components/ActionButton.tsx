@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
 import { FadeInView } from '../../common';
+import { useTranslation } from 'react-i18next';
 
 interface ActionButtonProps {
     title: string;
@@ -37,6 +38,7 @@ export const ActionButton = ({
     backgroundColor,
     _hover,
 }: ActionButtonProps) => {
+    const { t } = useTranslation();
     return (
         <FadeInView>
             <Button
@@ -83,7 +85,7 @@ export const ActionButton = ({
                         </Text>
                         {showComingSoon && (
                             <Tag size="sm" colorScheme="red">
-                                Coming Soon!
+                                {t('Coming Soon!')}
                             </Tag>
                         )}
                     </VStack>

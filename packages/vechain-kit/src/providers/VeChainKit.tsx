@@ -4,6 +4,7 @@ import {
     useContext,
     useState,
     useCallback,
+    useEffect,
 } from 'react';
 import { PrivyProvider, WalletListEntry } from '@privy-io/react-auth';
 import { DAppKitProvider } from '@vechain/dapp-kit-react';
@@ -27,6 +28,7 @@ import {
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import i18n from '../../i18n';
 
 export type VechainKitProps = {
     children: ReactNode;
@@ -132,9 +134,12 @@ export const VeChainKit = ({
     privy,
     feeDelegation,
     dappKit,
-    loginModalUI,
+    loginModalUI = {
+        description:
+            'Choose between social login through VeChain or by connecting your wallet.',
+    },
     darkMode = false,
-    i18n,
+    i18n: i18nConfig,
     language,
     network,
     privyEcosystemAppIDS,
@@ -201,6 +206,13 @@ export const VeChainKit = ({
         localStorage.setItem('chakra-ui-color-mode-default', 'set');
     }
 
+    // Initialize i18n with the provided language
+    useEffect(() => {
+        if (language) {
+            i18n.changeLanguage(language);
+        }
+    }, [language]);
+
     return (
         <EnsureQueryClient>
             <ReactQueryDevtools initialIsOpen={false} />
@@ -213,7 +225,7 @@ export const VeChainKit = ({
                         dappKit,
                         loginModalUI,
                         darkMode,
-                        i18n,
+                        i18n: i18nConfig,
                         language,
                         network,
                         privySocialLoginEnabled: privy !== undefined,
@@ -264,7 +276,7 @@ export const VeChainKit = ({
                                 genesis={
                                     getConfig(network.type).network.genesis
                                 }
-                                i18n={i18n}
+                                i18n={i18nConfig}
                                 language={language}
                                 logLevel={dappKit.logLevel}
                                 modalParent={dappKit.modalParent}

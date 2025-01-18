@@ -19,7 +19,6 @@ export const ConnectedWallet = ({
         <Button onClick={onOpen} p={'0px 13px'} minH={'45px'}>
             <HStack>
                 <Image
-                    className="address-icon mobile"
                     src={account.image ?? ''}
                     alt="wallet"
                     width={30}

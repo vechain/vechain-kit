@@ -4,12 +4,14 @@ import { useLoginWithPasskey } from '@privy-io/react-auth';
 import { IoIosFingerPrint } from 'react-icons/io';
 import { ConnectionButton } from '@/components';
 import { LoginLoadingModal } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     isDark: boolean;
 };
 
 export const PasskeyLoginButton = ({ isDark }: Props) => {
+    const { t } = useTranslation();
     const { loginWithPasskey } = useLoginWithPasskey();
     const [loginError, setLoginError] = useState<string>();
     const loginLoadingModal = useDisclosure();
@@ -25,7 +27,7 @@ export const PasskeyLoginButton = ({ isDark }: Props) => {
             setLoginError(
                 error instanceof Error
                     ? error.message
-                    : 'Failed to connect with Passkey',
+                    : t('Failed to connect with Passkey'),
             );
         }
     };
@@ -46,8 +48,8 @@ export const PasskeyLoginButton = ({ isDark }: Props) => {
                     loginLoadingModal.onClose();
                 }}
                 error={loginError}
-                title="Connecting with Passkey"
-                loadingText="Please complete the passkey authentication..."
+                title={t('Connecting with Passkey')}
+                loadingText={t('Please complete the passkey authentication...')}
                 onTryAgain={handleLoginWithPasskey}
             />
         </>

@@ -26,6 +26,7 @@ import { useWallet } from '@/hooks';
 import { useTransferERC20, useTransferVET } from '@/hooks';
 import { TransactionModal } from '@/components';
 import { GiConfirmed } from 'react-icons/gi';
+import { useTranslation } from 'react-i18next';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -65,6 +66,7 @@ export const SendTokenSummaryContent = ({
     amount,
     selectedToken,
 }: SendTokenSummaryContentProps) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { account, connection } = useWallet();
@@ -93,7 +95,7 @@ export const SendTokenSummaryContent = ({
                 await transferERC20.sendTransaction();
             }
         } catch (error) {
-            console.error('Transaction failed:', error);
+            console.error(t('Transaction failed:'), error);
         }
     };
 
@@ -120,23 +122,23 @@ export const SendTokenSummaryContent = ({
             <FadeInViewFromBottom>
                 <ModalBody>
                     <VStack spacing={6} align="stretch" w="full">
-                        {connection.isConnectedWithSocialLogin && (
+                        {connection.isConnectedWithPrivy && (
                             <Alert
                                 status="warning"
                                 fontSize={'xs'}
                                 borderRadius={'xl'}
                             >
                                 <AlertIcon />
-                                Sending to OceanX or other exchanges may result
-                                in loss of funds. Send the tokens to your
-                                VeWorld wallet first.
+                                {t(
+                                    'Sending to OceanX or other exchanges may result in loss of funds. Send the tokens to your VeWorld wallet first.',
+                                )}
                             </Alert>
                         )}
                         {/* From/To Card */}
 
                         <VStack spacing={4} w="full">
                             <AddressDisplayCard
-                                label="From"
+                                label={t('From')}
                                 address={account.address ?? ''}
                                 domain={account.domain}
                                 imageSrc={account.image ?? ''}
@@ -144,7 +146,7 @@ export const SendTokenSummaryContent = ({
                             />
 
                             <AddressDisplayCard
-                                label="To"
+                                label={t('To')}
                                 address={resolvedAddress || toAddressOrDomain}
                                 domain={resolvedDomain}
                                 imageSrc={getPicassoImage(
@@ -166,7 +168,7 @@ export const SendTokenSummaryContent = ({
                                     textAlign="left"
                                     w="full"
                                 >
-                                    Amount
+                                    {t('Amount')}
                                 </Text>
                                 <HStack justifyContent="flex-start" w="full">
                                     <Text
@@ -205,7 +207,7 @@ export const SendTokenSummaryContent = ({
                     onClick={handleSend}
                     rightIcon={<Icon as={GiConfirmed} />}
                 >
-                    CONFIRM
+                    {t('Confirm')}
                 </Button>
             </ModalFooter>
             {/* </StickyFooterContainer> */}
@@ -218,7 +220,7 @@ export const SendTokenSummaryContent = ({
                 }}
                 status={status}
                 txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
+                errorDescription={error?.reason ?? t('Unknown error')}
                 showExplorerButton={true}
                 showSocialButtons={true}
                 showTryAgainButton={true}

@@ -10,6 +10,7 @@ import {
 import { useBalances, useRefreshBalances } from '@/hooks';
 import { useState } from 'react';
 import { IoRefresh } from 'react-icons/io5';
+import { useTranslation } from 'react-i18next';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -18,6 +19,7 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
 });
 
 export const BalanceSection = ({ mb }: { mb?: number }) => {
+    const { t } = useTranslation();
     const { isLoading, totalBalance } = useBalances();
 
     const { refresh } = useRefreshBalances();
@@ -47,10 +49,10 @@ export const BalanceSection = ({ mb }: { mb?: number }) => {
                     onClick={handleRefresh}
                     leftIcon={<Icon as={IoRefresh} />}
                     isLoading={isRefreshing}
-                    loadingText="Refreshing"
+                    loadingText={t('Refreshing')}
                 >
                     <Text fontSize="xs" opacity={0.7} lineHeight={1}>
-                        Refresh Balances
+                        {t('Refresh balances')}
                     </Text>
                 </Button>
             </HStack>

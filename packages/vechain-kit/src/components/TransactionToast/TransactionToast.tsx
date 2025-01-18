@@ -19,6 +19,7 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useWallet } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 export type TransactionToastProps = {
     isOpen: boolean;
@@ -45,6 +46,7 @@ export const TransactionToast = ({
     resetStatus,
     progress,
 }: TransactionToastProps) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
@@ -54,12 +56,12 @@ export const TransactionToast = ({
     const statusConfig: Record<string, StatusConfig> = {
         pending: {
             icon: <Spinner size="md" />,
-            title: 'Processing transaction...',
+            title: t('Processing transaction...'),
             closeDisabled: true,
         },
         waitingConfirmation: {
             icon: <Spinner size="md" />,
-            title: 'Processing transaction...',
+            title: t('Processing transssaction...'),
             closeDisabled: true,
         },
         error: {
@@ -70,12 +72,12 @@ export const TransactionToast = ({
                     fontSize={'40px'}
                 />
             ),
-            title: 'Transaction failed',
+            title: t('Transaction failed'),
             closeDisabled: false,
         },
         success: {
             icon: <Icon as={FcCheckmark} fontSize={'40px'} />,
-            title: 'Transaction successful!',
+            title: t('Transaction successful!'),
             closeDisabled: false,
         },
     };
@@ -117,7 +119,9 @@ export const TransactionToast = ({
                                 />
                                 <Text fontSize="xs" color="gray.500">
                                     {progress.currentStepDescription ||
-                                        `Step ${progress.currentStep} of ${progress.totalSteps}`}
+                                        `${t('Step')} ${
+                                            progress.currentStep
+                                        } ${t('of')} ${progress.totalSteps}`}
                                 </Text>
                             </VStack>
                         )}
@@ -130,7 +134,7 @@ export const TransactionToast = ({
                             isExternal
                             href={`${explorerUrl}/${txReceipt.meta.txID}`}
                         >
-                            View on explorer <Icon as={IoOpenOutline} />
+                            {t('View on explorer')} <Icon as={IoOpenOutline} />
                         </Link>
                     )}
                 </VStack>
@@ -170,7 +174,7 @@ export const TransactionToast = ({
                         aria-label="Close"
                         ml={5}
                     >
-                        Close
+                        {t('Close')}
                     </Button>
                 )}
             </HStack>

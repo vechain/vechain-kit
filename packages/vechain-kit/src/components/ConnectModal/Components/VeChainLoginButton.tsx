@@ -5,12 +5,14 @@ import { ConnectionButton, LoginLoadingModal } from '@/components';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { useDisclosure } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     isDark: boolean;
 };
 
 export const VeChainLoginButton = ({ isDark }: Props) => {
+    const { t } = useTranslation();
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
     const [loginError, setLoginError] = useState<string>();
     const loginLoadingModal = useDisclosure();
@@ -22,11 +24,11 @@ export const VeChainLoginButton = ({ isDark }: Props) => {
             await loginWithVeChain(VECHAIN_PRIVY_APP_ID);
             loginLoadingModal.onClose();
         } catch (error) {
-            console.error('Login failed:', error);
+            console.error(t('Login failed:'), error);
             setLoginError(
                 error instanceof Error
                     ? error.message
-                    : 'Failed to connect with VeChain',
+                    : t('Failed to connect with VeChain'),
             );
         }
     };
@@ -40,7 +42,7 @@ export const VeChainLoginButton = ({ isDark }: Props) => {
                     customIcon={
                         <VechainLogo boxSize={'20px'} isDark={isDark} />
                     }
-                    text="Login with VeChain"
+                    text={t('Login with VeChain')}
                 />
             </GridItem>
 
@@ -51,8 +53,10 @@ export const VeChainLoginButton = ({ isDark }: Props) => {
                 }}
                 onTryAgain={handleLoginWithVeChain}
                 error={loginError}
-                title="Connecting with VeChain"
-                loadingText="Please approve the request in the connection request window..."
+                title={t('Connecting with VeChain')}
+                loadingText={t(
+                    'Please approve the request in the connection request window...',
+                )}
             />
         </>
     );

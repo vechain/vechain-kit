@@ -4,6 +4,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton, EmailLoginButton } from '@/components';
 import { VechainKitProps } from '@/providers';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     isDark: boolean;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export const SocialLoginButtons = ({ isDark, loginModalUI }: Props) => {
+    const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
     return (
@@ -32,7 +34,7 @@ export const SocialLoginButtons = ({ isDark, loginModalUI }: Props) => {
                                     })
                                 }
                                 icon={FcGoogle}
-                                text="Continue with Google"
+                                text={t('Continue with Google')}
                             />
                         </GridItem>
                     )}

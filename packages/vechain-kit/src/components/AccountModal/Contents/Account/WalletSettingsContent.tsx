@@ -32,6 +32,7 @@ import { IoOpenOutline } from 'react-icons/io5';
 import { useState } from 'react';
 import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
 import { TbAmpersand } from 'react-icons/tb';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -42,6 +43,7 @@ export const WalletSettingsContent = ({
     setCurrentContent,
     onLogoutSuccess,
 }: Props) => {
+    const { t } = useTranslation();
     const { exportWallet, linkPasskey } = usePrivy();
     const { privy } = useVeChainKitConfig();
 
@@ -63,7 +65,7 @@ export const WalletSettingsContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {'Wallet'}
+                    {t('Wallet')}
                 </ModalHeader>
 
                 <ModalBackButton
@@ -99,17 +101,16 @@ export const WalletSettingsContent = ({
                                 opacity={0.5}
                                 textAlign={'center'}
                             >
-                                This is your main wallet and identity. Please be
-                                sure to keep it safe and backed up. Go to
-                                VeChain to manage your wallet and security
-                                settings.
+                                {t(
+                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.',
+                                )}
                             </Text>
                         )}
 
                         {connection.isConnectedWithPrivy && (
                             <VStack mt={2} opacity={0.5}>
                                 <Text fontSize={'sm'} textAlign={'center'}>
-                                    Secured by
+                                    {t('Secured by')}
                                 </Text>
                                 <HStack justify={'center'}>
                                     <PrivyLogo isDark={isDark} w={'50px'} />
@@ -132,24 +133,18 @@ export const WalletSettingsContent = ({
                                                     fontSize={'sm'}
                                                     opacity={0.5}
                                                 >
-                                                    You're using an Embedded
-                                                    Wallet created and secured
-                                                    by Privy, accessable though
-                                                    your preffered login
-                                                    methods, ensuring a seamless
-                                                    VeChain experience.
+                                                    {t(
+                                                        'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
+                                                    )}
                                                 </Text>
 
                                                 <Text
                                                     fontSize={'sm'}
                                                     opacity={0.5}
                                                 >
-                                                    We highly recommend
-                                                    exporting your private key
-                                                    to back up your wallet. This
-                                                    ensures you can restore it
-                                                    if needed or transfer it to
-                                                    self-custody using{' '}
+                                                    {t(
+                                                        'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
+                                                    )}
                                                     <Link
                                                         href="https://www.veworld.net/"
                                                         isExternal
@@ -159,7 +154,7 @@ export const WalletSettingsContent = ({
                                                             'underline'
                                                         }
                                                     >
-                                                        VeWorld Wallet{' '}
+                                                        {t('VeWorld Wallet')}
                                                         <Icon
                                                             ml={1}
                                                             as={IoOpenOutline}
@@ -178,7 +173,9 @@ export const WalletSettingsContent = ({
                                     transition={'all 0.2s'}
                                     _hover={{ textDecoration: 'none' }}
                                 >
-                                    {isExpanded ? 'Read less' : 'Read more'}
+                                    {isExpanded
+                                        ? t('Read less')
+                                        : t('Read more')}
                                 </Link>
                             </>
                         )}
@@ -186,10 +183,12 @@ export const WalletSettingsContent = ({
 
                     <VStack mt={5} w={'full'} spacing={5}>
                         {connection.isConnectedWithSocialLogin && (
-                            <>
+                            <VStack spacing={5}>
                                 <ActionButton
-                                    title="Backup your wallet"
-                                    description="Upgrade wallet in Self-Custody by storing your Recovery Phrase and seamlessly importing it into a wallet provider."
+                                    title={t('Backup your wallet')}
+                                    description={t(
+                                        'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
+                                    )}
                                     onClick={() => {
                                         exportWallet();
                                     }}
@@ -200,8 +199,10 @@ export const WalletSettingsContent = ({
 
                                 {privy?.allowPasskeyLinking && (
                                     <ActionButton
-                                        title="Add passkey"
-                                        description="Add a passkey to your account for future logins. If enabled, passkeys will always be available as a login method."
+                                        title={t('Add passkey')}
+                                        description={t(
+                                            'Enable one click login by adding a passkey to your account.',
+                                        )}
                                         onClick={() => {
                                             linkPasskey();
                                         }}
@@ -212,16 +213,18 @@ export const WalletSettingsContent = ({
                                         rightIcon={MdOutlineNavigateNext}
                                     />
                                 )}
-                            </>
+                            </VStack>
                         )}
                         {connection.isConnectedWithDappKit && (
                             <ActionButton
                                 title={
                                     hasExistingDomain
-                                        ? 'Change account name'
-                                        : 'Choose account name'
+                                        ? t('Change account name')
+                                        : t('Choose account name')
                                 }
-                                description="Give a nickname to your wallet to easily identify it."
+                                description={t(
+                                    'Give a nickname to your wallet to easily identify it.',
+                                )}
                                 onClick={() => {
                                     if (hasExistingDomain) {
                                         setCurrentContent({
@@ -242,19 +245,6 @@ export const WalletSettingsContent = ({
 
                         <Divider />
 
-                        {/* <ActionButton
-                            title="Disconnect"
-                            description="Disconnect and sign out from your wallet and smart account"
-                            onClick={() => {
-                                disconnect();
-                                onLogoutSuccess();
-                            }}
-                            leftIcon={RxExit}
-                            backgroundColor={'#ff00000f'}
-                            _hover={{
-                                bg: '#ff00001a',
-                            }}
-                        /> */}
                         <Button
                             onClick={() => {
                                 disconnect();
@@ -263,7 +253,7 @@ export const WalletSettingsContent = ({
                             variant="secondary"
                             leftIcon={<RxExit color="#888888" />}
                         >
-                            Logout
+                            {t('Logout')}
                         </Button>
                     </VStack>
                 </ModalBody>

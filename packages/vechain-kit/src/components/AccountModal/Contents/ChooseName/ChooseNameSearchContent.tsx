@@ -20,6 +20,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
 import { useEnsRecordExists, useWallet } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -30,6 +31,7 @@ export const ChooseNameSearchContent = ({
     name: initialName,
     setCurrentContent,
 }: ChooseNameSearchContentProps) => {
+    const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -44,10 +46,10 @@ export const ChooseNameSearchContent = ({
         if (!hasInteracted) return;
 
         if (name.length < 3) {
-            setError('Name must be at least 3 characters long');
+            setError(t('Name must be at least 3 characters long'));
             setIsAvailable(false);
         } else if (ensRecordExists) {
-            setError('This domain is already taken');
+            setError(t('This domain is already taken'));
             setIsAvailable(false);
         } else if (!isLoading) {
             setError(null);
@@ -76,7 +78,7 @@ export const ChooseNameSearchContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Choose Name
+                    {t('Choose Name')}
                 </ModalHeader>
                 <ModalBackButton
                     onClick={() =>
@@ -96,7 +98,7 @@ export const ChooseNameSearchContent = ({
                     <VStack spacing={4} align="stretch">
                         <InputGroup size="lg">
                             <Input
-                                placeholder="Enter your name"
+                                placeholder={t('Enter your name')}
                                 value={name}
                                 onChange={(e) => {
                                     setName(e.target.value);
@@ -151,7 +153,9 @@ export const ChooseNameSearchContent = ({
                                 color={isAvailable ? 'green.500' : 'red.500'}
                                 fontWeight="500"
                             >
-                                {isAvailable ? 'AVAILABLE' : 'UNAVAILABLE'}
+                                {isAvailable
+                                    ? t('AVAILABLE')
+                                    : t('UNAVAILABLE')}
                             </Text>
                         )}
                     </VStack>
@@ -167,7 +171,7 @@ export const ChooseNameSearchContent = ({
                         isDisabled={!isAvailable || !!error}
                         onClick={handleContinue}
                     >
-                        Continue
+                        {t('Continue')}
                     </Button>
                 </ModalFooter>
             </FadeInViewFromBottom>

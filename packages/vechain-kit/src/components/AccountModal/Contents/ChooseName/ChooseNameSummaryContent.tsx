@@ -20,6 +20,7 @@ import { useWallet } from '@/hooks';
 import { TransactionModal } from '@/components/TransactionModal';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { GiConfirmed } from 'react-icons/gi';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -30,6 +31,7 @@ export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
 }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { account } = useWallet();
@@ -60,7 +62,7 @@ export const ChooseNameSummaryContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Confirm Name
+                    {t('Confirm Name')}
                 </ModalHeader>
                 <ModalBackButton
                     onClick={() =>
@@ -80,7 +82,7 @@ export const ChooseNameSummaryContent = ({
                 <ModalBody>
                     <VStack spacing={4} w="full">
                         <AddressDisplayCard
-                            label="Current"
+                            label={t('Current')}
                             address={account.address ?? ''}
                             domain={account.domain}
                             imageSrc={account.image ?? ''}
@@ -89,7 +91,7 @@ export const ChooseNameSummaryContent = ({
                         />
 
                         <AddressDisplayCard
-                            label="New Name"
+                            label={t('New Name')}
                             address={account.address ?? ''}
                             domain={`${name}.veworld.vet`}
                             imageSrc={account.image ?? ''}
@@ -111,7 +113,7 @@ export const ChooseNameSummaryContent = ({
                     onClick={handleConfirm}
                     rightIcon={<Icon as={GiConfirmed} />}
                 >
-                    CONFIRM
+                    {t('Confirm')}
                 </Button>
             </ModalFooter>
 

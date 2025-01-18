@@ -12,8 +12,10 @@ import { useLoginWithEmail } from '@privy-io/react-auth';
 import { useState } from 'react';
 import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
+import { useTranslation } from 'react-i18next';
 
 export const EmailLoginButton = () => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     // Email login
@@ -42,7 +44,7 @@ export const EmailLoginButton = () => {
                         />
                     </InputLeftElement>
                     <Input
-                        placeholder="your@email.com"
+                        placeholder={t('your@email.com')}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         variant={'loginIn'}
@@ -69,7 +71,7 @@ export const EmailLoginButton = () => {
                         isLoading={emailState.status === 'sending-code'}
                         onClick={handleSendCode}
                     >
-                        Submit
+                        {t('Submit')}
                     </Button>
                 </InputGroup>
             </VStack>

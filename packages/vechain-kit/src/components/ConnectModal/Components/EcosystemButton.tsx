@@ -1,6 +1,7 @@
 import { GridItem, useDisclosure } from '@chakra-ui/react';
 import { IoPlanet } from 'react-icons/io5';
 import { ConnectionButton, EcosystemModal } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     isDark: boolean;
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export const EcosystemButton = ({ isDark, privySocialLoginEnabled }: Props) => {
+    const { t } = useTranslation();
     const ecosystemModal = useDisclosure();
 
     return (
@@ -17,7 +19,7 @@ export const EcosystemButton = ({ isDark, privySocialLoginEnabled }: Props) => {
                     isDark={isDark}
                     onClick={ecosystemModal.onOpen}
                     icon={IoPlanet}
-                    text={!privySocialLoginEnabled ? 'Ecosystem' : undefined}
+                    text={!privySocialLoginEnabled ? t('Ecosystem') : undefined}
                 />
             </GridItem>
 

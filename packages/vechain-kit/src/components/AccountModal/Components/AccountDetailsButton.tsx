@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
 import { humanAddress } from '../../../utils';
+import { useTranslation } from 'react-i18next';
 
 interface AccountDetailsButtonProps {
     title: string;
@@ -33,6 +34,7 @@ export const AccountDetailsButton = ({
     leftImage,
     isActive = false,
 }: AccountDetailsButtonProps) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -85,7 +87,7 @@ export const AccountDetailsButton = ({
                     <HStack justifyContent={'flex-end'} minW={'40px'}>
                         {isActive && (
                             <Tag size={'sm'} colorScheme={'green'}>
-                                Active
+                                {t('Active')}
                             </Tag>
                         )}
                         <Icon as={rightIcon} fontSize={'20px'} opacity={0.5} />

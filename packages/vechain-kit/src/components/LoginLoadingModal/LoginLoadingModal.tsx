@@ -18,6 +18,7 @@ import {
 import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -69,6 +70,7 @@ const LoadingContent = ({
     title?: string;
     onTryAgain?: () => void;
 }) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const [showTimeout, setShowTimeout] = React.useState(false);
@@ -90,7 +92,7 @@ const LoadingContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {title || 'Connecting...'}
+                    {title ?? t('Connecting...')}
                 </ModalHeader>
             </StickyHeaderContainer>
 
@@ -113,11 +115,12 @@ const LoadingContent = ({
                 {showTimeout && (
                     <VStack mt={4} spacing={2}>
                         <Text color="orange.300" size="sm" textAlign={'center'}>
-                            This is taking longer than expected.
+                            {t('This is taking longer than expected.')}
                         </Text>
                         <Text size="sm" textAlign={'center'}>
-                            You may want to try establishing the connection
-                            again.
+                            {t(
+                                'You may want to try establishing the connection again.',
+                            )}
                         </Text>
                     </VStack>
                 )}
@@ -126,7 +129,7 @@ const LoadingContent = ({
                 {showTimeout && (
                     <Button variant="secondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
-                        Try again
+                        {t('Try again')}
                     </Button>
                 )}
             </ModalFooter>
@@ -143,6 +146,7 @@ const ErrorContent = ({
     onClose: () => void;
     onTryAgain: () => void;
 }) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -155,7 +159,7 @@ const ErrorContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Connection Failed
+                    {t('Connection Failed')}
                 </ModalHeader>
                 <ModalCloseButton
                     onClick={() => {
@@ -203,7 +207,7 @@ const ErrorContent = ({
             <ModalFooter justifyContent={'center'}>
                 <Button variant="secondary" onClick={onTryAgain}>
                     <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
-                    Try again
+                    {t('Try again')}
                 </Button>
             </ModalFooter>
         </FadeInViewFromBottom>

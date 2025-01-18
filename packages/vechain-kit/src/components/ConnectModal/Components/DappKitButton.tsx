@@ -2,6 +2,7 @@ import { GridItem } from '@chakra-ui/react';
 import { useWalletModal } from '@vechain/dapp-kit-react';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { ConnectionButton } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     isDark: boolean;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export const DappKitButton = ({ isDark, privySocialLoginEnabled }: Props) => {
+    const { t } = useTranslation();
     const { open: openDappKitModal } = useWalletModal();
 
     return (
@@ -17,7 +19,9 @@ export const DappKitButton = ({ isDark, privySocialLoginEnabled }: Props) => {
                 isDark={isDark}
                 onClick={openDappKitModal}
                 icon={HiOutlineWallet}
-                text={!privySocialLoginEnabled ? 'Connect Wallet' : undefined}
+                text={
+                    !privySocialLoginEnabled ? t('Connect Wallet') : undefined
+                }
             />
         </GridItem>
     );

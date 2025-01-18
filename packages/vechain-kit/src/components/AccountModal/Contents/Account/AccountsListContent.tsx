@@ -28,6 +28,7 @@ import { Wallet } from '@/types';
 import { compareAddresses } from '@/utils';
 import { useSmartAccountAlert } from '@/hooks';
 import { IoCloseCircle } from 'react-icons/io5';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -38,6 +39,7 @@ type Props = {
 };
 
 export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -58,7 +60,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {'Your accounts'}
+                    {t('Your accounts')}
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -80,8 +82,9 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                     fontSize={'xs'}
                                     lineHeight={'1.2'}
                                 >
-                                    You own a Smart Account and it has priority
-                                    over your wallet.
+                                    {t(
+                                        'You own a Smart Account and it has priority over your wallet.',
+                                    )}
                                 </AlertDescription>
                                 <IconButton
                                     position="absolute"
@@ -103,7 +106,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                         >
                             {activeWalletIsSmartAccount && (
                                 <AccountDetailsButton
-                                    title="Smart Account"
+                                    title={t('Smart Account')}
                                     address={smartAccount?.address ?? ''}
                                     isActive={activeWalletIsSmartAccount}
                                     onClick={() => {
@@ -114,7 +117,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                 />
                             )}
                             <AccountDetailsButton
-                                title="Wallet"
+                                title={t('Wallet')}
                                 address={connectedWallet?.address ?? ''}
                                 isActive={!activeWalletIsSmartAccount}
                                 onClick={() => {
@@ -135,7 +138,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                         variant="secondary"
                         leftIcon={<RxExit color="#888888" />}
                     >
-                        Logout
+                        {t('Logout')}
                     </Button>
                 </ModalFooter>
             </FadeInViewFromBottom>

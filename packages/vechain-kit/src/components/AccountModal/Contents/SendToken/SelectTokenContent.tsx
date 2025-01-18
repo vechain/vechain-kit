@@ -22,6 +22,7 @@ import { AccountModalContentTypes } from '@/components';
 import { useBalances } from '@/hooks';
 import { useState } from 'react';
 import { AssetButton } from '@/components/common';
+import { useTranslation } from 'react-i18next';
 
 type Token = {
     symbol: string;
@@ -40,6 +41,7 @@ type Props = {
 };
 
 export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { balances, prices } = useBalances();
@@ -107,7 +109,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Select Token
+                    {t('Select Token')}
                 </ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
@@ -141,7 +143,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                             color={isDark ? 'whiteAlpha.800' : 'gray.700'}
                             mt={4}
                         >
-                            Your tokens
+                            {t('Your tokens')}
                         </Text>
 
                         {filteredTokens.length === 0 ? (
@@ -151,9 +153,11 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                                 color={isDark ? 'whiteAlpha.600' : 'gray.500'}
                             >
                                 <Icon as={FiSlash} boxSize={12} opacity={0.5} />
-                                <Text fontSize="lg">No tokens found</Text>
+                                <Text fontSize="lg">
+                                    {t('No tokens found')}
+                                </Text>
                                 <Text fontSize="md">
-                                    Try searching with a different term
+                                    {t('Try searching with a different term')}
                                 </Text>
                             </VStack>
                         ) : (

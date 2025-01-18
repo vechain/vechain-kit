@@ -13,10 +13,11 @@ import {
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { useVeChainKitConfig } from '@/providers';
-import { MdOutlineErrorOutline } from 'react-icons/md';
+import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { FadeInViewFromBottom } from '@/components/common';
 import { StickyHeaderContainer } from '@/components/common';
 import { getConfig } from '@/config';
+import { useTranslation } from 'react-i18next';
 
 export type ErrorModalContentProps = {
     title?: ReactNode;
@@ -28,13 +29,14 @@ export type ErrorModalContentProps = {
 };
 
 export const ErrorModalContent = ({
-    title = 'Something went wrong',
-    description = 'Something went wrong 😕',
+    title,
+    description,
     showTryAgainButton = false,
     onTryAgain,
     showExplorerButton,
     txId,
 }: ErrorModalContentProps) => {
+    const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -49,7 +51,7 @@ export const ErrorModalContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {title}
+                    {title ?? t('Something went wrong')}
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -75,11 +77,12 @@ export const ErrorModalContent = ({
                                         fontSize={'100px'}
                                     />
                                 </motion.div>
-                                {description && (
-                                    <Text size="sm" textAlign={'center'}>
-                                        {description}
-                                    </Text>
-                                )}
+
+                                <Text size="sm" textAlign={'center'}>
+                                    {description ??
+                                        t('An unexpected error occurred.')}
+                                </Text>
+
                                 {showExplorerButton && txId && (
                                     <Link
                                         href={`${explorerUrl}/${txId}`}
@@ -88,7 +91,7 @@ export const ErrorModalContent = ({
                                         fontSize={'14px'}
                                         textDecoration={'underline'}
                                     >
-                                        {'View transaction on the explorer'}
+                                        {t('View transaction on the explorer')}
                                     </Link>
                                 )}
                                 {showTryAgainButton && onTryAgain && (
@@ -96,7 +99,12 @@ export const ErrorModalContent = ({
                                         variant="secondary"
                                         onClick={onTryAgain}
                                     >
-                                        {'Try again'}
+                                        <Icon
+                                            mr={2}
+                                            size={'sm'}
+                                            as={MdOutlineRefresh}
+                                        />
+                                        {t('Try again')}
                                     </Button>
                                 )}
                             </VStack>

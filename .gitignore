@@ -40,3 +40,6 @@ yarn-error.log*
 
 veworld-dist
 .reports
+
+packages/vechain-kit/.env
+.env

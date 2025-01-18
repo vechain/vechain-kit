@@ -23,7 +23,6 @@ import {
     TransactionToast,
     TransactionModal,
     useDAppKitPrivyColorMode,
-    useConnectModal,
     useAccountModal,
     useGetB3trBalance,
     humanAddress,
@@ -38,7 +37,6 @@ export default function Home(): ReactElement {
 
     const { connection, account, connectedWallet, smartAccount } = useWallet();
 
-    const { open } = useConnectModal();
     const { open: openAccountModal } = useAccountModal();
 
     const { data: b3trBalance, isLoading: b3trBalanceLoading } =
@@ -126,7 +124,10 @@ export default function Home(): ReactElement {
         return (
             <Container justifyContent={'center'}>
                 <VStack>
-                    <Button onClick={open}>Login</Button>
+                    <WalletButton
+                        mobileVariant="iconDomainAndAddress"
+                        desktopVariant="iconAndDomain"
+                    />
                 </VStack>
             </Container>
         );

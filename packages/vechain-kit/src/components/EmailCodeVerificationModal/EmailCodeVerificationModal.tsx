@@ -21,6 +21,7 @@ import {
 } from '../common';
 import { useEffect, useState } from 'react';
 import { useLoginWithEmail } from '@privy-io/react-auth';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     email: string;
@@ -37,6 +38,7 @@ export const EmailCodeVerificationModal = ({
     isOpen,
     onClose,
 }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const [code, setCode] = useState('');
@@ -68,7 +70,7 @@ export const EmailCodeVerificationModal = ({
                     display={'flex'}
                     gap={2}
                 >
-                    Enter confirmation code
+                    {t('Enter confirmation code')}
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -89,8 +91,12 @@ export const EmailCodeVerificationModal = ({
                                 color={isDark ? 'whiteAlpha.700' : 'gray.600'}
                                 textAlign="center"
                             >
-                                Please check {email} for an email from privy.io
-                                and enter your code below.
+                                {t(
+                                    'Please check {{email}} for an email from privy.io and enter your code below.',
+                                    {
+                                        email,
+                                    },
+                                )}
                             </Text>
                             <HStack spacing={2} justify="center" mt={4}>
                                 <PinInput
@@ -237,7 +243,7 @@ export const EmailCodeVerificationModal = ({
                             fontSize="14px"
                             color={isDark ? 'whiteAlpha.700' : 'gray.600'}
                         >
-                            Didn't get an email?{' '}
+                            {t("Didn't get an email?")}{' '}
                             <Button
                                 variant="link"
                                 color="blue.500"
@@ -245,7 +251,7 @@ export const EmailCodeVerificationModal = ({
                                 onClick={onResend}
                                 isLoading={isLoading}
                             >
-                                Resend code
+                                {t('Resend code')}
                             </Button>
                         </Text>
                     </ModalFooter>

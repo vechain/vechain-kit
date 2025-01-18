@@ -22,6 +22,7 @@ import { getPicassoImage } from '@/utils';
 import { ActionButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { FaRegAddressCard } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -30,8 +31,9 @@ type Props = {
 };
 
 export const SmartAccountContent = ({ setCurrentContent }: Props) => {
+    const { t } = useTranslation();
+
     const { smartAccount, connection } = useWallet();
-    // const { exportWallet } = usePrivy();
 
     const walletImage = getPicassoImage(smartAccount.address ?? '');
 
@@ -51,7 +53,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {'Smart Account'}
+                    {t('Smart Account')}
                 </ModalHeader>
 
                 <ModalBackButton
@@ -73,8 +75,9 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
 
                     <VStack align="stretch" textAlign={'center'} mt={5}>
                         <Text fontSize={'sm'} opacity={0.5}>
-                            Your smart account is your gateway to blockchain
-                            interactions.
+                            {t(
+                                'Your smart account is your gateway to blockchain interactions.',
+                            )}
                         </Text>
 
                         {isExpanded && (
@@ -82,19 +85,16 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                                 <VStack>
                                     {connection.isConnectedWithSocialLogin && (
                                         <Text fontSize={'sm'} opacity={0.5}>
-                                            You're using an Embedded Wallet
-                                            secured by your social login method,
-                                            which acts as a master controller of
-                                            your smart account, ensuring a
-                                            seamless VeChain experience with
-                                            full ownership and control.
+                                            {t(
+                                                'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
+                                            )}
                                         </Text>
                                     )}
 
                                     <Text fontSize={'sm'} opacity={0.5}>
-                                        Transfer the ownership of your Smart
-                                        Account to make your main wallet active
-                                        again.
+                                        {t(
+                                            'Transfer the ownership of your Smart Account to make your main wallet active again.',
+                                        )}
                                     </Text>
                                 </VStack>
                             </FadeInViewFromBottom>
@@ -107,7 +107,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                             transition={'all 0.2s'}
                             _hover={{ textDecoration: 'none' }}
                         >
-                            {isExpanded ? 'Read less' : 'Read more'}
+                            {isExpanded ? t('Read less') : t('Read more')}
                         </Link>
                     </VStack>
 
@@ -125,10 +125,12 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         <ActionButton
                             title={
                                 hasExistingDomain
-                                    ? 'Change account name'
-                                    : 'Choose account name'
+                                    ? t('Change account name')
+                                    : t('Choose account name')
                             }
-                            description="Give a nickname to your wallet to easily identify it."
+                            description={t(
+                                'Give a nickname to your wallet to easily identify it.',
+                            )}
                             onClick={() => {
                                 if (hasExistingDomain) {
                                     setCurrentContent({

@@ -23,6 +23,7 @@ import {
     QuickActionsSection,
 } from '@/components';
 import { Wallet } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -33,6 +34,7 @@ type Props = {
 };
 
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -49,7 +51,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {'Account'}
+                    {t('Account')}
                 </ModalHeader>
 
                 <ModalCloseButton />

@@ -17,6 +17,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -25,6 +26,7 @@ type Props = {
 };
 
 export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { account } = useWallet();
@@ -38,7 +40,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Receive
+                    {t('Receive')}
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -61,7 +63,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                             />
 
                             <Text fontSize="sm" textAlign="center">
-                                Copy your address or scan this QR code
+                                {t('Copy your address or scan this QR code')}
                             </Text>
 
                             <Text
@@ -69,7 +71,9 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                                 textAlign="center"
                                 opacity={0.5}
                             >
-                                This address only supports VeChain assets.
+                                {t(
+                                    'This address only supports VeChain assets.',
+                                )}
                             </Text>
                         </VStack>
                     </ModalBody>

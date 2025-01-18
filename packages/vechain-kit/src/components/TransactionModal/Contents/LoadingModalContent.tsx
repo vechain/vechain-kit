@@ -18,6 +18,7 @@ import { FadeInViewFromBottom } from '@/components/common';
 import { StickyHeaderContainer } from '@/components/common';
 import { getConfig } from '@/config';
 import { MdOutlineRefresh } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 export type LoadingModalContentProps = {
     title?: ReactNode;
@@ -27,11 +28,12 @@ export type LoadingModalContentProps = {
 };
 
 export const LoadingModalContent = ({
-    title = 'Sending Transaction...',
+    title,
     showExplorerButton,
     txId,
     onTryAgain,
 }: LoadingModalContentProps) => {
+    const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -55,7 +57,7 @@ export const LoadingModalContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {title}
+                    {title ?? t('Sending Transaction...')}
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -73,15 +75,15 @@ export const LoadingModalContent = ({
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >
-                                    {'View it on the explorer'}
+                                    {t('View on the explorer')}
                                 </Link>
                             )}
 
                             {!showTimeout && !txId && (
                                 <Text fontSize="sm" align={'center'}>
-                                    {
-                                        'This may take a few seconds. You can close this window and check the status later.'
-                                    }
+                                    {t(
+                                        'This may take a few seconds. You can close this window and check the status later.',
+                                    )}
                                 </Text>
                             )}
 
@@ -92,11 +94,14 @@ export const LoadingModalContent = ({
                                         size="sm"
                                         textAlign={'center'}
                                     >
-                                        This is taking longer than expected.
+                                        {t(
+                                            'This is taking longer than expected.',
+                                        )}
                                     </Text>
                                     <Text size="sm" textAlign={'center'}>
-                                        You may want to try establishing the
-                                        transaction again.
+                                        {t(
+                                            'You may want to try establishing the transaction again.',
+                                        )}
                                     </Text>
                                 </VStack>
                             )}
@@ -109,7 +114,7 @@ export const LoadingModalContent = ({
                 {showTimeout && onTryAgain && !txId && (
                     <Button variant="secondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
-                        Try again
+                        {t('Try again')}
                     </Button>
                 )}
             </ModalFooter>

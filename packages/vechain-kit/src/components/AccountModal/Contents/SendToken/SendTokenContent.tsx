@@ -28,6 +28,7 @@ import { TOKEN_LOGOS } from '@/utils';
 import { ZeroAddress } from 'ethers';
 import { compareAddresses, isValidAddress } from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';
+import { useTranslation } from 'react-i18next';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -51,6 +52,7 @@ type Props = {
 };
 
 export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
+    const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -70,7 +72,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
     const validateAddress = useCallback(
         (value: string) => {
             if (!value) {
-                setAddressError('Address is required');
+                setAddressError(t('Address is required'));
                 return false;
             }
 
@@ -81,7 +83,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                 ) || isValidAddress(value);
 
             if (!isValidReceiver) {
-                setAddressError('Invalid address or domain');
+                setAddressError(t('Invalid address or domain'));
                 return false;
             }
 
@@ -107,7 +109,11 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
         if (selectedToken && newAmount) {
             const numericAmount = parseFloat(newAmount);
             if (numericAmount > selectedToken.numericBalance) {
-                setError(`Insufficient ${selectedToken.symbol} balance`);
+                setError(
+                    t(`Insufficient {{symbol}} balance`, {
+                        symbol: selectedToken.symbol,
+                    }),
+                );
             }
         }
     };
@@ -166,7 +172,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    Send
+                    {t('Send')}
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -284,7 +290,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                                 setIsSelectingToken(true)
                                             }
                                         >
-                                            Select token
+                                            {t('Select token')}
                                         </Button>
                                     )}
                                 </HStack>
@@ -298,7 +304,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                                                 : 'blackAlpha.700'
                                         }
                                     >
-                                        <Text>Balance:</Text>
+                                        <Text>{t('Balance')}:</Text>
                                         <Text
                                             cursor="pointer"
                                             _hover={{
@@ -363,7 +369,9 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                             >
                                 <InputGroup size="lg">
                                     <Input
-                                        placeholder="Type the receiver address or domain"
+                                        placeholder={t(
+                                            'Type the receiver address or domain',
+                                        )}
                                         _placeholder={{
                                             fontSize: 'md',
                                             fontWeight: 'normal',
@@ -403,7 +411,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                     }
                     onClick={handleSend}
                 >
-                    {selectedToken ? 'Send' : 'Select Token'}
+                    {selectedToken ? t('Send') : t('Select Token')}
                 </Button>
             </ModalFooter>
         </FadeInViewFromBottom>
