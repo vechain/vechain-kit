@@ -14,10 +14,11 @@ import { usePrivy } from '@privy-io/react-auth';
 import { useVeChainKitConfig } from '@/providers';
 import {
     FadeInViewFromBottom,
+    ModalFAQButton,
     StickyHeaderContainer,
     VersionFooter,
 } from '@/components/common';
-import { ConnectModalContents } from '../ConnectModal';
+import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { VeChainLoginButton } from '../Components/VeChainLoginButton';
@@ -29,12 +30,12 @@ import { PrivyButton } from '../Components/PrivyButton';
 
 type Props = {
     setCurrentContent: React.Dispatch<
-        React.SetStateAction<ConnectModalContents>
+        React.SetStateAction<ConnectModalContentsTypes>
     >;
     onClose: () => void;
 };
 
-export const MainContent = ({ onClose }: Props) => {
+export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
@@ -51,6 +52,7 @@ export const MainContent = ({ onClose }: Props) => {
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
+                <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
                     fontSize={'md'}
                     fontWeight={'500'}

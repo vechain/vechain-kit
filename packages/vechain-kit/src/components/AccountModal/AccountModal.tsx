@@ -15,6 +15,7 @@ import {
     ChooseNameContent,
     ChooseNameSearchContent,
     ChooseNameSummaryContent,
+    FAQContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 
@@ -102,6 +103,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             case 'choose-name':
                 return (
                     <ChooseNameContent setCurrentContent={setCurrentContent} />
+                );
+            case 'faq':
+                return (
+                    <FAQContent onGoBack={() => setCurrentContent('main')} />
                 );
         }
     };

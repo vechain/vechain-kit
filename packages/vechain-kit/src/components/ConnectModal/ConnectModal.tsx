@@ -3,17 +3,18 @@
 import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
+import { FAQContent } from '../AccountModal';
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
 };
 
-export type ConnectModalContents = 'main' | 'email-verification';
+export type ConnectModalContentsTypes = 'main' | 'email-verification' | 'faq';
 
 export const ConnectModal = ({ isOpen, onClose }: Props) => {
     const [currentContent, setCurrentContent] =
-        useState<ConnectModalContents>('main');
+        useState<ConnectModalContentsTypes>('main');
 
     useEffect(() => {
         if (isOpen) {
@@ -29,6 +30,10 @@ export const ConnectModal = ({ isOpen, onClose }: Props) => {
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                     />
+                );
+            case 'faq':
+                return (
+                    <FAQContent onGoBack={() => setCurrentContent('main')} />
                 );
         }
     };

@@ -2,6 +2,7 @@ import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSum
 
 export type AccountModalContentTypes =
     | 'main'
+    | 'faq'
     | 'settings'
     | 'smart-account'
     | 'accounts'

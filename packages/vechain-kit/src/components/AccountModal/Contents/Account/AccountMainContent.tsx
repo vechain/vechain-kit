@@ -13,6 +13,7 @@ import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
     VersionFooter,
+    ModalFAQButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
@@ -40,6 +41,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
+                <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
                     w={'full'}
                     fontSize={'md'}
@@ -49,6 +51,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                 >
                     {'Account'}
                 </ModalHeader>
+
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

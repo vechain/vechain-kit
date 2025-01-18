@@ -7,3 +7,4 @@ export * from './StickyFooterContainer';
 export * from './BaseModal';
 export * from './AssetButton';
 export * from './AddressDisplayCard';
+export * from './ModalFAQButton';

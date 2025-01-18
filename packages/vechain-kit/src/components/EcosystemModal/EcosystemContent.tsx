@@ -76,7 +76,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
                         gap={2}
                     >
                         <Icon as={IoPlanet} size={'20px'} />
-                        Login with Ecosystem
+                        Ecosystem Login
                     </ModalHeader>
                     <ModalCloseButton />
                 </StickyHeaderContainer>
