@@ -1,6 +1,5 @@
 import {
     Button,
-    HStack,
     Icon,
     Image,
     ModalBody,
@@ -35,7 +34,9 @@ export const EcosystemContent = ({ onClose }: Props) => {
     const [selectedApp, setSelectedApp] = useState<string>();
     const loginLoadingModal = useDisclosure();
 
-    // const { loginWithCrossAppAccount } = useCrossAppAccounts();
+    const { privyEcosystemAppIDS } = useVeChainKitConfig();
+    const { data: appsInfo, isLoading } = useFetchAppInfo(privyEcosystemAppIDS);
+
     // Login with Vechain - Cross app account login
     const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
 
@@ -60,9 +61,6 @@ export const EcosystemContent = ({ onClose }: Props) => {
         }
     };
 
-    const { privyEcosystemAppIDS, loginModalUI } = useVeChainKitConfig();
-    const { data: appsInfo, isLoading } = useFetchAppInfo(privyEcosystemAppIDS);
-
     return (
         <>
             <FadeInViewFromBottom>
@@ -83,7 +81,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
                     <ModalCloseButton />
                 </StickyHeaderContainer>
 
-                {loginModalUI?.logo && (
+                {/* {loginModalUI?.logo && (
                     <FadeInViewFromBottom>
                         <HStack justify={'center'}>
                             <Image
@@ -95,7 +93,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
                             />
                         </HStack>
                     </FadeInViewFromBottom>
-                )}
+                )} */}
 
                 <FadeInViewFromBottom>
                     <ModalBody>

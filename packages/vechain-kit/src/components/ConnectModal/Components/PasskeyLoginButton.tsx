@@ -48,6 +48,7 @@ export const PasskeyLoginButton = ({ isDark }: Props) => {
                 error={loginError}
                 title="Connecting with Passkey"
                 loadingText="Please complete the passkey authentication..."
+                onTryAgain={handleLoginWithPasskey}
             />
         </>
     );
