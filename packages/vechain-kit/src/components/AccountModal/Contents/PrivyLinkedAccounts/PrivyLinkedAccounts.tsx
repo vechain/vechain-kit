@@ -14,7 +14,6 @@ import {
 import {
     FaGoogle,
     FaEnvelope,
-    FaKey,
     FaWallet,
     FaTwitter,
     FaPhone,

@@ -21,7 +21,7 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKit';
 import { AccountModalContentTypes } from '../../Types';
-import { FaRegAddressCard, FaShieldAlt } from 'react-icons/fa';
+import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
@@ -37,7 +37,7 @@ export const WalletSettingsContent = ({
     onLogoutSuccess,
 }: Props) => {
     const { t } = useTranslation();
-    const { exportWallet, linkPasskey, user: privyUser } = usePrivy();
+    const { exportWallet, linkPasskey } = usePrivy();
     const { privy } = useVeChainKitConfig();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
@@ -142,7 +142,7 @@ export const WalletSettingsContent = ({
                                     rightIcon={MdOutlineNavigateNext}
                                 />
 
-                                <ActionButton
+                                {/* <ActionButton
                                     title={t('Manage MFA')}
                                     description={t(
                                         'Manage multi-factor authentication settings for your wallet.',
@@ -155,7 +155,7 @@ export const WalletSettingsContent = ({
                                     hide={connection.isConnectedWithCrossApp}
                                     leftIcon={FaShieldAlt}
                                     rightIcon={MdOutlineNavigateNext}
-                                />
+                                /> */}
                             </VStack>
                         )}
                         {connection.isConnectedWithDappKit && (
