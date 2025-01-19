@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
-import { MdOutlineNavigateNext } from 'react-icons/md';
+import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 import { IoIosFingerPrint } from 'react-icons/io';
 import { ActionButton } from '@/components';
 import {
@@ -21,7 +21,7 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKit';
 import { AccountModalContentTypes } from '../../Types';
-import { FaRegAddressCard } from 'react-icons/fa';
+import { FaRegAddressCard, FaShieldAlt } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
@@ -126,6 +126,33 @@ export const WalletSettingsContent = ({
                                         rightIcon={MdOutlineNavigateNext}
                                     />
                                 )}
+
+                                <ActionButton
+                                    title={t('Link accounts')}
+                                    description={t(
+                                        'View and manage social media accounts linked to your wallet.',
+                                    )}
+                                    onClick={() => {
+                                        // linkPasskey();
+                                    }}
+                                    hide={connection.isConnectedWithCrossApp}
+                                    leftIcon={MdManageAccounts}
+                                    rightIcon={MdOutlineNavigateNext}
+                                />
+
+                                <ActionButton
+                                    title={t('Manage MFA')}
+                                    description={t(
+                                        'Manage multi-factor authentication settings for your wallet.',
+                                    )}
+                                    onClick={() => {
+                                        // linkPasskey();
+                                    }}
+                                    showComingSoon={true}
+                                    hide={connection.isConnectedWithCrossApp}
+                                    leftIcon={FaShieldAlt}
+                                    rightIcon={MdOutlineNavigateNext}
+                                />
                             </VStack>
                         )}
                         {connection.isConnectedWithDappKit && (
@@ -159,7 +186,7 @@ export const WalletSettingsContent = ({
                         <ActionButton
                             title={t('Connection Details')}
                             description={t(
-                                'View the details of your connection.',
+                                'View the details of your connection to this app.',
                             )}
                             onClick={() => {
                                 setCurrentContent('connection-details');

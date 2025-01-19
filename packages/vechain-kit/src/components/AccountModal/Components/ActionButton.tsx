@@ -67,9 +67,16 @@ export const ActionButton = ({
                         justifyContent={'flex-start'}
                         alignItems={'flex-start'}
                     >
-                        <Text w={'full'} fontSize={'sm'} fontWeight={'400'}>
-                            {title}
-                        </Text>
+                        <HStack justify={'flex-start'}>
+                            <Text fontSize={'sm'} fontWeight={'400'}>
+                                {title}
+                            </Text>
+                            {showComingSoon && (
+                                <Tag size="sm" colorScheme="red">
+                                    {t('Coming Soon!')}
+                                </Tag>
+                            )}
+                        </HStack>
 
                         <Text
                             fontSize={'xs'}
@@ -83,11 +90,6 @@ export const ActionButton = ({
                         >
                             {description}
                         </Text>
-                        {showComingSoon && (
-                            <Tag size="sm" colorScheme="red">
-                                {t('Coming Soon!')}
-                            </Tag>
-                        )}
                     </VStack>
 
                     {rightIcon && (
