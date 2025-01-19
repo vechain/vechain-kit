@@ -29,10 +29,7 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
                     </Text>
                 </VStack>
             )}
-            <Text>
-                {t('on')}:{' '}
-                {new Date(connectionCache.timestamp).toLocaleString()}
-            </Text>
+            <Text>{new Date(connectionCache.timestamp).toLocaleString()}</Text>
         </VStack>
     );
 };
