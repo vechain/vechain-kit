@@ -26,9 +26,13 @@ import {
     useAccountModal,
     useGetB3trBalance,
     humanAddress,
+    useCurrentAllocationsRoundId,
+    useSelectedGmNft,
+    useParticipatedInGovernance,
+    useIsPerson,
 } from '@vechain/vechain-kit';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
-import { Interface, ethers } from 'ethers';
+import { Interface } from 'ethers';
 
 export default function Home(): ReactElement {
     const { toggleColorMode, colorMode } = useColorMode();
@@ -36,6 +40,13 @@ export default function Home(): ReactElement {
         useDAppKitPrivyColorMode();
 
     const { connection, account, connectedWallet, smartAccount } = useWallet();
+
+    const { data: currentAllocationsRoundId } = useCurrentAllocationsRoundId();
+    const { gmId } = useSelectedGmNft(account?.address ?? '');
+    const { data: participatedInGovernance } = useParticipatedInGovernance(
+        account?.address,
+    );
+    const { data: isValidPassport } = useIsPerson(account?.address);
 
     const { open: openAccountModal } = useAccountModal();
 
@@ -160,8 +171,7 @@ export default function Home(): ReactElement {
                                 <Spinner />
                             ) : (
                                 <Text>
-                                    B3TR Balance:{' '}
-                                    {ethers.formatEther(b3trBalance ?? '0')}
+                                    B3TR Balance: {b3trBalance?.formatted}
                                 </Text>
                             )}
                         </Box>
@@ -180,6 +190,24 @@ export default function Home(): ReactElement {
                         </Heading>
                         <Text>Type: {connection.source.type}</Text>
                         <Text>Network: {connection.network}</Text>
+                    </Box>
+
+                    <Box>
+                        <Heading size={'md'}>VeBetterDAO</Heading>
+                        <Text>
+                            Current Allocations Round ID:{' '}
+                            {currentAllocationsRoundId}
+                        </Text>
+                        <Text>
+                            Selected GM NFT: {gmId === '0' ? 'None' : gmId}
+                        </Text>
+                        <Text>
+                            Participated in Governance:{' '}
+                            {participatedInGovernance?.toString()}
+                        </Text>
+                        <Text>
+                            Is Passport Valid: {isValidPassport?.toString()}
+                        </Text>
                     </Box>
 
                     <Box mt={4}>

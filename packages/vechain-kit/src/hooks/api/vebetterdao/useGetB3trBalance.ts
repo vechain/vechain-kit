@@ -5,14 +5,29 @@ import { IB3TR__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
+import { ethers } from 'ethers';
+import { humanNumber } from '@/utils';
 
 const B3TRInterface = IB3TR__factory.createInterface();
 
+export type TokenBalance = {
+    original: string;
+    scaled: string;
+    formatted: string;
+};
+
+/**
+ *  Get the b3tr balance of an address from the contract
+ * @param thor  The thor instance
+ * @param network  The network type
+ * @param address  The address to get the balance of. If not provided, will return an error (for better react-query DX)
+ * @returns Balance of the token in the form of {@link TokenBalance} (original, scaled down and formatted)
+ */
 export const getB3trBalance = async (
     thor: Connex.Thor,
     network: NETWORK_TYPE,
     address?: string,
-): Promise<string> => {
+): Promise<TokenBalance> => {
     const functionFragment =
         B3TRInterface.getFunction('balanceOf').format('json');
 
@@ -23,7 +38,15 @@ export const getB3trBalance = async (
 
     if (res.reverted) throw new Error('Reverted');
 
-    return res.decoded[0];
+    const original = res.decoded[0];
+    const scaled = ethers.formatEther(original);
+    const formatted = scaled === '0' ? '0' : humanNumber(scaled);
+
+    return {
+        original,
+        scaled,
+        formatted,
+    };
 };
 
 export const getB3trBalanceQueryKey = (address?: string) => [

@@ -8,3 +8,14 @@ export const TOKEN_LOGOS: Record<string, string> = {
 };
 
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
+
+export const notFoundImage =
+    'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';
+
+export enum TogglePassportCheck {
+    WhitelistCheck = 1,
+    BlacklistCheck = 2,
+    SignalingCheck = 3,
+    ParticipationScoreCheck = 4,
+    GmOwnershipCheck = 5,
+}

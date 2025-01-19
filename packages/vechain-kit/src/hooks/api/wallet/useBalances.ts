@@ -43,8 +43,8 @@ export const useBalances = () => {
     const balances = {
         vet: Number(vetData?.balance || 0),
         vtho: Number(vetData?.energy || 0),
-        b3tr: Number(ethers.formatEther(b3trBalance || '0')),
-        vot3: Number(ethers.formatEther(vot3Balance || '0')),
+        b3tr: Number(ethers.formatEther(b3trBalance?.original || '0')),
+        vot3: Number(ethers.formatEther(vot3Balance?.original || '0')),
         veDelegate: Number(ethers.formatEther(veDelegateBalance || '0')),
     };
 

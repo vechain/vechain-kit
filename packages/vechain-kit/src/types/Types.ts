@@ -126,3 +126,16 @@ export interface CrossAppConnectionCache {
         appId: string;
     };
 }
+
+export enum NFTMediaType {
+    IMAGE = 'image',
+    VIDEO = 'video',
+    UNKNOWN = 'unknown',
+    TEXT = 'text', // mp4 appears as text sometimes
+}
+
+export enum VePassportUserStatus {
+    NONE = 'NONE',
+    WHITELIST = 'WHITELIST',
+    BLACKLIST = 'BLACKLIST',
+}

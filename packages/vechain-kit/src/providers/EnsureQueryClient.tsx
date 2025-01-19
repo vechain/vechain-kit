@@ -9,13 +9,18 @@ import {
 let internalQueryClient: QueryClient | null = null;
 
 // Function to safely get the QueryClient
-function getOrCreateQueryClient(): QueryClient {
+export function getOrCreateQueryClient(): QueryClient {
     if (!internalQueryClient) {
         internalQueryClient = new QueryClient({
             defaultOptions: {
                 queries: {
-                    retry: 1, // Customize defaults if needed
-                    refetchOnWindowFocus: false,
+                    retry: 0,
+                    staleTime: 30000,
+                    refetchOnWindowFocus: true,
+                    refetchOnMount: true,
+                    refetchOnReconnect: true,
+                    refetchInterval: false,
+                    refetchIntervalInBackground: false,
                 },
             },
         });
