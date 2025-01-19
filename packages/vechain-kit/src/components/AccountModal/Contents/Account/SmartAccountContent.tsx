@@ -69,7 +69,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                         <AddressDisplay wallet={smartAccount} />
                     </VStack>
 
-                    <VStack mt={10} spacing={5}>
+                    <VStack mt={10} spacing={3}>
                         {/* <ActionButton
                             title="Transfer ownership"
                             description="Change the owner of your smart account."

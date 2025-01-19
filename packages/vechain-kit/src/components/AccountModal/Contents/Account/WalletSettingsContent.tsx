@@ -101,7 +101,7 @@ export const WalletSettingsContent = ({
                         <AddressDisplay wallet={connectedWallet} />
                     </VStack>
 
-                    <VStack mt={5} w={'full'} spacing={3}>
+                    <VStack mt={10} w={'full'} spacing={3}>
                         {connection.isConnectedWithSocialLogin && (
                             <VStack spacing={3}>
                                 <ActionButton
