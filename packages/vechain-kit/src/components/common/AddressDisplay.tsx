@@ -37,12 +37,21 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                 )}
                 {wallet.domain ? (
                     <VStack>
-                        <HStack>
+                        <HStack
+                            onClick={() =>
+                                copyToClipboard(
+                                    wallet.domain || '',
+                                    setCopiedDomain,
+                                )
+                            }
+                            cursor="pointer"
+                            spacing={2}
+                        >
                             <Text fontSize={size} fontWeight={'500'}>
                                 {wallet.domain}
                             </Text>
                             <Icon
-                                boxSize={4}
+                                boxSize={5}
                                 aria-label="Copy Domain"
                                 as={
                                     copiedDomain
@@ -50,47 +59,44 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                                         : IoCopyOutline
                                 }
                                 cursor="pointer"
-                                onClick={() =>
-                                    copyToClipboard(
-                                        wallet.domain || '',
-                                        setCopiedDomain,
-                                    )
-                                }
                             />
                         </HStack>
-                        <HStack>
+                        <HStack
+                            onClick={() =>
+                                copyToClipboard(wallet.address ?? '', setCopied)
+                            }
+                            cursor="pointer"
+                            spacing={2}
+                        >
                             <Text fontSize={'sm'}>
                                 {'('}
                                 {humanAddress(wallet.address ?? '', 8, 7)}
                                 {')'}
                             </Text>
                             <Icon
-                                boxSize={3}
+                                boxSize={4}
                                 aria-label="Copy Address"
                                 as={copied ? IoCheckmarkOutline : IoCopyOutline}
                                 cursor="pointer"
-                                onClick={() =>
-                                    copyToClipboard(
-                                        wallet.address ?? '',
-                                        setCopied,
-                                    )
-                                }
                             />
                         </HStack>
                     </VStack>
                 ) : (
-                    <HStack>
+                    <HStack
+                        onClick={() =>
+                            copyToClipboard(wallet.address ?? '', setCopied)
+                        }
+                        cursor="pointer"
+                        spacing={2}
+                    >
                         <Text fontSize={size}>
                             {humanAddress(wallet.address ?? '', 6, 4)}
                         </Text>
                         <Icon
-                            boxSize={3}
+                            boxSize={5}
                             aria-label="Copy Address"
                             as={copied ? IoCheckmarkOutline : IoCopyOutline}
                             cursor="pointer"
-                            onClick={() =>
-                                copyToClipboard(wallet.address ?? '', setCopied)
-                            }
                         />
                     </HStack>
                 )}

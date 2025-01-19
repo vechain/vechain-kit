@@ -113,7 +113,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                             {activeWalletIsSmartAccount && (
                                 <AccountDetailsButton
                                     title={t('Smart Account')}
-                                    address={smartAccount?.address ?? ''}
+                                    wallet={smartAccount as Wallet}
                                     isActive={activeWalletIsSmartAccount}
                                     onClick={() => {
                                         setCurrentContent('smart-account');
@@ -129,33 +129,26 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                         ? connectionCache.ecosystemApp.name +
                                           ' ' +
                                           t('Wallet')
+                                        : connection.isConnectedWithSocialLogin
+                                        ? t('Embedded Wallet')
                                         : t('Wallet')
                                 }
-                                address={connectedWallet?.address ?? ''}
+                                wallet={connectedWallet}
                                 isActive={!activeWalletIsSmartAccount}
                                 onClick={() => {
                                     setCurrentContent('settings');
                                 }}
-                                leftIcon={
+                                leftImage={
                                     connection.isConnectedWithCrossApp &&
                                     connectionCache?.ecosystemApp?.logoUrl
-                                        ? () => (
-                                              <Image
-                                                  src={
-                                                      connectionCache
-                                                          .ecosystemApp?.logoUrl
-                                                  }
-                                                  alt={
-                                                      connectionCache
-                                                          .ecosystemApp?.name ??
-                                                      'ecosystem app logo'
-                                                  }
-                                                  width={28}
-                                                  boxSize={'28px'}
-                                                  justifySelf={'center'}
-                                              />
-                                          )
-                                        : HiOutlineWallet
+                                        ? connectionCache.ecosystemApp?.logoUrl
+                                        : undefined
+                                }
+                                leftIcon={
+                                    !connection.isConnectedWithCrossApp ||
+                                    !connectionCache?.ecosystemApp?.logoUrl
+                                        ? HiOutlineWallet
+                                        : undefined
                                 }
                                 rightIcon={MdOutlineNavigateNext}
                             />

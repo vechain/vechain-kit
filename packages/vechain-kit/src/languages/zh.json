@@ -37,6 +37,7 @@
   "Connecting with Passkey": "通过Passkey连接",
   "Connecting with VeChain": "通过VeChain连接",
   "Connecting...": "正在连接...",
+  "Connection Details": "连接详情",
   "Connection Failed": "连接失败",
   "Continue": "继续",
   "Continue with Google": "通过Google继续",
@@ -118,6 +119,7 @@
   "This domain is already taken": "该域名已被占用",
   "This is taking longer than expected.": "这比预期花费的时间更长。",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "这是您的主要钱包和身份。请务必妥善保管并备份。请前往唯链管理您的钱包和安全设置。",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "这是您的主要钱包和身份。请确保其安全并进行备份。访问{{element}}网站以管理您的钱包和安全设置。",
   "This may take a few seconds. You can close this window and check the status later.": "这可能需要几秒钟。您可以关闭此窗口，稍后查看状态。",
   "To": "到",
   "Transaction completed!": "交易完成！",
@@ -138,10 +140,12 @@
   "VeWorld": "VeWorld",
   "View on explorer": "在浏览器中查看",
   "View on the explorer": "在浏览器中查看",
+  "View the details of your connection.": "查看您的连接详情。",
   "View transaction on the explorer": "在浏览器中查看交易",
   "Waiting for confirmation": "等待确认",
   "Wallet": "钱包",
   "Wallet Settings": "钱包设置",
+  "Wallet secured by": "钱包安全由",
   "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using": "我们强烈建议导出您的私钥以备份钱包。这确保您可以在需要时恢复钱包，或将其转移到自托管。",
   "Welcome to the VeChainKit": "欢迎使用VeChainKit",
   "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.": "欢迎！在这里，您可以管理钱包、发送代币并与唯链区块链及其应用进行互动。",
@@ -165,5 +169,7 @@
   "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.": "您的钱包由私钥保护。私钥是一个独特的代码，允许您访问您的钱包。它存储在您的浏览器中，用于签署交易。私钥不会与任何人共享，包括唯链基金会。",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "您的钱包安全性取决于您如何访问它。通过 VeWorld 插件、移动应用或硬件钱包等自我托管选项，您可以完全控制您的私钥。此插件本身无法访问您的私钥。使用社交账户或唯链登录时，您的钱包由 Privy 创建和保护，并由唯链管理，提供更简单的入门体验，同时保持安全性。",
   "of": "的",
-  "your@email.com": "your@email.com"
+  "on": "开启",
+  "your@email.com": "your@email.com",
+  "{{element}} website": "{{element}}网站"
 }

@@ -170,7 +170,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
                         )}
 
                         {!isLoading && !appsInfo && (
-                            <Text>
+                            <Text textAlign={'center'}>
                                 {t(
                                     'No application from VeChain ecosystem is available to login.',
                                 )}

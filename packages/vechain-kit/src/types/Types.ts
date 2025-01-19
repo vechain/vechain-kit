@@ -93,6 +93,7 @@ export type PrivyAppInfo = {
     email_auth: boolean;
     google_oauth: boolean;
     twitter_oauth: boolean;
+    url: string;
 };
 
 export type PrivyLoginMethod =

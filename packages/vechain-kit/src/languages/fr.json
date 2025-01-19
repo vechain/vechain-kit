@@ -37,6 +37,7 @@
   "Connecting with Passkey": "Connexion avec Passkey",
   "Connecting with VeChain": "Connexion avec VeChain",
   "Connecting...": "Connexion...",
+  "Connection Details": "Détails de la connexion",
   "Connection Failed": "Échec de la connexion",
   "Continue": "Continuer",
   "Continue with Google": "Continuer avec Google",
@@ -118,6 +119,7 @@
   "This domain is already taken": "Ce domaine est déjà pris",
   "This is taking longer than expected.": "Cela prend plus de temps que prévu.",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "Ceci est votre portefeuille principal et votre identité. Veuillez vous assurer de le garder en sécurité et de le sauvegarder. Allez sur VeChain pour gérer votre portefeuille et vos paramètres de sécurité.",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "Ceci est votre portefeuille principal et votre identité. Veuillez vous assurer de le garder en sécurité et sauvegardé. Allez sur le site {{element}} pour gérer votre portefeuille et vos paramètres de sécurité.",
   "This may take a few seconds. You can close this window and check the status later.": "Cela peut prendre quelques secondes. Vous pouvez fermer cette fenêtre et vérifier le statut plus tard.",
   "To": "À",
   "Transaction completed!": "Transaction terminée !",
@@ -138,10 +140,12 @@
   "VeWorld": "VeWorld",
   "View on explorer": "Voir sur l'explorateur",
   "View on the explorer": "Voir sur l'explorateur",
+  "View the details of your connection.": "Voir les détails de votre connexion.",
   "View transaction on the explorer": "Voir la transaction sur l'explorateur",
   "Waiting for confirmation": "En attente de confirmation",
   "Wallet": "Portefeuille",
   "Wallet Settings": "Paramètres du portefeuille",
+  "Wallet secured by": "Portefeuille sécurisé par",
   "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using": "Nous vous recommandons vivement d'exporter votre clé privée pour sauvegarder votre portefeuille. Cela garantit que vous pouvez le restaurer si nécessaire ou le transférer en gestion autonome en utilisant",
   "Welcome to the VeChainKit": "Bienvenue sur le VeChainKit",
   "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.": "Bienvenue ! Ici, vous pouvez gérer votre portefeuille, envoyer des jetons et interagir avec la blockchain VeChain et ses applications.",
@@ -165,5 +169,7 @@
   "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.": "Votre portefeuille est sécurisé par une clé privée. La clé privée est un code unique qui vous permet d'accéder à votre portefeuille. Elle est stockée dans votre navigateur et est utilisée pour signer des transactions. La clé privée n'est jamais partagée avec qui que ce soit, y compris la Fondation VeChain.",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "La sécurité de votre portefeuille dépend de la façon dont vous y accédez. Avec des options d'auto-gardiennage comme l'extension VeWorld, l'application mobile ou le portefeuille matériel, vous avez un contrôle complet sur vos clés privées. Cette extension en elle-même n'a pas accès à vos clés privées. Lors de la connexion avec des comptes sociaux ou VeChain, votre portefeuille est créé et sécurisé par Privy et géré par VeChain, offrant une expérience d'intégration plus facile tout en maintenant la sécurité.",
   "of": "de",
-  "your@email.com": "votre@email.com"
+  "on": "le",
+  "your@email.com": "votre@email.com",
+  "{{element}} website": "site {{element}}"
 }

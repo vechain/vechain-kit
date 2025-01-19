@@ -37,6 +37,7 @@
   "Connecting with Passkey": "パスキーで接続中",
   "Connecting with VeChain": "VeChainで接続中",
   "Connecting...": "接続中...",
+  "Connection Details": "接続の詳細",
   "Connection Failed": "接続に失敗しました",
   "Continue": "続ける",
   "Continue with Google": "Googleで続行",
@@ -118,6 +119,7 @@
   "This domain is already taken": "このドメインは既に使用されています",
   "This is taking longer than expected.": "予想以上に時間がかかっています。",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "これはあなたのメインウォレットとアイデンティティです。安全に保管し、バックアップを取るようにしてください。ウォレットとセキュリティ設定を管理するには、VeChainにアクセスしてください。",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "これがあなたのメインウォレットとアイデンティティです。安全に保管し、バックアップを取ってください。ウォレットとセキュリティ設定を管理するには{{element}}ウェブサイトにアクセスしてください。",
   "This may take a few seconds. You can close this window and check the status later.": "数秒かかることがあります。このウィンドウを閉じて後でステータスを確認することができます。",
   "To": "宛先",
   "Transaction completed!": "取引が完了しました！",
@@ -138,10 +140,12 @@
   "VeWorld": "VeWorld",
   "View on explorer": "エクスプローラーで表示",
   "View on the explorer": "エクスプローラーで表示",
+  "View the details of your connection.": "接続の詳細を表示する。",
   "View transaction on the explorer": "エクスプローラーでトランザクションを表示",
   "Waiting for confirmation": "確認待ち",
   "Wallet": "ウォレット",
   "Wallet Settings": "ウォレット設定",
+  "Wallet secured by": "によって保護されたウォレット",
   "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using": "ウォレットをバックアップするために、秘密鍵をエクスポートすることを強くお勧めします。これにより、必要に応じて復元するか、自己管理に移行することができます。",
   "Welcome to the VeChainKit": "VeChainKitへようこそ",
   "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.": "ようこそ！ここではウォレットを管理し、トークンを送信し、VeChainブロックチェーンとそのアプリケーションとやり取りできます。",
@@ -165,5 +169,7 @@
   "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.": "ウォレットは秘密鍵によって保護されています。秘密鍵はウォレットへのアクセスを可能にする一意のコードです。これはブラウザに保存され、トランザクションの署名に使用されます。秘密鍵は、VeChainの財団を含む誰とも共有されません。",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "ウォレットのセキュリティは、アクセス方法に依存します。VeWorld拡張機能やモバイルアプリ、ハードウェアウォレットなどの自己管理オプションを使用することで、秘密鍵を完全に管理できます。この拡張機能自体はあなたの秘密鍵にアクセスすることはありません。ソーシャルアカウントやVeChainを使用してログインする場合、ウォレットはPrivyによって作成され、保護され、VeChainによって管理され、セキュリティを維持しつつ容易なオンボーディング体験を提供します。",
   "of": "の",
-  "your@email.com": "your@email.com"
+  "on": "上",
+  "your@email.com": "your@email.com",
+  "{{element}} website": "{{element}}ウェブサイト"
 }

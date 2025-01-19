@@ -3,7 +3,11 @@
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { useVechainDomain, useGetChainId, useGetNodeUrl } from '@/hooks';
-import { compareAddresses, getPicassoImage } from '@/utils';
+import {
+    compareAddresses,
+    getPicassoImage,
+    VECHAIN_PRIVY_APP_ID,
+} from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '.';
 import { useVeChainKitConfig } from '@/providers';
@@ -44,6 +48,7 @@ export type UseWalletReturnType = {
         isConnectedWithCrossApp: boolean;
         isConnectedWithPrivy: boolean;
         isLoadingPrivyConnection: boolean;
+        isConnectedWithVeChain: boolean;
         source: ConnectionSource;
         isInAppBrowser: boolean;
         nodeUrl: string;
@@ -65,11 +70,15 @@ export const useWallet = (): UseWalletReturnType => {
     } = useAccount();
     const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
-    const { feeDelegation, network } = useVeChainKitConfig();
+    const { feeDelegation, network, privy } = useVeChainKitConfig();
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDappKitWallet();
+
+    const { getConnectionCache, clearConnectionCache } =
+        useCrossAppConnectionCache();
+    const connectionCache = getConnectionCache();
 
     const nodeUrl = useGetNodeUrl();
 
@@ -78,6 +87,11 @@ export const useWallet = (): UseWalletReturnType => {
     const isConnectedWithSocialLogin = authenticated && !!user;
     const isConnectedWithPrivy =
         isConnectedWithSocialLogin || isConnectedWithCrossApp;
+
+    const isConnectedWithVeChain =
+        (isConnectedWithSocialLogin && privy?.appId === VECHAIN_PRIVY_APP_ID) ||
+        (isConnectedWithCrossApp &&
+            connectionCache?.ecosystemApp?.appId === VECHAIN_PRIVY_APP_ID);
 
     const isConnecting =
         isConnectingWithCrossApp ||
@@ -98,10 +112,8 @@ export const useWallet = (): UseWalletReturnType => {
           }
         : {
               type: 'privy',
-              displayName: 'Social',
+              displayName: 'Social Login',
           };
-
-    const { clearConnectionCache } = useCrossAppConnectionCache();
 
     useEffect(() => {
         const isNowConnected =
@@ -229,6 +241,7 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithCrossApp,
             isLoadingPrivyConnection: !ready,
             isConnectedWithPrivy,
+            isConnectedWithVeChain,
             source: connectionSource,
             isInAppBrowser:
                 (window.vechain && window.vechain.isInAppBrowser) ?? false,

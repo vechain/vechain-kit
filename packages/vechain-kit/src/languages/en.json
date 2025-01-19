@@ -37,6 +37,7 @@
   "Connecting with Passkey": "Connecting with Passkey",
   "Connecting with VeChain": "Connecting with VeChain",
   "Connecting...": "Connecting...",
+  "Connection Details": "Connection Details",
   "Connection Failed": "Connection Failed",
   "Continue": "Continue",
   "Continue with Google": "Continue with Google",
@@ -118,6 +119,7 @@
   "This domain is already taken": "This domain is already taken",
   "This is taking longer than expected.": "This is taking longer than expected.",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.",
   "This may take a few seconds. You can close this window and check the status later.": "This may take a few seconds. You can close this window and check the status later.",
   "To": "To",
   "Transaction completed!": "Transaction completed!",
@@ -138,10 +140,12 @@
   "VeWorld": "VeWorld",
   "View on explorer": "View on explorer",
   "View on the explorer": "View on the explorer",
+  "View the details of your connection.": "View the details of your connection.",
   "View transaction on the explorer": "View transaction on the explorer",
   "Waiting for confirmation": "Waiting for confirmation",
   "Wallet": "Wallet",
   "Wallet Settings": "Wallet Settings",
+  "Wallet secured by": "Wallet secured by",
   "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using": "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using",
   "Welcome to the VeChainKit": "Welcome to the VeChainKit",
   "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.": "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.",
@@ -165,5 +169,7 @@
   "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.": "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.",
   "of": "of",
-  "your@email.com": "your@email.com"
+  "on": "on",
+  "your@email.com": "your@email.com",
+  "{{element}} website": "{{element}} website"
 }

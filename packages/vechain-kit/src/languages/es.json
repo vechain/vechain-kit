@@ -37,6 +37,7 @@
   "Connecting with Passkey": "Conectando con Passkey",
   "Connecting with VeChain": "Conectando con VeChain",
   "Connecting...": "Conectando...",
+  "Connection Details": "Detalles de la Conexión",
   "Connection Failed": "Conexión Fallida",
   "Continue": "Continuar",
   "Continue with Google": "Continuar con Google",
@@ -118,6 +119,7 @@
   "This domain is already taken": "Este dominio ya está en uso",
   "This is taking longer than expected.": "Esto está tardando más de lo esperado.",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "Esta es su billetera e identidad principal. Asegúrese de mantenerla segura y respaldada. Vaya a VeChain para gestionar su billetera y configuraciones de seguridad.",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "Esta es su billetera principal e identidad. Asegúrese de mantenerla segura y respaldada. Vaya al sitio web de {{element}} para administrar su billetera y la configuración de seguridad.",
   "This may take a few seconds. You can close this window and check the status later.": "Esto puede tardar unos segundos. Puede cerrar esta ventana y comprobar el estado más tarde.",
   "To": "Para",
   "Transaction completed!": "¡Transacción completada!",
@@ -138,10 +140,12 @@
   "VeWorld": "VeWorld",
   "View on explorer": "Ver en el explorador",
   "View on the explorer": "Ver en el explorador",
+  "View the details of your connection.": "Vea los detalles de su conexión.",
   "View transaction on the explorer": "Ver transacción en el explorador",
   "Waiting for confirmation": "Esperando confirmación",
   "Wallet": "Billetera",
   "Wallet Settings": "Configuración de la billetera",
+  "Wallet secured by": "Billetera asegurada por",
   "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using": "Le recomendamos encarecidamente exportar su clave privada para respaldar su billetera. Esto asegura que pueda restaurarla si es necesario o transferirla a autocustodia usando",
   "Welcome to the VeChainKit": "Bienvenido a VeChainKit",
   "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.": "¡Bienvenido! Aquí puede gestionar su billetera, enviar tokens e interactuar con la blockchain de VeChain y sus aplicaciones.",
@@ -165,5 +169,7 @@
   "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.": "Tu billetera está protegida por una clave privada. La clave privada es un código único que te permite acceder a tu billetera. Se almacena en tu navegador y se utiliza para firmar transacciones. La clave privada nunca se comparte con nadie, incluida la Fundación VeChain.",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "La seguridad de tu billetera depende de cómo accedas a ella. Con opciones de autocustodia como la extensión VeWorld, la aplicación móvil o la billetera de hardware, tienes control total sobre tus claves privadas. Esta extensión no tiene acceso a tus claves privadas. Al iniciar sesión con cuentas sociales o VeChain, tu billetera es creada y asegurada por Privy y gestionada por VeChain, ofreciendo una experiencia de integración más sencilla mientras se mantiene la seguridad.",
   "of": "de",
-  "your@email.com": "tu@email.com"
+  "on": "en",
+  "your@email.com": "tu@email.com",
+  "{{element}} website": "sitio web de {{element}}"
 }

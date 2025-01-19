@@ -10,12 +10,13 @@ import {
     Tag,
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
-import { humanAddress } from '../../../utils';
+import { humanAddress, humanDomain } from '@/utils';
 import { useTranslation } from 'react-i18next';
+import { Wallet } from '@/types';
 
 interface AccountDetailsButtonProps {
     title: string;
-    address: string;
+    wallet: Wallet;
     onClick: () => void;
     leftIcon?: ElementType;
     rightIcon?: ElementType;
@@ -29,7 +30,7 @@ export const AccountDetailsButton = ({
     leftIcon,
     rightIcon,
     title,
-    address,
+    wallet,
     onClick,
     leftImage,
     isActive = false,
@@ -49,12 +50,12 @@ export const AccountDetailsButton = ({
             border={`1px solid ${isDark ? '#ffffff29' : '#ebebeb'}`}
         >
             <HStack w={'full'} justify={'space-between'}>
-                <Box minW={'40px'}>
+                <Box minW={'40px'} justifyContent={'center'}>
                     {leftImage ? (
                         <Image
+                            justifySelf={'center'}
                             src={leftImage}
-                            w={'25px'}
-                            h={'25px'}
+                            w={'28px'}
                             alt="left-image"
                         />
                     ) : (
@@ -80,7 +81,9 @@ export const AccountDetailsButton = ({
                         whiteSpace={'normal'}
                         w={'full'}
                     >
-                        {humanAddress(address, 6, 4)}
+                        {wallet.domain
+                            ? humanDomain(wallet.domain, 4, 11)
+                            : humanAddress(wallet.address ?? '', 6, 4)}
                     </Text>
                 </VStack>
                 <VStack minW={'40px'} justifyContent={'flex-end'}>

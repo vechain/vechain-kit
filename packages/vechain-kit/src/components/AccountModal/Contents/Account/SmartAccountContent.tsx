@@ -5,12 +5,10 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    Text,
     useColorMode,
-    Link,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
-import React, { useState } from 'react';
+import React from 'react';
 import {
     AddressDisplay,
     FadeInViewFromBottom,
@@ -39,8 +37,6 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
 
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
-
-    const [isExpanded, setIsExpanded] = useState(false);
 
     const hasExistingDomain = !!smartAccount.domain;
 
@@ -71,44 +67,6 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                             borderRadius="50%"
                         />
                         <AddressDisplay wallet={smartAccount} />
-                    </VStack>
-
-                    <VStack align="stretch" textAlign={'center'} mt={5}>
-                        <Text fontSize={'sm'} opacity={0.5}>
-                            {t(
-                                'Your smart account is your gateway to blockchain interactions.',
-                            )}
-                        </Text>
-
-                        {isExpanded && (
-                            <FadeInViewFromBottom>
-                                <VStack>
-                                    {connection.isConnectedWithSocialLogin && (
-                                        <Text fontSize={'sm'} opacity={0.5}>
-                                            {t(
-                                                'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
-                                            )}
-                                        </Text>
-                                    )}
-
-                                    <Text fontSize={'sm'} opacity={0.5}>
-                                        {t(
-                                            'Transfer the ownership of your Smart Account to make your main wallet active again.',
-                                        )}
-                                    </Text>
-                                </VStack>
-                            </FadeInViewFromBottom>
-                        )}
-
-                        <Link
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            color="gray.500"
-                            fontSize={'sm'}
-                            transition={'all 0.2s'}
-                            _hover={{ textDecoration: 'none' }}
-                        >
-                            {isExpanded ? t('Read less') : t('Read more')}
-                        </Link>
                     </VStack>
 
                     <VStack mt={10} spacing={5}>

@@ -8,8 +8,10 @@ import {
     Text,
     Link,
     Icon,
+    HStack,
+    Image,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
+import { useFetchAppInfo, useWallet } from '@/hooks';
 import {
     ModalBackButton,
     StickyHeaderContainer,
@@ -19,6 +21,9 @@ import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { CrossAppConnectionCard } from '@/components/AccountModal/Components';
 import { IoOpenOutline } from 'react-icons/io5';
+import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
+import { PiLineVertical } from 'react-icons/pi';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     onGoBack: () => void;
@@ -28,11 +33,24 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const { t } = useTranslation();
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { connectedWallet, connection, disconnect } = useWallet();
+    const { privy } = useVeChainKitConfig();
+    const { privyUser, connection } = useWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
     const connectionCache = getConnectionCache();
+
+    console.log('privyUser', privyUser);
+    console.log('connection', connection);
+    const { data: privyAppInfo, isLoading: isLoadingPrivyAppInfo } =
+        useFetchAppInfo(privy?.appId ?? '');
+
+    const modalTitle =
+        connection.isConnectedWithCrossApp && connectionCache
+            ? connectionCache.ecosystemApp.name + ' ' + t('Wallet')
+            : connection.isConnectedWithSocialLogin
+            ? t('Embedded Wallet')
+            : t('Wallet');
 
     return (
         <FadeInViewFromBottom>
@@ -43,7 +61,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Wallet')}
+                    {modalTitle}
                 </ModalHeader>
 
                 <ModalBackButton
@@ -56,6 +74,12 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
 
             <FadeInViewFromBottom>
                 <ModalBody w={'full'}>
+                    {connection.isConnectedWithCrossApp && connectionCache && (
+                        <CrossAppConnectionCard
+                            connectionCache={connectionCache}
+                        />
+                    )}
+
                     <VStack align="stretch" textAlign={'center'} mt={5}>
                         {connection.isConnectedWithCrossApp && (
                             <Text
@@ -64,7 +88,11 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                                 textAlign={'center'}
                             >
                                 {t(
-                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.',
+                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.',
+                                    {
+                                        element:
+                                            connectionCache?.ecosystemApp?.name,
+                                    },
                                 )}
                             </Text>
                         )}
@@ -90,6 +118,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                                                 fontSize={'14px'}
                                                 textDecoration={'underline'}
                                             >
+                                                {' '}
                                                 {t('VeWorld Wallet')}
                                                 <Icon
                                                     ml={1}
@@ -104,13 +133,70 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                         )}
                     </VStack>
 
-                    <VStack mt={5} w={'full'} spacing={5}>
-                        {connection.isConnectedWithCrossApp &&
-                            connectionCache && (
-                                <CrossAppConnectionCard
-                                    connectionCache={connectionCache}
-                                />
+                    {connection.isConnectedWithPrivy && (
+                        <Text
+                            fontSize={'sm'}
+                            opacity={0.5}
+                            mt={5}
+                            textAlign={'center'}
+                        >
+                            {t(
+                                'Your smart account is your gateway to blockchain interactions.',
                             )}
+                        </Text>
+                    )}
+
+                    <VStack align="stretch" textAlign={'center'} mt={5}>
+                        {connection.isConnectedWithPrivy && (
+                            <VStack mt={2} opacity={0.6}>
+                                <HStack
+                                    textAlign={'center'}
+                                    alignItems={'center'}
+                                    justify={'center'}
+                                    w={'full'}
+                                >
+                                    <Text fontSize={'xs'} fontWeight={'800'}>
+                                        {t('Wallet secured by')}
+                                    </Text>
+                                </HStack>
+                                <HStack justify={'center'}>
+                                    <PrivyLogo isDark={isDark} w={'50px'} />
+                                    <Icon as={PiLineVertical} ml={2} />
+
+                                    {connection.isConnectedWithVeChain ? (
+                                        <VechainLogoHorizontal
+                                            isDark={isDark}
+                                            w={'69px'}
+                                        />
+                                    ) : (
+                                        connection.isConnectedWithCrossApp &&
+                                        connectionCache && (
+                                            <Image
+                                                src={
+                                                    connectionCache.ecosystemApp
+                                                        .logoUrl
+                                                }
+                                                alt={
+                                                    connectionCache.ecosystemApp
+                                                        .name
+                                                }
+                                                maxW="40px"
+                                                borderRadius="md"
+                                            />
+                                        )
+                                    )}
+
+                                    {connection.isConnectedWithSocialLogin && (
+                                        <Image
+                                            src={privy?.appearance.logo}
+                                            alt={privy?.appearance.logo}
+                                            maxW="40px"
+                                            borderRadius="md"
+                                        />
+                                    )}
+                                </HStack>
+                            </VStack>
+                        )}
                     </VStack>
                 </ModalBody>
                 <ModalFooter></ModalFooter>

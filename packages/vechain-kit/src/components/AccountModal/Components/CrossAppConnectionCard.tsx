@@ -1,4 +1,4 @@
-import { VStack, Text, Image } from '@chakra-ui/react';
+import { VStack, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { CrossAppConnectionCache } from '@/types';
 
@@ -23,12 +23,6 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
         >
             {connectionCache.ecosystemApp && (
                 <VStack spacing={2}>
-                    <Image
-                        src={connectionCache.ecosystemApp.logoUrl}
-                        alt={connectionCache.ecosystemApp.name}
-                        maxW="40px"
-                        borderRadius="md"
-                    />
                     <Text>
                         {t('Connected through')}:{' '}
                         {connectionCache.ecosystemApp.name}
@@ -36,7 +30,7 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
                 </VStack>
             )}
             <Text>
-                {t('On')}:{' '}
+                {t('on')}:{' '}
                 {new Date(connectionCache.timestamp).toLocaleString()}
             </Text>
         </VStack>

@@ -37,6 +37,7 @@
   "Connecting with Passkey": "Collegamento con Passkey",
   "Connecting with VeChain": "Collegamento con VeChain",
   "Connecting...": "Collegamento...",
+  "Connection Details": "Dettagli di Connessione",
   "Connection Failed": "Connessione Fallita",
   "Continue": "Continua",
   "Continue with Google": "Continua con Google",
@@ -118,6 +119,7 @@
   "This domain is already taken": "Questo dominio è già stato preso",
   "This is taking longer than expected.": "Sta richiedendo più tempo del previsto.",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "Questo è il tuo portafoglio principale e la tua identità. Assicurati di tenerlo al sicuro e di fare un backup. Vai su VeChain per gestire il tuo portafoglio e le impostazioni di sicurezza.",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "Questo è il tuo portafoglio e identità principale. Assicurati di tenerlo al sicuro e di averne una copia di backup. Vai al sito web di {{element}} per gestire le impostazioni del tuo portafoglio e della sicurezza.",
   "This may take a few seconds. You can close this window and check the status later.": "Potrebbe richiedere alcuni secondi. Puoi chiudere questa finestra e controllare lo stato più tardi.",
   "To": "A",
   "Transaction completed!": "Transazione completata!",
@@ -138,10 +140,12 @@
   "VeWorld": "VeWorld",
   "View on explorer": "Visualizza sull'explorer",
   "View on the explorer": "Visualizza sull'explorer",
+  "View the details of your connection.": "Visualizza i dettagli della tua connessione.",
   "View transaction on the explorer": "Visualizza la transazione sull'explorer",
   "Waiting for confirmation": "In attesa di conferma",
   "Wallet": "Portafoglio",
   "Wallet Settings": "Impostazioni del portafoglio",
+  "Wallet secured by": "Portafoglio protetto da",
   "We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using": "Consigliamo vivamente di esportare la tua chiave privata per eseguire il backup del tuo portafoglio. Questo garantisce che tu possa ripristinarlo se necessario o trasferirlo in self-custody utilizzando",
   "Welcome to the VeChainKit": "Benvenuto nel VeChainKit",
   "Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.": "Benvenuto! Qui puoi gestire il tuo portafoglio, inviare token e interagire con la blockchain VeChain e le sue applicazioni.",
@@ -165,5 +169,7 @@
   "Your wallet is secured by a private key. The private key is a unique code that allows you to access your wallet. It is stored in your browser and is used to sign transactions. The private key is never shared with anyone, including the VeChain Foundation.": "Il tuo portafoglio è protetto da una chiave privata. La chiave privata è un codice unico che ti consente di accedere al tuo portafoglio. È memorizzata nel tuo browser e viene utilizzata per firmare le transazioni. La chiave privata non viene mai condivisa con nessuno, inclusa la Fondazione VeChain.",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "La sicurezza del tuo portafoglio dipende da come vi accedi. Con opzioni di autocustodia come l'estensione VeWorld, l'app mobile o il portafoglio hardware, hai il controllo completo sulle tue chiavi private. Questa estensione stessa non ha accesso alle tue chiavi private. Quando accedi con i social account o VeChain, il tuo portafoglio viene creato e protetto da Privy e gestito da VeChain, offrendo un'esperienza di onboarding più semplice mantenendo la sicurezza.",
   "of": "di",
-  "your@email.com": "your@email.com"
+  "on": "su",
+  "your@email.com": "your@email.com",
+  "{{element}} website": "sito web di {{element}}"
 }

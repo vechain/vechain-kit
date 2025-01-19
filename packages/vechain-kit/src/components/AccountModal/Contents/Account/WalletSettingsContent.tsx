@@ -32,6 +32,7 @@ import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
 import { PiLineVertical } from 'react-icons/pi';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
+import { VscDebugDisconnect } from 'react-icons/vsc';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -55,6 +56,13 @@ export const WalletSettingsContent = ({
 
     const hasExistingDomain = !!connectedWallet.domain;
 
+    const modalTitle =
+        connection.isConnectedWithCrossApp && connectionCache
+            ? connectionCache.ecosystemApp.name + ' ' + t('Wallet')
+            : connection.isConnectedWithSocialLogin
+            ? t('Embedded Wallet')
+            : t('Wallet');
+
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
@@ -64,7 +72,7 @@ export const WalletSettingsContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Wallet')}
+                    {modalTitle}
                 </ModalHeader>
 
                 <ModalBackButton
@@ -93,49 +101,9 @@ export const WalletSettingsContent = ({
                         <AddressDisplay wallet={connectedWallet} />
                     </VStack>
 
-                    <VStack align="stretch" textAlign={'center'} mt={5}>
-                        {connection.isConnectedWithPrivy && (
-                            <VStack
-                                mt={2}
-                                opacity={0.5}
-                                _hover={{
-                                    cursor: 'pointer',
-                                    opacity: 0.7,
-                                    transition: 'all 0.5s',
-                                }}
-                                onClick={() => {
-                                    setCurrentContent('connection-details');
-                                }}
-                            >
-                                <HStack
-                                    textAlign={'center'}
-                                    alignItems={'center'}
-                                    justify={'center'}
-                                    w={'full'}
-                                >
-                                    <Icon
-                                        as={AiOutlineQuestionCircle}
-                                        size={'xs'}
-                                    />
-                                    <Text fontSize={'xs'} fontWeight={'800'}>
-                                        {t('Secured by')}
-                                    </Text>
-                                </HStack>
-                                <HStack justify={'center'}>
-                                    <PrivyLogo isDark={isDark} w={'50px'} />
-                                    <Icon as={PiLineVertical} ml={2} />
-                                    <VechainLogoHorizontal
-                                        isDark={isDark}
-                                        w={'69px'}
-                                    />
-                                </HStack>
-                            </VStack>
-                        )}
-                    </VStack>
-
-                    <VStack mt={5} w={'full'} spacing={5}>
+                    <VStack mt={5} w={'full'} spacing={3}>
                         {connection.isConnectedWithSocialLogin && (
-                            <VStack spacing={5}>
+                            <VStack spacing={3}>
                                 <ActionButton
                                     title={t('Backup your wallet')}
                                     description={t(
@@ -195,21 +163,31 @@ export const WalletSettingsContent = ({
                             />
                         )}
 
-                        <Divider />
-
-                        <Button
+                        <ActionButton
+                            title={t('Connection Details')}
+                            description={t(
+                                'View the details of your connection.',
+                            )}
                             onClick={() => {
-                                disconnect();
-                                onLogoutSuccess();
+                                setCurrentContent('connection-details');
                             }}
-                            variant="secondary"
-                            leftIcon={<RxExit color="#888888" />}
-                        >
-                            {t('Logout')}
-                        </Button>
+                            leftIcon={VscDebugDisconnect}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
                     </VStack>
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter>
+                    <Button
+                        onClick={() => {
+                            disconnect();
+                            onLogoutSuccess();
+                        }}
+                        variant="secondary"
+                        leftIcon={<RxExit color="#888888" />}
+                    >
+                        {t('Logout')}
+                    </Button>
+                </ModalFooter>
             </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );
