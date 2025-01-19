@@ -24,6 +24,8 @@ interface ActionButtonProps {
     hide?: boolean;
     _hover?: object;
     showComingSoon?: boolean;
+    isDisabled?: boolean;
+    stacked?: boolean;
 }
 
 export const ActionButton = ({
@@ -37,6 +39,8 @@ export const ActionButton = ({
     showComingSoon = false,
     backgroundColor,
     _hover,
+    isDisabled = false,
+    stacked = false,
 }: ActionButtonProps) => {
     const { t } = useTranslation();
     return (
@@ -45,10 +49,10 @@ export const ActionButton = ({
                 w={'full'}
                 minH={'70px'}
                 h={'fit-content'}
-                py={4}
+                py={stacked ? 0 : 4}
                 onClick={onClick}
                 display={hide ? 'none' : 'flex'}
-                isDisabled={showComingSoon}
+                isDisabled={showComingSoon || isDisabled}
                 bgColor={backgroundColor}
                 _hover={_hover}
             >

@@ -19,6 +19,7 @@ import {
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
+import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 
 type Props = {
     isOpen: boolean;
@@ -113,6 +114,12 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 return (
                     <ConnectionDetailsContent
                         onGoBack={() => setCurrentContent('settings')}
+                    />
+                );
+            case 'privy-linked-accounts':
+                return (
+                    <PrivyLinkedAccounts
+                        onBack={() => setCurrentContent('settings')}
                     />
                 );
         }

@@ -37,7 +37,7 @@ export const WalletSettingsContent = ({
     onLogoutSuccess,
 }: Props) => {
     const { t } = useTranslation();
-    const { exportWallet, linkPasskey } = usePrivy();
+    const { exportWallet, linkPasskey, user: privyUser } = usePrivy();
     const { privy } = useVeChainKitConfig();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
@@ -128,12 +128,14 @@ export const WalletSettingsContent = ({
                                 )}
 
                                 <ActionButton
-                                    title={t('Link accounts')}
+                                    title={t('Login methods')}
                                     description={t(
-                                        'View and manage social media accounts linked to your wallet.',
+                                        'View and manage the login methods linked to your wallet.',
                                     )}
                                     onClick={() => {
-                                        // linkPasskey();
+                                        setCurrentContent(
+                                            'privy-linked-accounts',
+                                        );
                                     }}
                                     hide={connection.isConnectedWithCrossApp}
                                     leftIcon={MdManageAccounts}
@@ -149,6 +151,7 @@ export const WalletSettingsContent = ({
                                         // linkPasskey();
                                     }}
                                     showComingSoon={true}
+                                    isDisabled={!privyUser?.mfaMethods?.length}
                                     hide={connection.isConnectedWithCrossApp}
                                     leftIcon={FaShieldAlt}
                                     rightIcon={MdOutlineNavigateNext}
