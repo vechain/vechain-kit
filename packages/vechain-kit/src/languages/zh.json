@@ -119,6 +119,7 @@
   "This domain is already taken": "该域名已被占用",
   "This is taking longer than expected.": "这比预期花费的时间更长。",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "这是您的主要钱包和身份。请务必妥善保管并备份。请前往唯链管理您的钱包和安全设置。",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.": "这是您的主要钱包和身份。请务必妥善保管并备份。请前往{{element}}应用程序或扩展管理您的钱包和安全设置。",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "这是您的主要钱包和身份。请确保其安全并进行备份。访问{{element}}网站以管理您的钱包和安全设置。",
   "This may take a few seconds. You can close this window and check the status later.": "这可能需要几秒钟。您可以关闭此窗口，稍后查看状态。",
   "To": "到",

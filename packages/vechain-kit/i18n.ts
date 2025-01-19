@@ -23,6 +23,17 @@ const resources = {
     ja: { translation: ja },
 };
 
+// Language names mapping
+export const languageNames = {
+    en: 'English',
+    de: 'Deutsch',
+    it: 'Italiano',
+    fr: 'Français',
+    es: 'Español',
+    zh: '中文',
+    ja: '日本語',
+};
+
 // Custom language detector that checks prop first, then browser
 const customLanguageDetector = {
     name: 'customDetector',

@@ -119,6 +119,7 @@
   "This domain is already taken": "Diese Domain ist bereits vergeben",
   "This is taking longer than expected.": "Dies dauert länger als erwartet.",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "Dies ist Ihre Hauptwallet und -identität. Bitte sorgen Sie dafür, dass sie sicher und gesichert bleibt. Gehen Sie zu VeChain, um Ihre Wallet- und Sicherheitseinstellungen zu verwalten.",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.": "Dies ist Ihr Hauptwallet und Ihre Identität. Bitte stellen Sie sicher, dass es sicher und gesichert ist. Gehen Sie zur {{element}} App oder Erweiterung, um Ihr Wallet und Ihre Sicherheitseinstellungen zu verwalten.",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "Dies ist Ihre Hauptgeldbörse und Identität. Bitte achten Sie darauf, sie sicher und abgesichert zu halten. Besuchen Sie die Website von {{element}}, um Ihre Geldbörse und Sicherheitseinstellungen zu verwalten.",
   "This may take a few seconds. You can close this window and check the status later.": "Dies kann einige Sekunden dauern. Sie können dieses Fenster schließen und den Status später überprüfen.",
   "To": "Zu",

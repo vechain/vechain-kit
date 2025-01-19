@@ -6,11 +6,7 @@ import {
     ModalFooter,
     ModalHeader,
     useColorMode,
-    Text,
-    Divider,
-    Icon,
     Button,
-    HStack,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
@@ -26,10 +22,7 @@ import {
 import { useVeChainKitConfig } from '@/providers/VeChainKit';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
-import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import { RxExit } from 'react-icons/rx';
-import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
-import { PiLineVertical } from 'react-icons/pi';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { VscDebugDisconnect } from 'react-icons/vsc';

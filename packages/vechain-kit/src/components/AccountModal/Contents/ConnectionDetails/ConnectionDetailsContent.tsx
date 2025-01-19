@@ -19,11 +19,16 @@ import {
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
-import { CrossAppConnectionCard } from '@/components/AccountModal/Components';
+import {
+    CrossAppConnectionCard,
+    DappKitConnectionCard,
+    PrivyConnectionCard,
+} from './Components';
 import { IoOpenOutline } from 'react-icons/io5';
 import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
 import { PiLineVertical } from 'react-icons/pi';
 import { useVeChainKitConfig } from '@/providers';
+import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 type Props = {
     onGoBack: () => void;
@@ -35,6 +40,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
 
     const { privy } = useVeChainKitConfig();
     const { privyUser, connection } = useWallet();
+    const { source } = useDappKitWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
@@ -78,6 +84,29 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                         <CrossAppConnectionCard
                             connectionCache={connectionCache}
                         />
+                    )}
+
+                    {connection.isConnectedWithSocialLogin && (
+                        <PrivyConnectionCard />
+                    )}
+
+                    {connection.isConnectedWithDappKit && (
+                        <VStack align="stretch" textAlign={'center'} mt={5}>
+                            <DappKitConnectionCard />
+
+                            <Text
+                                fontSize={'sm'}
+                                opacity={0.5}
+                                textAlign={'center'}
+                            >
+                                {t(
+                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.',
+                                    {
+                                        element: source,
+                                    },
+                                )}
+                            </Text>
+                        </VStack>
                     )}
 
                     <VStack align="stretch" textAlign={'center'} mt={5}>

@@ -23,7 +23,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { VechainLogoHorizontal } from '@/assets';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
-import { supportedLanguages } from '../../../../../i18n';
+import { supportedLanguages, languageNames } from '../../../../../i18n';
 
 type Props = {
     onGoBack: () => void;
@@ -34,17 +34,6 @@ export const FAQContent = ({ onGoBack }: Props) => {
     const isDark = colorMode === 'dark';
     const { network } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
-
-    // Language names mapping
-    const languageNames = {
-        en: 'English',
-        de: 'Deutsch',
-        it: 'Italiano',
-        fr: 'Français',
-        es: 'Español',
-        zh: '中文',
-        ja: '日本語',
-    };
 
     return (
         <FadeInViewFromBottom>

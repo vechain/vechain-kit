@@ -119,6 +119,7 @@
   "This domain is already taken": "このドメインは既に使用されています",
   "This is taking longer than expected.": "予想以上に時間がかかっています。",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to VeChain to manage your wallet and security settings.": "これはあなたのメインウォレットとアイデンティティです。安全に保管し、バックアップを取るようにしてください。ウォレットとセキュリティ設定を管理するには、VeChainにアクセスしてください。",
+  "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.": "これはあなたのメインウォレットとアイデンティティです。安全に保管し、バックアップを取ってください。ウォレットとセキュリティ設定を管理するには、{{element}} アプリまたは拡張機能に移動してください。",
   "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "これがあなたのメインウォレットとアイデンティティです。安全に保管し、バックアップを取ってください。ウォレットとセキュリティ設定を管理するには{{element}}ウェブサイトにアクセスしてください。",
   "This may take a few seconds. You can close this window and check the status later.": "数秒かかることがあります。このウィンドウを閉じて後でステータスを確認することができます。",
   "To": "宛先",

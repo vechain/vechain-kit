@@ -11,7 +11,6 @@ import {
     useColorMode,
     VStack,
     IconButton,
-    Image,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import {
