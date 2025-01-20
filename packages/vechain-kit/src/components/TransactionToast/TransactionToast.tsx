@@ -61,7 +61,7 @@ export const TransactionToast = ({
         },
         waitingConfirmation: {
             icon: <Spinner size="md" />,
-            title: t('Processing transssaction...'),
+            title: t('Waiting for confirmation') + '...',
             closeDisabled: true,
         },
         error: {

@@ -42,6 +42,14 @@ export const FAQAccordion = () => {
             answer: "A network in blockchain refers to the environment where transactions take place. VeChain has two main networks: Mainnet (the live network where real transactions occur) and Testnet (a testing environment for developers). The network you're connected to is displayed at the top of this modal.",
         },
         {
+            question: 'What is a domain name?',
+            answer: 'A domain name is a sort of nickname for your wallet address. It allows you to easily identify your wallet and interact with dApps using a human-readable name. For example, if your wallet address is 0x1234567890, your nickname could be "alice.vechain".',
+        },
+        {
+            question: 'What is Privy?',
+            answer: 'Privy builds user onboarding and embedded wallet infrastructure to enable better products built on crypto rails. This means embedding asset control within applications themselves to enable users, businesses or machines to use digital assets through seamless product experiences.',
+        },
+        {
             question: 'What is VeBetterDAO?',
             answer: 'VeBetterDAO is a decentralized organization on VeChain blockchain focused on sustainability. Members participate in the governance of the DAO using B3TR tokens for rewards and VOT3 for voting in proposals and weekly token allocation rounds.',
         },
