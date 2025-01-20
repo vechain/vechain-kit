@@ -42,12 +42,11 @@ export type UseWalletReturnType = {
     // Connection status
     connection: {
         isConnected: boolean;
-        isConnecting: boolean;
+        isLoading: boolean;
         isConnectedWithSocialLogin: boolean;
         isConnectedWithDappKit: boolean;
         isConnectedWithCrossApp: boolean;
         isConnectedWithPrivy: boolean;
-        isLoadingPrivyConnection: boolean;
         isConnectedWithVeChain: boolean;
         source: ConnectionSource;
         isInAppBrowser: boolean;
@@ -93,10 +92,11 @@ export const useWallet = (): UseWalletReturnType => {
         (isConnectedWithCrossApp &&
             connectionCache?.ecosystemApp?.appId === VECHAIN_PRIVY_APP_ID);
 
-    const isConnecting =
+    const isLoading =
         isConnectingWithCrossApp ||
         isReconnectingWithCrossApp ||
-        isLoadingLoginOAuth;
+        isLoadingLoginOAuth ||
+        !ready;
 
     const [isConnected, setIsConnected] = useState(false);
     // Connection type
@@ -234,12 +234,11 @@ export const useWallet = (): UseWalletReturnType => {
         connectedWallet,
         privyUser: user,
         connection: {
-            isConnecting,
+            isLoading,
             isConnected,
             isConnectedWithSocialLogin,
             isConnectedWithDappKit,
             isConnectedWithCrossApp,
-            isLoadingPrivyConnection: !ready,
             isConnectedWithPrivy,
             isConnectedWithVeChain,
             source: connectionSource,

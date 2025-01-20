@@ -41,7 +41,7 @@ export const WalletButton = ({
             }
         };
 
-        if (authenticated && !connection.isConnecting && !embeddedWallet) {
+        if (authenticated && !connection.isLoading && !embeddedWallet) {
             asyncCreateWallet();
         }
     }, [authenticated, connection, user]);

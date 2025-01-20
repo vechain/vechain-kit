@@ -120,7 +120,7 @@ export default function Home(): ReactElement {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-    if (connection.isLoadingPrivyConnection) {
+    if (connection.isLoading) {
         return (
             <Container>
                 <HStack justifyContent={'center'}>
