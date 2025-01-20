@@ -31,7 +31,7 @@ import {
 } from '@vechain/vechain-kit';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
 import { Interface } from 'ethers';
-import { SigningExample } from '@/components/SigningExample';
+import { SigningExample } from '@/app/components/SigningExample';
 
 export default function Home(): ReactElement {
     const { toggleColorMode, colorMode } = useColorMode();

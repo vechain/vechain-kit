@@ -10,8 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { AssetsTabPanel } from './Contents/AssetsTabPanel';
-import { NFTsTabPanel } from './Contents/NFTsTabPanel';
-import { ActivityTabPanel } from './Contents/ActivityTabPanel';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 
@@ -69,53 +67,11 @@ export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
                         >
                             {t('Assets')}
                         </Tab>
-                        <Tab
-                            borderRadius="lg"
-                            color={tabTextColor}
-                            _selected={{
-                                bg: tabSelectedBgColor,
-                                color: tabTextSelectedColor,
-                            }}
-                            flex={1}
-                            transition="all 0.2s"
-                            _hover={{
-                                bg: tabSelectedBgColor,
-                                opacity: 0.8,
-                            }}
-                        >
-                            {t('NFTs')}
-                        </Tab>
-                        <Tab
-                            borderRadius="lg"
-                            color={tabTextColor}
-                            _selected={{
-                                bg: tabSelectedBgColor,
-                                color: tabTextSelectedColor,
-                            }}
-                            flex={1}
-                            transition="all 0.2s"
-                            _hover={{
-                                bg: tabSelectedBgColor,
-                                opacity: 0.8,
-                            }}
-                        >
-                            {t('Activity')}
-                        </Tab>
                     </TabList>
                 </HStack>
                 <TabPanels ref={tabPanelsRef}>
                     <TabPanel p={0} pt={3}>
                         <AssetsTabPanel />
-                    </TabPanel>
-                    <TabPanel p={0} pt={3}>
-                        <NFTsTabPanel
-                            onOpenReceiveModal={() =>
-                                setCurrentContent('receive-token')
-                            }
-                        />
-                    </TabPanel>
-                    <TabPanel p={0} pt={3}>
-                        <ActivityTabPanel />
                     </TabPanel>
                 </TabPanels>
             </Tabs>
