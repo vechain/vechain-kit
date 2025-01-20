@@ -1,7 +1,7 @@
 <div align="center">
     <h1><code>vechain-kit</code></h1>
     <p>
-        <strong>A TypeScript library that facilitates seamless interaction between VeChain wallets.</strong>
+        <strong>A all-in-one library for building VeChain applications.</strong>
     </p>
     <p>
         <a href="https://sonarcloud.io/project/overview?id=vechain_vechain-dapp-kit"><img src="https://sonarcloud.io/api/project_badges/measure?project=vechain_vechain-dapp-kit&metric=alert_status&token=69ceb851539382455c3eba073d1690bb58147af5" alt="Quality Gate Status"></a>
@@ -13,11 +13,17 @@
 
 ## Introduction
 
-VeChain Kit is a TypeScript library that simplifies wallet connections for VeChain applications. It provides a unified interface for multiple wallet providers including VeWorld, Sync2, Privy, and Login with VeChain.
+VeChain Kit is a library created to make it easy for developers to build VeChain applications.
 
-This kit also provides components and hooks for reading and writing to the VeChainThor blockchain.
+It comes with:
 
-Currently only supported for React and NextJS.
+- Wallet connection: VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, Social Login (Privy)
+- Hooks for reading and writing to the VeChainThor blockchain
+- Components for wallet operations
+- Multilanguage support
+- Send tokens, see balances, handle vet domains, etc.
+
+You can use the hooks to read data from the blockchain even if user is not connected to the app.
 
 For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg).
 
