@@ -120,16 +120,6 @@ export default function Home(): ReactElement {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-    if (connection.isLoading) {
-        return (
-            <Container>
-                <HStack justifyContent={'center'}>
-                    <Spinner />
-                </HStack>
-            </Container>
-        );
-    }
-
     if (!connection.isConnected) {
         return (
             <Container justifyContent={'center'}>
