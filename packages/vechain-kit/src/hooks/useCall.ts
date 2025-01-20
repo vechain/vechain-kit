@@ -95,5 +95,5 @@ export type GetCallKeyParams = {
 };
 
 export const getCallKey = ({ method, keyArgs = [] }: GetCallKeyParams) => {
-    return ['VECHAIN_KIT_', ...method, ...keyArgs];
+    return ['VECHAIN_KIT_', method, ...keyArgs];
 };
