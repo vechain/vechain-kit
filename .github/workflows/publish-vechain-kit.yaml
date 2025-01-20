@@ -23,6 +23,8 @@ jobs:
                   registry-url: https://npm.pkg.github.com/
             - run: yarn install:all
             - run: yarn build
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
 
             - name: Publish VeChain-Kit
               run: |

@@ -27,12 +27,20 @@ jobs:
 
             - name: Install
               run: yarn install:all
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
 
             - name: Lint
               run: yarn run lint
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
 
             - name: Test
               run: yarn run test
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
 
             - name: Build
               run: yarn run build
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
