@@ -134,7 +134,7 @@ export const usePrivyCrossAppSdk = () => {
     // Keep the other methods unchanged
     const signMessage = useCallback(
         async (message: string) => {
-            return signMessageAsync({ message });
+            return await signMessageAsync({ message });
         },
         [signMessageAsync],
     );

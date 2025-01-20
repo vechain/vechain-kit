@@ -34,15 +34,15 @@ export const WalletButton = ({
         const embeddedWallet = user?.wallet?.address;
 
         const asyncCreateWallet = async () => {
-            await createWallet();
-        };
-
-        if (authenticated && !connection.isConnecting && !embeddedWallet) {
             try {
-                asyncCreateWallet();
+                await createWallet();
             } catch (error) {
                 console.error(error);
             }
+        };
+
+        if (authenticated && !connection.isConnecting && !embeddedWallet) {
+            asyncCreateWallet();
         }
     }, [authenticated, connection, user]);
 

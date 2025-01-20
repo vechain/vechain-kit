@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
-import { encodeFunctionData } from 'viem';
+import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
+import { encodeFunctionData, TypedDataParameter } from 'viem';
 import { ABIContract, Address, Clause } from '@vechain/sdk-core';
 import {
     ThorClient,
@@ -30,6 +30,8 @@ export interface PrivyWalletProviderContextType {
         buttonText?: string;
         onProgress?: (progress: TransactionProgress) => void;
     }) => Promise<string>;
+    signTypedData: (data: SignTypedDataParams) => Promise<string>;
+    signMessage: (message: string) => Promise<string>;
     exportWallet: () => Promise<void>;
 }
 
@@ -60,8 +62,15 @@ export const PrivyWalletProvider = ({
     delegatorUrl: string;
     delegateAllTransactions: boolean;
 }) => {
-    const { signTypedData, exportWallet } = usePrivy();
-    const { signTypedData: signTypedDataVeChain } = usePrivyCrossAppSdk();
+    const {
+        signTypedData: signTypedDataPrivy,
+        exportWallet,
+        signMessage: signMessagePrivy,
+    } = usePrivy();
+    const {
+        signTypedData: signTypedDataWithCrossApp,
+        signMessage: signMessageWithCrossApp,
+    } = usePrivyCrossAppSdk();
     const { connection, connectedWallet } = useWallet();
 
     const { network } = useVeChainKitConfig();
@@ -161,7 +170,7 @@ export const PrivyWalletProvider = ({
                     },
                 };
 
-                const signature = await signTypedDataVeChain({
+                const signature = await signTypedDataWithCrossApp({
                     ...dataToSign,
                     address: connectedWallet.address as `0x${string}`,
                 } as SignTypedDataParameters);
@@ -311,15 +320,24 @@ export const PrivyWalletProvider = ({
                 }
 
                 if (connection.isConnectedWithCrossApp) {
-                    return signTypedDataVeChain({
+                    const mutableData = {
                         ...data,
                         address: connectedWallet.address as `0x${string}`,
-                    } as SignTypedDataParameters);
+                        types: Object.fromEntries(
+                            Object.entries(data.types).map(([k, v]) => [
+                                k,
+                                [...v],
+                            ]),
+                        ),
+                    } as unknown as SignTypedDataParameters & {
+                        address: `0x${string}`;
+                    };
+                    return signTypedDataWithCrossApp(mutableData);
                 }
 
                 const funcData = txClause.data;
                 return (
-                    await signTypedData(data, {
+                    await signTypedDataPrivy(data, {
                         uiOptions: {
                             title,
                             description:
@@ -429,11 +447,54 @@ export const PrivyWalletProvider = ({
         return id;
     };
 
+    /**
+     * Sign a message using the VechainKit wallet
+     * @param message - The message to sign
+     * @returns The signature of the message
+     */
+    const signMessage = async (message: string): Promise<string> => {
+        if (connection.isConnectedWithCrossApp) {
+            return await signMessageWithCrossApp(message);
+        }
+
+        return (
+            await signMessagePrivy({
+                message,
+            })
+        ).signature;
+    };
+
+    /**
+     * Sign a typed data using the VechainKit wallet
+     * @param data - The typed data to sign
+     * @returns The signature of the typed data
+     */
+    const signTypedData = async (
+        data: SignTypedDataParams,
+    ): Promise<string> => {
+        if (connection.isConnectedWithCrossApp) {
+            const mutableData = {
+                ...data,
+                address: connectedWallet.address as `0x${string}`,
+                types: Object.fromEntries(
+                    Object.entries(data.types).map(([k, v]) => [k, [...v]]),
+                ),
+            } as unknown as SignTypedDataParameters & {
+                address: `0x${string}`;
+            };
+            return await signTypedDataWithCrossApp(mutableData);
+        }
+
+        return (await signTypedDataPrivy(data)).signature;
+    };
+
     return (
         <PrivyWalletProviderContext.Provider
             value={{
                 accountFactory: getConfig(network.type).accountFactoryAddress,
                 sendTransaction,
+                signMessage,
+                signTypedData,
                 exportWallet,
                 delegateAllTransactions,
             }}

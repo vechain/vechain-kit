@@ -6,13 +6,11 @@ import {
     Container,
     Heading,
     HStack,
-    Stack,
     Text,
     useColorMode,
     VStack,
     Box,
     Spinner,
-    Grid,
 } from '@chakra-ui/react';
 import {
     useWallet,
@@ -33,6 +31,7 @@ import {
 } from '@vechain/vechain-kit';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
 import { Interface } from 'ethers';
+import { SigningExample } from '@/components/SigningExample';
 
 export default function Home(): ReactElement {
     const { toggleColorMode, colorMode } = useColorMode();
@@ -145,116 +144,108 @@ export default function Home(): ReactElement {
     }
 
     return (
-        <Container maxW="container.md" justifyContent={'center'}>
-            <WalletButton
-                mobileVariant="iconDomainAndAddress"
-                desktopVariant="iconAndDomain"
-            />
-
-            <Stack
-                mt={10}
-                overflowWrap={'break-word'}
-                wordBreak={'break-word'}
-                whiteSpace={'normal'}
-            >
-                <VStack spacing={4} alignItems="flex-start">
-                    {smartAccount.address && (
-                        <Box mt={4}>
-                            <Heading size={'md'}>
-                                <b>Smart Account</b>
-                            </Heading>
-                            <Text>Smart Account: {smartAccount.address}</Text>
-                            <Text>
-                                Deployed: {smartAccount.isDeployed.toString()}
-                            </Text>
-                            {b3trBalanceLoading ? (
-                                <Spinner />
-                            ) : (
-                                <Text>
-                                    B3TR Balance: {b3trBalance?.formatted}
-                                </Text>
-                            )}
-                        </Box>
-                    )}
-
+        <Container
+            height={'full'}
+            maxW="container.md"
+            justifyContent={'center'}
+            wordBreak={'break-word'}
+        >
+            <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
+                <WalletButton
+                    mobileVariant="iconDomainAndAddress"
+                    desktopVariant="iconAndDomain"
+                />
+                {smartAccount.address && (
                     <Box>
                         <Heading size={'md'}>
-                            <b>Wallet</b>
+                            <b>Smart Account</b>
                         </Heading>
-                        <Text>Address: {connectedWallet?.address}</Text>
+                        <Text>Smart Account: {smartAccount.address}</Text>
+                        <Text>
+                            Deployed: {smartAccount.isDeployed.toString()}
+                        </Text>
+                        {b3trBalanceLoading ? (
+                            <Spinner />
+                        ) : (
+                            <Text>B3TR Balance: {b3trBalance?.formatted}</Text>
+                        )}
                     </Box>
+                )}
 
-                    <Box>
-                        <Heading size={'md'}>
-                            <b>Connection</b>
-                        </Heading>
-                        <Text>Type: {connection.source.type}</Text>
-                        <Text>Network: {connection.network}</Text>
-                    </Box>
+                <Box>
+                    <Heading size={'md'}>
+                        <b>Wallet</b>
+                    </Heading>
+                    <Text>Address: {connectedWallet?.address}</Text>
+                </Box>
 
-                    <Box>
-                        <Heading size={'md'}>VeBetterDAO</Heading>
-                        <Text>
-                            Current Allocations Round ID:{' '}
-                            {currentAllocationsRoundId}
-                        </Text>
-                        <Text>
-                            Selected GM NFT: {gmId === '0' ? 'None' : gmId}
-                        </Text>
-                        <Text>
-                            Participated in Governance:{' '}
-                            {participatedInGovernance?.toString()}
-                        </Text>
-                        <Text>
-                            Is Passport Valid: {isValidPassport?.toString()}
-                        </Text>
-                    </Box>
+                <Box>
+                    <Heading size={'md'}>
+                        <b>Connection</b>
+                    </Heading>
+                    <Text>Type: {connection.source.type}</Text>
+                    <Text>Network: {connection.network}</Text>
+                </Box>
 
-                    <Box mt={4}>
-                        <Heading size={'md'}>
-                            <b>Test</b>
-                        </Heading>
-                        <HStack mt={4} spacing={4}>
-                            <Grid
-                                mt={4}
-                                templateColumns={[
-                                    'repeat(2, 1fr)',
-                                    'repeat(3, 1fr)',
-                                ]}
-                                gap={4}
-                            >
-                                <Button
-                                    onClick={() => {
-                                        toggleDAppKitPrivyColorMode();
-                                        toggleColorMode();
-                                    }}
-                                >
-                                    {colorMode === 'dark'
-                                        ? 'Light mode'
-                                        : 'Dark mode'}
-                                </Button>
-                                <Button onClick={openAccountModal}>
-                                    Account Modal
-                                </Button>
-                                <Button
-                                    onClick={handleTransactionWithToast}
-                                    isLoading={isTransactionPending}
-                                    isDisabled={isTransactionPending}
-                                >
-                                    Tx with toast
-                                </Button>
-                                <Button
-                                    onClick={handleTransactionWithModal}
-                                    isLoading={isTransactionPending}
-                                    isDisabled={isTransactionPending}
-                                >
-                                    Tx with modal
-                                </Button>
-                            </Grid>
-                        </HStack>
-                    </Box>
-                </VStack>
-            </Stack>
+                <Box>
+                    <Heading size={'md'}>VeBetterDAO</Heading>
+                    <Text>
+                        Current Allocations Round ID:{' '}
+                        {currentAllocationsRoundId}
+                    </Text>
+                    <Text>Selected GM NFT: {gmId === '0' ? 'None' : gmId}</Text>
+                    <Text>
+                        Participated in Governance:{' '}
+                        {participatedInGovernance?.toString()}
+                    </Text>
+                    <Text>
+                        Is Passport Valid: {isValidPassport?.toString()}
+                    </Text>
+                </Box>
+
+                <Box>
+                    <Heading size={'md'}>
+                        <b>UI</b>
+                    </Heading>
+                    <HStack mt={4} spacing={4}>
+                        <Button
+                            onClick={() => {
+                                toggleDAppKitPrivyColorMode();
+                                toggleColorMode();
+                            }}
+                        >
+                            {colorMode === 'dark' ? 'Light mode' : 'Dark mode'}
+                        </Button>
+                        <Button onClick={openAccountModal}>
+                            Account Modal
+                        </Button>
+                    </HStack>
+                </Box>
+
+                <Box>
+                    <Heading size={'md'}>
+                        <b>Test Transactions</b>
+                    </Heading>
+                    <HStack mt={4} spacing={4}>
+                        <Button
+                            onClick={handleTransactionWithToast}
+                            isLoading={isTransactionPending}
+                            isDisabled={isTransactionPending}
+                        >
+                            Tx with toast
+                        </Button>
+                        <Button
+                            onClick={handleTransactionWithModal}
+                            isLoading={isTransactionPending}
+                            isDisabled={isTransactionPending}
+                        >
+                            Tx with modal
+                        </Button>
+                    </HStack>
+                </Box>
+
+                <SigningExample />
+            </VStack>
 
             <TransactionToast
                 isOpen={isTransactionToastOpen}

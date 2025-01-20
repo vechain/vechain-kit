@@ -7,3 +7,4 @@ export * from './transactions';
 export * from './alerts';
 export * from './useCrossAppConnectionCache';
 export * from './useCall';
+export * from './signing';
