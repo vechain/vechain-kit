@@ -43,7 +43,7 @@ export const ConfirmationModalContent = ({
         setShowTimeout(false);
         const timer = setTimeout(() => {
             setShowTimeout(true);
-        }, 7000);
+        }, 9000);
 
         return () => clearTimeout(timer);
     }, [progress?.currentStep]);

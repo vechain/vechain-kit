@@ -78,7 +78,7 @@ const LoadingContent = ({
     React.useEffect(() => {
         const timer = setTimeout(() => {
             setShowTimeout(true);
-        }, 7000);
+        }, 9000);
 
         return () => clearTimeout(timer);
     }, []);
