@@ -4,7 +4,8 @@
         "gh-pages-build": {},
         "build": {
             "outputs": ["build/**", "dist/**"],
-            "dependsOn": ["^build"]
+            "dependsOn": ["^build"],
+            "cache": false
         },
         "purge": {
             "cache": false
