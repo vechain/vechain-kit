@@ -132,39 +132,35 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
 
                         {!isLoading && appsInfo && (
                             <VStack spacing={4} w={'full'} pb={6}>
-                                {Object.entries(appsInfo).map(
-                                    ([appId, appInfo]) => (
-                                        <Button
-                                            key={appId}
-                                            fontSize={'14px'}
-                                            fontWeight={'400'}
-                                            backgroundColor={
-                                                isDark
-                                                    ? 'transparent'
-                                                    : '#ffffff'
-                                            }
-                                            border={`1px solid ${
-                                                isDark ? '#ffffff29' : '#ebebeb'
-                                            }`}
-                                            p={6}
-                                            borderRadius={16}
-                                            w={'full'}
-                                            onClick={() =>
-                                                connectWithVebetterDaoApps(
-                                                    appId,
-                                                    appInfo.name,
-                                                )
-                                            }
-                                        >
-                                            <Image
-                                                src={appInfo.logo_url}
-                                                alt={appInfo.name}
-                                                w={'30px'}
-                                            />
-                                            <Text ml={5}>{appInfo.name}</Text>
-                                        </Button>
-                                    ),
-                                )}
+                                {appsInfo.map((appInfo) => (
+                                    <Button
+                                        key={appInfo.id}
+                                        fontSize={'14px'}
+                                        fontWeight={'400'}
+                                        backgroundColor={
+                                            isDark ? 'transparent' : '#ffffff'
+                                        }
+                                        border={`1px solid ${
+                                            isDark ? '#ffffff29' : '#ebebeb'
+                                        }`}
+                                        p={6}
+                                        borderRadius={16}
+                                        w={'full'}
+                                        onClick={() => {
+                                            connectWithVebetterDaoApps(
+                                                appInfo.id,
+                                                appInfo.name,
+                                            );
+                                        }}
+                                    >
+                                        <Image
+                                            src={appInfo.logo_url}
+                                            alt={appInfo.name}
+                                            w={'30px'}
+                                        />
+                                        <Text ml={5}>{appInfo.name}</Text>
+                                    </Button>
+                                ))}
                             </VStack>
                         )}
 
