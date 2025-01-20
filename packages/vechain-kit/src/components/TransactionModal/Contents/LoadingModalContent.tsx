@@ -112,7 +112,7 @@ export const LoadingModalContent = ({
 
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && onTryAgain && !txId && (
-                    <Button variant="secondary" onClick={onTryAgain}>
+                    <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         {t('Try again')}
                     </Button>

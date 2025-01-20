@@ -145,7 +145,7 @@ export const ConfirmationModalContent = ({
 
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && onTryAgain && (
-                    <Button variant="secondary" onClick={onTryAgain}>
+                    <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         {t('Try again')}
                     </Button>

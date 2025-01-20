@@ -17,7 +17,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
         <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full" mt={mt}>
             <IconButton
                 disabled
-                variant="selector"
+                variant="vechainKitSelector"
                 h="auto"
                 py={3}
                 fontSize="xs"
@@ -26,7 +26,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 icon={<Icon as={BsLightningCharge} boxSize={5} opacity={0.5} />}
             />
             <IconButton
-                variant="selector"
+                variant="vechainKitSelector"
                 h="auto"
                 py={3}
                 aria-label="Swap"
@@ -34,7 +34,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 onClick={() => setCurrentContent('swap-token')}
             />
             <IconButton
-                variant="selector"
+                variant="vechainKitSelector"
                 h="auto"
                 py={3}
                 aria-label="Receive"
@@ -48,7 +48,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 onClick={() => setCurrentContent('receive-token')}
             />
             <IconButton
-                variant="selector"
+                variant="vechainKitSelector"
                 h="auto"
                 py={3}
                 aria-label="Send"

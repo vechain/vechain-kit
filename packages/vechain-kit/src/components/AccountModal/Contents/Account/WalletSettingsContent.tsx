@@ -204,7 +204,7 @@ export const WalletSettingsContent = ({
                             disconnect();
                             onLogoutSuccess();
                         }}
-                        variant="secondary"
+                        variant="vechainKitSecondary"
                         leftIcon={<RxExit color="#888888" />}
                     >
                         {t('Logout')}

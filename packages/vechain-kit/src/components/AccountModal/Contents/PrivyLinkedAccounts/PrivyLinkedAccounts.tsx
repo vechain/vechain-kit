@@ -616,7 +616,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         <Button
                             mt={2}
                             w="full"
-                            variant="secondary"
+                            variant="vechainKitSecondary"
                             onClick={() => setShowLinkOptions(true)}
                             leftIcon={<Icon as={FaPlus} />}
                             isDisabled={

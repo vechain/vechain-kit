@@ -81,7 +81,7 @@ export const ChooseNameContent = ({ setCurrentContent }: Props) => {
                         </VStack>
 
                         <Button
-                            variant="primary"
+                            variant="vechainKitPrimary"
                             onClick={() =>
                                 setCurrentContent({
                                     type: 'choose-name-search',

@@ -399,7 +399,7 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
 
             <ModalFooter>
                 <Button
-                    variant="secondary"
+                    variant="vechainKitSecondary"
                     isDisabled={
                         !selectedToken ||
                         !amount ||

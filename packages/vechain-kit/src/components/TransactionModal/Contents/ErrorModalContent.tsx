@@ -96,7 +96,7 @@ export const ErrorModalContent = ({
                                 )}
                                 {showTryAgainButton && onTryAgain && (
                                     <Button
-                                        variant="secondary"
+                                        variant="vechainKitSecondary"
                                         onClick={onTryAgain}
                                     >
                                         <Icon

@@ -162,7 +162,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                             disconnect();
                             onClose();
                         }}
-                        variant="secondary"
+                        variant="vechainKitSecondary"
                         leftIcon={<RxExit color="#888888" />}
                     >
                         {t('Logout')}

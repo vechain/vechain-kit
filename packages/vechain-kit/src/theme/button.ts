@@ -20,7 +20,7 @@ const variants = {
             // border: '1px solid #5e5e5e',
         },
     })),
-    selector: defineStyle(({ colorMode }) => ({
+    vechainKitSelector: defineStyle(({ colorMode }) => ({
         bg: 'transparent',
         border: `1px solid ${colorMode === 'dark' ? '#ffffff29' : '#ebebeb'}`,
         _hover: {
@@ -32,7 +32,7 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
-    primary: defineStyle(() => ({
+    vechainKitPrimary: defineStyle(() => ({
         fontSize: 'sm',
         fontWeight: '400',
         px: 4,
@@ -55,7 +55,7 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
-    secondary: defineStyle(() => ({
+    vechainKitSecondary: defineStyle(() => ({
         fontSize: 'sm',
         fontWeight: '400',
         px: 4,

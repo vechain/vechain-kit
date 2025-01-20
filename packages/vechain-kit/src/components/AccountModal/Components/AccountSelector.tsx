@@ -28,7 +28,8 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
             <Button
                 p={2}
                 px={4}
-                variant="selector"
+                h={9}
+                variant="vechainKitSelector"
                 onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -46,8 +47,9 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
                 h="fit-content"
                 p={2}
                 pl={4}
+                h={9}
                 onClick={onClick}
-                variant="selector"
+                variant="vechainKitSelector"
             >
                 <HStack spacing={2} align="center">
                     <Text fontSize={size} fontWeight="500">

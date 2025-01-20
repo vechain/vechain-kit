@@ -127,7 +127,7 @@ const LoadingContent = ({
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && (
-                    <Button variant="secondary" onClick={onTryAgain}>
+                    <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         {t('Try again')}
                     </Button>
@@ -200,7 +200,7 @@ const ErrorContent = ({
                 </VStack>
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
-                <Button variant="secondary" onClick={onTryAgain}>
+                <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                     <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                     {t('Try again')}
                 </Button>
