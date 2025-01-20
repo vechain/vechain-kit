@@ -18,10 +18,9 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
-import { AccountModalContentTypes } from '@/components';
+import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useBalances } from '@/hooks';
 import { useState } from 'react';
-import { AssetButton } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 
 type Token = {

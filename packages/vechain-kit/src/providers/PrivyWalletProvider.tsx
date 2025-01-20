@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
-import { encodeFunctionData, TypedDataParameter } from 'viem';
+import { encodeFunctionData } from 'viem';
 import { ABIContract, Address, Clause } from '@vechain/sdk-core';
 import {
     ThorClient,

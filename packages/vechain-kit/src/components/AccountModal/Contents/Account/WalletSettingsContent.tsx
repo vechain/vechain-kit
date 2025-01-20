@@ -8,7 +8,7 @@ import {
     useColorMode,
     Button,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet } from '@/hooks';
+import { usePrivy, useWallet, useCrossAppConnectionCache } from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 import { IoIosFingerPrint } from 'react-icons/io';
@@ -24,7 +24,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache } from '@/hooks';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 
 type Props = {

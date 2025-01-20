@@ -22,8 +22,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
-import { useWallet } from '@/hooks';
-import { useTransferERC20, useTransferVET } from '@/hooks';
+import { useTransferERC20, useTransferVET, useWallet } from '@/hooks';
 import { TransactionModal } from '@/components';
 import { GiConfirmed } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';

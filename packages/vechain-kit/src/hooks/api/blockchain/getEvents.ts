@@ -60,7 +60,7 @@ export const getEvents = async ({
 
     const outputs = (await response.json()) as Connex.Thor.Filter.Row<
         'event',
-        {}
+        object
     >[];
     return outputs;
 };
@@ -82,7 +82,7 @@ export const getAllEvents = async ({
     to,
     filterCriteria,
 }: Omit<GetEventsProps, 'offset' | 'limit'>) => {
-    const allEvents: Connex.Thor.Filter.Row<'event', {}>[] = [];
+    const allEvents: Connex.Thor.Filter.Row<'event', object>[] = [];
     let offset = 0;
 
     // thor.block("best").get() is not working, have to use the node directly

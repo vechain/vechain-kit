@@ -70,8 +70,8 @@ export const getUserXNodes = async (
 
     if (!res[0] || !res[1])
         throw new Error('Error fetching Nodes - Data is missing');
-    let nodeIds: string[] = getNodeIdsAbi.decode(res[0]?.data)[0];
-    let levels: string[] = getNodeLevelsAbi.decode(res[1]?.data)[0];
+    const nodeIds: string[] = getNodeIdsAbi.decode(res[0]?.data)[0];
+    const levels: string[] = getNodeLevelsAbi.decode(res[1]?.data)[0];
 
     if (nodeIds.length !== levels.length)
         throw new Error('Error fetching Nodes - Data is corrupted');

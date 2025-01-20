@@ -12,7 +12,6 @@ import {
     VStack,
     IconButton,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
 import {
     FadeInViewFromBottom,
     ModalBackButton,
@@ -26,10 +25,13 @@ import React from 'react';
 import { RxExit } from 'react-icons/rx';
 import { Wallet } from '@/types';
 import { compareAddresses } from '@/utils';
-import { useSmartAccountAlert } from '@/hooks';
+import {
+    useSmartAccountAlert,
+    useCrossAppConnectionCache,
+    useWallet,
+} from '@/hooks';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<

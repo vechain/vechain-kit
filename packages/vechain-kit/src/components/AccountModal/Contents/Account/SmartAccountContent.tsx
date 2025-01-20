@@ -31,7 +31,7 @@ type Props = {
 export const SmartAccountContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
 
-    const { smartAccount, connection } = useWallet();
+    const { smartAccount } = useWallet();
 
     const walletImage = getPicassoImage(smartAccount.address ?? '');
 

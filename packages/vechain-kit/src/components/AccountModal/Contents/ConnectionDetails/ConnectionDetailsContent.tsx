@@ -11,14 +11,13 @@ import {
     HStack,
     Image,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
 import {
     ModalBackButton,
     StickyHeaderContainer,
     FadeInViewFromBottom,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache } from '@/hooks';
+import { useCrossAppConnectionCache, useWallet } from '@/hooks';
 import {
     CrossAppConnectionCard,
     DappKitConnectionCard,

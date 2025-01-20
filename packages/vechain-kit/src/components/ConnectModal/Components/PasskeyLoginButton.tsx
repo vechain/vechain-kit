@@ -2,8 +2,7 @@ import { GridItem, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useLoginWithPasskey } from '@privy-io/react-auth';
 import { IoIosFingerPrint } from 'react-icons/io';
-import { ConnectionButton } from '@/components';
-import { LoginLoadingModal } from '@/components';
+import { LoginLoadingModal, ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

@@ -24,9 +24,8 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent } from './SelectTokenContent';
-import { TOKEN_LOGOS } from '@/utils';
 import { ZeroAddress } from 'ethers';
-import { compareAddresses, isValidAddress } from '@/utils';
+import { compareAddresses, isValidAddress, TOKEN_LOGOS } from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
 
