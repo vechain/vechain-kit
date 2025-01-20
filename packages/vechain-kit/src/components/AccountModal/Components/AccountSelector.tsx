@@ -44,7 +44,6 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
 
             <Button
                 w="fit-content"
-                h="fit-content"
                 p={2}
                 pl={4}
                 h={9}
