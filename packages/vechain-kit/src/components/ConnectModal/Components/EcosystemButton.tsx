@@ -2,13 +2,21 @@ import { GridItem, useDisclosure } from '@chakra-ui/react';
 import { IoPlanet } from 'react-icons/io5';
 import { ConnectionButton, EcosystemModal } from '@/components';
 import { useTranslation } from 'react-i18next';
+import { PrivyAppInfo } from '@/types';
 
 type Props = {
     isDark: boolean;
     privySocialLoginEnabled: boolean;
+    appsInfo: PrivyAppInfo[];
+    isLoading: boolean;
 };
 
-export const EcosystemButton = ({ isDark, privySocialLoginEnabled }: Props) => {
+export const EcosystemButton = ({
+    isDark,
+    privySocialLoginEnabled,
+    appsInfo,
+    isLoading,
+}: Props) => {
     const { t } = useTranslation();
     const ecosystemModal = useDisclosure();
 
@@ -26,6 +34,8 @@ export const EcosystemButton = ({ isDark, privySocialLoginEnabled }: Props) => {
             <EcosystemModal
                 isOpen={ecosystemModal.isOpen}
                 onClose={ecosystemModal.onClose}
+                appsInfo={appsInfo}
+                isLoading={isLoading}
             />
         </>
     );

@@ -20,7 +20,7 @@ import {
 } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
-import { useWallet } from '@/hooks';
+import { useFetchAppInfo, useWallet } from '@/hooks';
 import { VeChainLoginButton } from '../Components/VeChainLoginButton';
 import { SocialLoginButtons } from '../Components/SocialLoginButtons';
 import { PasskeyLoginButton } from '../Components/PasskeyLoginButton';
@@ -42,9 +42,14 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
     const { connection } = useWallet();
-    const { loginModalUI, privySocialLoginEnabled } = useVeChainKitConfig();
+    const { loginModalUI, privySocialLoginEnabled, privyEcosystemAppIDS } =
+        useVeChainKitConfig();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
+
+    // Load ecosystem apps info, doing it here to avoid loading when opening the modal
+    const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
+        useFetchAppInfo(privyEcosystemAppIDS);
 
     useEffect(() => {
         if (connection.isConnected) {
@@ -132,6 +137,8 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                                 privySocialLoginEnabled={
                                     privySocialLoginEnabled
                                 }
+                                appsInfo={Object.values(appsInfo || {})}
+                                isLoading={isEcosystemAppsLoading}
                             />
 
                             {privySocialLoginEnabled && (

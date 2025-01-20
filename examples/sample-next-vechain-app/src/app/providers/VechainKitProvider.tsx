@@ -40,11 +40,6 @@ export function VechainKitProvider({ children }: Props) {
 
                 allowPasskeyLinking: true,
             }}
-            privyEcosystemAppIDS={[
-                'cm4wxxujb022fyujl7g0thb21', //vechain
-                'clz41gcg00e4ay75dmq3uzzgr', //cleanify
-                'cm153hrup0817axti38avlfyg', //greencart
-            ]}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: true,

@@ -30,6 +30,12 @@ import { getConfig } from '@/config';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
 
+const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
+    'cm4wxxujb022fyujl7g0thb21', //vechain
+    'clz41gcg00e4ay75dmq3uzzgr', //cleanify
+    'cm153hrup0817axti38avlfyg', //greencart
+];
+
 export type VechainKitProps = {
     children: ReactNode;
     privy?: {
@@ -47,7 +53,7 @@ export type VechainKitProps = {
         loginMethods: PrivyLoginMethod[];
         allowPasskeyLinking?: boolean;
     };
-    privyEcosystemAppIDS: string[];
+    privyEcosystemAppIDS?: string[];
     feeDelegation: {
         delegatorUrl: string;
         delegateAllTransactions: boolean;
@@ -142,7 +148,7 @@ export const VeChainKit = ({
     i18n: i18nConfig,
     language,
     network,
-    privyEcosystemAppIDS,
+    privyEcosystemAppIDS = DEFAULT_PRIVY_ECOSYSTEM_APP_IDS,
 }: Omit<VechainKitProps, 'queryClient'>) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);

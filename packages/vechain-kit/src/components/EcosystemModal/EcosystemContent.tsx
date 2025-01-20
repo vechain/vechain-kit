@@ -16,19 +16,21 @@ import {
     FadeInViewFromBottom,
     StickyHeaderContainer,
 } from '@/components/common';
-import { useVeChainKitConfig } from '@/providers';
-import { useFetchAppInfo, useCrossAppConnectionCache } from '@/hooks';
+import { useCrossAppConnectionCache } from '@/hooks';
 import { IoPlanet } from 'react-icons/io5';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
+import { PrivyAppInfo } from '@/types';
 
 type Props = {
     onClose: () => void;
+    appsInfo: PrivyAppInfo[];
+    isLoading: boolean;
 };
 
-export const EcosystemContent = ({ onClose }: Props) => {
+export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -37,9 +39,6 @@ export const EcosystemContent = ({ onClose }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const { setConnectionCache } = useCrossAppConnectionCache();
-
-    const { privyEcosystemAppIDS } = useVeChainKitConfig();
-    const { data: appsInfo, isLoading } = useFetchAppInfo(privyEcosystemAppIDS);
 
     // Login with Vechain - Cross app account login
     const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
@@ -59,7 +58,7 @@ export const EcosystemContent = ({ onClose }: Props) => {
             // Store the appId along with the connection info
             setConnectionCache({
                 name: appName,
-                logoUrl: appsInfo?.[appId]?.logo_url,
+                logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
                 appId: appId,
             });
 

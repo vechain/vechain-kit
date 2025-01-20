@@ -11,7 +11,7 @@ import {
     HStack,
     Image,
 } from '@chakra-ui/react';
-import { useFetchAppInfo, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import {
     ModalBackButton,
     StickyHeaderContainer,
@@ -39,17 +39,12 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const { getConnectionCache } = useCrossAppConnectionCache();
 
     const { privy } = useVeChainKitConfig();
-    const { privyUser, connection } = useWallet();
+    const { connection } = useWallet();
     const { source } = useDappKitWallet();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
     const connectionCache = getConnectionCache();
-
-    console.log('privyUser', privyUser);
-    console.log('connection', connection);
-    const { data: privyAppInfo, isLoading: isLoadingPrivyAppInfo } =
-        useFetchAppInfo(privy?.appId ?? '');
 
     const modalTitle =
         connection.isConnectedWithCrossApp && connectionCache
