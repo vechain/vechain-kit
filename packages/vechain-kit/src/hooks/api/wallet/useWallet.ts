@@ -173,11 +173,11 @@ export const useWallet = (): UseWalletReturnType => {
     const disconnect = useCallback(async () => {
         try {
             if (isConnectedWithDappKit) {
-                await dappKitDisconnect();
+                dappKitDisconnect();
             } else if (isConnectedWithSocialLogin) {
-                await logout();
+                logout();
             } else if (isConnectedWithCrossApp) {
-                await disconnectCrossApp();
+                disconnectCrossApp();
             }
             clearConnectionCache();
             window.dispatchEvent(new Event('wallet_disconnected'));
