@@ -44,6 +44,18 @@ export const useClaimVeWorldSubdomain = ({
         const clausesArray: any[] = [];
 
         clausesArray.push({
+            to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
+            value: '0x0',
+            data: ReverseRegistrarInterface.encodeFunctionData('setName', ['']),
+            comment: `Unsetting your current VeChain nickname of the account ${humanAddress(
+                account.address ?? '',
+                4,
+                4,
+            )}`,
+            abi: ReverseRegistrarInterface.getFunction('setName'),
+        });
+
+        clausesArray.push({
             to: getConfig(network.type).veWorldSubdomainClaimerContractAddress,
             value: '0x0',
             data: SubdomainClaimerInterface.encodeFunctionData('claim', [
