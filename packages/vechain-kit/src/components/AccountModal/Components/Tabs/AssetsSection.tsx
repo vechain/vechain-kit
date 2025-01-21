@@ -18,7 +18,7 @@ type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
 };
 
-export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
+export const AssetsSection = ({ mt }: Props) => {
     const { t } = useTranslation();
     const tabBgColor = useColorModeValue('white', '#1f1f1e');
     const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
@@ -67,12 +67,54 @@ export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
                         >
                             {t('Assets')}
                         </Tab>
+                        {/* <Tab
+                            borderRadius="lg"
+                            color={tabTextColor}
+                            _selected={{
+                                bg: tabSelectedBgColor,
+                                color: tabTextSelectedColor,
+                            }}
+                            flex={1}
+                            transition="all 0.2s"
+                            _hover={{
+                                bg: tabSelectedBgColor,
+                                opacity: 0.8,
+                            }}
+                        >
+                            {t('NFTs')}
+                        </Tab>
+                        <Tab
+                            borderRadius="lg"
+                            color={tabTextColor}
+                            _selected={{
+                                bg: tabSelectedBgColor,
+                                color: tabTextSelectedColor,
+                            }}
+                            flex={1}
+                            transition="all 0.2s"
+                            _hover={{
+                                bg: tabSelectedBgColor,
+                                opacity: 0.8,
+                            }}
+                        >
+                            {t('Activity')}
+                        </Tab> */}
                     </TabList>
                 </HStack>
                 <TabPanels ref={tabPanelsRef}>
                     <TabPanel p={0} pt={3}>
                         <AssetsTabPanel />
                     </TabPanel>
+                    {/* <TabPanel p={0} pt={3}>
+                        <NFTsTabPanel
+                            onOpenReceiveModal={() =>
+                                setCurrentContent('receive-token')
+                            }
+                        />
+                    </TabPanel>
+                    <TabPanel p={0} pt={3}>
+                        <ActivityTabPanel />
+                    </TabPanel> */}
                 </TabPanels>
             </Tabs>
         </VStack>
