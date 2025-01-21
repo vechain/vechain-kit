@@ -33,7 +33,12 @@ export const BalanceSection = ({ mb, mt }: { mb?: number; mt?: number }) => {
         }, 1500);
     };
 
-    if (isLoading) return <Spinner mt={4} mb={mb} />;
+    if (isLoading)
+        return (
+            <VStack w="full" spacing={2} mt={mt} mb={mb}>
+                <Spinner />
+            </VStack>
+        );
 
     return (
         <VStack w="full" spacing={2} mt={mt} mb={mb} onClick={handleRefresh}>

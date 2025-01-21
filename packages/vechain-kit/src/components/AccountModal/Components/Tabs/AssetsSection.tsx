@@ -60,6 +60,14 @@ export const AssetsSection = ({ mt }: Props) => {
                             flex={1}
                             onClick={scrollToContent}
                             transition="all 0.2s"
+                            _active={{
+                                bg: tabBgColor,
+                                color: tabTextColor,
+                            }}
+                            _focus={{
+                                bg: tabBgColor,
+                                color: tabTextColor,
+                            }}
                             _hover={{
                                 bg: tabSelectedBgColor,
                                 opacity: 0.8,

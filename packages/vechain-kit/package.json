@@ -17,7 +17,7 @@
     ],
     "scripts": {
         "build": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
-        "watch": "tsup --watch",
+        "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup --watch",
         "clean": "rm -rf dist .turbo",
         "lint": "eslint",
         "purge": "yarn clean && rm -rf node_modules",
