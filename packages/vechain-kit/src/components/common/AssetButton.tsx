@@ -69,9 +69,9 @@ export const AssetButton = ({
             <Text>{symbol}</Text>
         </HStack>
         <VStack align="flex-end" spacing={0}>
-            <Text>{compactFormatter.format(amount)}</Text>
+            <Text>${compactFormatter.format(usdValue)}</Text>
             <Text fontSize="sm" color="gray.500">
-                ${compactFormatter.format(usdValue)}
+                {compactFormatter.format(amount)}
             </Text>
         </VStack>
     </Button>
