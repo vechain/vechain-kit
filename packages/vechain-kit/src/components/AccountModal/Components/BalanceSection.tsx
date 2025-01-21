@@ -11,6 +11,9 @@ import { useBalances, useRefreshBalances } from '@/hooks';
 import { useState } from 'react';
 import { IoRefresh } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
+import { VscRefresh } from 'react-icons/vsc';
+import { MdOutlineRefresh } from 'react-icons/md';
+import { IoMdRefresh } from 'react-icons/io';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -18,7 +21,7 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
 });
 
-export const BalanceSection = ({ mb }: { mb?: number }) => {
+export const BalanceSection = ({ mb, mt }: { mb?: number; mt?: number }) => {
     const { t } = useTranslation();
     const { isLoading, totalBalance } = useBalances();
 
@@ -36,7 +39,7 @@ export const BalanceSection = ({ mb }: { mb?: number }) => {
     if (isLoading) return <Spinner mt={4} mb={mb} />;
 
     return (
-        <VStack w="full" spacing={2} mt={4} mb={mb} onClick={handleRefresh}>
+        <VStack w="full" spacing={2} mt={mt} mb={mb} onClick={handleRefresh}>
             <Heading textAlign="center" size={'2xl'} fontWeight={'500'}>
                 ${compactFormatter.format(totalBalance)}
             </Heading>
@@ -47,8 +50,9 @@ export const BalanceSection = ({ mb }: { mb?: number }) => {
                     size="sm"
                     variant="link"
                     onClick={handleRefresh}
-                    leftIcon={<Icon as={IoRefresh} />}
+                    leftIcon={<Icon as={VscRefresh} boxSize={4} />}
                     isLoading={isRefreshing}
+                    alignItems="center"
                     loadingText={t('Refreshing')}
                 >
                     <Text fontSize="xs" opacity={0.7} lineHeight={1}>

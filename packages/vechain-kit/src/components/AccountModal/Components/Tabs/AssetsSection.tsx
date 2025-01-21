@@ -23,7 +23,7 @@ export const AssetsSection = ({ mt }: Props) => {
     const tabBgColor = useColorModeValue('white', '#1f1f1e');
     const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
     const tabTextColor = useColorModeValue('#4d4d4d', '#dfdfdd');
-    const tabTextSelectedColor = useColorModeValue('#000000', '#ffffff');
+    // const tabTextSelectedColor = useColorModeValue('#000000', '#ffffff');
     const tabSelectedBgColor = useColorModeValue('#f7f7f7', '#3c3c39');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
@@ -54,8 +54,8 @@ export const AssetsSection = ({ mt }: Props) => {
                             borderRadius="lg"
                             color={tabTextColor}
                             _selected={{
-                                bg: tabSelectedBgColor,
-                                color: tabTextSelectedColor,
+                                bg: tabBgColor,
+                                color: tabTextColor,
                             }}
                             flex={1}
                             onClick={scrollToContent}

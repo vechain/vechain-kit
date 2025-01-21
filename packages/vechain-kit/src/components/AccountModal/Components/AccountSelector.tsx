@@ -10,9 +10,15 @@ type Props = {
     wallet: Wallet;
     size?: string;
     onClick?: () => void;
+    mt?: number;
 };
 
-export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
+export const AccountSelector = ({
+    wallet,
+    size = 'md',
+    onClick,
+    mt,
+}: Props) => {
     const [copied, setCopied] = useState(false);
 
     const copyToClipboard = async (textToCopy: string) => {
@@ -24,7 +30,7 @@ export const AccountSelector = ({ wallet, size = 'md', onClick }: Props) => {
     };
 
     return (
-        <HStack>
+        <HStack mt={mt}>
             <Button
                 p={2}
                 px={4}

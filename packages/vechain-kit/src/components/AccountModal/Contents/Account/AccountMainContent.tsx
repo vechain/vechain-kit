@@ -61,9 +61,8 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                 <VStack justify={'center'}>
                     <Image
                         src={wallet.image}
-                        w="120px"
-                        h="120px"
-                        mt={10}
+                        maxW={'100px'}
+                        mt={5}
                         mb={5}
                         borderRadius="full"
                         objectFit="cover"
@@ -74,8 +73,9 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
             <FadeInViewFromBottom>
                 <Container maxW={'container.lg'}>
                     <ModalBody w={'full'}>
-                        <VStack w={'full'} spacing={10} overflow={'hidden'}>
+                        <VStack w={'full'} overflow={'hidden'}>
                             <AccountSelector
+                                mt={0}
                                 onClick={() => {
                                     if (smartAccount.isActive) {
                                         setCurrentContent('accounts');
@@ -85,11 +85,15 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                                 }}
                                 wallet={wallet}
                             />
-                            <BalanceSection />
+
+                            <BalanceSection mt={10} />
+
                             <QuickActionsSection
+                                mt={10}
                                 setCurrentContent={setCurrentContent}
                             />
                             <AssetsSection
+                                mt={2}
                                 setCurrentContent={setCurrentContent}
                             />
                         </VStack>
