@@ -20,6 +20,7 @@ type useClaimVeWorldSubdomainProps = {
     domain: string;
     onSuccess?: () => void;
     onSuccessMessageTitle?: number;
+    alreadyOwned?: boolean;
 };
 
 type useClaimVeWorldSubdomainReturnValue = {
@@ -33,6 +34,7 @@ export const useClaimVeWorldSubdomain = ({
     subdomain,
     domain,
     onSuccess,
+    alreadyOwned = false,
 }: useClaimVeWorldSubdomainProps): useClaimVeWorldSubdomainReturnValue => {
     const queryClient = useQueryClient();
     const { account } = useWallet();
@@ -55,16 +57,19 @@ export const useClaimVeWorldSubdomain = ({
             abi: ReverseRegistrarInterface.getFunction('setName'),
         });
 
-        clausesArray.push({
-            to: getConfig(network.type).veWorldSubdomainClaimerContractAddress,
-            value: '0x0',
-            data: SubdomainClaimerInterface.encodeFunctionData('claim', [
-                subdomain,
-                getConfig(network.type).vetDomainsPublicResolverAddress,
-            ]),
-            comment: `Claim VeChain subdomain: ${subdomain}.${domain}`,
-            abi: SubdomainClaimerInterface.getFunction('claim'),
-        });
+        if (!alreadyOwned) {
+            clausesArray.push({
+                to: getConfig(network.type)
+                    .veWorldSubdomainClaimerContractAddress,
+                value: '0x0',
+                data: SubdomainClaimerInterface.encodeFunctionData('claim', [
+                    subdomain,
+                    getConfig(network.type).vetDomainsPublicResolverAddress,
+                ]),
+                comment: `Claim VeChain subdomain: ${subdomain}.${domain}`,
+                abi: SubdomainClaimerInterface.getFunction('claim'),
+            });
+        }
 
         clausesArray.push({
             to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
@@ -81,7 +86,7 @@ export const useClaimVeWorldSubdomain = ({
         });
 
         return clausesArray;
-    }, [subdomain, domain, account?.address]);
+    }, [subdomain, domain, account?.address, alreadyOwned]);
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {

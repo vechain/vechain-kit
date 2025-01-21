@@ -27,11 +27,13 @@ export type ChooseNameSummaryContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     name: string;
+    isOwnDomain: boolean;
 };
 
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
+    isOwnDomain,
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -42,6 +44,7 @@ export const ChooseNameSummaryContent = ({
         useClaimVeWorldSubdomain({
             subdomain: name,
             domain: 'veworld.vet',
+            alreadyOwned: isOwnDomain,
         });
 
     const handleConfirm = async () => {

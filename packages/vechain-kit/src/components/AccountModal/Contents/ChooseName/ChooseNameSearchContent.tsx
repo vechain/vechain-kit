@@ -18,7 +18,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
-import { useEnsRecordExists, useWallet } from '@/hooks';
+import { useEnsRecordExists, useWallet, useVechainDomain } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -38,10 +38,13 @@ export const ChooseNameSearchContent = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const [name, setName] = useState(initialName);
     const [error, setError] = useState<string | null>(null);
+    const [isOwnDomain, setIsOwnDomain] = useState(false);
     const [isAvailable, setIsAvailable] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
 
-    const { data: ensRecordExists, isLoading } = useEnsRecordExists(name);
+    const { data: ensRecordExists, isLoading: isEnsCheckLoading } =
+        useEnsRecordExists(name);
+    const { data: domainInfo } = useVechainDomain(`${name}.veworld.vet`);
 
     useEffect(() => {
         if (!hasInteracted) return;
@@ -49,14 +52,35 @@ export const ChooseNameSearchContent = ({
         if (name.length < 3) {
             setError(t('Name must be at least 3 characters long'));
             setIsAvailable(false);
+            setIsOwnDomain(false);
         } else if (ensRecordExists) {
-            setError(t('This domain is already taken'));
-            setIsAvailable(false);
-        } else if (!isLoading) {
+            // Check if the domain belongs to the current user
+            const isOwnDomain =
+                domainInfo?.address?.toLowerCase() ===
+                account?.address?.toLowerCase();
+
+            if (isOwnDomain) {
+                setError(null);
+                setIsAvailable(true);
+                setIsOwnDomain(true);
+            } else {
+                setError(t('This domain is already taken'));
+                setIsAvailable(false);
+                setIsOwnDomain(false);
+            }
+        } else if (!isEnsCheckLoading) {
             setError(null);
             setIsAvailable(true);
+            setIsOwnDomain(false);
         }
-    }, [name, hasInteracted, ensRecordExists, isLoading]);
+    }, [
+        name,
+        hasInteracted,
+        ensRecordExists,
+        isEnsCheckLoading,
+        domainInfo,
+        account?.address,
+    ]);
 
     const handleContinue = () => {
         if (isAvailable && !error) {
@@ -64,6 +88,7 @@ export const ChooseNameSearchContent = ({
                 type: 'choose-name-summary',
                 props: {
                     name,
+                    isOwnDomain,
                     setCurrentContent,
                 },
             });
@@ -154,7 +179,9 @@ export const ChooseNameSearchContent = ({
                                 color={isAvailable ? 'green.500' : 'red.500'}
                                 fontWeight="500"
                             >
-                                {isAvailable
+                                {isOwnDomain
+                                    ? t('YOU OWN THIS')
+                                    : isAvailable
                                     ? t('AVAILABLE')
                                     : t('UNAVAILABLE')}
                             </Text>
