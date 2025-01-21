@@ -1,7 +1,7 @@
-import { HStack, Image, Box, Text } from '@chakra-ui/react';
+import { HStack, Text, Circle, Image } from '@chakra-ui/react';
 import { useBalances } from '@/hooks';
-import { TOKEN_LOGOS } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
+import { TOKEN_LOGOS } from '@/utils';
 
 type AssetIconsProps = {
     address?: string;
@@ -38,51 +38,34 @@ export const AssetIcons = ({
     return (
         <HStack spacing={0} ml={ml}>
             {tokensToShow.map((token, index) => (
-                <Box
+                <Circle
                     key={token.symbol}
                     ml={index > 0 ? `-${marginLeft}px` : '0'}
                     zIndex={index}
+                    size={`${iconSize}px`}
                     borderRadius="full"
-                    backgroundColor={darkMode ? 'gray.100' : 'gray.700'}
+                    bg={darkMode ? 'gray.100' : 'gray.700'}
+                    border="2px solid #00000024"
                 >
                     <Image
                         src={TOKEN_LOGOS[token.symbol]}
                         alt={`${token.symbol} logo`}
-                        width={`${iconSize}px`}
-                        height={`${iconSize}px`}
-                        borderRadius="full"
-                        fallback={
-                            <Box
-                                boxSize={`${iconSize}px`}
-                                borderRadius="full"
-                                bg={darkMode ? 'gray.200' : 'gray.700'}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                            >
-                                <Text
-                                    fontSize={`${iconSize * 0.4}px`}
-                                    fontWeight="bold"
-                                    color={darkMode ? 'white' : 'black'}
-                                >
-                                    {token.symbol.slice(0, 3)}
-                                </Text>
-                            </Box>
-                        }
+                        width={`${iconSize * 0.8}px`}
+                        height={`${iconSize * 0.8}px`}
                     />
-                </Box>
+                </Circle>
             ))}
             {remainingTokens > 0 && (
-                <Box
+                <Circle
                     ml={`-${marginLeft}px`}
                     zIndex={tokensToShow.length}
-                    width={`${iconSize}px`}
-                    height={`${iconSize}px`}
+                    size={`${iconSize}px`}
                     borderRadius="full"
                     bg={darkMode ? 'gray.100' : 'gray.700'}
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
+                    border="2px solid"
                 >
                     <Text
                         fontSize={`${iconSize * 0.4}px`}
@@ -91,7 +74,7 @@ export const AssetIcons = ({
                     >
                         +{remainingTokens}
                     </Text>
-                </Box>
+                </Circle>
             )}
         </HStack>
     );
