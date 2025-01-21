@@ -63,7 +63,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                     <VStack justify={'center'}>
                         <Image
                             src={walletImage}
-                            maxW={'70px'}
+                            maxW={'100px'}
                             borderRadius="50%"
                         />
                         <AddressDisplay wallet={smartAccount} />

@@ -87,7 +87,7 @@ export const WalletSettingsContent = ({
                     <VStack justify={'center'}>
                         <Image
                             src={connectedWallet.image}
-                            maxW={'70px'}
+                            maxW={'100px'}
                             borderRadius="50%"
                         />
                         <AddressDisplay wallet={connectedWallet} />
