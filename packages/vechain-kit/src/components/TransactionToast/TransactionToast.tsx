@@ -117,7 +117,7 @@ export const TransactionToast = ({
                                     size="xs"
                                     borderRadius="xl"
                                 />
-                                <Text fontSize="xs" color="gray.500">
+                                <Text fontSize="xs" opacity={0.5}>
                                     {progress.currentStepDescription ||
                                         `${t('Step')} ${
                                             progress.currentStep

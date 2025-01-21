@@ -1,3 +1,4 @@
+import { VechainKitThemeProvider } from '@/providers';
 import {
     Modal,
     ModalContent,
@@ -6,6 +7,7 @@ import {
     useMediaQuery,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import { useVeChainKitConfig } from '@/providers';
 
 type BaseModalProps = {
     isOpen: boolean;
@@ -34,6 +36,7 @@ export const BaseModal = ({
     allowExternalFocus = false,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
+    const { darkMode } = useVeChainKitConfig();
 
     const modalContentProps: ModalContentProps = isDesktop
         ? {}
@@ -49,29 +52,31 @@ export const BaseModal = ({
           };
 
     return (
-        <Modal
-            motionPreset={isDesktop ? 'none' : motionPreset}
-            isOpen={isOpen}
-            onClose={onClose}
-            isCentered={isCentered}
-            size={size}
-            scrollBehavior="inside"
-            returnFocusOnClose={false}
-            blockScrollOnMount={blockScrollOnMount}
-            closeOnOverlayClick={closeOnOverlayClick}
-            preserveScrollBarGap={true}
-            portalProps={{ containerRef: undefined }}
-            trapFocus={!allowExternalFocus}
-            autoFocus={!allowExternalFocus}
-        >
-            <ModalOverlay />
-            <ModalContent
-                role="dialog"
-                aria-modal={!allowExternalFocus}
-                {...modalContentProps}
+        <VechainKitThemeProvider darkMode={darkMode}>
+            <Modal
+                motionPreset={isDesktop ? 'none' : motionPreset}
+                isOpen={isOpen}
+                onClose={onClose}
+                isCentered={isCentered}
+                size={size}
+                scrollBehavior="inside"
+                returnFocusOnClose={false}
+                blockScrollOnMount={blockScrollOnMount}
+                closeOnOverlayClick={closeOnOverlayClick}
+                preserveScrollBarGap={true}
+                portalProps={{ containerRef: undefined }}
+                trapFocus={!allowExternalFocus}
+                autoFocus={!allowExternalFocus}
             >
-                {children}
-            </ModalContent>
-        </Modal>
+                <ModalOverlay />
+                <ModalContent
+                    role="dialog"
+                    aria-modal={!allowExternalFocus}
+                    {...modalContentProps}
+                >
+                    {children}
+                </ModalContent>
+            </Modal>
+        </VechainKitThemeProvider>
     );
 };

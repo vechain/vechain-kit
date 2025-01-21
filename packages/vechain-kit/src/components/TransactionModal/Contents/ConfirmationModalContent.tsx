@@ -86,7 +86,7 @@ export const ConfirmationModalContent = ({
                                         <Text
                                             fontSize="sm"
                                             align={'center'}
-                                            color="gray.500"
+                                            opacity={0.5}
                                         >
                                             {progress.currentStepDescription}
                                         </Text>

@@ -4,8 +4,8 @@ import { cardTheme } from './card';
 import { buttonTheme } from './button';
 
 const themeConfig: ThemeConfig = {
-    // 2. Add your color mode config
     useSystemColorMode: false,
+    disableTransitionOnChange: false,
 
     // @ts-ignore
     components: {

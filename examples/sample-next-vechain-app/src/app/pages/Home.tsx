@@ -17,7 +17,6 @@ import {
     useSendTransaction,
     useTransactionModal,
     useTransactionToast,
-    useDAppKitPrivyColorMode,
     useAccountModal,
     useGetB3trBalance,
     useCurrentAllocationsRoundId,
@@ -35,8 +34,6 @@ import { SigningExample } from '@/app/components/SigningExample';
 
 export default function Home(): ReactElement {
     const { toggleColorMode, colorMode } = useColorMode();
-    const { toggleColorMode: toggleDAppKitPrivyColorMode } =
-        useDAppKitPrivyColorMode();
 
     const { connection, account, connectedWallet, smartAccount } = useWallet();
 
@@ -196,8 +193,8 @@ export default function Home(): ReactElement {
                     </Heading>
                     <HStack mt={4} spacing={4}>
                         <Button
+                            colorScheme="primary"
                             onClick={() => {
-                                toggleDAppKitPrivyColorMode();
                                 toggleColorMode();
                             }}
                         >

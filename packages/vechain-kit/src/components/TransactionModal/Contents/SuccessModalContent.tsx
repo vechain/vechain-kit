@@ -106,7 +106,7 @@ export const SuccessModalContent = ({
                             <Link
                                 href={`${explorerUrl}/${txId}`}
                                 isExternal
-                                color="gray.500"
+                                opacity={0.5}
                                 fontSize={'14px'}
                                 textDecoration={'underline'}
                             >
