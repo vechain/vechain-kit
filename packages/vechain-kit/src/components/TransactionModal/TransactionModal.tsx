@@ -70,6 +70,7 @@ export const TransactionModal = ({
                     onTryAgain={onTryAgain}
                     showExplorerButton={showExplorerButton}
                     txId={txId}
+                    onClose={onClose}
                 />
             );
         if (status === 'success')
@@ -80,6 +81,7 @@ export const TransactionModal = ({
                     socialDescriptionEncoded={socialDescriptionEncoded}
                     showExplorerButton={showExplorerButton}
                     txId={txId}
+                    onClose={onClose}
                 />
             );
         return null;

@@ -6,8 +6,9 @@ import {
     Icon,
     ModalHeader,
     ModalFooter,
-    Container,
     ModalBody,
+    Button,
+    HStack,
 } from '@chakra-ui/react';
 import { ShareButtons } from '../Components/ShareButtons';
 import { ReactNode } from 'react';
@@ -20,6 +21,7 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
+import { GoLinkExternal } from 'react-icons/go';
 
 export type SuccessModalContentProps = {
     title?: ReactNode;
@@ -27,6 +29,7 @@ export type SuccessModalContentProps = {
     socialDescriptionEncoded?: string;
     showExplorerButton?: boolean;
     txId?: string;
+    onClose?: () => void;
 };
 
 /**
@@ -45,6 +48,7 @@ export const SuccessModalContent = ({
     showExplorerButton = false,
     txId,
     socialDescriptionEncoded,
+    onClose,
 }: SuccessModalContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -70,36 +74,40 @@ export const SuccessModalContent = ({
             </StickyHeaderContainer>
 
             <FadeInViewFromBottom>
-                <Container maxW={'container.lg'}>
-                    <ModalBody>
-                        <VStack align={'center'} p={6}>
-                            <motion.div
-                                transition={{
-                                    duration: 4,
-                                    ease: 'easeInOut',
-                                    repeat: Infinity,
-                                }}
-                                animate={{
-                                    scale: [1, 1.1, 1],
-                                }}
-                            >
-                                <Icon as={FcCheckmark} fontSize={'100px'} />
-                            </motion.div>
+                <ModalBody>
+                    <VStack align={'center'} p={6} spacing={3}>
+                        <motion.div
+                            transition={{
+                                duration: 4,
+                                ease: 'easeInOut',
+                                repeat: Infinity,
+                            }}
+                            animate={{
+                                scale: [1, 1.1, 1],
+                            }}
+                        >
+                            <Icon as={FcCheckmark} fontSize={'100px'} />
+                        </motion.div>
 
-                            {showSocialButtons && (
-                                <VStack>
-                                    <Text fontSize="sm">
-                                        {t('Share your transaction')}
-                                    </Text>
-                                    <ShareButtons
-                                        descriptionEncoded={socialDescription}
-                                    />
-                                </VStack>
-                            )}
-                        </VStack>
-                    </ModalBody>
+                        {showSocialButtons && (
+                            <VStack>
+                                <Text fontSize="sm">
+                                    {t('Share your transaction')}
+                                </Text>
+                                <ShareButtons
+                                    descriptionEncoded={socialDescription}
+                                />
+                            </VStack>
+                        )}
+                    </VStack>
+                </ModalBody>
 
-                    <ModalFooter justifyContent={'center'}>
+                <ModalFooter justifyContent={'center'}>
+                    <VStack w={'full'} spacing={4}>
+                        <Button onClick={onClose} variant="vechainKitSecondary">
+                            {t('Close')}
+                        </Button>
+
                         {showExplorerButton && txId && (
                             <Link
                                 href={`${explorerUrl}/${txId}`}
@@ -108,11 +116,21 @@ export const SuccessModalContent = ({
                                 fontSize={'14px'}
                                 textDecoration={'underline'}
                             >
-                                {t('View transaction on the explorer')}
+                                <HStack
+                                    spacing={1}
+                                    alignItems={'center'}
+                                    w={'full'}
+                                    justifyContent={'center'}
+                                >
+                                    <Text>
+                                        {t('View transaction on the explorer')}
+                                    </Text>
+                                    <Icon size={'sm'} as={GoLinkExternal} />
+                                </HStack>
                             </Link>
                         )}
-                    </ModalFooter>
-                </Container>
+                    </VStack>
+                </ModalFooter>
             </FadeInViewFromBottom>
         </FadeInViewFromBottom>
     );

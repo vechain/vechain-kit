@@ -5,7 +5,6 @@ import {
     Text,
     VStack,
     ModalHeader,
-    Container,
     ModalBody,
     ModalFooter,
     Button,
@@ -61,51 +60,47 @@ export const LoadingModalContent = ({
             </StickyHeaderContainer>
 
             <FadeInViewFromBottom>
-                <Container maxW={'container.lg'}>
-                    <ModalBody>
-                        <VStack align={'center'} p={6}>
-                            <Spinner my={10} size="xl" />
-                            {showExplorerButton && txId && (
-                                <Link
-                                    href={`${explorerUrl}/transactions/${txId}`}
-                                    isExternal
-                                    opacity={0.5}
-                                    fontSize={'14px'}
-                                    textDecoration={'underline'}
-                                >
-                                    {t('View on the explorer')}
-                                </Link>
-                            )}
+                <ModalBody>
+                    <VStack align={'center'} p={6}>
+                        <Spinner my={10} size="xl" />
+                        {showExplorerButton && txId && (
+                            <Link
+                                href={`${explorerUrl}/transactions/${txId}`}
+                                isExternal
+                                opacity={0.5}
+                                fontSize={'14px'}
+                                textDecoration={'underline'}
+                            >
+                                {t('View on the explorer')}
+                            </Link>
+                        )}
 
-                            {!showTimeout && !txId && (
-                                <Text fontSize="sm" align={'center'}>
+                        {!showTimeout && !txId && (
+                            <Text fontSize="sm" align={'center'}>
+                                {t(
+                                    'This may take a few seconds. You can close this window and check the status later.',
+                                )}
+                            </Text>
+                        )}
+
+                        {showTimeout && !txId && (
+                            <VStack mt={4} spacing={2}>
+                                <Text
+                                    color="orange.300"
+                                    size="sm"
+                                    textAlign={'center'}
+                                >
+                                    {t('This is taking longer than expected.')}
+                                </Text>
+                                <Text size="sm" textAlign={'center'}>
                                     {t(
-                                        'This may take a few seconds. You can close this window and check the status later.',
+                                        'You may want to try establishing the transaction again.',
                                     )}
                                 </Text>
-                            )}
-
-                            {showTimeout && !txId && (
-                                <VStack mt={4} spacing={2}>
-                                    <Text
-                                        color="orange.300"
-                                        size="sm"
-                                        textAlign={'center'}
-                                    >
-                                        {t(
-                                            'This is taking longer than expected.',
-                                        )}
-                                    </Text>
-                                    <Text size="sm" textAlign={'center'}>
-                                        {t(
-                                            'You may want to try establishing the transaction again.',
-                                        )}
-                                    </Text>
-                                </VStack>
-                            )}
-                        </VStack>
-                    </ModalBody>
-                </Container>
+                            </VStack>
+                        )}
+                    </VStack>
+                </ModalBody>
             </FadeInViewFromBottom>
 
             <ModalFooter justifyContent={'center'}>

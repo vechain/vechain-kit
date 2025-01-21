@@ -100,7 +100,7 @@ export default function Home(): ReactElement {
             value: '0x0',
             data: abi.encodeFunctionData('transfer', [
                 connectedWallet?.address,
-                '1', // 1 B3TR (in wei)
+                '10000000000000000000', // 10 B3TR (in wei)
             ]),
             comment: `This is a second close demonstrating multiclause with privy-corssapp. Transfer ${0.000001} B3TR to ${humanAddress(
                 connectedWallet?.address,
@@ -121,7 +121,17 @@ export default function Home(): ReactElement {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-    if (!account) {
+    if (connection.isLoading) {
+        return (
+            <Container justifyContent={'center'}>
+                <VStack>
+                    <Spinner />
+                </VStack>
+            </Container>
+        );
+    }
+
+    if (!connection.isConnected) {
         return (
             <Container justifyContent={'center'}>
                 <VStack>
@@ -287,6 +297,7 @@ export default function Home(): ReactElement {
                 showSocialButtons={true}
                 showExplorerButton={true}
                 onTryAgain={handleTransactionWithModal}
+                showTryAgainButton={true}
             />
         </Container>
     );
