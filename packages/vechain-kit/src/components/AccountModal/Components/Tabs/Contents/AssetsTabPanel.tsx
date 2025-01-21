@@ -88,6 +88,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                     symbol={token.symbol}
                     amount={token.amount}
                     usdValue={token.usdValue}
+                    isDisabled={token.amount === 0}
                     onClick={() => handleTokenSelect(token)}
                 />
             ))}
@@ -96,6 +97,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                     symbol="VOT3"
                     amount={balances.vot3}
                     usdValue={balances.vot3 * prices.b3tr}
+                    isDisabled={balances.vot3 === 0}
                     onClick={() =>
                         handleTokenSelect({
                             symbol: 'VOT3',
@@ -110,6 +112,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                     symbol="veDelegate"
                     amount={balances.veDelegate}
                     usdValue={balances.veDelegate * prices.b3tr}
+                    isDisabled={balances.veDelegate === 0}
                     onClick={() =>
                         handleTokenSelect({
                             symbol: 'veDelegate',

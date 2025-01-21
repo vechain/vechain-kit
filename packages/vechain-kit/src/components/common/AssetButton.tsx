@@ -35,9 +35,9 @@ export const AssetButton = ({
         height="72px"
         variant="ghost"
         justifyContent="space-between"
+        isDisabled={isDisabled}
         p={4}
         w="100%"
-        opacity={isDisabled ? 0.5 : 1}
         _disabled={{
             cursor: 'not-allowed',
             opacity: 0.5,

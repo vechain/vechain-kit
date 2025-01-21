@@ -188,7 +188,7 @@ export const VeChainKit = ({
     const loginMethods = [
         ...(privy?.loginMethods ?? []),
         ...(privyEcosystemAppIDS ?? []).map((appID) => `privy:${appID}`),
-    ].slice(0, 4); // Limit is 4 login methods
+    ];
 
     let privyAppId: string, privyClientId: string;
     if (!privy) {

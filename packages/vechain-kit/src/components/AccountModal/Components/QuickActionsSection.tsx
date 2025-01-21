@@ -4,6 +4,7 @@ import { BsLightningCharge } from 'react-icons/bs';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
+import { useBalances } from '@/hooks';
 
 type Props = {
     mt?: number;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
+    const { totalBalance } = useBalances();
     return (
         <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full" mt={mt}>
             <IconButton
@@ -53,6 +55,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 py={3}
                 aria-label="Send"
                 icon={<Icon as={FiSend} boxSize={5} opacity={0.5} />}
+                isDisabled={totalBalance === 0}
                 onClick={() =>
                     setCurrentContent({
                         type: 'send-token',
