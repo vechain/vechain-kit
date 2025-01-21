@@ -13,7 +13,7 @@ import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import { VechainKitTheme } from '../theme';
 import { PrivyLoginMethod } from '@/types';
-import { ConnectModal, AccountModal } from '../components';
+import { ConnectModal, AccountModal, ConnectModalVariant } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
@@ -72,6 +72,7 @@ export type VechainKitProps = {
         logo?: string;
         description?: string;
         preferredLoginMethods?: Array<'email' | 'google'>;
+        variant?: ConnectModalVariant;
     };
     darkMode?: boolean;
     i18n?: I18n;

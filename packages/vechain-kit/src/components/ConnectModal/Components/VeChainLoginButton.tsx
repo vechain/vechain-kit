@@ -2,38 +2,27 @@ import { GridItem } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VechainLogo } from '@/assets';
 import { ConnectionButton, LoginLoadingModal } from '@/components';
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { VECHAIN_PRIVY_APP_ID } from '@/utils';
+import { useLoginWithVeChain } from '@/hooks';
 import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache, useFetchAppInfo } from '@/hooks';
 
 type Props = {
     isDark: boolean;
+    gridColumn?: number;
 };
 
-export const VeChainLoginButton = ({ isDark }: Props) => {
+export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
-    const { login: loginWithVeChain } = usePrivyCrossAppSdk();
+    const { login: loginWithVeChain } = useLoginWithVeChain();
     const [loginError, setLoginError] = useState<string>();
     const loginLoadingModal = useDisclosure();
-    const { data: appsInfo } = useFetchAppInfo([VECHAIN_PRIVY_APP_ID]);
-
-    const { setConnectionCache } = useCrossAppConnectionCache();
 
     const handleLoginWithVeChain = async () => {
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);
 
-            await loginWithVeChain(VECHAIN_PRIVY_APP_ID);
-
-            // Store the appId along with the connection info
-            setConnectionCache({
-                name: t('VeChain'),
-                logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
-                appId: VECHAIN_PRIVY_APP_ID,
-            });
+            await loginWithVeChain();
 
             loginLoadingModal.onClose();
         } catch (error) {
@@ -48,7 +37,7 @@ export const VeChainLoginButton = ({ isDark }: Props) => {
 
     return (
         <>
-            <GridItem colSpan={4} w={'full'}>
+            <GridItem colSpan={gridColumn ? gridColumn : 4} w={'full'}>
                 <ConnectionButton
                     isDark={isDark}
                     onClick={handleLoginWithVeChain}

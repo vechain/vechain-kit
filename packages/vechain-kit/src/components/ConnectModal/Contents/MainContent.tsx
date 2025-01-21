@@ -19,7 +19,7 @@ import {
     VersionFooter,
 } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useFetchAppInfo, useWallet } from '@/hooks';
 import { VeChainLoginButton } from '../Components/VeChainLoginButton';
 import { SocialLoginButtons } from '../Components/SocialLoginButtons';
@@ -29,14 +29,24 @@ import { EcosystemButton } from '../Components/EcosystemButton';
 import { PrivyButton } from '../Components/PrivyButton';
 import { useTranslation } from 'react-i18next';
 
+export type ConnectModalVariant =
+    | 'full'
+    | 'vechain-and-wallet'
+    | 'vechain-wallet-ecosystem';
+
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<ConnectModalContentsTypes>
     >;
     onClose: () => void;
+    variant?: ConnectModalVariant;
 };
 
-export const MainContent = ({ setCurrentContent, onClose }: Props) => {
+export const MainContent = ({
+    setCurrentContent,
+    onClose,
+    variant = 'vechain-wallet-ecosystem',
+}: Props) => {
     const { t } = useTranslation();
 
     const { colorMode } = useColorMode();
@@ -57,6 +67,40 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
         }
     }, [connection.isConnected, onClose]);
 
+    const dappKitGridColumn = useMemo(() => {
+        switch (variant) {
+            case 'full':
+                return 1;
+            case 'vechain-and-wallet':
+                return 4;
+            case 'vechain-wallet-ecosystem':
+                if (privyEcosystemAppIDS.length === 0) {
+                    return 4;
+                }
+                return 2;
+            default:
+                if (
+                    !privySocialLoginEnabled ||
+                    privyEcosystemAppIDS.length === 0
+                ) {
+                    return 4;
+                }
+                return 1;
+        }
+    }, [variant, privySocialLoginEnabled, privyEcosystemAppIDS]);
+
+    const privyGridColumn = useMemo(() => {
+        switch (variant) {
+            case 'full':
+                if (privyEcosystemAppIDS.length === 0) {
+                    return 2;
+                }
+                return 1;
+            default:
+                return 0;
+        }
+    }, [variant, privyEcosystemAppIDS]);
+
     return (
         <FadeInViewFromBottom>
             <StickyHeaderContainer>
@@ -69,7 +113,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                 >
                     {t('Log in or sign up')}
                 </ModalHeader>
-                <ModalCloseButton mt={'5px'} />
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             {loginModalUI?.logo && (
@@ -79,7 +123,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                             src={loginModalUI.logo || '/images/favicon.png'}
                             maxW={'180px'}
                             maxH={'90px'}
-                            m={10}
+                            m={8}
                             alt="logo"
                         />
                     </HStack>
@@ -112,39 +156,46 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                             gap={2}
                             w={'full'}
                         >
-                            {privySocialLoginEnabled && (
+                            {variant === 'full' && privySocialLoginEnabled && (
                                 <SocialLoginButtons
                                     isDark={isDark}
                                     loginModalUI={loginModalUI}
                                 />
                             )}
 
-                            <VeChainLoginButton isDark={isDark} />
+                            <VeChainLoginButton
+                                isDark={isDark}
+                                gridColumn={4}
+                            />
 
-                            {privySocialLoginEnabled && (
+                            {variant === 'full' && privySocialLoginEnabled && (
                                 <PasskeyLoginButton isDark={isDark} />
                             )}
 
                             <DappKitButton
                                 isDark={isDark}
-                                privySocialLoginEnabled={
-                                    privySocialLoginEnabled
-                                }
+                                gridColumn={dappKitGridColumn}
                             />
 
-                            <EcosystemButton
-                                isDark={isDark}
-                                privySocialLoginEnabled={
-                                    privySocialLoginEnabled
-                                }
-                                appsInfo={Object.values(appsInfo || {})}
-                                isLoading={isEcosystemAppsLoading}
-                            />
+                            {(variant === 'full' ||
+                                variant === 'vechain-wallet-ecosystem') &&
+                                privyEcosystemAppIDS.length > 0 && (
+                                    <EcosystemButton
+                                        isDark={isDark}
+                                        privySocialLoginEnabled={
+                                            variant === 'full' &&
+                                            privySocialLoginEnabled
+                                        }
+                                        appsInfo={Object.values(appsInfo || {})}
+                                        isLoading={isEcosystemAppsLoading}
+                                    />
+                                )}
 
-                            {privySocialLoginEnabled && (
+                            {variant === 'full' && privySocialLoginEnabled && (
                                 <PrivyButton
                                     isDark={isDark}
                                     onViewMoreLogin={viewMoreLogin}
+                                    gridColumn={privyGridColumn}
                                 />
                             )}
                         </Grid>

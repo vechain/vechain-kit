@@ -1,10 +1,10 @@
 import { Divider, GridItem, HStack, Text } from '@chakra-ui/react';
-import { useLoginWithOAuth } from '@privy-io/react-auth';
 import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton, EmailLoginButton } from '@/components';
 import { VechainKitProps } from '@/providers';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLoginWithOAuth } from '@/hooks';
 
 type Props = {
     isDark: boolean;

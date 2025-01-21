@@ -1,15 +1,16 @@
 import { GridItem, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useLoginWithPasskey } from '@privy-io/react-auth';
 import { IoIosFingerPrint } from 'react-icons/io';
 import { LoginLoadingModal, ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
+import { useLoginWithPasskey } from '@/hooks';
 
 type Props = {
     isDark: boolean;
+    gridColumn?: number;
 };
 
-export const PasskeyLoginButton = ({ isDark }: Props) => {
+export const PasskeyLoginButton = ({ isDark, gridColumn = 1 }: Props) => {
     const { t } = useTranslation();
     const { loginWithPasskey } = useLoginWithPasskey();
     const [loginError, setLoginError] = useState<string>();
@@ -33,7 +34,7 @@ export const PasskeyLoginButton = ({ isDark }: Props) => {
 
     return (
         <>
-            <GridItem colSpan={1} w={'full'}>
+            <GridItem colSpan={gridColumn} w={'full'}>
                 <ConnectionButton
                     isDark={isDark}
                     onClick={handleLoginWithPasskey}
