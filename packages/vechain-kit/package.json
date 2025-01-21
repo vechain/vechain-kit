@@ -63,6 +63,14 @@
         "vite": "^4.5.5",
         "vitest": "^0.34.6"
     },
+    "resolutions": {
+        "react-query": "^5.64.2",
+        "@chakra-ui/react": "^2.8.2"
+    },
+    "overrides": {
+        "react-query": "^5.64.2",
+        "@chakra-ui/react": "^2.8.2"
+    },
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
