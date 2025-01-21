@@ -9,7 +9,6 @@ import {
     Tag,
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
-import { FadeInView } from '../../common';
 import { useTranslation } from 'react-i18next';
 
 interface ActionButtonProps {
@@ -44,69 +43,63 @@ export const ActionButton = ({
 }: ActionButtonProps) => {
     const { t } = useTranslation();
     return (
-        <FadeInView>
-            <Button
-                w={'full'}
-                minH={'70px'}
-                h={'fit-content'}
-                py={stacked ? 0 : 4}
-                onClick={onClick}
-                display={hide ? 'none' : 'flex'}
-                isDisabled={showComingSoon || isDisabled}
-                bgColor={backgroundColor}
-                _hover={_hover}
-            >
-                <HStack w={'full'} justify={'space-between'}>
-                    <Box minW={'40px'}>
-                        {leftImage ? (
-                            <Image src={leftImage} alt="left-image" />
-                        ) : (
-                            <Icon as={leftIcon} fontSize={'25px'} />
-                        )}
-                    </Box>
-                    <VStack
-                        textAlign={'left'}
-                        w={'full'}
-                        flex={1}
-                        justifyContent={'flex-start'}
-                        alignItems={'flex-start'}
-                    >
-                        <HStack justify={'flex-start'}>
-                            <Text fontSize={'sm'} fontWeight={'400'}>
-                                {title}
-                            </Text>
-                            {showComingSoon && (
-                                <Tag size="sm" colorScheme="red">
-                                    {t('Coming Soon!')}
-                                </Tag>
-                            )}
-                        </HStack>
-
-                        <Text
-                            fontSize={'xs'}
-                            fontWeight={'400'}
-                            opacity={0.5}
-                            overflowWrap={'break-word'}
-                            wordBreak={'break-word'}
-                            whiteSpace={'normal'}
-                            w={'full'}
-                            pr={rightIcon ? '0px' : '10px'}
-                        >
-                            {description}
-                        </Text>
-                    </VStack>
-
-                    {rightIcon && (
-                        <VStack minW={'40px'} justifyContent={'flex-end'}>
-                            <Icon
-                                as={rightIcon}
-                                fontSize={'20px'}
-                                opacity={0.5}
-                            />
-                        </VStack>
+        <Button
+            w={'full'}
+            minH={'70px'}
+            h={'fit-content'}
+            py={stacked ? 0 : 4}
+            onClick={onClick}
+            display={hide ? 'none' : 'flex'}
+            isDisabled={showComingSoon || isDisabled}
+            bgColor={backgroundColor}
+            _hover={_hover}
+        >
+            <HStack w={'full'} justify={'space-between'}>
+                <Box minW={'40px'}>
+                    {leftImage ? (
+                        <Image src={leftImage} alt="left-image" />
+                    ) : (
+                        <Icon as={leftIcon} fontSize={'25px'} />
                     )}
-                </HStack>
-            </Button>
-        </FadeInView>
+                </Box>
+                <VStack
+                    textAlign={'left'}
+                    w={'full'}
+                    flex={1}
+                    justifyContent={'flex-start'}
+                    alignItems={'flex-start'}
+                >
+                    <HStack justify={'flex-start'}>
+                        <Text fontSize={'sm'} fontWeight={'400'}>
+                            {title}
+                        </Text>
+                        {showComingSoon && (
+                            <Tag size="sm" colorScheme="red">
+                                {t('Coming Soon!')}
+                            </Tag>
+                        )}
+                    </HStack>
+
+                    <Text
+                        fontSize={'xs'}
+                        fontWeight={'400'}
+                        opacity={0.5}
+                        overflowWrap={'break-word'}
+                        wordBreak={'break-word'}
+                        whiteSpace={'normal'}
+                        w={'full'}
+                        pr={rightIcon ? '0px' : '10px'}
+                    >
+                        {description}
+                    </Text>
+                </VStack>
+
+                {rightIcon && (
+                    <VStack minW={'40px'} justifyContent={'flex-end'}>
+                        <Icon as={rightIcon} fontSize={'20px'} opacity={0.5} />
+                    </VStack>
+                )}
+            </HStack>
+        </Button>
     );
 };

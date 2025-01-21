@@ -94,68 +94,63 @@ export const WalletSettingsContent = ({
 
                     <VStack mt={10} w={'full'} spacing={3}>
                         {connection.isConnectedWithSocialLogin && (
-                            <VStack spacing={3}>
-                                <ActionButton
-                                    title={t('Backup your wallet')}
-                                    description={t(
-                                        'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
-                                    )}
-                                    onClick={() => {
-                                        exportWallet();
-                                    }}
-                                    hide={connection.isConnectedWithCrossApp}
-                                    leftIcon={GiHouseKeys}
-                                    rightIcon={MdOutlineNavigateNext}
-                                />
-
-                                {privy?.allowPasskeyLinking && (
-                                    <ActionButton
-                                        title={t('Add passkey')}
-                                        description={t(
-                                            'Enable one click login by adding a passkey to your account.',
-                                        )}
-                                        onClick={() => {
-                                            linkPasskey();
-                                        }}
-                                        hide={
-                                            connection.isConnectedWithCrossApp
-                                        }
-                                        leftIcon={IoIosFingerPrint}
-                                        rightIcon={MdOutlineNavigateNext}
-                                    />
+                            <ActionButton
+                                title={t('Backup your wallet')}
+                                description={t(
+                                    'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
                                 )}
+                                onClick={() => {
+                                    exportWallet();
+                                }}
+                                leftIcon={GiHouseKeys}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
+                        )}
 
+                        {connection.isConnectedWithSocialLogin &&
+                            privy?.allowPasskeyLinking && (
                                 <ActionButton
-                                    title={t('Login methods')}
+                                    title={t('Add passkey')}
                                     description={t(
-                                        'View and manage the login methods linked to your wallet.',
+                                        'Enable one click login by adding a passkey to your account.',
                                     )}
                                     onClick={() => {
-                                        setCurrentContent(
-                                            'privy-linked-accounts',
-                                        );
+                                        linkPasskey();
                                     }}
-                                    hide={connection.isConnectedWithCrossApp}
-                                    leftIcon={MdManageAccounts}
+                                    leftIcon={IoIosFingerPrint}
                                     rightIcon={MdOutlineNavigateNext}
                                 />
+                            )}
 
-                                {/* <ActionButton
-                                    title={t('Manage MFA')}
-                                    description={t(
-                                        'Manage multi-factor authentication settings for your wallet.',
-                                    )}
-                                    onClick={() => {
-                                        // linkPasskey();
-                                    }}
-                                    showComingSoon={true}
-                                    isDisabled={!privyUser?.mfaMethods?.length}
-                                    hide={connection.isConnectedWithCrossApp}
-                                    leftIcon={FaShieldAlt}
-                                    rightIcon={MdOutlineNavigateNext}
-                                /> */}
-                            </VStack>
+                        {connection.isConnectedWithSocialLogin && (
+                            <ActionButton
+                                title={t('Login methods')}
+                                description={t(
+                                    'View and manage the login methods linked to your wallet.',
+                                )}
+                                onClick={() => {
+                                    setCurrentContent('privy-linked-accounts');
+                                }}
+                                leftIcon={MdManageAccounts}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
                         )}
+
+                        {/* <ActionButton
+                                title={t('Manage MFA')}
+                                description={t(
+                                    'Manage multi-factor authentication settings for your wallet.',
+                                )}
+                                onClick={() => {
+                                    // linkPasskey();
+                                }}
+                                showComingSoon={true}
+                                isDisabled={!privyUser?.mfaMethods?.length}
+                                hide={connection.isConnectedWithCrossApp}
+                                leftIcon={FaShieldAlt}
+                                rightIcon={MdOutlineNavigateNext}
+                            /> */}
+
                         {connection.isConnectedWithDappKit && (
                             <ActionButton
                                 title={

@@ -58,7 +58,7 @@ export const AccountDetailsButton = ({
                             alt="left-image"
                         />
                     ) : (
-                        <Icon as={leftIcon} fontSize={'25px'} />
+                        <Icon as={leftIcon} fontSize={'28px'} />
                     )}
                 </Box>
                 <VStack textAlign={'left'} w={'full'} flex={1}>

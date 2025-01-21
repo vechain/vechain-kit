@@ -17,7 +17,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { AccountDetailsButton } from '@/components';
-import { MdAccountCircle, MdOutlineNavigateNext } from 'react-icons/md';
+import { MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountModalContentTypes } from '../../Types';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import React from 'react';
@@ -43,7 +43,7 @@ type Props = {
 
 export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, privy } = useVeChainKitConfig();
 
     const { account, connectedWallet, disconnect, smartAccount, connection } =
         useWallet();
@@ -118,7 +118,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                     onClick={() => {
                                         setCurrentContent('smart-account');
                                     }}
-                                    leftIcon={MdAccountCircle}
+                                    leftIcon={HiOutlineWallet}
                                     rightIcon={MdOutlineNavigateNext}
                                 />
                             )}
@@ -142,11 +142,15 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                                     connection.isConnectedWithCrossApp &&
                                     connectionCache?.ecosystemApp?.logoUrl
                                         ? connectionCache.ecosystemApp?.logoUrl
+                                        : connection.isConnectedWithSocialLogin &&
+                                          privy?.appearance?.logo
+                                        ? privy.appearance.logo
                                         : undefined
                                 }
                                 leftIcon={
                                     !connection.isConnectedWithCrossApp ||
-                                    !connectionCache?.ecosystemApp?.logoUrl
+                                    !connectionCache?.ecosystemApp?.logoUrl ||
+                                    !privy?.appearance?.logo
                                         ? HiOutlineWallet
                                         : undefined
                                 }
