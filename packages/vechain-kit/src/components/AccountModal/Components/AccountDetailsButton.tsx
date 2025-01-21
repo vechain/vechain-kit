@@ -6,13 +6,13 @@ import {
     Text,
     Icon,
     Image,
-    useColorMode,
     Tag,
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
 import { humanAddress, humanDomain } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { Wallet } from '@/types';
+import { useVeChainKitConfig } from '@/providers';
 
 interface AccountDetailsButtonProps {
     title: string;
@@ -36,8 +36,7 @@ export const AccountDetailsButton = ({
     isActive = false,
 }: AccountDetailsButtonProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <Button

@@ -5,7 +5,6 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    useColorMode,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import React from 'react';
@@ -21,6 +20,7 @@ import { ActionButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,8 +35,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
 
     const walletImage = getPicassoImage(smartAccount.address ?? '');
 
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const hasExistingDomain = !!smartAccount.domain;
 

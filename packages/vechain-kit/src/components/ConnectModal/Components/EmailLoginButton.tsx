@@ -4,7 +4,6 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
-    useColorMode,
     useDisclosure,
     VStack,
 } from '@chakra-ui/react';
@@ -13,11 +12,11 @@ import { useState } from 'react';
 import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 export const EmailLoginButton = () => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     // Email login
     const [email, setEmail] = useState('');

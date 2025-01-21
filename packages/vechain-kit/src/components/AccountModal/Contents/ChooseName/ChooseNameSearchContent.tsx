@@ -4,7 +4,6 @@ import {
     ModalHeader,
     VStack,
     Text,
-    useColorMode,
     Input,
     InputGroup,
     Box,
@@ -21,6 +20,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
 import { useEnsRecordExists, useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -35,8 +35,7 @@ export const ChooseNameSearchContent = ({
 }: ChooseNameSearchContentProps) => {
     const { t } = useTranslation();
     const { account, connection } = useWallet();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [name, setName] = useState(initialName);
     const [error, setError] = useState<string | null>(null);
     const [isAvailable, setIsAvailable] = useState(false);

@@ -6,7 +6,6 @@ import {
     ModalHeader,
     Text,
     VStack,
-    useColorMode,
     Icon,
     HStack,
     Heading,
@@ -30,9 +29,7 @@ type Props = {
 };
 
 export const FAQContent = ({ onGoBack }: Props) => {
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
-    const { network } = useVeChainKitConfig();
+    const { network, darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
 
     return (

@@ -7,7 +7,6 @@ import {
     HStack,
     Heading,
     Spinner,
-    useColorMode,
     Button,
     Progress,
 } from '@chakra-ui/react';
@@ -16,7 +15,7 @@ import { TransactionStatusErrorType, TransactionProgress } from '@/types';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { getConfig } from '@/config';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
@@ -47,8 +46,7 @@ export const TransactionToast = ({
     progress,
 }: TransactionToastProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
     const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
@@ -152,32 +150,34 @@ export const TransactionToast = ({
     if (!toastContent || !isOpen) return null;
 
     return (
-        <Box
-            position="fixed"
-            bottom="10"
-            left="10"
-            zIndex="11111"
-            bg={isDark ? '#1f1f1e' : 'white'}
-            borderRadius={'md'}
-            p={5}
-            boxShadow="lg"
-            maxW="sm"
-        >
-            <HStack justify="space-between" alignItems={'center'} w="full">
-                <VStack spacing={4}>{toastContent}</VStack>
-                {!statusConfig[status].closeDisabled && (
-                    <Button
-                        onClick={handleClose}
-                        variant="ghost"
-                        size="sm"
-                        borderRadius={'full'}
-                        aria-label="Close"
-                        ml={5}
-                    >
-                        {t('Close')}
-                    </Button>
-                )}
-            </HStack>
-        </Box>
+        <VechainKitThemeProvider darkMode={isDark}>
+            <Box
+                position="fixed"
+                bottom="10"
+                left="10"
+                zIndex="11111"
+                bg={isDark ? '#1f1f1e' : 'white'}
+                borderRadius={'md'}
+                p={5}
+                boxShadow="lg"
+                maxW="sm"
+            >
+                <HStack justify="space-between" alignItems={'center'} w="full">
+                    <VStack spacing={4}>{toastContent}</VStack>
+                    {!statusConfig[status].closeDisabled && (
+                        <Button
+                            onClick={handleClose}
+                            variant="ghost"
+                            size="sm"
+                            borderRadius={'full'}
+                            aria-label="Close"
+                            ml={5}
+                        >
+                            {t('Close')}
+                        </Button>
+                    )}
+                </HStack>
+            </Box>
+        </VechainKitThemeProvider>
     );
 };

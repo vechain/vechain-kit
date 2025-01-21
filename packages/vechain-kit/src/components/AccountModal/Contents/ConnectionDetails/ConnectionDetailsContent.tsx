@@ -4,7 +4,6 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    useColorMode,
     Text,
     Link,
     Icon,
@@ -37,11 +36,9 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const { t } = useTranslation();
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { privy } = useVeChainKitConfig();
+    const { privy, darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
     const { source } = useDappKitWallet();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
 
     const connectionCache = getConnectionCache();
 

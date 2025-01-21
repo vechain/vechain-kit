@@ -4,7 +4,6 @@ import {
     ModalHeader,
     VStack,
     Button,
-    useColorMode,
     ModalFooter,
     useDisclosure,
     Icon,
@@ -21,6 +20,7 @@ import { TransactionModal } from '@/components/TransactionModal';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { GiConfirmed } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -34,8 +34,7 @@ export const ChooseNameSummaryContent = ({
     name,
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
     const transactionModal = useDisclosure();
 

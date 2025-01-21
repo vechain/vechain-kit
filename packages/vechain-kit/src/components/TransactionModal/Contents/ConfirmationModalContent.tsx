@@ -16,11 +16,11 @@ import {
     ModalCloseButton,
     Container,
     ModalBody,
-    useColorMode,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 export type ConfirmationModalContentProps = {
     title?: ReactNode;
@@ -35,8 +35,7 @@ export const ConfirmationModalContent = ({
 }: ConfirmationModalContentProps) => {
     const { t } = useTranslation();
     const { connection } = useWallet();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [showTimeout, setShowTimeout] = useState(false);
 
     useEffect(() => {

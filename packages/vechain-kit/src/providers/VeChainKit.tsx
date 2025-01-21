@@ -27,6 +27,7 @@ import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
+import { initializeI18n } from '@/utils/i18n';
 
 const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'cm4wxxujb022fyujl7g0thb21', //vechain
@@ -92,7 +93,7 @@ type VeChainKitConfig = {
     feeDelegation: VechainKitProps['feeDelegation'];
     dappKit: VechainKitProps['dappKit'];
     loginModalUI?: VechainKitProps['loginModalUI'];
-    darkMode?: VechainKitProps['darkMode'];
+    darkMode: boolean;
     i18n?: VechainKitProps['i18n'];
     language?: VechainKitProps['language'];
     network: VechainKitProps['network'];
@@ -198,26 +199,28 @@ export const VeChainKit = ({
         privyClientId = privy.clientId;
     }
 
-    // Set the color mode in localStorage to match the Privy theme
-    // if (
-    //     !localStorage.getItem('chakra-ui-color-mode') ||
-    //     localStorage.getItem('chakra-ui-color-mode') !==
-    //         (darkMode ? 'dark' : 'light')
-    // ) {
-    //     localStorage.setItem(
-    //         'chakra-ui-color-mode',
-    //         darkMode ? 'dark' : 'light',
-    //     );
-    //     localStorage.setItem('chakra-ui-color-mode-default', 'set');
-    // }
-
-    // Initialize i18n with the provided language
+    // Initialize i18n with the provided language and merge translations
     useEffect(() => {
+        // Initialize translations from VeChainKit
+        initializeI18n(i18n);
+
         if (language) {
             i18n.changeLanguage(language);
-            //i18n.addResourceBundle(language, 'translation', i18nConfig);
         }
-    }, [language]);
+
+        if (i18nConfig) {
+            // Add custom translations from the app if provided
+            Object.keys(i18nConfig).forEach((lang) => {
+                i18n.addResourceBundle(
+                    lang,
+                    'translation',
+                    i18nConfig[lang],
+                    true,
+                    true,
+                );
+            });
+        }
+    }, [language, i18nConfig]);
 
     return (
         <EnsureQueryClient>

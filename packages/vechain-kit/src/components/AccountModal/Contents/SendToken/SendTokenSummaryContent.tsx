@@ -5,7 +5,6 @@ import {
     VStack,
     Button,
     Text,
-    useColorMode,
     HStack,
     Divider,
     Alert,
@@ -26,6 +25,7 @@ import { useTransferERC20, useTransferVET, useWallet } from '@/hooks';
 import { TransactionModal } from '@/components';
 import { GiConfirmed } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -65,8 +65,7 @@ export const SendTokenSummaryContent = ({
     selectedToken,
 }: SendTokenSummaryContentProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connection } = useWallet();
     const transactionModal = useDisclosure();
 

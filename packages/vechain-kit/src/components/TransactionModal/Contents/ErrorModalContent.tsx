@@ -8,7 +8,6 @@ import {
     ModalHeader,
     Container,
     ModalBody,
-    useColorMode,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
@@ -38,8 +37,7 @@ export const ErrorModalContent = ({
 }: ErrorModalContentProps) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
 
     return (

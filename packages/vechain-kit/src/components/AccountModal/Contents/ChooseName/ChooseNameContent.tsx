@@ -4,7 +4,6 @@ import {
     ModalHeader,
     VStack,
     Text,
-    useColorMode,
     Button,
     Icon,
 } from '@chakra-ui/react';
@@ -17,6 +16,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 export type ChooseNameContentProps = {
     setCurrentContent: React.Dispatch<
@@ -29,8 +29,7 @@ export const ChooseNameContent = ({
 }: ChooseNameContentProps) => {
     const { t } = useTranslation();
     const { smartAccount, connection } = useWallet();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <FadeInViewFromBottom>

@@ -1,4 +1,5 @@
-import { Box, useColorMode } from '@chakra-ui/react';
+import { useVeChainKitConfig } from '@/providers';
+import { Box } from '@chakra-ui/react';
 import { useEffect, useState, useRef } from 'react';
 
 type Props = {
@@ -6,8 +7,7 @@ type Props = {
 };
 
 export const StickyHeaderContainer = ({ children }: Props) => {
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
 

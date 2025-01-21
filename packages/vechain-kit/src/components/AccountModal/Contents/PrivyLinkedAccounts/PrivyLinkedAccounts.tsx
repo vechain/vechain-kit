@@ -4,7 +4,6 @@ import {
     ModalCloseButton,
     ModalHeader,
     VStack,
-    useColorMode,
     Button,
     Flex,
     Text,
@@ -95,8 +94,7 @@ type PrivyLinkedAccountsProps = {
 
 export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [unlinkingAccount, setUnlinkingAccount] = useState<any>(null);
     const [showLinkOptions, setShowLinkOptions] = useState(false);
     const [showFullText, setShowFullText] = useState(false);

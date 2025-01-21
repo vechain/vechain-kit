@@ -1,12 +1,6 @@
-import {
-    Box,
-    Text,
-    HStack,
-    VStack,
-    Image,
-    useColorMode,
-} from '@chakra-ui/react';
+import { Box, Text, HStack, VStack, Image } from '@chakra-ui/react';
 import { humanAddress } from '@/utils';
+import { useVeChainKitConfig } from '@/providers';
 
 type AddressDisplayCardProps = {
     label: string;
@@ -25,8 +19,7 @@ export const AddressDisplayCard = ({
     imageAlt = 'Account',
     hideAddress = false,
 }: AddressDisplayCardProps) => {
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <Box

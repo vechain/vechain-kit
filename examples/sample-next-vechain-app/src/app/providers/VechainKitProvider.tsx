@@ -2,6 +2,8 @@
 
 import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'react-i18next';
+import '../../../i18n';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -20,6 +22,8 @@ interface Props {
 
 export function VechainKitProvider({ children }: Props) {
     const { colorMode } = useColorMode();
+    const { i18n } = useTranslation();
+
     const isDarkMode = colorMode === 'dark';
 
     return (
@@ -74,7 +78,8 @@ export function VechainKitProvider({ children }: Props) {
             // Uncomment this to remove the ecosystem button
             // privyEcosystemAppIDS={[]}
             darkMode={isDarkMode}
-            language="en"
+            language={i18n.language}
+            // i18n={i18n}
             network={{
                 type: 'main',
                 // connectionCertificate: {

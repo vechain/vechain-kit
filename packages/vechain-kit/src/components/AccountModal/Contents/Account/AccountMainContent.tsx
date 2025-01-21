@@ -6,7 +6,6 @@ import {
     ModalFooter,
     ModalHeader,
     VStack,
-    useColorMode,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import {
@@ -24,6 +23,7 @@ import {
 } from '@/components';
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,8 +35,7 @@ type Props = {
 
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const { smartAccount } = useWallet();
 

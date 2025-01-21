@@ -1,12 +1,12 @@
-import { HStack, Link, StackProps, useColorMode } from '@chakra-ui/react';
+import { HStack, Link, StackProps } from '@chakra-ui/react';
 import { VechainLogoHorizontal } from '../../assets';
 import packageJson from '../../../package.json';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {} & Omit<StackProps, 'dangerouslySetInnerHTML'>;
 
 export const VersionFooter = ({ ...props }: Props) => {
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <HStack

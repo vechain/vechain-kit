@@ -7,7 +7,6 @@ import {
     ModalHeader,
     Container,
     ModalBody,
-    useColorMode,
     ModalFooter,
     Button,
     Icon,
@@ -35,8 +34,7 @@ export const LoadingModalContent = ({
 }: LoadingModalContentProps) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const [showTimeout, setShowTimeout] = useState(false);
 

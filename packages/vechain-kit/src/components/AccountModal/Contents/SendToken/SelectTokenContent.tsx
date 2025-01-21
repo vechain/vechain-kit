@@ -5,7 +5,6 @@ import {
     VStack,
     Input,
     Text,
-    useColorMode,
     InputGroup,
     InputLeftElement,
     Icon,
@@ -43,8 +42,7 @@ type Props = {
 
 export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { balances, prices } = useBalances();
     const [searchQuery, setSearchQuery] = useState('');
 

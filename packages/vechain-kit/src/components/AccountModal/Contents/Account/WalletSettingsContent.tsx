@@ -5,7 +5,6 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    useColorMode,
     Button,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet, useCrossAppConnectionCache } from '@/hooks';
@@ -39,14 +38,12 @@ export const WalletSettingsContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { exportWallet, linkPasskey } = usePrivy();
-    const { privy } = useVeChainKitConfig();
+    const { privy, darkMode: isDark } = useVeChainKitConfig();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
 
     const { connectedWallet, connection, disconnect } = useWallet();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
 
     const hasExistingDomain = !!connectedWallet?.domain;
 

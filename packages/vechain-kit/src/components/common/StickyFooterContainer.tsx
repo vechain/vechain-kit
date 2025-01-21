@@ -1,12 +1,12 @@
-import { Box, useColorMode } from '@chakra-ui/react';
+import { useVeChainKitConfig } from '@/providers';
+import { Box } from '@chakra-ui/react';
 
 type Props = {
     children: React.ReactNode;
 };
 
 export const StickyFooterContainer = ({ children }: Props) => {
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <Box

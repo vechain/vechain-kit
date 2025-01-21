@@ -6,7 +6,6 @@ import {
     PinInput,
     PinInputField,
     Icon,
-    useColorMode,
     ModalFooter,
     ModalBody,
     ModalHeader,
@@ -22,6 +21,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useLoginWithEmail } from '@privy-io/react-auth';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     email: string;
@@ -39,8 +39,7 @@ export const EmailCodeVerificationModal = ({
     onClose,
 }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [code, setCode] = useState('');
     const [error, setError] = useState<string | null>(null);
     const { loginWithCode } = useLoginWithEmail({});

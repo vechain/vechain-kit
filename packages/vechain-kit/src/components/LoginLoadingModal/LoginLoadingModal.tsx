@@ -4,7 +4,6 @@ import {
     ModalHeader,
     Spinner,
     VStack,
-    useColorMode,
     ModalCloseButton,
     Text,
     ModalFooter,
@@ -19,6 +18,7 @@ import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -71,8 +71,7 @@ const LoadingContent = ({
     onTryAgain?: () => void;
 }) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [showTimeout, setShowTimeout] = React.useState(false);
 
     React.useEffect(() => {
@@ -147,8 +146,7 @@ const ErrorContent = ({
     onTryAgain: () => void;
 }) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <FadeInViewFromBottom>

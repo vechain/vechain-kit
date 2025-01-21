@@ -1,9 +1,10 @@
-import { Box, HStack, Link, useColorMode } from '@chakra-ui/react';
+import { Box, HStack, Link } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaTelegramPlane } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa6';
 import { RiTwitterXFill } from 'react-icons/ri';
 import React from 'react';
+import { useVeChainKitConfig } from '@/providers';
 
 const TWITTER_INJECT = 'https://twitter.com/intent/tweet?text=';
 
@@ -38,8 +39,7 @@ type Props = {
 };
 
 export const ShareButtons = ({ descriptionEncoded }: Props) => {
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <HStack gap={2}>

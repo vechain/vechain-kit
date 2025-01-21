@@ -5,7 +5,6 @@ import {
     Link,
     Icon,
     ModalHeader,
-    useColorMode,
     ModalFooter,
     Container,
     ModalBody,
@@ -48,8 +47,7 @@ export const SuccessModalContent = ({
     socialDescriptionEncoded,
 }: SuccessModalContentProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;

@@ -1,3 +1,4 @@
+import { useVeChainKitConfig } from '@/providers';
 import {
     Accordion,
     AccordionItem,
@@ -6,15 +7,13 @@ import {
     Box,
     Text,
     Icon,
-    useColorMode,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 
 export const FAQAccordion = () => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const faqItems = [
         {

@@ -5,7 +5,6 @@ import {
     ModalHeader,
     VStack,
     Text,
-    useColorMode,
     ModalFooter,
     Image,
     Button,
@@ -19,6 +18,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -28,8 +28,7 @@ type Props = {
 
 export const SwapTokenContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <FadeInViewFromBottom>

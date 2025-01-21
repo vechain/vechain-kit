@@ -8,7 +8,6 @@ import {
     ModalCloseButton,
     ModalFooter,
     ModalHeader,
-    useColorMode,
     VStack,
     IconButton,
 } from '@chakra-ui/react';
@@ -32,6 +31,7 @@ import {
 } from '@/hooks';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -43,8 +43,7 @@ type Props = {
 
 export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const { account, connectedWallet, disconnect, smartAccount, connection } =
         useWallet();

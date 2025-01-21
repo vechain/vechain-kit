@@ -9,7 +9,6 @@ import {
     Spinner,
     Text,
     VStack,
-    useColorMode,
     useDisclosure,
 } from '@chakra-ui/react';
 import {
@@ -23,6 +22,7 @@ import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     onClose: () => void;
@@ -32,8 +32,7 @@ type Props = {
 
 export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const [loginError, setLoginError] = useState<string>();
     const [selectedApp, setSelectedApp] = useState<string>();
     const loginLoadingModal = useDisclosure();

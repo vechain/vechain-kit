@@ -2,13 +2,13 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 // Import all language JSON files
-import en from './src/languages/en.json';
-import de from './src/languages/de.json';
-import it from './src/languages/it.json';
-import fr from './src/languages/fr.json';
-import es from './src/languages/es.json';
-import zh from './src/languages/zh.json';
-import ja from './src/languages/ja.json';
+import en from './src/app/languages/en.json';
+import de from './src/app/languages/de.json';
+import it from './src/app/languages/it.json';
+import fr from './src/app/languages/fr.json';
+import es from './src/app/languages/es.json';
+import zh from './src/app/languages/zh.json';
+import ja from './src/app/languages/ja.json';
 
 // Define supported languages
 export const supportedLanguages = ['en', 'de', 'it', 'fr', 'es', 'zh', 'ja'];
@@ -38,7 +38,6 @@ export const languageNames = {
 const customLanguageDetector = {
     name: 'customDetector',
     lookup: (options?: { languages?: string[] } | undefined) => {
-        // Get language from VechainKitProvider prop
         const propLanguage = options?.languages?.[0];
 
         if (propLanguage && supportedLanguages.includes(propLanguage)) {

@@ -5,7 +5,6 @@ import {
     ModalHeader,
     VStack,
     Text,
-    useColorMode,
     ModalFooter,
 } from '@chakra-ui/react';
 import { QRCode } from 'react-qrcode-logo';
@@ -18,6 +17,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -27,8 +27,7 @@ type Props = {
 
 export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
 
     return (

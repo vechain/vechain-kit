@@ -8,7 +8,6 @@ import {
     ModalHeader,
     Stack,
     Text,
-    useColorMode,
 } from '@chakra-ui/react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useVeChainKitConfig } from '@/providers';
@@ -49,8 +48,7 @@ export const MainContent = ({
 }: Props) => {
     const { t } = useTranslation();
 
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
     const { loginModalUI, privySocialLoginEnabled, privyEcosystemAppIDS } =
         useVeChainKitConfig();

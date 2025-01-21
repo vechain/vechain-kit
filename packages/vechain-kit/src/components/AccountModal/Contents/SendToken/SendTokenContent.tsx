@@ -6,7 +6,6 @@ import {
     Input,
     Button,
     Text,
-    useColorMode,
     InputGroup,
     Box,
     HStack,
@@ -28,6 +27,7 @@ import { ZeroAddress } from 'ethers';
 import { compareAddresses, isValidAddress, TOKEN_LOGOS } from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -57,8 +57,7 @@ export const SendTokenContent = ({
     preselectedToken,
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const isDark = colorMode === 'dark';
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const [toAddressOrDomain, setToAddress] = useState('');
     const [amount, setAmount] = useState('');
