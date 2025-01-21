@@ -18,7 +18,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
-import { useBalances } from '@/hooks';
+import { useBalances, useWallet } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -43,7 +43,10 @@ type Props = {
 export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { balances, prices } = useBalances();
+    const { account } = useWallet();
+    const { balances, prices } = useBalances({
+        address: account?.address ?? '',
+    });
     const [searchQuery, setSearchQuery] = useState('');
 
     const { network } = useVeChainKitConfig();

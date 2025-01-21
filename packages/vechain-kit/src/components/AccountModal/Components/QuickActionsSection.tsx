@@ -4,7 +4,7 @@ import { BsLightningCharge } from 'react-icons/bs';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
-import { useBalances } from '@/hooks';
+import { useBalances, useWallet } from '@/hooks';
 
 type Props = {
     mt?: number;
@@ -14,7 +14,10 @@ type Props = {
 };
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
-    const { totalBalance } = useBalances();
+    const { account } = useWallet();
+    const { totalBalance } = useBalances({
+        address: account?.address ?? '',
+    });
     return (
         <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full" mt={mt}>
             <IconButton

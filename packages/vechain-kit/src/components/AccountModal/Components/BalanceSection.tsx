@@ -7,7 +7,7 @@ import {
     HStack,
     Icon,
 } from '@chakra-ui/react';
-import { useBalances, useRefreshBalances } from '@/hooks';
+import { useBalances, useRefreshBalances, useWallet } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VscRefresh } from 'react-icons/vsc';
@@ -20,7 +20,10 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
 
 export const BalanceSection = ({ mb, mt }: { mb?: number; mt?: number }) => {
     const { t } = useTranslation();
-    const { isLoading, totalBalance } = useBalances();
+    const { account } = useWallet();
+    const { isLoading, totalBalance } = useBalances({
+        address: account?.address ?? '',
+    });
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);

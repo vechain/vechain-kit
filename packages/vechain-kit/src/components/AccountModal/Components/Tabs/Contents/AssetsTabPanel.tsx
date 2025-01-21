@@ -1,6 +1,6 @@
 import { VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { useBalances } from '@/hooks';
+import { useBalances, useWallet } from '@/hooks';
 import { AssetButton } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useVeChainKitConfig } from '@/providers';
@@ -15,7 +15,8 @@ export type AssetsTabPanelProps = {
 };
 
 export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
-    const { balances, prices } = useBalances();
+    const { account } = useWallet();
+    const { balances, prices } = useBalances({ address: account?.address });
     const { network } = useVeChainKitConfig();
 
     const handleTokenSelect = (token: {
