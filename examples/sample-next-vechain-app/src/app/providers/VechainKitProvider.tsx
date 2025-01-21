@@ -79,7 +79,6 @@ export function VechainKitProvider({ children }: Props) {
             // privyEcosystemAppIDS={[]}
             darkMode={isDarkMode}
             language={i18n.language}
-            // i18n={i18n}
             network={{
                 type: 'main',
                 // connectionCertificate: {

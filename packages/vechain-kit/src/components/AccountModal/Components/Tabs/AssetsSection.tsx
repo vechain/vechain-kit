@@ -26,7 +26,7 @@ export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
     const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
     const tabTextColor = useColorModeValue('#4d4d4d', '#dfdfdd');
     // const tabTextSelectedColor = useColorModeValue('#000000', '#ffffff');
-    const tabSelectedBgColor = useColorModeValue('#f7f7f7', '#3c3c39');
+    // const tabSelectedBgColor = useColorModeValue('#f7f7f7', '#3c3c39');
     const tabPanelsRef = useRef<HTMLDivElement>(null);
 
     const scrollToContent = () => {
@@ -62,18 +62,10 @@ export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
                             flex={1}
                             onClick={scrollToContent}
                             transition="all 0.2s"
-                            _active={{
-                                bg: tabBgColor,
-                                color: tabTextColor,
-                            }}
-                            _focus={{
-                                bg: tabBgColor,
-                                color: tabTextColor,
-                            }}
-                            _hover={{
-                                bg: tabSelectedBgColor,
-                                opacity: 0.8,
-                            }}
+                            // _hover={{
+                            //     bg: tabSelectedBgColor,
+                            //     opacity: 0.8,
+                            // }}
                         >
                             {t('Assets')}
                         </Tab>

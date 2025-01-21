@@ -153,8 +153,8 @@ export const TransactionToast = ({
         <VechainKitThemeProvider darkMode={isDark}>
             <Box
                 position="fixed"
-                bottom="10"
-                left="10"
+                bottom="5"
+                left="5"
                 zIndex="11111"
                 bg={isDark ? '#1f1f1e' : 'white'}
                 borderRadius={'md'}
