@@ -40,5 +40,5 @@
           "@providers/*": ["src/providers/*"],
       },
     },
-    "include": ["src/**/*.ts", "test/**/*.test.ts", "eslint.config.mjs"]
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/*.d.ts", "test/**/*.test.ts", "eslint.config.mjs"]
 }

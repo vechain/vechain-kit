@@ -1,7 +1,7 @@
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config({
-    ignores: ['**/*.config.ts', 'dist/**'],
+    ignores: ['**/*.config.ts', 'dist/**', 'src/contracts/typechain-types.ts'],
     extends: [...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
     rules: {

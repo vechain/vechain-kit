@@ -15,20 +15,20 @@ import {
 import {
     useWallet,
     useSendTransaction,
-    WalletButton,
     useTransactionModal,
     useTransactionToast,
-    TransactionToast,
-    TransactionModal,
     useDAppKitPrivyColorMode,
     useAccountModal,
     useGetB3trBalance,
-    humanAddress,
     useCurrentAllocationsRoundId,
     useSelectedGmNft,
     useParticipatedInGovernance,
     useIsPerson,
+    WalletButton,
+    TransactionToast,
+    TransactionModal,
 } from '@vechain/vechain-kit';
+import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trAbi, b3trMainnetAddress } from '../constants';
 import { Interface } from 'ethers';
 import { SigningExample } from '@/app/components/SigningExample';
