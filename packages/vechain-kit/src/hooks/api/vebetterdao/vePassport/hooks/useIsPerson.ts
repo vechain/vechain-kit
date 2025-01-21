@@ -1,7 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
-import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -37,9 +36,9 @@ export const useIsPerson = (user?: string | null) => {
 
 /**
  * Hook to get the isPerson status from the VeBetterPassport contract for the current user.
+ * @param address - The address of the account.
  * @returns The isPerson status.
  */
-export const useIsUserPerson = () => {
-    const { account } = useWallet();
-    return useIsPerson(account.address);
+export const useIsUserPerson = (address?: string) => {
+    return useIsPerson(address);
 };

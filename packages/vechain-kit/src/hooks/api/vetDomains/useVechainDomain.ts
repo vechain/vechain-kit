@@ -31,7 +31,7 @@ const getNamesABI = {
     type: 'function',
 };
 
-const fetchVechainDomain = async (
+export const fetchVechainDomain = async (
     thor: Connex.Thor,
     networkType: NETWORK_TYPE,
     addressOrDomain?: string | null,

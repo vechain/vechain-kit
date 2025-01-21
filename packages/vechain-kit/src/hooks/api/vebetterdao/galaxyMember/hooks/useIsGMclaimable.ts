@@ -1,17 +1,17 @@
-import { useWallet } from '@/hooks';
 import { useParticipatedInGovernance } from './useParticipatedInGovernance';
 import { useGMbalance } from './useGMbalance';
 
 /**
  * Returns whether the user can claim a GM NFT
+ *
+ * @param address - The address of the account.
  * @returns Whether the user can claim a GM NFT
  */
 
-export const useIsGMclaimable = () => {
-    const { account } = useWallet();
-    const { data: hasVoted } = useParticipatedInGovernance(account.address);
+export const useIsGMclaimable = (address?: string) => {
+    const { data: hasVoted } = useParticipatedInGovernance(address ?? '');
 
-    const { data: nftBalance } = useGMbalance(account.address);
+    const { data: nftBalance } = useGMbalance(address ?? '');
 
     if (Number(nftBalance) > 0) return { isClaimable: false, isOwned: true };
 

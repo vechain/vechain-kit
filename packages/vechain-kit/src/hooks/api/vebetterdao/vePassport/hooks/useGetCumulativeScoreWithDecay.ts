@@ -1,8 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts';
-import { useWallet } from '@/hooks';
-import { useCurrentAllocationsRoundId } from '../../xAllocations';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -44,20 +42,4 @@ export const useGetCumulativeScoreWithDecay = (
         args: [user, round],
         enabled: !!user && !!round && !!veBetterPassportContractAddress,
     });
-};
-
-/**
- * Hook to get the cumulative score with decay for the current user.
- * @returns The cumulative score with decay for the current user.
- */
-export const useGetCurrentUserCumulativeScoreWithDecay = () => {
-    const { account } = useWallet();
-    const { data: roundId, isLoading: isRoundIdLoading } =
-        useCurrentAllocationsRoundId();
-    const { data: userRoundScore, isLoading: isUserRoundScoreLoading } =
-        useGetCumulativeScoreWithDecay(account.address, Number(roundId));
-    return {
-        data: userRoundScore,
-        isLoading: isUserRoundScoreLoading || isRoundIdLoading,
-    };
 };

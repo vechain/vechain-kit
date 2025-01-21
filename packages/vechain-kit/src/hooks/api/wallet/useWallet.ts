@@ -145,19 +145,26 @@ export const useWallet = (): UseWalletReturnType => {
     // TODO: here we will need to check if the owner of the wallet owns a smart account
     const activeAddress = isConnectedWithDappKit
         ? dappKitAccount
-        : smartAccount?.address ?? '';
+        : smartAccount?.address;
 
-    const account = {
-        address: activeAddress ?? null,
-        domain: useVechainDomain(activeAddress ?? '').data?.domain,
-        image: getPicassoImage(activeAddress ?? ''),
-    };
+    const accountDomain = useVechainDomain(activeAddress ?? '').data?.domain;
+    const account = activeAddress
+        ? {
+              address: activeAddress,
+              domain: accountDomain,
+              image: getPicassoImage(activeAddress),
+          }
+        : null;
 
-    const connectedWallet = {
-        address: connectedWalletAddress ?? null,
-        domain: useVechainDomain(connectedWalletAddress ?? '').data?.domain,
-        image: getPicassoImage(connectedWalletAddress ?? ''),
-    };
+    const connectedWalletDomain = useVechainDomain(connectedWalletAddress ?? '')
+        .data?.domain;
+    const connectedWallet = connectedWalletAddress
+        ? {
+              address: connectedWalletAddress,
+              domain: connectedWalletDomain,
+              image: getPicassoImage(connectedWalletAddress),
+          }
+        : null;
 
     //TODO: add isLoading for each domain
     // Use cached domain lookups for each address
@@ -203,7 +210,7 @@ export const useWallet = (): UseWalletReturnType => {
     return {
         account,
         smartAccount: {
-            address: smartAccount?.address ?? null,
+            address: smartAccount?.address ?? '',
             domain: smartAccountDomain,
             image: getPicassoImage(smartAccount?.address ?? ''),
             isDeployed: smartAccount?.isDeployed ?? false,

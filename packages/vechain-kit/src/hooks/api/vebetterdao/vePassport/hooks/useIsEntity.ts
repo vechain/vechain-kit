@@ -1,7 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
-import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -38,9 +37,9 @@ export const useIsEntity = (address?: string | null) => {
 
 /**
  * Hook to check if the current user's address is an entity using the VeBetterPassport contract.
+ * @param address - The address of the account.
  * @returns A boolean indicating whether the current user's address is an entity.
  */
-export const useIsUserEntity = () => {
-    const { account } = useWallet();
-    return useIsEntity(account.address);
+export const useIsUserEntity = (address?: string) => {
+    return useIsEntity(address);
 };

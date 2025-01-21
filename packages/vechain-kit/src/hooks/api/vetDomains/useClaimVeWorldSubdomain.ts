@@ -48,7 +48,7 @@ export const useClaimVeWorldSubdomain = ({
             value: '0x0',
             data: ReverseRegistrarInterface.encodeFunctionData('setName', ['']),
             comment: `Unsetting your current VeChain nickname of the account ${humanAddress(
-                account.address ?? '',
+                account?.address ?? '',
                 4,
                 4,
             )}`,
@@ -73,7 +73,7 @@ export const useClaimVeWorldSubdomain = ({
                 subdomain + '.' + domain,
             ]),
             comment: `Set ${subdomain}.${domain} as the VeChain nickname of the account ${humanAddress(
-                account.address ?? '',
+                account?.address ?? '',
                 4,
                 4,
             )}`,
@@ -81,13 +81,13 @@ export const useClaimVeWorldSubdomain = ({
         });
 
         return clausesArray;
-    }, [subdomain, domain, account.address]);
+    }, [subdomain, domain, account?.address]);
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
         // Invalidate immediately without refetching
         queryClient.cancelQueries({
-            queryKey: getVechainDomainQueryKey(account.address ?? ''),
+            queryKey: getVechainDomainQueryKey(account?.address ?? ''),
             refetchType: 'none',
         });
 
@@ -104,7 +104,7 @@ export const useClaimVeWorldSubdomain = ({
         // Refetch after 3 seconds
         setTimeout(() => {
             queryClient.invalidateQueries({
-                queryKey: getVechainDomainQueryKey(account.address ?? ''),
+                queryKey: getVechainDomainQueryKey(account?.address ?? ''),
                 refetchType: 'none',
             });
 
@@ -114,7 +114,7 @@ export const useClaimVeWorldSubdomain = ({
             });
 
             queryClient.refetchQueries({
-                queryKey: getVechainDomainQueryKey(account.address ?? ''),
+                queryKey: getVechainDomainQueryKey(account?.address ?? ''),
             });
             queryClient.refetchQueries({
                 queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
@@ -130,10 +130,10 @@ export const useClaimVeWorldSubdomain = ({
         }, 2000);
 
         onSuccess?.();
-    }, [onSuccess, subdomain, domain, queryClient, account.address]);
+    }, [onSuccess, subdomain, domain, queryClient, account?.address]);
 
     const result = useSendTransaction({
-        signerAccountAddress: account.address,
+        signerAccountAddress: account?.address ?? '',
         privyUIOptions: {
             title: 'Sign to claim your VeChain nickname',
             description: `Claim ${subdomain} as your VeChain nickname`,

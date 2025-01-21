@@ -79,7 +79,7 @@ export const PrivyWalletProvider = ({
     const thor = ThorClient.at(nodeUrl);
 
     const { data: smartAccount } = useSmartAccount(
-        connectedWallet.address ?? '',
+        connectedWallet?.address ?? '',
     );
 
     /**
@@ -475,7 +475,7 @@ export const PrivyWalletProvider = ({
         if (connection.isConnectedWithCrossApp) {
             const mutableData = {
                 ...data,
-                address: connectedWallet.address as `0x${string}`,
+                address: connectedWallet?.address as `0x${string}`,
                 types: Object.fromEntries(
                     Object.entries(data.types).map(([k, v]) => [k, [...v]]),
                 ),

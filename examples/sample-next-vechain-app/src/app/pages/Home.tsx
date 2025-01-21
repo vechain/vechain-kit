@@ -43,7 +43,7 @@ export default function Home(): ReactElement {
     const { data: currentAllocationsRoundId } = useCurrentAllocationsRoundId();
     const { gmId } = useSelectedGmNft(account?.address ?? '');
     const { data: participatedInGovernance } = useParticipatedInGovernance(
-        account?.address,
+        account?.address ?? '',
     );
     const { data: isValidPassport } = useIsPerson(account?.address);
 
@@ -61,7 +61,7 @@ export default function Home(): ReactElement {
         error,
         progress,
     } = useSendTransaction({
-        signerAccountAddress: account?.address,
+        signerAccountAddress: account?.address ?? '',
     });
 
     const {
@@ -77,7 +77,7 @@ export default function Home(): ReactElement {
 
     // A dummy tx sending 0 b3tr tokens
     const clauses = useMemo(() => {
-        if (!connectedWallet.address) return [];
+        if (!connectedWallet?.address) return [];
 
         const clausesArray: any[] = [];
         const abi = new Interface(b3trAbi);
@@ -85,11 +85,11 @@ export default function Home(): ReactElement {
             to: b3trMainnetAddress,
             value: '0x0',
             data: abi.encodeFunctionData('transfer', [
-                connectedWallet.address,
+                connectedWallet?.address,
                 '0', // 1 B3TR (in wei)
             ]),
             comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                connectedWallet.address,
+                connectedWallet?.address,
             )}`,
             abi: abi.getFunction('transfer'),
         });
@@ -98,17 +98,17 @@ export default function Home(): ReactElement {
             to: b3trMainnetAddress,
             value: '0x0',
             data: abi.encodeFunctionData('transfer', [
-                connectedWallet.address,
+                connectedWallet?.address,
                 '1', // 1 B3TR (in wei)
             ]),
             comment: `This is a second close demonstrating multiclause with privy-corssapp. Transfer ${0.000001} B3TR to ${humanAddress(
-                connectedWallet.address,
+                connectedWallet?.address,
             )}`,
             abi: abi.getFunction('transfer'),
         });
 
         return clausesArray;
-    }, [connectedWallet.address]);
+    }, [connectedWallet?.address]);
 
     const handleTransactionWithToast = useCallback(async () => {
         openTransactionToast();
@@ -120,14 +120,11 @@ export default function Home(): ReactElement {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-    if (!connection.isConnected) {
+    if (!account) {
         return (
             <Container justifyContent={'center'}>
                 <VStack>
-                    <WalletButton
-                        mobileVariant="iconDomainAndAddress"
-                        desktopVariant="iconAndDomain"
-                    />
+                    <WalletButton />
                 </VStack>
             </Container>
         );

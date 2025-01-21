@@ -2,6 +2,7 @@ import { Button, HStack, Image, useMediaQuery } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { WalletDisplay } from './WalletDisplay';
 import { WalletButtonProps } from './types';
+import { notFoundImage } from '@/utils';
 
 type ConnectedWalletProps = WalletButtonProps & {
     onOpen: () => void;
@@ -19,7 +20,7 @@ export const ConnectedWallet = ({
         <Button onClick={onOpen} p={'0px 13px'} minH={'45px'}>
             <HStack>
                 <Image
-                    src={account.image ?? ''}
+                    src={account?.image ?? notFoundImage}
                     alt="wallet"
                     width={30}
                     height={30}

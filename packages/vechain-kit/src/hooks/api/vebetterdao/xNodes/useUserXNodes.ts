@@ -6,7 +6,6 @@ import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { useWallet } from '@/hooks';
 import { abi } from 'thor-devkit';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
@@ -106,13 +105,4 @@ export const useXNodes = (user?: string) => {
         queryFn: async () => await getUserXNodes(thor, network.type, user),
         enabled: !!thor && !!user && !!network.type,
     });
-};
-
-/**
- *  Hook to get the owned or delegated xNodes for a user from the NodeManagement contract
- * @returns  the xNodes for the user
- */
-export const useUserXNodes = () => {
-    const { account } = useWallet();
-    return useXNodes(account.address || undefined);
 };

@@ -71,7 +71,7 @@ export const SendTokenSummaryContent = ({
     const transactionModal = useDisclosure();
 
     const transferERC20 = useTransferERC20({
-        fromAddress: account.address ?? '',
+        fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         tokenAddress: selectedToken.address,
@@ -79,7 +79,7 @@ export const SendTokenSummaryContent = ({
     });
 
     const transferVET = useTransferVET({
-        fromAddress: account.address ?? '',
+        fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
     });
@@ -144,9 +144,9 @@ export const SendTokenSummaryContent = ({
                         <VStack spacing={4} w="full">
                             <AddressDisplayCard
                                 label={t('From')}
-                                address={account.address ?? ''}
-                                domain={account.domain}
-                                imageSrc={account.image ?? ''}
+                                address={account?.address ?? ''}
+                                domain={account?.domain}
+                                imageSrc={account?.image ?? ''}
                                 imageAlt="From account"
                             />
 

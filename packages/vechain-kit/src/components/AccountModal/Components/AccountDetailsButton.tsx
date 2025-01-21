@@ -81,9 +81,9 @@ export const AccountDetailsButton = ({
                         whiteSpace={'normal'}
                         w={'full'}
                     >
-                        {wallet.domain
-                            ? humanDomain(wallet.domain, 4, 11)
-                            : humanAddress(wallet.address ?? '', 6, 4)}
+                        {wallet?.domain
+                            ? humanDomain(wallet?.domain, 4, 11)
+                            : humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
                 </VStack>
                 <VStack minW={'40px'} justifyContent={'flex-end'}>

@@ -87,7 +87,7 @@ export const ChooseNameSearchContent = ({
                         // if the user has a domain, go to accounts
                         connection.isConnectedWithDappKit
                             ? setCurrentContent('settings')
-                            : account.domain
+                            : account?.domain
                             ? setCurrentContent('smart-account')
                             : setCurrentContent('choose-name')
                     }

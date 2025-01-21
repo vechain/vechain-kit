@@ -52,7 +52,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                         <VStack spacing={6} align="center" w="full">
                             <AddressDisplay wallet={account} size="lg" />
                             <QRCode
-                                value={account.address ?? ''}
+                                value={account?.address ?? ''}
                                 size={200}
                                 removeQrCodeBehindLogo={true}
                                 eyeRadius={4}

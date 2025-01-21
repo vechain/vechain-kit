@@ -60,7 +60,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
             <FadeInViewFromBottom>
                 <VStack justify={'center'}>
                     <Image
-                        src={wallet.image}
+                        src={wallet?.image}
                         maxW={'100px'}
                         mt={5}
                         mb={5}

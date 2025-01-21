@@ -39,7 +39,7 @@ export const AccountSelector = ({
                 onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    copyToClipboard(wallet.address ?? '');
+                    copyToClipboard(wallet?.address ?? '');
                 }}
             >
                 <Icon
@@ -58,8 +58,8 @@ export const AccountSelector = ({
             >
                 <HStack spacing={2} align="center">
                     <Text fontSize={size} fontWeight="500">
-                        {wallet.domain ||
-                            humanAddress(wallet.address ?? '', 6, 4)}
+                        {wallet?.domain ||
+                            humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
 
                     <Icon

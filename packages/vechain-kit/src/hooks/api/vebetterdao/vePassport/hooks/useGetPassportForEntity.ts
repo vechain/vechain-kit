@@ -1,7 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
-import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -39,9 +38,9 @@ export const useGetPassportForEntity = (entity?: string | null) => {
 
 /**
  * Hook to get the passport for the current user's entity from the VeBetterPassport contract.
+ * @param address - The address of the entity.
  * @returns The passport address for the current user's entity.
  */
-export const useGetUserPassportForEntity = () => {
-    const { account } = useWallet();
-    return useGetPassportForEntity(account.address);
+export const useGetUserPassportForEntity = (address?: string) => {
+    return useGetPassportForEntity(address ?? '');
 };

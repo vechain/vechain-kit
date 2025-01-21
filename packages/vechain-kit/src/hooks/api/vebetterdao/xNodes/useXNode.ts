@@ -1,7 +1,6 @@
 import { notFoundImage } from '@/utils';
 import { useGetTokenIdAttachedToNode } from '../galaxyMember/hooks/useGetTokenIdAttachedToNode';
 import { useTranslation } from 'react-i18next';
-import { useWallet } from '@vechain/dapp-kit-react';
 import { useGetUserNodes } from './useGetUserNodes';
 import {
     allNodeStrengthLevelToName,
@@ -12,6 +11,7 @@ import { useXNodeCheckCooldown } from './useXNodeCheckCooldown';
 /**
  * Custom hook for retrieving data related to an X-Node.
  *
+ * @param address - The address of the account.
  * @returns An object containing the following properties:
  * - xNodeName: The name of the X-Node.
  * - xNodeImage: The image URL of the X-Node.
@@ -50,10 +50,9 @@ interface XNodeData {
     }>;
 }
 
-export const useXNode = (): XNodeData => {
+export const useXNode = (address?: string): XNodeData => {
     const { t } = useTranslation();
-    const { account } = useWallet();
-    const userNodeDetails = useGetUserNodes(account ?? '');
+    const userNodeDetails = useGetUserNodes(address ?? '');
 
     // Store raw node data
     const allNodes = userNodeDetails?.data ?? [];

@@ -35,7 +35,7 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                         {label}
                     </Text>
                 )}
-                {wallet.domain ? (
+                {wallet?.domain ? (
                     <VStack>
                         <HStack
                             onClick={() =>
@@ -84,13 +84,13 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
                 ) : (
                     <HStack
                         onClick={() =>
-                            copyToClipboard(wallet.address ?? '', setCopied)
+                            copyToClipboard(wallet?.address ?? '', setCopied)
                         }
                         cursor="pointer"
                         spacing={2}
                     >
                         <Text fontSize={size}>
-                            {humanAddress(wallet.address ?? '', 6, 4)}
+                            {humanAddress(wallet?.address ?? '', 6, 4)}
                         </Text>
                         <Icon
                             boxSize={5}

@@ -1,4 +1,4 @@
-import { Text, VStack } from '@chakra-ui/react';
+import { Spinner, Text, VStack } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { humanAddress } from '@/utils';
 
@@ -8,6 +8,8 @@ type WalletDisplayProps = {
 
 export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
     const { account } = useWallet();
+
+    if (!account) return <Spinner />;
 
     if (variant === 'icon') {
         return null;

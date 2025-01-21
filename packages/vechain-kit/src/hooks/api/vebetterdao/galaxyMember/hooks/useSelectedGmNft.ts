@@ -26,15 +26,15 @@ import { useB3trToUpgrade } from '.';
  *   - attachedNodeId: The ID of the node attached to the Galaxy Member NFT.
  */
 export const useSelectedGmNft = (userAddress?: string) => {
-    const { isOwned: isGMOwned } = useIsGMclaimable();
-    const { isLoading: isGMLoading } = useNFTImage();
+    const { isOwned: isGMOwned } = useIsGMclaimable(userAddress);
+    const { isLoading: isGMLoading } = useNFTImage(userAddress);
     const { data: b3trBalance } = useGetB3trBalance(userAddress ?? '');
     const {
         data: selectedTokenId,
         isLoading: isSelectedTokenIdLoading,
         isError: isErrorSelectedTokenId,
         error: errorSelectedTokenIdError,
-    } = useSelectedTokenId();
+    } = useSelectedTokenId(userAddress ?? '');
 
     const {
         data: gmLevel,
@@ -144,7 +144,7 @@ export const useSelectedGmNft = (userAddress?: string) => {
     const missingB3trToUpgrade =
         b3trToUpgradeGMToNextLevel - Number(b3trBalance?.scaled || 0);
 
-    const { xNodeId } = useXNode();
+    const { xNodeId } = useXNode(userAddress);
     const isXNodeAttachedToGM = attachedNodeId === xNodeId;
 
     const isMaxGmLevelReached =

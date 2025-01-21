@@ -14,7 +14,7 @@ export const WalletButton = ({
 }: WalletButtonProps) => {
     const { t } = useTranslation();
 
-    const { connection } = useWallet();
+    const { connection, account } = useWallet();
     const { setSource, connect } = useDappKitWallet();
     const { authenticated, user, createWallet } = usePrivy();
 
@@ -48,7 +48,7 @@ export const WalletButton = ({
 
     return (
         <>
-            {connection.isConnected ? (
+            {connection.isConnected && !!account ? (
                 <ConnectedWallet
                     mobileVariant={mobileVariant}
                     desktopVariant={desktopVariant}

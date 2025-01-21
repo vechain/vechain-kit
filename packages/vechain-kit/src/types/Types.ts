@@ -1,10 +1,10 @@
 export type Wallet = {
-    address: string | null;
+    address: string;
     domain?: string;
-    image?: string;
-};
+    image: string;
+} | null;
 
-export type SmartAccount = Wallet & {
+export type SmartAccount = NonNullable<Wallet> & {
     isDeployed: boolean;
     isActive: boolean;
 };

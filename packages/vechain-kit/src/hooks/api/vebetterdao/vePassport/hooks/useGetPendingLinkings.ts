@@ -1,7 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
-import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -42,9 +41,9 @@ export const useGetPendingLinkings = (user?: string | null) => {
 
 /**
  * Hook to get pending linkings from the VeBetterPassport contract for the current user.
+ * @param address - The address of the account.
  * @returns An object containing incoming and outgoing pending linkings for the current user.
  */
-export const useGetUserPendingLinkings = () => {
-    const { account } = useWallet();
-    return useGetPendingLinkings(account.address);
+export const useGetUserPendingLinkings = (address?: string) => {
+    return useGetPendingLinkings(address);
 };

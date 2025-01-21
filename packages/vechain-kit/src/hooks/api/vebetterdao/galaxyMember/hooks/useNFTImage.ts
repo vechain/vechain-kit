@@ -1,4 +1,3 @@
-import { useWallet } from '@/hooks';
 import { useTokenIdByAccount } from './useTokenIdByAccount';
 import { useNFTMetadataUri } from './useNFTMetadataUri';
 import { useIpfsImage } from '@/hooks/api/ipfs/useIpfsImage';
@@ -20,14 +19,13 @@ export type NFTMetadata = {
     }[];
 };
 
-export const useNFTImage = () => {
-    const { account } = useWallet();
+export const useNFTImage = (address?: string) => {
     const {
         data: tokenID,
         isLoading: isLoadingTokenID,
         isError: isErrorTokenID,
         error: errorTokenID,
-    } = useTokenIdByAccount(account.address, 0);
+    } = useTokenIdByAccount(address ?? '', 0);
 
     const {
         data: metadataURI,

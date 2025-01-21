@@ -48,7 +48,7 @@ export const WalletSettingsContent = ({
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
 
-    const hasExistingDomain = !!connectedWallet.domain;
+    const hasExistingDomain = !!connectedWallet?.domain;
 
     const modalTitle =
         connection.isConnectedWithCrossApp && connectionCache
@@ -88,7 +88,7 @@ export const WalletSettingsContent = ({
                 <ModalBody w={'full'}>
                     <VStack justify={'center'}>
                         <Image
-                            src={connectedWallet.image}
+                            src={connectedWallet?.image}
                             maxW={'100px'}
                             borderRadius="50%"
                         />
