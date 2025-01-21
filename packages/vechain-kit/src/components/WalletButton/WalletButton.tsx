@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 export const WalletButton = ({
     mobileVariant = 'iconAndDomain',
-    desktopVariant = 'iconAndDomain',
+    desktopVariant = 'iconDomainAndAddress',
 }: WalletButtonProps) => {
     const { t } = useTranslation();
 
