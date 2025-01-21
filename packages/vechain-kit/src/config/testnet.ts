@@ -2,6 +2,7 @@ import { AppConfig } from '.';
 
 const config: AppConfig = {
     ipfsFetchingService: 'https://api.dev.gateway-proxy.vechain.org/ipfs',
+    vthoContractAddress: '0x0000000000000000000000000000456E65726779',
     b3trContractAddress: '0xbf64cf86894Ee0877C4e7d03936e35Ee8D8b864F',
     vot3ContractAddress: '0xa704c45971995467696EE9544Da77DD42Bc9706E',
     b3trGovernorAddress: '0xDF5E114D391CAC840529802fe8D01f6bdeBE41eC',

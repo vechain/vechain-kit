@@ -53,7 +53,15 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 py={3}
                 aria-label="Send"
                 icon={<Icon as={FiSend} boxSize={5} opacity={0.5} />}
-                onClick={() => setCurrentContent('send-token')}
+                onClick={() =>
+                    setCurrentContent({
+                        type: 'send-token',
+                        props: {
+                            setCurrentContent,
+                            isNavigatingFromMain: true,
+                        },
+                    })
+                }
             />
         </Grid>
     );

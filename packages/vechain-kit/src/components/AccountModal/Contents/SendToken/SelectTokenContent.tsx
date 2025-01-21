@@ -22,8 +22,10 @@ import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useBalances } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
+import { getConfig } from '@/config';
 
-type Token = {
+export type Token = {
     symbol: string;
     balance: string;
     address: string;
@@ -46,6 +48,8 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { balances, prices } = useBalances();
     const [searchQuery, setSearchQuery] = useState('');
 
+    const { network } = useVeChainKitConfig();
+
     // Transform balances into tokens array with numeric values
     const tokens: Token[] = [
         {
@@ -58,28 +62,28 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
         {
             symbol: 'VTHO',
             balance: balances.vtho.toString(),
-            address: '0x0000000000000000000000000000456E65726779',
+            address: getConfig(network.type).vthoContractAddress,
             numericBalance: balances.vtho,
             price: prices.vtho,
         },
         {
             symbol: 'B3TR',
             balance: balances.b3tr.toString(),
-            address: '0x5ef79995FE8a89e0812330E4378eB2660ceDe699',
+            address: getConfig(network.type).b3trContractAddress,
             numericBalance: balances.b3tr,
             price: prices.b3tr,
         },
         {
             symbol: 'VOT3',
             balance: balances.vot3.toString(),
-            address: '0x5ef79995FE8a89e0812330E4378eB2660ceDe699',
+            address: getConfig(network.type).vot3ContractAddress,
             numericBalance: balances.vot3,
             price: prices.b3tr,
         },
         {
             symbol: 'veDelegate',
             balance: balances.veDelegate.toString(),
-            address: '0xD3f7b82Df5705D34f64C634d2dEf6B1cB3116950',
+            address: getConfig(network.type).veDelegate,
             numericBalance: balances.veDelegate,
             price: prices.b3tr,
         },

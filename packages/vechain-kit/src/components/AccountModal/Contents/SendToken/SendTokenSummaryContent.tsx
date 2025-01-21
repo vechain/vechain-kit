@@ -43,7 +43,6 @@ export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    onSend: (address: string, amount: string) => void;
     toAddressOrDomain: string;
     resolvedDomain?: string;
     resolvedAddress?: string;
@@ -113,7 +112,14 @@ export const SendTokenSummaryContent = ({
                     Send
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() => setCurrentContent('send-token')}
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'send-token',
+                            props: {
+                                setCurrentContent,
+                            },
+                        })
+                    }
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

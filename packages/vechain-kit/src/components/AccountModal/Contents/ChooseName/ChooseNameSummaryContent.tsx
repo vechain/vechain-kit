@@ -22,15 +22,17 @@ import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorld
 import { GiConfirmed } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 
-type Props = {
-    setCurrentContent: (content: AccountModalContentTypes) => void;
+export type ChooseNameSummaryContentProps = {
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
     name: string;
 };
 
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
-}: Props) => {
+}: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -69,8 +71,8 @@ export const ChooseNameSummaryContent = ({
                         setCurrentContent({
                             type: 'choose-name-search',
                             props: {
-                                name,
                                 setCurrentContent,
+                                name,
                             },
                         })
                     }

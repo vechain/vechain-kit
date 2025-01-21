@@ -40,6 +40,8 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
     const renderContent = () => {
         if (typeof currentContent === 'object') {
             switch (currentContent.type) {
+                case 'send-token':
+                    return <SendTokenContent {...currentContent.props} />;
                 case 'send-token-summary':
                     return (
                         <SendTokenSummaryContent {...currentContent.props} />
@@ -83,13 +85,6 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
                         wallet={account}
-                    />
-                );
-            case 'send-token':
-                return (
-                    <SendTokenContent
-                        setCurrentContent={setCurrentContent}
-                        onSend={() => {}}
                     />
                 );
             case 'receive-token':

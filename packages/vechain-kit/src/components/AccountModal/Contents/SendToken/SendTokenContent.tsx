@@ -43,14 +43,19 @@ type Token = {
     price: number;
 };
 
-type Props = {
+export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    onSend: (address: string, amount: string) => void;
+    isNavigatingFromMain?: boolean;
+    preselectedToken?: Token;
 };
 
-export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
+export const SendTokenContent = ({
+    setCurrentContent,
+    isNavigatingFromMain = false,
+    preselectedToken,
+}: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const isDark = colorMode === 'dark';
@@ -58,9 +63,16 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
     const [toAddressOrDomain, setToAddress] = useState('');
     const [amount, setAmount] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [isSelectingToken, setIsSelectingToken] = useState(false);
-    const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+    const [isSelectingToken, setIsSelectingToken] = useState(
+        isNavigatingFromMain && !preselectedToken,
+    );
+
+    const [selectedToken, setSelectedToken] = useState<Token | null>(
+        preselectedToken ?? null,
+    );
     const [addressError, setAddressError] = useState<string | null>(null);
+    const [isInitialTokenSelection, setIsInitialTokenSelection] =
+        useState(isNavigatingFromMain);
 
     const {
         domain: resolvedDomain,
@@ -143,7 +155,6 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                 resolvedAddress: resolvedAddress,
                 amount,
                 selectedToken,
-                onSend,
                 setCurrentContent,
             },
         });
@@ -156,8 +167,15 @@ export const SendTokenContent = ({ setCurrentContent, onSend }: Props) => {
                 onSelectToken={(token) => {
                     setSelectedToken(token);
                     setIsSelectingToken(false);
+                    setIsInitialTokenSelection(false);
                 }}
-                onBack={() => setIsSelectingToken(false)}
+                onBack={() => {
+                    if (isInitialTokenSelection) {
+                        setCurrentContent('main');
+                    } else {
+                        setIsSelectingToken(false);
+                    }
+                }}
             />
         );
     }

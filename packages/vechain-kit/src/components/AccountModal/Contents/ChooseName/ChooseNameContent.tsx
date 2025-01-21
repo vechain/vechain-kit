@@ -18,11 +18,15 @@ import { FaRegAddressCard } from 'react-icons/fa';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 
-type Props = {
-    setCurrentContent: (content: AccountModalContentTypes) => void;
+export type ChooseNameContentProps = {
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
 };
 
-export const ChooseNameContent = ({ setCurrentContent }: Props) => {
+export const ChooseNameContent = ({
+    setCurrentContent,
+}: ChooseNameContentProps) => {
     const { t } = useTranslation();
     const { smartAccount, connection } = useWallet();
     const { colorMode } = useColorMode();

@@ -20,6 +20,7 @@ type AssetButtonProps = ButtonProps & {
     amount: number;
     usdValue: number;
     isDisabled?: boolean;
+    onClick?: () => void;
 };
 
 export const AssetButton = ({
@@ -27,6 +28,7 @@ export const AssetButton = ({
     amount,
     usdValue,
     isDisabled,
+    onClick,
     ...buttonProps
 }: AssetButtonProps) => (
     <Button
@@ -40,6 +42,7 @@ export const AssetButton = ({
             cursor: 'not-allowed',
             opacity: 0.5,
         }}
+        onClick={onClick}
         {...buttonProps}
     >
         <HStack>

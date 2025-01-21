@@ -15,10 +15,12 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
     mt?: number;
-    setCurrentContent: (content: AccountModalContentTypes) => void;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
 };
 
-export const AssetsSection = ({ mt }: Props) => {
+export const AssetsSection = ({ mt, setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const tabBgColor = useColorModeValue('white', '#1f1f1e');
     const tabBorderColor = useColorModeValue('#ebebeb', '#2d2d2d');
@@ -111,7 +113,7 @@ export const AssetsSection = ({ mt }: Props) => {
                 </HStack>
                 <TabPanels ref={tabPanelsRef}>
                     <TabPanel p={0} pt={3}>
-                        <AssetsTabPanel />
+                        <AssetsTabPanel setCurrentContent={setCurrentContent} />
                     </TabPanel>
                     {/* <TabPanel p={0} pt={3}>
                         <NFTsTabPanel

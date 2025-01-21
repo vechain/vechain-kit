@@ -1,3 +1,8 @@
+import {
+    ChooseNameSearchContentProps,
+    ChooseNameSummaryContentProps,
+} from '../Contents';
+import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 
 export type AccountModalContentTypes =
@@ -6,27 +11,21 @@ export type AccountModalContentTypes =
     | 'settings'
     | 'smart-account'
     | 'accounts'
-    | 'send-token'
     | 'receive-token'
     | 'swap-token'
     | 'connection-details'
     | 'choose-name'
     | 'privy-linked-accounts'
+    | { type: 'send-token'; props: SendTokenContentProps }
     | {
           type: 'send-token-summary';
           props: SendTokenSummaryContentProps;
       }
     | {
           type: 'choose-name-search';
-          props: {
-              name: string;
-              setCurrentContent: (content: AccountModalContentTypes) => void;
-          };
+          props: ChooseNameSearchContentProps;
       }
     | {
           type: 'choose-name-summary';
-          props: {
-              name: string;
-              setCurrentContent: (content: AccountModalContentTypes) => void;
-          };
+          props: ChooseNameSummaryContentProps;
       };

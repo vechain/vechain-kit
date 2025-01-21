@@ -27,7 +27,9 @@ import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 
 type Props = {
-    setCurrentContent: (content: AccountModalContentTypes) => void;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
     onLogoutSuccess: () => void;
 };
 

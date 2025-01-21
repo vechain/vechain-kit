@@ -24,7 +24,9 @@ import { useTranslation } from 'react-i18next';
 
 export type ChooseNameSearchContentProps = {
     name: string;
-    setCurrentContent: (content: AccountModalContentTypes) => void;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
 };
 
 export const ChooseNameSearchContent = ({

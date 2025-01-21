@@ -5,6 +5,7 @@ import { Network, NETWORK_TYPE } from './network';
 
 export type AppConfig = {
     ipfsFetchingService: string;
+    vthoContractAddress: string;
     b3trContractAddress: string;
     vot3ContractAddress: string;
     b3trGovernorAddress: string;
