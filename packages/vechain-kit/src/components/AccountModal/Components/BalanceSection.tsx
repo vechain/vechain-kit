@@ -9,11 +9,8 @@ import {
 } from '@chakra-ui/react';
 import { useBalances, useRefreshBalances } from '@/hooks';
 import { useState } from 'react';
-import { IoRefresh } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { VscRefresh } from 'react-icons/vsc';
-import { MdOutlineRefresh } from 'react-icons/md';
-import { IoMdRefresh } from 'react-icons/io';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
