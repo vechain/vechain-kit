@@ -1,8 +1,8 @@
 import { Button, HStack, Image, useMediaQuery } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { WalletDisplay } from './WalletDisplay';
-import { WalletButtonProps } from './types';
 import { notFoundImage } from '@/utils';
+import { WalletButtonProps } from './WalletButton';
 
 type ConnectedWalletProps = WalletButtonProps & {
     onOpen: () => void;
@@ -12,12 +12,13 @@ export const ConnectedWallet = ({
     mobileVariant = 'iconAndDomain',
     desktopVariant = 'iconAndDomain',
     onOpen,
+    buttonStyle,
 }: ConnectedWalletProps) => {
     const { account } = useWallet();
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
 
     return (
-        <Button onClick={onOpen} p={'0px 13px'} minH={'45px'}>
+        <Button {...buttonStyle} onClick={onOpen} p={'0px 13px'} minH={'45px'}>
             <HStack>
                 <Image
                     src={account?.image ?? notFoundImage}

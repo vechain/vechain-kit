@@ -3,8 +3,3 @@ export type WalletDisplayVariant =
     | 'iconAndDomain'
     | 'iconDomainAndAddress'
     | 'iconDomainAndAssets';
-
-export type WalletButtonProps = {
-    mobileVariant?: WalletDisplayVariant;
-    desktopVariant?: WalletDisplayVariant;
-};

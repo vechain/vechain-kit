@@ -1,17 +1,24 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useEffect } from 'react';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
-import { WalletButtonProps } from './types';
+import { WalletDisplayVariant } from './types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
+
+export type WalletButtonProps = {
+    mobileVariant?: WalletDisplayVariant;
+    desktopVariant?: WalletDisplayVariant;
+    buttonStyle?: ButtonProps;
+};
 
 export const WalletButton = ({
     mobileVariant = 'iconAndDomain',
     desktopVariant = 'iconDomainAndAddress',
+    buttonStyle,
 }: WalletButtonProps) => {
     const { t } = useTranslation();
     const { darkMode } = useVeChainKitConfig();
@@ -55,9 +62,12 @@ export const WalletButton = ({
                     mobileVariant={mobileVariant}
                     desktopVariant={desktopVariant}
                     onOpen={accountModal.onOpen}
+                    buttonStyle={buttonStyle}
                 />
             ) : (
-                <Button onClick={handleConnect}>{t('Login')}</Button>
+                <Button onClick={handleConnect} {...buttonStyle}>
+                    {t('Login')}
+                </Button>
             )}
 
             <ConnectModal
