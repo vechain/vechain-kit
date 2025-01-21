@@ -1,4 +1,10 @@
+export type WalletDisplayVariant =
+    | 'icon'
+    | 'iconAndDomain'
+    | 'iconDomainAndAddress'
+    | 'iconDomainAndAssets';
+
 export type WalletButtonProps = {
-    mobileVariant?: 'icon' | 'iconAndDomain' | 'iconDomainAndAddress';
-    desktopVariant?: 'icon' | 'iconAndDomain' | 'iconDomainAndAddress';
+    mobileVariant?: WalletDisplayVariant;
+    desktopVariant?: WalletDisplayVariant;
 };

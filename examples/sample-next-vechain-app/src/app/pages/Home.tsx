@@ -150,8 +150,8 @@ export default function Home(): ReactElement {
         >
             <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
                 <WalletButton
-                    mobileVariant="iconDomainAndAddress"
-                    desktopVariant="iconDomainAndAddress"
+                    mobileVariant="iconDomainAndAssets"
+                    desktopVariant="iconDomainAndAssets"
                 />
                 {smartAccount.address && (
                     <Box>

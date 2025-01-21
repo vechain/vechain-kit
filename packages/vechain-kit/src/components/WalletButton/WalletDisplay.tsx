@@ -1,9 +1,11 @@
-import { Spinner, Text, VStack } from '@chakra-ui/react';
+import { Spinner, Text, VStack, HStack } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { humanAddress } from '@/utils';
+import { AssetIcons } from './AssetIcons';
+import { WalletDisplayVariant } from './types';
 
 type WalletDisplayProps = {
-    variant: 'icon' | 'iconAndDomain' | 'iconDomainAndAddress';
+    variant: WalletDisplayVariant;
 };
 
 export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
@@ -25,26 +27,39 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
         );
     }
 
+    if (variant === 'iconDomainAndAssets') {
+        return (
+            <HStack spacing={2}>
+                <VStack spacing={0} alignItems="flex-start">
+                    {account.domain && (
+                        <Text fontSize="sm" fontWeight="bold">
+                            {account.domain}
+                        </Text>
+                    )}
+                    <Text
+                        fontSize={account.domain ? 'xs' : 'sm'}
+                        opacity={account.domain ? 0.5 : 1}
+                    >
+                        {humanAddress(account.address ?? '', 4, 4)}
+                    </Text>
+                </VStack>
+                <AssetIcons ml={2} address={account.address} maxIcons={3} />
+            </HStack>
+        );
+    }
+
     return (
-        <VStack
-            justifyContent="flex-start"
-            spacing={0}
-            alignItems="flex-start"
-            textAlign="left"
-        >
+        <VStack spacing={0} alignItems="flex-start">
             {account.domain && (
-                <Text fontSize="sm" w="100%" fontWeight={'bold'}>
+                <Text fontSize="sm" fontWeight="bold">
                     {account.domain}
                 </Text>
             )}
             <Text
-                mt={account.domain ? '1px' : 0}
                 fontSize={account.domain ? 'xs' : 'sm'}
-                fontWeight={account.domain ? '400' : 'bold'}
-                w="100%"
                 opacity={account.domain ? 0.5 : 1}
             >
-                {humanAddress(account.address ?? '', 2, 4)}
+                {humanAddress(account.address ?? '', 4, 4)}
             </Text>
         </VStack>
     );
