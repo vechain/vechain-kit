@@ -79,6 +79,10 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
         dapp.app.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
+    const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
+        dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+
     const { shortcuts } = useEcosystemShortcuts();
 
     return (
@@ -127,7 +131,7 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
                         </InputLeftElement>
                     </InputGroup>
                     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
-                        {DEFAULT_APPS.map((dapp) => (
+                        {filteredDefaultApps.map((dapp) => (
                             <GridItem key={dapp.name}>
                                 <CustomAppComponent
                                     name={dapp.name}
