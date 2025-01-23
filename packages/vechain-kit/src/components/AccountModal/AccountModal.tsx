@@ -20,6 +20,7 @@ import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
+import { EcosystemContent } from './Contents/Ecosystem/EcosystemContent';
 
 type Props = {
     isOpen: boolean;
@@ -116,6 +117,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                     <PrivyLinkedAccounts
                         onBack={() => setCurrentContent('settings')}
                     />
+                );
+            case 'ecosystem':
+                return (
+                    <EcosystemContent setCurrentContent={setCurrentContent} />
                 );
         }
     };

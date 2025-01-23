@@ -1,10 +1,10 @@
 import { Grid, Icon, IconButton } from '@chakra-ui/react';
 import { MdSwapHoriz } from 'react-icons/md';
-import { BsLightningCharge } from 'react-icons/bs';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import { useBalances, useWallet } from '@/hooks';
+import { IoPlanet } from 'react-icons/io5';
 
 type Props = {
     mt?: number;
@@ -21,14 +21,14 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     return (
         <Grid templateColumns="repeat(4, 1fr)" gap={2} w="full" mt={mt}>
             <IconButton
-                disabled
                 variant="vechainKitSelector"
                 h="auto"
                 py={3}
                 fontSize="xs"
                 verticalAlign="middle"
-                aria-label="Buy"
-                icon={<Icon as={BsLightningCharge} boxSize={5} opacity={0.5} />}
+                aria-label="Ecosystem"
+                icon={<Icon as={IoPlanet} boxSize={5} opacity={0.5} />}
+                onClick={() => setCurrentContent('ecosystem')}
             />
             <IconButton
                 variant="vechainKitSelector"

@@ -14,6 +14,7 @@ export type AccountModalContentTypes =
     | 'swap-token'
     | 'connection-details'
     | 'choose-name'
+    | 'ecosystem'
     | 'notifications'
     | 'privy-linked-accounts'
     | { type: 'send-token'; props: SendTokenContentProps }

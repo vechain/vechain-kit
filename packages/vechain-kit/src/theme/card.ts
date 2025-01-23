@@ -41,6 +41,25 @@ const variants = {
                 backgroundColor: 'transparent',
             },
         }),
+
+    vechainKitAppCard: (props: StyleFunctionProps) =>
+        definePartsStyle({
+            body: {
+                height: 'full',
+                borderRadius: '12px',
+                backgroundColor:
+                    props.colorMode === 'dark' ? '#1f1f1e' : 'white',
+                border:
+                    props.colorMode === 'dark'
+                        ? '1px solid #2d2d2d'
+                        : '1px solid #eaeaea',
+            },
+            container: {
+                height: '150px',
+                borderRadius: '12px',
+                backgroundColor: 'transparent',
+            },
+        }),
 };
 
 export const cardTheme = defineMultiStyleConfig({

@@ -11,3 +11,5 @@ export * from './useXAppVotes';
 export * from './useXAppVotesQf';
 export * from './useUserVotesInAllRounds';
 export * from './useUserTopVotedApps';
+export * from './useXAppsShares';
+export * from './useMostVotedAppsInRound';
