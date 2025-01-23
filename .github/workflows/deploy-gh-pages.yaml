@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy to GitHub Pages
 
 on:
     # Runs on pushes targeting the default branch
@@ -22,26 +22,11 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    # Single deploy job since we're just deploying
-    deploy:
-        env:
-            BASE_PATH: ''
-            NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
-            NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
-            NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
-            NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
+    build:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 18
+              uses: actions/checkout@v4
 
             - name: Build App
               env:
@@ -56,14 +41,21 @@ jobs:
                     echo "::warning title=Invalid file permissions automatically fixed::$line"
                   done
 
-            - name: Setup Pages
-              uses: actions/configure-pages@v2
-
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
               with:
                   path: './examples/sample-next-vechain-app/dist'
 
+    deploy:
+        needs: build
+        permissions:
+            pages: write
+            id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@v1
+              uses: actions/deploy-pages@v4
