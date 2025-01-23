@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useWallet } from '@/hooks';
+import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
@@ -27,6 +27,8 @@ type Props = {
 };
 
 export const AccountModal = ({ isOpen, onClose }: Props) => {
+    useNotificationAlerts();
+
     const { account } = useWallet();
     const [currentContent, setCurrentContent] =
         useState<AccountModalContentTypes>('main');

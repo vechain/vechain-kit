@@ -19,14 +19,6 @@ const DEFAULT_NOTIFICATIONS = [
         status: 'success' as const,
         isRead: false,
     },
-    {
-        id: 'security',
-        title: 'Security Update',
-        description: 'New security features have been added to your wallet.',
-        timestamp: Date.now() - 86400000,
-        status: 'info' as const,
-        isRead: false,
-    },
 ];
 
 export const useNotifications = () => {
@@ -79,14 +71,25 @@ export const useNotifications = () => {
     }, [account?.address, getStorageKeys]);
 
     const addNotification = useCallback(
-        (notification: Omit<Notification, 'id' | 'timestamp' | 'isRead'>) => {
+        (notification: Omit<Notification, 'timestamp' | 'isRead'>) => {
             if (!account?.address) return;
 
             const keys = getStorageKeys(account.address);
             const notifications = getNotifications();
+            const archivedNotifications = JSON.parse(
+                localStorage.getItem(keys.archived) || '[]',
+            );
+
+            // Check if notification exists in either active or archived notifications
+            const isDuplicate = [
+                ...notifications,
+                ...archivedNotifications,
+            ].some((n) => n.title === notification.title);
+            if (isDuplicate) return;
+
             const newNotification: Notification = {
                 ...notification,
-                id: Math.random().toString(36).substring(7),
+                id: notification.id || Math.random().toString(36).substring(7),
                 timestamp: Date.now(),
                 isRead: false,
             };
@@ -121,17 +124,42 @@ export const useNotifications = () => {
 
             const keys = getStorageKeys(account.address);
             const notifications = getNotifications();
-            const updatedNotifications = notifications.map((notification) =>
-                notification.id === notificationId
-                    ? { ...notification, isRead: true }
-                    : notification,
+            const archivedNotifications = getArchivedNotifications();
+
+            // Find the notification to archive
+            const notificationToArchive = notifications.find(
+                (n) => n.id === notificationId,
             );
-            localStorage.setItem(
-                keys.notifications,
-                JSON.stringify(updatedNotifications),
+
+            // Update notifications list - remove the archived one
+            const updatedNotifications = notifications.filter(
+                (n) => n.id !== notificationId,
             );
+
+            // Add to archived list if found
+            if (notificationToArchive) {
+                const updatedArchivedNotifications = [
+                    { ...notificationToArchive, isRead: true },
+                    ...archivedNotifications,
+                ];
+
+                // Update both lists in localStorage
+                localStorage.setItem(
+                    keys.notifications,
+                    JSON.stringify(updatedNotifications),
+                );
+                localStorage.setItem(
+                    keys.archived,
+                    JSON.stringify(updatedArchivedNotifications),
+                );
+            }
         },
-        [account?.address, getNotifications, getStorageKeys],
+        [
+            account?.address,
+            getNotifications,
+            getArchivedNotifications,
+            getStorageKeys,
+        ],
     );
 
     return {

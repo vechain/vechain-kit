@@ -14,7 +14,7 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useNotifications } from '@/hooks/alerts';
+import { useNotifications } from '@/hooks/notifications';
 import { useState } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
 import { NotificationItem } from './Components/NotificationItem';
@@ -48,13 +48,14 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
 
     const handleMarkAsRead = (id: string) => {
         markAsRead(id);
-        setNotifications(
-            notifications.map((notification) =>
-                notification.id === id
-                    ? { ...notification, isRead: true }
-                    : notification,
-            ),
-        );
+        const notificationToArchive = notifications.find((n) => n.id === id);
+        setNotifications(notifications.filter((n) => n.id !== id));
+        if (notificationToArchive) {
+            setArchivedNotifications([
+                { ...notificationToArchive, isRead: true },
+                ...archivedNotifications,
+            ]);
+        }
     };
 
     const currentNotifications = isArchiveView

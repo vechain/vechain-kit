@@ -1,6 +1,13 @@
 'use client';
 
-import { Text, Icon, HStack, Button, Image } from '@chakra-ui/react';
+import {
+    Text,
+    Icon,
+    HStack,
+    Button,
+    Image,
+    IconButton,
+} from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
@@ -23,9 +30,10 @@ export const AccountSelector = ({
 }: Props) => {
     return (
         <HStack mt={mt}>
-            <Button
+            <IconButton
                 p={2}
                 h={9}
+                icon={<Icon boxSize={5} as={CiLogout} />}
                 aria-label="Disconnect"
                 variant="vechainKitSelector"
                 onClick={(e) => {
@@ -33,9 +41,7 @@ export const AccountSelector = ({
                     e.preventDefault();
                     onDisconnect?.();
                 }}
-            >
-                <Icon boxSize={5} as={CiLogout} />
-            </Button>
+            />
 
             <Button
                 w="fit-content"

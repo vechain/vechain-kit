@@ -83,7 +83,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                             textAlign={'center'}
                         >
                             {t(
-                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.',
+                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your security settings.',
                                 {
                                     element: source,
                                 },

@@ -86,7 +86,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                     {connection.isConnectedWithCrossApp && (
                         <Text fontSize={'sm'} opacity={0.5}>
                             {t(
-                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.',
+                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your login methods and security settings.',
                                 {
                                     element:
                                         connectionCache?.ecosystemApp?.name,
@@ -124,7 +124,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                     </Text>
                                     <Text fontSize={'sm'} opacity={0.5} mt={5}>
                                         {t(
-                                            'Your smart account is your gateway to blockchain interactions.',
+                                            'A smart account is being used as a gateway for blockchain interactions.',
                                         )}
                                     </Text>
                                 </>

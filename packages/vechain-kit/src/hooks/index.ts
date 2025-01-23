@@ -3,7 +3,7 @@ export { useConnex } from '@vechain/dapp-kit-react';
 export * from './api';
 export * from './modals';
 export * from './transactions';
-export * from './alerts';
+export * from './notifications';
 export * from './useCrossAppConnectionCache';
 export * from './useCall';
 export * from './signing';

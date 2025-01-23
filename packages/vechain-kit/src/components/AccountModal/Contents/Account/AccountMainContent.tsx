@@ -7,6 +7,7 @@ import {
     ModalFooter,
     ModalHeader,
     VStack,
+    Box,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -26,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { BiBell } from 'react-icons/bi';
+import { useNotifications } from '@/hooks/notifications';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -43,6 +45,9 @@ export const AccountMainContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { disconnect, connection } = useWallet();
+    const { getNotifications } = useNotifications();
+    const notifications = getNotifications();
+    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
     return (
         <ScrollToTopWrapper>
@@ -77,14 +82,29 @@ export const AccountMainContent = ({
                             }}
                             wallet={wallet}
                         />
-                        <IconButton
-                            p={2}
-                            h={9}
-                            variant="vechainKitSelector"
-                            aria-label="notifications"
-                            icon={<Icon boxSize={5} as={BiBell} />}
-                            onClick={() => setCurrentContent('notifications')}
-                        />
+                        <Box position="relative">
+                            <IconButton
+                                p={2}
+                                h={9}
+                                variant="vechainKitSelector"
+                                aria-label="notifications"
+                                icon={<Icon boxSize={5} as={BiBell} />}
+                                onClick={() =>
+                                    setCurrentContent('notifications')
+                                }
+                            />
+                            {hasUnreadNotifications && (
+                                <Box
+                                    position="absolute"
+                                    top={1}
+                                    right={1}
+                                    width="8px"
+                                    height="8px"
+                                    bg="red.500"
+                                    borderRadius="full"
+                                />
+                            )}
+                        </Box>
                     </HStack>
 
                     <BalanceSection mt={10} />
