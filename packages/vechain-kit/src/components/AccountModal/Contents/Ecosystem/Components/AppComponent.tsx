@@ -1,5 +1,4 @@
-import { useIpfsImage, useXAppMetadata } from '@/hooks';
-import { XApp } from '@/types';
+import { useIpfsImage, useXAppMetadata, XApp } from '@/hooks';
 import { SharedAppCard } from './SharedAppCard';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { SkeletonAppCard } from './SkeletonAppCard';
