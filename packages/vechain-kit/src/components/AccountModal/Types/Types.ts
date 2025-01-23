@@ -17,6 +17,15 @@ export type AccountModalContentTypes =
     | 'ecosystem'
     | 'notifications'
     | 'privy-linked-accounts'
+    | {
+          type: 'app-overview';
+          props: {
+              name: string;
+              image: string;
+              url: string;
+              description?: string;
+          };
+      }
     | { type: 'send-token'; props: SendTokenContentProps }
     | {
           type: 'send-token-summary';

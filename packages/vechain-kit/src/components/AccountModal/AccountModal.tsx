@@ -21,6 +21,7 @@ import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
 import { EcosystemContent } from './Contents/Ecosystem/EcosystemContent';
+import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 
 type Props = {
     isOpen: boolean;
@@ -56,6 +57,13 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 case 'choose-name-summary':
                     return (
                         <ChooseNameSummaryContent {...currentContent.props} />
+                    );
+                case 'app-overview':
+                    return (
+                        <AppOverviewContent
+                            {...currentContent.props}
+                            setCurrentContent={setCurrentContent}
+                        />
                     );
             }
         }

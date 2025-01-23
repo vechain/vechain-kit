@@ -16,7 +16,11 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useState } from 'react';
-import { useCurrentAllocationsRoundId, useMostVotedAppsInRound } from '@/hooks';
+import {
+    useCurrentAllocationsRoundId,
+    useMostVotedAppsInRound,
+    XAppMetadata,
+} from '@/hooks';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 type Props = {
@@ -26,18 +30,35 @@ type Props = {
 };
 
 // Mock data - Replace with real data from your API
-const DEFAULT_APPS = [
+const DEFAULT_APPS: XAppMetadata[] = [
     {
-        id: 1,
         name: 'VeBetterDAO',
-        image: 'https://i.ibb.co/cgJBj83/vbd.png',
-        url: 'https://governance.vebetterdao.org/',
+        description: 'Engage, earn and prosper by doing sustainable actions.',
+        external_url: 'https://governance.vebetterdao.org/',
+        logo: 'https://i.ibb.co/cgJBj83/vbd.png',
+        banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+        screenshots: [],
+        social_urls: [],
+        app_urls: [],
+        tweets: [],
+        ve_world: {
+            banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+        },
     },
     {
-        id: 2,
         name: 'vetDomains',
-        image: 'https://vet.domains/assets/walletconnect.png',
-        url: 'https://vet.domains',
+        description:
+            '.vet.domains provides a unique and unchangeable identity for Vechain users by linking information to their wallet addresses. It becomes easier for people to use the blockchain by replacing complicated wallet addresses with easy-to-remember names.',
+        external_url: 'https://vet.domains',
+        logo: 'https://vet.domains/assets/walletconnect.png',
+        banner: 'https://vet.domains/assets/walletconnect.png',
+        screenshots: [],
+        social_urls: [],
+        app_urls: [],
+        tweets: [],
+        ve_world: {
+            banner: 'https://vet.domains/assets/walletconnect.png',
+        },
     },
 ];
 
@@ -90,17 +111,22 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
 
                     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
                         {DEFAULT_APPS.map((dapp) => (
-                            <GridItem key={dapp.id}>
+                            <GridItem key={dapp.name}>
                                 <CustomAppComponent
                                     name={dapp.name}
-                                    image={dapp.image}
-                                    url={dapp.url}
+                                    image={dapp.logo}
+                                    url={dapp.external_url}
+                                    setCurrentContent={setCurrentContent}
+                                    description={dapp.description}
                                 />
                             </GridItem>
                         ))}
                         {filteredDapps.map((dapp) => (
                             <GridItem key={dapp.id}>
-                                <AppComponent xApp={dapp.app} />
+                                <AppComponent
+                                    xApp={dapp.app}
+                                    setCurrentContent={setCurrentContent}
+                                />
                             </GridItem>
                         ))}
                     </Grid>
