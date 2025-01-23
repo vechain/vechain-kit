@@ -20,6 +20,27 @@ const variants = {
                         : '1px solid #eaeaea',
             },
         }),
+
+    featureAnnouncement: (props: StyleFunctionProps) =>
+        definePartsStyle({
+            body: {
+                backgroundColor:
+                    props.colorMode === 'dark'
+                        ? 'whiteAlpha.100'
+                        : 'blackAlpha.50',
+                borderRadius: '12px',
+                border:
+                    props.colorMode === 'dark'
+                        ? '1px solid #2d2d2d'
+                        : '1px solid #eaeaea',
+                color:
+                    props.colorMode === 'dark' ? 'whiteAlpha.900' : 'gray.800',
+            },
+            container: {
+                borderRadius: '12px',
+                backgroundColor: 'transparent',
+            },
+        }),
 };
 
 export const cardTheme = defineMultiStyleConfig({

@@ -11,7 +11,7 @@ import {
 import { humanAddress } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { CiLogout } from 'react-icons/ci';
+import { RiLogoutBoxLine } from 'react-icons/ri';
 
 type Props = {
     wallet: Wallet;
@@ -33,7 +33,7 @@ export const AccountSelector = ({
             <IconButton
                 p={2}
                 h={9}
-                icon={<Icon boxSize={5} as={CiLogout} />}
+                icon={<Icon boxSize={5} as={RiLogoutBoxLine} />}
                 aria-label="Disconnect"
                 variant="vechainKitSelector"
                 onClick={(e) => {

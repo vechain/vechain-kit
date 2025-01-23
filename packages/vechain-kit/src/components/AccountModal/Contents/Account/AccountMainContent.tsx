@@ -28,6 +28,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
+import { FeatureAnnouncementCard } from '../../Components/Alerts';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -70,6 +71,10 @@ export const AccountMainContent = ({
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} overflow={'hidden'}>
+                    <FeatureAnnouncementCard
+                        setCurrentContent={setCurrentContent}
+                    />
+
                     <HStack justify={'space-between'}>
                         <AccountSelector
                             mt={0}

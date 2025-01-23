@@ -27,7 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { useEffect, useRef } from 'react';
-import { CiLogout } from 'react-icons/ci';
+import { RiLogoutBoxLine } from 'react-icons/ri';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -182,7 +182,7 @@ export const WalletSettingsContent = ({
                         onLogoutSuccess();
                     }}
                     variant="vechainKitSecondary"
-                    leftIcon={<CiLogout color="#888888" />}
+                    leftIcon={<RiLogoutBoxLine color="#888888" />}
                 >
                     {t('Logout')}
                 </Button>
