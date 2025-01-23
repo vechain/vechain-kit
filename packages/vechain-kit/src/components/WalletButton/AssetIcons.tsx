@@ -68,12 +68,15 @@ export const AssetIcons = ({
                     borderRadius="full"
                     bg={darkMode ? 'gray.100' : 'gray.700'}
                     border="2px solid #00000024"
+                    alignItems="center"
+                    justifyContent="center"
                 >
                     <Image
                         src={TOKEN_LOGOS[token.symbol]}
                         alt={`${token.symbol} logo`}
                         width={`${iconSize * 0.8}px`}
                         height={`${iconSize * 0.8}px`}
+                        rounded="full"
                     />
                 </Circle>
             ))}
