@@ -27,7 +27,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 fontSize="xs"
                 verticalAlign="middle"
                 aria-label="Ecosystem"
-                icon={<Icon as={IoPlanet} boxSize={5} opacity={0.5} />}
+                icon={<Icon as={IoPlanet} boxSize={5} opacity={0.9} />}
                 onClick={() => setCurrentContent('ecosystem')}
             />
             <IconButton
@@ -35,7 +35,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 h="auto"
                 py={3}
                 aria-label="Swap"
-                icon={<Icon as={MdSwapHoriz} boxSize={5} opacity={0.5} />}
+                icon={<Icon as={MdSwapHoriz} boxSize={5} opacity={0.9} />}
                 onClick={() => setCurrentContent('swap-token')}
             />
             <IconButton
@@ -47,7 +47,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                     <Icon
                         as={FaRegArrowAltCircleDown}
                         boxSize={5}
-                        opacity={0.5}
+                        opacity={0.9}
                     />
                 }
                 onClick={() => setCurrentContent('receive-token')}
@@ -57,7 +57,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 h="auto"
                 py={3}
                 aria-label="Send"
-                icon={<Icon as={FiSend} boxSize={5} opacity={0.5} />}
+                icon={<Icon as={FiSend} boxSize={5} opacity={0.9} />}
                 isDisabled={totalBalance === 0}
                 onClick={() =>
                     setCurrentContent({

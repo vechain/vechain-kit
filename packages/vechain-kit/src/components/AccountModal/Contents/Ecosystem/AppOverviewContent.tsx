@@ -14,6 +14,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { ShortcutButton } from './Components/ShortcutButton';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -77,19 +78,28 @@ export const AppOverviewContent = ({
             </ModalBody>
 
             <ModalFooter>
-                <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
-                    onClick={() => {
-                        window.open(url, '_blank');
-                    }}
-                >
-                    {t('Launch {{name}}', { name })}
-                    <Icon as={FaExternalLinkAlt} ml={2} />
-                </Button>
+                <VStack w="full" spacing={4}>
+                    <Button
+                        px={4}
+                        width="full"
+                        height="60px"
+                        variant="solid"
+                        borderRadius="xl"
+                        onClick={() => {
+                            window.open(url, '_blank');
+                        }}
+                    >
+                        {t('Launch {{name}}', { name })}
+                        <Icon as={FaExternalLinkAlt} ml={2} />
+                    </Button>
+
+                    <ShortcutButton
+                        name={name}
+                        image={image}
+                        url={url}
+                        description={description}
+                    />
+                </VStack>
             </ModalFooter>
         </>
     );

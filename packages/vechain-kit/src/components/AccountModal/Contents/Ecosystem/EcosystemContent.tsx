@@ -9,6 +9,7 @@ import {
     Grid,
     GridItem,
     ModalFooter,
+    Text,
 } from '@chakra-ui/react';
 import { CiSearch } from 'react-icons/ci';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -18,11 +19,14 @@ import { useVeChainKitConfig } from '@/providers';
 import { useState } from 'react';
 import {
     useCurrentAllocationsRoundId,
+    useEcosystemShortcuts,
     useMostVotedAppsInRound,
     XAppMetadata,
 } from '@/hooks';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
+import { ShortcutsSection } from './Components/ShortcutsSection';
+
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -75,6 +79,8 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
         dapp.app.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
+    const { shortcuts } = useEcosystemShortcuts();
+
     return (
         <>
             <StickyHeaderContainer>
@@ -92,6 +98,18 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
 
             <ModalBody>
                 <VStack spacing={6} w="full">
+                    <ShortcutsSection setCurrentContent={setCurrentContent} />
+
+                    {shortcuts.length > 0 && (
+                        <Text
+                            fontSize="sm"
+                            fontWeight="500"
+                            w="full"
+                            textAlign="left"
+                        >
+                            {t('All apps')}
+                        </Text>
+                    )}
                     <InputGroup size="lg">
                         <Input
                             placeholder={t('Search dApps')}
@@ -108,7 +126,6 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
                             />
                         </InputLeftElement>
                     </InputGroup>
-
                     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
                         {DEFAULT_APPS.map((dapp) => (
                             <GridItem key={dapp.name}>

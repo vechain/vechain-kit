@@ -9,3 +9,5 @@ export * from './useCall';
 export * from './signing';
 export * from './login';
 export * from './useFeatureAnnouncement';
+export * from './useEcosystemShortcuts';
+export * from './useLocalStorage';

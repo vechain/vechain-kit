@@ -2,16 +2,18 @@ import { Card, CardBody, Image, Text, VStack } from '@chakra-ui/react';
 import { notFoundImage } from '@/utils';
 
 type SharedAppCardProps = {
-    name: string;
+    name?: string;
     imageUrl: string;
     linkUrl: string;
     onClick: () => void;
+    size?: 'sm' | 'md';
 };
 
 export const SharedAppCard = ({
     name,
     imageUrl,
     onClick,
+    size = 'md',
 }: SharedAppCardProps) => {
     return (
         <Card
@@ -20,7 +22,7 @@ export const SharedAppCard = ({
             cursor="pointer"
             onClick={onClick}
         >
-            <CardBody p={4} alignItems="center">
+            <CardBody p={size === 'sm' ? 2 : 4} alignItems="center">
                 <VStack spacing={3} align="center" justify="center">
                     {imageUrl && (
                         <Image
@@ -32,17 +34,19 @@ export const SharedAppCard = ({
                             rounded="full"
                         />
                     )}
-                    <Text
-                        position="absolute"
-                        bottom={'5px'}
-                        fontWeight="medium"
-                        wordBreak="break-word"
-                        noOfLines={1}
-                        width="90%"
-                        textAlign="center"
-                    >
-                        {name}
-                    </Text>
+                    {name && (
+                        <Text
+                            position="absolute"
+                            bottom={'5px'}
+                            fontWeight="medium"
+                            wordBreak="break-word"
+                            noOfLines={1}
+                            width="90%"
+                            textAlign="center"
+                        >
+                            {name}
+                        </Text>
+                    )}
                 </VStack>
             </CardBody>
         </Card>
