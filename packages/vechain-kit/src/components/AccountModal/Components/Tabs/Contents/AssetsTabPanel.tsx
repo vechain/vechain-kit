@@ -1,12 +1,9 @@
 import { VStack } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
 import { useBalances, useWallet } from '@/hooks';
 import { AssetButton } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-
-const MotionVStack = motion(VStack);
 
 export type AssetsTabPanelProps = {
     setCurrentContent: React.Dispatch<
@@ -74,15 +71,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
     ].sort((a, b) => b.usdValue - a.usdValue);
 
     return (
-        <MotionVStack
-            spacing={2}
-            align="stretch"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            mt={2}
-        >
+        <VStack spacing={2} align="stretch" mt={2}>
             {baseAssets.map((token) => (
                 <AssetButton
                     key={token.symbol}
@@ -123,6 +112,6 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                     }
                 />
             )}
-        </MotionVStack>
+        </VStack>
     );
 };
