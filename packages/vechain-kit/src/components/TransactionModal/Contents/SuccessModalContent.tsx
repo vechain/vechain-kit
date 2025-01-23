@@ -14,10 +14,7 @@ import { ShareButtons } from '../Components/ShareButtons';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { FcCheckmark } from 'react-icons/fc';
-import {
-    FadeInViewFromBottom,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
@@ -60,7 +57,7 @@ export const SuccessModalContent = ({
         socialDescriptionEncoded ?? `${explorerUrl}/${txId}`;
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -73,65 +70,63 @@ export const SuccessModalContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack align={'center'} p={6} spacing={3}>
-                        <motion.div
-                            transition={{
-                                duration: 4,
-                                ease: 'easeInOut',
-                                repeat: Infinity,
-                            }}
-                            animate={{
-                                scale: [1, 1.1, 1],
-                            }}
+            <ModalBody>
+                <VStack align={'center'} p={6} spacing={3}>
+                    <motion.div
+                        transition={{
+                            duration: 4,
+                            ease: 'easeInOut',
+                            repeat: Infinity,
+                        }}
+                        animate={{
+                            scale: [1, 1.1, 1],
+                        }}
+                    >
+                        <Icon as={FcCheckmark} fontSize={'100px'} />
+                    </motion.div>
+
+                    {showSocialButtons && (
+                        <VStack>
+                            <Text fontSize="sm">
+                                {t('Share your transaction')}
+                            </Text>
+                            <ShareButtons
+                                descriptionEncoded={socialDescription}
+                            />
+                        </VStack>
+                    )}
+                </VStack>
+            </ModalBody>
+
+            <ModalFooter justifyContent={'center'}>
+                <VStack w={'full'} spacing={4}>
+                    <Button onClick={onClose} variant="vechainKitSecondary">
+                        {t('Close')}
+                    </Button>
+
+                    {showExplorerButton && txId && (
+                        <Link
+                            href={`${explorerUrl}/${txId}`}
+                            isExternal
+                            opacity={0.5}
+                            fontSize={'14px'}
+                            textDecoration={'underline'}
                         >
-                            <Icon as={FcCheckmark} fontSize={'100px'} />
-                        </motion.div>
-
-                        {showSocialButtons && (
-                            <VStack>
-                                <Text fontSize="sm">
-                                    {t('Share your transaction')}
-                                </Text>
-                                <ShareButtons
-                                    descriptionEncoded={socialDescription}
-                                />
-                            </VStack>
-                        )}
-                    </VStack>
-                </ModalBody>
-
-                <ModalFooter justifyContent={'center'}>
-                    <VStack w={'full'} spacing={4}>
-                        <Button onClick={onClose} variant="vechainKitSecondary">
-                            {t('Close')}
-                        </Button>
-
-                        {showExplorerButton && txId && (
-                            <Link
-                                href={`${explorerUrl}/${txId}`}
-                                isExternal
-                                opacity={0.5}
-                                fontSize={'14px'}
-                                textDecoration={'underline'}
+                            <HStack
+                                spacing={1}
+                                alignItems={'center'}
+                                w={'full'}
+                                justifyContent={'center'}
                             >
-                                <HStack
-                                    spacing={1}
-                                    alignItems={'center'}
-                                    w={'full'}
-                                    justifyContent={'center'}
-                                >
-                                    <Text>
-                                        {t('View transaction on the explorer')}
-                                    </Text>
-                                    <Icon size={'sm'} as={GoLinkExternal} />
-                                </HStack>
-                            </Link>
-                        )}
-                    </VStack>
-                </ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                                <Text>
+                                    {t('View transaction on the explorer')}
+                                </Text>
+                                <Icon size={'sm'} as={GoLinkExternal} />
+                            </HStack>
+                        </Link>
+                    )}
+                </VStack>
+            </ModalFooter>
+        </>
     );
 };

@@ -3,7 +3,7 @@ import { useConnex } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { isAddress } from 'ethers';
+import { isAddress } from 'viem';
 
 interface VeChainDomainResult {
     address?: string;

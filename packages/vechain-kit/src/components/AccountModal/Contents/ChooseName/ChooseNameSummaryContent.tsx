@@ -9,7 +9,6 @@ import {
     Icon,
 } from '@chakra-ui/react';
 import {
-    FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplayCard,
@@ -58,7 +57,7 @@ export const ChooseNameSummaryContent = ({
     };
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -82,29 +81,27 @@ export const ChooseNameSummaryContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack spacing={4} w="full">
-                        <AddressDisplayCard
-                            label={t('Current')}
-                            address={account?.address ?? ''}
-                            domain={account?.domain}
-                            imageSrc={account?.image ?? ''}
-                            imageAlt="Current account"
-                            hideAddress={true}
-                        />
+            <ModalBody>
+                <VStack spacing={4} w="full">
+                    <AddressDisplayCard
+                        label={t('Current')}
+                        address={account?.address ?? ''}
+                        domain={account?.domain}
+                        imageSrc={account?.image ?? ''}
+                        imageAlt="Current account"
+                        hideAddress={true}
+                    />
 
-                        <AddressDisplayCard
-                            label={t('New Name')}
-                            address={account?.address ?? ''}
-                            domain={`${name}.veworld.vet`}
-                            imageSrc={account?.image ?? ''}
-                            imageAlt="Account"
-                            hideAddress={true}
-                        />
-                    </VStack>
-                </ModalBody>
-            </FadeInViewFromBottom>
+                    <AddressDisplayCard
+                        label={t('New Name')}
+                        address={account?.address ?? ''}
+                        domain={`${name}.veworld.vet`}
+                        imageSrc={account?.image ?? ''}
+                        imageAlt="Account"
+                        hideAddress={true}
+                    />
+                </VStack>
+            </ModalBody>
 
             <ModalFooter>
                 <Button
@@ -136,6 +133,6 @@ export const ChooseNameSummaryContent = ({
                 progress={progress}
                 onTryAgain={handleConfirm}
             />
-        </FadeInViewFromBottom>
+        </>
     );
 };

@@ -9,7 +9,6 @@ import {
 } from '@chakra-ui/react';
 import { QRCode } from 'react-qrcode-logo';
 import {
-    FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplay,
@@ -31,7 +30,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
     const { account } = useWallet();
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -45,40 +44,32 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <Container maxW={'container.lg'}>
-                    <ModalBody>
-                        <VStack spacing={6} align="center" w="full">
-                            <AddressDisplay wallet={account} size="lg" />
-                            <QRCode
-                                value={account?.address ?? ''}
-                                size={200}
-                                removeQrCodeBehindLogo={true}
-                                eyeRadius={4}
-                                logoPaddingStyle={'circle'}
-                                style={{
-                                    borderRadius: '16px',
-                                }}
-                            />
+            <Container maxW={'container.lg'}>
+                <ModalBody>
+                    <VStack spacing={6} align="center" w="full">
+                        <AddressDisplay wallet={account} size="lg" />
+                        <QRCode
+                            value={account?.address ?? ''}
+                            size={200}
+                            removeQrCodeBehindLogo={true}
+                            eyeRadius={4}
+                            logoPaddingStyle={'circle'}
+                            style={{
+                                borderRadius: '16px',
+                            }}
+                        />
 
-                            <Text fontSize="sm" textAlign="center">
-                                {t('Copy your address or scan this QR code')}
-                            </Text>
+                        <Text fontSize="sm" textAlign="center">
+                            {t('Copy your address or scan this QR code')}
+                        </Text>
 
-                            <Text
-                                fontSize="xs"
-                                textAlign="center"
-                                opacity={0.5}
-                            >
-                                {t(
-                                    'This address only supports VeChain assets.',
-                                )}
-                            </Text>
-                        </VStack>
-                    </ModalBody>
-                    <ModalFooter></ModalFooter>
-                </Container>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                        <Text fontSize="xs" textAlign="center" opacity={0.5}>
+                            {t('This address only supports VeChain assets.')}
+                        </Text>
+                    </VStack>
+                </ModalBody>
+                <ModalFooter></ModalFooter>
+            </Container>
+        </>
     );
 };

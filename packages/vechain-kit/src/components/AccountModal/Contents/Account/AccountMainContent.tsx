@@ -9,7 +9,6 @@ import {
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import {
-    FadeInViewFromBottom,
     StickyHeaderContainer,
     VersionFooter,
     ModalFAQButton,
@@ -40,7 +39,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { smartAccount } = useWallet();
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
@@ -56,52 +55,48 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <VStack justify={'center'}>
-                    <Image
-                        src={wallet?.image}
-                        maxW={'100px'}
-                        mt={5}
-                        mb={5}
-                        borderRadius="full"
-                        objectFit="cover"
-                    />
-                </VStack>
-            </FadeInViewFromBottom>
+            <VStack justify={'center'}>
+                <Image
+                    src={wallet?.image}
+                    maxW={'100px'}
+                    mt={5}
+                    mb={5}
+                    borderRadius="full"
+                    objectFit="cover"
+                />
+            </VStack>
 
-            <FadeInViewFromBottom>
-                <Container maxW={'container.lg'}>
-                    <ModalBody w={'full'}>
-                        <VStack w={'full'} overflow={'hidden'}>
-                            <AccountSelector
-                                mt={0}
-                                onClick={() => {
-                                    if (smartAccount.isActive) {
-                                        setCurrentContent('accounts');
-                                    } else {
-                                        setCurrentContent('settings');
-                                    }
-                                }}
-                                wallet={wallet}
-                            />
+            <Container maxW={'container.lg'}>
+                <ModalBody w={'full'}>
+                    <VStack w={'full'} overflow={'hidden'}>
+                        <AccountSelector
+                            mt={0}
+                            onClick={() => {
+                                if (smartAccount.isActive) {
+                                    setCurrentContent('accounts');
+                                } else {
+                                    setCurrentContent('settings');
+                                }
+                            }}
+                            wallet={wallet}
+                        />
 
-                            <BalanceSection mt={10} />
+                        <BalanceSection mt={10} />
 
-                            <QuickActionsSection
-                                mt={10}
-                                setCurrentContent={setCurrentContent}
-                            />
-                            <AssetsSection
-                                mt={2}
-                                setCurrentContent={setCurrentContent}
-                            />
-                        </VStack>
-                    </ModalBody>
-                    <ModalFooter>
-                        <VersionFooter />
-                    </ModalFooter>
-                </Container>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                        <QuickActionsSection
+                            mt={10}
+                            setCurrentContent={setCurrentContent}
+                        />
+                        <AssetsSection
+                            mt={2}
+                            setCurrentContent={setCurrentContent}
+                        />
+                    </VStack>
+                </ModalBody>
+                <ModalFooter>
+                    <VersionFooter />
+                </ModalFooter>
+            </Container>
+        </>
     );
 };

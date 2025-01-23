@@ -12,11 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { CiSearch } from 'react-icons/ci';
 import { FiSlash } from 'react-icons/fi';
-import {
-    FadeInViewFromBottom,
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useBalances, useWallet } from '@/hooks';
 import { useState } from 'react';
@@ -105,7 +101,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
         });
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -119,75 +115,69 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack spacing={4} align="stretch">
-                        <InputGroup size="lg">
-                            <Input
-                                placeholder="Search token"
-                                bg={isDark ? '#1a1a1a' : 'gray.50'}
-                                borderRadius="xl"
-                                height="56px"
-                                pl={12}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
+            <ModalBody>
+                <VStack spacing={4} align="stretch">
+                    <InputGroup size="lg">
+                        <Input
+                            placeholder="Search token"
+                            bg={isDark ? '#1a1a1a' : 'gray.50'}
+                            borderRadius="xl"
+                            height="56px"
+                            pl={12}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <InputLeftElement h="56px" w="56px" pl={4}>
+                            <CiSearch
+                                color={isDark ? 'whiteAlpha.400' : 'gray.400'}
                             />
-                            <InputLeftElement h="56px" w="56px" pl={4}>
-                                <CiSearch
-                                    color={
-                                        isDark ? 'whiteAlpha.400' : 'gray.400'
-                                    }
-                                />
-                            </InputLeftElement>
-                        </InputGroup>
+                        </InputLeftElement>
+                    </InputGroup>
 
-                        <Text
-                            fontSize="lg"
-                            fontWeight="semibold"
-                            color={isDark ? 'whiteAlpha.800' : 'gray.700'}
-                            mt={4}
+                    <Text
+                        fontSize="lg"
+                        fontWeight="semibold"
+                        color={isDark ? 'whiteAlpha.800' : 'gray.700'}
+                        mt={4}
+                    >
+                        {t('Your tokens')}
+                    </Text>
+
+                    {filteredTokens.length === 0 ? (
+                        <VStack
+                            spacing={2}
+                            py={8}
+                            color={isDark ? 'whiteAlpha.600' : 'gray.500'}
                         >
-                            {t('Your tokens')}
-                        </Text>
+                            <Icon as={FiSlash} boxSize={12} opacity={0.5} />
+                            <Text fontSize="lg">{t('No tokens found')}</Text>
+                            <Text fontSize="md">
+                                {t('Try searching with a different term')}
+                            </Text>
+                        </VStack>
+                    ) : (
+                        <VStack spacing={2} align="stretch">
+                            {filteredTokens.map((token) => {
+                                const hasBalance = token.numericBalance > 0;
+                                const usdValue =
+                                    token.numericBalance * token.price;
 
-                        {filteredTokens.length === 0 ? (
-                            <VStack
-                                spacing={2}
-                                py={8}
-                                color={isDark ? 'whiteAlpha.600' : 'gray.500'}
-                            >
-                                <Icon as={FiSlash} boxSize={12} opacity={0.5} />
-                                <Text fontSize="lg">
-                                    {t('No tokens found')}
-                                </Text>
-                                <Text fontSize="md">
-                                    {t('Try searching with a different term')}
-                                </Text>
-                            </VStack>
-                        ) : (
-                            <VStack spacing={2} align="stretch">
-                                {filteredTokens.map((token) => {
-                                    const hasBalance = token.numericBalance > 0;
-                                    const usdValue =
-                                        token.numericBalance * token.price;
-
-                                    return (
-                                        <AssetButton
-                                            key={token.symbol}
-                                            symbol={token.symbol}
-                                            amount={token.numericBalance}
-                                            usdValue={usdValue}
-                                            onClick={() => onSelectToken(token)}
-                                            isDisabled={!hasBalance}
-                                        />
-                                    );
-                                })}
-                            </VStack>
-                        )}
-                    </VStack>
-                </ModalBody>
-                <ModalFooter />
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                                return (
+                                    <AssetButton
+                                        key={token.symbol}
+                                        symbol={token.symbol}
+                                        amount={token.numericBalance}
+                                        usdValue={usdValue}
+                                        onClick={() => onSelectToken(token)}
+                                        isDisabled={!hasBalance}
+                                    />
+                                );
+                            })}
+                        </VStack>
+                    )}
+                </VStack>
+            </ModalBody>
+            <ModalFooter />
+        </>
     );
 };

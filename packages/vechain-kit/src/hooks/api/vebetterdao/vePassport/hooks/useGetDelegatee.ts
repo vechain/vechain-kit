@@ -1,7 +1,7 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
-import { ZeroAddress } from 'ethers';
+import { zeroAddress } from 'viem';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -33,7 +33,7 @@ export const useGetDelegatee = (delegator?: string | null) => {
         enabled: !!delegator && !!veBetterPassportContractAddress,
         mapResponse: (response) => {
             const delegatee = response.decoded[0];
-            if (delegatee === ZeroAddress) return null;
+            if (delegatee === zeroAddress) return null;
             return delegatee;
         },
     });

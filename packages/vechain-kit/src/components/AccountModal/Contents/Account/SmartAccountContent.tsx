@@ -10,7 +10,6 @@ import { useWallet } from '@/hooks';
 import React from 'react';
 import {
     AddressDisplay,
-    FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
@@ -40,7 +39,7 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
     const hasExistingDomain = !!smartAccount.domain;
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -57,19 +56,18 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody w={'full'}>
-                    <VStack justify={'center'}>
-                        <Image
-                            src={walletImage}
-                            maxW={'100px'}
-                            borderRadius="50%"
-                        />
-                        <AddressDisplay wallet={smartAccount} />
-                    </VStack>
+            <ModalBody w={'full'}>
+                <VStack justify={'center'}>
+                    <Image
+                        src={walletImage}
+                        maxW={'100px'}
+                        borderRadius="50%"
+                    />
+                    <AddressDisplay wallet={smartAccount} />
+                </VStack>
 
-                    <VStack mt={10} spacing={3}>
-                        {/* <ActionButton
+                <VStack mt={10} spacing={3}>
+                    {/* <ActionButton
                             title="Transfer ownership"
                             description="Change the owner of your smart account."
                             onClick={() => {
@@ -79,35 +77,34 @@ export const SmartAccountContent = ({ setCurrentContent }: Props) => {
                             rightIcon={MdOutlineNavigateNext}
                         /> */}
 
-                        <ActionButton
-                            title={
-                                hasExistingDomain
-                                    ? t('Change account name')
-                                    : t('Choose account name')
+                    <ActionButton
+                        title={
+                            hasExistingDomain
+                                ? t('Change account name')
+                                : t('Choose account name')
+                        }
+                        description={t(
+                            'Give a nickname to your wallet to easily identify it.',
+                        )}
+                        onClick={() => {
+                            if (hasExistingDomain) {
+                                setCurrentContent({
+                                    type: 'choose-name-search',
+                                    props: {
+                                        name: '',
+                                        setCurrentContent,
+                                    },
+                                });
+                            } else {
+                                setCurrentContent('choose-name');
                             }
-                            description={t(
-                                'Give a nickname to your wallet to easily identify it.',
-                            )}
-                            onClick={() => {
-                                if (hasExistingDomain) {
-                                    setCurrentContent({
-                                        type: 'choose-name-search',
-                                        props: {
-                                            name: '',
-                                            setCurrentContent,
-                                        },
-                                    });
-                                } else {
-                                    setCurrentContent('choose-name');
-                                }
-                            }}
-                            leftIcon={FaRegAddressCard}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    </VStack>
-                </ModalBody>
-                <ModalFooter></ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                        }}
+                        leftIcon={FaRegAddressCard}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+                </VStack>
+            </ModalBody>
+            <ModalFooter></ModalFooter>
+        </>
     );
 };

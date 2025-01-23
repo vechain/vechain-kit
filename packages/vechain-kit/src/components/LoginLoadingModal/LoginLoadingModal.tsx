@@ -10,10 +10,7 @@ import {
     Icon,
     Button,
 } from '@chakra-ui/react';
-import {
-    FadeInViewFromBottom,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import React from 'react';
@@ -83,7 +80,7 @@ const LoadingContent = ({
     }, []);
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -132,7 +129,7 @@ const LoadingContent = ({
                     </Button>
                 )}
             </ModalFooter>
-        </FadeInViewFromBottom>
+        </>
     );
 };
 
@@ -149,7 +146,7 @@ const ErrorContent = ({
     const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -203,6 +200,6 @@ const ErrorContent = ({
                     {t('Try again')}
                 </Button>
             </ModalFooter>
-        </FadeInViewFromBottom>
+        </>
     );
 };

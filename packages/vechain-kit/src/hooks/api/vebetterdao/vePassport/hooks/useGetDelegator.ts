@@ -2,7 +2,7 @@ import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { compareAddresses } from '@/utils/AddressUtils';
-import { ZeroAddress } from 'ethers';
+import { zeroAddress } from 'viem';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();
@@ -33,7 +33,7 @@ export const useGetDelegator = (delegator?: string | null) => {
         args: [delegator],
         mapResponse: (response) => {
             const delegator = response.decoded[0];
-            if (compareAddresses(delegator, ZeroAddress)) return null;
+            if (compareAddresses(delegator, zeroAddress)) return null;
             return delegator;
         },
         enabled: !!delegator,

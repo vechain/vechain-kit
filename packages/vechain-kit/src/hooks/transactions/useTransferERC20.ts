@@ -5,9 +5,9 @@ import {
 } from '@/hooks';
 import { useCallback } from 'react';
 import { ERC20__factory } from '@/contracts/typechain-types';
-import { ethers } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
 import { isValidAddress } from '@/utils';
+import { parseEther } from 'viem';
 
 type useTransferERC20Props = {
     fromAddress: string;
@@ -47,7 +47,7 @@ export const useTransferERC20 = ({
             value: '0x0',
             data: ERC20Interface.encodeFunctionData('transfer', [
                 receiverAddress,
-                ethers.parseEther(amount),
+                parseEther(amount),
             ]),
             comment: `Transfer ${amount} ${tokenName} to ${receiverAddress}`,
             abi: ERC20Interface.getFunction('transfer'),

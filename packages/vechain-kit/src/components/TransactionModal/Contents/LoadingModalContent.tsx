@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode, useState, useEffect } from 'react';
 import { useVeChainKitConfig } from '@/providers';
-import { FadeInViewFromBottom } from '@/components/common';
 import { StickyHeaderContainer } from '@/components/common';
 import { getConfig } from '@/config';
 import { MdOutlineRefresh } from 'react-icons/md';
@@ -46,7 +45,7 @@ export const LoadingModalContent = ({
     }, []);
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -59,49 +58,47 @@ export const LoadingModalContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack align={'center'} p={6}>
-                        <Spinner my={10} size="xl" />
-                        {showExplorerButton && txId && (
-                            <Link
-                                href={`${explorerUrl}/transactions/${txId}`}
-                                isExternal
-                                opacity={0.5}
-                                fontSize={'14px'}
-                                textDecoration={'underline'}
-                            >
-                                {t('View on the explorer')}
-                            </Link>
-                        )}
+            <ModalBody>
+                <VStack align={'center'} p={6}>
+                    <Spinner my={10} size="xl" />
+                    {showExplorerButton && txId && (
+                        <Link
+                            href={`${explorerUrl}/transactions/${txId}`}
+                            isExternal
+                            opacity={0.5}
+                            fontSize={'14px'}
+                            textDecoration={'underline'}
+                        >
+                            {t('View on the explorer')}
+                        </Link>
+                    )}
 
-                        {!showTimeout && !txId && (
-                            <Text fontSize="sm" align={'center'}>
+                    {!showTimeout && !txId && (
+                        <Text fontSize="sm" align={'center'}>
+                            {t(
+                                'This may take a few seconds. You can close this window and check the status later.',
+                            )}
+                        </Text>
+                    )}
+
+                    {showTimeout && !txId && (
+                        <VStack mt={4} spacing={2}>
+                            <Text
+                                color="orange.300"
+                                size="sm"
+                                textAlign={'center'}
+                            >
+                                {t('This is taking longer than expected.')}
+                            </Text>
+                            <Text size="sm" textAlign={'center'}>
                                 {t(
-                                    'This may take a few seconds. You can close this window and check the status later.',
+                                    'You may want to try establishing the transaction again.',
                                 )}
                             </Text>
-                        )}
-
-                        {showTimeout && !txId && (
-                            <VStack mt={4} spacing={2}>
-                                <Text
-                                    color="orange.300"
-                                    size="sm"
-                                    textAlign={'center'}
-                                >
-                                    {t('This is taking longer than expected.')}
-                                </Text>
-                                <Text size="sm" textAlign={'center'}>
-                                    {t(
-                                        'You may want to try establishing the transaction again.',
-                                    )}
-                                </Text>
-                            </VStack>
-                        )}
-                    </VStack>
-                </ModalBody>
-            </FadeInViewFromBottom>
+                        </VStack>
+                    )}
+                </VStack>
+            </ModalBody>
 
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && onTryAgain && !txId && (
@@ -111,6 +108,6 @@ export const LoadingModalContent = ({
                     </Button>
                 )}
             </ModalFooter>
-        </FadeInViewFromBottom>
+        </>
     );
 };

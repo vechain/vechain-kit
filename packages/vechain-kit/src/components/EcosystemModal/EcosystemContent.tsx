@@ -11,10 +11,7 @@ import {
     VStack,
     useDisclosure,
 } from '@chakra-ui/react';
-import {
-    FadeInViewFromBottom,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { IoPlanet } from 'react-icons/io5';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
@@ -74,7 +71,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
 
     return (
         <>
-            <FadeInViewFromBottom>
+            <>
                 <StickyHeaderContainer>
                     <ModalHeader
                         fontSize={'md'}
@@ -93,7 +90,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                 </StickyHeaderContainer>
 
                 {/* {loginModalUI?.logo && (
-                    <FadeInViewFromBottom>
                         <HStack justify={'center'}>
                             <Image
                                 src={loginModalUI.logo || '/images/favicon.png'}
@@ -103,77 +99,74 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                                 alt="logo"
                             />
                         </HStack>
-                    </FadeInViewFromBottom>
                 )} */}
 
-                <FadeInViewFromBottom>
-                    <ModalBody>
-                        <Text
-                            fontSize={'12px'}
-                            fontWeight={'400'}
-                            opacity={0.5}
-                            mb={4}
-                            textAlign={'center'}
+                <ModalBody>
+                    <Text
+                        fontSize={'12px'}
+                        fontWeight={'400'}
+                        opacity={0.5}
+                        mb={4}
+                        textAlign={'center'}
+                    >
+                        {t(
+                            'Use your existing VeChain wallet from other ecosystem apps to sign in seamlessly.',
+                        )}
+                    </Text>
+                    {isLoading && (
+                        <VStack
+                            minH={'200px'}
+                            w={'full'}
+                            justifyContent={'center'}
                         >
+                            <Spinner />
+                        </VStack>
+                    )}
+
+                    {!isLoading && appsInfo && (
+                        <VStack spacing={4} w={'full'} pb={6}>
+                            {appsInfo.map((appInfo) => (
+                                <Button
+                                    key={appInfo.id}
+                                    fontSize={'14px'}
+                                    fontWeight={'400'}
+                                    backgroundColor={
+                                        isDark ? 'transparent' : '#ffffff'
+                                    }
+                                    border={`1px solid ${
+                                        isDark ? '#ffffff29' : '#ebebeb'
+                                    }`}
+                                    p={6}
+                                    borderRadius={16}
+                                    w={'full'}
+                                    onClick={() => {
+                                        connectWithVebetterDaoApps(
+                                            appInfo.id,
+                                            appInfo.name,
+                                        );
+                                    }}
+                                >
+                                    <Image
+                                        src={appInfo.logo_url}
+                                        alt={appInfo.name}
+                                        w={'30px'}
+                                    />
+                                    <Text ml={5}>{appInfo.name}</Text>
+                                </Button>
+                            ))}
+                        </VStack>
+                    )}
+
+                    {!isLoading && !appsInfo && (
+                        <Text textAlign={'center'}>
                             {t(
-                                'Use your existing VeChain wallet from other ecosystem apps to sign in seamlessly.',
+                                'No application from VeChain ecosystem is available to login.',
                             )}
                         </Text>
-                        {isLoading && (
-                            <VStack
-                                minH={'200px'}
-                                w={'full'}
-                                justifyContent={'center'}
-                            >
-                                <Spinner />
-                            </VStack>
-                        )}
-
-                        {!isLoading && appsInfo && (
-                            <VStack spacing={4} w={'full'} pb={6}>
-                                {appsInfo.map((appInfo) => (
-                                    <Button
-                                        key={appInfo.id}
-                                        fontSize={'14px'}
-                                        fontWeight={'400'}
-                                        backgroundColor={
-                                            isDark ? 'transparent' : '#ffffff'
-                                        }
-                                        border={`1px solid ${
-                                            isDark ? '#ffffff29' : '#ebebeb'
-                                        }`}
-                                        p={6}
-                                        borderRadius={16}
-                                        w={'full'}
-                                        onClick={() => {
-                                            connectWithVebetterDaoApps(
-                                                appInfo.id,
-                                                appInfo.name,
-                                            );
-                                        }}
-                                    >
-                                        <Image
-                                            src={appInfo.logo_url}
-                                            alt={appInfo.name}
-                                            w={'30px'}
-                                        />
-                                        <Text ml={5}>{appInfo.name}</Text>
-                                    </Button>
-                                ))}
-                            </VStack>
-                        )}
-
-                        {!isLoading && !appsInfo && (
-                            <Text textAlign={'center'}>
-                                {t(
-                                    'No application from VeChain ecosystem is available to login.',
-                                )}
-                            </Text>
-                        )}
-                    </ModalBody>
-                    <ModalFooter></ModalFooter>
-                </FadeInViewFromBottom>
-            </FadeInViewFromBottom>
+                    )}
+                </ModalBody>
+                <ModalFooter></ModalFooter>
+            </>
 
             <LoginLoadingModal
                 isOpen={loginLoadingModal.isOpen}

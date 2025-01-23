@@ -28,9 +28,9 @@ import {
     TransactionToast,
     TransactionModal,
 } from '@vechain/vechain-kit';
+import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
-import { b3trAbi, b3trMainnetAddress } from '../constants';
-import { Interface } from 'ethers';
+import { b3trMainnetAddress } from '../constants';
 import { SigningExample } from '@/app/components/SigningExample';
 import { useTranslation } from 'react-i18next';
 import { languageNames, supportedLanguages } from '../../../i18n';
@@ -80,32 +80,20 @@ export default function Home(): ReactElement {
     const clauses = useMemo(() => {
         if (!connectedWallet?.address) return [];
 
+        const B3TRInterface = IB3TR__factory.createInterface();
+
         const clausesArray: any[] = [];
-        const abi = new Interface(b3trAbi);
         clausesArray.push({
             to: b3trMainnetAddress,
             value: '0x0',
-            data: abi.encodeFunctionData('transfer', [
+            data: B3TRInterface.encodeFunctionData('transfer', [
                 connectedWallet?.address,
                 '0', // 1 B3TR (in wei)
             ]),
             comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
                 connectedWallet?.address,
             )}`,
-            abi: abi.getFunction('transfer'),
-        });
-
-        clausesArray.push({
-            to: b3trMainnetAddress,
-            value: '0x0',
-            data: abi.encodeFunctionData('transfer', [
-                connectedWallet?.address,
-                '10000000000000000000', // 10 B3TR (in wei)
-            ]),
-            comment: `This is a second close demonstrating multiclause with privy-corssapp. Transfer ${0.000001} B3TR to ${humanAddress(
-                connectedWallet?.address,
-            )}`,
-            abi: abi.getFunction('transfer'),
+            abi: B3TRInterface.getFunction('transfer'),
         });
 
         return clausesArray;

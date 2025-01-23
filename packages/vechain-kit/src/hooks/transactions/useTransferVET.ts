@@ -4,8 +4,8 @@ import {
     useSendTransaction,
 } from '@/hooks';
 import { isValidAddress } from '@/utils';
-import { ethers } from 'ethers';
 import { useCallback } from 'react';
+import { parseEther } from 'viem';
 
 type useTransferVETProps = {
     fromAddress: string;
@@ -40,7 +40,7 @@ export const useTransferVET = ({
         try {
             clausesArray.push({
                 to: receiverAddress,
-                value: ethers.parseEther(amount).toString(), // Convert to string
+                value: parseEther(amount).toString(), // Convert to string
                 data: '0x',
                 comment: `Transfer ${amount} VET to ${receiverAddress}`,
             });

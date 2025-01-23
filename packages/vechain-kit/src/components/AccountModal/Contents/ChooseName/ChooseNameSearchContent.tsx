@@ -11,11 +11,7 @@ import {
     ModalFooter,
     InputRightElement,
 } from '@chakra-ui/react';
-import {
-    FadeInViewFromBottom,
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
 import { useEnsRecordExists, useWallet, useVechainDomain } from '@/hooks';
@@ -96,7 +92,7 @@ export const ChooseNameSearchContent = ({
     };
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -119,90 +115,86 @@ export const ChooseNameSearchContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack spacing={4} align="stretch">
-                        <InputGroup size="lg">
-                            <Input
-                                placeholder={t('Enter your name')}
-                                value={name}
-                                onChange={(e) => {
-                                    setName(e.target.value);
-                                    if (!hasInteracted) setHasInteracted(true);
-                                }}
-                                paddingRight="120px"
-                                fontSize="lg"
-                                height="60px"
-                                bg={isDark ? '#1a1a1a' : 'white'}
-                                border={`1px solid ${
-                                    isDark ? '#ffffff29' : '#ebebeb'
-                                }`}
-                                _hover={{
-                                    border: `1px solid ${
-                                        isDark ? '#ffffff40' : '#e0e0e0'
-                                    }`,
-                                }}
-                                _focus={{
-                                    border: `1px solid ${
-                                        isDark ? '#ffffff60' : '#d0d0d0'
-                                    }`,
-                                    boxShadow: 'none',
-                                }}
-                                isInvalid={!!error}
-                            />
-                            <InputRightElement
-                                width="auto"
-                                paddingRight="12px"
-                                h={'full'}
-                            >
-                                <Box
-                                    mr={4}
-                                    fontSize="sm"
-                                    color={
-                                        isDark ? 'whiteAlpha.800' : 'gray.500'
-                                    }
-                                >
-                                    .veworld.vet
-                                </Box>
-                            </InputRightElement>
-                        </InputGroup>
-
-                        {error && hasInteracted && (
-                            <Text color="red.500" fontSize="sm">
-                                {error}
-                            </Text>
-                        )}
-
-                        {!error && hasInteracted && name.length >= 3 && (
-                            <Text
+            <ModalBody>
+                <VStack spacing={4} align="stretch">
+                    <InputGroup size="lg">
+                        <Input
+                            placeholder={t('Enter your name')}
+                            value={name}
+                            onChange={(e) => {
+                                setName(e.target.value);
+                                if (!hasInteracted) setHasInteracted(true);
+                            }}
+                            paddingRight="120px"
+                            fontSize="lg"
+                            height="60px"
+                            bg={isDark ? '#1a1a1a' : 'white'}
+                            border={`1px solid ${
+                                isDark ? '#ffffff29' : '#ebebeb'
+                            }`}
+                            _hover={{
+                                border: `1px solid ${
+                                    isDark ? '#ffffff40' : '#e0e0e0'
+                                }`,
+                            }}
+                            _focus={{
+                                border: `1px solid ${
+                                    isDark ? '#ffffff60' : '#d0d0d0'
+                                }`,
+                                boxShadow: 'none',
+                            }}
+                            isInvalid={!!error}
+                        />
+                        <InputRightElement
+                            width="auto"
+                            paddingRight="12px"
+                            h={'full'}
+                        >
+                            <Box
+                                mr={4}
                                 fontSize="sm"
-                                color={isAvailable ? 'green.500' : 'red.500'}
-                                fontWeight="500"
+                                color={isDark ? 'whiteAlpha.800' : 'gray.500'}
                             >
-                                {isOwnDomain
-                                    ? t('YOU OWN THIS')
-                                    : isAvailable
-                                    ? t('AVAILABLE')
-                                    : t('UNAVAILABLE')}
-                            </Text>
-                        )}
-                    </VStack>
-                </ModalBody>
+                                .veworld.vet
+                            </Box>
+                        </InputRightElement>
+                    </InputGroup>
 
-                <ModalFooter>
-                    <Button
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
-                        isDisabled={!isAvailable || !!error}
-                        onClick={handleContinue}
-                    >
-                        {t('Continue')}
-                    </Button>
-                </ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                    {error && hasInteracted && (
+                        <Text color="red.500" fontSize="sm">
+                            {error}
+                        </Text>
+                    )}
+
+                    {!error && hasInteracted && name.length >= 3 && (
+                        <Text
+                            fontSize="sm"
+                            color={isAvailable ? 'green.500' : 'red.500'}
+                            fontWeight="500"
+                        >
+                            {isOwnDomain
+                                ? t('YOU OWN THIS')
+                                : isAvailable
+                                ? t('AVAILABLE')
+                                : t('UNAVAILABLE')}
+                        </Text>
+                    )}
+                </VStack>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button
+                    px={4}
+                    width="full"
+                    height="60px"
+                    variant="solid"
+                    borderRadius="xl"
+                    isDisabled={!isAvailable || !!error}
+                    onClick={handleContinue}
+                >
+                    {t('Continue')}
+                </Button>
+            </ModalFooter>
+        </>
     );
 };

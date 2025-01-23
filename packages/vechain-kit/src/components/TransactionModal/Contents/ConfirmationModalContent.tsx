@@ -9,7 +9,6 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode, useState, useEffect } from 'react';
 import { useWallet } from '@/hooks';
-import { FadeInViewFromBottom } from '@/components/common';
 import { TransactionProgress } from '@/types';
 import { ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
@@ -43,7 +42,7 @@ export const ConfirmationModalContent = ({
     }, [progress?.currentStep]);
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -56,81 +55,77 @@ export const ConfirmationModalContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack align={'center'} p={6} gap={6}>
-                        <Spinner my={10} size="xl" />
-                        {connection.isConnectedWithCrossApp && progress ? (
-                            <>
-                                <Progress
-                                    value={
-                                        (progress.currentStep /
-                                            progress.totalSteps) *
-                                        100
-                                    }
-                                    width="100%"
-                                    borderRadius="xl"
-                                />
-                                <Text fontSize="sm" align={'center'}>
-                                    {t('Step')} {progress.currentStep} {t('of')}{' '}
-                                    {progress.totalSteps}
+            <ModalBody>
+                <VStack align={'center'} p={6} gap={6}>
+                    <Spinner my={10} size="xl" />
+                    {connection.isConnectedWithCrossApp && progress ? (
+                        <>
+                            <Progress
+                                value={
+                                    (progress.currentStep /
+                                        progress.totalSteps) *
+                                    100
+                                }
+                                width="100%"
+                                borderRadius="xl"
+                            />
+                            <Text fontSize="sm" align={'center'}>
+                                {t('Step')} {progress.currentStep} {t('of')}{' '}
+                                {progress.totalSteps}
+                            </Text>
+                            {progress.currentStepDescription && (
+                                <Text
+                                    fontSize="sm"
+                                    align={'center'}
+                                    opacity={0.5}
+                                >
+                                    {progress.currentStepDescription}
                                 </Text>
-                                {progress.currentStepDescription && (
+                            )}
+                            {showTimeout && (
+                                <Text
+                                    fontSize="sm"
+                                    align={'center'}
+                                    color="orange.300"
+                                >
+                                    {t('This is taking longer than expected.')}
+                                </Text>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {!showTimeout ? (
+                                <Text fontSize="sm" align={'center'}>
+                                    {connection.isConnectedWithSocialLogin
+                                        ? t(
+                                              'Please do not close this window, it will take just a few seconds.',
+                                          )
+                                        : t(
+                                              'Please confirm the transaction in your wallet.',
+                                          )}
+                                </Text>
+                            ) : (
+                                <VStack mt={4} spacing={2}>
                                     <Text
-                                        fontSize="sm"
-                                        align={'center'}
-                                        opacity={0.5}
-                                    >
-                                        {progress.currentStepDescription}
-                                    </Text>
-                                )}
-                                {showTimeout && (
-                                    <Text
-                                        fontSize="sm"
-                                        align={'center'}
                                         color="orange.300"
+                                        size="sm"
+                                        textAlign={'center'}
                                     >
                                         {t(
                                             'This is taking longer than expected.',
                                         )}
                                     </Text>
-                                )}
-                            </>
-                        ) : (
-                            <>
-                                {!showTimeout ? (
-                                    <Text fontSize="sm" align={'center'}>
-                                        {connection.isConnectedWithSocialLogin
-                                            ? t(
-                                                  'Please do not close this window, it will take just a few seconds.',
-                                              )
-                                            : t(
-                                                  'Please confirm the transaction in your wallet.',
-                                              )}
+                                    <Text size="sm" textAlign={'center'}>
+                                        {t(
+                                            'You may want to try establishing the transaction again.',
+                                        )}
                                     </Text>
-                                ) : (
-                                    <VStack mt={4} spacing={2}>
-                                        <Text
-                                            color="orange.300"
-                                            size="sm"
-                                            textAlign={'center'}
-                                        >
-                                            {t(
-                                                'This is taking longer than expected.',
-                                            )}
-                                        </Text>
-                                        <Text size="sm" textAlign={'center'}>
-                                            {t(
-                                                'You may want to try establishing the transaction again.',
-                                            )}
-                                        </Text>
-                                    </VStack>
-                                )}
-                            </>
-                        )}
-                    </VStack>
-                </ModalBody>
-            </FadeInViewFromBottom>
+                                </VStack>
+                            )}
+                        </>
+                    )}
+                </VStack>
+            </ModalBody>
 
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && onTryAgain && (
@@ -140,6 +135,6 @@ export const ConfirmationModalContent = ({
                     </Button>
                 )}
             </ModalFooter>
-        </FadeInViewFromBottom>
+        </>
     );
 };

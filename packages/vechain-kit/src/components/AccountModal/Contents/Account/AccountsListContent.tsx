@@ -11,11 +11,7 @@ import {
     VStack,
     IconButton,
 } from '@chakra-ui/react';
-import {
-    FadeInViewFromBottom,
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountDetailsButton } from '@/components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountModalContentTypes } from '../../Types';
@@ -58,7 +54,7 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
     const connectionCache = getConnectionCache();
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -71,107 +67,105 @@ export const AccountsListContent = ({ setCurrentContent, onClose }: Props) => {
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <FadeInViewFromBottom>
-                <ModalBody w={'full'}>
-                    <VStack justify={'space-between'} w={'full'}>
-                        {activeWalletIsSmartAccount && isAlertVisible && (
-                            <Alert
-                                status="info"
-                                variant="subtle"
-                                mb={4}
-                                borderRadius={'lg'}
-                                pr={8}
-                                position="relative"
-                            >
-                                <AlertIcon boxSize={'16px'} />
-                                <AlertDescription
-                                    fontSize={'xs'}
-                                    lineHeight={'1.2'}
-                                >
-                                    {t(
-                                        'You own a Smart Account and it has priority over your wallet.',
-                                    )}
-                                </AlertDescription>
-                                <IconButton
-                                    position="absolute"
-                                    right={1}
-                                    top={1}
-                                    size="sm"
-                                    variant="ghost"
-                                    icon={<IoCloseCircle />}
-                                    onClick={hideAlert}
-                                    aria-label="Close alert"
-                                />
-                            </Alert>
-                        )}
-                        <Grid
-                            gap={2}
-                            templateColumns={['repeat(1, 1fr)']}
-                            w="100%"
-                            h="100%"
+            <ModalBody w={'full'}>
+                <VStack justify={'space-between'} w={'full'}>
+                    {activeWalletIsSmartAccount && isAlertVisible && (
+                        <Alert
+                            status="info"
+                            variant="subtle"
+                            mb={4}
+                            borderRadius={'lg'}
+                            pr={8}
+                            position="relative"
                         >
-                            {activeWalletIsSmartAccount && (
-                                <AccountDetailsButton
-                                    title={t('Smart Account')}
-                                    wallet={smartAccount as Wallet}
-                                    isActive={activeWalletIsSmartAccount}
-                                    onClick={() => {
-                                        setCurrentContent('smart-account');
-                                    }}
-                                    leftIcon={HiOutlineWallet}
-                                    rightIcon={MdOutlineNavigateNext}
-                                />
-                            )}
+                            <AlertIcon boxSize={'16px'} />
+                            <AlertDescription
+                                fontSize={'xs'}
+                                lineHeight={'1.2'}
+                            >
+                                {t(
+                                    'You own a Smart Account and it has priority over your wallet.',
+                                )}
+                            </AlertDescription>
+                            <IconButton
+                                position="absolute"
+                                right={1}
+                                top={1}
+                                size="sm"
+                                variant="ghost"
+                                icon={<IoCloseCircle />}
+                                onClick={hideAlert}
+                                aria-label="Close alert"
+                            />
+                        </Alert>
+                    )}
+                    <Grid
+                        gap={2}
+                        templateColumns={['repeat(1, 1fr)']}
+                        w="100%"
+                        h="100%"
+                    >
+                        {activeWalletIsSmartAccount && (
                             <AccountDetailsButton
-                                title={
-                                    connection.isConnectedWithCrossApp &&
-                                    connectionCache
-                                        ? connectionCache.ecosystemApp.name +
-                                          ' ' +
-                                          t('Wallet')
-                                        : connection.isConnectedWithSocialLogin
-                                        ? t('Embedded Wallet')
-                                        : t('Wallet')
-                                }
-                                wallet={connectedWallet}
-                                isActive={!activeWalletIsSmartAccount}
+                                title={t('Smart Account')}
+                                wallet={smartAccount as Wallet}
+                                isActive={activeWalletIsSmartAccount}
                                 onClick={() => {
-                                    setCurrentContent('settings');
+                                    setCurrentContent('smart-account');
                                 }}
-                                leftImage={
-                                    connection.isConnectedWithCrossApp &&
-                                    connectionCache?.ecosystemApp?.logoUrl
-                                        ? connectionCache.ecosystemApp?.logoUrl
-                                        : connection.isConnectedWithSocialLogin &&
-                                          privy?.appearance?.logo
-                                        ? privy.appearance.logo
-                                        : undefined
-                                }
-                                leftIcon={
-                                    !connection.isConnectedWithCrossApp ||
-                                    !connectionCache?.ecosystemApp?.logoUrl ||
-                                    !privy?.appearance?.logo
-                                        ? HiOutlineWallet
-                                        : undefined
-                                }
+                                leftIcon={HiOutlineWallet}
                                 rightIcon={MdOutlineNavigateNext}
                             />
-                        </Grid>
-                    </VStack>
-                </ModalBody>
-                <ModalFooter>
-                    <Button
-                        onClick={() => {
-                            disconnect();
-                            onClose();
-                        }}
-                        variant="vechainKitSecondary"
-                        leftIcon={<RxExit color="#888888" />}
-                    >
-                        {t('Logout')}
-                    </Button>
-                </ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                        )}
+                        <AccountDetailsButton
+                            title={
+                                connection.isConnectedWithCrossApp &&
+                                connectionCache
+                                    ? connectionCache.ecosystemApp.name +
+                                      ' ' +
+                                      t('Wallet')
+                                    : connection.isConnectedWithSocialLogin
+                                    ? t('Embedded Wallet')
+                                    : t('Wallet')
+                            }
+                            wallet={connectedWallet}
+                            isActive={!activeWalletIsSmartAccount}
+                            onClick={() => {
+                                setCurrentContent('settings');
+                            }}
+                            leftImage={
+                                connection.isConnectedWithCrossApp &&
+                                connectionCache?.ecosystemApp?.logoUrl
+                                    ? connectionCache.ecosystemApp?.logoUrl
+                                    : connection.isConnectedWithSocialLogin &&
+                                      privy?.appearance?.logo
+                                    ? privy.appearance.logo
+                                    : undefined
+                            }
+                            leftIcon={
+                                !connection.isConnectedWithCrossApp ||
+                                !connectionCache?.ecosystemApp?.logoUrl ||
+                                !privy?.appearance?.logo
+                                    ? HiOutlineWallet
+                                    : undefined
+                            }
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    </Grid>
+                </VStack>
+            </ModalBody>
+            <ModalFooter>
+                <Button
+                    onClick={() => {
+                        disconnect();
+                        onClose();
+                    }}
+                    variant="vechainKitSecondary"
+                    leftIcon={<RxExit color="#888888" />}
+                >
+                    {t('Logout')}
+                </Button>
+            </ModalFooter>
+        </>
     );
 };

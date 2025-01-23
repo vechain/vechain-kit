@@ -14,7 +14,6 @@ import {
     Icon,
 } from '@chakra-ui/react';
 import {
-    FadeInViewFromBottom,
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplayCard,
@@ -100,7 +99,7 @@ export const SendTokenSummaryContent = ({
         selectedToken.symbol === 'VET' ? transferVET : transferERC20;
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -123,81 +122,76 @@ export const SendTokenSummaryContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack spacing={6} align="stretch" w="full">
-                        {connection.isConnectedWithPrivy && (
-                            <Alert
-                                status="warning"
-                                fontSize={'xs'}
-                                borderRadius={'xl'}
-                            >
-                                <AlertIcon />
-                                {t(
-                                    'Sending to OceanX or other exchanges may result in loss of funds. Send the tokens to your VeWorld wallet first.',
-                                )}
-                            </Alert>
-                        )}
-                        {/* From/To Card */}
+            <ModalBody>
+                <VStack spacing={6} align="stretch" w="full">
+                    {connection.isConnectedWithPrivy && (
+                        <Alert
+                            status="warning"
+                            fontSize={'xs'}
+                            borderRadius={'xl'}
+                        >
+                            <AlertIcon />
+                            {t(
+                                'Sending to OceanX or other exchanges may result in loss of funds. Send the tokens to your VeWorld wallet first.',
+                            )}
+                        </Alert>
+                    )}
+                    {/* From/To Card */}
 
-                        <VStack spacing={4} w="full">
-                            <AddressDisplayCard
-                                label={t('From')}
-                                address={account?.address ?? ''}
-                                domain={account?.domain}
-                                imageSrc={account?.image ?? ''}
-                                imageAlt="From account"
-                            />
+                    <VStack spacing={4} w="full">
+                        <AddressDisplayCard
+                            label={t('From')}
+                            address={account?.address ?? ''}
+                            domain={account?.domain}
+                            imageSrc={account?.image ?? ''}
+                            imageAlt="From account"
+                        />
 
-                            <AddressDisplayCard
-                                label={t('To')}
-                                address={resolvedAddress || toAddressOrDomain}
-                                domain={resolvedDomain}
-                                imageSrc={getPicassoImage(
-                                    resolvedAddress || toAddressOrDomain,
-                                )}
-                                imageAlt="To account"
-                            />
+                        <AddressDisplayCard
+                            label={t('To')}
+                            address={resolvedAddress || toAddressOrDomain}
+                            domain={resolvedDomain}
+                            imageSrc={getPicassoImage(
+                                resolvedAddress || toAddressOrDomain,
+                            )}
+                            imageAlt="To account"
+                        />
 
-                            <Divider />
-                            <VStack
-                                spacing={0}
+                        <Divider />
+                        <VStack
+                            spacing={0}
+                            w="full"
+                            justifyContent="flex-start"
+                            p={2}
+                        >
+                            <Text
+                                fontSize="sm"
+                                fontWeight="light"
+                                textAlign="left"
                                 w="full"
-                                justifyContent="flex-start"
-                                p={2}
                             >
+                                {t('Amount')}
+                            </Text>
+                            <HStack justifyContent="flex-start" w="full">
                                 <Text
-                                    fontSize="sm"
-                                    fontWeight="light"
+                                    fontSize="xl"
+                                    fontWeight="semibold"
                                     textAlign="left"
-                                    w="full"
                                 >
-                                    {t('Amount')}
+                                    {summaryFormatter.format(Number(amount))}{' '}
+                                    {selectedToken.symbol}
                                 </Text>
-                                <HStack justifyContent="flex-start" w="full">
-                                    <Text
-                                        fontSize="xl"
-                                        fontWeight="semibold"
-                                        textAlign="left"
-                                    >
-                                        {summaryFormatter.format(
-                                            Number(amount),
-                                        )}{' '}
-                                        {selectedToken.symbol}
-                                    </Text>
-                                    <Text fontSize="sm" opacity={0.5}>
-                                        ≈ $
-                                        {compactFormatter.format(
-                                            Number(amount) *
-                                                selectedToken.price,
-                                        )}
-                                    </Text>
-                                </HStack>
-                            </VStack>
+                                <Text fontSize="sm" opacity={0.5}>
+                                    ≈ $
+                                    {compactFormatter.format(
+                                        Number(amount) * selectedToken.price,
+                                    )}
+                                </Text>
+                            </HStack>
                         </VStack>
                     </VStack>
-                </ModalBody>
-            </FadeInViewFromBottom>
+                </VStack>
+            </ModalBody>
 
             {/* <StickyFooterContainer> */}
             <ModalFooter>
@@ -230,6 +224,6 @@ export const SendTokenSummaryContent = ({
                 showTryAgainButton={true}
                 onTryAgain={handleSend}
             />
-        </FadeInViewFromBottom>
+        </>
     );
 };

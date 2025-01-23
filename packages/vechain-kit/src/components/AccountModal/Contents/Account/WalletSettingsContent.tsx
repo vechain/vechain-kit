@@ -16,7 +16,6 @@ import {
     AddressDisplay,
     ModalBackButton,
     StickyHeaderContainer,
-    FadeInViewFromBottom,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
@@ -55,7 +54,7 @@ export const WalletSettingsContent = ({
             : t('Wallet');
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -81,62 +80,61 @@ export const WalletSettingsContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody w={'full'}>
-                    <VStack justify={'center'}>
-                        <Image
-                            src={connectedWallet?.image}
-                            maxW={'100px'}
-                            borderRadius="50%"
-                        />
-                        <AddressDisplay wallet={connectedWallet} />
-                    </VStack>
+            <ModalBody w={'full'}>
+                <VStack justify={'center'}>
+                    <Image
+                        src={connectedWallet?.image}
+                        maxW={'100px'}
+                        borderRadius="50%"
+                    />
+                    <AddressDisplay wallet={connectedWallet} />
+                </VStack>
 
-                    <VStack mt={10} w={'full'} spacing={3}>
-                        {connection.isConnectedWithSocialLogin && (
-                            <ActionButton
-                                title={t('Backup your wallet')}
-                                description={t(
-                                    'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
-                                )}
-                                onClick={() => {
-                                    exportWallet();
-                                }}
-                                leftIcon={GiHouseKeys}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                        )}
-
-                        {connection.isConnectedWithSocialLogin &&
-                            privy?.allowPasskeyLinking && (
-                                <ActionButton
-                                    title={t('Add passkey')}
-                                    description={t(
-                                        'Enable one click login by adding a passkey to your account.',
-                                    )}
-                                    onClick={() => {
-                                        linkPasskey();
-                                    }}
-                                    leftIcon={IoIosFingerPrint}
-                                    rightIcon={MdOutlineNavigateNext}
-                                />
+                <VStack mt={10} w={'full'} spacing={3}>
+                    {connection.isConnectedWithSocialLogin && (
+                        <ActionButton
+                            title={t('Backup your wallet')}
+                            description={t(
+                                'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
                             )}
+                            onClick={() => {
+                                exportWallet();
+                            }}
+                            leftIcon={GiHouseKeys}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    )}
 
-                        {connection.isConnectedWithSocialLogin && (
+                    {connection.isConnectedWithSocialLogin &&
+                        privy?.allowPasskeyLinking && (
                             <ActionButton
-                                title={t('Login methods')}
+                                title={t('Add passkey')}
                                 description={t(
-                                    'View and manage the login methods linked to your wallet.',
+                                    'Enable one click login by adding a passkey to your account.',
                                 )}
                                 onClick={() => {
-                                    setCurrentContent('privy-linked-accounts');
+                                    linkPasskey();
                                 }}
-                                leftIcon={MdManageAccounts}
+                                leftIcon={IoIosFingerPrint}
                                 rightIcon={MdOutlineNavigateNext}
                             />
                         )}
 
-                        {/* <ActionButton
+                    {connection.isConnectedWithSocialLogin && (
+                        <ActionButton
+                            title={t('Login methods')}
+                            description={t(
+                                'View and manage the login methods linked to your wallet.',
+                            )}
+                            onClick={() => {
+                                setCurrentContent('privy-linked-accounts');
+                            }}
+                            leftIcon={MdManageAccounts}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    )}
+
+                    {/* <ActionButton
                                 title={t('Manage MFA')}
                                 description={t(
                                     'Manage multi-factor authentication settings for your wallet.',
@@ -151,60 +149,59 @@ export const WalletSettingsContent = ({
                                 rightIcon={MdOutlineNavigateNext}
                             /> */}
 
-                        {connection.isConnectedWithDappKit && (
-                            <ActionButton
-                                title={
-                                    hasExistingDomain
-                                        ? t('Change account name')
-                                        : t('Choose account name')
-                                }
-                                description={t(
-                                    'Give a nickname to your wallet to easily identify it.',
-                                )}
-                                onClick={() => {
-                                    if (hasExistingDomain) {
-                                        setCurrentContent({
-                                            type: 'choose-name-search',
-                                            props: {
-                                                name: '',
-                                                setCurrentContent,
-                                            },
-                                        });
-                                    } else {
-                                        setCurrentContent('choose-name');
-                                    }
-                                }}
-                                leftIcon={FaRegAddressCard}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                        )}
-
+                    {connection.isConnectedWithDappKit && (
                         <ActionButton
-                            title={t('Connection Details')}
+                            title={
+                                hasExistingDomain
+                                    ? t('Change account name')
+                                    : t('Choose account name')
+                            }
                             description={t(
-                                'View the details of your connection to this app.',
+                                'Give a nickname to your wallet to easily identify it.',
                             )}
                             onClick={() => {
-                                setCurrentContent('connection-details');
+                                if (hasExistingDomain) {
+                                    setCurrentContent({
+                                        type: 'choose-name-search',
+                                        props: {
+                                            name: '',
+                                            setCurrentContent,
+                                        },
+                                    });
+                                } else {
+                                    setCurrentContent('choose-name');
+                                }
                             }}
-                            leftIcon={VscDebugDisconnect}
+                            leftIcon={FaRegAddressCard}
                             rightIcon={MdOutlineNavigateNext}
                         />
-                    </VStack>
-                </ModalBody>
-                <ModalFooter>
-                    <Button
+                    )}
+
+                    <ActionButton
+                        title={t('Connection Details')}
+                        description={t(
+                            'View the details of your connection to this app.',
+                        )}
                         onClick={() => {
-                            disconnect();
-                            onLogoutSuccess();
+                            setCurrentContent('connection-details');
                         }}
-                        variant="vechainKitSecondary"
-                        leftIcon={<RxExit color="#888888" />}
-                    >
-                        {t('Logout')}
-                    </Button>
-                </ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                        leftIcon={VscDebugDisconnect}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+                </VStack>
+            </ModalBody>
+            <ModalFooter>
+                <Button
+                    onClick={() => {
+                        disconnect();
+                        onLogoutSuccess();
+                    }}
+                    variant="vechainKitSecondary"
+                    leftIcon={<RxExit color="#888888" />}
+                >
+                    {t('Logout')}
+                </Button>
+            </ModalFooter>
+        </>
     );
 };

@@ -12,7 +12,6 @@ import {
 import { usePrivy } from '@privy-io/react-auth';
 import { useVeChainKitConfig } from '@/providers';
 import {
-    FadeInViewFromBottom,
     ModalFAQButton,
     StickyHeaderContainer,
     VersionFooter,
@@ -100,7 +99,7 @@ export const MainContent = ({
     }, [variant, privyEcosystemAppIDS]);
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
@@ -115,95 +114,84 @@ export const MainContent = ({
             </StickyHeaderContainer>
 
             {loginModalUI?.logo && (
-                <FadeInViewFromBottom>
-                    <HStack justify={'center'}>
-                        <Image
-                            src={loginModalUI.logo || '/images/favicon.png'}
-                            maxW={'180px'}
-                            maxH={'90px'}
-                            m={8}
-                            alt="logo"
-                        />
-                    </HStack>
-                </FadeInViewFromBottom>
+                <HStack justify={'center'}>
+                    <Image
+                        src={loginModalUI.logo || '/images/favicon.png'}
+                        maxW={'180px'}
+                        maxH={'90px'}
+                        m={8}
+                        alt="logo"
+                    />
+                </HStack>
             )}
 
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    {loginModalUI?.description && (
-                        <HStack
-                            spacing={4}
-                            w={'full'}
-                            justify={'center'}
-                            mb={'24px'}
+            <ModalBody>
+                {loginModalUI?.description && (
+                    <HStack
+                        spacing={4}
+                        w={'full'}
+                        justify={'center'}
+                        mb={'24px'}
+                    >
+                        <Text
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                            fontSize={'xs'}
+                            fontWeight={'200'}
+                            textAlign={'center'}
                         >
-                            <Text
-                                color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                                fontSize={'xs'}
-                                fontWeight={'200'}
-                                textAlign={'center'}
-                            >
-                                {t(loginModalUI?.description)}
-                            </Text>
-                        </HStack>
-                    )}
+                            {t(loginModalUI?.description)}
+                        </Text>
+                    </HStack>
+                )}
 
-                    <Stack spacing={4} w={'full'} align={'center'}>
-                        <Grid
-                            templateColumns="repeat(4, 1fr)"
-                            gap={2}
-                            w={'full'}
-                        >
-                            {variant === 'full' && privySocialLoginEnabled && (
-                                <SocialLoginButtons
+                <Stack spacing={4} w={'full'} align={'center'}>
+                    <Grid templateColumns="repeat(4, 1fr)" gap={2} w={'full'}>
+                        {variant === 'full' && privySocialLoginEnabled && (
+                            <SocialLoginButtons
+                                isDark={isDark}
+                                loginModalUI={loginModalUI}
+                            />
+                        )}
+
+                        <VeChainLoginButton isDark={isDark} gridColumn={4} />
+
+                        {variant === 'full' && privySocialLoginEnabled && (
+                            <PasskeyLoginButton isDark={isDark} />
+                        )}
+
+                        <DappKitButton
+                            isDark={isDark}
+                            gridColumn={dappKitGridColumn}
+                        />
+
+                        {(variant === 'full' ||
+                            variant === 'vechain-wallet-ecosystem') &&
+                            privyEcosystemAppIDS.length > 0 && (
+                                <EcosystemButton
                                     isDark={isDark}
-                                    loginModalUI={loginModalUI}
+                                    privySocialLoginEnabled={
+                                        variant === 'full' &&
+                                        privySocialLoginEnabled
+                                    }
+                                    appsInfo={Object.values(appsInfo || {})}
+                                    isLoading={isEcosystemAppsLoading}
                                 />
                             )}
 
-                            <VeChainLoginButton
+                        {variant === 'full' && privySocialLoginEnabled && (
+                            <PrivyButton
                                 isDark={isDark}
-                                gridColumn={4}
+                                onViewMoreLogin={viewMoreLogin}
+                                gridColumn={privyGridColumn}
                             />
+                        )}
+                    </Grid>
+                </Stack>
+            </ModalBody>
 
-                            {variant === 'full' && privySocialLoginEnabled && (
-                                <PasskeyLoginButton isDark={isDark} />
-                            )}
-
-                            <DappKitButton
-                                isDark={isDark}
-                                gridColumn={dappKitGridColumn}
-                            />
-
-                            {(variant === 'full' ||
-                                variant === 'vechain-wallet-ecosystem') &&
-                                privyEcosystemAppIDS.length > 0 && (
-                                    <EcosystemButton
-                                        isDark={isDark}
-                                        privySocialLoginEnabled={
-                                            variant === 'full' &&
-                                            privySocialLoginEnabled
-                                        }
-                                        appsInfo={Object.values(appsInfo || {})}
-                                        isLoading={isEcosystemAppsLoading}
-                                    />
-                                )}
-
-                            {variant === 'full' && privySocialLoginEnabled && (
-                                <PrivyButton
-                                    isDark={isDark}
-                                    onViewMoreLogin={viewMoreLogin}
-                                    gridColumn={privyGridColumn}
-                                />
-                            )}
-                        </Grid>
-                    </Stack>
-                </ModalBody>
-
-                <ModalFooter>
-                    <VersionFooter />
-                </ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+            <ModalFooter>
+                <VersionFooter />
+            </ModalFooter>
+        </>
     );
 };

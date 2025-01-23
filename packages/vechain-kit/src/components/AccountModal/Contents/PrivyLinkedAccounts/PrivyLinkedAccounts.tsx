@@ -27,11 +27,7 @@ import {
 } from 'react-icons/fa';
 import { SiFarcaster } from 'react-icons/si';
 import { ActionButton } from '@/components';
-import {
-    FadeInViewFromBottom,
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useVeChainKitConfig } from '@/providers';
@@ -278,7 +274,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
 
     if (showLinkOptions) {
         return (
-            <FadeInViewFromBottom>
+            <>
                 <StickyHeaderContainer>
                     <ModalHeader
                         fontSize={'md'}
@@ -441,13 +437,13 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     </VStack>
                 </ModalBody>
                 <ModalFooter></ModalFooter>
-            </FadeInViewFromBottom>
+            </>
         );
     }
 
     if (unlinkingAccount) {
         return (
-            <FadeInViewFromBottom>
+            <>
                 <StickyHeaderContainer>
                     <ModalHeader
                         fontSize={'md'}
@@ -474,12 +470,12 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     />
                 </ModalBody>
                 <ModalFooter></ModalFooter>
-            </FadeInViewFromBottom>
+            </>
         );
     }
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -493,151 +489,139 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody w={'full'}>
-                    <VStack spacing={3} align="stretch">
-                        <VStack spacing={1} align="stretch" mb={5}>
+            <ModalBody w={'full'}>
+                <VStack spacing={3} align="stretch">
+                    <VStack spacing={1} align="stretch" mb={5}>
+                        <Text fontSize="sm" textAlign="center" opacity={0.5}>
+                            {t(
+                                'These accounts are linked to your embedded wallet and can be used to login to your wallet and access your private key.',
+                            )}
+                        </Text>
+                        {showFullText && (
                             <Text
                                 fontSize="sm"
                                 textAlign="center"
                                 opacity={0.5}
                             >
                                 {t(
-                                    'These accounts are linked to your embedded wallet and can be used to login to your wallet and access your private key.',
+                                    'Adding more linked accounts increases security against loss of access, but also introduces additional potential attack vectors. For enhanced security, we recommend enabling MFA.',
                                 )}
                             </Text>
-                            {showFullText && (
-                                <Text
-                                    fontSize="sm"
-                                    textAlign="center"
-                                    opacity={0.5}
-                                >
-                                    {t(
-                                        'Adding more linked accounts increases security against loss of access, but also introduces additional potential attack vectors. For enhanced security, we recommend enabling MFA.',
-                                    )}
-                                </Text>
-                            )}
-                            <Button
-                                variant="link"
-                                size="sm"
-                                onClick={() => setShowFullText(!showFullText)}
-                                color="blue.500"
-                            >
-                                {t(showFullText ? 'Show Less' : 'Read More')}
-                            </Button>
-                        </VStack>
-
-                        {user?.linkedAccounts
-                            ?.filter((account) => account.type !== 'wallet')
-                            .map((account) => (
-                                <Flex
-                                    key={account.type}
-                                    p={4}
-                                    borderWidth="1px"
-                                    borderRadius="md"
-                                    align="center"
-                                    justify="space-between"
-                                >
-                                    <Flex align="center" gap={3}>
-                                        <Icon
-                                            as={getAccountIcon(account.type)}
-                                        />
-                                        <VStack align="start" spacing={0}>
-                                            <Text fontWeight="500">
-                                                {t(
-                                                    account.type ===
-                                                        'google_oauth'
-                                                        ? 'Google'
-                                                        : account.type ===
-                                                          'email'
-                                                        ? 'Email'
-                                                        : account.type ===
-                                                          'passkey'
-                                                        ? 'Passkey'
-                                                        : account.type ===
-                                                          'twitter_oauth'
-                                                        ? 'Twitter'
-                                                        : account.type ===
-                                                          'phone'
-                                                        ? 'Phone Number'
-                                                        : account.type ===
-                                                          'spotify_oauth'
-                                                        ? 'Spotify'
-                                                        : account.type ===
-                                                          'apple_oauth'
-                                                        ? 'Apple'
-                                                        : account.type ===
-                                                          'instagram_oauth'
-                                                        ? 'Instagram'
-                                                        : account.type ===
-                                                          'tiktok_oauth'
-                                                        ? 'TikTok'
-                                                        : account.type ===
-                                                          'github_oauth'
-                                                        ? 'GitHub'
-                                                        : account.type ===
-                                                          'linkedin_oauth'
-                                                        ? 'LinkedIn'
-                                                        : account.type ===
-                                                          'telegram'
-                                                        ? 'Telegram'
-                                                        : account.type ===
-                                                          'farcaster'
-                                                        ? 'Farcaster'
-                                                        : 'Wallet',
-                                                )}
-                                            </Text>
-                                            <Text fontSize="sm" opacity={0.8}>
-                                                {getAccountDescription(account)}
-                                            </Text>
-                                        </VStack>
-                                    </Flex>
-
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        colorScheme="red"
-                                        isDisabled={!canUnlink()}
-                                        onClick={() => {
-                                            if (account.type === 'passkey') {
-                                                linkPasskey();
-                                            } else {
-                                                setUnlinkingAccount(account);
-                                            }
-                                        }}
-                                    >
-                                        {t('Remove')}
-                                    </Button>
-                                </Flex>
-                            ))}
-
+                        )}
                         <Button
-                            mt={2}
-                            w="full"
-                            variant="vechainKitSecondary"
-                            onClick={() => setShowLinkOptions(true)}
-                            leftIcon={<Icon as={FaPlus} />}
-                            isDisabled={
-                                !canLinkGoogle &&
-                                !canLinkEmail &&
-                                !canLinkTwitter &&
-                                !canLinkSms &&
-                                !canLinkSpotify &&
-                                !canLinkApple &&
-                                !canLinkInstagram &&
-                                !canLinkTiktok &&
-                                !canLinkGithub &&
-                                !canLinkLinkedin &&
-                                !canLinkTelegram &&
-                                !canLinkFarcaster
-                            }
+                            variant="link"
+                            size="sm"
+                            onClick={() => setShowFullText(!showFullText)}
+                            color="blue.500"
                         >
-                            {t('Add Login Method')}
+                            {t(showFullText ? 'Show Less' : 'Read More')}
                         </Button>
                     </VStack>
-                </ModalBody>
-                <ModalFooter></ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+
+                    {user?.linkedAccounts
+                        ?.filter((account) => account.type !== 'wallet')
+                        .map((account) => (
+                            <Flex
+                                key={account.type}
+                                p={4}
+                                borderWidth="1px"
+                                borderRadius="md"
+                                align="center"
+                                justify="space-between"
+                            >
+                                <Flex align="center" gap={3}>
+                                    <Icon as={getAccountIcon(account.type)} />
+                                    <VStack align="start" spacing={0}>
+                                        <Text fontWeight="500">
+                                            {t(
+                                                account.type === 'google_oauth'
+                                                    ? 'Google'
+                                                    : account.type === 'email'
+                                                    ? 'Email'
+                                                    : account.type === 'passkey'
+                                                    ? 'Passkey'
+                                                    : account.type ===
+                                                      'twitter_oauth'
+                                                    ? 'Twitter'
+                                                    : account.type === 'phone'
+                                                    ? 'Phone Number'
+                                                    : account.type ===
+                                                      'spotify_oauth'
+                                                    ? 'Spotify'
+                                                    : account.type ===
+                                                      'apple_oauth'
+                                                    ? 'Apple'
+                                                    : account.type ===
+                                                      'instagram_oauth'
+                                                    ? 'Instagram'
+                                                    : account.type ===
+                                                      'tiktok_oauth'
+                                                    ? 'TikTok'
+                                                    : account.type ===
+                                                      'github_oauth'
+                                                    ? 'GitHub'
+                                                    : account.type ===
+                                                      'linkedin_oauth'
+                                                    ? 'LinkedIn'
+                                                    : account.type ===
+                                                      'telegram'
+                                                    ? 'Telegram'
+                                                    : account.type ===
+                                                      'farcaster'
+                                                    ? 'Farcaster'
+                                                    : 'Wallet',
+                                            )}
+                                        </Text>
+                                        <Text fontSize="sm" opacity={0.8}>
+                                            {getAccountDescription(account)}
+                                        </Text>
+                                    </VStack>
+                                </Flex>
+
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    colorScheme="red"
+                                    isDisabled={!canUnlink()}
+                                    onClick={() => {
+                                        if (account.type === 'passkey') {
+                                            linkPasskey();
+                                        } else {
+                                            setUnlinkingAccount(account);
+                                        }
+                                    }}
+                                >
+                                    {t('Remove')}
+                                </Button>
+                            </Flex>
+                        ))}
+
+                    <Button
+                        mt={2}
+                        w="full"
+                        variant="vechainKitSecondary"
+                        onClick={() => setShowLinkOptions(true)}
+                        leftIcon={<Icon as={FaPlus} />}
+                        isDisabled={
+                            !canLinkGoogle &&
+                            !canLinkEmail &&
+                            !canLinkTwitter &&
+                            !canLinkSms &&
+                            !canLinkSpotify &&
+                            !canLinkApple &&
+                            !canLinkInstagram &&
+                            !canLinkTiktok &&
+                            !canLinkGithub &&
+                            !canLinkLinkedin &&
+                            !canLinkTelegram &&
+                            !canLinkFarcaster
+                        }
+                    >
+                        {t('Add Login Method')}
+                    </Button>
+                </VStack>
+            </ModalBody>
+            <ModalFooter></ModalFooter>
+        </>
     );
 };

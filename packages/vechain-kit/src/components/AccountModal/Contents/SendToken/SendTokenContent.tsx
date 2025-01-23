@@ -15,11 +15,7 @@ import {
     Image,
 } from '@chakra-ui/react';
 import { useState, useCallback } from 'react';
-import {
-    FadeInViewFromBottom,
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components';
+import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent } from './SelectTokenContent';
@@ -180,7 +176,7 @@ export const SendTokenContent = ({
     }
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -193,226 +189,220 @@ export const SendTokenContent = ({
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
-            <FadeInViewFromBottom>
-                <ModalBody>
-                    <VStack spacing={1} align="stretch" position="relative">
-                        <Box
-                            p={6}
-                            borderRadius="xl"
-                            bg={isDark ? '#1a1a1a' : 'gray.50'}
-                            height="auto"
-                            minHeight="100px"
-                        >
-                            <VStack align="stretch" spacing={2}>
-                                <HStack justify="space-between">
-                                    <Input
-                                        placeholder="0"
-                                        value={amount}
-                                        onChange={handleAmountChange}
-                                        variant="unstyled"
-                                        fontSize="4xl"
-                                        fontWeight="bold"
-                                        border="none"
-                                        _focus={{ border: 'none' }}
-                                        isInvalid={!!error}
-                                    />
-                                    {selectedToken ? (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            borderRadius="full"
-                                            px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.800'
-                                                    : 'blackAlpha.800',
-                                                color: isDark
-                                                    ? 'blackAlpha.700'
-                                                    : 'whiteAlpha.700',
-                                            }}
-                                            onClick={() =>
-                                                setIsSelectingToken(true)
-                                            }
-                                            leftIcon={
-                                                <Image
-                                                    src={
-                                                        TOKEN_LOGOS[
-                                                            selectedToken.symbol
-                                                        ]
-                                                    }
-                                                    alt={`${selectedToken.symbol} logo`}
-                                                    boxSize="20px"
-                                                    borderRadius="full"
-                                                    fallback={
-                                                        <Box
-                                                            boxSize="20px"
-                                                            borderRadius="full"
-                                                            bg="whiteAlpha.200"
-                                                            display="flex"
-                                                            alignItems="center"
-                                                            justifyContent="center"
-                                                        >
-                                                            <Text
-                                                                fontSize="8px"
-                                                                fontWeight="bold"
-                                                            >
-                                                                {selectedToken.symbol.slice(
-                                                                    0,
-                                                                    3,
-                                                                )}
-                                                            </Text>
-                                                        </Box>
-                                                    }
-                                                />
-                                            }
-                                        >
-                                            {selectedToken.symbol}
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            borderRadius="full"
-                                            px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
-                                                color: isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700',
-                                            }}
-                                            onClick={() =>
-                                                setIsSelectingToken(true)
-                                            }
-                                        >
-                                            {t('Select token')}
-                                        </Button>
-                                    )}
-                                </HStack>
-                                {selectedToken && (
-                                    <HStack
-                                        spacing={1}
-                                        fontSize="sm"
+
+            <ModalBody>
+                <VStack spacing={1} align="stretch" position="relative">
+                    <Box
+                        p={6}
+                        borderRadius="xl"
+                        bg={isDark ? '#1a1a1a' : 'gray.50'}
+                        height="auto"
+                        minHeight="100px"
+                    >
+                        <VStack align="stretch" spacing={2}>
+                            <HStack justify="space-between">
+                                <Input
+                                    placeholder="0"
+                                    value={amount}
+                                    onChange={handleAmountChange}
+                                    variant="unstyled"
+                                    fontSize="4xl"
+                                    fontWeight="bold"
+                                    border="none"
+                                    _focus={{ border: 'none' }}
+                                    isInvalid={!!error}
+                                />
+                                {selectedToken ? (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        borderRadius="full"
+                                        px={6}
                                         color={
                                             isDark
                                                 ? 'whiteAlpha.700'
                                                 : 'blackAlpha.700'
                                         }
+                                        borderColor={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
+                                        }
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.800'
+                                                : 'blackAlpha.800',
+                                            color: isDark
+                                                ? 'blackAlpha.700'
+                                                : 'whiteAlpha.700',
+                                        }}
+                                        onClick={() =>
+                                            setIsSelectingToken(true)
+                                        }
+                                        leftIcon={
+                                            <Image
+                                                src={
+                                                    TOKEN_LOGOS[
+                                                        selectedToken.symbol
+                                                    ]
+                                                }
+                                                alt={`${selectedToken.symbol} logo`}
+                                                boxSize="20px"
+                                                borderRadius="full"
+                                                fallback={
+                                                    <Box
+                                                        boxSize="20px"
+                                                        borderRadius="full"
+                                                        bg="whiteAlpha.200"
+                                                        display="flex"
+                                                        alignItems="center"
+                                                        justifyContent="center"
+                                                    >
+                                                        <Text
+                                                            fontSize="8px"
+                                                            fontWeight="bold"
+                                                        >
+                                                            {selectedToken.symbol.slice(
+                                                                0,
+                                                                3,
+                                                            )}
+                                                        </Text>
+                                                    </Box>
+                                                }
+                                            />
+                                        }
                                     >
-                                        <Text>{t('Balance')}:</Text>
-                                        <Text
-                                            cursor="pointer"
-                                            _hover={{
-                                                color: isDark
-                                                    ? 'blue.300'
-                                                    : 'blue.500',
-                                                textDecoration: 'underline',
-                                            }}
-                                            onClick={handleSetMaxAmount}
-                                            noOfLines={1}
-                                            overflow="hidden"
-                                            textOverflow="ellipsis"
-                                        >
-                                            {compactFormatter.format(
-                                                selectedToken.numericBalance,
-                                            )}
-                                        </Text>
-                                    </HStack>
+                                        {selectedToken.symbol}
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        borderRadius="full"
+                                        px={6}
+                                        color={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
+                                        }
+                                        borderColor={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
+                                        }
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.300'
+                                                : 'blackAlpha.300',
+                                            color: isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700',
+                                        }}
+                                        onClick={() =>
+                                            setIsSelectingToken(true)
+                                        }
+                                    >
+                                        {t('Select token')}
+                                    </Button>
                                 )}
-                                {error && (
-                                    <Text color="red.500" fontSize="sm">
-                                        {error}
-                                    </Text>
-                                )}
-                            </VStack>
-                        </Box>
-
-                        {/* Arrow Icon */}
-                        <Center
-                            position="relative"
-                            marginTop="-20px"
-                            marginBottom="-20px"
-                            marginX="auto"
-                            bg={isDark ? '#262626' : 'gray.100'}
-                            borderRadius="xl"
-                            w="40px"
-                            h="40px"
-                            zIndex={2}
-                        >
-                            <Icon
-                                as={FiArrowDown}
-                                boxSize={5}
-                                opacity={0.5}
-                                color={isDark ? 'whiteAlpha.700' : 'gray.600'}
-                            />
-                        </Center>
-
-                        {/* Address Input Section */}
-                        <Box
-                            borderRadius="xl"
-                            bg={isDark ? '#1a1a1a' : 'gray.50'}
-                            height="auto"
-                            minHeight="100px"
-                            display="flex"
-                            alignItems="center"
-                        >
-                            <VStack
-                                align="stretch"
-                                spacing={2}
-                                p={6}
-                                width="100%"
-                            >
-                                <InputGroup size="lg">
-                                    <Input
-                                        placeholder={t(
-                                            'Type the receiver address or domain',
+                            </HStack>
+                            {selectedToken && (
+                                <HStack
+                                    spacing={1}
+                                    fontSize="sm"
+                                    color={
+                                        isDark
+                                            ? 'whiteAlpha.700'
+                                            : 'blackAlpha.700'
+                                    }
+                                >
+                                    <Text>{t('Balance')}:</Text>
+                                    <Text
+                                        cursor="pointer"
+                                        _hover={{
+                                            color: isDark
+                                                ? 'blue.300'
+                                                : 'blue.500',
+                                            textDecoration: 'underline',
+                                        }}
+                                        onClick={handleSetMaxAmount}
+                                        noOfLines={1}
+                                        overflow="hidden"
+                                        textOverflow="ellipsis"
+                                    >
+                                        {compactFormatter.format(
+                                            selectedToken.numericBalance,
                                         )}
-                                        _placeholder={{
-                                            fontSize: 'md',
-                                            fontWeight: 'normal',
-                                        }}
-                                        value={toAddressOrDomain}
-                                        onChange={(e) => {
-                                            setToAddress(e.target.value);
-                                            setAddressError(null);
-                                        }}
-                                        fontSize="lg"
-                                        fontWeight="bold"
-                                        variant="unstyled"
-                                        isInvalid={!!addressError}
-                                    />
-                                </InputGroup>
-                                {addressError && (
-                                    <Text color="red.500" fontSize="sm">
-                                        {addressError}
                                     </Text>
-                                )}
-                            </VStack>
-                        </Box>
-                    </VStack>
-                </ModalBody>
-            </FadeInViewFromBottom>
+                                </HStack>
+                            )}
+                            {error && (
+                                <Text color="red.500" fontSize="sm">
+                                    {error}
+                                </Text>
+                            )}
+                        </VStack>
+                    </Box>
+
+                    {/* Arrow Icon */}
+                    <Center
+                        position="relative"
+                        marginTop="-20px"
+                        marginBottom="-20px"
+                        marginX="auto"
+                        bg={isDark ? '#262626' : 'gray.100'}
+                        borderRadius="xl"
+                        w="40px"
+                        h="40px"
+                        zIndex={2}
+                    >
+                        <Icon
+                            as={FiArrowDown}
+                            boxSize={5}
+                            opacity={0.5}
+                            color={isDark ? 'whiteAlpha.700' : 'gray.600'}
+                        />
+                    </Center>
+
+                    {/* Address Input Section */}
+                    <Box
+                        borderRadius="xl"
+                        bg={isDark ? '#1a1a1a' : 'gray.50'}
+                        height="auto"
+                        minHeight="100px"
+                        display="flex"
+                        alignItems="center"
+                    >
+                        <VStack align="stretch" spacing={2} p={6} width="100%">
+                            <InputGroup size="lg">
+                                <Input
+                                    placeholder={t(
+                                        'Type the receiver address or domain',
+                                    )}
+                                    _placeholder={{
+                                        fontSize: 'md',
+                                        fontWeight: 'normal',
+                                    }}
+                                    value={toAddressOrDomain}
+                                    onChange={(e) => {
+                                        setToAddress(e.target.value);
+                                        setAddressError(null);
+                                    }}
+                                    fontSize="lg"
+                                    fontWeight="bold"
+                                    variant="unstyled"
+                                    isInvalid={!!addressError}
+                                />
+                            </InputGroup>
+                            {addressError && (
+                                <Text color="red.500" fontSize="sm">
+                                    {addressError}
+                                </Text>
+                            )}
+                        </VStack>
+                    </Box>
+                </VStack>
+            </ModalBody>
 
             <ModalFooter>
                 <Button
@@ -430,6 +420,6 @@ export const SendTokenContent = ({
                     {selectedToken ? t('Send') : t('Select Token')}
                 </Button>
             </ModalFooter>
-        </FadeInViewFromBottom>
+        </>
     );
 };

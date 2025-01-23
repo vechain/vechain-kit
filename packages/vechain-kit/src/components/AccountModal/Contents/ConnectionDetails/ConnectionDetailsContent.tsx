@@ -11,11 +11,7 @@ import {
     Image,
     Divider,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    FadeInViewFromBottom,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import {
     useCrossAppConnectionCache,
@@ -57,7 +53,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
             : t('Wallet');
 
     return (
-        <FadeInViewFromBottom>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -76,212 +72,201 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <FadeInViewFromBottom>
-                <ModalBody w={'full'}>
-                    {connection.isConnectedWithCrossApp && connectionCache && (
-                        <CrossAppConnectionCard
-                            connectionCache={connectionCache}
-                        />
-                    )}
+            <ModalBody w={'full'}>
+                {connection.isConnectedWithCrossApp && connectionCache && (
+                    <CrossAppConnectionCard connectionCache={connectionCache} />
+                )}
 
-                    {connection.isConnectedWithSocialLogin && (
-                        <PrivyConnectionCard />
-                    )}
+                {connection.isConnectedWithSocialLogin && (
+                    <PrivyConnectionCard />
+                )}
 
-                    {connection.isConnectedWithDappKit && (
-                        <VStack align="stretch" textAlign={'center'} mt={5}>
-                            <DappKitConnectionCard />
-
-                            <Text
-                                fontSize={'sm'}
-                                opacity={0.5}
-                                textAlign={'center'}
-                            >
-                                {t(
-                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.',
-                                    {
-                                        element: source,
-                                    },
-                                )}
-                            </Text>
-                        </VStack>
-                    )}
-
+                {connection.isConnectedWithDappKit && (
                     <VStack align="stretch" textAlign={'center'} mt={5}>
-                        {connection.isConnectedWithCrossApp && (
-                            <Text
-                                fontSize={'sm'}
-                                opacity={0.5}
-                                textAlign={'center'}
-                            >
-                                {t(
-                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.',
-                                    {
-                                        element:
-                                            connectionCache?.ecosystemApp?.name,
-                                    },
-                                )}
-                            </Text>
-                        )}
+                        <DappKitConnectionCard />
 
-                        {connection.isConnectedWithSocialLogin && (
-                            <FadeInViewFromBottom>
-                                {connection.isConnectedWithSocialLogin && (
-                                    <>
-                                        <Text fontSize={'sm'} opacity={0.5}>
-                                            {t(
-                                                'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
-                                            )}
-                                        </Text>
-
-                                        <Text fontSize={'sm'} opacity={0.5}>
-                                            {t(
-                                                'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
-                                            )}
-                                            <Link
-                                                href="https://www.veworld.net/"
-                                                isExternal
-                                                color="gray.500"
-                                                fontSize={'14px'}
-                                                textDecoration={'underline'}
-                                            >
-                                                {' '}
-                                                {t('VeWorld Wallet')}
-                                                <Icon
-                                                    ml={1}
-                                                    as={IoOpenOutline}
-                                                />
-                                            </Link>
-                                            .
-                                        </Text>
-                                    </>
-                                )}
-                            </FadeInViewFromBottom>
-                        )}
-                    </VStack>
-
-                    {connection.isConnectedWithPrivy && (
                         <Text
                             fontSize={'sm'}
                             opacity={0.5}
-                            mt={5}
                             textAlign={'center'}
                         >
                             {t(
-                                'Your smart account is your gateway to blockchain interactions.',
+                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.',
+                                {
+                                    element: source,
+                                },
+                            )}
+                        </Text>
+                    </VStack>
+                )}
+
+                <VStack align="stretch" textAlign={'center'} mt={5}>
+                    {connection.isConnectedWithCrossApp && (
+                        <Text
+                            fontSize={'sm'}
+                            opacity={0.5}
+                            textAlign={'center'}
+                        >
+                            {t(
+                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.',
+                                {
+                                    element:
+                                        connectionCache?.ecosystemApp?.name,
+                                },
                             )}
                         </Text>
                     )}
 
-                    <VStack align="stretch" textAlign={'center'} mt={5}>
-                        {connection.isConnectedWithPrivy && (
-                            <VStack mt={2} opacity={0.6}>
-                                <HStack
-                                    textAlign={'center'}
-                                    alignItems={'center'}
-                                    justify={'center'}
-                                    w={'full'}
+                    {connection.isConnectedWithSocialLogin && (
+                        <>
+                            <Text fontSize={'sm'} opacity={0.5}>
+                                {t(
+                                    'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
+                                )}
+                            </Text>
+
+                            <Text fontSize={'sm'} opacity={0.5}>
+                                {t(
+                                    'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
+                                )}
+                                <Link
+                                    href="https://www.veworld.net/"
+                                    isExternal
+                                    color="gray.500"
+                                    fontSize={'14px'}
+                                    textDecoration={'underline'}
                                 >
-                                    <Text fontSize={'xs'} fontWeight={'800'}>
-                                        {t('Wallet secured by')}
-                                    </Text>
-                                </HStack>
-                                <HStack justify={'center'}>
-                                    <PrivyLogo isDark={isDark} w={'50px'} />
-                                    <Icon as={PiLineVertical} ml={2} />
+                                    {' '}
+                                    {t('VeWorld Wallet')}
+                                    <Icon ml={1} as={IoOpenOutline} />
+                                </Link>
+                                .
+                            </Text>
+                        </>
+                    )}
+                </VStack>
 
-                                    {connection.isConnectedWithVeChain ? (
-                                        <VechainLogoHorizontal
-                                            isDark={isDark}
-                                            w={'69px'}
-                                        />
-                                    ) : (
-                                        connection.isConnectedWithCrossApp &&
-                                        connectionCache && (
-                                            <Image
-                                                src={
-                                                    connectionCache.ecosystemApp
-                                                        .logoUrl
-                                                }
-                                                alt={
-                                                    connectionCache.ecosystemApp
-                                                        .name
-                                                }
-                                                maxW="40px"
-                                                borderRadius="md"
-                                            />
-                                        )
-                                    )}
+                {connection.isConnectedWithPrivy && (
+                    <Text
+                        fontSize={'sm'}
+                        opacity={0.5}
+                        mt={5}
+                        textAlign={'center'}
+                    >
+                        {t(
+                            'Your smart account is your gateway to blockchain interactions.',
+                        )}
+                    </Text>
+                )}
 
-                                    {connection.isConnectedWithSocialLogin && (
+                <VStack align="stretch" textAlign={'center'} mt={5}>
+                    {connection.isConnectedWithPrivy && (
+                        <VStack mt={2} opacity={0.6}>
+                            <HStack
+                                textAlign={'center'}
+                                alignItems={'center'}
+                                justify={'center'}
+                                w={'full'}
+                            >
+                                <Text fontSize={'xs'} fontWeight={'800'}>
+                                    {t('Wallet secured by')}
+                                </Text>
+                            </HStack>
+                            <HStack justify={'center'}>
+                                <PrivyLogo isDark={isDark} w={'50px'} />
+                                <Icon as={PiLineVertical} ml={2} />
+
+                                {connection.isConnectedWithVeChain ? (
+                                    <VechainLogoHorizontal
+                                        isDark={isDark}
+                                        w={'69px'}
+                                    />
+                                ) : (
+                                    connection.isConnectedWithCrossApp &&
+                                    connectionCache && (
                                         <Image
-                                            src={privy?.appearance.logo}
-                                            alt={privy?.appearance.logo}
+                                            src={
+                                                connectionCache.ecosystemApp
+                                                    .logoUrl
+                                            }
+                                            alt={
+                                                connectionCache.ecosystemApp
+                                                    .name
+                                            }
                                             maxW="40px"
                                             borderRadius="md"
                                         />
-                                    )}
-                                </HStack>
-                            </VStack>
-                        )}
-                    </VStack>
+                                    )
+                                )}
 
-                    {(connection.isConnectedWithSocialLogin ||
-                        connection.isConnectedWithCrossApp) && (
-                        <VStack spacing={4} mt={5}>
-                            <Divider />
-                            <VStack
-                                spacing={4}
-                                p={4}
-                                borderRadius="lg"
-                                bg={isDark ? 'whiteAlpha.100' : 'blackAlpha.50'}
-                            >
-                                <Text
-                                    fontSize="xs"
-                                    fontWeight="normal"
-                                    textAlign={'center'}
-                                >
-                                    {t(
-                                        'To use this identity on other applications always choose:',
-                                    )}
-                                </Text>
-
-                                <HStack
-                                    p={3}
-                                    borderRadius="lg"
-                                    bg={isDark ? 'whiteAlpha.200' : 'white'}
-                                    shadow="sm"
-                                    spacing={4}
-                                >
+                                {connection.isConnectedWithSocialLogin && (
                                     <Image
-                                        src={
-                                            connection.isConnectedWithCrossApp
-                                                ? connectionCache?.ecosystemApp
-                                                      ?.logoUrl
-                                                : privy?.appearance.logo
-                                        }
-                                        alt="App Logo"
-                                        boxSize="24px"
+                                        src={privy?.appearance.logo}
+                                        alt={privy?.appearance.logo}
+                                        maxW="40px"
                                         borderRadius="md"
                                     />
-                                    <Text fontSize="sm" fontWeight="500">
-                                        {t('Login with {{appName}}', {
-                                            appName:
-                                                connection.isConnectedWithCrossApp
-                                                    ? connectionCache
-                                                          ?.ecosystemApp?.name
-                                                    : Object.values(
-                                                          appInfo ?? {},
-                                                      )[0]?.name ?? '',
-                                        })}
-                                    </Text>
-                                </HStack>
-                            </VStack>
+                                )}
+                            </HStack>
                         </VStack>
                     )}
-                </ModalBody>
-                <ModalFooter></ModalFooter>
-            </FadeInViewFromBottom>
-        </FadeInViewFromBottom>
+                </VStack>
+
+                {(connection.isConnectedWithSocialLogin ||
+                    connection.isConnectedWithCrossApp) && (
+                    <VStack spacing={4} mt={5}>
+                        <Divider />
+                        <VStack
+                            spacing={4}
+                            p={4}
+                            borderRadius="lg"
+                            bg={isDark ? 'whiteAlpha.100' : 'blackAlpha.50'}
+                        >
+                            <Text
+                                fontSize="xs"
+                                fontWeight="normal"
+                                textAlign={'center'}
+                            >
+                                {t(
+                                    'To use this identity on other applications always choose:',
+                                )}
+                            </Text>
+
+                            <HStack
+                                p={3}
+                                borderRadius="lg"
+                                bg={isDark ? 'whiteAlpha.200' : 'white'}
+                                shadow="sm"
+                                spacing={4}
+                            >
+                                <Image
+                                    src={
+                                        connection.isConnectedWithCrossApp
+                                            ? connectionCache?.ecosystemApp
+                                                  ?.logoUrl
+                                            : privy?.appearance.logo
+                                    }
+                                    alt="App Logo"
+                                    boxSize="24px"
+                                    borderRadius="md"
+                                />
+                                <Text fontSize="sm" fontWeight="500">
+                                    {t('Login with {{appName}}', {
+                                        appName:
+                                            connection.isConnectedWithCrossApp
+                                                ? connectionCache?.ecosystemApp
+                                                      ?.name
+                                                : Object.values(
+                                                      appInfo ?? {},
+                                                  )[0]?.name ?? '',
+                                    })}
+                                </Text>
+                            </HStack>
+                        </VStack>
+                    </VStack>
+                )}
+            </ModalBody>
+            <ModalFooter></ModalFooter>
+        </>
     );
 };
