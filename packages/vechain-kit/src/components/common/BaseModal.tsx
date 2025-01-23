@@ -54,7 +54,7 @@ export const BaseModal = ({
     return (
         <VechainKitThemeProvider darkMode={darkMode}>
             <Modal
-                motionPreset={isDesktop ? 'none' : motionPreset}
+                motionPreset={motionPreset}
                 isOpen={isOpen}
                 onClose={onClose}
                 isCentered={isCentered}
