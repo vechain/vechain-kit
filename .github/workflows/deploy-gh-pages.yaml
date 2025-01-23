@@ -47,6 +47,12 @@ jobs:
                   path: './examples/sample-next-vechain-app/dist'
 
     deploy:
+        env:
+            BASE_PATH: ''
+            NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
+            NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
+            NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+            NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
         needs: build
         permissions:
             pages: write
