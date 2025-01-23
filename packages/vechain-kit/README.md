@@ -7,11 +7,11 @@
 
 # Features
 
-- 🔌 **Wallet Connection**: VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, Social Login (Privy)
-- 🪝 **React Hooks**: Read and write to the VeChainThor blockchain
-- 🧩 **Components**: Pre-built components for wallet operations
-- 🌍 **Multilanguage**: Built-in i18n support
-- 💰 **Token Operations**: Send tokens, check balances, handle VET domains, and more
+-   🔌 **Wallet Connection**: VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, Social Login (Privy)
+-   🪝 **React Hooks**: Read and write to the VeChainThor blockchain
+-   🧩 **Components**: Pre-built components for wallet operations
+-   🌍 **Multilanguage**: Built-in i18n support
+-   💰 **Token Operations**: Send tokens, check balances, handle VET domains, and more
 
 > **Note**: Currently supports React and Next.js only
 
@@ -24,7 +24,7 @@ Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main
 # Installation
 
 ```bash
-yarn add @vechain/vechain-kit
+yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp-kit-react@"1.4.1" @vechain/vechain-kit
 ```
 
 # Quick Start
@@ -46,11 +46,15 @@ export default function App({ Component, pageProps }: AppProps) {
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
                 walletConnectOptions: {
-                    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
+                    projectId:
+                        process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
                     metadata: {
                         name: 'Your App',
                         description: 'Your app description',
-                        url: typeof window !== 'undefined' ? window.location.origin : '',
+                        url:
+                            typeof window !== 'undefined'
+                                ? window.location.origin
+                                : '',
                         icons: [
                             typeof window !== 'undefined'
                                 ? `${window.location.origin}/images/logo/my-dapp.png`
@@ -61,12 +65,13 @@ export default function App({ Component, pageProps }: AppProps) {
             }}
             loginModalUI={{
                 logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
-                description: 'Choose between social login through VeChain or by connecting your wallet.',
+                description:
+                    'Choose between social login through VeChain or by connecting your wallet.',
             }}
             darkMode={isDarkMode}
             language="en"
             network={{
-                type: 'main'
+                type: 'main',
             }}
         >
             {children}
@@ -110,7 +115,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ## Next.js Integration
 
-To use the library with Next.js,  you will need to dynamically import the `VeChainKit` provider in your `_app.tsx` file.
+To use the library with Next.js, you will need to dynamically import the `VeChainKit` provider in your `_app.tsx` file.
 
 ```typescript
 import dynamic from 'next/dynamic';
@@ -144,7 +149,7 @@ export default function App({ Component, pageProps }: AppProps) {
 ```typescript
 import { WalletButton } from '@vechain/vechain-kit';
 
-<WalletButton />
+<WalletButton />;
 ```
 
 ### Custom Connection Button
@@ -154,7 +159,7 @@ import { useConnectModal } from '@vechain/vechain-kit';
 
 const { open } = useConnectModal();
 
-<Button onClick={open}>Connect Wallet</Button>
+<Button onClick={open}>Connect Wallet</Button>;
 ```
 
 ## Wallet Information
@@ -178,10 +183,14 @@ const { sendTransaction } = useSendTransaction();
 And you can mix it with the provided components to create a seamless experience for your users.
 
 ```typescript
-import { TransactionModal, useSendTransaction, useTransactionModal } from '@vechain/vechain-kit';
+import {
+    TransactionModal,
+    useSendTransaction,
+    useTransactionModal,
+} from '@vechain/vechain-kit';
 
 const MyComponent = () => {
-const {
+    const {
         sendTransaction,
         status,
         txReceipt,
@@ -199,7 +208,7 @@ const {
         isOpen: isTransactionModalOpen,
     } = useTransactionModal();
 
-     // A dummy tx sending 0 b3tr tokens
+    // A dummy tx sending 0 b3tr tokens
     const clauses = useMemo(() => {
         if (!connectedWallet.address) return [];
 
@@ -218,38 +227,24 @@ const {
             abi: abi.getFunction('transfer'),
         });
 
-        clausesArray.push({
-            to: b3trMainnetAddress,
-            value: '0x0',
-            data: abi.encodeFunctionData('transfer', [
-                connectedWallet.address,
-                '1', // 1 B3TR (in wei)
-            ]),
-            comment: `This is a second close demonstrating multiclause with privy-corssapp. Transfer ${0.000001} B3TR to ${humanAddress(
-                connectedWallet.address,
-            )}`,
-            abi: abi.getFunction('transfer'),
-        });
-
         return clausesArray;
     }, [connectedWallet.address]);
 
-     const handleTransactionWithModal = useCallback(async () => {
+    const handleTransactionWithModal = useCallback(async () => {
         openTransactionModal();
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-return (
-     <Button
-                            onClick={handleTransactionWithModal}
-                            isLoading={isTransactionPending}
-                            isDisabled={isTransactionPending}
-                        >
-                            Tx with modal
-                        </Button>
-
-                );
-}
+    return (
+        <Button
+            onClick={handleTransactionWithModal}
+            isLoading={isTransactionPending}
+            isDisabled={isTransactionPending}
+        >
+            Tx with modal
+        </Button>
+    );
+};
 ```
 
 You can also use `useSignMessage` and `useSignTypedData` hooks to sign messages and typed data.
