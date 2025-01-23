@@ -212,14 +212,15 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                     )
                                 )}
 
-                                {connection.isConnectedWithSocialLogin && (
-                                    <Image
-                                        src={privy?.appearance.logo}
-                                        alt={privy?.appearance.logo}
-                                        maxW="40px"
-                                        borderRadius="md"
-                                    />
-                                )}
+                                {connection.isConnectedWithSocialLogin &&
+                                    !connection.isConnectedWithVeChain && (
+                                        <Image
+                                            src={privy?.appearance.logo}
+                                            alt={privy?.appearance.logo}
+                                            maxW="40px"
+                                            borderRadius="md"
+                                        />
+                                    )}
                             </HStack>
                         </VStack>
                     )}

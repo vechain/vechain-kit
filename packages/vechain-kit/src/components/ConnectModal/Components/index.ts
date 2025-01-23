@@ -6,3 +6,4 @@ export * from './PrivyButton';
 export * from './SocialLoginButtons';
 export * from './PasskeyLoginButton';
 export * from './DappKitButton';
+export * from './VeChainWithPrivyLoginButton';

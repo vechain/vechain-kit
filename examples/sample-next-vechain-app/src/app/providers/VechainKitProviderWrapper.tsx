@@ -31,22 +31,21 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            // privy={{
-            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-            //     loginMethods: ['google', 'twitter', 'sms', 'email'],
-            //     appearance: {
-            //         walletList: ['metamask', 'rainbow'],
-            //         accentColor: '#696FFD',
-            //         loginMessage: 'Select a social media profile',
-            //         logo: appLogo,
-            //     },
-            //     embeddedWallets: {
-            //         createOnLogin: 'all-users',
-            //     },
-
-            //     allowPasskeyLinking: true,
-            // }}
+            privy={{
+                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+                loginMethods: ['google', 'twitter', 'sms', 'email'],
+                appearance: {
+                    walletList: ['metamask', 'rainbow'],
+                    accentColor: '#696FFD',
+                    loginMessage: 'Select a social media profile',
+                    logo: appLogo,
+                },
+                embeddedWallets: {
+                    createOnLogin: 'all-users',
+                },
+                allowPasskeyLinking: true,
+            }}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: false,
@@ -72,27 +71,17 @@ export function VechainKitProviderWrapper({ children }: Props) {
             }}
             loginModalUI={{
                 // preferredLoginMethods: ['google'],
-                variant: 'vechain-and-wallet',
+                variant: 'vechain',
                 logo: appLogo,
                 description:
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}
-            // Uncomment this to remove the ecosystem button
-            // privyEcosystemAppIDS={[]}
+            // Leave this empty to remove the ecosystem button
+            privyEcosystemAppIDS={[]}
             darkMode={isDarkMode}
             language={'en'}
             network={{
                 type: 'main',
-                // connectionCertificate: {
-                //     message: {
-                //         purpose: 'identification',
-                //         payload: {
-                //             type: 'text',
-                //             content:
-                //                 'https://node.vechain.energy/connection-certificate',
-                //         },
-                //     },
-                // },
             }}
         >
             {children}

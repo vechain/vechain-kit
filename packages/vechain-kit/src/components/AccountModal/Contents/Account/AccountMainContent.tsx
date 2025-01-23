@@ -12,7 +12,6 @@ import {
 import {
     StickyHeaderContainer,
     VersionFooter,
-    ModalFAQButton,
     ScrollToTopWrapper,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -47,7 +46,7 @@ export const AccountMainContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { disconnect, connection } = useWallet();
+    const { disconnect, connection, account } = useWallet();
     const { getNotifications } = useNotifications();
     const notifications = getNotifications();
     const hasUnreadNotifications = notifications.some((n) => !n.isRead);
@@ -60,7 +59,6 @@ export const AccountMainContent = ({
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
                     w={'full'}
                     fontSize={'md'}
@@ -78,9 +76,11 @@ export const AccountMainContent = ({
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} overflow={'hidden'}>
-                    <FeatureAnnouncementCard
-                        setCurrentContent={setCurrentContent}
-                    />
+                    {!account?.domain && (
+                        <FeatureAnnouncementCard
+                            setCurrentContent={setCurrentContent}
+                        />
+                    )}
 
                     <HStack justify={'space-between'}>
                         <IconButton
@@ -131,10 +131,10 @@ export const AccountMainContent = ({
                         </Box>
                     </HStack>
 
-                    <BalanceSection mt={10} />
+                    <BalanceSection mt={14} />
 
                     <QuickActionsSection
-                        mt={10}
+                        mt={14}
                         setCurrentContent={setCurrentContent}
                     />
                     <AssetsSection

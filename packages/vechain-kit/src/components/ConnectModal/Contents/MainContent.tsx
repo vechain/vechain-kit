@@ -26,10 +26,12 @@ import { DappKitButton } from '../Components/DappKitButton';
 import { EcosystemButton } from '../Components/EcosystemButton';
 import { PrivyButton } from '../Components/PrivyButton';
 import { useTranslation } from 'react-i18next';
+import { VeChainWithPrivyLoginButton } from '../Components';
 
 export type ConnectModalVariant =
     | 'full'
     | 'vechain-and-wallet'
+    | 'vechain'
     | 'vechain-wallet-ecosystem';
 
 type Props = {
@@ -153,7 +155,19 @@ export const MainContent = ({
                             />
                         )}
 
-                        <VeChainLoginButton isDark={isDark} gridColumn={4} />
+                        {variant === 'vechain' ? (
+                            // This exists because we want to use same button but connect
+                            // with privy-auth instead of cross-app, used only by vechain.
+                            <VeChainWithPrivyLoginButton
+                                isDark={isDark}
+                                gridColumn={4}
+                            />
+                        ) : (
+                            <VeChainLoginButton
+                                isDark={isDark}
+                                gridColumn={4}
+                            />
+                        )}
 
                         {variant === 'full' && privySocialLoginEnabled && (
                             <PasskeyLoginButton isDark={isDark} />

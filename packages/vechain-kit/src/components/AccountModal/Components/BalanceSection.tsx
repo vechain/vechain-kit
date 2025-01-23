@@ -45,7 +45,7 @@ export const BalanceSection = ({ mb, mt }: { mb?: number; mt?: number }) => {
 
     return (
         <VStack w="full" spacing={2} mt={mt} mb={mb} onClick={handleRefresh}>
-            <Heading textAlign="center" size={'2xl'} fontWeight={'500'}>
+            <Heading textAlign="center" size={'3xl'} fontWeight={'500'}>
                 ${compactFormatter.format(totalBalance)}
             </Heading>
             <HStack justify="center" px={2} mt={2}>

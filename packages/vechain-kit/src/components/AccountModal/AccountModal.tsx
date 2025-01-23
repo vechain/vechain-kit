@@ -20,7 +20,7 @@ import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
-import { EcosystemContent } from './Contents/Ecosystem/EcosystemContent';
+import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 
@@ -133,7 +133,9 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 );
             case 'ecosystem':
                 return (
-                    <EcosystemContent setCurrentContent={setCurrentContent} />
+                    <ExploreEcosystemContent
+                        setCurrentContent={setCurrentContent}
+                    />
                 );
         }
     };

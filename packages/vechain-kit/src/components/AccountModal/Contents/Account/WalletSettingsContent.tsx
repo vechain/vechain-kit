@@ -28,6 +28,7 @@ import { VscDebugDisconnect } from 'react-icons/vsc';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { useEffect, useRef } from 'react';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { BsQuestionCircle } from 'react-icons/bs';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -173,6 +174,22 @@ export const WalletSettingsContent = ({
                             rightIcon={MdOutlineNavigateNext}
                         />
                     )}
+
+                    <ActionButton
+                        title={t('FAQs')}
+                        description={t(
+                            'Still have some doubts? Check out our FAQs and learn more.',
+                            {
+                                appName: connection.isConnectedWithCrossApp
+                                    ? connectionCache?.ecosystemApp?.name
+                                    : Object.values(appInfo ?? {})[0]?.name ??
+                                      '',
+                            },
+                        )}
+                        onClick={() => setCurrentContent('faq')}
+                        leftIcon={BsQuestionCircle}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>

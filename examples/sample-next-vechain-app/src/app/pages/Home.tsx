@@ -1,142 +1,29 @@
 'use client';
 
-import { type ReactElement, useMemo, useCallback } from 'react';
-import {
-    Button,
-    Container,
-    Heading,
-    HStack,
-    Text,
-    useColorMode,
-    VStack,
-    Box,
-    Spinner,
-    Select,
-    Image,
-} from '@chakra-ui/react';
-import {
-    useWallet,
-    useSendTransaction,
-    useTransactionModal,
-    useTransactionToast,
-    useAccountModal,
-    useGetB3trBalance,
-    useCurrentAllocationsRoundId,
-    useSelectedGmNft,
-    useParticipatedInGovernance,
-    useIsPerson,
-    WalletButton,
-    TransactionToast,
-    TransactionModal,
-} from '@vechain/vechain-kit';
-import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
-import { humanAddress } from '@vechain/vechain-kit/utils';
-import { b3trMainnetAddress } from '../constants';
+import { type ReactElement } from 'react';
+import { Container, Spinner, VStack } from '@chakra-ui/react';
+import { useWallet, WalletButton } from '@vechain/vechain-kit';
+import { AccountInfo } from '@/app/components/features/AccountInfo';
+import { ConnectionInfo } from '@/app/components/features/ConnectionInfo';
+import { DaoInfo } from '@/app/components/features/DaoInfo';
+import { UIControls } from '@/app/components/features/UIControls';
+import { LanguageSelector } from '@/app/components/features/LanguageSelector';
+import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/SigningExample';
-import { useTranslation } from 'react-i18next';
-import { languageNames, supportedLanguages } from '../../../i18n';
+import { WelcomeSection } from '../components/features/WelcomeSection';
 
 export default function Home(): ReactElement {
-    const { t, i18n } = useTranslation();
-    const { toggleColorMode, colorMode } = useColorMode();
-
-    const { connection, account, connectedWallet, smartAccount } = useWallet();
-
-    const { data: currentAllocationsRoundId } = useCurrentAllocationsRoundId();
-    const { gmId } = useSelectedGmNft(account?.address ?? '');
-    const { data: participatedInGovernance } = useParticipatedInGovernance(
-        account?.address ?? '',
-    );
-    const { data: isValidPassport } = useIsPerson(account?.address);
-
-    const { open: openAccountModal } = useAccountModal();
-
-    const { data: b3trBalance, isLoading: b3trBalanceLoading } =
-        useGetB3trBalance(smartAccount.address ?? undefined);
-
-    const {
-        sendTransaction,
-        status,
-        txReceipt,
-        resetStatus,
-        isTransactionPending,
-        error,
-        progress,
-    } = useSendTransaction({
-        signerAccountAddress: account?.address ?? '',
-    });
-
-    const {
-        open: openTransactionModal,
-        close: closeTransactionModal,
-        isOpen: isTransactionModalOpen,
-    } = useTransactionModal();
-    const {
-        open: openTransactionToast,
-        close: closeTransactionToast,
-        isOpen: isTransactionToastOpen,
-    } = useTransactionToast();
-
-    // A dummy tx sending 0 b3tr tokens
-    const clauses = useMemo(() => {
-        if (!connectedWallet?.address) return [];
-
-        const B3TRInterface = IB3TR__factory.createInterface();
-
-        const clausesArray: any[] = [];
-        clausesArray.push({
-            to: b3trMainnetAddress,
-            value: '0x0',
-            data: B3TRInterface.encodeFunctionData('transfer', [
-                connectedWallet?.address,
-                '0', // 1 B3TR (in wei)
-            ]),
-            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                connectedWallet?.address,
-            )}`,
-            abi: B3TRInterface.getFunction('transfer'),
-        });
-
-        return clausesArray;
-    }, [connectedWallet?.address]);
-
-    const handleTransactionWithToast = useCallback(async () => {
-        openTransactionToast();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses]);
-
-    const handleTransactionWithModal = useCallback(async () => {
-        openTransactionModal();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses]);
+    const { account, connection } = useWallet();
 
     if (!account) {
+        return <WelcomeSection />;
+    }
+
+    if (connection.isLoading) {
         return (
-            <Container justifyContent={'center'}>
-                <VStack justify={'center'} align={'center'} spacing={2}>
-                    <Image
-                        src={
-                            'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png'
-                        }
-                        maxW={'180px'}
-                        maxH={'90px'}
-                        // m={8}
-                        alt="logo"
-                    />
-                    <Text
-                        // color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        fontSize={'sm'}
-                        fontWeight={'200'}
-                        textAlign={'center'}
-                        maxW={'300px'}
-                    >
-                        {t(
-                            "Hi there! I'm VeChain Kit, a new way to access applications on VeChain. I'm here to help you connect to the blockchain and interact with smart contracts.",
-                        )}
-                    </Text>
-                    <WalletButton buttonStyle={{ mt: 10 }} />
-                </VStack>
-            </Container>
+            <VStack w="full" h="full" justify="center" align="center">
+                <Spinner />
+            </VStack>
         );
     }
 
@@ -152,152 +39,14 @@ export default function Home(): ReactElement {
                     mobileVariant="iconDomainAndAssets"
                     desktopVariant="iconDomainAndAssets"
                 />
-                {smartAccount.address && (
-                    <Box>
-                        <Heading size={'md'}>
-                            <b>Smart Account</b>
-                        </Heading>
-                        <Text>Smart Account: {smartAccount.address}</Text>
-                        <Text>
-                            Deployed: {smartAccount.isDeployed.toString()}
-                        </Text>
-                        {b3trBalanceLoading ? (
-                            <Spinner />
-                        ) : (
-                            <Text>B3TR Balance: {b3trBalance?.formatted}</Text>
-                        )}
-                    </Box>
-                )}
-
-                <Box>
-                    <Heading size={'md'}>
-                        <b>Wallet</b>
-                    </Heading>
-                    <Text>Address: {connectedWallet?.address}</Text>
-                </Box>
-
-                <Box>
-                    <Heading size={'md'}>
-                        <b>Connection</b>
-                    </Heading>
-                    <Text>Type: {connection.source.type}</Text>
-                    <Text>Network: {connection.network}</Text>
-                </Box>
-
-                <Box>
-                    <Heading size={'md'}>VeBetterDAO</Heading>
-                    <Text>
-                        Current Allocations Round ID:{' '}
-                        {currentAllocationsRoundId}
-                    </Text>
-                    <Text>Selected GM NFT: {gmId === '0' ? 'None' : gmId}</Text>
-                    <Text>
-                        Participated in Governance:{' '}
-                        {participatedInGovernance?.toString()}
-                    </Text>
-                    <Text>
-                        Is Passport Valid: {isValidPassport?.toString()}
-                    </Text>
-                </Box>
-
-                <Box>
-                    <Heading size={'md'}>
-                        <b>UI</b>
-                    </Heading>
-                    <HStack mt={4} spacing={4}>
-                        <Button
-                            colorScheme="primary"
-                            onClick={() => {
-                                toggleColorMode();
-                            }}
-                        >
-                            {colorMode === 'dark' ? 'Light mode' : 'Dark mode'}
-                        </Button>
-                        <Button onClick={openAccountModal}>
-                            Account Modal
-                        </Button>
-                    </HStack>
-                </Box>
-
-                <Box>
-                    <Heading size={'md'}>
-                        <b>Multilanguage</b> (currently disabled)
-                    </Heading>
-                    <VStack mt={4} spacing={4} alignItems="flex-start">
-                        <Text>
-                            {t('Demo text to be translated')} - (language should
-                            change also in modal and toast)
-                        </Text>
-
-                        <Select
-                            borderRadius={'md'}
-                            size="sm"
-                            width="auto"
-                            value={i18n.language}
-                            onChange={(e) =>
-                                i18n.changeLanguage(e.target.value)
-                            }
-                        >
-                            {supportedLanguages.map((lang) => (
-                                <option key={lang} value={lang}>
-                                    {
-                                        languageNames[
-                                            lang as keyof typeof languageNames
-                                        ]
-                                    }
-                                </option>
-                            ))}
-                        </Select>
-                    </VStack>
-                </Box>
-
-                <Box>
-                    <Heading size={'md'}>
-                        <b>Test Transactions</b>
-                    </Heading>
-                    <HStack mt={4} spacing={4}>
-                        <Button
-                            onClick={handleTransactionWithToast}
-                            isLoading={isTransactionPending}
-                            isDisabled={isTransactionPending}
-                        >
-                            Tx with toast
-                        </Button>
-                        <Button
-                            onClick={handleTransactionWithModal}
-                            isLoading={isTransactionPending}
-                            isDisabled={isTransactionPending}
-                        >
-                            Tx with modal
-                        </Button>
-                    </HStack>
-                </Box>
-
+                <AccountInfo />
+                <ConnectionInfo />
+                <DaoInfo />
+                <UIControls />
+                <LanguageSelector />
+                <TransactionExamples />
                 <SigningExample />
             </VStack>
-
-            <TransactionToast
-                isOpen={isTransactionToastOpen}
-                onClose={closeTransactionToast}
-                status={status}
-                error={error}
-                txReceipt={txReceipt}
-                resetStatus={resetStatus}
-                progress={progress}
-            />
-
-            <TransactionModal
-                isOpen={isTransactionModalOpen}
-                onClose={closeTransactionModal}
-                status={status}
-                progress={progress}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
-                showSocialButtons={true}
-                showExplorerButton={true}
-                onTryAgain={handleTransactionWithModal}
-                showTryAgainButton={true}
-            />
         </Container>
     );
 }

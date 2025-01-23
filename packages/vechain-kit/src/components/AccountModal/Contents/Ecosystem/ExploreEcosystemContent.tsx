@@ -10,6 +10,7 @@ import {
     GridItem,
     ModalFooter,
     Text,
+    Box,
 } from '@chakra-ui/react';
 import { CiSearch } from 'react-icons/ci';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -66,7 +67,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
     },
 ];
 
-export const EcosystemContent = ({ setCurrentContent }: Props) => {
+export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const [searchQuery, setSearchQuery] = useState('');
@@ -86,7 +87,7 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
     const { shortcuts } = useEcosystemShortcuts();
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -100,7 +101,7 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody>
+            <ModalBody overflowY="auto" minH="300px">
                 <VStack spacing={6} w="full">
                     <ShortcutsSection setCurrentContent={setCurrentContent} />
 
@@ -155,6 +156,6 @@ export const EcosystemContent = ({ setCurrentContent }: Props) => {
             </ModalBody>
 
             <ModalFooter />
-        </>
+        </Box>
     );
 };
