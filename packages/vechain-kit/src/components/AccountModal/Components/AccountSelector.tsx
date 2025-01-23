@@ -1,48 +1,25 @@
 'use client';
 
-import {
-    Text,
-    Icon,
-    HStack,
-    Button,
-    Image,
-    IconButton,
-} from '@chakra-ui/react';
+import { Text, Icon, HStack, Button, Image } from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { RiLogoutBoxLine } from 'react-icons/ri';
 
 type Props = {
     wallet: Wallet;
     size?: string;
     onClick?: () => void;
     mt?: number;
-    onDisconnect?: () => void;
 };
 
 export const AccountSelector = ({
     wallet,
     size = 'md',
     onClick,
-    onDisconnect,
     mt,
 }: Props) => {
     return (
         <HStack mt={mt}>
-            <IconButton
-                p={2}
-                h={9}
-                icon={<Icon boxSize={5} as={RiLogoutBoxLine} />}
-                aria-label="Disconnect"
-                variant="vechainKitSelector"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    onDisconnect?.();
-                }}
-            />
-
             <Button
                 w="fit-content"
                 p={2}

@@ -29,6 +29,7 @@ import { useWallet } from '@/hooks';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { FeatureAnnouncementCard } from '../../Components/Alerts';
+import { RiLogoutBoxLine } from 'react-icons/ri';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -76,14 +77,23 @@ export const AccountMainContent = ({
                     />
 
                     <HStack justify={'space-between'}>
+                        <IconButton
+                            p={2}
+                            h={9}
+                            icon={<Icon boxSize={5} as={RiLogoutBoxLine} />}
+                            aria-label="Disconnect"
+                            variant="vechainKitSelector"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                disconnect();
+                                onClose();
+                            }}
+                        />
                         <AccountSelector
                             mt={0}
                             onClick={() => {
                                 setCurrentContent('settings');
-                            }}
-                            onDisconnect={() => {
-                                disconnect();
-                                onClose();
                             }}
                             wallet={wallet}
                         />
