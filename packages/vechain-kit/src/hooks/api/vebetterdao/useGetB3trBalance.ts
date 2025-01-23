@@ -5,7 +5,7 @@ import { IB3TR__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { ethers } from 'ethers';
+import { formatEther } from 'viem';
 import { humanNumber } from '@/utils';
 
 const B3TRInterface = IB3TR__factory.createInterface();
@@ -39,7 +39,7 @@ export const getB3trBalance = async (
     if (res.reverted) throw new Error('Reverted');
 
     const original = res.decoded[0];
-    const scaled = ethers.formatEther(original);
+    const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
     return {

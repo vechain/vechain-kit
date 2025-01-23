@@ -4,10 +4,10 @@ import { getXAppRoundEarningsQueryKey } from './useXAppRoundEarnings';
 import { getConfig } from '@/config';
 import { XAllocationPool__factory } from '@/contracts';
 import { abi } from 'thor-devkit';
-import { ethers } from 'ethers';
 import { getOrCreateQueryClient } from '@/providers/EnsureQueryClient';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { formatEther } from 'viem';
 
 const roundEarningsFragment = XAllocationPool__factory.createInterface()
     .getFunction('roundEarnings')
@@ -68,7 +68,7 @@ export const useXAppTotalEarnings = (roundIds: number[], appId: string) => {
                         }`,
                     );
                 const decoded = roundEarningsAbi.decode(r.data);
-                const parsedAmount = ethers.formatEther(decoded[0]);
+                const parsedAmount = formatEther(decoded[0]);
                 // Update the cache with the new amount
                 queryClient.setQueryData(
                     getXAppRoundEarningsQueryKey(

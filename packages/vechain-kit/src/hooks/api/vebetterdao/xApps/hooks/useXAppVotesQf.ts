@@ -65,6 +65,6 @@ export const useXAppVotesQf = (roundId?: number | string, appId?: string) => {
         method: 'getAppVotesQF',
         args: [roundId, appId],
         enabled: !!roundId && !!appId && !!network.type,
-        // mapResponse: res => ethers.formatEther(res.decoded[0]),
+        // mapResponse: res => formatEther(res.decoded[0]),
     });
 };

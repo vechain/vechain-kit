@@ -1,3 +1,4 @@
+import { formatEther } from 'viem';
 import { useAccountBalance } from '..';
 import {
     useGetB3trBalance,
@@ -5,7 +6,6 @@ import {
     useGetVeDelegateBalance,
     useGetTokenUsdPrice,
 } from '..';
-import { ethers } from 'ethers';
 
 type UseBalancesProps = {
     address?: string;
@@ -41,9 +41,9 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
     const balances = {
         vet: Number(vetData?.balance || 0),
         vtho: Number(vetData?.energy || 0),
-        b3tr: Number(ethers.formatEther(b3trBalance?.original || '0')),
-        vot3: Number(ethers.formatEther(vot3Balance?.original || '0')),
-        veDelegate: Number(ethers.formatEther(veDelegateBalance || '0')),
+        b3tr: Number(formatEther(BigInt(b3trBalance?.original || '0'))),
+        vot3: Number(formatEther(BigInt(vot3Balance?.original || '0'))),
+        veDelegate: Number(formatEther(BigInt(veDelegateBalance || '0'))),
     };
 
     const prices = {

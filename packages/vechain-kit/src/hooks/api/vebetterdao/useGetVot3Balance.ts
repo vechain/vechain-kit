@@ -4,9 +4,9 @@ import { IVOT3__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { ethers } from 'ethers';
 import { humanNumber } from '@/utils';
 import { TokenBalance } from './useGetB3trBalance';
+import { formatEther } from 'viem';
 
 const VOT3Interface = IVOT3__factory.createInterface();
 
@@ -26,7 +26,7 @@ export const getVot3Balance = async (
     if (res.reverted) throw new Error('Reverted');
 
     const original = res.decoded[0];
-    const scaled = ethers.formatEther(original);
+    const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
     return {

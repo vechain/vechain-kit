@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { VoterRewards__factory } from '@/contracts';
-import { ethers } from 'ethers';
 import { RoundReward } from '../utils';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { formatEther } from 'viem';
 
 /**
  * Fetches the reward for a given round and voter from the VoterRewards contract.
@@ -34,7 +34,7 @@ export const getRoundReward = async (
 
     if (res.vmError) return Promise.reject(new Error(res.vmError));
 
-    const reward = ethers.formatEther(res.decoded[0]);
+    const reward = formatEther(res.decoded[0]);
 
     return {
         roundId,

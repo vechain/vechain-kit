@@ -1,7 +1,7 @@
 import { isValidAddress } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { ethers } from 'ethers';
+import { formatEther } from 'viem';
 
 export const getAccountBalance = async (
     thor: Connex.Thor,
@@ -11,8 +11,8 @@ export const getAccountBalance = async (
     const account = await thor.account(address).get();
 
     return {
-        balance: ethers.formatEther(account.balance).toString(),
-        energy: ethers.formatEther(account.energy).toString(),
+        balance: formatEther(BigInt(account.balance)).toString(),
+        energy: formatEther(BigInt(account.energy)).toString(),
     };
 };
 export const getAccountBalanceQueryKey = (address?: string) => [

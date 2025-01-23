@@ -1,7 +1,7 @@
-import { ethers } from 'ethers';
 import { useMemo } from 'react';
 import { useUserVotesInAllRounds } from './useUserVotesInAllRounds';
 import { useXApps } from './useXApps';
+import { formatEther } from 'viem';
 
 export type AppVotesGiven = {
     appId: string;
@@ -34,7 +34,7 @@ export const useUserTopVotedApps = (user?: string) => {
                 appIds.forEach((appId, i) => {
                     appIdToVotes[appId] =
                         (appIdToVotes[appId] || 0) +
-                        Number(ethers.formatEther(voteWeights[i] ?? '0'));
+                        Number(formatEther(BigInt(voteWeights[i] ?? '0')));
                 });
             }
         });

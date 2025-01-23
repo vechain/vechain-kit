@@ -5,9 +5,9 @@ import { getRoundRewardQueryKey } from './useVotingRoundReward';
 import { VoterRewards__factory } from '@/contracts';
 import { abi } from 'thor-devkit';
 import { getConfig } from '@/config';
-import { ethers } from 'ethers';
 import { BigNumber } from 'bignumber.js';
 import { useVeChainKitConfig } from '@/providers';
+import { formatEther } from 'viem';
 
 const voterRewardsInterface = VoterRewards__factory.createInterface();
 const voteRewardFragment = voterRewardsInterface
@@ -65,7 +65,7 @@ export const useVotingRewards = (currentRoundId?: string, voter?: string) => {
                     );
                 const roundId = rounds[index] as string;
                 const rewards = decoded[0] as string;
-                const formattedRewards = ethers.formatEther(rewards);
+                const formattedRewards = formatEther(BigInt(rewards));
 
                 total = total.plus(rewards);
 
@@ -83,7 +83,7 @@ export const useVotingRewards = (currentRoundId?: string, voter?: string) => {
                 };
             });
 
-            const totalFormatted = ethers.formatEther(total.toFixed());
+            const totalFormatted = formatEther(BigInt(total.toFixed()));
 
             return {
                 total: total.toFixed(),

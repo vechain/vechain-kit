@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { X2EarnRewardsPool__factory } from '@/contracts';
-import { ethers } from 'ethers';
 import { humanNumber } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { TokenBalance } from '../../useGetB3trBalance';
+import { formatEther } from 'viem';
 
 /**
  * Get the available balance in the x2Earn rewards pool contract for a specific xApp
@@ -31,7 +31,7 @@ export const getAppBalance = async (
     if (res.vmError) return Promise.reject(new Error(res.vmError));
 
     const original = res.decoded[0];
-    const scaled = ethers.formatEther(original);
+    const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
     return {

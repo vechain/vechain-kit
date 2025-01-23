@@ -7,10 +7,10 @@ import {
     getRoundXApps,
     getRoundXAppsQueryKey,
 } from '@/hooks/api/vebetterdao/xApps/hooks/useRoundXApps';
-import { ethers } from 'ethers';
 import { abi } from 'thor-devkit';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { formatEther } from 'viem';
 
 const roundEarningsFragment = XAllocationPool__factory.createInterface()
     .getFunction('roundEarnings')
@@ -50,7 +50,7 @@ export const getXAppRoundEarnings = async (
 
     if (res.vmError) return Promise.reject(new Error(res.vmError));
 
-    return { amount: ethers.formatEther(res.decoded['0']), appId: xAppId };
+    return { amount: formatEther(res.decoded['0']), appId: xAppId };
 };
 
 export const getXAppRoundEarningsQueryKey = (
@@ -144,7 +144,7 @@ export const useMultipleXAppRoundEarnings = (
                         }`,
                     );
                 const decoded = roundEarningsAbi.decode(r.data);
-                const parsedAmount = ethers.formatEther(decoded[0]);
+                const parsedAmount = formatEther(decoded[0]);
                 const appId = xAppsInRound[index]?.id as string;
                 // Update the cache with the new amount
                 queryClient.setQueryData(

@@ -2,7 +2,7 @@ import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { ethers } from 'ethers';
+import { formatEther } from 'viem';
 
 const contractInterface = GalaxyMember__factory.createInterface();
 const method = 'getB3TRtoUpgrade';
@@ -27,6 +27,6 @@ export const useB3trToUpgrade = (tokenId?: string, enabled = true) => {
         method,
         args: [tokenId],
         enabled: !!tokenId && enabled && !!network.type,
-        mapResponse: (res) => ethers.formatEther(res.decoded[0]),
+        mapResponse: (res) => formatEther(res.decoded[0]),
     });
 };

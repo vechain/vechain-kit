@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { Emissions__factory } from '@/contracts';
-import { ethers } from 'ethers';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { formatEther } from 'viem';
 
 type AllocationAmount = {
     treasury: string;
@@ -61,9 +61,9 @@ export const getAllocationAmount = async (
         return Promise.reject(new Error(voteXAllocations.vmError));
 
     return {
-        treasury: ethers.formatEther(resTreasury.decoded[0]),
-        voteX2Earn: ethers.formatEther(resVoteX2Earn.decoded[0]),
-        voteXAllocations: ethers.formatEther(voteXAllocations.decoded[0]),
+        treasury: formatEther(resTreasury.decoded[0]),
+        voteX2Earn: formatEther(resVoteX2Earn.decoded[0]),
+        voteXAllocations: formatEther(voteXAllocations.decoded[0]),
     };
 };
 
