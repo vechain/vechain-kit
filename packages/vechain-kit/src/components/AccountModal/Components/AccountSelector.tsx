@@ -2,50 +2,39 @@
 
 import { Text, Icon, HStack, Button } from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
-import { useState } from 'react';
-import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
+import { RxExit } from 'react-icons/rx';
+
 type Props = {
     wallet: Wallet;
     size?: string;
     onClick?: () => void;
     mt?: number;
+    onDisconnect?: () => void;
 };
 
 export const AccountSelector = ({
     wallet,
     size = 'md',
     onClick,
+    onDisconnect,
     mt,
 }: Props) => {
-    const [copied, setCopied] = useState(false);
-
-    const copyToClipboard = async (textToCopy: string) => {
-        await navigator.clipboard.writeText(textToCopy);
-        setCopied(true);
-        setTimeout(() => {
-            setCopied(false);
-        }, 2000);
-    };
-
     return (
         <HStack mt={mt}>
             <Button
                 p={2}
-                px={4}
                 h={9}
+                aria-label="Disconnect"
                 variant="vechainKitSelector"
                 onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    copyToClipboard(wallet?.address ?? '');
+                    onDisconnect?.();
                 }}
             >
-                <Icon
-                    boxSize={5}
-                    as={copied ? IoCheckmarkOutline : IoCopyOutline}
-                />
+                <Icon boxSize={4} as={RxExit} />
             </Button>
 
             <Button
@@ -53,6 +42,7 @@ export const AccountSelector = ({
                 p={2}
                 pl={4}
                 h={9}
+                aria-label="Wallet"
                 onClick={onClick}
                 variant="vechainKitSelector"
             >

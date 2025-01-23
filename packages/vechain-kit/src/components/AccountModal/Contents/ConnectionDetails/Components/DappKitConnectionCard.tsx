@@ -1,30 +1,33 @@
-import { VStack, Text } from '@chakra-ui/react';
+import { Text, HStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@vechain/dapp-kit-react';
+import { useVeChainKitConfig } from '@/providers';
 
 export const DappKitConnectionCard = () => {
     const { t } = useTranslation();
     const { source } = useWallet();
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
-        <VStack
-            spacing={2}
-            opacity={0.8}
-            fontSize="sm"
-            p={4}
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.200"
-            _dark={{ borderColor: 'gray.700' }}
-            w="full"
-        >
+        <>
             {source && (
-                <VStack spacing={2}>
-                    <Text>
-                        {t('Connected through')}: {source}
+                <HStack
+                    p={4}
+                    bg={isDark ? '#1a1a1a' : '#f5f5f5'}
+                    borderRadius={'xl'}
+                    spacing={4}
+                    w="full"
+                    justifyContent="space-between"
+                >
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {t('Connected through')}:
                     </Text>
-                </VStack>
+
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {source}
+                    </Text>
+                </HStack>
             )}
-        </VStack>
+        </>
     );
 };

@@ -12,6 +12,7 @@ import {
     Box,
     Spinner,
     Select,
+    Image,
 } from '@chakra-ui/react';
 import {
     useWallet,
@@ -109,21 +110,31 @@ export default function Home(): ReactElement {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses]);
 
-    if (connection.isLoading) {
+    if (!account) {
         return (
             <Container justifyContent={'center'}>
-                <VStack>
-                    <Spinner />
-                </VStack>
-            </Container>
-        );
-    }
-
-    if (!connection.isConnected) {
-        return (
-            <Container justifyContent={'center'}>
-                <VStack>
-                    <WalletButton />
+                <VStack justify={'center'} align={'center'} spacing={2}>
+                    <Image
+                        src={
+                            'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png'
+                        }
+                        maxW={'180px'}
+                        maxH={'90px'}
+                        // m={8}
+                        alt="logo"
+                    />
+                    <Text
+                        // color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        fontSize={'sm'}
+                        fontWeight={'200'}
+                        textAlign={'center'}
+                        maxW={'300px'}
+                    >
+                        {t(
+                            "Hi there! I'm VeChain Kit, a new way to access applications on VeChain. I'm here to help you connect to the blockchain and interact with smart contracts.",
+                        )}
+                    </Text>
+                    <WalletButton buttonStyle={{ mt: 10 }} />
                 </VStack>
             </Container>
         );
@@ -210,7 +221,7 @@ export default function Home(): ReactElement {
 
                 <Box>
                     <Heading size={'md'}>
-                        <b>Multilanguage</b>
+                        <b>Multilanguage</b> (currently disabled)
                     </Heading>
                     <VStack mt={4} spacing={4} alignItems="flex-start">
                         <Text>

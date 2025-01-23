@@ -1,6 +1,7 @@
-import { VStack, Text } from '@chakra-ui/react';
+import { Text, HStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { CrossAppConnectionCache } from '@/types';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     connectionCache: CrossAppConnectionCache;
@@ -8,28 +9,28 @@ type Props = {
 
 export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
-        <VStack
-            spacing={2}
-            opacity={0.8}
-            fontSize="sm"
-            p={4}
-            borderRadius="lg"
-            border="1px solid"
-            borderColor="gray.200"
-            _dark={{ borderColor: 'gray.700' }}
-            w="full"
-        >
+        <>
             {connectionCache.ecosystemApp && (
-                <VStack spacing={2}>
-                    <Text>
-                        {t('Connected through')}:{' '}
-                        {connectionCache.ecosystemApp.name}
+                <HStack
+                    p={4}
+                    bg={isDark ? '#1a1a1a' : '#f5f5f5'}
+                    borderRadius={'xl'}
+                    spacing={4}
+                    w="full"
+                    justifyContent="space-between"
+                >
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {t('Connected through')}:
                     </Text>
-                </VStack>
+
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {new Date(connectionCache.timestamp).toLocaleString()}
+                    </Text>
+                </HStack>
             )}
-            <Text>{new Date(connectionCache.timestamp).toLocaleString()}</Text>
-        </VStack>
+        </>
     );
 };

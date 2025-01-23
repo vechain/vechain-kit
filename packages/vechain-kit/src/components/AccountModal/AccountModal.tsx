@@ -6,8 +6,7 @@ import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
     WalletSettingsContent,
-    SmartAccountContent,
-    AccountsListContent,
+    EmbeddedWalletContent,
     SendTokenContent,
     SendTokenSummaryContent,
     ReceiveTokenContent,
@@ -73,18 +72,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                         onLogoutSuccess={onClose}
                     />
                 );
-            case 'smart-account':
+            case 'embedded-wallet':
                 return (
-                    <SmartAccountContent
+                    <EmbeddedWalletContent
                         setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'accounts':
-                return (
-                    <AccountsListContent
-                        setCurrentContent={setCurrentContent}
-                        onClose={onClose}
-                        wallet={account}
                     />
                 );
             case 'receive-token':

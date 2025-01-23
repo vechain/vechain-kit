@@ -10,7 +10,6 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
-import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -24,7 +23,6 @@ export const ChooseNameContent = ({
     setCurrentContent,
 }: ChooseNameContentProps) => {
     const { t } = useTranslation();
-    const { smartAccount, connection } = useWallet();
     const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
@@ -39,13 +37,7 @@ export const ChooseNameContent = ({
                     {t('Choose your account name')}
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() =>
-                        smartAccount.isActive
-                            ? setCurrentContent('smart-account')
-                            : connection.isConnectedWithDappKit
-                            ? setCurrentContent('settings')
-                            : setCurrentContent('accounts')
-                    }
+                    onClick={() => setCurrentContent('settings')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

@@ -30,7 +30,7 @@ export const ChooseNameSearchContent = ({
     setCurrentContent,
 }: ChooseNameSearchContentProps) => {
     const { t } = useTranslation();
-    const { account, connection } = useWallet();
+    const { account } = useWallet();
     const { darkMode: isDark } = useVeChainKitConfig();
     const [name, setName] = useState(initialName);
     const [error, setError] = useState<string | null>(null);
@@ -105,10 +105,8 @@ export const ChooseNameSearchContent = ({
                 <ModalBackButton
                     onClick={() =>
                         // if the user has a domain, go to accounts
-                        connection.isConnectedWithDappKit
+                        account?.domain
                             ? setCurrentContent('settings')
-                            : account?.domain
-                            ? setCurrentContent('smart-account')
                             : setCurrentContent('choose-name')
                     }
                 />

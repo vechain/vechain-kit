@@ -141,6 +141,7 @@ export const VeChainKitProvider = ({
     feeDelegation,
     dappKit,
     loginModalUI = {
+        variant: 'vechain-and-wallet',
         description:
             'Choose between social login through VeChain or by connecting your wallet.',
     },

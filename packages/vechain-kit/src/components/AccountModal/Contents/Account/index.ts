@@ -1,4 +1,3 @@
 export * from './AccountMainContent';
-export * from './AccountsListContent';
-export * from './SmartAccountContent';
+export * from './EmbeddedWalletContent';
 export * from './WalletSettingsContent';

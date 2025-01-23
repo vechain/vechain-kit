@@ -6,7 +6,6 @@ import {
     ModalHeader,
     VStack,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
 import {
     StickyHeaderContainer,
     VersionFooter,
@@ -22,6 +21,7 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useWallet } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -31,11 +31,14 @@ type Props = {
     wallet: Wallet;
 };
 
-export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
+export const AccountMainContent = ({
+    setCurrentContent,
+    wallet,
+    onClose,
+}: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-
-    const { smartAccount } = useWallet();
+    const { disconnect, connection } = useWallet();
 
     return (
         <>
@@ -48,7 +51,9 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Account')}
+                    {connection.isConnectedWithPrivy
+                        ? t('Account')
+                        : t('Wallet')}
                 </ModalHeader>
 
                 <ModalCloseButton />
@@ -60,11 +65,11 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         <AccountSelector
                             mt={0}
                             onClick={() => {
-                                if (smartAccount.isActive) {
-                                    setCurrentContent('accounts');
-                                } else {
-                                    setCurrentContent('settings');
-                                }
+                                setCurrentContent('settings');
+                            }}
+                            onDisconnect={() => {
+                                disconnect();
+                                onClose();
                             }}
                             wallet={wallet}
                         />

@@ -7,7 +7,12 @@ import {
     ModalHeader,
     Button,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet, useCrossAppConnectionCache } from '@/hooks';
+import {
+    useCrossAppConnectionCache,
+    useFetchAppInfo,
+    usePrivy,
+    useWallet,
+} from '@/hooks';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 import { IoIosFingerPrint } from 'react-icons/io';
@@ -23,6 +28,8 @@ import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
+import { HiOutlineWallet } from 'react-icons/hi2';
+import { useEffect, useRef } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,26 +42,28 @@ export const WalletSettingsContent = ({
     setCurrentContent,
     onLogoutSuccess,
 }: Props) => {
+    const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
     const { exportWallet, linkPasskey } = usePrivy();
     const { privy, darkMode: isDark } = useVeChainKitConfig();
 
+    const { connection, disconnect, account } = useWallet();
+
+    const hasExistingDomain = !!account?.domain;
+
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
 
-    const { connectedWallet, connection, disconnect } = useWallet();
+    const { data: appInfo } = useFetchAppInfo(privy?.appId ?? '');
 
-    const hasExistingDomain = !!connectedWallet?.domain;
-
-    const modalTitle =
-        connection.isConnectedWithCrossApp && connectionCache
-            ? connectionCache.ecosystemApp.name + ' ' + t('Wallet')
-            : connection.isConnectedWithSocialLogin
-            ? t('Embedded Wallet')
-            : t('Wallet');
+    useEffect(() => {
+        if (contentRef.current) {
+            contentRef.current.scrollTop = 0;
+        }
+    }, []);
 
     return (
-        <>
+        <VStack ref={contentRef}>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -62,32 +71,21 @@ export const WalletSettingsContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {modalTitle}
+                    {t('Settings')}
                 </ModalHeader>
 
-                <ModalBackButton
-                    onClick={() => {
-                        if (
-                            connection.isConnectedWithSocialLogin ||
-                            connection.isConnectedWithCrossApp
-                        ) {
-                            setCurrentContent('accounts');
-                        } else {
-                            setCurrentContent('main');
-                        }
-                    }}
-                />
+                <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
                 <VStack justify={'center'}>
                     <Image
-                        src={connectedWallet?.image}
+                        src={account?.image}
                         maxW={'100px'}
                         borderRadius="50%"
                     />
-                    <AddressDisplay wallet={connectedWallet} />
+                    <AddressDisplay wallet={account} />
                 </VStack>
 
                 <VStack mt={10} w={'full'} spacing={3}>
@@ -149,33 +147,31 @@ export const WalletSettingsContent = ({
                                 rightIcon={MdOutlineNavigateNext}
                             /> */}
 
-                    {connection.isConnectedWithDappKit && (
-                        <ActionButton
-                            title={
-                                hasExistingDomain
-                                    ? t('Change account name')
-                                    : t('Choose account name')
+                    <ActionButton
+                        title={
+                            hasExistingDomain
+                                ? t('Change account name')
+                                : t('Choose account name')
+                        }
+                        description={t(
+                            'Give a nickname to your wallet to easily identify it.',
+                        )}
+                        onClick={() => {
+                            if (hasExistingDomain) {
+                                setCurrentContent({
+                                    type: 'choose-name-search',
+                                    props: {
+                                        name: '',
+                                        setCurrentContent,
+                                    },
+                                });
+                            } else {
+                                setCurrentContent('choose-name');
                             }
-                            description={t(
-                                'Give a nickname to your wallet to easily identify it.',
-                            )}
-                            onClick={() => {
-                                if (hasExistingDomain) {
-                                    setCurrentContent({
-                                        type: 'choose-name-search',
-                                        props: {
-                                            name: '',
-                                            setCurrentContent,
-                                        },
-                                    });
-                                } else {
-                                    setCurrentContent('choose-name');
-                                }
-                            }}
-                            leftIcon={FaRegAddressCard}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    )}
+                        }}
+                        leftIcon={FaRegAddressCard}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
                     <ActionButton
                         title={t('Connection Details')}
@@ -188,9 +184,29 @@ export const WalletSettingsContent = ({
                         leftIcon={VscDebugDisconnect}
                         rightIcon={MdOutlineNavigateNext}
                     />
+
+                    {connection.isConnectedWithPrivy && (
+                        <ActionButton
+                            title={t('Embedded Wallet')}
+                            description={t(
+                                'View details of your embedded wallet created and secured by {{appName}}.',
+                                {
+                                    appName: connection.isConnectedWithCrossApp
+                                        ? connectionCache?.ecosystemApp?.name
+                                        : Object.values(appInfo ?? {})[0]
+                                              ?.name ?? '',
+                                },
+                            )}
+                            onClick={() => {
+                                setCurrentContent('embedded-wallet');
+                            }}
+                            leftIcon={HiOutlineWallet}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    )}
                 </VStack>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter w={'full'}>
                 <Button
                     onClick={() => {
                         disconnect();
@@ -202,6 +218,6 @@ export const WalletSettingsContent = ({
                     {t('Logout')}
                 </Button>
             </ModalFooter>
-        </>
+        </VStack>
     );
 };

@@ -16,18 +16,40 @@ export const AssetIcons = ({
     iconSize = 20,
     ml = 0,
 }: AssetIconsProps) => {
-    const { balances } = useBalances({ address: address ?? '' });
+    const { balances, prices } = useBalances({ address: address ?? '' });
     const { darkMode } = useVeChainKitConfig();
     const marginLeft = iconSize / 2;
 
-    // Create array of tokens with balances
+    // Create array of tokens with balances and their values
     const tokens = [
-        { symbol: 'VET', balance: balances.vet },
-        { symbol: 'VTHO', balance: balances.vtho },
-        { symbol: 'B3TR', balance: balances.b3tr },
-        { symbol: 'VOT3', balance: balances.vot3 },
-        { symbol: 'veDelegate', balance: balances.veDelegate },
-    ].filter((token) => token.balance > 0);
+        {
+            symbol: 'VET',
+            balance: balances.vet,
+            value: balances.vet * prices.vet,
+        },
+        {
+            symbol: 'VTHO',
+            balance: balances.vtho,
+            value: balances.vtho * prices.vtho,
+        },
+        {
+            symbol: 'B3TR',
+            balance: balances.b3tr,
+            value: balances.b3tr * prices.b3tr,
+        },
+        {
+            symbol: 'VOT3',
+            balance: balances.vot3,
+            value: balances.vot3 * prices.b3tr,
+        },
+        {
+            symbol: 'veDelegate',
+            balance: balances.veDelegate,
+            value: balances.veDelegate * prices.b3tr,
+        },
+    ]
+        .filter((token) => token.balance > 0)
+        .sort((a, b) => a.value - b.value); // Changed to ascending order
 
     const tokensToShow = tokens.slice(0, maxIcons);
     const remainingTokens = tokens.length - maxIcons;
