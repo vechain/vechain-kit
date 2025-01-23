@@ -30,6 +30,7 @@ import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { FeatureAnnouncementCard } from '../../Components/Alerts';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import React from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -50,6 +51,11 @@ export const AccountMainContent = ({
     const { getNotifications } = useNotifications();
     const notifications = getNotifications();
     const hasUnreadNotifications = notifications.some((n) => !n.isRead);
+
+    const handleDisconnect = () => {
+        disconnect();
+        onClose();
+    };
 
     return (
         <ScrollToTopWrapper>
@@ -83,12 +89,15 @@ export const AccountMainContent = ({
                             icon={<Icon boxSize={5} as={RiLogoutBoxLine} />}
                             aria-label="Disconnect"
                             variant="vechainKitSelector"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                disconnect();
-                                onClose();
-                            }}
+                            onClick={() =>
+                                setCurrentContent({
+                                    type: 'disconnect-confirm',
+                                    props: {
+                                        onDisconnect: handleDisconnect,
+                                        onBack: () => setCurrentContent('main'),
+                                    },
+                                })
+                            }
                         />
                         <AccountSelector
                             mt={0}

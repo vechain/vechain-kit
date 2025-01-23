@@ -22,6 +22,7 @@ import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
 import { EcosystemContent } from './Contents/Ecosystem/EcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
+import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 
 type Props = {
     isOpen: boolean;
@@ -64,6 +65,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                             {...currentContent.props}
                             setCurrentContent={setCurrentContent}
                         />
+                    );
+                case 'disconnect-confirm':
+                    return (
+                        <DisconnectConfirmContent {...currentContent.props} />
                     );
             }
         }

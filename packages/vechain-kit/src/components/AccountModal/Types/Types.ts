@@ -38,4 +38,11 @@ export type AccountModalContentTypes =
     | {
           type: 'choose-name-summary';
           props: ChooseNameSummaryContentProps;
+      }
+    | {
+          type: 'disconnect-confirm';
+          props: {
+              onDisconnect: () => void;
+              onBack: () => void;
+          };
       };
