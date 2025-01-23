@@ -1,5 +1,7 @@
 import {
-    Container,
+    HStack,
+    Icon,
+    IconButton,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
@@ -23,6 +25,7 @@ import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
+import { BiBell } from 'react-icons/bi';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -60,9 +63,9 @@ export const AccountMainContent = ({
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'}>
-                <ModalBody w={'full'}>
-                    <VStack w={'full'} overflow={'hidden'}>
+            <ModalBody w={'full'}>
+                <VStack w={'full'} overflow={'hidden'}>
+                    <HStack justify={'space-between'}>
                         <AccountSelector
                             mt={0}
                             onClick={() => {
@@ -74,23 +77,31 @@ export const AccountMainContent = ({
                             }}
                             wallet={wallet}
                         />
-
-                        <BalanceSection mt={10} />
-
-                        <QuickActionsSection
-                            mt={10}
-                            setCurrentContent={setCurrentContent}
+                        <IconButton
+                            p={2}
+                            h={9}
+                            variant="vechainKitSelector"
+                            aria-label="notifications"
+                            icon={<Icon boxSize={5} as={BiBell} />}
+                            onClick={() => setCurrentContent('notifications')}
                         />
-                        <AssetsSection
-                            mt={2}
-                            setCurrentContent={setCurrentContent}
-                        />
-                    </VStack>
-                </ModalBody>
-                <ModalFooter>
-                    <VersionFooter />
-                </ModalFooter>
-            </Container>
+                    </HStack>
+
+                    <BalanceSection mt={10} />
+
+                    <QuickActionsSection
+                        mt={10}
+                        setCurrentContent={setCurrentContent}
+                    />
+                    <AssetsSection
+                        mt={2}
+                        setCurrentContent={setCurrentContent}
+                    />
+                </VStack>
+            </ModalBody>
+            <ModalFooter>
+                <VersionFooter />
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

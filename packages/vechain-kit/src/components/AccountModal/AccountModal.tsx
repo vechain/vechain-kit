@@ -19,6 +19,7 @@ import {
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
+import { NotificationsContent } from './Contents/Notifications/NotificationContent';
 
 type Props = {
     isOpen: boolean;
@@ -70,6 +71,12 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                     <WalletSettingsContent
                         setCurrentContent={setCurrentContent}
                         onLogoutSuccess={onClose}
+                    />
+                );
+            case 'notifications':
+                return (
+                    <NotificationsContent
+                        setCurrentContent={setCurrentContent}
                     />
                 );
             case 'embedded-wallet':
