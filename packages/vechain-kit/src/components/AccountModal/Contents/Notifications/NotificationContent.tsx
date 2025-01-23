@@ -8,6 +8,7 @@ import {
     ModalFooter,
     Button,
     HStack,
+    Box,
 } from '@chakra-ui/react';
 import { BiBell, BiArchive } from 'react-icons/bi';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -62,8 +63,26 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
         ? archivedNotifications
         : notifications;
 
+    // Sort notifications by date in descending order (newest first)
+    const sortedNotifications = [...currentNotifications].sort((a, b) => {
+        // Welcome notification always first
+        if (a.id === 'welcome') return -1;
+        if (b.id === 'welcome') return 1;
+
+        // Smart account second
+        if (a.id === 'smart-account') return -1;
+        if (b.id === 'smart-account') return 1;
+
+        // Multiclause third
+        if (a.id === 'multiclause') return -1;
+        if (b.id === 'multiclause') return 1;
+
+        // All other notifications sorted by timestamp
+        return b.timestamp - a.timestamp;
+    });
+
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalHeader
@@ -79,7 +98,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'}>
+            <Container maxW={'container.lg'} h="350px" overflowY="auto">
                 <ModalBody w={'full'}>
                     <VStack spacing={4} align="stretch" w="full">
                         <HStack justify="space-between">
@@ -110,7 +129,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                             <EmptyNotifications showArchived={isArchiveView} />
                         ) : (
                             <VStack spacing={3}>
-                                {currentNotifications.map((notification) => (
+                                {sortedNotifications.map((notification) => (
                                     <NotificationItem
                                         key={notification.id}
                                         notification={notification}
@@ -124,6 +143,6 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 </ModalBody>
                 <ModalFooter></ModalFooter>
             </Container>
-        </>
+        </Box>
     );
 };

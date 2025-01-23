@@ -4,9 +4,9 @@ import {
     HStack,
     VStack,
     Text,
-    Badge,
     useColorModeValue,
     IconButton,
+    Tag,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoCloseCircle } from 'react-icons/io5';
@@ -47,16 +47,6 @@ export const FeatureAnnouncementCard = ({
                 <HStack justify="space-between" align="flex-start" spacing={3}>
                     <VStack align="flex-start" spacing={1}>
                         <HStack spacing={2}>
-                            <Badge
-                                colorScheme="red"
-                                variant="subtle"
-                                fontSize="xs"
-                                px={2}
-                                py={0.5}
-                                borderRadius="full"
-                            >
-                                {t('New')}
-                            </Badge>
                             <Text
                                 fontSize="sm"
                                 fontWeight="400"
@@ -64,6 +54,9 @@ export const FeatureAnnouncementCard = ({
                             >
                                 {t('Claim your vet domain!')}
                             </Text>
+                            <Tag size="sm" colorScheme="red">
+                                {t('New')}
+                            </Tag>
                         </HStack>
                         <Text fontSize="xs" opacity={0.5}>
                             {t(

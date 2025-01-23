@@ -1,1 +1,1 @@
-export * from './EcosystemContent';
+export * from './ExploreEcosystemContent';

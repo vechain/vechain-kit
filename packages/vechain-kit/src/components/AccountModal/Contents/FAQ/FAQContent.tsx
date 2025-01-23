@@ -13,7 +13,11 @@ import {
     Select,
 } from '@chakra-ui/react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import {
+    ModalBackButton,
+    ScrollToTopWrapper,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
 import { VechainLogoHorizontal } from '@/assets';
 import { FAQAccordion } from './FAQAccordion';
@@ -29,7 +33,7 @@ export const FAQContent = ({ onGoBack }: Props) => {
     const { i18n, t } = useTranslation();
 
     return (
-        <>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -123,6 +127,6 @@ export const FAQContent = ({ onGoBack }: Props) => {
                     </Button>
                 </VStack>
             </ModalBody>
-        </>
+        </ScrollToTopWrapper>
     );
 };

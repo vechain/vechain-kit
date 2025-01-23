@@ -9,7 +9,7 @@ type Props = {
 
 export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, network } = useVeChainKitConfig();
 
     return (
         <>
@@ -50,6 +50,34 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
                             {new Date(
                                 connectionCache.timestamp,
                             ).toLocaleString()}
+                        </Text>
+                    </HStack>
+                    <HStack w="full" justifyContent="space-between">
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        >
+                            {t('Network')}:
+                        </Text>
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        >
+                            {network.type}
+                        </Text>
+                    </HStack>
+                    <HStack w="full" justifyContent="space-between">
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        >
+                            {t('Node')}:
+                        </Text>
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        >
+                            {network.nodeUrl}
                         </Text>
                     </HStack>
                 </VStack>
