@@ -50,6 +50,12 @@ jobs:
                   yarn install:all
                   yarn build
 
+            - name: Fix permissions
+              run: |
+                  chmod -c -R +rX "./examples/sample-next-vechain-app/dist" | while read line; do
+                    echo "::warning title=Invalid file permissions automatically fixed::$line"
+                  done
+
             - name: Setup Pages
               uses: actions/configure-pages@v2
 
