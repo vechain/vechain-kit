@@ -9,12 +9,14 @@ import {
     Text,
     Icon,
     Link,
+    Button,
 } from '@chakra-ui/react';
-import { useCrossAppConnectionCache, useWallet } from '@/hooks';
-import React from 'react';
+import { useCrossAppConnectionCache, usePrivy, useWallet } from '@/hooks';
+import React, { useState } from 'react';
 import {
     AddressDisplay,
     ModalBackButton,
+    ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -24,6 +26,10 @@ import { useVeChainKitConfig } from '@/providers';
 import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
 import { PiLineVertical } from 'react-icons/pi';
 import { IoOpenOutline } from 'react-icons/io5';
+import { ActionButton } from '../../Components';
+import { GiHouseKeys } from 'react-icons/gi';
+import { MdOutlineNavigateNext } from 'react-icons/md';
+import { IoIosFingerPrint } from 'react-icons/io';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -33,8 +39,11 @@ type Props = {
 
 export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
+    const [showFullText, setShowFullText] = useState(false);
 
     const { connectedWallet } = useWallet();
+
+    const { exportWallet, linkPasskey } = usePrivy();
 
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
 
@@ -46,7 +55,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const connectionCache = getConnectionCache();
 
     return (
-        <VStack>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -64,34 +73,18 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack justify={'center'}>
-                    <Image
-                        src={walletImage}
-                        maxW={'100px'}
-                        borderRadius="50%"
-                    />
-                    <AddressDisplay wallet={connectedWallet} />
-                </VStack>
+                <VStack justify={'center'} spacing={5} align="center">
+                    <VStack justify={'center'} align={'center'} w={'full'}>
+                        <Image
+                            src={walletImage}
+                            maxW={'100px'}
+                            borderRadius="50%"
+                        />
+                        <AddressDisplay wallet={connectedWallet} />
+                    </VStack>
 
-                <VStack mt={10} spacing={3}>
-                    {/* <ActionButton
-                            title="Transfer ownership"
-                            description="Change the owner of your smart account."
-                            onClick={() => {
-                                exportWallet();
-                            }}
-                            leftIcon={FaUserEdit}
-                            rightIcon={MdOutlineNavigateNext}
-                        /> */}
-                </VStack>
-
-                <VStack align="stretch" textAlign={'center'} mt={5}>
                     {connection.isConnectedWithCrossApp && (
-                        <Text
-                            fontSize={'sm'}
-                            opacity={0.5}
-                            textAlign={'center'}
-                        >
+                        <Text fontSize={'sm'} opacity={0.5}>
                             {t(
                                 'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.',
                                 {
@@ -106,45 +99,80 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         <>
                             <Text fontSize={'sm'} opacity={0.5}>
                                 {t(
-                                    'You are using an Embedded Wallet secured by your social login method, which acts as a master controller of your smart account, ensuring a seamless VeChain experience with full ownership and control.',
+                                    'You are using an Embedded Wallet secured by your social login method, ensuring a seamless VeChain experience.',
                                 )}
                             </Text>
 
-                            <Text fontSize={'sm'} opacity={0.5}>
-                                {t(
-                                    'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
-                                )}
-                                <Link
-                                    href="https://www.veworld.net/"
-                                    isExternal
-                                    color="gray.500"
-                                    fontSize={'14px'}
-                                    textDecoration={'underline'}
-                                >
-                                    {' '}
-                                    {t('VeWorld Wallet')}
-                                    <Icon ml={1} as={IoOpenOutline} />
-                                </Link>
-                                .
-                            </Text>
+                            {showFullText && (
+                                <>
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        {t(
+                                            'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
+                                        )}
+                                        <Link
+                                            href="https://www.veworld.net/"
+                                            isExternal
+                                            color="gray.500"
+                                            fontSize={'14px'}
+                                            textDecoration={'underline'}
+                                        >
+                                            {' '}
+                                            {t('VeWorld Wallet')}
+                                            <Icon ml={1} as={IoOpenOutline} />
+                                        </Link>
+                                        .
+                                    </Text>
+                                    <Text fontSize={'sm'} opacity={0.5} mt={5}>
+                                        {t(
+                                            'Your smart account is your gateway to blockchain interactions.',
+                                        )}
+                                    </Text>
+                                </>
+                            )}
+
+                            <Button
+                                variant="link"
+                                size="sm"
+                                onClick={() => setShowFullText(!showFullText)}
+                                color="blue.500"
+                            >
+                                {t(showFullText ? 'Show Less' : 'Read More')}
+                            </Button>
                         </>
                     )}
 
-                    {connection.isConnectedWithPrivy && (
-                        <Text
-                            fontSize={'sm'}
-                            opacity={0.5}
-                            mt={5}
-                            textAlign={'center'}
-                        >
-                            {t(
-                                'Your smart account is your gateway to blockchain interactions.',
+                    {connection.isConnectedWithSocialLogin && (
+                        <ActionButton
+                            title={t('Backup your wallet')}
+                            description={t(
+                                'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
                             )}
-                        </Text>
+                            onClick={() => {
+                                exportWallet();
+                            }}
+                            leftIcon={GiHouseKeys}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
                     )}
-                </VStack>
 
-                <VStack align="stretch" textAlign={'center'} mt={5}>
+                    {connection.isConnectedWithSocialLogin &&
+                        privy?.allowPasskeyLinking && (
+                            <ActionButton
+                                title={t('Add passkey')}
+                                description={t(
+                                    'Enable one click login by adding a passkey to your account.',
+                                )}
+                                onClick={() => {
+                                    linkPasskey();
+                                }}
+                                leftIcon={IoIosFingerPrint}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
+                        )}
+                </VStack>
+            </ModalBody>
+            <ModalFooter w={'full'}>
+                <VStack w={'full'} align="stretch" textAlign={'center'} mt={5}>
                     {connection.isConnectedWithPrivy && (
                         <VStack mt={2} opacity={0.6}>
                             <HStack
@@ -196,8 +224,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         </VStack>
                     )}
                 </VStack>
-            </ModalBody>
-            <ModalFooter></ModalFooter>
-        </VStack>
+            </ModalFooter>
+        </ScrollToTopWrapper>
     );
 };

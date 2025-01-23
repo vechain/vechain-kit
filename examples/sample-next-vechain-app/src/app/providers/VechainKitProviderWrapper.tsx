@@ -31,22 +31,22 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            // privy={{
-            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-            //     loginMethods: ['google', 'twitter', 'sms', 'email'],
-            //     appearance: {
-            //         walletList: ['metamask', 'rainbow'],
-            //         accentColor: '#696FFD',
-            //         loginMessage: 'Select a social media profile',
-            //         logo: appLogo,
-            //     },
-            //     embeddedWallets: {
-            //         createOnLogin: 'all-users',
-            //     },
+            privy={{
+                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+                loginMethods: ['google', 'twitter', 'sms', 'email'],
+                appearance: {
+                    walletList: ['metamask', 'rainbow'],
+                    accentColor: '#696FFD',
+                    loginMessage: 'Select a social media profile',
+                    logo: appLogo,
+                },
+                embeddedWallets: {
+                    createOnLogin: 'all-users',
+                },
 
-            //     allowPasskeyLinking: true,
-            // }}
+                allowPasskeyLinking: true,
+            }}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: false,
@@ -72,7 +72,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             }}
             loginModalUI={{
                 // preferredLoginMethods: ['google'],
-                variant: 'vechain-and-wallet',
+                variant: 'full',
                 logo: appLogo,
                 description:
                     'Choose between social login through VeChain or by connecting your wallet.',

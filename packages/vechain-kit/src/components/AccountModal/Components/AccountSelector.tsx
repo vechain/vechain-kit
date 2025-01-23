@@ -1,10 +1,10 @@
 'use client';
 
-import { Text, Icon, HStack, Button } from '@chakra-ui/react';
+import { Text, Icon, HStack, Button, Image } from '@chakra-ui/react';
 import { humanAddress } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { RxExit } from 'react-icons/rx';
+import { CiLogout } from 'react-icons/ci';
 
 type Props = {
     wallet: Wallet;
@@ -34,7 +34,7 @@ export const AccountSelector = ({
                     onDisconnect?.();
                 }}
             >
-                <Icon boxSize={4} as={RxExit} />
+                <Icon boxSize={5} as={CiLogout} />
             </Button>
 
             <Button
@@ -47,6 +47,13 @@ export const AccountSelector = ({
                 variant="vechainKitSelector"
             >
                 <HStack spacing={2} align="center">
+                    <Image
+                        src={wallet?.image}
+                        alt={wallet?.domain}
+                        width={5}
+                        height={5}
+                        rounded="full"
+                    />
                     <Text fontSize={size} fontWeight="500">
                         {wallet?.domain ||
                             humanAddress(wallet?.address ?? '', 6, 4)}

@@ -27,7 +27,11 @@ import {
 } from 'react-icons/fa';
 import { SiFarcaster } from 'react-icons/si';
 import { ActionButton } from '@/components';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import {
+    ModalBackButton,
+    ScrollToTopWrapper,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useVeChainKitConfig } from '@/providers';
@@ -274,7 +278,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
 
     if (showLinkOptions) {
         return (
-            <>
+            <ScrollToTopWrapper>
                 <StickyHeaderContainer>
                     <ModalHeader
                         fontSize={'md'}
@@ -437,13 +441,13 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     </VStack>
                 </ModalBody>
                 <ModalFooter></ModalFooter>
-            </>
+            </ScrollToTopWrapper>
         );
     }
 
     if (unlinkingAccount) {
         return (
-            <>
+            <ScrollToTopWrapper>
                 <StickyHeaderContainer>
                     <ModalHeader
                         fontSize={'md'}
@@ -470,12 +474,12 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     />
                 </ModalBody>
                 <ModalFooter></ModalFooter>
-            </>
+            </ScrollToTopWrapper>
         );
     }
 
     return (
-        <>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -492,17 +496,13 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
             <ModalBody w={'full'}>
                 <VStack spacing={3} align="stretch">
                     <VStack spacing={1} align="stretch" mb={5}>
-                        <Text fontSize="sm" textAlign="center" opacity={0.5}>
+                        <Text fontSize="sm" opacity={0.5}>
                             {t(
-                                'These accounts are linked to your embedded wallet and can be used to login to your wallet and access your private key.',
+                                'These accounts are linked to your embedded wallet and can be used to login to your account.',
                             )}
                         </Text>
                         {showFullText && (
-                            <Text
-                                fontSize="sm"
-                                textAlign="center"
-                                opacity={0.5}
-                            >
+                            <Text fontSize="sm" opacity={0.5}>
                                 {t(
                                     'Adding more linked accounts increases security against loss of access, but also introduces additional potential attack vectors. For enhanced security, we recommend enabling MFA.',
                                 )}
@@ -622,6 +622,6 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 </VStack>
             </ModalBody>
             <ModalFooter></ModalFooter>
-        </>
+        </ScrollToTopWrapper>
     );
 };

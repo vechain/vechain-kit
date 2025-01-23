@@ -9,7 +9,11 @@ import {
     Image,
     Divider,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import {
+    ModalBackButton,
+    ScrollToTopWrapper,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import {
     useCrossAppConnectionCache,
@@ -41,7 +45,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const connectionCache = getConnectionCache();
 
     return (
-        <>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -143,6 +147,6 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                 )}
             </ModalBody>
             <ModalFooter></ModalFooter>
-        </>
+        </ScrollToTopWrapper>
     );
 };

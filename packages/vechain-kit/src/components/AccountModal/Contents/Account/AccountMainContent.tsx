@@ -10,6 +10,7 @@ import {
     StickyHeaderContainer,
     VersionFooter,
     ModalFAQButton,
+    ScrollToTopWrapper,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
@@ -41,7 +42,7 @@ export const AccountMainContent = ({
     const { disconnect, connection } = useWallet();
 
     return (
-        <>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
@@ -90,6 +91,6 @@ export const AccountMainContent = ({
                     <VersionFooter />
                 </ModalFooter>
             </Container>
-        </>
+        </ScrollToTopWrapper>
     );
 };

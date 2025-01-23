@@ -10,26 +10,24 @@ import {
 import {
     useCrossAppConnectionCache,
     useFetchAppInfo,
-    usePrivy,
     useWallet,
 } from '@/hooks';
-import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
-import { IoIosFingerPrint } from 'react-icons/io';
 import { ActionButton } from '@/components';
 import {
     AddressDisplay,
     ModalBackButton,
     StickyHeaderContainer,
+    ScrollToTopWrapper,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
-import { RxExit } from 'react-icons/rx';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { useEffect, useRef } from 'react';
+import { CiLogout } from 'react-icons/ci';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -44,7 +42,7 @@ export const WalletSettingsContent = ({
 }: Props) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
-    const { exportWallet, linkPasskey } = usePrivy();
+
     const { privy, darkMode: isDark } = useVeChainKitConfig();
 
     const { connection, disconnect, account } = useWallet();
@@ -63,7 +61,7 @@ export const WalletSettingsContent = ({
     }, []);
 
     return (
-        <VStack ref={contentRef}>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -89,49 +87,6 @@ export const WalletSettingsContent = ({
                 </VStack>
 
                 <VStack mt={10} w={'full'} spacing={3}>
-                    {connection.isConnectedWithSocialLogin && (
-                        <ActionButton
-                            title={t('Backup your wallet')}
-                            description={t(
-                                'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
-                            )}
-                            onClick={() => {
-                                exportWallet();
-                            }}
-                            leftIcon={GiHouseKeys}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    )}
-
-                    {connection.isConnectedWithSocialLogin &&
-                        privy?.allowPasskeyLinking && (
-                            <ActionButton
-                                title={t('Add passkey')}
-                                description={t(
-                                    'Enable one click login by adding a passkey to your account.',
-                                )}
-                                onClick={() => {
-                                    linkPasskey();
-                                }}
-                                leftIcon={IoIosFingerPrint}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                        )}
-
-                    {connection.isConnectedWithSocialLogin && (
-                        <ActionButton
-                            title={t('Login methods')}
-                            description={t(
-                                'View and manage the login methods linked to your wallet.',
-                            )}
-                            onClick={() => {
-                                setCurrentContent('privy-linked-accounts');
-                            }}
-                            leftIcon={MdManageAccounts}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    )}
-
                     {/* <ActionButton
                                 title={t('Manage MFA')}
                                 description={t(
@@ -185,6 +140,20 @@ export const WalletSettingsContent = ({
                         rightIcon={MdOutlineNavigateNext}
                     />
 
+                    {connection.isConnectedWithSocialLogin && (
+                        <ActionButton
+                            title={t('Login methods')}
+                            description={t(
+                                'View and manage the login methods linked to your wallet.',
+                            )}
+                            onClick={() => {
+                                setCurrentContent('privy-linked-accounts');
+                            }}
+                            leftIcon={MdManageAccounts}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    )}
+
                     {connection.isConnectedWithPrivy && (
                         <ActionButton
                             title={t('Embedded Wallet')}
@@ -213,11 +182,11 @@ export const WalletSettingsContent = ({
                         onLogoutSuccess();
                     }}
                     variant="vechainKitSecondary"
-                    leftIcon={<RxExit color="#888888" />}
+                    leftIcon={<CiLogout color="#888888" />}
                 >
                     {t('Logout')}
                 </Button>
             </ModalFooter>
-        </VStack>
+        </ScrollToTopWrapper>
     );
 };
