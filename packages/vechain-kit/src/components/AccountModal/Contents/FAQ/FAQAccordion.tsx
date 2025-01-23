@@ -7,13 +7,21 @@ import {
     Box,
     Text,
     Icon,
+    VStack,
+    InputGroup,
+    Input,
+    InputLeftElement,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
+import { useState } from 'react';
+import { CiSearch } from 'react-icons/ci';
+import { FiSlash } from 'react-icons/fi';
 
 export const FAQAccordion = () => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const [searchQuery, setSearchQuery] = useState('');
 
     const faqItems = [
         {
@@ -78,41 +86,85 @@ export const FAQAccordion = () => {
         },
     ];
 
+    // Filter FAQ items based on search query
+    const filteredFaqItems = faqItems.filter(
+        (item) =>
+            item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.answer.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+
     return (
-        <Accordion allowMultiple>
-            {faqItems.map((item, index) => (
-                <AccordionItem key={index} border="none" mb={2}>
-                    {({ isExpanded }) => (
-                        <>
-                            <AccordionButton
-                                bg={isDark ? 'whiteAlpha.50' : 'gray.50'}
-                                borderRadius="xl"
-                                _hover={{
-                                    bg: isDark ? 'whiteAlpha.100' : 'gray.100',
-                                }}
-                            >
-                                <Box flex="1" textAlign="left" py={2}>
-                                    <Text fontWeight="500">
-                                        {t(item.question)}
-                                    </Text>
-                                </Box>
-                                <Icon
-                                    as={
-                                        isExpanded ? IoChevronUp : IoChevronDown
-                                    }
-                                    fontSize="20px"
-                                    opacity={0.5}
-                                />
-                            </AccordionButton>
-                            <AccordionPanel pb={4}>
-                                <Text fontSize="sm" opacity={0.8}>
-                                    {t(item.answer)}
-                                </Text>
-                            </AccordionPanel>
-                        </>
-                    )}
-                </AccordionItem>
-            ))}
-        </Accordion>
+        <VStack spacing={4} align="stretch">
+            <InputGroup size="lg">
+                <Input
+                    placeholder="Search FAQ"
+                    bg={isDark ? '#1a1a1a' : 'gray.50'}
+                    borderRadius="xl"
+                    height="56px"
+                    pl={12}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <InputLeftElement h="56px" w="56px" pl={4}>
+                    <CiSearch color={isDark ? 'whiteAlpha.400' : 'gray.400'} />
+                </InputLeftElement>
+            </InputGroup>
+
+            {filteredFaqItems.length === 0 ? (
+                <VStack
+                    spacing={2}
+                    py={8}
+                    color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                >
+                    <Icon as={FiSlash} boxSize={12} opacity={0.5} />
+                    <Text fontSize="lg">{t('No questions found')}</Text>
+                    <Text fontSize="md">
+                        {t('Try searching with a different term')}
+                    </Text>
+                </VStack>
+            ) : (
+                <Accordion allowMultiple>
+                    {filteredFaqItems.map((item, index) => (
+                        <AccordionItem key={index} border="none" mb={2}>
+                            {({ isExpanded }) => (
+                                <>
+                                    <AccordionButton
+                                        bg={
+                                            isDark ? 'whiteAlpha.50' : 'gray.50'
+                                        }
+                                        borderRadius="xl"
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.100'
+                                                : 'gray.100',
+                                        }}
+                                    >
+                                        <Box flex="1" textAlign="left" py={2}>
+                                            <Text fontWeight="500">
+                                                {t(item.question)}
+                                            </Text>
+                                        </Box>
+                                        <Icon
+                                            as={
+                                                isExpanded
+                                                    ? IoChevronUp
+                                                    : IoChevronDown
+                                            }
+                                            fontSize="20px"
+                                            opacity={0.5}
+                                        />
+                                    </AccordionButton>
+                                    <AccordionPanel pb={4}>
+                                        <Text fontSize="sm" opacity={0.8}>
+                                            {t(item.answer)}
+                                        </Text>
+                                    </AccordionPanel>
+                                </>
+                            )}
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            )}
+        </VStack>
     );
 };
