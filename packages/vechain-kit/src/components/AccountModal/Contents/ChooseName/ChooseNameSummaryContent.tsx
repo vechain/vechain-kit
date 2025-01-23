@@ -6,18 +6,12 @@ import {
     Button,
     ModalFooter,
     useDisclosure,
-    Icon,
+    Text,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    AddressDisplayCard,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { useWallet } from '@/hooks';
 import { TransactionModal } from '@/components/TransactionModal';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
-import { GiConfirmed } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -36,7 +30,6 @@ export const ChooseNameSummaryContent = ({
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { account } = useWallet();
     const transactionModal = useDisclosure();
 
     const { sendTransaction, status, txReceipt, error, progress } =
@@ -82,37 +75,43 @@ export const ChooseNameSummaryContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={4} w="full">
-                    <AddressDisplayCard
-                        label={t('Current')}
-                        address={account?.address ?? ''}
-                        domain={account?.domain}
-                        imageSrc={account?.image ?? ''}
-                        imageAlt="Current account"
-                        hideAddress={true}
-                    />
-
-                    <AddressDisplayCard
-                        label={t('New Name')}
-                        address={account?.address ?? ''}
-                        domain={`${name}.veworld.vet`}
-                        imageSrc={account?.image ?? ''}
-                        imageAlt="Account"
-                        hideAddress={true}
-                    />
+                <VStack spacing={4} w="full" textAlign="center">
+                    <Text fontSize="lg">
+                        {t('Are you sure you want to set your domain name to')}
+                    </Text>
+                    <Text fontSize="xl" fontWeight="bold" color="blue.500">
+                        {`${name}.veworld.vet`}
+                    </Text>
                 </VStack>
             </ModalBody>
 
-            <ModalFooter>
+            <ModalFooter gap={4}>
                 <Button
                     px={4}
                     width="full"
-                    height="60px"
+                    height="48px"
+                    variant="outline"
+                    borderRadius="xl"
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'choose-name-search',
+                            props: {
+                                setCurrentContent,
+                                name,
+                            },
+                        })
+                    }
+                >
+                    {t('Cancel')}
+                </Button>
+                <Button
+                    px={4}
+                    width="full"
+                    height="48px"
                     variant="solid"
                     borderRadius="xl"
                     colorScheme="blue"
                     onClick={handleConfirm}
-                    rightIcon={<Icon as={GiConfirmed} />}
                 >
                     {t('Confirm')}
                 </Button>

@@ -17,6 +17,8 @@ type AddressDisplayCardProps = {
     imageSrc: string;
     imageAlt?: string;
     hideAddress?: boolean;
+    balance?: number;
+    symbol?: string;
 };
 
 export const AddressDisplayCard = ({
@@ -26,13 +28,24 @@ export const AddressDisplayCard = ({
     imageSrc,
     imageAlt = 'Account',
     hideAddress = false,
+    balance,
+    symbol,
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
 
-    const { totalBalance, isLoading } = useBalances({
+    const { balances, isLoading } = useBalances({
         address: address,
     });
+
+    // Use the specific token balance if symbol is provided
+    const displayBalance =
+        balance !== undefined
+            ? balance
+            : (symbol &&
+                  balances[symbol.toLowerCase() as keyof typeof balances]) ||
+              0;
+
     return (
         <Box
             w="full"
@@ -83,7 +96,8 @@ export const AddressDisplayCard = ({
                     </Text>
                     <Skeleton isLoaded={!isLoading}>
                         <Text fontSize="xs" opacity={0.5}>
-                            ${compactFormatter.format(totalBalance)}
+                            {compactFormatter.format(displayBalance)}
+                            {symbol && ` ${symbol}`}
                         </Text>
                     </Skeleton>
                 </VStack>
