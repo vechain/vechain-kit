@@ -32,6 +32,7 @@
         "@tanstack/react-query": "^5.64.2",
         "@tanstack/react-query-devtools": "^5.64.1",
         "@vechain/picasso": "^2.1.1",
+        "@vechain/dapp-kit-react": "1.4.1",
         "@vechain/sdk-core": "^1.0.0-rc.5",
         "@vechain/sdk-network": "^1.0.0-rc.5",
         "@vechain/vebetterdao-contracts": "^4.1.0",
@@ -65,6 +66,19 @@
         "@tanstack/react-query": "^5.64.2",
         "@chakra-ui/react": "^2.8.2",
         "@vechain/dapp-kit-react": "1.4.1"
+    },
+    "peerDependenciesMeta": {
+        "@vechain/dapp-kit-react": {
+            "optional": true
+        }
+    },
+    "resolutions": {
+        "@vechain/sdk-core": "^1.0.0-rc.5",
+        "@vechain/sdk-network": "^1.0.0-rc.5"
+    },
+    "overrides": {
+        "@vechain/sdk-core": "^1.0.0-rc.5",
+        "@vechain/sdk-network": "^1.0.0-rc.5"
     },
     "exports": {
         ".": {

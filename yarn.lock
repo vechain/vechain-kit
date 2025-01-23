@@ -4285,10 +4285,10 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tanstack/query-core@5.62.16":
-  version "5.62.16"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.62.16.tgz#f7efc92b1562a054748bc00c7f8d9d833407503b"
-  integrity sha512-9Sgft7Qavcd+sN0V25xVyo0nfmcZXBuODy3FVG7BMWTg1HMLm8wwG5tNlLlmSic1u7l1v786oavn+STiFaPH2g==
+"@tanstack/query-core@5.64.2":
+  version "5.64.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.64.2.tgz#be06e7c7966d14ea3e7c82bea1086b463f2f6809"
+  integrity sha512-hdO8SZpWXoADNTWXV9We8CwTkXU88OVWRBcsiFrk7xJQnhm6WRlweDzMD+uH+GnuieTBVSML6xFa17C2cNV8+g==
 
 "@tanstack/query-devtools@5.62.16":
   version "5.62.16"
@@ -4302,12 +4302,12 @@
   dependencies:
     "@tanstack/query-devtools" "5.62.16"
 
-"@tanstack/react-query@^5.63.0":
-  version "5.63.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.63.0.tgz#18e00e24a485f707cfd41f4b30679f70e6ca6016"
-  integrity sha512-QWizLzSiog8xqIRYmuJRok9VELlXVBAwtINgVCgW1SNvamQwWDO5R0XFSkjoBEj53x9Of1KAthLRBUC5xmtVLQ==
+"@tanstack/react-query@^5.64.2":
+  version "5.64.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.64.2.tgz#199c8a5a8ff92a8565f8cdd378747398347512a2"
+  integrity sha512-3pakNscZNm8KJkxmovvtZ4RaXLyiYYobwleTMvpIGUoKRa8j8VlrQKNl5W8VUEfVfZKkikvXVddLuWMbcSCA1Q==
   dependencies:
-    "@tanstack/query-core" "5.62.16"
+    "@tanstack/query-core" "5.64.2"
 
 "@tanstack/react-virtual@^3.8.1":
   version "3.11.2"
@@ -7920,19 +7920,6 @@ ethers@^5.7.2:
     "@ethersproject/wallet" "5.7.0"
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
-
-ethers@^6.13.5:
-  version "6.13.5"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.13.5.tgz#8c1d6ac988ac08abc3c1d8fabbd4b8b602851ac4"
-  integrity sha512-+knKNieu5EKRThQJWwqaJ10a6HE9sSehGeqWN65//wE7j47ZpFhKAnHB/JJFibwwg61I/koxaPsXbXpD/skNOQ==
-  dependencies:
-    "@adraffy/ens-normalize" "1.10.1"
-    "@noble/curves" "1.2.0"
-    "@noble/hashes" "1.3.2"
-    "@types/node" "22.7.5"
-    aes-js "4.0.0-beta.5"
-    tslib "2.7.0"
-    ws "8.17.1"
 
 ethjs-util@^0.1.6:
   version "0.1.6"
@@ -12838,7 +12825,21 @@ viem@^2.1.1:
     webauthn-p256 "0.0.5"
     ws "8.17.1"
 
-viem@^2.21.14, viem@^2.21.3:
+viem@^2.21.14:
+  version "2.22.12"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.22.12.tgz#9940076d6883c09b073f674cdf43b907fe9e6bb2"
+  integrity sha512-n3Oc3RO6SaFMOaF8/0YzZK5KtL3OJ9mPiJQgJIOI5Ab5FscdsFixjJdaYD2Tp3Sp/VMHYG9aRyqJ1KZaO7nu+A==
+  dependencies:
+    "@noble/curves" "1.7.0"
+    "@noble/hashes" "1.6.1"
+    "@scure/bip32" "1.6.0"
+    "@scure/bip39" "1.5.0"
+    abitype "1.0.7"
+    isows "1.0.6"
+    ox "0.6.5"
+    ws "8.18.0"
+
+viem@^2.21.3:
   version "2.22.9"
   resolved "https://registry.yarnpkg.com/viem/-/viem-2.22.9.tgz#14ddb7f1ccf900784e347e1aa157e8e58043b0c2"
   integrity sha512-2yy46qYhcdo8GZggQ3Zoq9QCahI0goddzpVI/vSnTpcClQBSDxYRCuAqRzzLqjvJ7hS0UYgplC7eRkM2sYgflw==
