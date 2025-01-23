@@ -1,6 +1,5 @@
 import {
     Container,
-    Image,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
@@ -54,17 +53,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
 
                 <ModalCloseButton />
             </StickyHeaderContainer>
-
-            <VStack justify={'center'}>
-                <Image
-                    src={wallet?.image}
-                    maxW={'100px'}
-                    mt={5}
-                    mb={5}
-                    borderRadius="full"
-                    objectFit="cover"
-                />
-            </VStack>
 
             <Container maxW={'container.lg'}>
                 <ModalBody w={'full'}>
