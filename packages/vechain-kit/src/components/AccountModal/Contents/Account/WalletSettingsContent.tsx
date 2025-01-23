@@ -18,7 +18,7 @@ import {
     StickyHeaderContainer,
     FadeInViewFromBottom,
 } from '@/components/common';
-import { useVeChainKitConfig } from '@/providers/VeChainKit';
+import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { RxExit } from 'react-icons/rx';

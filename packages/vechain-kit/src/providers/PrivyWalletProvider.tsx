@@ -15,7 +15,7 @@ import { randomTransactionUser } from '../utils';
 import { EnhancedClause, ExecuteWithAuthorizationSignData } from '@/types';
 import { useGetChainId, useSmartAccount, useWallet } from '@/hooks';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig } from './VeChainKit';
+import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
 import { TransactionProgress } from '@/types';

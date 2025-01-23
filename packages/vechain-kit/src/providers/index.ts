@@ -1,3 +1,3 @@
-export * from './VeChainKit';
+export * from './VeChainKitProvider';
 export * from './PrivyWalletProvider';
 export * from './VechainKitThemeProvider';

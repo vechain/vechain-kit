@@ -4,9 +4,10 @@ import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { darkTheme } from './theme';
-const VechainKitProvider = dynamic(
+const VechainKitProviderWrapper = dynamic(
     async () =>
-        (await import('./providers/VechainKitProvider')).VechainKitProvider,
+        (await import('./providers/VechainKitProviderWrapper'))
+            .VechainKitProviderWrapper,
     {
         ssr: false,
     },
@@ -30,7 +31,9 @@ export default function RootLayout({
                 {/* Chakra UI Provider */}
                 <ChakraProvider theme={darkTheme}>
                     {/* VechainKit Provider */}
-                    <VechainKitProvider>{children}</VechainKitProvider>
+                    <VechainKitProviderWrapper>
+                        {children}
+                    </VechainKitProviderWrapper>
                 </ChakraProvider>
             </body>
         </html>

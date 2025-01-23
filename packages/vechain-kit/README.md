@@ -31,14 +31,14 @@ yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp
 
 ## Basic Setup
 
-Import the `VechainKit` provider and wrap your app in it.
+Import the `VechainKitProvider` provider and wrap your app in it.
 
 ```typescript
-import { VeChainKit } from '@vechain/vechain-kit';
+import { VechainKitProvider } from '@vechain/vechain-kit';
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <VeChainKit
+        <VechainKitProvider
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: true,
@@ -75,7 +75,7 @@ export default function App({ Component, pageProps }: AppProps) {
             }}
         >
             {children}
-        </VeChainKit>
+        </VechainKitProvider>
     );
 }
 ```
@@ -85,11 +85,11 @@ This will allow you to connect to wallets (VeWorld, Sync2, WalletConnect) and to
 If you want to have your own Privy app, for enchanced user experience, you can use the `privy` prop.
 
 ```typescript
-import { VeChainKit } from '@vechain/vechain-kit';
+import { VechainKitProvider } from '@vechain/vechain-kit';
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <VeChainKit
+        <VechainKitProvider
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
@@ -108,7 +108,7 @@ export default function App({ Component, pageProps }: AppProps) {
             ...
         >
             {children}
-        </VeChainKit>
+        </VechainKitProvider>
     );
 }
 ```
@@ -124,8 +124,8 @@ import dynamic from 'next/dynamic';
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
 // 2. Code splitting - this component will only be loaded when needed, reducing initial bundle size
 // 3. The 'ssr: false' option ensures this component is only rendered on the client side
-const VeChainKit = dynamic(
-    async () => (await import('@vechain/vechain-kit')).VeChainKit,
+const VechainKitProvider = dynamic(
+    async () => (await import('@vechain/vechain-kit')).VechainKitProvider,
     {
         ssr: false,
     },
@@ -133,9 +133,9 @@ const VeChainKit = dynamic(
 
 export default function App({ Component, pageProps }: AppProps) {
     return (
-        <VeChainKit>
+        <VechainKitProvider>
             <Component {...pageProps} />
-        </VeChainKit>
+        </VechainKitProvider>
     );
 }
 ```

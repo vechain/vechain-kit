@@ -35,7 +35,7 @@ const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'cm153hrup0817axti38avlfyg', //greencart
 ];
 
-export type VechainKitProps = {
+export type VechainKitProviderProps = {
     children: ReactNode;
     privy?: {
         appId: string;
@@ -88,15 +88,15 @@ export type VechainKitProps = {
 };
 
 type VeChainKitConfig = {
-    privy?: VechainKitProps['privy'];
+    privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
-    feeDelegation: VechainKitProps['feeDelegation'];
-    dappKit: VechainKitProps['dappKit'];
-    loginModalUI?: VechainKitProps['loginModalUI'];
+    feeDelegation: VechainKitProviderProps['feeDelegation'];
+    dappKit: VechainKitProviderProps['dappKit'];
+    loginModalUI?: VechainKitProviderProps['loginModalUI'];
     darkMode: boolean;
-    i18n?: VechainKitProps['i18n'];
-    language?: VechainKitProps['language'];
-    network: VechainKitProps['network'];
+    i18n?: VechainKitProviderProps['i18n'];
+    language?: VechainKitProviderProps['language'];
+    network: VechainKitProviderProps['network'];
     privySocialLoginEnabled: boolean;
     // Connect Modal
     openConnectModal: () => void;
@@ -135,7 +135,7 @@ export const useVeChainKitConfig = () => {
 /**
  * Provider to wrap the application with Privy and DAppKit
  */
-export const VeChainKit = ({
+export const VeChainKitProvider = ({
     children,
     privy,
     feeDelegation,
@@ -146,10 +146,10 @@ export const VeChainKit = ({
     },
     darkMode = false,
     i18n: i18nConfig,
-    language,
+    language = 'en',
     network,
     privyEcosystemAppIDS = DEFAULT_PRIVY_ECOSYSTEM_APP_IDS,
-}: Omit<VechainKitProps, 'queryClient'>) => {
+}: Omit<VechainKitProviderProps, 'queryClient'>) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
     const closeConnectModal = useCallback(
