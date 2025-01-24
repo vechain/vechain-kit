@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoCloseCircle } from 'react-icons/io5';
-import { useFeatureAnnouncement } from '@/hooks/useFeatureAnnouncement';
+import { useFeatureAnnouncement } from '@/hooks/utils/useFeatureAnnouncement';
 import { AccountModalContentTypes } from '../../Types';
 
 type FeatureAnnouncementCardProps = {
