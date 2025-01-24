@@ -26,6 +26,38 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
+
+                <title>Vechain Kit Sample App</title>
+                <meta
+                    name="description"
+                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                />
+
+                <meta
+                    property="og:url"
+                    content="https://sample-vechain-app-demo.vechain.org/"
+                />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Vechain Kit Sample App" />
+                <meta
+                    property="og:description"
+                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                />
+                <meta
+                    property="og:image"
+                    content="https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png"
+                />
+
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Vechain Kit Sample App" />
+                <meta
+                    name="twitter:description"
+                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                />
+                <meta
+                    name="twitter:image"
+                    content="https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png"
+                />
             </head>
             <body>
                 {/* Chakra UI Provider */}

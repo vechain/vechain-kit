@@ -7,14 +7,12 @@ import { AccountInfo } from '@/app/components/features/AccountInfo';
 import { ConnectionInfo } from '@/app/components/features/ConnectionInfo';
 import { DaoInfo } from '@/app/components/features/DaoInfo';
 import { UIControls } from '@/app/components/features/UIControls';
-import { LanguageSelector } from '@/app/components/features/LanguageSelector';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
 import { Introduction } from '../components/features/Introduction';
 import { ConnectionTypes } from '../components/features/ConnectionTypes';
 import { SmartAccountInfo } from '../components/features/SmartAccountInfo';
-import { KitFeatures } from '../components/features/KitFeatures';
 
 export default function Home(): ReactElement {
     const { account, connection } = useWallet();
