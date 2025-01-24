@@ -59,6 +59,7 @@ export function ConnectionTypes() {
                             textDecoration: 'underline',
                             fontWeight: 'bold',
                         }}
+                        target="_blank"
                     >
                         this website
                     </a>{' '}
@@ -67,7 +68,10 @@ export function ConnectionTypes() {
                 </Text>
 
                 <Button>
-                    <Link href="https://vechain.github.io/smart-accounts-factory/">
+                    <Link
+                        isExternal
+                        href="https://vechain.github.io/smart-accounts-factory/"
+                    >
                         Go to website
                     </Link>
                 </Button>
