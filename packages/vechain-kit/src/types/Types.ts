@@ -10,7 +10,7 @@ export type SmartAccount = Wallet & {
 };
 
 export type ConnectionSource = {
-    type: 'privy' | 'wallet' | 'privy-cross-app' | 'privy-vechain';
+    type: 'privy' | 'wallet' | 'privy-cross-app';
     displayName: string;
 };
 
