@@ -16,7 +16,7 @@
 
 > **Note**: Currently supports React and Next.js only
 
-📚 For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg)
+📚 For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/vechain-kit)
 
 Try out the [demo app](https://sample-vechain-app-demo.vechain.org/) to see how it works.
 
