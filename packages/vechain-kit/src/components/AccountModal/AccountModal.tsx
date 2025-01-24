@@ -117,7 +117,9 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 );
             case 'faq':
                 return (
-                    <FAQContent onGoBack={() => setCurrentContent('main')} />
+                    <FAQContent
+                        onGoBack={() => setCurrentContent('settings')}
+                    />
                 );
             case 'connection-details':
                 return (
