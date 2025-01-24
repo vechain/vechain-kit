@@ -3,6 +3,7 @@
     <p>
         <strong>An all-in-one library for building VeChain applications</strong>
     </p>
+    <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
 </div>
 
 # Features
@@ -17,7 +18,7 @@
 
 📚 For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg)
 
-Try out the [demo app](https://vechain.github.io/vechain-kit/) to see how it works.
+Try out the [demo app](https://sample-vechain-app-demo.vechain.org/) to see how it works.
 
 Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main/examples/tutorial-next) to see how to integrate the library with Next.js.
 

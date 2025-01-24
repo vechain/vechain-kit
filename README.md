@@ -9,6 +9,7 @@
         <a href="https://sonarcloud.io/project/overview?id=vechain_vechain-dapp-kit"><img src="https://sonarcloud.io/api/project_badges/measure?project=vechain_vechain-dapp-kit&metric=sqale_rating&token=69ceb851539382455c3eba073d1690bb58147af5" alt="Maintainability Rating"></a>
         <a href="https://github.com/vechain/vechain-dapp-kit/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
     </p>
+    <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
 </div>
 
 ## Introduction
@@ -17,11 +18,11 @@ VeChain Kit is a library created to make it easy for developers to build VeChain
 
 It comes with:
 
-- Wallet connection: VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, Social Login (Privy)
-- Hooks for reading and writing to the VeChainThor blockchain
-- Components for wallet operations
-- Multilanguage support
-- Send tokens, see balances, handle vet domains, etc.
+-   Wallet connection: VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, Social Login (Privy)
+-   Hooks for reading and writing to the VeChainThor blockchain
+-   Components for wallet operations
+-   Multilanguage support
+-   Send tokens, see balances, handle vet domains, etc.
 
 You can use the hooks to read data from the blockchain even if user is not connected to the app.
 
