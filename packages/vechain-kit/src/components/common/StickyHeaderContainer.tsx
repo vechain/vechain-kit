@@ -7,10 +7,9 @@ type Props = {
 };
 
 export const StickyHeaderContainer = ({ children }: Props) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
-
+    const { darkMode: isDark } = useVeChainKitConfig();
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {

@@ -61,10 +61,10 @@ export const AccountMainContent = ({
             <StickyHeaderContainer>
                 <ModalHeader
                     w={'full'}
+                    color={isDark ? '#dfdfdd' : 'rgb(77, 77, 77)'}
                     fontSize={'md'}
                     fontWeight={'500'}
                     textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
                     {connection.isConnectedWithPrivy
                         ? t('Account')
