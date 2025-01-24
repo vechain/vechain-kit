@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Icon,
     Image,
@@ -91,7 +92,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     };
 
     return (
-        <>
+        <Box>
             <>
                 <StickyHeaderContainer>
                     <ModalHeader
@@ -201,6 +202,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                 )}
                 onTryAgain={handleTryAgain}
             />
-        </>
+        </Box>
     );
 };

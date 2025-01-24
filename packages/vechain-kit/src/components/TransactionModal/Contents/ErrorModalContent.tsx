@@ -9,6 +9,7 @@ import {
     ModalBody,
     ModalFooter,
     HStack,
+    Box,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
@@ -44,7 +45,7 @@ export const ErrorModalContent = ({
     const explorerUrl = getConfig(network.type).explorerUrl;
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -122,6 +123,6 @@ export const ErrorModalContent = ({
                     </Button>
                 </VStack>
             </ModalFooter>
-        </>
+        </Box>
     );
 };

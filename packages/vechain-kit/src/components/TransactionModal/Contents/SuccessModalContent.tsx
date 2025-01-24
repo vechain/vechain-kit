@@ -9,6 +9,7 @@ import {
     ModalBody,
     Button,
     HStack,
+    Box,
 } from '@chakra-ui/react';
 import { ShareButtons } from '../Components/ShareButtons';
 import { ReactNode } from 'react';
@@ -57,7 +58,7 @@ export const SuccessModalContent = ({
         socialDescriptionEncoded ?? `${explorerUrl}/${txId}`;
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -127,6 +128,6 @@ export const SuccessModalContent = ({
                     )}
                 </VStack>
             </ModalFooter>
-        </>
+        </Box>
     );
 };

@@ -9,6 +9,7 @@ import {
     ModalFooter,
     Button,
     Icon,
+    Box,
 } from '@chakra-ui/react';
 import { ReactNode, useState, useEffect } from 'react';
 import { useVeChainKitConfig } from '@/providers';
@@ -45,7 +46,7 @@ export const LoadingModalContent = ({
     }, []);
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -108,6 +109,6 @@ export const LoadingModalContent = ({
                     </Button>
                 )}
             </ModalFooter>
-        </>
+        </Box>
     );
 };

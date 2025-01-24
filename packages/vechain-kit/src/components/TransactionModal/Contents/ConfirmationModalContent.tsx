@@ -6,6 +6,7 @@ import {
     Button,
     Icon,
     ModalFooter,
+    Box,
 } from '@chakra-ui/react';
 import { ReactNode, useState, useEffect } from 'react';
 import { useWallet } from '@/hooks';
@@ -42,7 +43,7 @@ export const ConfirmationModalContent = ({
     }, [progress?.currentStep]);
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -135,6 +136,6 @@ export const ConfirmationModalContent = ({
                     </Button>
                 )}
             </ModalFooter>
-        </>
+        </Box>
     );
 };

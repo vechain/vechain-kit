@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Icon,
     Image,
@@ -37,7 +38,7 @@ export const AppOverviewContent = ({
     const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -101,6 +102,6 @@ export const AppOverviewContent = ({
                     />
                 </VStack>
             </ModalFooter>
-        </>
+        </Box>
     );
 };
