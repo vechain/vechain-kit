@@ -14,7 +14,12 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
-import { useEnsRecordExists, useWallet, useVechainDomain } from '@/hooks';
+import {
+    useEnsRecordExists,
+    useWallet,
+    useVechainDomain,
+    useIsDomainProtected,
+} from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -40,13 +45,23 @@ export const ChooseNameSearchContent = ({
 
     const { data: ensRecordExists, isLoading: isEnsCheckLoading } =
         useEnsRecordExists(name);
-    const { data: domainInfo } = useVechainDomain(`${name}.veworld.vet`);
+    const { data: domainInfo, isLoading: isDomainInfoLoading } =
+        useVechainDomain(`${name}.veworld.vet`);
+    const { data: isProtected, isLoading: isProtectedLoading } =
+        useIsDomainProtected(name);
+
+    const isFetchingDomainInfo =
+        isEnsCheckLoading || isDomainInfoLoading || isProtectedLoading;
 
     useEffect(() => {
         if (!hasInteracted) return;
 
         if (name.length < 3) {
             setError(t('Name must be at least 3 characters long'));
+            setIsAvailable(false);
+            setIsOwnDomain(false);
+        } else if (isProtected) {
+            setError(t('This domain is protected'));
             setIsAvailable(false);
             setIsOwnDomain(false);
         } else if (ensRecordExists) {
@@ -76,6 +91,7 @@ export const ChooseNameSearchContent = ({
         isEnsCheckLoading,
         domainInfo,
         account?.address,
+        isProtected,
     ]);
 
     const handleContinue = () => {
@@ -187,7 +203,12 @@ export const ChooseNameSearchContent = ({
                     height="60px"
                     variant="solid"
                     borderRadius="xl"
-                    isDisabled={!isAvailable || !!error}
+                    isDisabled={
+                        !isAvailable ||
+                        !!error ||
+                        isProtected ||
+                        isFetchingDomainInfo
+                    }
                     onClick={handleContinue}
                 >
                     {t('Continue')}

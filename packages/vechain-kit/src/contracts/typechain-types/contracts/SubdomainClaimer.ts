@@ -23,6 +23,15 @@ import type {
   TypedContractMethod,
 } from "../common";
 
+export declare namespace SubdomainClaimer {
+  export type ProtectedDomainStruct = { name: string; isProtected: boolean };
+
+  export type ProtectedDomainStructOutput = [
+    name: string,
+    isProtected: boolean
+  ] & { name: string; isProtected: boolean };
+}
+
 export interface SubdomainClaimerInterface extends Interface {
   getFunction(
     nameOrSignature:
@@ -31,17 +40,24 @@ export interface SubdomainClaimerInterface extends Interface {
       | "domainName"
       | "ens"
       | "initialize"
+      | "initializeV2"
+      | "isDomainProtected"
       | "node"
       | "owner"
       | "proxiableUUID"
       | "renounceOwnership"
       | "transferOwnership"
+      | "updateProtectedDomains"
       | "upgradeToAndCall"
       | "version"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "Initialized" | "OwnershipTransferred" | "Upgraded"
+    nameOrSignatureOrTopic:
+      | "Initialized"
+      | "OwnershipTransferred"
+      | "ProtectedDomainUpdated"
+      | "Upgraded"
   ): EventFragment;
 
   encodeFunctionData(
@@ -61,6 +77,14 @@ export interface SubdomainClaimerInterface extends Interface {
     functionFragment: "initialize",
     values: [AddressLike, AddressLike, string]
   ): string;
+  encodeFunctionData(
+    functionFragment: "initializeV2",
+    values: [SubdomainClaimer.ProtectedDomainStruct[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isDomainProtected",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "node", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -76,6 +100,10 @@ export interface SubdomainClaimerInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "updateProtectedDomains",
+    values: [SubdomainClaimer.ProtectedDomainStruct]
+  ): string;
+  encodeFunctionData(
     functionFragment: "upgradeToAndCall",
     values: [AddressLike, BytesLike]
   ): string;
@@ -89,6 +117,14 @@ export interface SubdomainClaimerInterface extends Interface {
   decodeFunctionResult(functionFragment: "domainName", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ens", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initializeV2",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isDomainProtected",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "node", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
@@ -101,6 +137,10 @@ export interface SubdomainClaimerInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateProtectedDomains",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -128,6 +168,31 @@ export namespace OwnershipTransferredEvent {
   export interface OutputObject {
     previousOwner: string;
     newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ProtectedDomainUpdatedEvent {
+  export type InputTuple = [
+    nameHash: BytesLike,
+    domainName: string,
+    wasProtected: boolean,
+    isProtected: boolean
+  ];
+  export type OutputTuple = [
+    nameHash: string,
+    domainName: string,
+    wasProtected: boolean,
+    isProtected: boolean
+  ];
+  export interface OutputObject {
+    nameHash: string;
+    domainName: string;
+    wasProtected: boolean;
+    isProtected: boolean;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -212,6 +277,14 @@ export interface SubdomainClaimer extends BaseContract {
     "nonpayable"
   >;
 
+  initializeV2: TypedContractMethod<
+    [_protectedDomains: SubdomainClaimer.ProtectedDomainStruct[]],
+    [void],
+    "nonpayable"
+  >;
+
+  isDomainProtected: TypedContractMethod<[name: string], [boolean], "view">;
+
   node: TypedContractMethod<[], [string], "view">;
 
   owner: TypedContractMethod<[], [string], "view">;
@@ -222,6 +295,12 @@ export interface SubdomainClaimer extends BaseContract {
 
   transferOwnership: TypedContractMethod<
     [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  updateProtectedDomains: TypedContractMethod<
+    [_protectedDomain: SubdomainClaimer.ProtectedDomainStruct],
     [void],
     "nonpayable"
   >;
@@ -266,6 +345,16 @@ export interface SubdomainClaimer extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "initializeV2"
+  ): TypedContractMethod<
+    [_protectedDomains: SubdomainClaimer.ProtectedDomainStruct[]],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "isDomainProtected"
+  ): TypedContractMethod<[name: string], [boolean], "view">;
+  getFunction(
     nameOrSignature: "node"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -280,6 +369,13 @@ export interface SubdomainClaimer extends BaseContract {
   getFunction(
     nameOrSignature: "transferOwnership"
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "updateProtectedDomains"
+  ): TypedContractMethod<
+    [_protectedDomain: SubdomainClaimer.ProtectedDomainStruct],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "upgradeToAndCall"
   ): TypedContractMethod<
@@ -304,6 +400,13 @@ export interface SubdomainClaimer extends BaseContract {
     OwnershipTransferredEvent.InputTuple,
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
+  >;
+  getEvent(
+    key: "ProtectedDomainUpdated"
+  ): TypedContractEvent<
+    ProtectedDomainUpdatedEvent.InputTuple,
+    ProtectedDomainUpdatedEvent.OutputTuple,
+    ProtectedDomainUpdatedEvent.OutputObject
   >;
   getEvent(
     key: "Upgraded"
@@ -334,6 +437,17 @@ export interface SubdomainClaimer extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
+    >;
+
+    "ProtectedDomainUpdated(bytes32,string,bool,bool)": TypedContractEvent<
+      ProtectedDomainUpdatedEvent.InputTuple,
+      ProtectedDomainUpdatedEvent.OutputTuple,
+      ProtectedDomainUpdatedEvent.OutputObject
+    >;
+    ProtectedDomainUpdated: TypedContractEvent<
+      ProtectedDomainUpdatedEvent.InputTuple,
+      ProtectedDomainUpdatedEvent.OutputTuple,
+      ProtectedDomainUpdatedEvent.OutputObject
     >;
 
     "Upgraded(address)": TypedContractEvent<
