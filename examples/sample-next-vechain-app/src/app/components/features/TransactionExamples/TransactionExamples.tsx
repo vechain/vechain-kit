@@ -1,6 +1,8 @@
 'use client';
 
-import { Box, Button, Heading, HStack } from '@chakra-ui/react';
+import { VStack, Text, SimpleGrid, Box, Code, Button } from '@chakra-ui/react';
+import { MdSend } from 'react-icons/md';
+import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
     useSendTransaction,
@@ -74,51 +76,114 @@ export function TransactionExamples() {
     }, [sendTransaction, clauses, openTransactionModal]);
 
     return (
-        <>
-            <Box>
-                <Heading size={'md'}>
-                    <b>Test Transactions</b>
-                </Heading>
-                <HStack mt={4} spacing={4}>
-                    <Button
-                        onClick={handleTransactionWithToast}
-                        isLoading={isTransactionPending}
-                        isDisabled={isTransactionPending}
-                    >
-                        Tx with toast
-                    </Button>
-                    <Button
-                        onClick={handleTransactionWithModal}
-                        isLoading={isTransactionPending}
-                        isDisabled={isTransactionPending}
-                    >
-                        Tx with modal
-                    </Button>
-                </HStack>
-            </Box>
+        <CollapsibleCard title="Transaction Examples" icon={MdSend}>
+            <VStack spacing={6} align="stretch">
+                <Text textAlign="center">
+                    VeChain Kit provides built-in transaction handling with UI
+                    components. Try these examples to see the transaction flow
+                    in action.
+                </Text>
 
-            <TransactionToast
-                isOpen={isTransactionToastOpen}
-                onClose={closeTransactionToast}
-                status={status}
-                error={error}
-                txReceipt={txReceipt}
-                resetStatus={resetStatus}
-                progress={progress}
-            />
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                    {/* Transaction Buttons */}
+                    <VStack
+                        spacing={4}
+                        p={6}
+                        borderRadius="md"
+                        bg="whiteAlpha.50"
+                    >
+                        <Text fontWeight="bold">Test Transactions</Text>
+                        <VStack spacing={4} w="full">
+                            <Button
+                                onClick={handleTransactionWithToast}
+                                isLoading={isTransactionPending}
+                                isDisabled={isTransactionPending}
+                                w="full"
+                            >
+                                Test with Toast
+                            </Button>
+                            <Button
+                                onClick={handleTransactionWithModal}
+                                isLoading={isTransactionPending}
+                                isDisabled={isTransactionPending}
+                                w="full"
+                            >
+                                Test with Modal
+                            </Button>
+                        </VStack>
+                    </VStack>
 
-            <TransactionModal
-                isOpen={isTransactionModalOpen}
-                onClose={closeTransactionModal}
-                status={status}
-                progress={progress}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
-                showSocialButtons={true}
-                showExplorerButton={true}
-                onTryAgain={handleTransactionWithModal}
-                showTryAgainButton={true}
-            />
-        </>
+                    {/* Code Example */}
+                    <VStack
+                        spacing={4}
+                        p={6}
+                        borderRadius="md"
+                        bg="whiteAlpha.50"
+                    >
+                        <Text fontWeight="bold">Implementation</Text>
+                        <Box
+                            w="full"
+                            p={3}
+                            bg="blackAlpha.300"
+                            borderRadius="md"
+                        >
+                            <Code
+                                display="block"
+                                whiteSpace="pre"
+                                p={2}
+                                overflowX="auto"
+                            >
+                                {`import {
+  useSendTransaction,
+  useTransactionModal,
+  useTransactionToast,
+} from '@vechain/vechain-kit';
+import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
+
+// Create clauses
+const clauses = [{
+  to: contractAddress,
+  value: '0x0',
+  data: interface.encodeFunctionData(
+    'transfer',
+    [address, amount]
+  ),
+  comment: 'Transfer tokens',
+  abi: interface.getFunction('transfer'),
+}];
+
+// Send with UI feedback
+openTransactionModal();
+await sendTransaction(clauses);`}
+                            </Code>
+                        </Box>
+                    </VStack>
+                </SimpleGrid>
+
+                {/* Transaction UI Components */}
+                <TransactionToast
+                    isOpen={isTransactionToastOpen}
+                    onClose={closeTransactionToast}
+                    status={status}
+                    error={error}
+                    txReceipt={txReceipt}
+                    resetStatus={resetStatus}
+                    progress={progress}
+                />
+
+                <TransactionModal
+                    isOpen={isTransactionModalOpen}
+                    onClose={closeTransactionModal}
+                    status={status}
+                    progress={progress}
+                    txId={txReceipt?.meta.txID}
+                    errorDescription={error?.reason ?? 'Unknown error'}
+                    showSocialButtons={true}
+                    showExplorerButton={true}
+                    onTryAgain={handleTransactionWithModal}
+                    showTryAgainButton={true}
+                />
+            </VStack>
+        </CollapsibleCard>
     );
 }

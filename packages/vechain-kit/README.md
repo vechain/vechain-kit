@@ -3,6 +3,7 @@
     <p>
         <strong>An all-in-one library for building VeChain applications</strong>
     </p>
+    <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
 </div>
 
 # Features
@@ -17,9 +18,9 @@
 
 📚 For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg)
 
-Try out the [demo app](https://vechain.github.io/vechain-kit/) to see how it works.
+Try out the [demo app](https://sample-vechain-app-demo.vechain.org/) to see how it works.
 
-Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main/examples/sample-next-vechain-app) to see how to integrate the library with Next.js.
+Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main/examples/tutorial-next) to see how to integrate the library with Next.js.
 
 # Installation
 
@@ -39,12 +40,13 @@ import { VechainKitProvider } from '@vechain/vechain-kit';
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <VechainKitProvider
+            // Mandatory
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                delegateAllTransactions: true,
             }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
+                // If you want to use WalletConnect
                 walletConnectOptions: {
                     projectId:
                         process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
@@ -63,12 +65,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     },
                 },
             }}
-            loginModalUI={{
-                logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
-                description:
-                    'Choose between social login through VeChain or by connecting your wallet.',
-            }}
-            darkMode={isDarkMode}
+            darkMode={true}
             language="en"
             network={{
                 type: 'main',
