@@ -98,7 +98,9 @@ export const useWallet = (): UseWalletReturnType => {
         isLoadingLoginOAuth ||
         !ready;
 
+    // Add a single connection state that considers all factors
     const [isConnected, setIsConnected] = useState(false);
+
     // Connection type
     const connectionSource: ConnectionSource = isConnectedWithCrossApp
         ? {
@@ -122,10 +124,19 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithCrossApp;
 
         setIsConnected(isNowConnected);
+
+        // Force re-render of dependent components
+        if (!isNowConnected) {
+            // Clear any cached wallet data
+            clearConnectionCache();
+            // Dispatch event to trigger re-renders
+            window.dispatchEvent(new Event('wallet_disconnected'));
+        }
     }, [
         isConnectedWithDappKit,
         isConnectedWithSocialLogin,
         isConnectedWithCrossApp,
+        clearConnectionCache,
         connectionSource,
     ]);
 
@@ -179,16 +190,20 @@ export const useWallet = (): UseWalletReturnType => {
     // Modify the disconnect function to ensure state updates
     const disconnect = useCallback(async () => {
         try {
+            // First set connection state to false
+            setIsConnected(false);
+
+            // Then perform disconnection logic
             if (isConnectedWithDappKit) {
-                dappKitDisconnect();
+                await dappKitDisconnect();
             } else if (isConnectedWithSocialLogin) {
-                logout();
+                await logout();
             } else if (isConnectedWithCrossApp) {
-                disconnectCrossApp();
+                await disconnectCrossApp();
             }
+
             clearConnectionCache();
             window.dispatchEvent(new Event('wallet_disconnected'));
-            setIsConnected(false);
         } catch (error) {
             console.error('Error during disconnect:', error);
         }
