@@ -4,6 +4,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { darkTheme } from './theme';
+import { Metadata } from 'next';
 const VechainKitProviderWrapper = dynamic(
     async () =>
         (await import('./providers/VechainKitProviderWrapper'))
@@ -12,6 +13,21 @@ const VechainKitProviderWrapper = dynamic(
         ssr: false,
     },
 );
+
+export const metadata: Metadata = {
+    title: 'VeChain Kit',
+    description:
+        'VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain.',
+    openGraph: {
+        title: 'VeChain Kit',
+        description:
+            'VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain.',
+        images: ['https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png'],
+    },
+    icons: {
+        icon: 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png',
+    },
+};
 
 export default function RootLayout({
     children,
@@ -25,7 +41,6 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
-                <title>Vechain Kit Sample App</title>
             </head>
             <body>
                 {/* Chakra UI Provider */}
