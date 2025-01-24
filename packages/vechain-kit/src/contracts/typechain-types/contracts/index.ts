@@ -34,3 +34,8 @@ export type { XAllocationPool } from './XAllocationPool';
 export type { XAllocationVoting } from './XAllocationVoting';
 export type { SubdomainClaimer } from './SubdomainClaimer';
 export type { MockENS } from './mocks/MockENS';
+import type * as accounts from './accounts';
+export type { accounts };
+import type * as core from './core';
+export type { core };
+export type { AAProxy } from './AAProxy';

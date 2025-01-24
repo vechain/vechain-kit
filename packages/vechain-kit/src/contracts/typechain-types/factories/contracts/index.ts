@@ -25,3 +25,6 @@ export { X2EarnRewardsPool__factory } from './X2EarnRewardsPool__factory';
 export { XAllocationPool__factory } from './XAllocationPool__factory';
 export { XAllocationVoting__factory } from './XAllocationVoting__factory';
 export { SubdomainClaimer__factory } from './SubdomainClaimer__factory';
+export * as accounts from './accounts';
+export * as core from './core';
+export { AAProxy__factory } from './AAProxy__factory';

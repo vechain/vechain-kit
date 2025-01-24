@@ -4,7 +4,7 @@ export type Wallet = {
     image: string;
 } | null;
 
-export type SmartAccount = NonNullable<Wallet> & {
+export type SmartAccount = Wallet & {
     isDeployed: boolean;
     isActive: boolean;
 };
