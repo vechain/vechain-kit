@@ -40,12 +40,13 @@ import { VechainKitProvider } from '@vechain/vechain-kit';
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <VechainKitProvider
+            // Mandatory
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                delegateAllTransactions: true,
             }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
+                // If you want to use WalletConnect
                 walletConnectOptions: {
                     projectId:
                         process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
@@ -64,12 +65,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     },
                 },
             }}
-            loginModalUI={{
-                logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
-                description:
-                    'Choose between social login through VeChain or by connecting your wallet.',
-            }}
-            darkMode={isDarkMode}
+            darkMode={true}
             language="en"
             network={{
                 type: 'main',
