@@ -18,7 +18,7 @@ export function WelcomeSection() {
                 />
                 <Text textAlign={'center'}>
                     Hi! I'm VeChain Kit, a new way to access applications on
-                    VeChain, and I'm here to show how to use the kit and its
+                    VeChain, and I'm here to show you how to use the kit and its
                     features.
                 </Text>
                 <WalletButton

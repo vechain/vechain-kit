@@ -134,10 +134,11 @@ export const MainContent = ({
                         w={'full'}
                         justify={'center'}
                         mb={'24px'}
+                        px={4}
                     >
                         <Text
                             color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                            fontSize={'xs'}
+                            fontSize={'sm'}
                             textAlign={'center'}
                         >
                             {t(loginModalUI?.description)}
