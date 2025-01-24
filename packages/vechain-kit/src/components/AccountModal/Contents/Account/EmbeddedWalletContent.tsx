@@ -73,7 +73,12 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack justify={'center'} spacing={5} align="center">
+                <VStack
+                    justify={'center'}
+                    spacing={5}
+                    align="flex-start"
+                    w={'full'}
+                >
                     <VStack justify={'center'} align={'center'} w={'full'}>
                         <Image
                             src={walletImage}
@@ -131,10 +136,12 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                             )}
 
                             <Button
+                                mt={0}
                                 variant="link"
                                 size="sm"
                                 onClick={() => setShowFullText(!showFullText)}
                                 color="blue.500"
+                                textAlign="left"
                             >
                                 {t(showFullText ? 'Show Less' : 'Read More')}
                             </Button>

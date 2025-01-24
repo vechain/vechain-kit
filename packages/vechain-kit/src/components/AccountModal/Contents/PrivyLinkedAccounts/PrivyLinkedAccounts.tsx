@@ -24,6 +24,7 @@ import {
     FaLinkedin,
     FaTelegram,
     FaPlus,
+    FaDiscord,
 } from 'react-icons/fa';
 import { SiFarcaster } from 'react-icons/si';
 import { ActionButton } from '@/components';
@@ -115,6 +116,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         linkTelegram,
         linkFarcaster,
         linkPasskey,
+        linkDiscord,
         unlinkEmail,
         unlinkGoogle,
         unlinkApple,
@@ -127,6 +129,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         unlinkFarcaster,
         unlinkPhone,
         unlinkPasskey,
+        unlinkDiscord,
     } = usePrivy();
 
     const { privy } = useVeChainKitConfig();
@@ -161,6 +164,8 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 return FaTelegram;
             case 'farcaster':
                 return SiFarcaster;
+            case 'discord_oauth':
+                return FaDiscord;
             default:
                 return undefined;
         }
@@ -211,6 +216,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 break;
             case 'farcaster':
                 await unlinkFarcaster(account.subject);
+                break;
+            case 'discord_oauth':
+                await unlinkDiscord(account.subject);
                 break;
             default:
                 break;
@@ -275,6 +283,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const canLinkFarcaster =
         !linkedAccountTypes.includes('farcaster') &&
         availableLoginMethods.includes('farcaster');
+    const canLinkDiscord =
+        !linkedAccountTypes.includes('discord_oauth') &&
+        availableLoginMethods.includes('discord');
 
     if (showLinkOptions) {
         return (
@@ -416,6 +427,16 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 leftIcon={SiFarcaster}
                             />
                         )}
+                        {canLinkDiscord && (
+                            <ActionButton
+                                title={t('Link Discord Account')}
+                                description={t(
+                                    'Connect your Discord account for easier access',
+                                )}
+                                onClick={() => linkDiscord()}
+                                leftIcon={FaDiscord}
+                            />
+                        )}
                         {!canLinkGoogle &&
                             !canLinkEmail &&
                             !canLinkTwitter &&
@@ -427,7 +448,8 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                             !canLinkGithub &&
                             !canLinkLinkedin &&
                             !canLinkTelegram &&
-                            !canLinkFarcaster && (
+                            !canLinkFarcaster &&
+                            !canLinkDiscord && (
                                 <Text
                                     fontSize="sm"
                                     textAlign="center"
@@ -494,8 +516,20 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack spacing={3} align="stretch">
-                    <VStack spacing={1} align="stretch" mb={5}>
+                <VStack
+                    spacing={3}
+                    align="center"
+                    w={'full'}
+                    justify={'center'}
+                >
+                    <VStack
+                        spacing={1}
+                        justify={'flex-start'}
+                        alignItems="flex-start"
+                        mb={5}
+                        textAlign="left"
+                        w={'full'}
+                    >
                         <Text fontSize="sm" opacity={0.5}>
                             {t(
                                 'These accounts are linked to your embedded wallet and can be used to login to your account.',
@@ -510,6 +544,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         )}
                         <Button
                             variant="link"
+                            mt={0}
                             size="sm"
                             onClick={() => setShowFullText(!showFullText)}
                             color="blue.500"
@@ -528,6 +563,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 borderRadius="md"
                                 align="center"
                                 justify="space-between"
+                                w={'full'}
                             >
                                 <Flex align="center" gap={3}>
                                     <Icon as={getAccountIcon(account.type)} />
@@ -569,6 +605,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                                     : account.type ===
                                                       'farcaster'
                                                     ? 'Farcaster'
+                                                    : account.type ===
+                                                      'discord_oauth'
+                                                    ? 'Discord'
                                                     : 'Wallet',
                                             )}
                                         </Text>
@@ -614,7 +653,8 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                             !canLinkGithub &&
                             !canLinkLinkedin &&
                             !canLinkTelegram &&
-                            !canLinkFarcaster
+                            !canLinkFarcaster &&
+                            !canLinkDiscord
                         }
                     >
                         {t('Add Login Method')}

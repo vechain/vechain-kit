@@ -124,7 +124,8 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                                         connection.isConnectedWithCrossApp
                                             ? connectionCache?.ecosystemApp
                                                   ?.logoUrl
-                                            : privy?.appearance.logo
+                                            : Object.values(appInfo ?? {})[0]
+                                                  ?.logo_url ?? ''
                                     }
                                     alt="App Logo"
                                     boxSize="24px"

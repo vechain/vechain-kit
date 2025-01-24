@@ -34,12 +34,29 @@ export function VechainKitProviderWrapper({ children }: Props) {
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: ['google', 'twitter', 'sms', 'email'],
+                loginMethods: [
+                    'google',
+                    'twitter',
+                    // 'sms',
+                    'email',
+                    'discord',
+                    'farcaster',
+                    'tiktok',
+                    'wallet',
+                ],
                 appearance: {
-                    walletList: ['metamask', 'rainbow'],
+                    walletList: [
+                        'metamask',
+                        'rainbow',
+                        'coinbase_wallet',
+                        'detected_ethereum_wallets',
+                        'rabby_wallet',
+                        'safe',
+                        'uniswap',
+                    ],
                     accentColor: '#696FFD',
-                    loginMessage: 'Select a social media profile',
-                    logo: appLogo,
+                    loginMessage: 'Select a login method',
+                    logo: 'https://i.ibb.co/0Mxcw49/V-color.png',
                 },
                 embeddedWallets: {
                     createOnLogin: 'all-users',

@@ -129,18 +129,6 @@ export const WalletSettingsContent = ({
                         rightIcon={MdOutlineNavigateNext}
                     />
 
-                    <ActionButton
-                        title={t('Connection Details')}
-                        description={t(
-                            'View the details of your connection to this app.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('connection-details');
-                        }}
-                        leftIcon={VscDebugDisconnect}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-
                     {connection.isConnectedWithSocialLogin && (
                         <ActionButton
                             title={t('Login methods')}
@@ -174,6 +162,18 @@ export const WalletSettingsContent = ({
                             rightIcon={MdOutlineNavigateNext}
                         />
                     )}
+
+                    <ActionButton
+                        title={t('Connection Details')}
+                        description={t(
+                            'View the details of your connection to this app.',
+                        )}
+                        onClick={() => {
+                            setCurrentContent('connection-details');
+                        }}
+                        leftIcon={VscDebugDisconnect}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
                     <ActionButton
                         title={t('FAQs')}

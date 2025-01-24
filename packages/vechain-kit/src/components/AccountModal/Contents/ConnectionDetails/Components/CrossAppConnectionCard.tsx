@@ -2,6 +2,7 @@ import { Text, HStack, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { CrossAppConnectionCache } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
+import { NetworkInfo } from './NetworkInfo';
 
 type Props = {
     connectionCache: CrossAppConnectionCache;
@@ -9,7 +10,7 @@ type Props = {
 
 export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <>
@@ -52,34 +53,7 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
                             ).toLocaleString()}
                         </Text>
                     </HStack>
-                    <HStack w="full" justifyContent="space-between">
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
-                            {t('Network')}:
-                        </Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
-                            {network.type}
-                        </Text>
-                    </HStack>
-                    <HStack w="full" justifyContent="space-between">
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
-                            {t('Node')}:
-                        </Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
-                            {network.nodeUrl}
-                        </Text>
-                    </HStack>
+                    <NetworkInfo />
                 </VStack>
             )}
         </>
