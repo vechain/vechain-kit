@@ -54,7 +54,7 @@ export function Introduction() {
                     <Button
                         leftIcon={<IoDocumentText />}
                         as="a"
-                        href="https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg/vechain-kit/installation"
+                        href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="outline"

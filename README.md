@@ -26,7 +26,7 @@ It comes with:
 
 You can use the hooks to read data from the blockchain even if user is not connected to the app.
 
-For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/social-login-dappkit-privy/~/changes/3deX4SvayBeNDBaxivMg).
+For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/vechain-kit).
 
 ### We currently only support React and Next.js.
 
