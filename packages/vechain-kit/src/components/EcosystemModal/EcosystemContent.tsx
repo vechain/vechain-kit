@@ -20,6 +20,7 @@ import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
+import { handlePopupError } from '@/utils/handlePopupError';
 
 type Props = {
     onClose: () => void;
@@ -30,6 +31,7 @@ type Props = {
 export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+
     const [loginError, setLoginError] = useState<string>();
     const [selectedApp, setSelectedApp] = useState<string>();
     const loginLoadingModal = useDisclosure();
@@ -48,17 +50,26 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             setLoginError(undefined);
             setSelectedApp(appName);
 
-            await loginWithCrossApp(appId);
-            loginLoadingModal.onClose();
-
-            // Store the appId along with the connection info
-            setConnectionCache({
-                name: appName,
-                logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
-                appId: appId,
-            });
-
-            onClose();
+            try {
+                await loginWithCrossApp(appId);
+                loginLoadingModal.onClose();
+                setConnectionCache({
+                    name: appName,
+                    logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
+                    appId: appId,
+                });
+                onClose();
+            } catch (error) {
+                const popupError = handlePopupError({
+                    error,
+                    safariMessage: t(
+                        'Safari blocked the login window. Please try again, it should work now.',
+                    ),
+                    rejectedMessage: t('Login request was cancelled.'),
+                    defaultMessage: t('Failed to connect with ecosystem app'),
+                });
+                setLoginError(popupError.message);
+            }
         } catch (error) {
             console.error(t('Login failed:'), error);
             setLoginError(
@@ -66,6 +77,16 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     ? error.message
                     : t('Failed to connect with ecosystem app'),
             );
+        }
+    };
+
+    // Add onTryAgain handler for the LoginLoadingModal
+    const handleTryAgain = () => {
+        if (selectedApp) {
+            const app = appsInfo.find((app) => app.name === selectedApp);
+            if (app) {
+                connectWithVebetterDaoApps(app.id, app.name);
+            }
         }
     };
 
@@ -178,6 +199,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                 loadingText={t(
                     'Please approve the request in the connection request window...',
                 )}
+                onTryAgain={handleTryAgain}
             />
         </>
     );

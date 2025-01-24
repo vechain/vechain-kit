@@ -2,6 +2,7 @@ import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCrossAppConnectionCache } from '@/hooks/cache/useCrossAppConnectionCache';
 import { useFetchAppInfo } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
+import { handlePopupError } from '@/utils/handlePopupError';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
@@ -17,8 +18,13 @@ export const useLoginWithVeChain = () => {
                 appId: VECHAIN_PRIVY_APP_ID,
             });
         } catch (error) {
-            console.error('VeChain login failed:', error);
-            throw error;
+            throw handlePopupError({
+                error,
+                safariMessage:
+                    'Safari blocked the login window. Please try again, it should work now.',
+                rejectedMessage: 'Login request was cancelled.',
+                defaultMessage: 'VeChain login failed',
+            });
         }
     };
 

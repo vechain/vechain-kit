@@ -13,6 +13,7 @@ import {
 import { SignTypedDataParameters } from '@wagmi/core';
 import { VECHAIN_PRIVY_APP_ID } from '../utils';
 import { defineChain } from 'viem';
+import { handlePopupError } from '@/utils/handlePopupError';
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
@@ -134,14 +135,34 @@ export const usePrivyCrossAppSdk = () => {
     // Keep the other methods unchanged
     const signMessage = useCallback(
         async (message: string) => {
-            return await signMessageAsync({ message });
+            try {
+                return await signMessageAsync({ message });
+            } catch (error) {
+                throw handlePopupError({
+                    error,
+                    safariMessage:
+                        'Safari blocked the signing window. Please try again, it should work now.',
+                    rejectedMessage: 'Signing request was cancelled.',
+                    defaultMessage: 'Failed to sign message',
+                });
+            }
         },
         [signMessageAsync],
     );
 
     const signTypedData = useCallback(
         async (data: SignTypedDataParameters) => {
-            return await signTypedDataAsync(data);
+            try {
+                return await signTypedDataAsync(data);
+            } catch (error) {
+                throw handlePopupError({
+                    error,
+                    safariMessage:
+                        'Safari blocked the signing window. Please try again, it should work now.',
+                    rejectedMessage: 'Signing request was cancelled.',
+                    defaultMessage: 'Failed to sign typed data',
+                });
+            }
         },
         [signTypedDataAsync],
     );
