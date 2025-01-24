@@ -106,7 +106,7 @@ export const MainContent = ({
                 <ModalFAQButton onClick={() => setCurrentContent('faq')} />
                 <ModalHeader
                     fontSize={'md'}
-                    fontWeight={'500'}
+                    fontWeight={'00'}
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
@@ -138,7 +138,6 @@ export const MainContent = ({
                         <Text
                             color={isDark ? '#dfdfdd' : '#4d4d4d'}
                             fontSize={'xs'}
-                            fontWeight={'200'}
                             textAlign={'center'}
                         >
                             {t(loginModalUI?.description)}
