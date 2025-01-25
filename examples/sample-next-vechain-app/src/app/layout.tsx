@@ -22,6 +22,11 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning={true}>
             <head>
+                <link
+                    rel="icon"
+                    href="https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png"
+                    type="image/png"
+                />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1"
