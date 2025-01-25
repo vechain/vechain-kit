@@ -3,3 +3,8 @@ export * from './useAccountModal';
 export * from './useTransactionModal';
 export * from './useTransactionToast';
 export * from './useWalletModal';
+export * from './useChooseNameModal';
+export * from './useSendTokenModal';
+export * from './useEmbeddedWalletSettingsModal';
+export * from './useExploreEcosystemModal';
+export * from './useNotificationsModal';

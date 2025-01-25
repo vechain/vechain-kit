@@ -27,20 +27,25 @@ import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmCo
 type Props = {
     isOpen: boolean;
     onClose: () => void;
+    initialContent?: AccountModalContentTypes;
 };
 
-export const AccountModal = ({ isOpen, onClose }: Props) => {
+export const AccountModal = ({
+    isOpen,
+    onClose,
+    initialContent = 'main',
+}: Props) => {
     useNotificationAlerts();
 
     const { account } = useWallet();
     const [currentContent, setCurrentContent] =
-        useState<AccountModalContentTypes>('main');
+        useState<AccountModalContentTypes>(initialContent);
 
     useEffect(() => {
-        if (isOpen) {
-            setCurrentContent('main');
+        if (isOpen && initialContent) {
+            setCurrentContent(initialContent);
         }
-    }, [isOpen]);
+    }, [isOpen, initialContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {

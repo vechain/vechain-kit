@@ -3,7 +3,6 @@
 import { type ReactElement } from 'react';
 import {
     Container,
-    Spinner,
     VStack,
     Text,
     Link,
@@ -19,21 +18,14 @@ import { WelcomeSection } from '../components/features/WelcomeSection';
 import { Introduction } from '../components/features/Introduction';
 import { IoMdMoon } from 'react-icons/io';
 import { FaSun, FaHandPointLeft } from 'react-icons/fa';
+import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 
 export default function Home(): ReactElement {
-    const { account, connection } = useWallet();
+    const { account } = useWallet();
     const { colorMode, toggleColorMode } = useColorMode();
 
     if (!account) {
         return <WelcomeSection />;
-    }
-
-    if (connection.isLoading) {
-        return (
-            <VStack w="full" h="full" justify="center" align="center">
-                <Spinner />
-            </VStack>
-        );
     }
 
     return (
@@ -95,6 +87,8 @@ export default function Home(): ReactElement {
                 </HStack>
 
                 <Introduction />
+
+                <FeaturesToTry />
 
                 <UIControls />
 

@@ -11,7 +11,12 @@ import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyLoginMethod } from '@/types';
-import { ConnectModal, AccountModal, ConnectModalVariant } from '../components';
+import {
+    ConnectModal,
+    AccountModal,
+    ConnectModalVariant,
+    AccountModalContentTypes,
+} from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
@@ -106,6 +111,9 @@ type VeChainKitConfig = {
     openAccountModal: () => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
+    setAccountModalContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
     // Transaction Modal
     openTransactionModal: () => void;
     closeTransactionModal: () => void;
@@ -185,6 +193,9 @@ export const VeChainKitProvider = ({
         [],
     );
 
+    const [accountModalContent, setAccountModalContent] =
+        useState<AccountModalContentTypes>('main');
+
     const loginMethods = [
         ...(privy?.loginMethods ?? []),
         ...(privyEcosystemAppIDS ?? []).map((appID) => `privy:${appID}`),
@@ -245,6 +256,7 @@ export const VeChainKitProvider = ({
                         openAccountModal,
                         closeAccountModal,
                         isAccountModalOpen,
+                        setAccountModalContent,
                         openTransactionModal,
                         closeTransactionModal,
                         isTransactionModalOpen,
@@ -330,6 +342,7 @@ export const VeChainKitProvider = ({
                                 <AccountModal
                                     isOpen={isAccountModalOpen}
                                     onClose={closeAccountModal}
+                                    initialContent={accountModalContent}
                                 />
                             </PrivyWalletProvider>
                         </DAppKitProvider>

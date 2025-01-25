@@ -13,7 +13,7 @@ export function UIControls() {
         <CollapsibleCard
             title="UI Customization Examples"
             icon={MdBrush}
-            defaultIsOpen={true}
+            defaultIsOpen={false}
         >
             <VStack spacing={6} align="stretch" w={'full'}>
                 <Text textAlign="center">
