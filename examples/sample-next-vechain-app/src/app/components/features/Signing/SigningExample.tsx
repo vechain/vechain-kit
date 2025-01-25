@@ -8,7 +8,6 @@ import {
     Code,
     useToast,
     SimpleGrid,
-    Box,
 } from '@chakra-ui/react';
 import {
     useWallet,
@@ -18,6 +17,7 @@ import {
 } from '@vechain/vechain-kit';
 import { MdFingerprint } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
+import { Link } from '@chakra-ui/react';
 
 // Example EIP-712 typed data
 const exampleTypedData = {
@@ -181,39 +181,16 @@ export function SigningExample(): ReactElement {
                 {/* Implementation Example */}
                 <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
                     <Text fontWeight="bold">Implementation</Text>
-                    <Box w="full" p={3} bg="blackAlpha.300" borderRadius="md">
-                        <Code
-                            display="block"
-                            whiteSpace="pre"
-                            p={2}
-                            overflowX="auto"
-                        >
-                            {`import {
-    useSignMessage,
-    useSignTypedData
-} from '@vechain/vechain-kit';
-
-function SigningExample(): ReactElement {
-    // Sign message
-    const { signMessage, isSigningPending: isMessageSignPending, signature: messageSignature } = useSignMessage();
-    const { signTypedData, isSigningPending: isTypedDataSignPending, signature: typedDataSignature } = useSignTypedData();
-    const handleSignMessage = async () => {
-        const signature = await signMessage('Hello!');
-    }
-
-    // Sign typed data (EIP-712)
-    const { signTypedData } = useSignTypedData();
-    const handleSignTypedData = async () => {
-        const signature = await signTypedData({
-            domain,
-            types,
-            message,
-            primaryType
-        });
-    }
-}`}
-                        </Code>
-                    </Box>
+                    <Button
+                        as={Link}
+                        isExternal
+                        href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit/vechain-kit/sign-messages"
+                        w="full"
+                        variant="outline"
+                        rightIcon={<MdFingerprint />}
+                    >
+                        View Full Documentation
+                    </Button>
                 </VStack>
             </VStack>
         </CollapsibleCard>

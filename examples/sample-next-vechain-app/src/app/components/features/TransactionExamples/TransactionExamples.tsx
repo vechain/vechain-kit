@@ -1,14 +1,6 @@
 'use client';
 
-import {
-    VStack,
-    Text,
-    SimpleGrid,
-    Box,
-    Button,
-    Link,
-    Code,
-} from '@chakra-ui/react';
+import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
 import { MdSend } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
@@ -83,55 +75,9 @@ export function TransactionExamples() {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses, openTransactionModal]);
 
-    const codeExample = `const { account } = useWallet();
-const b3trMainnetAddress = getConfig("main").b3trContractAddress;
-
-const clauses = useMemo(() => {
-    const B3TRInterface = IB3TR__factory.createInterface();
-
-    const clausesArray: any[] = [];
-    clausesArray.push({
-        to: b3trMainnetAddress,
-        value: '0x0',
-        data: B3TRInterface.encodeFunctionData('transfer', [
-            "0x0, // receiver address
-            '0', // 0 B3TR (in wei)
-        ]),
-        comment: \`This is a dummy transaction to test the transaction modal. Confirm to transfer \${0} B3TR to \${humanAddress(
-    'Ox0',
-)}\`,
-        abi: B3TRInterface.getFunction('transfer'),
-    });
-
-    return clausesArray;
-}, [connectedWallet?.address]);
-
-const {
-    sendTransaction,
-} = useSendTransaction({
-    signerAccountAddress: account?.address ?? '',
-});
-
-// This is the function triggering the transaction
-const handleTransaction = useCallback(async () => {
-    await sendTransaction(clauses);
-}, [sendTransaction, clauses]);
-
-return (
-    <>
-        <button
-            onClick={handleTransactionWithModal}
-            isLoading={isTransactionPending}
-            isDisabled={isTransactionPending}
-        >
-            Send B3TR
-        </button>
-    </>
-);`;
-
     return (
         <CollapsibleCard
-            defaultIsOpen
+            defaultIsOpen={false}
             title="Transaction Examples"
             icon={MdSend}
         >
@@ -181,29 +127,16 @@ return (
                         <Text my={2} fontWeight="bold">
                             Implementation
                         </Text>
-                        <Box
+                        <Button
+                            as={Link}
+                            isExternal
+                            href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit/vechain-kit/send-transactions"
                             w="full"
-                            p={3}
-                            bg="blackAlpha.300"
-                            borderRadius="md"
+                            variant="outline"
+                            rightIcon={<MdSend />}
                         >
-                            <Link
-                                isExternal
-                                my={2}
-                                href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit/vechain-kit/send-transactions"
-                            >
-                                View full code
-                            </Link>
-
-                            <Code
-                                display="block"
-                                whiteSpace="pre"
-                                p={2}
-                                overflowX="auto"
-                            >
-                                {codeExample}
-                            </Code>
-                        </Box>
+                            View Code Example
+                        </Button>
                     </VStack>
                 </SimpleGrid>
 

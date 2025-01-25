@@ -43,8 +43,8 @@ export function CollapsibleCard({
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <HStack spacing={2}>
-                        {icon && <Icon as={icon} boxSize={7} />}
-                        <Heading size="md" textAlign="center">
+                        {icon && <Icon as={icon} boxSize={6} />}
+                        <Heading size="sm" textAlign="center">
                             {title}
                         </Heading>
                     </HStack>
@@ -52,7 +52,7 @@ export function CollapsibleCard({
                         aria-label={isOpen ? 'Collapse' : 'Expand'}
                         icon={isOpen ? <MdExpandLess /> : <MdExpandMore />}
                         variant="ghost"
-                        size="md"
+                        size="sm"
                     />
                 </HStack>
                 <Collapse in={isOpen} animateOpacity>

@@ -74,8 +74,8 @@ export function Introduction() {
                             <Image
                                 src="https://vechain.github.io/smart-accounts-factory/assets/logo-DnOsqNR_.png"
                                 alt="Smart Account Factory"
-                                width={10}
-                                height={10}
+                                width={8}
+                                height={8}
                             />
                         }
                         as="a"
@@ -84,7 +84,7 @@ export function Introduction() {
                         rel="noopener noreferrer"
                         variant="outline"
                     >
-                        View Smart Account Factory
+                        Smart Account Factory
                     </Button>
                 </Box>
             </VStack>

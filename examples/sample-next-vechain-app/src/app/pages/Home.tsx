@@ -39,7 +39,7 @@ export default function Home(): ReactElement {
     return (
         <Container
             height={'full'}
-            maxW="container.md"
+            maxW="container.lg"
             justifyContent={'center'}
             wordBreak={'break-word'}
         >
