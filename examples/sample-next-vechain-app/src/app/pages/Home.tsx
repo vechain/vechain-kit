@@ -52,10 +52,10 @@ export default function Home(): ReactElement {
                         />
                         <HStack
                             spacing={2}
-                            animation="bounce 1s infinite"
+                            animation="bounce-left 1s infinite"
                             transform="rotate(-10deg)"
                             sx={{
-                                '@keyframes bounce': {
+                                '@keyframes bounce-left': {
                                     '0%, 100%': {
                                         transform: 'rotate(0deg) translateX(0)',
                                     },

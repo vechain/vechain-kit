@@ -10,6 +10,7 @@ import {
     Icon,
     Image,
     Link,
+    HStack,
 } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 import { IoDocumentText } from 'react-icons/io5';
@@ -20,6 +21,7 @@ import {
     MdConstruction,
 } from 'react-icons/md';
 import { RiUserSettingsLine } from 'react-icons/ri';
+import { SiNpm } from 'react-icons/si';
 
 export function Introduction() {
     return (
@@ -31,8 +33,30 @@ export function Introduction() {
             backdropFilter="blur(10px)"
         >
             <VStack spacing={6} align="stretch">
+                <HStack justifyContent="center">
+                    <Image
+                        src={
+                            'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png'
+                        }
+                        maxW={'350px'}
+                        maxH={'175px'}
+                        alt="logo"
+                        animation="bounce 3s infinite"
+                        transform="rotate(-10deg)"
+                        sx={{
+                            '@keyframes bounce': {
+                                '0%, 100%': {
+                                    transform: 'rotate(0deg) translateX(0)',
+                                },
+                                '50%': {
+                                    transform: 'rotate(0deg) translateY(5px)',
+                                },
+                            },
+                        }}
+                    />
+                </HStack>
                 <Heading as="h1" size="lg" textAlign="center">
-                    Welcome to VeChain Kit! 👋
+                    Welcome to VeChain Kit!
                 </Heading>
 
                 <Text textAlign="center">
@@ -48,6 +72,17 @@ export function Introduction() {
                     flexWrap="wrap"
                 >
                     <Button
+                        leftIcon={<SiNpm />}
+                        as="a"
+                        href="https://www.npmjs.com/package/@vechain/vechain-kit"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        colorScheme="red"
+                    >
+                        View on NPM
+                    </Button>
+
+                    <Button
                         leftIcon={<FaGithub />}
                         as="a"
                         href="https://github.com/vechain/vechain-kit"
@@ -55,7 +90,7 @@ export function Introduction() {
                         rel="noopener noreferrer"
                         colorScheme="gray"
                     >
-                        View on GitHub
+                        Contribute on GitHub
                     </Button>
 
                     <Button

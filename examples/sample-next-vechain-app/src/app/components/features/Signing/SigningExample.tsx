@@ -112,7 +112,7 @@ export function SigningExample(): ReactElement {
 
     return (
         <CollapsibleCard
-            defaultIsOpen
+            defaultIsOpen={false}
             title="Message Signing"
             icon={MdFingerprint}
         >

@@ -2,7 +2,6 @@
 
 import { Container, Image, Text, VStack } from '@chakra-ui/react';
 import { WalletButton } from '@vechain/vechain-kit';
-import './logo.css';
 
 export function WelcomeSection() {
     return (
@@ -15,7 +14,18 @@ export function WelcomeSection() {
                     maxW={'350px'}
                     maxH={'175px'}
                     alt="logo"
-                    className="bounce-animation"
+                    animation="bounce 3s infinite"
+                    transform="rotate(-10deg)"
+                    sx={{
+                        '@keyframes bounce': {
+                            '0%, 100%': {
+                                transform: 'rotate(0deg) translateX(0)',
+                            },
+                            '50%': {
+                                transform: 'rotate(0deg) translateY(5px)',
+                            },
+                        },
+                    }}
                 />
                 <Text
                     textAlign={'center'}
