@@ -29,27 +29,30 @@ export function CollapsibleCard({
 
     return (
         <Box
-            p={8}
+            p={4}
             borderRadius="lg"
             boxShadow="xl"
             bg="whiteAlpha.100"
             backdropFilter="blur(10px)"
             w="full"
         >
-            <VStack spacing={6} align="stretch">
-                <HStack justify="space-between" align="center">
+            <VStack spacing={6} align="stretch" justifyContent={'center'}>
+                <HStack
+                    justify="space-between"
+                    align="center"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
                     <HStack spacing={2}>
-                        {icon && <Icon as={icon} boxSize={8} />}
-                        <Heading size="lg" textAlign="center">
+                        {icon && <Icon as={icon} boxSize={7} />}
+                        <Heading size="md" textAlign="center">
                             {title}
                         </Heading>
                     </HStack>
                     <IconButton
                         aria-label={isOpen ? 'Collapse' : 'Expand'}
                         icon={isOpen ? <MdExpandLess /> : <MdExpandMore />}
-                        onClick={() => setIsOpen(!isOpen)}
                         variant="ghost"
-                        size="lg"
+                        size="md"
                     />
                 </HStack>
                 <Collapse in={isOpen} animateOpacity>

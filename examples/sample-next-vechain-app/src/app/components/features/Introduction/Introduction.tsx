@@ -8,10 +8,17 @@ import {
     Heading,
     SimpleGrid,
     Icon,
+    Image,
+    Link,
 } from '@chakra-ui/react';
 import { FaGithub } from 'react-icons/fa';
 import { IoDocumentText } from 'react-icons/io5';
-import { MdBrush, MdCode } from 'react-icons/md';
+import {
+    MdBrush,
+    MdCode,
+    MdOutlineUpcoming,
+    MdConstruction,
+} from 'react-icons/md';
 import { RiUserSettingsLine } from 'react-icons/ri';
 
 export function Introduction() {
@@ -25,7 +32,7 @@ export function Introduction() {
         >
             <VStack spacing={6} align="stretch">
                 <Heading as="h1" size="lg" textAlign="center">
-                    Welcome to VeChain Kit Sample App! 👋
+                    Welcome to VeChain Kit! 👋
                 </Heading>
 
                 <Text textAlign="center">
@@ -57,65 +64,122 @@ export function Introduction() {
                         href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
                         target="_blank"
                         rel="noopener noreferrer"
-                        variant="outline"
+                        colorScheme="gray"
                     >
                         Documentation
+                    </Button>
+
+                    <Button
+                        leftIcon={
+                            <Image
+                                src="https://vechain.github.io/smart-accounts-factory/assets/logo-DnOsqNR_.png"
+                                alt="Smart Account Factory"
+                                width={10}
+                                height={10}
+                            />
+                        }
+                        as="a"
+                        href="https://vechain.github.io/smart-accounts-factory/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="outline"
+                    >
+                        View Smart Account Factory
                     </Button>
                 </Box>
             </VStack>
 
             <VStack mt={14} spacing={6} align="stretch">
-                <Text textAlign="center">
-                    Beyond social login capabilities, VeChain Kit enhances the
-                    users and developer experience with powerful features as:
-                    assets management, vet domains claiming, hooks to read and
-                    write data from smart contracts, out of the box UI
-                    components for transactions and login.
+                <Text textAlign="center" fontWeight="bold" fontSize="lg">
+                    Key Objectives
                 </Text>
 
-                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Icon as={RiUserSettingsLine} boxSize={8} />
-                        <Text fontWeight="bold">Social Login</Text>
-                        <Text fontSize="sm" textAlign="center">
-                            Seamlessly integrate social authentication with
-                            support for multiple providers and cross-app
-                            functionality.
-                        </Text>
-                    </VStack>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                    <Box p={4} borderRadius="md" borderWidth="1px">
+                        <VStack align="start" spacing={3}>
+                            <Icon as={MdCode} boxSize={6} color="blue.400" />
+                            <Text fontWeight="bold">Easier Integration</Text>
+                            <Text>
+                                We provide a standardized "kit" for dApp
+                                developers to quickly integrate social login and
+                                VeChain Smart Accounts, without the overhead of
+                                manual contract deployment and configuration.
+                            </Text>
+                        </VStack>
+                    </Box>
 
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Icon as={MdBrush} boxSize={8} />
-                        <Text fontWeight="bold">UI Customization</Text>
-                        <Text fontSize="sm" textAlign="center">
-                            Customize the look and feel of modals, buttons, and
-                            components to match your app's design system.
-                        </Text>
-                    </VStack>
+                    <Box p={4} borderRadius="md" borderWidth="1px">
+                        <VStack align="start" spacing={3}>
+                            <Icon
+                                as={RiUserSettingsLine}
+                                boxSize={6}
+                                color="green.400"
+                            />
+                            <Text fontWeight="bold">
+                                Unified Ecosystem Accounts
+                            </Text>
+                            <Text>
+                                Leverage Privy's Ecosystem feature to enable a
+                                single wallet per user across multiple apps,
+                                ensuring a consistent and cohesive user identity
+                                within the VeChain network.
+                            </Text>
+                            <Link
+                                href="https://vechain.github.io/smart-accounts-factory/"
+                                style={{
+                                    textDecoration: 'underline',
+                                    fontWeight: 'bold',
+                                }}
+                                target="_blank"
+                            >
+                                Try it!
+                            </Link>
+                        </VStack>
+                    </Box>
 
-                    <VStack
-                        spacing={4}
-                        p={6}
+                    <Box p={4} borderRadius="md" borderWidth="1px">
+                        <VStack align="start" spacing={3}>
+                            <Icon as={MdBrush} boxSize={6} color="purple.400" />
+                            <Text fontWeight="bold">Developer Tools</Text>
+                            <Text>
+                                Hooks to read and write data to the blockchain,
+                                UI components for your app, and out of the box
+                                wallet and identity management for your users.
+                            </Text>
+                        </VStack>
+                    </Box>
+
+                    <Box
+                        p={4}
                         borderRadius="md"
-                        bg="whiteAlpha.50"
+                        borderWidth="1px"
+                        bgGradient="linear(to-r, gray.50, gray.100)"
+                        position="relative"
+                        _dark={{
+                            bgGradient: 'linear(to-r, gray.700, gray.800)',
+                        }}
                     >
-                        <Icon as={MdCode} boxSize={8} />
-                        <Text fontWeight="bold">Developer Hooks</Text>
-                        <Text fontSize="sm" textAlign="center">
-                            Access powerful hooks to interact with smart
-                            contracts in a easy way.
-                        </Text>
-                    </VStack>
+                        <VStack align="start" spacing={3}>
+                            <Icon
+                                as={MdOutlineUpcoming}
+                                boxSize={6}
+                                color="orange.400"
+                            />
+                            <Text fontWeight="bold">More Coming Soon</Text>
+                            <Text>
+                                Stay tuned for additional features and
+                                improvements as we continue to enhance the
+                                VeChain Kit ecosystem.
+                            </Text>
+                            <Box position="absolute" bottom={2} right={2}>
+                                <Icon
+                                    as={MdConstruction}
+                                    boxSize={5}
+                                    color="gray.400"
+                                />
+                            </Box>
+                        </VStack>
+                    </Box>
                 </SimpleGrid>
             </VStack>
         </Box>

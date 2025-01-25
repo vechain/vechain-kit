@@ -18,15 +18,19 @@ VeChain Kit is a library created to make it easy for developers to build VeChain
 
 It comes with:
 
--   Wallet connection: VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, Social Login (Privy)
--   Hooks for reading and writing to the VeChainThor blockchain
--   Components for wallet operations
--   Multilanguage support
--   Send tokens, see balances, handle vet domains, etc.
+-   Social login without the need to setup a Privy account
+-   New interface over DAppKit for enchanced user experience
+-   UI components you can use in your app (eg: TransactionModal)
+-   Hooks to easily read data from blockchain (oracles, ve better dao, vepassport, vedelegate, etc.)
+-   Hooks to write data to blockchain, you just need to provide the clauses
 
 You can use the hooks to read data from the blockchain even if user is not connected to the app.
 
-For detailed documentation, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/vechain-kit).
+For detailed documentation about the kit and how to use it, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/vechain-kit).
+
+[NPM](https://www.npmjs.com/package/@vechain/vechain-kit)
+[VeChain Kit Demo](https://sample-vechain-app-demo.vechain.org/)
+[Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
 
 ### We currently only support React and Next.js.
 

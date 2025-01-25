@@ -1,21 +1,28 @@
 'use client';
 
 import { type ReactElement } from 'react';
-import { Container, Spinner, VStack, Text, Link } from '@chakra-ui/react';
+import {
+    Container,
+    Spinner,
+    VStack,
+    Text,
+    Link,
+    HStack,
+    useColorMode,
+} from '@chakra-ui/react';
 import { useWallet, WalletButton } from '@vechain/vechain-kit';
-import { AccountInfo } from '@/app/components/features/AccountInfo';
-import { ConnectionInfo } from '@/app/components/features/ConnectionInfo';
-import { DaoInfo } from '@/app/components/features/DaoInfo';
 import { UIControls } from '@/app/components/features/UIControls';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
 import { Introduction } from '../components/features/Introduction';
-import { ConnectionTypes } from '../components/features/ConnectionTypes';
-import { SmartAccountInfo } from '../components/features/SmartAccountInfo';
+import { IconButton } from '@chakra-ui/react';
+import { IoMdMoon } from 'react-icons/io';
+import { FaSun } from 'react-icons/fa';
 
 export default function Home(): ReactElement {
     const { account, connection } = useWallet();
+    const { colorMode, toggleColorMode } = useColorMode();
 
     if (!account) {
         return <WelcomeSection />;
@@ -37,21 +44,22 @@ export default function Home(): ReactElement {
             wordBreak={'break-word'}
         >
             <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
-                <WalletButton
-                    mobileVariant="iconDomainAndAssets"
-                    desktopVariant="iconDomainAndAssets"
-                />
+                <HStack w={'full'} justifyContent={'space-between'}>
+                    <WalletButton
+                        mobileVariant="iconDomainAndAssets"
+                        desktopVariant="iconDomainAndAssets"
+                    />
+                    <IconButton
+                        onClick={toggleColorMode}
+                        icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}
+                        aria-label="Toggle color mode"
+                    />
+                </HStack>
+
                 <Introduction />
-
-                <ConnectionTypes />
-                <ConnectionInfo />
-
-                <SmartAccountInfo />
-                <AccountInfo />
 
                 <UIControls />
 
-                <DaoInfo />
                 {/* <LanguageSelector /> */}
                 <TransactionExamples />
                 <SigningExample />

@@ -22,6 +22,9 @@ Try out the [demo app](https://sample-vechain-app-demo.vechain.org/) to see how 
 
 Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main/examples/next-template) to see how to integrate the library with Next.js.
 
+[VeChain Kit Demo](https://sample-vechain-app-demo.vechain.org/)
+[Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
+
 # Installation
 
 ```bash

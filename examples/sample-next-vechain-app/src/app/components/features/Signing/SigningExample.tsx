@@ -111,7 +111,11 @@ export function SigningExample(): ReactElement {
     }
 
     return (
-        <CollapsibleCard title="Message Signing" icon={MdFingerprint}>
+        <CollapsibleCard
+            defaultIsOpen
+            title="Message Signing"
+            icon={MdFingerprint}
+        >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
                     VeChain Kit provides hooks for signing messages and typed
@@ -178,29 +182,31 @@ export function SigningExample(): ReactElement {
                 <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
                     <Text fontWeight="bold">Implementation</Text>
                     <Box w="full" p={3} bg="blackAlpha.300" borderRadius="md">
-                        <Code
-                            display="block"
-                            whiteSpace="pre"
-                            p={2}
-                            overflowX="auto"
-                        >
+                        <Code>
                             {`import {
-  useSignMessage,
-  useSignTypedData
+    useSignMessage,
+    useSignTypedData
 } from '@vechain/vechain-kit';
 
-// Sign message
-const { signMessage } = useSignMessage();
-const signature = await signMessage('Hello!');
+function SigningExample(): ReactElement {
+    // Sign message
+    const { signMessage, isSigningPending: isMessageSignPending, signature: messageSignature } = useSignMessage();
+    const { signTypedData, isSigningPending: isTypedDataSignPending, signature: typedDataSignature } = useSignTypedData();
+    const handleSignMessage = async () => {
+        const signature = await signMessage('Hello!');
+    }
 
-// Sign typed data (EIP-712)
-const { signTypedData } = useSignTypedData();
-const signature = await signTypedData({
-  domain,
-  types,
-  message,
-  primaryType
-});`}
+    // Sign typed data (EIP-712)
+    const { signTypedData } = useSignTypedData();
+    const handleSignTypedData = async () => {
+        const signature = await signTypedData({
+            domain,
+            types,
+            message,
+            primaryType
+        });
+    }
+}`}
                         </Code>
                     </Box>
                 </VStack>
