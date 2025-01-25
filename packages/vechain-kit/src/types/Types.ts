@@ -7,6 +7,7 @@ export type Wallet = {
 export type SmartAccount = Wallet & {
     isDeployed: boolean;
     isActive: boolean;
+    version: string | null;
 };
 
 export type ConnectionSource = {

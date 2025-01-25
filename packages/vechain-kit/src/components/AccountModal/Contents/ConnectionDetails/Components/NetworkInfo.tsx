@@ -3,11 +3,13 @@ import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { HStack, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import packageJson from '../../../../../../package.json';
 
 export const NetworkInfo = () => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
-    const { connection } = useWallet();
+    const { connection, smartAccount } = useWallet();
+
     return (
         <>
             <HStack w="full" justifyContent="space-between">
@@ -34,12 +36,36 @@ export const NetworkInfo = () => {
                     {network.nodeUrl || getConfig(network.type).nodeUrl}
                 </Text>
             </HStack>
+            {connection.isConnectedWithPrivy ? (
+                <HStack w="full" justifyContent="space-between">
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {t('Smart Account')}:
+                    </Text>
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {smartAccount.version
+                            ? `v${smartAccount.version}`
+                            : 'v1'}
+                    </Text>
+                </HStack>
+            ) : (
+                <HStack w="full" justifyContent="space-between">
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {t('Smart Account')}:
+                    </Text>
+                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                        {smartAccount.version
+                            ? `v${smartAccount.version}`
+                            : 'v1'}
+                    </Text>
+                </HStack>
+            )}
+
             <HStack w="full" justifyContent="space-between">
                 <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {t('Active Smart Account')}:
+                    {t('VeChain Kit')}:
                 </Text>
                 <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {connection.isConnectedWithPrivy ? 'Yes' : 'No'}
+                    {packageJson.version}
                 </Text>
             </HStack>
         </>

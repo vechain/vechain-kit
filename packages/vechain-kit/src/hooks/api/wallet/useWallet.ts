@@ -2,7 +2,12 @@
 
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { useVechainDomain, useGetChainId, useGetNodeUrl } from '@/hooks';
+import {
+    useVechainDomain,
+    useGetChainId,
+    useGetNodeUrl,
+    useContractVersion,
+} from '@/hooks';
 import {
     compareAddresses,
     getPicassoImage,
@@ -186,6 +191,9 @@ export const useWallet = (): UseWalletReturnType => {
         .data?.domain;
     const crossAppAccountDomain = useVechainDomain(crossAppAddress ?? '').data
         ?.domain;
+    const { data: smartAccountVersion } = useContractVersion(
+        smartAccount?.address ?? '',
+    );
 
     // Modify the disconnect function to ensure state updates
     const disconnect = useCallback(async () => {
@@ -230,6 +238,7 @@ export const useWallet = (): UseWalletReturnType => {
             image: getPicassoImage(smartAccount?.address ?? ''),
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
+            version: smartAccountVersion ?? null,
         },
         dappKitWallet: isConnectedWithDappKit
             ? {

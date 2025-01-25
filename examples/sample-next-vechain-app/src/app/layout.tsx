@@ -24,7 +24,7 @@ export default function RootLayout({
             <head>
                 <link
                     rel="icon"
-                    href="https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png"
+                    href="https://i.ibb.co/BcCrSj9/vechain-kit-logo-colored.png"
                     type="image/png"
                 />
                 <meta
