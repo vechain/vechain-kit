@@ -11,7 +11,6 @@ import {
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
-import * from "@vechain/vechain-kit/"
 import { b3trMainnetAddress } from '../../../constants';
 import { useMemo, useCallback } from 'react';
 

@@ -29,7 +29,7 @@ export const SharedAppCard = ({
                             src={imageUrl}
                             fallbackSrc={notFoundImage}
                             alt={name}
-                            height="60%"
+                            height="90px"
                             objectFit="contain"
                             rounded="full"
                         />
