@@ -17,7 +17,15 @@ export function WelcomeSection() {
                     alt="logo"
                     className="bounce-animation"
                 />
-                <Text textAlign={'center'}>
+                <Text
+                    textAlign={'center'}
+                    fontSize="xl"
+                    fontWeight="bold"
+                    className="text-animation"
+                    bg="linear-gradient(45deg, #2B6CB0, #4299E1, #63B3ED)"
+                    backgroundClip="text"
+                    color="transparent"
+                >
                     Hi! I'm VeChain Kit, a new way to access applications on
                     VeChain, and I'm here to show you how to use me.
                 </Text>

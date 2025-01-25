@@ -182,7 +182,12 @@ export function SigningExample(): ReactElement {
                 <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
                     <Text fontWeight="bold">Implementation</Text>
                     <Box w="full" p={3} bg="blackAlpha.300" borderRadius="md">
-                        <Code>
+                        <Code
+                            display="block"
+                            whiteSpace="pre"
+                            p={2}
+                            overflowX="auto"
+                        >
                             {`import {
     useSignMessage,
     useSignTypedData

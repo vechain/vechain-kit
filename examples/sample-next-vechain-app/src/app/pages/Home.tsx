@@ -9,6 +9,7 @@ import {
     Link,
     HStack,
     useColorMode,
+    IconButton,
 } from '@chakra-ui/react';
 import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
@@ -16,9 +17,8 @@ import { TransactionExamples } from '@/app/components/features/TransactionExampl
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
 import { Introduction } from '../components/features/Introduction';
-import { IconButton } from '@chakra-ui/react';
 import { IoMdMoon } from 'react-icons/io';
-import { FaSun } from 'react-icons/fa';
+import { FaSun, FaHandPointLeft } from 'react-icons/fa';
 
 export default function Home(): ReactElement {
     const { account, connection } = useWallet();
@@ -45,10 +45,48 @@ export default function Home(): ReactElement {
         >
             <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
                 <HStack w={'full'} justifyContent={'space-between'}>
-                    <WalletButton
-                        mobileVariant="iconDomainAndAssets"
-                        desktopVariant="iconDomainAndAssets"
-                    />
+                    <HStack spacing={2} align="center">
+                        <WalletButton
+                            mobileVariant="iconDomainAndAssets"
+                            desktopVariant="iconDomainAndAssets"
+                        />
+                        <HStack
+                            spacing={2}
+                            animation="bounce 1s infinite"
+                            transform="rotate(-10deg)"
+                            sx={{
+                                '@keyframes bounce': {
+                                    '0%, 100%': {
+                                        transform: 'rotate(0deg) translateX(0)',
+                                    },
+                                    '50%': {
+                                        transform:
+                                            'rotate(0deg) translateX(-5px)',
+                                    },
+                                },
+                            }}
+                        >
+                            <FaHandPointLeft
+                                size={24}
+                                color={
+                                    colorMode === 'light'
+                                        ? '#4A5568'
+                                        : '#A0AEC0'
+                                }
+                                style={{ marginLeft: '8px' }}
+                            />
+                            <Text
+                                fontSize="sm"
+                                color={
+                                    colorMode === 'light'
+                                        ? 'gray.600'
+                                        : 'gray.400'
+                                }
+                            >
+                                Click me!
+                            </Text>
+                        </HStack>
+                    </HStack>
                     <IconButton
                         onClick={toggleColorMode}
                         icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}

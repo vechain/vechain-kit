@@ -187,10 +187,22 @@ return (
                             bg="blackAlpha.300"
                             borderRadius="md"
                         >
-                            <Link href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit/vechain-kit/send-transactions">
+                            <Link
+                                isExternal
+                                my={2}
+                                href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit/vechain-kit/send-transactions"
+                            >
                                 View full code
                             </Link>
-                            <Code>{codeExample}</Code>
+
+                            <Code
+                                display="block"
+                                whiteSpace="pre"
+                                p={2}
+                                overflowX="auto"
+                            >
+                                {codeExample}
+                            </Code>
                         </Box>
                     </VStack>
                 </SimpleGrid>
