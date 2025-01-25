@@ -20,7 +20,7 @@
 
 Try out the [demo app](https://sample-vechain-app-demo.vechain.org/) to see how it works.
 
-Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main/examples/tutorial-next) to see how to integrate the library with Next.js.
+Also check out the [sample app](https://github.com/vechain/vechain-kit/tree/main/examples/next-template) to see how to integrate the library with Next.js.
 
 # Installation
 

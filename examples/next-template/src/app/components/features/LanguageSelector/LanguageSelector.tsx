@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Heading, VStack, Text, Select } from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../../../../node_modules/react-i18next';
 import { languageNames, supportedLanguages } from '../../../../../i18n';
 
 export function LanguageSelector() {

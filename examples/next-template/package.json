@@ -1,5 +1,5 @@
 {
-    "name": "tutorial-next",
+    "name": "next-template",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -29,5 +29,5 @@
         "eslint-config-next": "14.1.4",
         "typescript": "5.3.3"
     },
-    "homepage": "https://vechain.github.io/tutorial-next"
+    "homepage": "https://vechain.github.io/next-template"
 }
