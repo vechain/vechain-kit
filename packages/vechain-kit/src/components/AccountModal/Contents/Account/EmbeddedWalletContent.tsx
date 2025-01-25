@@ -28,8 +28,7 @@ import { PiLineVertical } from 'react-icons/pi';
 import { IoOpenOutline } from 'react-icons/io5';
 import { ActionButton } from '../../Components';
 import { GiHouseKeys } from 'react-icons/gi';
-import { MdOutlineNavigateNext } from 'react-icons/md';
-import { IoIosFingerPrint } from 'react-icons/io';
+import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -43,7 +42,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
     const { connectedWallet } = useWallet();
 
-    const { exportWallet, linkPasskey } = usePrivy();
+    const { exportWallet } = usePrivy();
 
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
 
@@ -169,7 +168,21 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         />
                     )}
 
-                    {connection.isConnectedWithSocialLogin &&
+                    {connection.isConnectedWithSocialLogin && (
+                        <ActionButton
+                            title={t('Login methods')}
+                            description={t(
+                                'View and manage the login methods linked to your wallet.',
+                            )}
+                            onClick={() => {
+                                setCurrentContent('privy-linked-accounts');
+                            }}
+                            leftIcon={MdManageAccounts}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                    )}
+
+                    {/* {connection.isConnectedWithSocialLogin &&
                         privy?.allowPasskeyLinking && (
                             <ActionButton
                                 title={t('Add passkey')}
@@ -182,7 +195,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 leftIcon={IoIosFingerPrint}
                                 rightIcon={MdOutlineNavigateNext}
                             />
-                        )}
+                        )} */}
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>

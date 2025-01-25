@@ -130,7 +130,7 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             case 'privy-linked-accounts':
                 return (
                     <PrivyLinkedAccounts
-                        onBack={() => setCurrentContent('settings')}
+                        onBack={() => setCurrentContent('embedded-wallet')}
                     />
                 );
             case 'ecosystem':

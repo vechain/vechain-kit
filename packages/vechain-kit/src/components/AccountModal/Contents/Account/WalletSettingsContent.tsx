@@ -6,19 +6,19 @@ import {
     ModalFooter,
     ModalHeader,
     Button,
+    Box,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
     useFetchAppInfo,
     useWallet,
 } from '@/hooks';
-import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
+import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
 import {
     AddressDisplay,
     ModalBackButton,
     StickyHeaderContainer,
-    ScrollToTopWrapper,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
@@ -62,7 +62,7 @@ export const WalletSettingsContent = ({
     }, []);
 
     return (
-        <ScrollToTopWrapper>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -104,6 +104,18 @@ export const WalletSettingsContent = ({
                             /> */}
 
                     <ActionButton
+                        title={t('Connection Details')}
+                        description={t(
+                            'View the details of your connection to this app.',
+                        )}
+                        onClick={() => {
+                            setCurrentContent('connection-details');
+                        }}
+                        leftIcon={VscDebugDisconnect}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
                         title={
                             hasExistingDomain
                                 ? t('Change account name')
@@ -129,20 +141,6 @@ export const WalletSettingsContent = ({
                         rightIcon={MdOutlineNavigateNext}
                     />
 
-                    {connection.isConnectedWithSocialLogin && (
-                        <ActionButton
-                            title={t('Login methods')}
-                            description={t(
-                                'View and manage the login methods linked to your wallet.',
-                            )}
-                            onClick={() => {
-                                setCurrentContent('privy-linked-accounts');
-                            }}
-                            leftIcon={MdManageAccounts}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    )}
-
                     {connection.isConnectedWithPrivy && (
                         <ActionButton
                             title={t('Embedded Wallet')}
@@ -162,18 +160,6 @@ export const WalletSettingsContent = ({
                             rightIcon={MdOutlineNavigateNext}
                         />
                     )}
-
-                    <ActionButton
-                        title={t('Connection Details')}
-                        description={t(
-                            'View the details of your connection to this app.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('connection-details');
-                        }}
-                        leftIcon={VscDebugDisconnect}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
 
                     <ActionButton
                         title={t('FAQs')}
@@ -204,6 +190,6 @@ export const WalletSettingsContent = ({
                     {t('Logout')}
                 </Button>
             </ModalFooter>
-        </ScrollToTopWrapper>
+        </Box>
     );
 };
