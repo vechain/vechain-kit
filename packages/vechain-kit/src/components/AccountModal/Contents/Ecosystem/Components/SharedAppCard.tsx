@@ -23,26 +23,24 @@ export const SharedAppCard = ({
             onClick={onClick}
         >
             <CardBody p={size === 'sm' ? 2 : 4} alignItems="center">
-                <VStack spacing={3} align="center" justify="center">
+                <VStack spacing={3} alignItems="center" justifyContent="center">
                     {imageUrl && (
                         <Image
                             src={imageUrl}
                             fallbackSrc={notFoundImage}
                             alt={name}
-                            height="100px"
+                            height="60%"
                             objectFit="contain"
                             rounded="full"
                         />
                     )}
                     {name && (
                         <Text
-                            position="absolute"
-                            bottom={'5px'}
                             fontWeight="medium"
                             wordBreak="break-word"
                             noOfLines={1}
-                            width="90%"
                             textAlign="center"
+                            w="full"
                         >
                             {name}
                         </Text>

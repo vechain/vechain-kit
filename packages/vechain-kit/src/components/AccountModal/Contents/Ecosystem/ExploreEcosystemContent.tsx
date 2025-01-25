@@ -65,6 +65,20 @@ const DEFAULT_APPS: XAppMetadata[] = [
             banner: 'https://vet.domains/assets/walletconnect.png',
         },
     },
+    {
+        name: 'VeChain Kit',
+        description: 'A all-in-one library for building VeChain applications.',
+        external_url: 'https://sample-vechain-app-demo.vechain.org/',
+        logo: 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png',
+        banner: '',
+        screenshots: [],
+        social_urls: [],
+        app_urls: [],
+        tweets: [],
+        ve_world: {
+            banner: '',
+        },
+    },
 ];
 
 export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
