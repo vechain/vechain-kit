@@ -1,0 +1,29 @@
+{
+    "name": "VeChain Kit",
+    "icons": [
+        {
+            "src": "images/favicon/favicon32x32.png",
+            "sizes": "32x32",
+            "type": "image/png",
+            "density": "0.75"
+        },
+        {
+            "src": "images/favicon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "density": "1.0"
+        },
+        {
+            "src": "images/favicon/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "density": "1.5"
+        },
+        {
+            "src": "images/favicon/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "density": "2.0"
+        }
+    ]
+}

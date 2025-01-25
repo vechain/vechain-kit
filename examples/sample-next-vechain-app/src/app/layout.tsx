@@ -24,15 +24,15 @@ export default function RootLayout({
             <head>
                 <link
                     rel="icon"
-                    href="https://i.ibb.co/BcCrSj9/vechain-kit-logo-colored.png"
-                    type="image/png"
+                    href="/images/vechain-kit-long.svg"
+                    type="image/svg+xml"
                 />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
 
-                <title>Vechain Kit Sample App</title>
+                <title>VeChain Kit</title>
                 <meta
                     name="description"
                     content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
@@ -43,25 +43,25 @@ export default function RootLayout({
                     content="https://sample-vechain-app-demo.vechain.org/"
                 />
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content="Vechain Kit Sample App" />
+                <meta property="og:title" content="VeChain Kit" />
                 <meta
                     property="og:description"
                     content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
                 />
                 <meta
                     property="og:image"
-                    content="https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png"
+                    content="/images/vechain-kit-long.svg"
                 />
 
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="Vechain Kit Sample App" />
+                <meta name="twitter:title" content="VeChain Kit" />
                 <meta
                     name="twitter:description"
                     content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
                 />
                 <meta
                     name="twitter:image"
-                    content="https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png"
+                    content="/images/vechain-kit-long.svg"
                 />
             </head>
             <body>

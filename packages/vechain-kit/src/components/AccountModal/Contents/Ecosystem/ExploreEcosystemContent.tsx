@@ -51,7 +51,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         },
     },
     {
-        name: 'vetDomains',
+        name: 'vet.domains',
         description:
             '.vet.domains provides a unique and unchangeable identity for Vechain users by linking information to their wallet addresses. It becomes easier for people to use the blockchain by replacing complicated wallet addresses with easy-to-remember names.',
         external_url: 'https://vet.domains',
