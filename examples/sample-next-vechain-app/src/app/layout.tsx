@@ -41,11 +41,11 @@ export default function RootLayout({
                 <link
                     rel="apple-touch-icon"
                     sizes="57x57"
-                    href="/images/vechain-kit-long.png"
+                    href="/images/favicon/apple-touch-icon.png"
                 />
                 <meta
                     name="msapplication-TileImage"
-                    content="/images/vechain-kit-long.png"
+                    content="/images/favicon/apple-touch-icon.png"
                 />
 
                 {/* Open Graph Metadata */}
