@@ -101,7 +101,7 @@ export function Introduction() {
                         rel="noopener noreferrer"
                         colorScheme="gray"
                     >
-                        Documentation
+                        Read Documentation
                     </Button>
 
                     <Button
@@ -109,8 +109,8 @@ export function Introduction() {
                             <Image
                                 src="https://vechain.github.io/smart-accounts-factory/assets/logo-DnOsqNR_.png"
                                 alt="Smart Account Factory"
-                                width={8}
-                                height={8}
+                                width={7}
+                                height={7}
                             />
                         }
                         as="a"
