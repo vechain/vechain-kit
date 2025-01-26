@@ -1,7 +1,7 @@
 'use client';
 
 import { Text, Icon, HStack, Button, Image } from '@chakra-ui/react';
-import { humanAddress, humanDomain } from '../../../utils';
+import { humanAddress } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 
@@ -38,7 +38,7 @@ export const AccountSelector = ({
                         rounded="full"
                     />
                     <Text fontSize={size} fontWeight="500">
-                        {humanDomain(wallet?.domain ?? '', 8, 9) ||
+                        {wallet?.domain ||
                             humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
 
