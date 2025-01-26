@@ -14,6 +14,7 @@ import { FaHandPointUp } from 'react-icons/fa';
 export function WelcomeSection() {
     const { connection } = useWallet();
     const { colorMode } = useColorMode();
+    const isDarkMode = colorMode === 'dark';
 
     return (
         <Container alignItems={'center'} justifyContent={'center'}>
@@ -43,7 +44,11 @@ export function WelcomeSection() {
                     fontSize="xl"
                     fontWeight="bold"
                     className="text-animation"
-                    bg="linear-gradient(45deg, #fafae6, #fafae6, #fff)"
+                    bg={
+                        isDarkMode
+                            ? 'linear-gradient(45deg, #fafae6, #fafae6, #fff)'
+                            : 'linear-gradient(45deg, #2B6CB0, #3182CE, #4299E1)'
+                    }
                     backgroundClip="text"
                     color="transparent"
                 >

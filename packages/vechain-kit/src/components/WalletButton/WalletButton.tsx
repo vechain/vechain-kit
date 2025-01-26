@@ -65,7 +65,11 @@ export const WalletButton = ({
                     buttonStyle={buttonStyle}
                 />
             ) : (
-                <Button onClick={handleConnect} {...buttonStyle}>
+                <Button
+                    isLoading={connection.isLoading}
+                    onClick={handleConnect}
+                    {...buttonStyle}
+                >
                     {t('Login')}
                 </Button>
             )}
