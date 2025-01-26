@@ -113,7 +113,7 @@ export function FeaturesToTry() {
     return (
         <VStack spacing={6} align="stretch">
             <Text fontSize="xl" fontWeight="bold">
-                Features to Try
+                Features
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>

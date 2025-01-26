@@ -38,7 +38,7 @@ export const AccountSelector = ({
                         rounded="full"
                     />
                     <Text fontSize={size} fontWeight="500">
-                        {humanDomain(wallet?.domain ?? '', 11, 4) ||
+                        {humanDomain(wallet?.domain ?? '', 8, 9) ||
                             humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
 
