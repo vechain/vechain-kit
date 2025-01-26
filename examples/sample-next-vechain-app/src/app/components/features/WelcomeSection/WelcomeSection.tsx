@@ -62,12 +62,12 @@ export function WelcomeSection() {
                         <VStack
                             mt={4}
                             spacing={3}
-                            animation="bounce-left 1s infinite"
+                            animation="bounce-top 1s infinite"
                             transform="rotate(-10deg)"
                             justifyContent="center"
                             alignItems="center"
                             sx={{
-                                '@keyframes bounce-left': {
+                                '@keyframes bounce-top': {
                                     '0%, 100%': {
                                         transform: 'rotate(0deg) translateY(0)',
                                     },
