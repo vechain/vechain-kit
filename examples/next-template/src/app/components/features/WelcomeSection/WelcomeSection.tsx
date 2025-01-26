@@ -2,7 +2,7 @@
 
 import { Container, Image, Text, VStack } from '@chakra-ui/react';
 import { WalletButton } from '@vechain/vechain-kit';
-import './logo.css';
+
 export function WelcomeSection() {
     return (
         <Container alignItems={'center'} justifyContent={'center'}>
