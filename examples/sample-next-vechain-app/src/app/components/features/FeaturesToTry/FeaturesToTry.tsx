@@ -16,7 +16,7 @@ import {
     RiUserSettingsLine,
 } from 'react-icons/ri';
 import { IoMdNotifications } from 'react-icons/io';
-import { BsGithub } from 'react-icons/bs';
+import { BsGithub, BsQuestionCircle, BsGlobe } from 'react-icons/bs';
 import { useWallet } from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
@@ -24,6 +24,7 @@ import {
     useEmbeddedWalletSettingsModal,
     useExploreEcosystemModal,
     useNotificationsModal,
+    useFAQModal,
 } from '@vechain/vechain-kit';
 
 export function FeaturesToTry() {
@@ -37,6 +38,7 @@ export function FeaturesToTry() {
         useEmbeddedWalletSettingsModal();
     const { open: openExploreEcosystemModal } = useExploreEcosystemModal();
     const { open: openNotificationsModal } = useNotificationsModal();
+    const { open: openFAQModal } = useFAQModal();
 
     const features = [
         {
@@ -78,6 +80,21 @@ export function FeaturesToTry() {
             icon: IoMdNotifications,
             link: '#',
             content: openNotificationsModal,
+        },
+        {
+            title: 'FAQ',
+            description: 'Find answers to common questions about VeChain Kit',
+            icon: BsQuestionCircle,
+            link: '#',
+            content: openFAQModal,
+        },
+        {
+            title: 'Multilanguage support',
+            description:
+                'Customize the language of the login and account modal, creating a unique experience for your users',
+            icon: BsGlobe,
+            link: '#',
+            content: openFAQModal,
         },
         {
             title: 'Feature Request',
