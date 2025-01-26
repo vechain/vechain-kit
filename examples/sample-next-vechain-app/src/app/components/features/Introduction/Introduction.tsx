@@ -72,18 +72,29 @@ export function Introduction() {
                     flexWrap="wrap"
                 >
                     <VStack spacing={4}>
-                        <Button
-                            leftIcon={<IoDocumentText />}
-                            as="a"
-                            href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            colorScheme="gray"
-                            size="lg"
+                        <SimpleGrid
+                            columns={{ base: 1, md: 1 }}
+                            spacing={4}
+                            width="100%"
                         >
-                            Get Started
-                        </Button>
-                        <HStack>
+                            <Button
+                                leftIcon={<IoDocumentText />}
+                                as="a"
+                                href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                colorScheme="gray"
+                                size="lg"
+                                width="100%"
+                            >
+                                Get Started
+                            </Button>
+                        </SimpleGrid>
+                        <SimpleGrid
+                            columns={{ base: 1, md: 3 }}
+                            spacing={4}
+                            width="100%"
+                        >
                             <Button
                                 leftIcon={<SiNpm />}
                                 as="a"
@@ -91,6 +102,7 @@ export function Introduction() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 colorScheme="red"
+                                width="100%"
                             >
                                 NPM
                             </Button>
@@ -101,10 +113,10 @@ export function Introduction() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 colorScheme="gray"
+                                width="100%"
                             >
                                 GitHub
                             </Button>
-
                             <Button
                                 leftIcon={
                                     <Image
@@ -119,10 +131,11 @@ export function Introduction() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 variant="outline"
+                                width="100%"
                             >
                                 Smart Account Factory
                             </Button>
-                        </HStack>
+                        </SimpleGrid>
                     </VStack>
                 </Box>
             </VStack>
