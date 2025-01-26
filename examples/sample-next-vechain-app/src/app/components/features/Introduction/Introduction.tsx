@@ -71,56 +71,59 @@ export function Introduction() {
                     justifyContent="center"
                     flexWrap="wrap"
                 >
-                    <Button
-                        leftIcon={<SiNpm />}
-                        as="a"
-                        href="https://www.npmjs.com/package/@vechain/vechain-kit"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        colorScheme="red"
-                    >
-                        View on NPM
-                    </Button>
+                    <VStack spacing={4}>
+                        <Button
+                            leftIcon={<IoDocumentText />}
+                            as="a"
+                            href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            colorScheme="gray"
+                            size="lg"
+                        >
+                            Get Started
+                        </Button>
+                        <HStack>
+                            <Button
+                                leftIcon={<SiNpm />}
+                                as="a"
+                                href="https://www.npmjs.com/package/@vechain/vechain-kit"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                colorScheme="red"
+                            >
+                                NPM
+                            </Button>
+                            <Button
+                                leftIcon={<FaGithub />}
+                                as="a"
+                                href="https://github.com/vechain/vechain-kit"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                colorScheme="gray"
+                            >
+                                GitHub
+                            </Button>
 
-                    <Button
-                        leftIcon={<FaGithub />}
-                        as="a"
-                        href="https://github.com/vechain/vechain-kit"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        colorScheme="gray"
-                    >
-                        Contribute on GitHub
-                    </Button>
-
-                    <Button
-                        leftIcon={<IoDocumentText />}
-                        as="a"
-                        href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        colorScheme="gray"
-                    >
-                        Read Documentation
-                    </Button>
-
-                    <Button
-                        leftIcon={
-                            <Image
-                                src="https://vechain.github.io/smart-accounts-factory/assets/logo-DnOsqNR_.png"
-                                alt="Smart Account Factory"
-                                width={7}
-                                height={7}
-                            />
-                        }
-                        as="a"
-                        href="https://vechain.github.io/smart-accounts-factory/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        variant="outline"
-                    >
-                        Smart Account Factory
-                    </Button>
+                            <Button
+                                leftIcon={
+                                    <Image
+                                        src="https://vechain.github.io/smart-accounts-factory/assets/logo-DnOsqNR_.png"
+                                        alt="Smart Account Factory"
+                                        width={7}
+                                        height={7}
+                                    />
+                                }
+                                as="a"
+                                href="https://vechain.github.io/smart-accounts-factory/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                variant="outline"
+                            >
+                                Smart Account Factory
+                            </Button>
+                        </HStack>
+                    </VStack>
                 </Box>
             </VStack>
 
