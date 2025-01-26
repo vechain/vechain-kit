@@ -41,10 +41,10 @@ export function Introduction() {
                         maxW={'350px'}
                         maxH={'175px'}
                         alt="logo"
-                        animation="bounce 3s infinite"
+                        animation="bounce-intro 3s infinite"
                         transform="rotate(-10deg)"
                         sx={{
-                            '@keyframes bounce': {
+                            '@keyframes bounce-intro': {
                                 '0%, 100%': {
                                     transform: 'rotate(0deg) translateX(0)',
                                 },
