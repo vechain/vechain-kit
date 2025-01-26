@@ -16,6 +16,7 @@ import {
     RiUserSettingsLine,
 } from 'react-icons/ri';
 import { IoMdNotifications } from 'react-icons/io';
+import { BsGithub } from 'react-icons/bs';
 import { useWallet } from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
@@ -78,6 +79,18 @@ export function FeaturesToTry() {
             link: '#',
             content: openNotificationsModal,
         },
+        {
+            title: 'Feature Request',
+            description:
+                'Would you like to see something that is still missing? Requet the feature by opening an issue on our GitHub!',
+            icon: BsGithub,
+            link: 'https://github.com/vechain/vechain-kit/issues/new',
+            content: () =>
+                window.open(
+                    'https://github.com/vechain/vechain-kit/issues/new',
+                    '_blank',
+                ),
+        },
     ];
 
     return (
@@ -106,7 +119,11 @@ export function FeaturesToTry() {
                                 feature.highlight ? 'blue.500' : 'transparent'
                             }
                             bg={
-                                colorMode === 'light'
+                                feature.title === 'Feature Request'
+                                    ? colorMode === 'light'
+                                        ? 'green.50'
+                                        : 'green.900'
+                                    : colorMode === 'light'
                                     ? 'gray.50'
                                     : 'whiteAlpha.50'
                             }
@@ -114,7 +131,11 @@ export function FeaturesToTry() {
                                 transform: 'translateY(-2px)',
                                 transition: 'transform 0.2s',
                                 bg:
-                                    colorMode === 'light'
+                                    feature.title === 'Feature Request'
+                                        ? colorMode === 'light'
+                                            ? 'green.100'
+                                            : 'green.800'
+                                        : colorMode === 'light'
                                         ? 'gray.100'
                                         : 'whiteAlpha.100',
                             }}
@@ -126,7 +147,11 @@ export function FeaturesToTry() {
                                     as={feature.icon}
                                     boxSize={6}
                                     color={
-                                        colorMode === 'light'
+                                        feature.title === 'Feature Request'
+                                            ? colorMode === 'light'
+                                                ? 'green.500'
+                                                : 'green.300'
+                                            : colorMode === 'light'
                                             ? 'blue.500'
                                             : 'blue.300'
                                     }
