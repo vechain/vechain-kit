@@ -43,14 +43,14 @@ jobs:
 
             - name: Fix permissions
               run: |
-                  chmod -c -R +rX "./examples/sample-next-vechain-app/dist" | while read line; do
+                  chmod -c -R +rX "./examples/homepage/dist" | while read line; do
                     echo "::warning title=Invalid file permissions automatically fixed::$line"
                   done
 
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: './examples/sample-next-vechain-app/dist'
+                  path: './examples/homepage/dist'
 
     deploy:
         needs: build
