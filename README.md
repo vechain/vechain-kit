@@ -26,7 +26,7 @@ It comes with:
 
 You can use the hooks to read data from the blockchain even if user is not connected to the app.
 
-For detailed documentation about the kit and how to use it, visit our [VeChain Kit Docs](https://vechain-foundation-san-marino.gitbook.io/vechain-kit).
+For detailed documentation about the kit and how to use it, visit our [VeChain Kit Docs](https://docs.vechain-kit.vechain.org/).
 
 [NPM](https://www.npmjs.com/package/@vechain/vechain-kit)
 [VeChain Kit Demo](https://sample-vechain-app-demo.vechain.org/)

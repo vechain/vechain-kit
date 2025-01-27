@@ -130,7 +130,7 @@ export function TransactionExamples() {
                         <Button
                             as={Link}
                             isExternal
-                            href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit/vechain-kit/send-transactions"
+                            href="https://docs.vechain-kit.vechain.org/vechain-kit/send-transactions"
                             w="full"
                             variant="outline"
                             rightIcon={<MdSend />}

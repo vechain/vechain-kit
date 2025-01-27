@@ -79,9 +79,9 @@ export function Introduction() {
                         >
                             <Button
                                 leftIcon={<IoDocumentText />}
-                                as="a"
-                                href="https://vechain-foundation-san-marino.gitbook.io/vechain-kit"
-                                target="_blank"
+                                as={Link}
+                                href="https://docs.vechain-kit.vechain.org/"
+                                isExternal
                                 rel="noopener noreferrer"
                                 colorScheme="gray"
                                 size="lg"
