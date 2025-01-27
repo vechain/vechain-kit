@@ -40,9 +40,10 @@ yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp
 ```typescript
 'use client';
 
-import DAppKitPrivyProvider from '@vechain/dapp-kit-react-privy'
 
-export function DAppKitPrivyProvider({ children }: Props) {
+import VeChainKitProvider from '@vechain/vechain-kit'
+​
+export function VeChainKitProviderWrapper({ children }: Props) {
     return (
          <VechainKitProvider
             // Mandatory
