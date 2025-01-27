@@ -68,7 +68,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
     {
         name: 'VeChain Kit',
         description: 'A all-in-one library for building VeChain applications.',
-        external_url: 'https://sample-vechain-app-demo.vechain.org/',
+        external_url: 'https://vechain-kit.vechain.org/',
         logo: 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png',
         banner: '',
         screenshots: [],

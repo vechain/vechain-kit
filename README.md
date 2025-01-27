@@ -14,25 +14,27 @@
 
 ## Introduction
 
-VeChain Kit is a library created to make it easy for developers to build VeChain applications.
+VeChain Kit is a comprehensive library designed to make building VeChain applications fast and straightforward.
 
-It comes with:
+It offers:
 
--   Social login without the need to setup a Privy account
--   New interface over DAppKit for enchanced user experience
--   UI components you can use in your app (eg: TransactionModal)
--   Hooks to easily read data from blockchain (oracles, ve better dao, vepassport, vedelegate, etc.)
--   Hooks to write data to blockchain, you just need to provide the clauses
+-   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, and social logins (powered by Privy).
+-   <b>Unified Ecosystem Accounts:</b> Leverage Privy’s Ecosystem feature to give users a single wallet across multiple dApps, providing a consistent identity within the VeChain network.
+-   <b>Developer-Friendly Hooks:</b> Easy-to-use React Hooks that let you read and write data on the VeChainThor blockchain.
+-   <b>Pre-Built UI Components:</b> Ready-to-use components (e.g., TransactionModal) to simplify wallet operations and enhance your users’ experience.
+-   <b>Multi-Language Support:</b> Built-in i18n for a global audience.
+-   <b>Token Operations:</b> Send tokens, check balances, manage VET domains, and more—all in one place.
 
-You can use the hooks to read data from the blockchain even if user is not connected to the app.
+> **Note**: Currently supports React and Next.js only
 
-For detailed documentation about the kit and how to use it, visit our [VeChain Kit Docs](https://docs.vechain-kit.vechain.org/).
+📚 For detailed documentation, visit our [VeChain Kit Docs](https://docs.vechain-kit.vechain.org/)
 
-[NPM](https://www.npmjs.com/package/@vechain/vechain-kit)
-[VeChain Kit Demo](https://sample-vechain-app-demo.vechain.org/)
-[Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
+## Demo & Examples
 
-### We currently only support React and Next.js.
+-   [Live Demo](https://vechain-kit.vechain.org/)
+-   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
+-   [Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
+-   [Docs](https://docs.vechain-kit.vechain.org/)
 
 ## Table of Contents
 
