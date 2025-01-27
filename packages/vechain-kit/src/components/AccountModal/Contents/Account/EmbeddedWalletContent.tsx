@@ -5,11 +5,11 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    HStack,
     Text,
     Icon,
     Link,
     Button,
+    Divider,
 } from '@chakra-ui/react';
 import { useCrossAppConnectionCache, usePrivy, useWallet } from '@/hooks';
 import React, { useState } from 'react';
@@ -23,12 +23,11 @@ import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
-import { PiLineVertical } from 'react-icons/pi';
 import { IoOpenOutline } from 'react-icons/io5';
 import { ActionButton } from '../../Components';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
+import { WalletSecuredBy } from '../ConnectionDetails/Components';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -48,7 +47,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
 
     const connectionCache = getConnectionCache();
@@ -154,33 +153,35 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         </>
                     )}
 
-                    {connection.isConnectedWithSocialLogin && (
-                        <ActionButton
-                            title={t('Backup your wallet')}
-                            description={t(
-                                'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.',
-                            )}
-                            onClick={() => {
-                                exportWallet();
-                            }}
-                            leftIcon={GiHouseKeys}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    )}
+                    <ActionButton
+                        title={t('Backup your wallet')}
+                        description={t(
+                            connection.isConnectedWithSocialLogin
+                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
+                                : 'Backup can be done only in the app securing your wallet.',
+                        )}
+                        onClick={() => {
+                            exportWallet();
+                        }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                        leftIcon={GiHouseKeys}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
-                    {connection.isConnectedWithSocialLogin && (
-                        <ActionButton
-                            title={t('Login methods')}
-                            description={t(
-                                'View and manage the login methods linked to your wallet.',
-                            )}
-                            onClick={() => {
-                                setCurrentContent('privy-linked-accounts');
-                            }}
-                            leftIcon={MdManageAccounts}
-                            rightIcon={MdOutlineNavigateNext}
-                        />
-                    )}
+                    <ActionButton
+                        title={t('Login methods')}
+                        description={t(
+                            connection.isConnectedWithSocialLogin
+                                ? 'View and manage the login methods linked to your wallet.'
+                                : 'Login methods can be managed only in the app securing your wallet.',
+                        )}
+                        onClick={() => {
+                            setCurrentContent('privy-linked-accounts');
+                        }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                        leftIcon={MdManageAccounts}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
                     {/* {connection.isConnectedWithSocialLogin &&
                         privy?.allowPasskeyLinking && (
@@ -199,58 +200,9 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>
-                <VStack w={'full'} align="stretch" textAlign={'center'} mt={5}>
-                    {connection.isConnectedWithPrivy && (
-                        <VStack mt={2} opacity={0.6}>
-                            <HStack
-                                textAlign={'center'}
-                                alignItems={'center'}
-                                justify={'center'}
-                                w={'full'}
-                            >
-                                <Text fontSize={'xs'} fontWeight={'800'}>
-                                    {t('Wallet secured by')}
-                                </Text>
-                            </HStack>
-                            <HStack justify={'center'}>
-                                <PrivyLogo isDark={isDark} w={'50px'} />
-                                <Icon as={PiLineVertical} ml={2} />
-
-                                {connection.isConnectedWithVeChain ? (
-                                    <VechainLogoHorizontal
-                                        isDark={isDark}
-                                        w={'69px'}
-                                    />
-                                ) : (
-                                    connection.isConnectedWithCrossApp &&
-                                    connectionCache && (
-                                        <Image
-                                            src={
-                                                connectionCache.ecosystemApp
-                                                    .logoUrl
-                                            }
-                                            alt={
-                                                connectionCache.ecosystemApp
-                                                    .name
-                                            }
-                                            maxW="40px"
-                                            borderRadius="md"
-                                        />
-                                    )
-                                )}
-
-                                {connection.isConnectedWithSocialLogin &&
-                                    !connection.isConnectedWithVeChain && (
-                                        <Image
-                                            src={privy?.appearance.logo}
-                                            alt={privy?.appearance.logo}
-                                            maxW="40px"
-                                            borderRadius="md"
-                                        />
-                                    )}
-                            </HStack>
-                        </VStack>
-                    )}
+                <VStack w={'full'}>
+                    <Divider />
+                    {connection.isConnectedWithPrivy && <WalletSecuredBy />}
                 </VStack>
             </ModalFooter>
         </ScrollToTopWrapper>

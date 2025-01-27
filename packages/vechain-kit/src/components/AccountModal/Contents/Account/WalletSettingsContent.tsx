@@ -145,13 +145,7 @@ export const WalletSettingsContent = ({
                         <ActionButton
                             title={t('Embedded Wallet')}
                             description={t(
-                                'View details of your embedded wallet created and secured by {{appName}}.',
-                                {
-                                    appName: connection.isConnectedWithCrossApp
-                                        ? connectionCache?.ecosystemApp?.name
-                                        : Object.values(appInfo ?? {})[0]
-                                              ?.name ?? '',
-                                },
+                                'Manage your embedded wallet security settings or back it up to a new device.',
                             )}
                             onClick={() => {
                                 setCurrentContent('embedded-wallet');

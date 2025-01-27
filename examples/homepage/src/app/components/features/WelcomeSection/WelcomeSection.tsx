@@ -55,7 +55,7 @@ export function WelcomeSection() {
                     Hi! I'm VeChain Kit, a new way to access applications on
                     VeChain, and I'm here to show you my capabilities.
                 </Text>
-                {connection.isLoading ? (
+                {connection.isLoading || !connection.isConnected ? (
                     <Spinner />
                 ) : (
                     <VStack>

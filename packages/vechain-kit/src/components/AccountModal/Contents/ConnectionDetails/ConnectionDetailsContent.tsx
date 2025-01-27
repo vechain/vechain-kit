@@ -24,6 +24,7 @@ import {
     CrossAppConnectionCard,
     DappKitConnectionCard,
     PrivyConnectionCard,
+    WalletSecuredBy,
 } from './Components';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
@@ -146,6 +147,8 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                         </VStack>
                     </VStack>
                 )}
+
+                {connection.isConnectedWithPrivy && <WalletSecuredBy />}
             </ModalBody>
             <ModalFooter></ModalFooter>
         </ScrollToTopWrapper>
