@@ -132,6 +132,21 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                         </Link>
                                         .
                                     </Text>
+                                    <Text>
+                                        {t('Click')}{' '}
+                                        <Link
+                                            href="https://docs.vechain-kit.vechain.org/vechain-kit/embedded-wallets"
+                                            isExternal
+                                            color="gray.500"
+                                            fontSize={'14px'}
+                                            textDecoration={'underline'}
+                                        >
+                                            {t('here')}
+                                        </Link>{' '}
+                                        {t(
+                                            'to learn more about embedded wallets.',
+                                        )}
+                                    </Text>
                                     <Text fontSize={'sm'} opacity={0.5} mt={5}>
                                         {t(
                                             'A smart account is being used as a gateway for blockchain interactions.',
