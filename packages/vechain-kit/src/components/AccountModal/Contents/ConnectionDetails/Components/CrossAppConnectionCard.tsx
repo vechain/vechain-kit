@@ -27,7 +27,7 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
                             fontSize="sm"
                             color={isDark ? '#dfdfdd' : '#4d4d4d'}
                         >
-                            {t('Connected through')}:
+                            {t('Logged in with')}:
                         </Text>
                         <Text
                             fontSize="sm"

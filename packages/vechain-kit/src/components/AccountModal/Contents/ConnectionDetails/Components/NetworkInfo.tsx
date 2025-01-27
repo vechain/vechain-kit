@@ -30,7 +30,7 @@ export const NetworkInfo = () => {
             </HStack>
             <HStack w="full" justifyContent="space-between">
                 <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {t('Node')}:
+                    {t('Node URL')}:
                 </Text>
                 <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
                     {network.nodeUrl || getConfig(network.type).nodeUrl}
@@ -48,16 +48,24 @@ export const NetworkInfo = () => {
                     </Text>
                 </HStack>
             ) : (
-                <HStack w="full" justifyContent="space-between">
-                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                        {t('Smart Account')}:
-                    </Text>
-                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                        {smartAccount.version
-                            ? `v${smartAccount.version}`
-                            : 'v1'}
-                    </Text>
-                </HStack>
+                smartAccount.isDeployed && (
+                    <HStack w="full" justifyContent="space-between">
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        >
+                            {t('Smart Account')}:
+                        </Text>
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                        >
+                            {smartAccount.version
+                                ? `v${smartAccount.version}`
+                                : 'v1'}
+                        </Text>
+                    </HStack>
+                )
             )}
 
             <HStack w="full" justifyContent="space-between">
