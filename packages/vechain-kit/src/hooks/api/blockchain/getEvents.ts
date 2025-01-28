@@ -23,10 +23,14 @@ export type GetEventsProps = {
 };
 /**
  * Get events from blockchain (auction created, auction successful, auction cancelled)
- * @param order
- * @param offset
- * @param limit
+ * @param nodeUrl the node url
+ * @param thor the thor client
+ * @param order the order of the events (asc or desc)
+ * @param offset the offset of the events
+ * @param limit the limit of the events (max 256)
  * @param from block parse start from
+ * @param to block parse end to
+ * @param filterCriteria the filter criteria for the events
  */
 export const getEvents = async ({
     nodeUrl,
@@ -58,11 +62,10 @@ export const getEvents = async ({
 
     if (!response.ok) throw new Error('Failed to fetch events');
 
-    const outputs = (await response.json()) as Connex.Thor.Filter.Row<
+    return (await response.json()) as Connex.Thor.Filter.Row<
         'event',
         object
     >[];
-    return outputs;
 };
 
 /**
@@ -71,6 +74,7 @@ export const getEvents = async ({
  * @param thor the thor client
  * @param order the order of the events (asc or desc)
  * @param from the block number to start from
+ * @param to the block number to end
  * @param filterCriteria the filter criteria for the events
  * @returns all the events from the blockchain
  */

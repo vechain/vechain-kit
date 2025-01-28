@@ -34,6 +34,7 @@ export const getIpfsMetadataQueryKey = (
 /**
  * Fetches metadata from IPFS for a given URI
  * @param ipfsUri - The IPFS URI
+ * @param parseJson - Whether to parse the JSON
  * @returns The metadata from IPFS
  */
 export const useIpfsMetadata = <T>(ipfsUri?: string, parseJson = false) => {
