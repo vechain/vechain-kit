@@ -1,7 +1,7 @@
 import { VStack } from '@chakra-ui/react';
 import { useBalances, useWallet } from '@/hooks';
 import { AssetButton } from '@/components/common';
-import { AccountModalContentTypes } from '../../../Types';
+import { AccountModalContentTypes } from '@components';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 

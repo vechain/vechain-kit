@@ -15,10 +15,9 @@ import {
     Image,
 } from '@chakra-ui/react';
 import { useState, useCallback } from 'react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components';
+import { ModalBackButton, StickyHeaderContainer, SelectTokenContent } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
-import { SelectTokenContent } from './SelectTokenContent';
 import { ZeroAddress } from 'ethers';
 import { compareAddresses, isValidAddress, TOKEN_LOGOS } from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';

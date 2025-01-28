@@ -27,7 +27,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
-import { FeatureAnnouncementCard } from '../../Components/Alerts';
+import { FeatureAnnouncementCard } from '@/components';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import React from 'react';
 

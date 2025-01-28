@@ -24,7 +24,7 @@ import { getPicassoImage } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { IoOpenOutline } from 'react-icons/io5';
-import { ActionButton } from '../../Components';
+import { ActionButton } from '@/components';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';

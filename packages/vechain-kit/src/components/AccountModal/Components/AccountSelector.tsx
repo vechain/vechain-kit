@@ -1,7 +1,7 @@
 'use client';
 
 import { Text, Icon, HStack, Button, Image } from '@chakra-ui/react';
-import { humanAddress } from '../../../utils';
+import { humanAddress } from '@utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 
