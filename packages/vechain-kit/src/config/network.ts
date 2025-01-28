@@ -28,37 +28,6 @@ export type Network = {
     blockTime: number;
 };
 
-const THOR_MAIN_URLS = [
-    'https://mainnet.vechain.org',
-    'https://vethor-node.vechain.com',
-    'https://mainnet.veblocks.net',
-    'https://mainnet.vecha.in',
-];
-
-const THOR_TESTNET_URLS = [
-    'https://testnet.vechain.org',
-    'https://vethor-node-test.vechaindev.com',
-    'https://sync-testnet.veblocks.net',
-    'https://testnet.vecha.in',
-];
-
-const THOR_SOLO_URLS = ['http://localhost:8669'];
-
-const MAIN_EXPLORER_URL = 'https://explore.vechain.org';
-const TEST_EXPLORER_URL = 'https://explore-testnet.vechain.org';
-
-export const genesisesId = {
-    get main(): string {
-        return '0x00000000851caf3cfdb6e899cf5958bfb1ac3413d346d43539627e6be7ec1b4a';
-    },
-    get test(): string {
-        return '0x000000000b2bce3c70bc649a02749e8687721b09ed2e15997f466536b20bb127';
-    },
-    get solo(): string {
-        return '0x00000000c05a20fbca2bf6ae3affba6af4a74b800b585bf7a4988aba7aea69f6';
-    },
-};
-
 export const genesises = {
     get main(): Connex.Thor.Block {
         return {
@@ -142,63 +111,4 @@ export const genesises = {
                 return 'solo';
         }
     },
-};
-
-export const DEFAULT_GAS_COEFFICIENT = 0;
-
-export const BASE_GAS_PRICE =
-    '0x000000000000000000000000000000000000626173652d6761732d7072696365';
-
-export const defaultMainNetwork: Network = {
-    id: 'main',
-    name: 'main',
-    type: 'main',
-    defaultNet: true,
-    urls: THOR_MAIN_URLS,
-    explorerUrl: MAIN_EXPLORER_URL,
-    genesis: genesises.main,
-    blockTime: 1000 * 10,
-};
-
-export const defaultTestNetwork: Network = {
-    id: 'test',
-    name: 'test',
-    type: 'test',
-    defaultNet: true,
-    urls: THOR_TESTNET_URLS,
-    explorerUrl: TEST_EXPLORER_URL,
-    genesis: genesises.test,
-    blockTime: 1000 * 10,
-};
-
-export const defaultSoloNetwork: Network = {
-    id: 'solo',
-    name: 'solo',
-    type: 'solo',
-    defaultNet: true,
-    urls: THOR_SOLO_URLS,
-    explorerUrl: TEST_EXPLORER_URL,
-    genesis: genesises.solo,
-    blockTime: 1000 * 10,
-};
-
-export const defaultNetworks: Network[] = [
-    defaultMainNetwork,
-    defaultTestNetwork,
-    defaultSoloNetwork,
-];
-
-export const getNetworkById = (id: string): Network | undefined => {
-    return defaultNetworks.find((net) => net.id === id);
-};
-
-export const getNetworkByName = (name: string): Network | undefined => {
-    return defaultNetworks.find((net) => net.name === name);
-};
-
-//https://docs.vechain.org/miscellaneous
-export const chainTagToGenesisId: Record<number, string> = {
-    74: genesisesId.main,
-    39: genesisesId.test,
-    246: genesisesId.solo,
 };

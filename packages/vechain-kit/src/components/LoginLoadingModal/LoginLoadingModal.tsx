@@ -1,4 +1,4 @@
-import { BaseModal } from '../common/BaseModal';
+import { BaseModal } from '@common';
 import {
     ModalBody,
     ModalHeader,

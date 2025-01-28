@@ -2,7 +2,7 @@ import { Button, HStack, Image, useMediaQuery } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { WalletDisplay } from './WalletDisplay';
 import { notFoundImage } from '@/utils';
-import { WalletButtonProps } from './WalletButton';
+import { WalletButtonProps } from '@components';
 
 type ConnectedWalletProps = WalletButtonProps & {
     onOpen: () => void;

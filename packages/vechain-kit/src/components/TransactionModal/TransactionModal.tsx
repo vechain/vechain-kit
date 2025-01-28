@@ -5,7 +5,7 @@ import {
     LoadingModalContent,
     SuccessModalContent,
 } from './Contents';
-import { BaseModal } from '../common/BaseModal';
+import { BaseModal } from '@common';
 import { TransactionProgress } from '@/types';
 
 export type TransactionModalProps = {

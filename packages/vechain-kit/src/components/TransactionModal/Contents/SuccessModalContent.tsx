@@ -47,7 +47,7 @@ export const SuccessModalContent = ({
     txId,
     socialDescriptionEncoded,
     onClose,
-}: SuccessModalContentProps) => {
+}: SuccessModalContentProps): React.ReactElement => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
