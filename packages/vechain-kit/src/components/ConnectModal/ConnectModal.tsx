@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MainContent } from './Contents/MainContent';
+import { MainContent, FAQContent } from '@/components';
 import { BaseModal } from '@/components/common';
-import { FAQContent } from '../AccountModal';
 import { useVeChainKitConfig } from '@/providers';
 
 type Props = {

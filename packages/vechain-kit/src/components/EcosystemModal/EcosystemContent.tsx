@@ -17,7 +17,7 @@ import { useCrossAppConnectionCache } from '@/hooks';
 import { IoPlanet } from 'react-icons/io5';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
-import { LoginLoadingModal } from '../LoginLoadingModal';
+import { LoginLoadingModal } from '@components';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';

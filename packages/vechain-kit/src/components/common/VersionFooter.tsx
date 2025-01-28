@@ -1,5 +1,5 @@
 import { HStack, Link, StackProps } from '@chakra-ui/react';
-import { VechainLogoHorizontal } from '../../assets';
+import { VechainLogoHorizontal } from '@assets';
 import packageJson from '../../../package.json';
 import { useVeChainKitConfig } from '@/providers';
 

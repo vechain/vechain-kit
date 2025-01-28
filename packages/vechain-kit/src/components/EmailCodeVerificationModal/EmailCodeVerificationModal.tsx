@@ -13,7 +13,7 @@ import {
     Container,
 } from '@chakra-ui/react';
 import { MdEmail } from 'react-icons/md';
-import { BaseModal, StickyHeaderContainer } from '../common';
+import { BaseModal, StickyHeaderContainer } from '@common';
 import { useEffect, useState } from 'react';
 import { useLoginWithEmail } from '@privy-io/react-auth';
 import { useTranslation } from 'react-i18next';

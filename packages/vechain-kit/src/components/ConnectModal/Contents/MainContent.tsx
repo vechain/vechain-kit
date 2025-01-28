@@ -16,17 +16,10 @@ import {
     StickyHeaderContainer,
     VersionFooter,
 } from '@/components/common';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+import { ConnectModalContentsTypes, VeChainLoginButton, SocialLoginButtons, PasskeyLoginButton, DappKitButton, EcosystemButton, PrivyButton, VeChainWithPrivyLoginButton } from '@/components';
 import React, { useEffect, useMemo } from 'react';
 import { useFetchAppInfo, useWallet } from '@/hooks';
-import { VeChainLoginButton } from '../Components/VeChainLoginButton';
-import { SocialLoginButtons } from '../Components/SocialLoginButtons';
-import { PasskeyLoginButton } from '../Components/PasskeyLoginButton';
-import { DappKitButton } from '../Components/DappKitButton';
-import { EcosystemButton } from '../Components/EcosystemButton';
-import { PrivyButton } from '../Components/PrivyButton';
 import { useTranslation } from 'react-i18next';
-import { VeChainWithPrivyLoginButton } from '../Components';
 
 export type ConnectModalVariant =
     | 'full'

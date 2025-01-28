@@ -16,11 +16,11 @@ import {
     ChooseNameSummaryContent,
     FAQContent,
 } from './Contents';
-import { AccountModalContentTypes } from './Types/Types';
+import { AccountModalContentTypes } from '@/components';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationsContent';
-import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
+import { ExploreEcosystemContent } from '@components/AccountModal/Contents/Ecosystem';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 
