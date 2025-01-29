@@ -12,12 +12,11 @@ import {
     TransactionToast,
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
-import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';
 import { useMemo, useCallback } from 'react';
 
 export function TransactionExamples() {
-    const { account, connectedWallet } = useWallet();
+    const { account } = useWallet();
 
     const {
         sendTransaction,
@@ -44,8 +43,6 @@ export function TransactionExamples() {
     } = useTransactionToast();
 
     const clauses = useMemo(() => {
-        if (!connectedWallet?.address) return [];
-
         const B3TRInterface = IB3TR__factory.createInterface();
 
         const clausesArray: any[] = [];
@@ -53,17 +50,17 @@ export function TransactionExamples() {
             to: b3trMainnetAddress,
             value: '0x0',
             data: B3TRInterface.encodeFunctionData('transfer', [
-                connectedWallet?.address,
+                account?.address ?? '',
                 '0', // 1 B3TR (in wei)
             ]),
-            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                connectedWallet?.address,
-            )}`,
+            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
+                account?.address
+            }`,
             abi: B3TRInterface.getFunction('transfer'),
         });
 
         return clausesArray;
-    }, [connectedWallet?.address]);
+    }, [account?.address]);
 
     const handleTransactionWithToast = useCallback(async () => {
         openTransactionToast();
