@@ -82,17 +82,7 @@ export default function RootLayout({
                 />
                 <meta name="twitter:image:alt" content="VeChain Kit" />
             </head>
-            <body
-                className="background-wrapper"
-                style={{
-                    backgroundImage:
-                        'url(/images/spider-web-element-onblack-background-transparent.png)',
-                    backgroundSize: '150%',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundColor: '#0E0E0E',
-                }}
-            >
+            <body>
                 {/* Chakra UI Provider */}
                 <ChakraProvider theme={darkTheme}>
                     {/* VechainKit Provider */}
