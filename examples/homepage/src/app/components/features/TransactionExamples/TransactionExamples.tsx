@@ -14,7 +14,7 @@ import {
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { b3trMainnetAddress } from '../../../constants';
 import { useMemo, useCallback } from 'react';
-
+import { FaCode } from 'react-icons/fa';
 export function TransactionExamples() {
     const { account } = useWallet();
 
@@ -127,12 +127,22 @@ export function TransactionExamples() {
                         <Button
                             as={Link}
                             isExternal
+                            href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/TransactionExamples/TransactionExamples.tsx"
+                            w="full"
+                            variant="outline"
+                            rightIcon={<FaCode />}
+                        >
+                            View Code Example
+                        </Button>
+                        <Button
+                            as={Link}
+                            isExternal
                             href="https://docs.vechain-kit.vechain.org/vechain-kit/send-transactions"
                             w="full"
                             variant="outline"
                             rightIcon={<MdSend />}
                         >
-                            View Code Example
+                            Read Docs
                         </Button>
                     </VStack>
                 </SimpleGrid>

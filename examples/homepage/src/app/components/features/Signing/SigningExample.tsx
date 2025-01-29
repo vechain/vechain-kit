@@ -18,6 +18,7 @@ import {
 import { MdFingerprint } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import { Link } from '@chakra-ui/react';
+import { FaCode } from 'react-icons/fa';
 
 // Example EIP-712 typed data
 const exampleTypedData = {
@@ -184,12 +185,22 @@ export function SigningExample(): ReactElement {
                     <Button
                         as={Link}
                         isExternal
+                        href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/SigningExample/SigningExample.tsx"
+                        w="full"
+                        variant="outline"
+                        rightIcon={<FaCode />}
+                    >
+                        View Code Example
+                    </Button>
+                    <Button
+                        as={Link}
+                        isExternal
                         href="https://docs.vechain-kit.vechain.org/vechain-kit/sign-messages"
                         w="full"
                         variant="outline"
                         rightIcon={<MdFingerprint />}
                     >
-                        View Full Documentation
+                        Read Documentation
                     </Button>
                 </VStack>
             </VStack>
