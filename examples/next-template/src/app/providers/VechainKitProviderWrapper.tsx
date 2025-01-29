@@ -98,7 +98,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
             privyEcosystemAppIDS={[]}
             darkMode={isDarkMode}
             language={i18n.language}
-            i18n={i18n.loadResources()}
             network={{
                 type: 'main',
             }}
