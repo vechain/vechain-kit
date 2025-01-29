@@ -12,6 +12,7 @@ import {
     Link,
     HStack,
 } from '@chakra-ui/react';
+import { useWallet } from '@vechain/vechain-kit';
 import { FaGithub } from 'react-icons/fa';
 import { IoDocumentText } from 'react-icons/io5';
 import {
@@ -24,6 +25,7 @@ import { RiUserSettingsLine } from 'react-icons/ri';
 import { SiNpm } from 'react-icons/si';
 
 export function Introduction() {
+    const { connection } = useWallet();
     return (
         <Box
             p={8}
@@ -63,6 +65,9 @@ export function Introduction() {
                     This is a demonstration of VeChain Kit features and
                     capabilities. Learn how to integrate VeChain in your dApp
                     using our resources below.
+                    {connection.isConnected
+                        ? ''
+                        : ' Login to view all available features.'}
                 </Text>
 
                 <Box

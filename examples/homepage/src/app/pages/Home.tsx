@@ -25,7 +25,71 @@ export default function Home(): ReactElement {
     const { colorMode, toggleColorMode } = useColorMode();
 
     if (!account) {
-        return <WelcomeSection />;
+        return (
+            <Container
+                height={'full'}
+                maxW="container.lg"
+                justifyContent={'center'}
+                wordBreak={'break-word'}
+            >
+                <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
+                    <HStack w={'full'} justifyContent={'space-between'}>
+                        <HStack spacing={2} align="center">
+                            <WalletButton
+                                mobileVariant="iconDomainAndAssets"
+                                desktopVariant="iconDomainAndAssets"
+                            />
+                            <HStack
+                                spacing={2}
+                                animation="bounce-left 1s infinite"
+                                transform="rotate(-10deg)"
+                                sx={{
+                                    '@keyframes bounce-left': {
+                                        '0%, 100%': {
+                                            transform:
+                                                'rotate(0deg) translateX(0)',
+                                        },
+                                        '50%': {
+                                            transform:
+                                                'rotate(0deg) translateX(-5px)',
+                                        },
+                                    },
+                                }}
+                            >
+                                <FaHandPointLeft
+                                    size={24}
+                                    color={
+                                        colorMode === 'light'
+                                            ? 'blackAlpha.600'
+                                            : 'whiteAlpha.400'
+                                    }
+                                    style={{ marginLeft: '8px' }}
+                                />
+                                <Text
+                                    fontSize="sm"
+                                    color={
+                                        colorMode === 'light'
+                                            ? 'blackAlpha.600'
+                                            : 'whiteAlpha.400'
+                                    }
+                                >
+                                    Click me!
+                                </Text>
+                            </HStack>
+                        </HStack>
+                        <IconButton
+                            onClick={toggleColorMode}
+                            icon={
+                                colorMode === 'light' ? <IoMdMoon /> : <FaSun />
+                            }
+                            aria-label="Toggle color mode"
+                        />
+                    </HStack>
+
+                    <Introduction />
+                </VStack>
+            </Container>
+        );
     }
 
     return (
@@ -62,8 +126,8 @@ export default function Home(): ReactElement {
                                 size={24}
                                 color={
                                     colorMode === 'light'
-                                        ? '#4A5568'
-                                        : '#A0AEC0'
+                                        ? 'blackAlpha.600'
+                                        : 'whiteAlpha.400'
                                 }
                                 style={{ marginLeft: '8px' }}
                             />
@@ -71,8 +135,8 @@ export default function Home(): ReactElement {
                                 fontSize="sm"
                                 color={
                                     colorMode === 'light'
-                                        ? 'gray.600'
-                                        : 'gray.400'
+                                        ? 'blackAlpha.600'
+                                        : 'whiteAlpha.400'
                                 }
                             >
                                 Click me!
