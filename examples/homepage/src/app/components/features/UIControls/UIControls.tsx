@@ -109,7 +109,10 @@ export function UIControls() {
                                 color="gray.400"
                             >
                                 Note: Some variants might look different based
-                                on connection state and available data.
+                                on connection state and available data. Eg:
+                                "iconDomainAndAssets" will show the assets only
+                                if the user has assets. And same for domain
+                                name.
                             </Text>
                         </VStack>
                     </HStack>
