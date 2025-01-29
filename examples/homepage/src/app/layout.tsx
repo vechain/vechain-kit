@@ -1,9 +1,10 @@
 'use client';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, useColorMode } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { darkTheme } from './theme';
+import { useEffect, useState } from 'react';
 
 const VechainKitProviderWrapper = dynamic(
     async () =>
@@ -13,6 +14,34 @@ const VechainKitProviderWrapper = dynamic(
         ssr: false,
     },
 );
+
+function AppContent({ children }: { children: React.ReactNode }) {
+    const { colorMode } = useColorMode();
+    const [bgColor, setBgColor] = useState('#0E0E0E');
+
+    useEffect(() => {
+        setBgColor(colorMode === 'dark' ? '#0E0E0E' : '#FFFFFF');
+    }, [colorMode]);
+
+    return (
+        <body
+            className="background-wrapper"
+            style={{
+                backgroundImage:
+                    colorMode === 'dark'
+                        ? 'url(/images/spider-web-element-onblack-background-transparent.png)'
+                        : 'none',
+                backgroundSize: '150%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundColor: bgColor,
+                transition: 'background-color 0.2s ease-in-out',
+            }}
+        >
+            <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>
+        </body>
+    );
+}
 
 export default function RootLayout({
     children,
@@ -82,15 +111,9 @@ export default function RootLayout({
                 />
                 <meta name="twitter:image:alt" content="VeChain Kit" />
             </head>
-            <body>
-                {/* Chakra UI Provider */}
-                <ChakraProvider theme={darkTheme}>
-                    {/* VechainKit Provider */}
-                    <VechainKitProviderWrapper>
-                        {children}
-                    </VechainKitProviderWrapper>
-                </ChakraProvider>
-            </body>
+            <ChakraProvider theme={darkTheme}>
+                <AppContent>{children}</AppContent>
+            </ChakraProvider>
         </html>
     );
 }
