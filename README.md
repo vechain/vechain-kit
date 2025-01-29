@@ -4,7 +4,6 @@
         <strong>A all-in-one library for building VeChain applications.</strong>
     </p>
     <p>
-        <a href="https://sonarcloud.io/project/overview?id=vechain_vechain-dapp-kit"><img src="https://sonarcloud.io/api/project_badges/measure?project=vechain_vechain-dapp-kit&metric=alert_status&token=69ceb851539382455c3eba073d1690bb58147af5" alt="Quality Gate Status"></a>
         <a href="https://sonarcloud.io/project/overview?id=vechain_vechain-dapp-kit"><img src="https://sonarcloud.io/api/project_badges/measure?project=vechain_vechain-dapp-kit&metric=security_rating&token=69ceb851539382455c3eba073d1690bb58147af5" alt="Security Rating"></a>
         <a href="https://sonarcloud.io/project/overview?id=vechain_vechain-dapp-kit"><img src="https://sonarcloud.io/api/project_badges/measure?project=vechain_vechain-dapp-kit&metric=sqale_rating&token=69ceb851539382455c3eba073d1690bb58147af5" alt="Maintainability Rating"></a>
         <a href="https://github.com/vechain/vechain-dapp-kit/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>

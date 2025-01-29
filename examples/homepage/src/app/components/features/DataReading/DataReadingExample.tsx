@@ -9,12 +9,14 @@ import {
     Code,
     Box,
     Link,
+    Heading,
 } from '@chakra-ui/react';
 import {
     useWallet,
     useGetB3trBalance,
     useGetVot3Balance,
     useGetTokenUsdPrice,
+    useCurrentAllocationsRound,
 } from '@vechain/vechain-kit';
 import { MdDataUsage } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
@@ -30,6 +32,8 @@ export function DataReadingExample(): ReactElement {
         useGetVot3Balance(address);
     const { data: vetPrice, isLoading: isLoadingVetPrice } =
         useGetTokenUsdPrice('VET');
+    const { data: vbdCurrentRound, isLoading: isLoadingVbdCurrentRound } =
+        useCurrentAllocationsRound();
 
     return (
         <CollapsibleCard
@@ -77,6 +81,21 @@ export function DataReadingExample(): ReactElement {
                                     ? 'Loading...'
                                     : `$${vetPrice?.toFixed(4) || '0'}`}
                             </Text>
+                            <VStack mt={4} align="start" spacing={1}>
+                                <Heading size="sm">VeBetterDAO</Heading>
+                                <Text fontWeight="bold">
+                                    Current round: {vbdCurrentRound?.roundId}
+                                </Text>
+                                <Text fontWeight="bold">
+                                    Next round starts on:{' '}
+                                    {isLoadingVbdCurrentRound
+                                        ? 'Loading...'
+                                        : new Date(
+                                              vbdCurrentRound?.voteEndTimestamp ??
+                                                  0,
+                                          ).toLocaleString()}
+                                </Text>
+                            </VStack>
                         </VStack>
                     </VStack>
 
@@ -103,15 +122,12 @@ export function DataReadingExample(): ReactElement {
                                 {`// Import hooks
 import {
     useGetB3trBalance,
-    useGetVot3Balance,
     useGetTokenUsdPrice,
 } from '@vechain/vechain-kit';
 
 // Use hooks in your component
 const { data: b3trBalance } = 
     useGetB3trBalance(address);
-const { data: vot3Balance } = 
-    useGetVot3Balance(address);
 const { data: vetPrice } = 
     useGetTokenUsdPrice('VET');`}
                             </Code>
