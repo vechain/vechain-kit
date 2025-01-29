@@ -18,6 +18,7 @@ import { Introduction } from '../components/features/Introduction';
 import { IoMdMoon } from 'react-icons/io';
 import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
+import { DataReadingExample } from '../components/features/DataReading';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -189,6 +190,7 @@ export default function Home(): ReactElement {
                 {/* <LanguageSelector /> */}
                 <TransactionExamples />
                 <SigningExample />
+                <DataReadingExample />
                 <Text
                     fontSize="sm"
                     color="gray.600"

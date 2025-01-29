@@ -1,0 +1,139 @@
+'use client';
+
+import { ReactElement } from 'react';
+import {
+    VStack,
+    Text,
+    SimpleGrid,
+    Button,
+    Code,
+    Box,
+    Link,
+} from '@chakra-ui/react';
+import {
+    useWallet,
+    useGetB3trBalance,
+    useGetVot3Balance,
+    useGetTokenUsdPrice,
+} from '@vechain/vechain-kit';
+import { MdDataUsage } from 'react-icons/md';
+import { CollapsibleCard } from '../../ui/CollapsibleCard';
+
+export function DataReadingExample(): ReactElement {
+    const { account } = useWallet();
+    const address = account?.address || '';
+
+    // Example hooks for reading data
+    const { data: b3trBalance, isLoading: isLoadingB3tr } =
+        useGetB3trBalance(address);
+    const { data: vot3Balance, isLoading: isLoadingVot3 } =
+        useGetVot3Balance(address);
+    const { data: vetPrice, isLoading: isLoadingVetPrice } =
+        useGetTokenUsdPrice('VET');
+
+    return (
+        <CollapsibleCard
+            defaultIsOpen={false}
+            title="Reading Blockchain Data"
+            icon={MdDataUsage}
+        >
+            <VStack spacing={6} align="stretch">
+                <Text textAlign="center">
+                    VeChain Kit provides hooks to easily read data from the
+                    blockchain. Here are some examples using built-in hooks.
+                </Text>
+
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                    {/* Live Data Display */}
+                    <VStack
+                        spacing={4}
+                        p={6}
+                        borderRadius="md"
+                        bg="whiteAlpha.50"
+                    >
+                        <Text fontWeight="bold">Live Blockchain Data</Text>
+                        <VStack spacing={3} align="start" w="full">
+                            <Text>
+                                <Text as="span" fontWeight="bold">
+                                    B3TR Balance:{' '}
+                                </Text>
+                                {isLoadingB3tr
+                                    ? 'Loading...'
+                                    : b3trBalance?.formatted || '0'}
+                            </Text>
+                            <Text>
+                                <Text as="span" fontWeight="bold">
+                                    VOT3 Balance:{' '}
+                                </Text>
+                                {isLoadingVot3
+                                    ? 'Loading...'
+                                    : vot3Balance?.formatted || '0'}
+                            </Text>
+                            <Text>
+                                <Text as="span" fontWeight="bold">
+                                    VET Price:{' '}
+                                </Text>
+                                {isLoadingVetPrice
+                                    ? 'Loading...'
+                                    : `$${vetPrice?.toFixed(4) || '0'}`}
+                            </Text>
+                        </VStack>
+                    </VStack>
+
+                    {/* Code Example */}
+                    <VStack
+                        spacing={4}
+                        p={6}
+                        borderRadius="md"
+                        bg="whiteAlpha.50"
+                    >
+                        <Text fontWeight="bold">Implementation Example</Text>
+                        <Box
+                            w="full"
+                            p={3}
+                            bg="blackAlpha.300"
+                            borderRadius="md"
+                        >
+                            <Code
+                                display="block"
+                                whiteSpace="pre"
+                                p={2}
+                                overflowX="auto"
+                            >
+                                {`// Import hooks
+import {
+    useGetB3trBalance,
+    useGetVot3Balance,
+    useGetTokenUsdPrice,
+} from '@vechain/vechain-kit';
+
+// Use hooks in your component
+const { data: b3trBalance } = 
+    useGetB3trBalance(address);
+const { data: vot3Balance } = 
+    useGetVot3Balance(address);
+const { data: vetPrice } = 
+    useGetTokenUsdPrice('VET');`}
+                            </Code>
+                        </Box>
+                        <Button
+                            as={Link}
+                            isExternal
+                            href="https://docs.vechain-kit.vechain.org/vechain-kit/hooks"
+                            w="full"
+                            variant="outline"
+                            rightIcon={<MdDataUsage />}
+                        >
+                            View Full Documentation
+                        </Button>
+                    </VStack>
+                </SimpleGrid>
+
+                <Text fontSize="sm" textAlign="center" color="gray.400">
+                    Note: These hooks use react-query under the hood for
+                    efficient data fetching and caching.
+                </Text>
+            </VStack>
+        </CollapsibleCard>
+    );
+}
