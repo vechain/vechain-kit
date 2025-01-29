@@ -379,9 +379,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         )}
                         {canLinkTiktok && (
                             <ActionButton
-                                title={t('Link TikTok Account')}
+                                title={t('Link Tiktok Account')}
                                 description={t(
-                                    'Connect your TikTok account for easier access',
+                                    'Connect your Tiktok account for easier access',
                                 )}
                                 onClick={() => linkTiktok()}
                                 leftIcon={FaTiktok}
@@ -389,9 +389,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         )}
                         {canLinkGithub && (
                             <ActionButton
-                                title={t('Link GitHub Account')}
+                                title={t('Link Github Account')}
                                 description={t(
-                                    'Connect your GitHub account for easier access',
+                                    'Connect your Github account for easier access',
                                 )}
                                 onClick={() => linkGithub()}
                                 leftIcon={FaGithub}
@@ -532,7 +532,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     >
                         <Text fontSize="sm" opacity={0.5}>
                             {t(
-                                'These accounts are linked to your embedded wallet and can be used to login to your account.',
+                                'These accounts are linked to your embedded wallet and can be used to login to your wallet and access your private key.',
                             )}
                         </Text>
                         {showFullText && (
@@ -569,47 +569,42 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     <Icon as={getAccountIcon(account.type)} />
                                     <VStack align="start" spacing={0}>
                                         <Text fontWeight="500">
-                                            {t(
-                                                account.type === 'google_oauth'
-                                                    ? 'Google'
-                                                    : account.type === 'email'
-                                                    ? 'Email'
-                                                    : account.type === 'passkey'
-                                                    ? 'Passkey'
-                                                    : account.type ===
-                                                      'twitter_oauth'
-                                                    ? 'Twitter'
-                                                    : account.type === 'phone'
-                                                    ? 'Phone Number'
-                                                    : account.type ===
-                                                      'spotify_oauth'
-                                                    ? 'Spotify'
-                                                    : account.type ===
-                                                      'apple_oauth'
-                                                    ? 'Apple'
-                                                    : account.type ===
-                                                      'instagram_oauth'
-                                                    ? 'Instagram'
-                                                    : account.type ===
-                                                      'tiktok_oauth'
-                                                    ? 'TikTok'
-                                                    : account.type ===
-                                                      'github_oauth'
-                                                    ? 'GitHub'
-                                                    : account.type ===
-                                                      'linkedin_oauth'
-                                                    ? 'LinkedIn'
-                                                    : account.type ===
-                                                      'telegram'
-                                                    ? 'Telegram'
-                                                    : account.type ===
-                                                      'farcaster'
-                                                    ? 'Farcaster'
-                                                    : account.type ===
-                                                      'discord_oauth'
-                                                    ? 'Discord'
-                                                    : 'Wallet',
-                                            )}
+                                            {account.type === 'google_oauth'
+                                                ? t('Google')
+                                                : account.type === 'email'
+                                                ? t('Email')
+                                                : account.type === 'passkey'
+                                                ? t('Passkey')
+                                                : account.type ===
+                                                  'twitter_oauth'
+                                                ? t('Twitter')
+                                                : account.type === 'phone'
+                                                ? t('Phone Number')
+                                                : account.type ===
+                                                  'spotify_oauth'
+                                                ? t('Spotify')
+                                                : account.type === 'apple_oauth'
+                                                ? t('Apple')
+                                                : account.type ===
+                                                  'instagram_oauth'
+                                                ? t('Instagram')
+                                                : account.type ===
+                                                  'tiktok_oauth'
+                                                ? t('Tiktok')
+                                                : account.type ===
+                                                  'github_oauth'
+                                                ? t('Github')
+                                                : account.type ===
+                                                  'linkedin_oauth'
+                                                ? t('LinkedIn')
+                                                : account.type === 'telegram'
+                                                ? t('Telegram')
+                                                : account.type === 'farcaster'
+                                                ? t('Farcaster')
+                                                : account.type ===
+                                                  'discord_oauth'
+                                                ? t('Discord')
+                                                : t('Wallet')}
                                         </Text>
                                         <Text fontSize="sm" opacity={0.8}>
                                             {getAccountDescription(account)}

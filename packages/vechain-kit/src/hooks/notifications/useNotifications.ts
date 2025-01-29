@@ -13,8 +13,9 @@ export type Notification = {
 const DEFAULT_NOTIFICATIONS = [
     {
         id: 'welcome',
-        title: 'Welcome to VeChain',
-        description: 'Thank you for joining our ecosystem!',
+        title: 'Welcome to the VeChain',
+        description:
+            'Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.',
         timestamp: Date.now(),
         status: 'success' as const,
         isRead: false,

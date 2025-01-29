@@ -123,7 +123,7 @@ const LoadingContent = ({
                         </Text>
                         <Text size="sm" textAlign={'center'}>
                             {t(
-                                'Please click "Try again" to open the login window.',
+                                "Please click 'Try again' to open the login window.",
                             )}
                         </Text>
                     </VStack>
