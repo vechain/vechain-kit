@@ -20,6 +20,7 @@ import { IoMdMoon } from 'react-icons/io';
 import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
+import { VechainLogoHorizontal } from '@vechain/vechain-kit/assets';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -96,6 +97,7 @@ export default function Home(): ReactElement {
                     </HStack>
 
                     <Introduction />
+                    <Logo />
                 </VStack>
             </Container>
         );
@@ -211,7 +213,28 @@ export default function Home(): ReactElement {
                         GitHub
                     </Link>
                 </Text>
+
+                <Logo />
             </VStack>
         </Container>
     );
 }
+
+const Logo = () => {
+    const { colorMode } = useColorMode();
+    return (
+        <HStack
+            onClick={() => window.open('https://vechain.org', '_blank')}
+            pt={10}
+            justify={'center'}
+            w={'full'}
+            cursor={'pointer'}
+            _hover={{
+                opacity: 0.8,
+                transition: 'opacity 0.2s ease-in-out',
+            }}
+        >
+            <VechainLogoHorizontal maxW={200} isDark={colorMode === 'dark'} />
+        </HStack>
+    );
+};

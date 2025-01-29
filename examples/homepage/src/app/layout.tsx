@@ -24,10 +24,12 @@ function AppContent({ children }: { children: React.ReactNode }) {
     }, [colorMode]);
 
     return (
-        <body
+        <div
             className="background-wrapper"
             style={{
-                background:
+                width: '100%',
+                height: '100%',
+                backgroundImage:
                     colorMode === 'dark'
                         ? 'url(/images/spider-web-element-onblack-background-long.png)'
                         : 'none',
@@ -38,7 +40,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
             }}
         >
             <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>
-        </body>
+        </div>
     );
 }
 
@@ -110,9 +112,17 @@ export default function RootLayout({
                 />
                 <meta name="twitter:image:alt" content="VeChain Kit" />
             </head>
-            <ChakraProvider theme={darkTheme}>
-                <AppContent>{children}</AppContent>
-            </ChakraProvider>
+            <body
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'inherit',
+                }}
+            >
+                <ChakraProvider theme={darkTheme}>
+                    <AppContent>{children}</AppContent>
+                </ChakraProvider>
+            </body>
         </html>
     );
 }
