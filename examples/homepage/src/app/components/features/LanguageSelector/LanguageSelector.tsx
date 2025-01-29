@@ -8,9 +8,17 @@ export function LanguageSelector() {
     const { t, i18n } = useTranslation();
 
     return (
-        <Box>
+        <Box
+            p={6}
+            bg="white"
+            borderRadius="xl"
+            border="1px solid"
+            borderColor="gray.100"
+            _hover={{ borderColor: 'blue.500', cursor: 'pointer' }}
+            transition="all 0.2s"
+        >
             <Heading size={'md'}>
-                <b>Multilanguage</b> (currently disabled)
+                <b>Multilanguage</b>
             </Heading>
             <VStack mt={4} spacing={4} alignItems="flex-start">
                 <Text>
@@ -23,6 +31,7 @@ export function LanguageSelector() {
                     width="auto"
                     value={i18n.language}
                     onChange={(e) => i18n.changeLanguage(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
                 >
                     {supportedLanguages.map((lang) => (
                         <option key={lang} value={lang}>

@@ -21,7 +21,7 @@ export const useNotificationAlerts = () => {
                 id: `smart_account_${account.address.toLowerCase()}`,
                 title: t('Smart Account detected'),
                 description: t(
-                    'You have an active smart account associated to your wallet. It will be used as a gateway for your blockchain interactions.',
+                    'You have an active smart account associated to this wallet. It has been set as your main identity.',
                 ),
                 status: 'info',
             });
@@ -41,9 +41,9 @@ export const useNotificationAlerts = () => {
         if (!hasMulticlauseWarning) {
             addNotification({
                 id: `multiclause_warning_${account.address.toLowerCase()}`,
-                title: t('Multiclause Transactions Limited'),
+                title: t('Multiclause Transaction temporary disabled'),
                 description: t(
-                    'Currently, multiclause transactions are not supported for smart accounts and will be split into multiple transactions. This feature is being worked on.',
+                    'Currently, multiclause transactions are not supported for smart accounts. Your multiclause transaction will be split into multiple transactions.',
                 ),
                 status: 'warning',
             });

@@ -141,7 +141,7 @@ export const MainContent = ({
                             fontSize={'sm'}
                             textAlign={'center'}
                         >
-                            {t(loginModalUI?.description)}
+                            {loginModalUI?.description || t('Login')}
                         </Text>
                     </HStack>
                 )}
