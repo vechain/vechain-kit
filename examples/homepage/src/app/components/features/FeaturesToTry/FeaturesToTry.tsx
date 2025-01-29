@@ -21,6 +21,7 @@ import {
 import { FeatureCard } from './FeatureCard';
 import { GithubCard } from './GithubCard';
 import { LanguageCard } from './LanguageCard';
+import { ThemeCard } from './ThemeCard';
 
 export function FeaturesToTry() {
     const { account } = useWallet();
@@ -97,6 +98,7 @@ export function FeaturesToTry() {
                 ))}
                 <LanguageCard />
                 <GithubCard />
+                <ThemeCard />
             </SimpleGrid>
         </VStack>
     );
