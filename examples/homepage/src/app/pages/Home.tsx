@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement, useRef } from 'react';
+import { type ReactElement, useRef, useState } from 'react';
 import {
     Container,
     VStack,
@@ -24,9 +24,11 @@ export default function Home(): ReactElement {
     const { account } = useWallet();
     const { colorMode, toggleColorMode } = useColorMode();
     const featuresRef = useRef<HTMLDivElement>(null);
+    const [hasScrolled, setHasScrolled] = useState(false);
 
     const scrollToFeatures = () => {
         featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
+        setHasScrolled(true);
     };
 
     if (!account) {
@@ -155,7 +157,7 @@ export default function Home(): ReactElement {
                     />
                 </HStack>
 
-                {account && (
+                {account && !hasScrolled && (
                     <VStack
                         w="full"
                         cursor="pointer"
