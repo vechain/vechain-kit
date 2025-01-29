@@ -21,6 +21,7 @@ export function LanguageCard() {
     return (
         <Box
             p={4}
+            backdropFilter="blur(10px)"
             borderRadius="md"
             bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
             height="full"

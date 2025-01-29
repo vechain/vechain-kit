@@ -19,6 +19,7 @@ export function ThemeCard() {
         <Box
             p={4}
             borderRadius="md"
+            backdropFilter="blur(10px)"
             bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
             height="full"
         >

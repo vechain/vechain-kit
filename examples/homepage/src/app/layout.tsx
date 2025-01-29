@@ -27,12 +27,11 @@ function AppContent({ children }: { children: React.ReactNode }) {
         <body
             className="background-wrapper"
             style={{
-                backgroundImage:
+                background:
                     colorMode === 'dark'
-                        ? 'url(/images/spider-web-element-onblack-background-transparent.png)'
+                        ? 'url(/images/spider-web-element-onblack-background-long.png)'
                         : 'none',
-                backgroundSize: '150%',
-                backgroundPosition: 'center',
+                backgroundPosition: 'top center',
                 backgroundRepeat: 'no-repeat',
                 backgroundColor: bgColor,
                 transition: 'background-color 0.2s ease-in-out',
