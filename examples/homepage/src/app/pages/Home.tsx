@@ -9,6 +9,7 @@ import {
     HStack,
     useColorMode,
     IconButton,
+    useMediaQuery,
 } from '@chakra-ui/react';
 import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
@@ -25,6 +26,7 @@ export default function Home(): ReactElement {
     const { colorMode, toggleColorMode } = useColorMode();
     const featuresRef = useRef<HTMLDivElement>(null);
     const [hasScrolled, setHasScrolled] = useState(false);
+    const isDesktop = useMediaQuery('(min-width: 768px)');
 
     const scrollToFeatures = () => {
         featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -157,7 +159,7 @@ export default function Home(): ReactElement {
                     />
                 </HStack>
 
-                {account && !hasScrolled && (
+                {account && !hasScrolled && !isDesktop && (
                     <VStack
                         w="full"
                         cursor="pointer"
