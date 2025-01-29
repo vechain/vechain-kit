@@ -25,7 +25,7 @@ export const getVersion = async (
 };
 
 export const getVersionQueryKey = (contractAddress?: string) => [
-    'CONTRACT_VERSION',
+    'VECHAIN_KIT_CONTRACT_VERSION',
     contractAddress,
 ];
 

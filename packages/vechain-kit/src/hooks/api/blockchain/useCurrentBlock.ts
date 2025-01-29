@@ -1,3 +1,4 @@
+import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,7 +10,7 @@ export const currentBlockQueryKey = () => ['VECHAIN_KIT', 'CURRENT_BLOCK'];
  */
 export const useCurrentBlock = () => {
     const { network } = useVeChainKitConfig();
-    const nodeUrl = network.nodeUrl;
+    const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
 
     return useQuery({
         queryKey: currentBlockQueryKey(),
@@ -17,6 +18,7 @@ export const useCurrentBlock = () => {
             const response = await fetch(`${nodeUrl}/blocks/best`, {
                 method: 'GET',
             });
+
             if (!response.ok) throw new Error(response.statusText);
             return (await response.json()) as Connex.Thor.Block;
         },

@@ -1,3 +1,3 @@
 export * from './useCurrentBlock';
-export * from './getEvents';
+export { getEvents, getAllEvents } from './getEvents';
 export * from './useTxReceipt';

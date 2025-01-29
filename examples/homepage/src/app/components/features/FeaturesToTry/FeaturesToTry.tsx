@@ -61,7 +61,7 @@ export function FeaturesToTry() {
         {
             title: 'Backup & Secure',
             description:
-                'Secure your embedded wallet with proper backup procedures',
+                'Secure your embedded wallet with proper backup procedures and update your login methods.',
             icon: RiShieldKeyholeLine,
             link: '#',
             content: openEmbeddedWalletSettingsModal,
@@ -69,21 +69,22 @@ export function FeaturesToTry() {
         {
             title: 'Explore Ecosystem',
             description:
-                'Leverage ecosystem accounts for unified identity across VeChain apps',
+                'Explore other apps built on VeChain, and add shortcuts for faster access.',
             icon: RiUserSettingsLine,
             link: 'https://vechain.github.io/smart-accounts-factory/',
             content: openExploreEcosystemModal,
         },
         {
             title: 'Notifications',
-            description: 'Stay updated with transaction and account alerts',
+            description:
+                'Stay updated with the kit or ecosystem updates, and account alerts',
             icon: IoMdNotifications,
             link: '#',
             content: openNotificationsModal,
         },
         {
             title: 'FAQ',
-            description: 'Find answers to common questions about VeChain Kit',
+            description: 'Find answers to common questions about VeChain',
             icon: BsQuestionCircle,
             link: '#',
             content: openFAQModal,
@@ -113,7 +114,7 @@ export function FeaturesToTry() {
     return (
         <VStack spacing={6} align="stretch">
             <Text fontSize="xl" fontWeight="bold">
-                Features
+                Features (click to try!)
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
