@@ -7,6 +7,7 @@ import {
     ModalHeader,
     Button,
     Box,
+    Tag,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
@@ -44,7 +45,7 @@ export const WalletSettingsContent = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
+    const { privy, darkMode: isDark, network } = useVeChainKitConfig();
 
     const { connection, disconnect, account } = useWallet();
 
@@ -85,6 +86,19 @@ export const WalletSettingsContent = ({
                         borderRadius="50%"
                     />
                     <AddressDisplay wallet={account} />
+                    {network.type !== 'main' && (
+                        <Tag
+                            size={'sm'}
+                            colorScheme={'blue'}
+                            width={'fit-content'}
+                            justifyContent={'center'}
+                            padding={'10px'}
+                        >
+                            {network.type === 'test'
+                                ? t('Testnet')
+                                : t('Unknown')}
+                        </Tag>
+                    )}
                 </VStack>
 
                 <VStack mt={10} w={'full'} spacing={3}>

@@ -12,7 +12,10 @@
     "fixedWords": {
         "it": {
             "smart account": "smart account",
-            "Smart Account": "Smart Account"
+            "Smart Account": "Smart Account",
+            "Testnet": "Testnet",
+            "Mainnet": "Mainnet",
+            "Unknown": "Unknown"
         }
     },
     "mainLanguage": "en",
