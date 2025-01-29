@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement } from 'react';
+import { type ReactElement, useRef } from 'react';
 import {
     Container,
     VStack,
@@ -14,15 +14,19 @@ import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
-import { WelcomeSection } from '../components/features/WelcomeSection';
 import { Introduction } from '../components/features/Introduction';
 import { IoMdMoon } from 'react-icons/io';
-import { FaSun, FaHandPointLeft } from 'react-icons/fa';
+import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
     const { colorMode, toggleColorMode } = useColorMode();
+    const featuresRef = useRef<HTMLDivElement>(null);
+
+    const scrollToFeatures = () => {
+        featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     if (!account) {
         return (
@@ -150,9 +154,35 @@ export default function Home(): ReactElement {
                     />
                 </HStack>
 
+                {account && (
+                    <VStack
+                        w="full"
+                        cursor="pointer"
+                        onClick={scrollToFeatures}
+                        spacing={2}
+                        p={4}
+                        bg="whiteAlpha.100"
+                        rounded="md"
+                    >
+                        <Text fontSize="sm" textAlign="center">
+                            Scroll down to explore available features
+                        </Text>
+                        <FaChevronDown
+                            size={20}
+                            color={
+                                colorMode === 'light'
+                                    ? 'gray.500'
+                                    : 'whiteAlpha.600'
+                            }
+                        />
+                    </VStack>
+                )}
+
                 <Introduction />
 
-                <FeaturesToTry />
+                <div ref={featuresRef}>
+                    <FeaturesToTry />
+                </div>
 
                 <UIControls />
 
