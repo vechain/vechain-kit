@@ -4900,10 +4900,10 @@
     randombytes "^2.1.0"
     thor-devkit "^2.0.5"
 
-"@vechain/dapp-kit-react@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@vechain/dapp-kit-react/-/dapp-kit-react-1.4.1.tgz#9ceb4af0c02e962f6e9ed09afb7b7636bc6a0d71"
-  integrity sha512-yvKm2iuoRQTyjh7kCZEJzAJlLaojPN+IYbC1ye9ECEnCMpw7pu9/v9lQnwulMHtWDMTlwRIFpl+9CiFeHWkL/w==
+"@vechain/dapp-kit-react@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@vechain/dapp-kit-react/-/dapp-kit-react-1.5.0.tgz#27a24e432e8640bf9a25e757f9cfddaf1e555b89"
+  integrity sha512-QAja+2z276R4GoIjvQcTwapmaBUIGXeYwUX3zKRs98P36sp64hqja2E6eXS+GEuRLkmK2CEsCjDNb/4aWp6rpA==
   dependencies:
     "@lit/react" "^1.0.1"
     "@vechain/connex" "2.1.0"
