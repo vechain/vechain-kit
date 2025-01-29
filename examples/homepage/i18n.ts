@@ -34,43 +34,14 @@ export const languageNames = {
     ja: '日本語',
 };
 
-// Custom language detector that checks prop first, then browser
-const customLanguageDetector = {
-    name: 'customDetector',
-    lookup: (options?: { languages?: string[] } | undefined) => {
-        const propLanguage = options?.languages?.[0];
-
-        if (propLanguage && supportedLanguages.includes(propLanguage)) {
-            return propLanguage;
-        }
-
-        // Get browser language
-        const browserLang = navigator.language.split('-')[0];
-        if (browserLang && supportedLanguages.includes(browserLang)) {
-            return browserLang;
-        }
-
-        return 'en'; // fallback
+// Simplified initialization without language detection
+i18n.use(initReactI18next).init({
+    resources,
+    lng: 'en', // Force English as default
+    fallbackLng: 'en',
+    interpolation: {
+        escapeValue: false,
     },
-    cacheUserLanguage: (lng: string) => {
-        localStorage.setItem('i18nextLng', lng);
-    },
-};
-
-i18n.use({
-    type: 'languageDetector',
-    async: false,
-    init: () => {},
-    detect: customLanguageDetector.lookup,
-    cacheUserLanguage: customLanguageDetector.cacheUserLanguage,
-})
-    .use(initReactI18next)
-    .init({
-        resources,
-        fallbackLng: 'en',
-        interpolation: {
-            escapeValue: false,
-        },
-    });
+});
 
 export default i18n;
