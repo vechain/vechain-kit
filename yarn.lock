@@ -4914,9 +4914,9 @@
     valtio "1.11.2"
 
 "@vechain/dapp-kit-ui@*":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@vechain/dapp-kit-ui/-/dapp-kit-ui-1.4.1.tgz#17a6b4a0e85b373b309039a157b555c32a8511c6"
-  integrity sha512-zCvAJq9pEQP0lLnGGWdkC8PbPzQN/GybdioIob88GsrPVqcxMeUzhyODPaLs4eRISgU5SSyFspj7uZM9/7KgZg==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@vechain/dapp-kit-ui/-/dapp-kit-ui-1.5.0.tgz#405acc8c1a6661e098212cba710ecfdb55327247"
+  integrity sha512-QPlxsSvHEdi3tYNnRqSC3DCmHk/mBh7vV5Vtdv0fUyYWuyzabS4mgnhqNEudaYYYyxxEOAxBzRFxrt3hJqoJeA==
   dependencies:
     "@vechain/connex" "2.1.0"
     "@vechain/dapp-kit" "*"
@@ -4930,9 +4930,9 @@
     viem "^1.18.4"
 
 "@vechain/dapp-kit@*":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@vechain/dapp-kit/-/dapp-kit-1.4.1.tgz#7a4548a0b64086dcdc52368393f46d9657321bcc"
-  integrity sha512-hzzvceiOa068RoXvPUcWOqrxymeHtfACcVp1+g22TnahgxUgfrfhURaaxQ59jJGrV3+ZdnNEtDDFpnVsgnQGzw==
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@vechain/dapp-kit/-/dapp-kit-1.5.0.tgz#501e7b7f938abe8d73797cd250dbd04bee47ac3a"
+  integrity sha512-BTLxc6xFU8PdFK+b0DbQ92VNQvt5Yk8WEbb1VZuO+O3XOe4e4zdxLyDm/1cPKUpvbrVattpmfzFc8pExrm0Dww==
   dependencies:
     "@vechain/connex" "2.1.0"
     "@vechain/connex-driver" "2.1.0"
