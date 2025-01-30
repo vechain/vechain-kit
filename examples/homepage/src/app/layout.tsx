@@ -29,6 +29,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
             style={{
                 width: '100%',
                 height: '100%',
+                backgroundSize: '100%',
                 backgroundImage:
                     colorMode === 'dark'
                         ? 'url(/images/spider-web-element-onblack-background-long.png)'
