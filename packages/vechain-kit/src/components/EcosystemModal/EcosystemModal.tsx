@@ -18,7 +18,11 @@ export const EcosystemModal = ({
     isLoading,
 }: Props) => {
     return (
-        <BaseModal isOpen={isOpen} onClose={onClose}>
+        <BaseModal
+            isOpen={isOpen}
+            onClose={onClose}
+            backdropFilter={'blur(3px)'}
+        >
             <EcosystemContent
                 onClose={onClose}
                 appsInfo={appsInfo}

@@ -41,6 +41,7 @@ export const LoginLoadingModal = ({
             onClose={onClose}
             trapFocus={false}
             autoFocus={false}
+            backdropFilter={'blur(3px)'}
         >
             {error ? (
                 <ErrorContent
