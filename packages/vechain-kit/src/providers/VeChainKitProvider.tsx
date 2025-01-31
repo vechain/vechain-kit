@@ -304,18 +304,24 @@ export const VeChainKitProvider = ({
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={{
                                 '--vdk-modal-z-index': '10000',
+                                '--vdk-modal-width': '22rem',
+                                '--vdk-modal-backdrop-filter': 'blur(3px)',
+                                '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
+                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
 
                                 // Dark mode colors
-                                '--vdk-color-dark-primary': '#1f1f1e',
-                                '--vdk-color-dark-primary-hover': '#3c3c39',
-                                '--vdk-color-dark-primary-active': '#4a4a46',
-                                '--vdk-color-dark-secondary': '#2d2d2d',
+                                '--vdk-color-dark-primary': 'transparent',
+                                '--vdk-color-dark-primary-hover':
+                                    'rgba(255, 255, 255, 0.05)',
+                                '--vdk-color-dark-primary-active':
+                                    'rgba(255, 255, 255, 0.1)',
+                                '--vdk-color-dark-secondary': '#1f1f1e',
 
                                 // Light mode colors
                                 '--vdk-color-light-primary': '#ffffff',
-                                '--vdk-color-light-primary-hover': '#f2f2f2',
-                                '--vdk-color-light-primary-active': '#eaeaea',
-                                '--vdk-color-light-secondary': '#f7f7f7',
+                                '--vdk-color-light-primary-hover': '#f8f8f8',
+                                '--vdk-color-light-primary-active': '#f0f0f0',
+                                '--vdk-color-light-secondary': 'white',
 
                                 // Font settings
                                 '--vdk-font-family': 'var(--chakra-fonts-body)',
