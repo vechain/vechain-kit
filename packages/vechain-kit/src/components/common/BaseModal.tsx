@@ -22,6 +22,7 @@ type BaseModalProps = {
     autoFocus?: boolean;
     initialFocusRef?: React.RefObject<HTMLElement>;
     allowExternalFocus?: boolean;
+    backdropFilter?: string;
 };
 
 export const BaseModal = ({
@@ -34,6 +35,7 @@ export const BaseModal = ({
     closeOnOverlayClick = true,
     blockScrollOnMount = false,
     allowExternalFocus = false,
+    backdropFilter,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
     const { darkMode } = useVeChainKitConfig();
@@ -59,7 +61,7 @@ export const BaseModal = ({
                 onClose={onClose}
                 isCentered={isCentered}
                 size={size}
-                scrollBehavior="inside"
+                // scrollBehavior="inside"
                 returnFocusOnClose={false}
                 blockScrollOnMount={blockScrollOnMount}
                 closeOnOverlayClick={closeOnOverlayClick}
@@ -68,7 +70,7 @@ export const BaseModal = ({
                 trapFocus={!allowExternalFocus}
                 autoFocus={!allowExternalFocus}
             >
-                <ModalOverlay />
+                <ModalOverlay backdropFilter={backdropFilter} />
                 <ModalContent
                     role="dialog"
                     aria-modal={!allowExternalFocus}
