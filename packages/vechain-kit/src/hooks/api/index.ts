@@ -7,3 +7,4 @@ export * from './wallet';
 export * from './utility';
 export * from './ipfs';
 export * from './blockchain';
+export * from './nfts';

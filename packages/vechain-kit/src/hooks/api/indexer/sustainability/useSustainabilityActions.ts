@@ -131,7 +131,7 @@ export const useSustainabilityActions = (
     data: Omit<SustainabilityActionsRequest, 'page' | 'size'>,
 ) => {
     const { network } = useVeChainKitConfig();
-    const indexerUrl = getConfig(network.type).indexerUrl;
+    const indexerUrl = getConfig(network.type).b3trIndexerUrl;
 
     if (!indexerUrl) throw new Error('Indexer URL not found');
 

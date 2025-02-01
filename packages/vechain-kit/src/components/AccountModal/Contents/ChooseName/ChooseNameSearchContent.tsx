@@ -10,6 +10,10 @@ import {
     Button,
     ModalFooter,
     InputRightElement,
+    List,
+    ListItem,
+    Tag,
+    HStack,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -19,6 +23,7 @@ import {
     useWallet,
     useVechainDomain,
     useIsDomainProtected,
+    useGetDomainsOfAddress,
 } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -50,8 +55,26 @@ export const ChooseNameSearchContent = ({
     const { data: isProtected, isLoading: isProtectedLoading } =
         useIsDomainProtected(name);
 
+    const {
+        data: veworldDomainsOfAddress,
+        isLoading: isVeWorldDomainsOfAddressLoading,
+    } = useGetDomainsOfAddress(account?.address, 'veworld.vet');
+
+    const {
+        data: vetDomainsOfAddress,
+        isLoading: isVetDomainsOfAddressLoading,
+    } = useGetDomainsOfAddress(account?.address, 'vet');
+
+    const isLoadingOwnedDomains =
+        isVeWorldDomainsOfAddressLoading || isVetDomainsOfAddressLoading;
+
     const isFetchingDomainInfo =
         isEnsCheckLoading || isDomainInfoLoading || isProtectedLoading;
+
+    const allUserDomains = [
+        ...(veworldDomainsOfAddress?.domains || []),
+        ...(vetDomainsOfAddress?.domains || []),
+    ];
 
     useEffect(() => {
         if (!hasInteracted) return;
@@ -107,6 +130,19 @@ export const ChooseNameSearchContent = ({
         }
     };
 
+    const handleDomainSelect = (selectedDomain: string) => {
+        // Remove the .veworld.vet or .vet suffix
+        const baseName = selectedDomain.split('.')[0];
+        setCurrentContent({
+            type: 'choose-name-summary',
+            props: {
+                name: baseName,
+                isOwnDomain: true,
+                setCurrentContent,
+            },
+        });
+    };
+
     return (
         <>
             <StickyHeaderContainer>
@@ -130,6 +166,68 @@ export const ChooseNameSearchContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
+                {isLoadingOwnedDomains ? (
+                    <Text fontSize="sm" color="gray.500">
+                        {t('Loading your domains...')}
+                    </Text>
+                ) : allUserDomains.length > 0 ? (
+                    <VStack spacing={4} align="stretch" mb={6}>
+                        <Text
+                            fontSize="sm"
+                            fontWeight="500"
+                            color={isDark ? 'whiteAlpha.800' : 'gray.600'}
+                        >
+                            {t('Your existing domains')}
+                        </Text>
+                        <List spacing={2}>
+                            {allUserDomains.map((domain) => {
+                                const isCurrentDomain =
+                                    domain.name === account?.domain;
+                                return (
+                                    <ListItem
+                                        key={domain.name}
+                                        p={3}
+                                        bg={isDark ? '#1a1a1a' : 'gray.50'}
+                                        borderRadius="md"
+                                        cursor={
+                                            isCurrentDomain
+                                                ? 'default'
+                                                : 'pointer'
+                                        }
+                                        opacity={isCurrentDomain ? 0.7 : 1}
+                                        _hover={{
+                                            bg: isCurrentDomain
+                                                ? isDark
+                                                    ? '#1a1a1a'
+                                                    : 'gray.50'
+                                                : isDark
+                                                ? '#252525'
+                                                : 'gray.100',
+                                        }}
+                                        onClick={() =>
+                                            !isCurrentDomain &&
+                                            handleDomainSelect(domain.name)
+                                        }
+                                    >
+                                        <HStack justify="space-between">
+                                            <Text>{domain.name}</Text>
+                                            {isCurrentDomain && (
+                                                <Tag
+                                                    size="sm"
+                                                    colorScheme="green"
+                                                    variant="subtle"
+                                                >
+                                                    {t('Current')}
+                                                </Tag>
+                                            )}
+                                        </HStack>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </VStack>
+                ) : null}
+
                 <VStack spacing={4} align="stretch">
                     <InputGroup size="lg">
                         <Input

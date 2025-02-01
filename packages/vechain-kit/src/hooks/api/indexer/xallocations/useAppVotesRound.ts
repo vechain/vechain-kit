@@ -63,7 +63,7 @@ export const getRoundAppVotesQueryKey = (roundId: number) => [
  */
 export const useRoundAppVotes = ({ roundId }: RoundAppVotesRequest) => {
     const { network } = useVeChainKitConfig();
-    const indexerUrl = getConfig(network.type).indexerUrl;
+    const indexerUrl = getConfig(network.type).b3trIndexerUrl;
 
     return useQuery({
         queryKey: getRoundAppVotesQueryKey(roundId),

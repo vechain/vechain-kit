@@ -2,6 +2,8 @@ import { AppConfig } from '.';
 
 const config: AppConfig = {
     ipfsFetchingService: 'https://api.dev.gateway-proxy.vechain.org/ipfs',
+    ipfsPinningService:
+        'https://api.dev.gateway-proxy.vechain.org/api/v1/pinning/pinFileToIPFS',
     vthoContractAddress: '0x0000000000000000000000000000456E65726779',
     b3trContractAddress: '0xbf64cf86894Ee0877C4e7d03936e35Ee8D8b864F',
     vot3ContractAddress: '0xa704c45971995467696EE9544Da77DD42Bc9706E',
@@ -40,6 +42,8 @@ const config: AppConfig = {
         '0x6878f1aD5e3015310CfE5B38d7B7071C5D8818Ca',
     vnsResolverAddress: '0xc403b8EA53F707d7d4de095f0A20bC491Cf2bc94',
     indexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
+    b3trIndexerUrl: 'https://b3tr.testnet.vechain.org/api/v1',
+    graphQlIndexerUrl: 'https://graph.vet/subgraphs/name/vns',
     nodeUrl: 'https://testnet.vechain.org',
     network: {
         id: 'testnet',

@@ -5,6 +5,7 @@ import { Network, NETWORK_TYPE } from './network';
 
 export type AppConfig = {
     ipfsFetchingService: string;
+    ipfsPinningService: string;
     vthoContractAddress: string;
     b3trContractAddress: string;
     vot3ContractAddress: string;
@@ -34,7 +35,9 @@ export type AppConfig = {
     vetDomainsReverseRegistrarAddress: string;
     vnsResolverAddress: string;
     nodeUrl: string;
-    indexerUrl?: string;
+    indexerUrl: string;
+    b3trIndexerUrl: string;
+    graphQlIndexerUrl: string;
     network: Network;
     explorerUrl: string;
 };

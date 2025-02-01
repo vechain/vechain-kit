@@ -8,6 +8,4 @@ export * from './useB3trToUpgrade';
 export * from './useLevelMultiplier';
 export * from './useGetTokensInfoByOwner';
 export * from './useB3trDonated';
-export * from './useNFTMetadataUri';
-export * from './useNFTImage';
 export * from './useGMBaseUri';

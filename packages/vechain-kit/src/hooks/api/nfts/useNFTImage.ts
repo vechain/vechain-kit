@@ -1,4 +1,4 @@
-import { useTokenIdByAccount } from './useTokenIdByAccount';
+import { useTokenIdByAccount } from '@/hooks';
 import { useNFTMetadataUri } from './useNFTMetadataUri';
 import { useIpfsImage } from '@/hooks/api/ipfs/useIpfsImage';
 import { useIpfsMetadata } from '@/hooks/api/ipfs/useIpfsMetadata';
