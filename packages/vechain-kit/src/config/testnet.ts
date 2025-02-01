@@ -41,6 +41,7 @@ const config: AppConfig = {
     vetDomainsReverseRegistrarAddress:
         '0x6878f1aD5e3015310CfE5B38d7B7071C5D8818Ca',
     vnsResolverAddress: '0xc403b8EA53F707d7d4de095f0A20bC491Cf2bc94',
+    vetDomainAvatarUrl: 'https://testnet.vet.domains/api/avatar',
     indexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
     b3trIndexerUrl: 'https://b3tr.testnet.vechain.org/api/v1',
     graphQlIndexerUrl: 'https://graph.vet/subgraphs/name/vns',

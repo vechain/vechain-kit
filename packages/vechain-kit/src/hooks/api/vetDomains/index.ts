@@ -3,3 +3,4 @@ export * from './useEnsRecordExists';
 export * from './useClaimVeWorldSubdomain';
 export * from './useIsDomainProtected';
 export * from './useGetDomainsOfAddress';
+export * from './useGetAvatar';

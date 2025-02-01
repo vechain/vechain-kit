@@ -87,5 +87,6 @@ const config: AppConfig = {
     vetDomainsReverseRegistrarAddress:
         '0x5c970901a587BA3932C835D4ae5FAE2BEa7e78Bc',
     vnsResolverAddress: '0xA11413086e163e41901bb81fdc5617c975Fa5a1A',
+    vetDomainAvatarUrl: 'https://vet.domains/api/avatar',
 };
 export default config;

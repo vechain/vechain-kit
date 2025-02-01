@@ -7,6 +7,7 @@ import {
     useGetChainId,
     useGetNodeUrl,
     useContractVersion,
+    useGetAvatar,
 } from '@/hooks';
 import {
     compareAddresses,
@@ -21,6 +22,7 @@ import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useState } from 'react';
 import { useCrossAppConnectionCache } from '@/hooks';
+import { getConfig } from '@/config';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -79,6 +81,8 @@ export const useWallet = (): UseWalletReturnType => {
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDappKitWallet();
+
+    const vetDomainAvatarUrl = getConfig(network.type).vetDomainAvatarUrl;
 
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
@@ -164,33 +168,43 @@ export const useWallet = (): UseWalletReturnType => {
         : smartAccount?.address;
 
     const accountDomain = useVechainDomain(activeAddress ?? '').data?.domain;
+    const accountAvatar = useGetAvatar(accountDomain);
     const account = activeAddress
         ? {
               address: activeAddress,
               domain: accountDomain,
-              image: getPicassoImage(activeAddress),
+              image:
+                  accountDomain && accountAvatar.data
+                      ? `${vetDomainAvatarUrl}/${accountDomain}`
+                      : getPicassoImage(activeAddress),
           }
         : null;
 
     const connectedWalletDomain = useVechainDomain(connectedWalletAddress ?? '')
         .data?.domain;
+    const connectedWalletAvatar = useGetAvatar(connectedWalletDomain);
     const connectedWallet = connectedWalletAddress
         ? {
               address: connectedWalletAddress,
               domain: connectedWalletDomain,
-              image: getPicassoImage(connectedWalletAddress),
+              image:
+                  connectedWalletDomain && connectedWalletAvatar.data
+                      ? `${vetDomainAvatarUrl}/${connectedWalletDomain}`
+                      : getPicassoImage(connectedWalletAddress),
           }
         : null;
 
-    //TODO: add isLoading for each domain
     // Use cached domain lookups for each address
     const walletDomain = useVechainDomain(dappKitAccount ?? '').data?.domain;
+    const walletAvatar = useGetAvatar(walletDomain);
     const smartAccountDomain = useVechainDomain(smartAccount?.address ?? '')
         .data?.domain;
     const embeddedWalletDomain = useVechainDomain(privyEmbeddedWallet ?? '')
         .data?.domain;
+    const embeddedWalletAvatar = useGetAvatar(embeddedWalletDomain);
     const crossAppAccountDomain = useVechainDomain(crossAppAddress ?? '').data
         ?.domain;
+    const crossAppAccountAvatar = useGetAvatar(crossAppAccountDomain);
     const { data: smartAccountVersion } = useContractVersion(
         smartAccount?.address ?? '',
     );
@@ -244,21 +258,30 @@ export const useWallet = (): UseWalletReturnType => {
             ? {
                   address: dappKitAccount,
                   domain: walletDomain,
-                  image: getPicassoImage(dappKitAccount ?? ''),
+                  image:
+                      walletDomain && walletAvatar.data
+                          ? `${vetDomainAvatarUrl}/${walletDomain}`
+                          : getPicassoImage(dappKitAccount ?? ''),
               }
             : undefined,
         embeddedWallet: privyEmbeddedWallet
             ? {
                   address: privyEmbeddedWallet,
                   domain: embeddedWalletDomain,
-                  image: getPicassoImage(privyEmbeddedWallet),
+                  image:
+                      embeddedWalletDomain && embeddedWalletAvatar.data
+                          ? `${vetDomainAvatarUrl}/${embeddedWalletDomain}`
+                          : getPicassoImage(privyEmbeddedWallet),
               }
             : undefined,
         crossAppWallet: crossAppAddress
             ? {
                   address: crossAppAddress,
                   domain: crossAppAccountDomain,
-                  image: getPicassoImage(crossAppAddress),
+                  image:
+                      crossAppAccountDomain && crossAppAccountAvatar.data
+                          ? `${vetDomainAvatarUrl}/${crossAppAccountDomain}`
+                          : getPicassoImage(crossAppAddress),
               }
             : undefined,
 
