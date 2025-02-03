@@ -87,17 +87,10 @@ export const getAvatar = async (
             lookupData,
         );
 
-        if (avatar === '') {
-            return null;
-        }
-
-        return avatar;
+        return avatar === '' ? null : avatar;
     } catch (error) {
         console.error('Error fetching avatar:', error);
-        if (error instanceof Error) {
-            throw new Error(`Failed to fetch avatar: ${error.message}`);
-        }
-        throw new Error('Failed to fetch avatar. Please try again later.');
+        throw error;
     }
 };
 
@@ -117,7 +110,7 @@ export const useGetAvatar = (name?: string) => {
     const { network } = useVeChainKitConfig();
     const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
 
-    return useQuery({
+    const avatarQuery = useQuery({
         queryKey: getAvatarQueryKey(name ?? ''),
         queryFn: () => getAvatar(network.type, nodeUrl, name!),
         enabled: !!name && !!nodeUrl && !!network.type,
@@ -125,4 +118,6 @@ export const useGetAvatar = (name?: string) => {
         retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
+
+    return avatarQuery;
 };

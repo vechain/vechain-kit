@@ -312,5 +312,21 @@
     "Customize account": "Customize account",
     "Customize Account": "Customize Account",
     "Customize your account with a nickname and a picture to easily identify it.": "Customize your account with a nickname and a picture to easily identify it.",
-    "Choose a unique .vet domain name for your account": "Choose a unique .vet domain name for your account"
+    "Choose a unique .vet domain name for your account.": "Choose a unique .vet domain name for your account.",
+    "Profile Picture": "Profile Picture",
+    "Customize your account profile picture": "Customize your account profile picture",
+    "Profile Picture Updated": "Profile Picture Updated",
+    "Your profile picture has been successfully updated.": "Your profile picture has been successfully updated.",
+    "Back to Settings": "Back to Settings",
+    "Upload profile image": "Upload profile image",
+    "You can change your profile image only after you setup your domain name.": "You can change your profile image only after you setup your domain name.",
+    "Customize your account by adding a profile image, which will be displayed on the apps you use.": "Customize your account by adding a profile image, which will be displayed on the apps you use.",
+    "Uploading image": "Uploading image",
+    "Setting image": "Setting image",
+    "Your new profile image is set correctly": "Your new profile image is set correctly",
+    "Update profile image": "Update profile image",
+    "Customize your account with a unique .vet domain name and profile image to enhance your identity across VeChain applications.": "Customize your account with a unique .vet domain name and profile image to enhance your identity across VeChain applications.",
+    "Your customizations are linked to your .vet domain name, making them portable across different applications.": "Your customizations are linked to your .vet domain name, making them portable across different applications.",
+    "To get started with customization, first secure your .vet domain name. Once you have a domain, you can add a profile image that will be visible wherever you use your account.": "To get started with customization, first secure your .vet domain name. Once you have a domain, you can add a profile image that will be visible wherever you use your account.",
+    "Changing your domain name will update also your profile image.": "Changing your domain name will update also your profile image."
 }

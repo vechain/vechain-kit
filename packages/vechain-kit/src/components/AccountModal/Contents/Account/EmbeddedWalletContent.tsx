@@ -73,7 +73,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
             <ModalBody w={'full'}>
                 <VStack
                     justify={'center'}
-                    spacing={5}
+                    spacing={3}
                     align="flex-start"
                     w={'full'}
                 >

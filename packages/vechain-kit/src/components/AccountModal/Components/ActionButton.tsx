@@ -8,16 +8,17 @@ import {
     Image,
     Tag,
     useColorMode,
+    ButtonProps,
 } from '@chakra-ui/react';
-import { ElementType } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IconType } from 'react-icons';
 
-interface ActionButtonProps {
+type ActionButtonProps = {
     title: string;
     description: string;
     onClick: () => void;
-    leftIcon?: ElementType;
-    rightIcon?: ElementType;
+    leftIcon?: IconType;
+    rightIcon?: IconType;
     leftImage?: string;
     backgroundColor?: string;
     border?: string;
@@ -26,7 +27,10 @@ interface ActionButtonProps {
     showComingSoon?: boolean;
     isDisabled?: boolean;
     stacked?: boolean;
-}
+    isLoading?: boolean;
+    loadingText?: string;
+    style?: ButtonProps;
+};
 
 export const ActionButton = ({
     leftIcon,
@@ -41,6 +45,9 @@ export const ActionButton = ({
     _hover,
     isDisabled = false,
     stacked = false,
+    isLoading,
+    loadingText,
+    style,
 }: ActionButtonProps) => {
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
@@ -57,13 +64,23 @@ export const ActionButton = ({
             onClick={onClick}
             display={hide ? 'none' : 'flex'}
             isDisabled={showComingSoon || isDisabled}
+            isLoading={isLoading}
+            loadingText={loadingText}
             bgColor={baseBackgroundColor}
             _hover={_hover}
+            {...style}
         >
             <HStack w={'full'} justify={'space-between'}>
                 <Box minW={'40px'}>
                     {leftImage ? (
-                        <Image src={leftImage} alt="left-image" />
+                        <Image
+                            src={leftImage}
+                            w={'35px'}
+                            h={'35px'}
+                            borderRadius={'full'}
+                            alt="left-image"
+                            alignSelf={'end'}
+                        />
                     ) : (
                         <Icon as={leftIcon} fontSize={'25px'} />
                     )}

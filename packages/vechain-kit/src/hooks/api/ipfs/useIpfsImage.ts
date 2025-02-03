@@ -23,7 +23,7 @@ export const getIpfsImage = async (
 ): Promise<IpfsImage> => {
     if (!uri) throw new Error('IPFS URI is required');
 
-    const response = await fetch(convertUriToUrl(uri, networkType));
+    const response = await fetch(convertUriToUrl(uri, networkType) ?? '');
 
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

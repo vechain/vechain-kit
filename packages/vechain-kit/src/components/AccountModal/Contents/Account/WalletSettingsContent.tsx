@@ -23,13 +23,13 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
-import { FaPaintbrush } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { useEffect, useRef } from 'react';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { BsQuestionCircle } from 'react-icons/bs';
+import { GiPaintBrush } from 'react-icons/gi';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -135,7 +135,7 @@ export const WalletSettingsContent = ({
                         onClick={() => {
                             setCurrentContent('account-customization');
                         }}
-                        leftIcon={FaPaintbrush}
+                        leftIcon={GiPaintBrush}
                         rightIcon={MdOutlineNavigateNext}
                     />
 
