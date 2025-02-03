@@ -37,7 +37,6 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { IoIosFingerPrint } from 'react-icons/io';
-import { MdOutlineNavigateNext } from 'react-icons/md';
 
 type ConfirmUnlinkProps = {
     accountType: string;
@@ -316,7 +315,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 linkPasskey();
                             }}
                             leftIcon={IoIosFingerPrint}
-                            rightIcon={MdOutlineNavigateNext}
+                            rightIcon={undefined}
                             isDisabled={!privy?.allowPasskeyLinking}
                         />
 
