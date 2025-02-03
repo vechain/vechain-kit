@@ -28,6 +28,7 @@ import { ActionButton } from '../../Components';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';
+import { IoIosFingerPrint } from 'react-icons/io';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -47,8 +48,10 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, privy } = useVeChainKitConfig();
     const { connection } = useWallet();
+
+    const { linkPasskey } = usePrivy();
 
     const connectionCache = getConnectionCache();
 
@@ -198,20 +201,21 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         rightIcon={MdOutlineNavigateNext}
                     />
 
-                    {/* {connection.isConnectedWithSocialLogin &&
-                        privy?.allowPasskeyLinking && (
-                            <ActionButton
-                                title={t('Add passkey')}
-                                description={t(
-                                    'Enable one click login by adding a passkey to your account.',
-                                )}
-                                onClick={() => {
-                                    linkPasskey();
-                                }}
-                                leftIcon={IoIosFingerPrint}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                        )} */}
+                    <ActionButton
+                        title={t('Manage passkey login')}
+                        description={t(
+                            'Enable one click login by adding a passkey to your account.',
+                        )}
+                        onClick={() => {
+                            linkPasskey();
+                        }}
+                        leftIcon={IoIosFingerPrint}
+                        rightIcon={MdOutlineNavigateNext}
+                        isDisabled={
+                            !connection.isConnectedWithSocialLogin ||
+                            !privy?.allowPasskeyLinking
+                        }
+                    />
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>

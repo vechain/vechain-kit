@@ -328,5 +328,6 @@
     "Customize your account with a unique .vet domain name and profile image to enhance your identity across VeChain applications.": "Customize your account with a unique .vet domain name and profile image to enhance your identity across VeChain applications.",
     "Your customizations are linked to your .vet domain name, making them portable across different applications.": "Your customizations are linked to your .vet domain name, making them portable across different applications.",
     "To get started with customization, first secure your .vet domain name. Once you have a domain, you can add a profile image that will be visible wherever you use your account.": "To get started with customization, first secure your .vet domain name. Once you have a domain, you can add a profile image that will be visible wherever you use your account.",
-    "Changing your domain name will update also your profile image.": "Changing your domain name will update also your profile image."
+    "Changing your domain name will update also your profile image.": "Changing your domain name will update also your profile image.",
+    "Manage passkey login": "Manage passkey login"
 }
