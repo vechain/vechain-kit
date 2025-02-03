@@ -41,6 +41,6 @@ body:
   attributes:
     label: "Kit Version"
     description: What version of the kit are you using?
-    render: bash
+    placeholder: "@vechain/kit@1.0.0"
   validations:
     required: true
