@@ -234,7 +234,15 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <VechainLogoHorizontal maxW={200} isDark={colorMode === 'dark'} />
+            <VStack spacing={0}>
+                <Text fontSize={'md'} fontWeight={'bold'}>
+                    Powered by
+                </Text>
+                <VechainLogoHorizontal
+                    maxW={200}
+                    isDark={colorMode === 'dark'}
+                />
+            </VStack>
         </HStack>
     );
 };

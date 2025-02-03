@@ -329,5 +329,7 @@
     "Your customizations are linked to your .vet domain name, making them portable across different applications.": "Your customizations are linked to your .vet domain name, making them portable across different applications.",
     "To get started with customization, first secure your .vet domain name. Once you have a domain, you can add a profile image that will be visible wherever you use your account.": "To get started with customization, first secure your .vet domain name. Once you have a domain, you can add a profile image that will be visible wherever you use your account.",
     "Changing your domain name will update also your profile image.": "Changing your domain name will update also your profile image.",
-    "Manage passkey login": "Manage passkey login"
+    "Manage passkey login": "Manage passkey login",
+    "This is your main wallet, created by {{element}} and secured by Privy. This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions. Please be sure to keep it safe and backed up.": "This is your main wallet, created by {{element}} and secured by Privy. This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions. Please be sure to keep it safe and backed up.",
+    "This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.": "This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions."
 }

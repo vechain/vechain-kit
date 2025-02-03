@@ -9,3 +9,4 @@ export * from './useEmbeddedWalletSettingsModal';
 export * from './useExploreEcosystemModal';
 export * from './useNotificationsModal';
 export * from './useFAQModal';
+export * from './useAccountCustomizationModal';

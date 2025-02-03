@@ -13,12 +13,12 @@ import { useVeChainKitConfig } from '@/providers';
 import { getAvatarQueryKey, useWallet } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '../../Components';
-import { PiAddressBook } from 'react-icons/pi';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useUpdateAvatarRecord } from '@/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
+import { FaRegAddressCard } from 'react-icons/fa';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -170,7 +170,7 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
                                 setCurrentContent('choose-name');
                             }
                         }}
-                        leftIcon={PiAddressBook}
+                        leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
                     />
 
