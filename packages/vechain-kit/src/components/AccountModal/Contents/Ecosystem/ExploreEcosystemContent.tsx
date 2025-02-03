@@ -83,16 +83,20 @@ const DEFAULT_APPS: XAppMetadata[] = [
 
 export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, network } = useVeChainKitConfig();
     const [searchQuery, setSearchQuery] = useState('');
     const { data: currentRoundId } = useCurrentAllocationsRoundId();
     const { data: vbdApps } = useMostVotedAppsInRound(
         currentRoundId ? (parseInt(currentRoundId) - 1).toString() : '1',
     );
 
-    const filteredDapps = vbdApps.filter((dapp) =>
-        dapp.app.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    // Only show VBD apps if we're on mainnet
+    const isMainnet = network.type === 'main';
+    const filteredDapps = isMainnet
+        ? vbdApps.filter((dapp) =>
+              dapp.app.name.toLowerCase().includes(searchQuery.toLowerCase()),
+          )
+        : [];
 
     const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
         dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
