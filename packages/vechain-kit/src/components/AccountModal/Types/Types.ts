@@ -17,6 +17,7 @@ export type AccountModalContentTypes =
     | 'ecosystem'
     | 'notifications'
     | 'privy-linked-accounts'
+    | 'account-customization'
     | {
           type: 'app-overview';
           props: {

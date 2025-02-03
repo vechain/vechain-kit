@@ -23,6 +23,7 @@ import { NotificationsContent } from './Contents/Notifications/NotificationConte
 import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
+import { AccountCustomizationContent } from './Contents/Account/AccountCustomizationContent';
 
 type Props = {
     isOpen: boolean;
@@ -141,6 +142,12 @@ export const AccountModal = ({
             case 'ecosystem':
                 return (
                     <ExploreEcosystemContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'account-customization':
+                return (
+                    <AccountCustomizationContent
                         setCurrentContent={setCurrentContent}
                     />
                 );

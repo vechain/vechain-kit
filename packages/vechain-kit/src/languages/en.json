@@ -308,5 +308,9 @@
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
     "Loading your domains...": "Loading your domains...",
-    "Your existing domains": "Your existing domains"
+    "Your existing domains": "Your existing domains",
+    "Customize account": "Customize account",
+    "Customize Account": "Customize Account",
+    "Customize your account with a nickname and a picture to easily identify it.": "Customize your account with a nickname and a picture to easily identify it.",
+    "Choose a unique .vet domain name for your account": "Choose a unique .vet domain name for your account"
 }
