@@ -84,7 +84,7 @@ export const getXApps = async (
             }));
         }
     }
-    if (res[1]?.data) {
+    if (res[1]?.data && res[1]?.data !== '0x') {
         const unendorsedAppsDecoded = unendorsedAppsAbi.decode(res[1]?.data)[0];
         if (unendorsedAppsDecoded.length) {
             unendorsedApps = unendorsedAppsDecoded.map((app: any) => ({
