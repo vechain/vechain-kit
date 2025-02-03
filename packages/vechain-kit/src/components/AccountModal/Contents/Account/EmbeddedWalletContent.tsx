@@ -90,18 +90,39 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         <>
                             <Text fontSize={'sm'} opacity={0.5}>
                                 {t(
-                                    'This is your main wallet, created by {{element}} and secured by Privy. This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions. Please be sure to keep it safe and backed up.',
+                                    'This is your main wallet, created by {{element}} and secured by Privy.',
                                     {
                                         element:
                                             connectionCache?.ecosystemApp?.name,
                                     },
                                 )}
                             </Text>
-                            <Text fontSize={'sm'} opacity={0.5} mt={5}>
-                                {t(
-                                    'A smart account is being used as a gateway for blockchain interactions.',
-                                )}
-                            </Text>
+
+                            {showFullText && (
+                                <>
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        {t(
+                                            'This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.',
+                                        )}
+                                    </Text>
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        {t(
+                                            'Please be sure to keep this wallet safe and backed up.',
+                                        )}
+                                    </Text>
+                                </>
+                            )}
+
+                            <Button
+                                mt={0}
+                                variant="link"
+                                size="sm"
+                                onClick={() => setShowFullText(!showFullText)}
+                                color="blue.500"
+                                textAlign="left"
+                            >
+                                {t(showFullText ? 'Show Less' : 'Read More')}
+                            </Button>
                         </>
                     )}
 
