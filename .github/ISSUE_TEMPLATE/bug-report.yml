@@ -13,14 +13,6 @@ body:
     placeholder: Short and explicit description of your incident...
   validations:
     required: true
-- type: input
-  id: reprod-url
-  attributes:
-    label: "Reproduction URL"
-    description: Please enter your GitHub URL to provide a reproduction of the issue.
-    placeholder: ex. https://github.com/USERNAME/REPO-NAME
-  validations:
-    required: false
 - type: textarea
   id: reprod
   attributes:
@@ -44,23 +36,11 @@ body:
     render: bash
   validations:
     required: false
-- type: textarea
-  id: logs
+- type: input
+  id: kit-version
   attributes:
-    label: "Logs"
-    description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+    label: "Kit Version"
+    description: What version of the kit are you using?
     render: bash
   validations:
-    required: false
-- type: dropdown
-  id: os
-  attributes:
-    label: "OS"
-    description: What is the impacted environment?
-    multiple: true
-    options:
-    - Windows
-    - Linux
-    - Mac
-  validations:
-    required: false
+    required: true
