@@ -1,9 +1,8 @@
 import { notFoundImage, gmNfts } from '@/utils';
 import { useIsGMclaimable } from './useIsGMclaimable';
-import { NFTMetadata, useNFTImage } from './useNFTImage';
+import { NFTMetadata, useNFTImage, useNFTMetadataUri } from '@/hooks';
 import { useGetB3trBalance } from '@/hooks';
 import { useSelectedTokenId } from './useSelectedTokenId';
-import { useNFTMetadataUri } from './useNFTMetadataUri';
 import { useIpfsImage, useIpfsMetadata } from '@/hooks/api/ipfs';
 import { useLevelOfToken } from './useLevelOfToken';
 import { useLevelMultiplier } from './useLevelMultiplier';

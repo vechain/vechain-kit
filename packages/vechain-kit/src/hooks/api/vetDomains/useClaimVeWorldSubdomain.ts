@@ -1,5 +1,6 @@
 import {
     UseSendTransactionReturnValue,
+    getDomainsOfAddressQueryKey,
     getEnsRecordExistsQueryKey,
     getVechainDomainQueryKey,
     useSendTransaction,
@@ -106,6 +107,14 @@ export const useClaimVeWorldSubdomain = ({
             refetchType: 'none',
         });
 
+        queryClient.cancelQueries({
+            queryKey: getDomainsOfAddressQueryKey(
+                account?.address ?? '',
+                domain,
+            ),
+            refetchType: 'none',
+        });
+
         // Refetch after 3 seconds
         setTimeout(() => {
             queryClient.invalidateQueries({
@@ -131,6 +140,13 @@ export const useClaimVeWorldSubdomain = ({
 
             queryClient.refetchQueries({
                 queryKey: getEnsRecordExistsQueryKey(subdomain),
+            });
+
+            queryClient.refetchQueries({
+                queryKey: getDomainsOfAddressQueryKey(
+                    account?.address ?? '',
+                    domain,
+                ),
             });
         }, 2000);
 
