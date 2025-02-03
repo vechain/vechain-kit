@@ -73,7 +73,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
             <ModalBody w={'full'}>
                 <VStack
                     justify={'center'}
-                    spacing={5}
+                    spacing={3}
                     align="flex-start"
                     w={'full'}
                 >
@@ -90,7 +90,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         <>
                             <Text fontSize={'sm'} opacity={0.5}>
                                 {t(
-                                    'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your login methods and security settings.',
+                                    'This is your main wallet, created by {{element}} and secured by Privy. This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions. Please be sure to keep it safe and backed up.',
                                     {
                                         element:
                                             connectionCache?.ecosystemApp?.name,
@@ -115,6 +115,11 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
                             {showFullText && (
                                 <>
+                                    <Text fontSize={'sm'} opacity={0.5}>
+                                        {t(
+                                            'This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.',
+                                        )}
+                                    </Text>
                                     <Text fontSize={'sm'} opacity={0.5}>
                                         {t(
                                             'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
@@ -147,11 +152,6 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                             'to learn more about embedded wallets.',
                                         )}
                                     </Text>
-                                    <Text fontSize={'sm'} opacity={0.5}>
-                                        {t(
-                                            'A smart account is being used as a gateway for blockchain interactions.',
-                                        )}
-                                    </Text>
                                 </>
                             )}
 
@@ -167,6 +167,8 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                             </Button>
                         </>
                     )}
+
+                    {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
 
                     <ActionButton
                         title={t('Backup your wallet')}
@@ -197,21 +199,6 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         leftIcon={MdManageAccounts}
                         rightIcon={MdOutlineNavigateNext}
                     />
-
-                    {/* {connection.isConnectedWithSocialLogin &&
-                        privy?.allowPasskeyLinking && (
-                            <ActionButton
-                                title={t('Add passkey')}
-                                description={t(
-                                    'Enable one click login by adding a passkey to your account.',
-                                )}
-                                onClick={() => {
-                                    linkPasskey();
-                                }}
-                                leftIcon={IoIosFingerPrint}
-                                rightIcon={MdOutlineNavigateNext}
-                            />
-                        )} */}
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>

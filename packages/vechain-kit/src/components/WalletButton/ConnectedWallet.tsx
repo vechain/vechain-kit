@@ -12,7 +12,7 @@ export const ConnectedWallet = ({
     mobileVariant = 'iconAndDomain',
     desktopVariant = 'iconAndDomain',
     onOpen,
-    buttonStyle,
+    buttonStyle = {},
 }: ConnectedWalletProps) => {
     const { account } = useWallet();
     const [isDesktop] = useMediaQuery('(min-width: 768px)');

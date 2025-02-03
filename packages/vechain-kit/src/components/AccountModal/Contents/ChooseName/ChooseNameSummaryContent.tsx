@@ -121,7 +121,7 @@ export const ChooseNameSummaryContent = ({
                 isOpen={transactionModal.isOpen}
                 onClose={() => {
                     transactionModal.onClose();
-                    setCurrentContent('main');
+                    setCurrentContent('account-customization');
                 }}
                 status={status}
                 txId={txReceipt?.meta.txID}

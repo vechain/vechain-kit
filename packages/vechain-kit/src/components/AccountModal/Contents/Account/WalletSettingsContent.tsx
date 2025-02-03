@@ -23,13 +23,13 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
-import { FaRegAddressCard } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { HiOutlineWallet } from 'react-icons/hi2';
 import { useEffect, useRef } from 'react';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { BsQuestionCircle } from 'react-icons/bs';
+import { GiPaintBrush } from 'react-icons/gi';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -48,8 +48,6 @@ export const WalletSettingsContent = ({
     const { privy, darkMode: isDark, network } = useVeChainKitConfig();
 
     const { connection, disconnect, account } = useWallet();
-
-    const hasExistingDomain = !!account?.domain;
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -130,28 +128,14 @@ export const WalletSettingsContent = ({
                     />
 
                     <ActionButton
-                        title={
-                            hasExistingDomain
-                                ? t('Change account name')
-                                : t('Choose account name')
-                        }
+                        title={t('Customize account')}
                         description={t(
-                            'Give a nickname to your wallet to easily identify it.',
+                            'Customize your account with a nickname and a picture to easily identify it.',
                         )}
                         onClick={() => {
-                            if (hasExistingDomain) {
-                                setCurrentContent({
-                                    type: 'choose-name-search',
-                                    props: {
-                                        name: '',
-                                        setCurrentContent,
-                                    },
-                                });
-                            } else {
-                                setCurrentContent('choose-name');
-                            }
+                            setCurrentContent('account-customization');
                         }}
-                        leftIcon={FaRegAddressCard}
+                        leftIcon={GiPaintBrush}
                         rightIcon={MdOutlineNavigateNext}
                     />
 

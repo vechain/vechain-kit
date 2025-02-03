@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { IoIosFingerPrint } from 'react-icons/io';
+import { MdOutlineNavigateNext } from 'react-icons/md';
 
 type ConfirmUnlinkProps = {
     accountType: string;
@@ -306,6 +307,19 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 </StickyHeaderContainer>
                 <ModalBody>
                     <VStack spacing={3} align="stretch">
+                        <ActionButton
+                            title={t('Handle Passkey Login')}
+                            description={t(
+                                'Enable one click login by adding a passkey to your account.',
+                            )}
+                            onClick={() => {
+                                linkPasskey();
+                            }}
+                            leftIcon={IoIosFingerPrint}
+                            rightIcon={MdOutlineNavigateNext}
+                            isDisabled={!privy?.allowPasskeyLinking}
+                        />
+
                         {canLinkGoogle && (
                             <ActionButton
                                 title={t('Link Google Account')}

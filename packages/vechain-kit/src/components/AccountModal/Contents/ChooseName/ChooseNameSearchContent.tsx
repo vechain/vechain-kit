@@ -158,7 +158,7 @@ export const ChooseNameSearchContent = ({
                     onClick={() =>
                         // if the user has a domain, go to accounts
                         account?.domain
-                            ? setCurrentContent('settings')
+                            ? setCurrentContent('account-customization')
                             : setCurrentContent('choose-name')
                     }
                 />

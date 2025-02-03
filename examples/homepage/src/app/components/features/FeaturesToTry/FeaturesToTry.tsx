@@ -16,18 +16,22 @@ import {
     useEmbeddedWalletSettingsModal,
     useExploreEcosystemModal,
     useNotificationsModal,
+    useAccountCustomizationModal,
     useFAQModal,
 } from '@vechain/vechain-kit';
 import { FeatureCard } from './FeatureCard';
 import { GithubCard } from './GithubCard';
 import { LanguageCard } from './LanguageCard';
 import { ThemeCard } from './ThemeCard';
+import { CgProfile } from 'react-icons/cg';
 
 export function FeaturesToTry() {
     const { account } = useWallet();
 
     // Use the modal hooks
     const { open: openChooseNameModal } = useChooseNameModal();
+    const { open: openAccountCustomizationModal } =
+        useAccountCustomizationModal();
     const { open: openSendTokenModal } = useSendTokenModal();
     const { open: openEmbeddedWalletSettingsModal } =
         useEmbeddedWalletSettingsModal();
@@ -44,6 +48,15 @@ export function FeaturesToTry() {
             highlight: !account?.domain,
             link: '#',
             content: openChooseNameModal,
+        },
+        {
+            title: 'Set Profile Image',
+            description:
+                'Customize your account with a profile image to enhance your identity across VeChain applications.',
+            icon: CgProfile,
+            highlight: !account?.domain,
+            link: '#',
+            content: openAccountCustomizationModal,
         },
         {
             title: 'Transfer Assets',
@@ -89,7 +102,7 @@ export function FeaturesToTry() {
     return (
         <VStack spacing={6} align="stretch">
             <Text fontSize="xl" fontWeight="bold">
-                Features (click to try!)
+                Features
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
@@ -97,8 +110,8 @@ export function FeaturesToTry() {
                     <FeatureCard key={feature.title} {...feature} />
                 ))}
                 <LanguageCard />
-                <GithubCard />
                 <ThemeCard />
+                <GithubCard />
             </SimpleGrid>
         </VStack>
     );

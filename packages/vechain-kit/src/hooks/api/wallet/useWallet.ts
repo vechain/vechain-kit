@@ -2,17 +2,8 @@
 
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import {
-    useVechainDomain,
-    useGetChainId,
-    useGetNodeUrl,
-    useContractVersion,
-} from '@/hooks';
-import {
-    compareAddresses,
-    getPicassoImage,
-    VECHAIN_PRIVY_APP_ID,
-} from '@/utils';
+import { useGetChainId, useGetNodeUrl, useContractVersion } from '@/hooks';
+import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '.';
 import { useVeChainKitConfig } from '@/providers';
@@ -21,6 +12,7 @@ import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useState } from 'react';
 import { useCrossAppConnectionCache } from '@/hooks';
+import { useWalletMetadata } from './useWalletMetadata';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -31,15 +23,6 @@ export type UseWalletReturnType = {
 
     // Every user connected with privy has one
     smartAccount: SmartAccount;
-
-    // When user connects with a wallet
-    dappKitWallet?: Wallet;
-
-    // wallet created by the social login provider
-    embeddedWallet?: Wallet;
-
-    // Wallet of the user connected with a cross app provider
-    crossAppWallet?: Wallet;
 
     // Privy user if user is connected with privy
     privyUser: User | null;
@@ -128,21 +111,23 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithSocialLogin ||
             isConnectedWithCrossApp;
 
-        setIsConnected(isNowConnected);
+        if (isConnected !== isNowConnected) {
+            setIsConnected(isNowConnected);
 
-        // Force re-render of dependent components
-        if (!isNowConnected) {
-            // Clear any cached wallet data
-            clearConnectionCache();
-            // Dispatch event to trigger re-renders
-            window.dispatchEvent(new Event('wallet_disconnected'));
+            // Only clear cache and dispatch event when disconnecting
+            if (!isNowConnected) {
+                // Clear any cached wallet data
+                clearConnectionCache();
+                // Dispatch event to trigger re-renders
+                window.dispatchEvent(new Event('wallet_disconnected'));
+            }
         }
     }, [
         isConnectedWithDappKit,
         isConnectedWithSocialLogin,
         isConnectedWithCrossApp,
         clearConnectionCache,
-        connectionSource,
+        isConnected,
     ]);
 
     // Get embedded wallet
@@ -163,37 +148,41 @@ export const useWallet = (): UseWalletReturnType => {
         ? dappKitAccount
         : smartAccount?.address;
 
-    const accountDomain = useVechainDomain(activeAddress ?? '').data?.domain;
+    const activeMetadata = useWalletMetadata(activeAddress, network.type);
+    const connectedMetadata = useWalletMetadata(
+        connectedWalletAddress,
+        network.type,
+    );
+    const smartAccountMetadata = useWalletMetadata(
+        smartAccount?.address,
+        network.type,
+    );
+
     const account = activeAddress
         ? {
               address: activeAddress,
-              domain: accountDomain,
-              image: getPicassoImage(activeAddress),
+              domain: activeMetadata.domain,
+              image: activeMetadata.image,
           }
         : null;
 
-    const connectedWalletDomain = useVechainDomain(connectedWalletAddress ?? '')
-        .data?.domain;
     const connectedWallet = connectedWalletAddress
         ? {
               address: connectedWalletAddress,
-              domain: connectedWalletDomain,
-              image: getPicassoImage(connectedWalletAddress),
+              domain: connectedMetadata.domain,
+              image: connectedMetadata.image,
           }
         : null;
 
-    //TODO: add isLoading for each domain
-    // Use cached domain lookups for each address
-    const walletDomain = useVechainDomain(dappKitAccount ?? '').data?.domain;
-    const smartAccountDomain = useVechainDomain(smartAccount?.address ?? '')
-        .data?.domain;
-    const embeddedWalletDomain = useVechainDomain(privyEmbeddedWallet ?? '')
-        .data?.domain;
-    const crossAppAccountDomain = useVechainDomain(crossAppAddress ?? '').data
-        ?.domain;
+    // Get smart account version
     const { data: smartAccountVersion } = useContractVersion(
         smartAccount?.address ?? '',
     );
+
+    const hasActiveSmartAccount =
+        !!smartAccount?.address &&
+        !!account?.address &&
+        compareAddresses(smartAccount?.address, account?.address);
 
     // Modify the disconnect function to ensure state updates
     const disconnect = useCallback(async () => {
@@ -225,43 +214,16 @@ export const useWallet = (): UseWalletReturnType => {
         clearConnectionCache,
     ]);
 
-    const hasActiveSmartAccount =
-        !!smartAccount?.address &&
-        !!account?.address &&
-        compareAddresses(smartAccount?.address, account?.address);
-
     return {
         account,
         smartAccount: {
             address: smartAccount?.address ?? '',
-            domain: smartAccountDomain,
-            image: getPicassoImage(smartAccount?.address ?? ''),
+            domain: smartAccountMetadata.domain,
+            image: smartAccountMetadata.image,
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
             version: smartAccountVersion ?? null,
         },
-        dappKitWallet: isConnectedWithDappKit
-            ? {
-                  address: dappKitAccount,
-                  domain: walletDomain,
-                  image: getPicassoImage(dappKitAccount ?? ''),
-              }
-            : undefined,
-        embeddedWallet: privyEmbeddedWallet
-            ? {
-                  address: privyEmbeddedWallet,
-                  domain: embeddedWalletDomain,
-                  image: getPicassoImage(privyEmbeddedWallet),
-              }
-            : undefined,
-        crossAppWallet: crossAppAddress
-            ? {
-                  address: crossAppAddress,
-                  domain: crossAppAccountDomain,
-                  image: getPicassoImage(crossAppAddress),
-              }
-            : undefined,
-
         connectedWallet,
         privyUser: user,
         connection: {
