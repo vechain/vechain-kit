@@ -18,6 +18,8 @@ export const getIpfsMetadata = async <T>(
 ): Promise<T> => {
     if (!uri) throw new Error('No URI provided');
     const newUri = convertUriToUrl(uri, networkType);
+    if (!newUri) throw new Error('Invalid URI');
+
     const response = await fetch(newUri);
     const data = await response.text();
 

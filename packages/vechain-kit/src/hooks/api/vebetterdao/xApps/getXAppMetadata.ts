@@ -41,7 +41,10 @@ export const getXAppMetadata = async (
     uri: string,
     networkType: NETWORK_TYPE,
 ): Promise<XAppMetadata | undefined> => {
-    const response = await fetch(convertUriToUrl(uri, networkType));
+    const url = convertUriToUrl(uri, networkType);
+    if (!url) return undefined;
+
+    const response = await fetch(url);
 
     if (!response.ok) {
         return undefined;
