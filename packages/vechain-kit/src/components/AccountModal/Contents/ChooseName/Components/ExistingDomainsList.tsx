@@ -11,11 +11,13 @@ import {
     Tag,
     HStack,
     VStack,
+    Image,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
+import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
 
 type ExistingDomainsListProps = {
     domains: { name: string }[];
@@ -30,9 +32,10 @@ export const ExistingDomainsList = ({
 }: ExistingDomainsListProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { account } = useWallet();
+    const { account, connection } = useWallet();
 
-    if (domains.length === 0 && !isLoading) {
+    // avoid flickering after loading by returning null, so if no domains are found, it will not show the accordion
+    if (domains.length === 0 || isLoading) {
         return null;
     }
 
@@ -71,6 +74,10 @@ export const ExistingDomainsList = ({
                                 {domains.map((domain) => {
                                     const isCurrentDomain =
                                         domain.name === account?.domain;
+                                    const metadata = useWalletMetadata(
+                                        domain.name,
+                                        connection.network,
+                                    );
                                     return (
                                         <ListItem
                                             key={domain.name}
@@ -105,33 +112,18 @@ export const ExistingDomainsList = ({
                                             transition="all 0.2s"
                                         >
                                             <HStack spacing={3} align="center">
-                                                <Box
+                                                <Image
+                                                    src={metadata.image}
+                                                    alt={domain.name}
+                                                    width="40px"
+                                                    height="40px"
+                                                    rounded="full"
                                                     bg={
                                                         isDark
                                                             ? 'whiteAlpha.200'
                                                             : 'gray.100'
                                                     }
-                                                    borderRadius="full"
-                                                    w="40px"
-                                                    h="40px"
-                                                    display="flex"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                >
-                                                    <Text
-                                                        fontSize="lg"
-                                                        fontWeight="500"
-                                                        color={
-                                                            isDark
-                                                                ? 'whiteAlpha.900'
-                                                                : 'gray.600'
-                                                        }
-                                                    >
-                                                        {domain.name
-                                                            .charAt(0)
-                                                            .toUpperCase()}
-                                                    </Text>
-                                                </Box>
+                                                />
 
                                                 <VStack
                                                     align="start"
