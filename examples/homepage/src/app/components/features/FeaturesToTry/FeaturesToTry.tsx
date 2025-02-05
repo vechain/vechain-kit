@@ -18,12 +18,14 @@ import {
     useNotificationsModal,
     useAccountCustomizationModal,
     useFAQModal,
+    useReceiveModal,
 } from '@vechain/vechain-kit';
 import { FeatureCard } from './FeatureCard';
 import { GithubCard } from './GithubCard';
 import { LanguageCard } from './LanguageCard';
 import { ThemeCard } from './ThemeCard';
 import { CgProfile } from 'react-icons/cg';
+import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 
 export function FeaturesToTry() {
     const { account } = useWallet();
@@ -38,6 +40,7 @@ export function FeaturesToTry() {
     const { open: openExploreEcosystemModal } = useExploreEcosystemModal();
     const { open: openNotificationsModal } = useNotificationsModal();
     const { open: openFAQModal } = useFAQModal();
+    const { open: openReceiveModal } = useReceiveModal();
 
     const features = [
         {
@@ -54,7 +57,6 @@ export function FeaturesToTry() {
             description:
                 'Customize your account with a profile image to enhance your identity across VeChain applications.',
             icon: CgProfile,
-            highlight: !account?.domain,
             link: '#',
             content: openAccountCustomizationModal,
         },
@@ -65,6 +67,13 @@ export function FeaturesToTry() {
             icon: RiExchangeLine,
             link: '#',
             content: openSendTokenModal,
+        },
+        {
+            title: 'Receive Assets',
+            description: 'Receive VET, VTHO, and other tokens from anyone',
+            icon: FaRegArrowAltCircleDown,
+            link: '#',
+            content: openReceiveModal,
         },
         {
             title: 'Backup & Secure',
