@@ -9,3 +9,4 @@ export * from './AssetButton';
 export * from './AddressDisplayCard';
 export * from './ModalFAQButton';
 export * from './ScrollToTopWrapper';
+export * from './AccountAvatar';

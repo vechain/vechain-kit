@@ -7,8 +7,6 @@ import {
     Text,
     HStack,
     Divider,
-    Alert,
-    AlertIcon,
     ModalFooter,
     useDisclosure,
     Icon,
@@ -21,10 +19,13 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { useTransferERC20, useTransferVET, useWallet } from '@/hooks';
-import { TransactionModal } from '@/components';
+import { ExchangeWarningAlert, TransactionModal } from '@/components';
 import { GiConfirmed } from 'react-icons/gi';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useGetAvatar } from '@/hooks/api/vetDomains';
+import { useMemo } from 'react';
+import { convertUriToUrl } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -67,6 +68,16 @@ export const SendTokenSummaryContent = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connection } = useWallet();
     const transactionModal = useDisclosure();
+    const { data: avatar } = useGetAvatar(resolvedDomain);
+    const { network } = useVeChainKitConfig();
+
+    // Get the final image URL
+    const toImageSrc = useMemo(() => {
+        if (avatar) {
+            return convertUriToUrl(avatar, network.type);
+        }
+        return getPicassoImage(resolvedAddress || toAddressOrDomain);
+    }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
 
     const transferERC20 = useTransferERC20({
         fromAddress: account?.address ?? '',
@@ -125,16 +136,7 @@ export const SendTokenSummaryContent = ({
             <ModalBody>
                 <VStack spacing={6} align="stretch" w="full">
                     {connection.isConnectedWithPrivy && (
-                        <Alert
-                            status="warning"
-                            fontSize={'xs'}
-                            borderRadius={'xl'}
-                        >
-                            <AlertIcon />
-                            {t(
-                                'Sending to OceanX or other exchanges may result in loss of funds. Send the tokens to your VeWorld wallet first.',
-                            )}
-                        </Alert>
+                        <ExchangeWarningAlert />
                     )}
                     {/* From/To Card */}
 
@@ -153,9 +155,7 @@ export const SendTokenSummaryContent = ({
                             label={t('To')}
                             address={resolvedAddress || toAddressOrDomain}
                             domain={resolvedDomain}
-                            imageSrc={getPicassoImage(
-                                resolvedAddress || toAddressOrDomain,
-                            )}
+                            imageSrc={toImageSrc ?? ''}
                             imageAlt="To account"
                             symbol={selectedToken.symbol}
                         />

@@ -11,13 +11,13 @@ import {
     Tag,
     HStack,
     VStack,
-    Image,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
+import { AccountAvatar } from '@/components/common';
 
 type ExistingDomainsListProps = {
     domains: { name: string }[];
@@ -112,17 +112,13 @@ export const ExistingDomainsList = ({
                                             transition="all 0.2s"
                                         >
                                             <HStack spacing={3} align="center">
-                                                <Image
-                                                    src={metadata.image}
-                                                    alt={domain.name}
-                                                    width="40px"
-                                                    height="40px"
-                                                    rounded="full"
-                                                    bg={
-                                                        isDark
-                                                            ? 'whiteAlpha.200'
-                                                            : 'gray.100'
-                                                    }
+                                                <AccountAvatar
+                                                    props={{
+                                                        width: '40px',
+                                                        height: '40px',
+                                                        src: metadata.image,
+                                                        alt: domain.name,
+                                                    }}
                                                 />
 
                                                 <VStack

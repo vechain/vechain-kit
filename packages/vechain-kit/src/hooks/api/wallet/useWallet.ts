@@ -163,6 +163,7 @@ export const useWallet = (): UseWalletReturnType => {
               address: activeAddress,
               domain: activeMetadata.domain,
               image: activeMetadata.image,
+              isLoadingAvatar: activeMetadata.isLoading,
           }
         : null;
 
@@ -171,6 +172,7 @@ export const useWallet = (): UseWalletReturnType => {
               address: connectedWalletAddress,
               domain: connectedMetadata.domain,
               image: connectedMetadata.image,
+              isLoadingAvatar: connectedMetadata.isLoading,
           }
         : null;
 
@@ -223,6 +225,7 @@ export const useWallet = (): UseWalletReturnType => {
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
             version: smartAccountVersion ?? null,
+            isLoadingAvatar: smartAccountMetadata.isLoading,
         },
         connectedWallet,
         privyUser: user,

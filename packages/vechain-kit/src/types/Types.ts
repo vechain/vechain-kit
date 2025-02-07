@@ -2,6 +2,7 @@ export type Wallet = {
     address: string;
     domain?: string;
     image: string;
+    isLoadingAvatar?: boolean;
 } | null;
 
 export type SmartAccount = Wallet & {
