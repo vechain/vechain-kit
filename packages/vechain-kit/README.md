@@ -40,22 +40,15 @@ yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp
 ```typescript
 'use client';
 
-
-import VeChainKitProvider from '@vechain/vechain-kit'
-​
+import VeChainKitProvider from '@vechain/vechain-kit';
 export function VeChainKitProviderWrapper({ children }: Props) {
     return (
-         <VechainKitProvider
-            // Mandatory
+        <VechainKitProvider
             feeDelegation={{
-                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!
+                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
             }}
             dappKit={{
                 allowedWallets: ['veworld', 'sync2'],
-            }}
-            privyEcosystemApps=[] // remove for using default ones
-            loginModalUI={{
-                variant: 'vechain-wallet-ecosystem',
             }}
             darkMode={true}
             language="en"
@@ -83,6 +76,50 @@ interface Props {
     children: React.ReactNode;
 }
 ```
+
+### Available Login Methods
+
+The modal supports several authentication methods:
+
+-   Social Login - Email and Google authentication through Privy (only available for self hosted Privy)
+-   VeChain Login - Direct VeChain wallet authentication
+-   Passkey - Biometric/device-based authentication (only available for self hosted Privy)
+-   DappKit - Connection through VeWorld or other VeChain wallets
+-   Ecosystem - Cross-app authentication within the VeChain ecosystem
+-   More Options - Additional Privy-supported login methods (only available for self hosted Privy)
+
+#### Configuration
+
+The modal implements a dynamic grid layout system that can be customized through the `loginMethods` configuration.
+
+The modal can be configured through the `VeChainKitProvider` props.
+
+```typescript
+<VeChainKitProvider
+    loginModalUI={{
+        logo: '/your-logo.png',
+        description: 'Custom login description',
+    }}
+    loginMethods={[
+        { method: 'vechain', gridColumn: 4 },
+        { method: 'email', gridColumn: 2 },
+        { method: 'passkey', gridColumn: 2 },
+    ]}
+>
+    {children}
+</VeChainKitProvider>
+```
+
+#### Ecosystem button
+
+The ways to show the ecosystem login button are:
+
+1. You define "ecosystem" in the loginMethods in the config
+2. You do not define the loginMethods in the config, so we default to showing the ecosystem login button
+
+To not show the ecosystem login button, you must explicitly define the loginMethods array in the config and not include ecosystem in the options.
+
+By default we have a list of default apps that will be shown as ecosystem login options. If you want to customize this list you can pass the `allowedApps` array prop. You can find the app ids in the [Ecosystem](https://dashboard.privy.io/) tab in the Privy dashboard.
 
 ### Setup Fee Delegation (mandatory)
 
