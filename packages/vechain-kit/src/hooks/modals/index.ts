@@ -11,3 +11,4 @@ export * from './useNotificationsModal';
 export * from './useFAQModal';
 export * from './useAccountCustomizationModal';
 export * from './useReceiveModal';
+export * from './useLoginModalContent';

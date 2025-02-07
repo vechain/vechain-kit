@@ -6,14 +6,10 @@ import { useTranslation } from 'react-i18next';
 type Props = {
     isDark: boolean;
     onViewMoreLogin: () => void;
-    gridColumn: number;
+    gridColumn?: number;
 };
 
-export const PrivyButton = ({
-    isDark,
-    onViewMoreLogin,
-    gridColumn = 1,
-}: Props) => {
+export const PrivyButton = ({ isDark, onViewMoreLogin, gridColumn }: Props) => {
     const { t } = useTranslation();
     return (
         <GridItem colSpan={gridColumn} w={'full'}>
@@ -21,7 +17,7 @@ export const PrivyButton = ({
                 isDark={isDark}
                 onClick={onViewMoreLogin}
                 icon={CiCircleMore}
-                text={gridColumn >= 2 ? t('More') : undefined}
+                text={gridColumn && gridColumn >= 2 ? t('More') : undefined}
             />
         </GridItem>
     );

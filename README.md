@@ -1,7 +1,7 @@
 <div align="center">
     <h1><code>vechain-kit</code></h1>
     <p>
-        <strong>A all-in-one library for building VeChain applications.</strong>
+        <strong>An all-in-one library for building VeChain applications.</strong>
     </p>
     <p>
         <a href="https://sonarcloud.io/project/overview?id=vechain_vechain-dapp-kit"><img src="https://sonarcloud.io/api/project_badges/measure?project=vechain_vechain-dapp-kit&metric=security_rating&token=69ceb851539382455c3eba073d1690bb58147af5" alt="Security Rating"></a>

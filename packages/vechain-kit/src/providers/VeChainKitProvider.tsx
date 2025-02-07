@@ -5,6 +5,7 @@ import {
     useState,
     useCallback,
     useEffect,
+    useMemo,
 } from 'react';
 import { PrivyProvider, WalletListEntry } from '@privy-io/react-auth';
 import { DAppKitProvider } from '@vechain/dapp-kit-react';
@@ -14,7 +15,6 @@ import { PrivyLoginMethod } from '@/types';
 import {
     ConnectModal,
     AccountModal,
-    ConnectModalVariant,
     AccountModalContentTypes,
 } from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
@@ -40,6 +40,19 @@ const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'cm153hrup0817axti38avlfyg', //greencart
 ];
 
+type LoginMethodOrder = {
+    method:
+        | 'email'
+        | 'google'
+        | 'passkey'
+        | 'vechain'
+        | 'dappkit'
+        | 'ecosystem'
+        | 'more';
+    gridColumn?: number;
+    allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
+};
+
 export type VechainKitProviderProps = {
     children: ReactNode;
     privy?: {
@@ -57,7 +70,6 @@ export type VechainKitProviderProps = {
         loginMethods: PrivyLoginMethod[];
         allowPasskeyLinking?: boolean;
     };
-    privyEcosystemAppIDS?: string[];
     feeDelegation: {
         delegatorUrl: string;
         delegateAllTransactions: boolean;
@@ -75,9 +87,8 @@ export type VechainKitProviderProps = {
     loginModalUI?: {
         logo?: string;
         description?: string;
-        preferredLoginMethods?: Array<'email' | 'google'>;
-        variant?: ConnectModalVariant;
     };
+    loginMethods?: LoginMethodOrder[];
     darkMode?: boolean;
     i18n?: I18n;
     language?: string;
@@ -98,11 +109,11 @@ type VeChainKitConfig = {
     feeDelegation: VechainKitProviderProps['feeDelegation'];
     dappKit: VechainKitProviderProps['dappKit'];
     loginModalUI?: VechainKitProviderProps['loginModalUI'];
+    loginMethods?: VechainKitProviderProps['loginMethods'];
     darkMode: boolean;
     i18n?: VechainKitProviderProps['i18n'];
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
-    privySocialLoginEnabled: boolean;
     // Connect Modal
     openConnectModal: () => void;
     closeConnectModal: () => void;
@@ -149,15 +160,14 @@ export const VeChainKitProvider = ({
     feeDelegation,
     dappKit,
     loginModalUI = {
-        variant: 'vechain-and-wallet',
         description:
             'Choose between social login through VeChain or by connecting your wallet.',
     },
+    loginMethods,
     darkMode = false,
     i18n: i18nConfig,
     language = 'en',
     network,
-    privyEcosystemAppIDS = DEFAULT_PRIVY_ECOSYSTEM_APP_IDS,
 }: Omit<VechainKitProviderProps, 'queryClient'>) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
@@ -196,9 +206,18 @@ export const VeChainKitProvider = ({
     const [accountModalContent, setAccountModalContent] =
         useState<AccountModalContentTypes>('main');
 
-    const loginMethods = [
+    const allowedEcosystemApps = useMemo(() => {
+        const userEcosystemMethods = loginMethods?.find(
+            (method) => method.method === 'ecosystem',
+        );
+        return (
+            userEcosystemMethods?.allowedApps ?? DEFAULT_PRIVY_ECOSYSTEM_APP_IDS
+        );
+    }, [loginMethods]);
+
+    const privyLoginMethods = [
         ...(privy?.loginMethods ?? []),
-        ...(privyEcosystemAppIDS ?? []).map((appID) => `privy:${appID}`),
+        ...allowedEcosystemApps.map((appID) => `privy:${appID}`),
     ];
 
     let privyAppId: string, privyClientId: string;
@@ -237,19 +256,19 @@ export const VeChainKitProvider = ({
     return (
         <EnsureQueryClient>
             <ReactQueryDevtools initialIsOpen={false} />
-            <PrivyCrossAppProvider privyEcosystemAppIDS={privyEcosystemAppIDS}>
+            <PrivyCrossAppProvider privyEcosystemAppIDS={allowedEcosystemApps}>
                 <VeChainKitContext.Provider
                     value={{
                         privy,
-                        privyEcosystemAppIDS,
+                        privyEcosystemAppIDS: allowedEcosystemApps,
                         feeDelegation,
                         dappKit,
                         loginModalUI,
+                        loginMethods,
                         darkMode,
                         i18n: i18nConfig,
                         language,
                         network,
-                        privySocialLoginEnabled: privy !== undefined,
                         openConnectModal,
                         closeConnectModal,
                         isConnectModalOpen,
@@ -271,7 +290,7 @@ export const VeChainKitProvider = ({
                         config={{
                             loginMethodsAndOrder: {
                                 // @ts-ignore
-                                primary: loginMethods,
+                                primary: privyLoginMethods,
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',

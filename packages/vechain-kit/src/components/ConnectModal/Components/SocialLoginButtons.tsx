@@ -8,23 +8,32 @@ import { useLoginWithOAuth } from '@/hooks';
 
 type Props = {
     isDark: boolean;
-    loginModalUI: VechainKitProviderProps['loginModalUI'];
+    loginMethods?: VechainKitProviderProps['loginMethods'];
+    gridColumn?: number;
 };
 
-export const SocialLoginButtons = ({ isDark, loginModalUI }: Props) => {
+export const SocialLoginButtons = ({
+    isDark,
+    loginMethods,
+    gridColumn,
+}: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
+    const selfHostedPrivyLoginMethods = loginMethods?.filter(
+        (method) => method.method === 'email' || method.method === 'google',
+    );
+
     return (
-        <>
-            {loginModalUI?.preferredLoginMethods?.map((method, index) => (
-                <React.Fragment key={method}>
-                    {method === 'email' && (
+        <GridItem colSpan={gridColumn} w={'full'}>
+            {selfHostedPrivyLoginMethods?.map((loginMethod, index) => (
+                <React.Fragment key={loginMethod.method}>
+                    {loginMethod.method === 'email' && (
                         <GridItem colSpan={4} w={'full'}>
                             <EmailLoginButton />
                         </GridItem>
                     )}
-                    {method === 'google' && (
+                    {loginMethod.method === 'google' && (
                         <GridItem colSpan={4} w={'full'}>
                             <ConnectionButton
                                 isDark={isDark}
@@ -40,8 +49,7 @@ export const SocialLoginButtons = ({ isDark, loginModalUI }: Props) => {
                     )}
 
                     {index !==
-                        (loginModalUI?.preferredLoginMethods?.length ?? 0) -
-                            1 && (
+                        (selfHostedPrivyLoginMethods?.length ?? 0) - 1 && (
                         <GridItem colSpan={4} w={'full'}>
                             <HStack>
                                 <Divider />
@@ -52,6 +60,6 @@ export const SocialLoginButtons = ({ isDark, loginModalUI }: Props) => {
                     )}
                 </React.Fragment>
             ))}
-        </>
+        </GridItem>
     );
 };
