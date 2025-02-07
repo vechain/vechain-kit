@@ -88,14 +88,10 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 },
             }}
             loginModalUI={{
-                // preferredLoginMethods: ['google'],
-                variant: 'vechain',
                 logo: appLogo,
                 description:
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}
-            // Leave this empty to remove the ecosystem button
-            privyEcosystemAppIDS={[]}
             darkMode={isDarkMode}
             language={i18n.language}
             network={{

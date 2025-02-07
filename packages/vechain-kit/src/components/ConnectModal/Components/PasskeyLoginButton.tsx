@@ -10,7 +10,7 @@ type Props = {
     gridColumn?: number;
 };
 
-export const PasskeyLoginButton = ({ isDark, gridColumn = 1 }: Props) => {
+export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
     const { loginWithPasskey } = useLoginWithPasskey();
     const [loginError, setLoginError] = useState<string>();
@@ -39,6 +39,9 @@ export const PasskeyLoginButton = ({ isDark, gridColumn = 1 }: Props) => {
                     isDark={isDark}
                     onClick={handleLoginWithPasskey}
                     icon={IoIosFingerPrint}
+                    text={
+                        gridColumn && gridColumn >= 2 ? t('Passkey') : undefined
+                    }
                 />
             </GridItem>
 

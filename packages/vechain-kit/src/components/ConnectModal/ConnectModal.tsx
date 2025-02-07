@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
-import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     isOpen: boolean;
@@ -14,7 +13,6 @@ type Props = {
 export type ConnectModalContentsTypes = 'main' | 'email-verification' | 'faq';
 
 export const ConnectModal = ({ isOpen, onClose }: Props) => {
-    const { loginModalUI } = useVeChainKitConfig();
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>('main');
 
@@ -31,7 +29,6 @@ export const ConnectModal = ({ isOpen, onClose }: Props) => {
                     <MainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        variant={loginModalUI?.variant}
                     />
                 );
             case 'faq':

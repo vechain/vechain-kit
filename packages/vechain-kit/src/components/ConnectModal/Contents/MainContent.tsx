@@ -27,34 +27,34 @@ import { EcosystemButton } from '../Components/EcosystemButton';
 import { PrivyButton } from '../Components/PrivyButton';
 import { useTranslation } from 'react-i18next';
 import { VeChainWithPrivyLoginButton } from '../Components';
-
-export type ConnectModalVariant =
-    | 'full'
-    | 'vechain-and-wallet'
-    | 'vechain'
-    | 'vechain-wallet-ecosystem';
+import { useLoginModalContent } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<ConnectModalContentsTypes>
     >;
     onClose: () => void;
-    variant?: ConnectModalVariant;
 };
 
-export const MainContent = ({
-    setCurrentContent,
-    onClose,
-    variant = 'vechain-wallet-ecosystem',
-}: Props) => {
+export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { t } = useTranslation();
 
     const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
-    const { loginModalUI, privySocialLoginEnabled, privyEcosystemAppIDS } =
+    const { loginModalUI, privyEcosystemAppIDS, loginMethods } =
         useVeChainKitConfig();
     // View more login
     const { login: viewMoreLogin } = usePrivy();
+
+    const {
+        showSocialLogin,
+        showPasskey,
+        showVeChainLogin,
+        showDappKit,
+        showEcosystem,
+        showMoreLogin,
+        isOfficialVeChainApp,
+    } = useLoginModalContent();
 
     // Load ecosystem apps info, doing it here to avoid loading when opening the modal
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
@@ -66,39 +66,95 @@ export const MainContent = ({
         }
     }, [connection.isConnected, onClose]);
 
-    const dappKitGridColumn = useMemo(() => {
-        switch (variant) {
-            case 'full':
-                return 1;
-            case 'vechain-and-wallet':
-                return 4;
-            case 'vechain-wallet-ecosystem':
-                if (privyEcosystemAppIDS.length === 0) {
-                    return 4;
-                }
-                return 2;
-            default:
-                if (
-                    !privySocialLoginEnabled ||
-                    privyEcosystemAppIDS.length === 0
-                ) {
-                    return 4;
-                }
-                return 1;
-        }
-    }, [variant, privySocialLoginEnabled, privyEcosystemAppIDS]);
+    // Calculate grid layout based on visible buttons and order configuration
+    const gridLayout = useMemo(() => {
+        // If order is specified, use those values
+        if (loginMethods?.length) {
+            const layout: Record<string, number> = {};
 
-    const privyGridColumn = useMemo(() => {
-        switch (variant) {
-            case 'full':
-                if (privyEcosystemAppIDS.length === 0) {
-                    return 2;
+            loginMethods.forEach(({ method, gridColumn }) => {
+                switch (method) {
+                    case 'email':
+                    case 'google':
+                        layout.socialLoginColumn = gridColumn || 4;
+                        break;
+                    case 'vechain':
+                        layout.veChainColumn = gridColumn || 4;
+                        break;
+                    case 'passkey':
+                        layout.passkeyColumn = gridColumn || 1;
+                        break;
+                    case 'dappkit':
+                        layout.dappKitColumn = gridColumn || 2;
+                        break;
+                    case 'ecosystem':
+                        layout.ecosystemColumn = gridColumn || 2;
+                        break;
+                    case 'more':
+                        layout.moreLoginColumn = gridColumn || 1;
+                        break;
                 }
-                return 1;
-            default:
-                return 0;
+            });
+
+            return layout;
         }
-    }, [variant, privyEcosystemAppIDS]);
+
+        // Fall back to existing layout logic if no order is specified
+        const visibleButtons = {
+            socialLogin: showSocialLogin,
+            veChainLogin: showVeChainLogin,
+            dappKit: showDappKit,
+            ecosystem: showEcosystem,
+            moreLogin: showMoreLogin,
+            passkey: showPasskey,
+        };
+
+        // For VeChain + DappKit + Ecosystem layout (vechain self hosted privy)
+        if (
+            visibleButtons.veChainLogin &&
+            visibleButtons.dappKit &&
+            visibleButtons.ecosystem &&
+            !visibleButtons.socialLogin
+        ) {
+            return {
+                veChainColumn: 4, // Full width
+                dappKitColumn: 2, // Half width
+                ecosystemColumn: 2, // Half width
+            };
+        }
+
+        // For cases with social login (self hosted privy)
+        if (visibleButtons.socialLogin) {
+            return {
+                socialLoginColumn: 4,
+                veChainColumn: 4,
+                dappKitColumn: 1,
+                ecosystemColumn: 1,
+                moreLoginColumn: 1,
+                passkeyColumn: 1,
+            };
+        }
+
+        // Default layout (distribute evenly)
+        const totalButtons =
+            Object.values(visibleButtons).filter(Boolean).length;
+        const defaultColumn = Math.min(4, totalButtons);
+
+        // defaults to no self hosted privy
+        return {
+            veChainColumn: 4,
+            dappKitColumn: defaultColumn,
+            ecosystemColumn: defaultColumn,
+        };
+    }, [
+        loginMethods,
+        showSocialLogin,
+        showVeChainLogin,
+        showDappKit,
+        showEcosystem,
+        showMoreLogin,
+        showPasskey,
+    ]);
 
     return (
         <>
@@ -148,55 +204,55 @@ export const MainContent = ({
 
                 <Stack spacing={4} w={'full'} align={'center'}>
                     <Grid templateColumns="repeat(4, 1fr)" gap={2} w={'full'}>
-                        {variant === 'full' && privySocialLoginEnabled && (
+                        {showSocialLogin && (
                             <SocialLoginButtons
                                 isDark={isDark}
-                                loginModalUI={loginModalUI}
+                                loginMethods={loginMethods}
+                                gridColumn={gridLayout.socialLoginColumn}
                             />
                         )}
 
-                        {variant === 'vechain' ? (
-                            // This exists because we want to use same button but connect
-                            // with privy-auth instead of cross-app, used only by vechain.
-                            <VeChainWithPrivyLoginButton
-                                isDark={isDark}
-                                gridColumn={4}
-                            />
-                        ) : (
-                            <VeChainLoginButton
-                                isDark={isDark}
-                                gridColumn={4}
-                            />
-                        )}
-
-                        {variant === 'full' && privySocialLoginEnabled && (
-                            <PasskeyLoginButton isDark={isDark} />
-                        )}
-
-                        <DappKitButton
-                            isDark={isDark}
-                            gridColumn={dappKitGridColumn}
-                        />
-
-                        {(variant === 'full' ||
-                            variant === 'vechain-wallet-ecosystem') &&
-                            privyEcosystemAppIDS.length > 0 && (
-                                <EcosystemButton
+                        {showVeChainLogin &&
+                            (isOfficialVeChainApp ? (
+                                <VeChainWithPrivyLoginButton
                                     isDark={isDark}
-                                    privySocialLoginEnabled={
-                                        variant === 'full' &&
-                                        privySocialLoginEnabled
-                                    }
-                                    appsInfo={Object.values(appsInfo || {})}
-                                    isLoading={isEcosystemAppsLoading}
+                                    gridColumn={gridLayout.veChainColumn}
                                 />
-                            )}
+                            ) : (
+                                <VeChainLoginButton
+                                    isDark={isDark}
+                                    gridColumn={gridLayout.veChainColumn}
+                                />
+                            ))}
 
-                        {variant === 'full' && privySocialLoginEnabled && (
+                        {showPasskey && (
+                            <PasskeyLoginButton
+                                isDark={isDark}
+                                gridColumn={gridLayout.passkeyColumn}
+                            />
+                        )}
+
+                        {showDappKit && (
+                            <DappKitButton
+                                isDark={isDark}
+                                gridColumn={gridLayout.dappKitColumn}
+                            />
+                        )}
+
+                        {showEcosystem && (
+                            <EcosystemButton
+                                isDark={isDark}
+                                appsInfo={Object.values(appsInfo || {})}
+                                isLoading={isEcosystemAppsLoading}
+                                gridColumn={gridLayout.ecosystemColumn}
+                            />
+                        )}
+
+                        {showMoreLogin && (
                             <PrivyButton
                                 isDark={isDark}
                                 onViewMoreLogin={viewMoreLogin}
-                                gridColumn={privyGridColumn}
+                                gridColumn={gridLayout.moreLoginColumn}
                             />
                         )}
                     </Grid>
