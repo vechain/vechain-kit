@@ -337,5 +337,8 @@
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
     "Sending to OceanX or other exchanges may result in loss of funds.": "Sending to OceanX or other exchanges may result in loss of funds.",
-    "Send the tokens to your VeWorld wallet first.": "Send the tokens to your VeWorld wallet first."
+    "Send the tokens to your VeWorld wallet first.": "Send the tokens to your VeWorld wallet first.",
+    "Sign in with a wallet from other x2earn apps.": "Sign in with a wallet from other x2earn apps.",
+    "Select an app": "Select an app",
+    "Other": "Other"
 }

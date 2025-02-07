@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
 import { useCrossAppConnectionCache } from '@/hooks';
-import { IoPlanet } from 'react-icons/io5';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
@@ -22,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
 import { handlePopupError } from '@/utils/handlePopupError';
+import { IoMdApps } from 'react-icons/io';
 
 type Props = {
     onClose: () => void;
@@ -105,8 +105,8 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                         display={'flex'}
                         gap={2}
                     >
-                        <Icon as={IoPlanet} size={'20px'} />
-                        {t('Ecosystem Login')}
+                        <Icon as={IoMdApps} size={'20px'} />
+                        {t('Select an app')}
                     </ModalHeader>
                     <ModalCloseButton />
                 </StickyHeaderContainer>
@@ -131,9 +131,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                         mb={4}
                         textAlign={'center'}
                     >
-                        {t(
-                            'Use your existing VeChain wallet from other ecosystem apps to sign in seamlessly.',
-                        )}
+                        {t('Sign in with a wallet from other x2earn apps.')}
                     </Text>
                     {isLoading && (
                         <VStack

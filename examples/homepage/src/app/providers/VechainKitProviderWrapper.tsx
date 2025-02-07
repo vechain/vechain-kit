@@ -92,6 +92,11 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 description:
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}
+            loginMethods={[
+                { method: 'vechain', gridColumn: 4 },
+                { method: 'dappkit', gridColumn: 4 },
+                { method: 'ecosystem', gridColumn: 4 },
+            ]}
             darkMode={isDarkMode}
             language={i18n.language}
             network={{

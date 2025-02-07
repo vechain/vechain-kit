@@ -225,7 +225,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                                 />
                             ))}
 
-                        {showPasskey && (
+                        {gridLayout.passkeyColumn && (
                             <PasskeyLoginButton
                                 isDark={isDark}
                                 gridColumn={gridLayout.passkeyColumn}

@@ -35,7 +35,6 @@ import i18n from '../../i18n';
 import { initializeI18n } from '@/utils/i18n';
 
 const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
-    'cm4wxxujb022fyujl7g0thb21', //vechain
     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
     'cm153hrup0817axti38avlfyg', //greencart
 ];
@@ -215,11 +214,6 @@ export const VeChainKitProvider = ({
         );
     }, [loginMethods]);
 
-    const privyLoginMethods = [
-        ...(privy?.loginMethods ?? []),
-        ...allowedEcosystemApps.map((appID) => `privy:${appID}`),
-    ];
-
     let privyAppId: string, privyClientId: string;
     if (!privy) {
         // We set dummy values for the appId and clientId so that the PrivyProvider doesn't throw an error
@@ -290,7 +284,7 @@ export const VeChainKitProvider = ({
                         config={{
                             loginMethodsAndOrder: {
                                 // @ts-ignore
-                                primary: privyLoginMethods,
+                                primary: privy?.loginMethods,
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',
