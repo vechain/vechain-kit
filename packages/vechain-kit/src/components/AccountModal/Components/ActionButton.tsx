@@ -80,6 +80,7 @@ export const ActionButton = ({
                             borderRadius={'full'}
                             alt="left-image"
                             alignSelf={'end'}
+                            objectFit="cover"
                         />
                     ) : (
                         <Icon as={leftIcon} fontSize={'25px'} />

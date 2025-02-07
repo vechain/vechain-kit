@@ -1,5 +1,4 @@
 import {
-    Image,
     ModalBody,
     ModalCloseButton,
     VStack,
@@ -17,6 +16,7 @@ import {
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
 import {
+    AccountAvatar,
     AddressDisplay,
     ModalBackButton,
     StickyHeaderContainer,
@@ -78,11 +78,7 @@ export const WalletSettingsContent = ({
 
             <ModalBody w={'full'}>
                 <VStack justify={'center'}>
-                    <Image
-                        src={account?.image}
-                        maxW={'100px'}
-                        borderRadius="50%"
-                    />
+                    <AccountAvatar wallet={account} props={{ maxW: '100px' }} />
                     <AddressDisplay wallet={account} />
                     {network.type !== 'main' && (
                         <Tag

@@ -83,6 +83,7 @@
     "Continue with Google": "Continue with Google",
     "Copy your address or scan this QR code": "Copy your address or scan this QR code",
     "Current": "Current",
+    "Current domain": "Current domain",
     "Currently, multiclause transactions are not supported for smart accounts. Your multiclause transaction will be split into multiple transactions.": "Currently, multiclause transactions are not supported for smart accounts. Your multiclause transaction will be split into multiple transactions.",
     "Customize Account": "Customize Account",
     "Customize account": "Customize account",
@@ -181,6 +182,7 @@
     "Passkey": "Passkey",
     "Phone Number": "Phone Number",
     "Please approve the request in the connection request window...": "Please approve the request in the connection request window...",
+    "Please be sure to keep this wallet safe and backed up.": "Please be sure to keep this wallet safe and backed up.",
     "Please check {{email}} for an email from privy.io and enter your code below.": "Please check {{email}} for an email from privy.io and enter your code below.",
     "Please click 'Try again' to open the login window.": "Please click 'Try again' to open the login window.",
     "Please complete the passkey authentication...": "Please complete the passkey authentication...",
@@ -245,6 +247,7 @@
     "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.": "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your wallet and security settings.",
     "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your login methods and security settings.": "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your login methods and security settings.",
     "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.": "This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} website to manage your wallet and security settings.",
+    "This is your main wallet, created by {{element}} and secured by Privy.": "This is your main wallet, created by {{element}} and secured by Privy.",
     "This is your main wallet, created by {{element}} and secured by Privy. This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions. Please be sure to keep it safe and backed up.": "This is your main wallet, created by {{element}} and secured by Privy. This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions. Please be sure to keep it safe and backed up.",
     "This may take a few seconds. You can close this window and check the status later.": "This may take a few seconds. You can close this window and check the status later.",
     "This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.": "This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.",
@@ -333,6 +336,6 @@
     "your@email.com": "your@email.com",
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
-    "This is your main wallet, created by {{element}} and secured by Privy.": "This is your main wallet, created by {{element}} and secured by Privy.",
-    "Please be sure to keep this wallet safe and backed up.": "Please be sure to keep this wallet safe and backed up."
+    "Sending to OceanX or other exchanges may result in loss of funds.": "Sending to OceanX or other exchanges may result in loss of funds.",
+    "Send the tokens to your VeWorld wallet first.": "Send the tokens to your VeWorld wallet first."
 }

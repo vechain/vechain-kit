@@ -64,6 +64,7 @@ export const AddressDisplayCard = ({
                         alt={imageAlt}
                         boxSize="40px"
                         borderRadius="xl"
+                        objectFit="cover"
                     />
                     <VStack align="start" spacing={0}>
                         {domain ? (
