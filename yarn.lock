@@ -3647,26 +3647,26 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@privy-io/api-base@1.4.2", "@privy-io/api-base@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@privy-io/api-base/-/api-base-1.4.2.tgz#8710ab32032690527236be3eb45b79a61506084c"
-  integrity sha512-YepVxiylommw2jBuUpdqm90Ebnx6H/HZODDFEpi2/G7lOWMN3GemFHllYC8sKzLIwbPuBqAo5ImvyootOXMCEA==
+"@privy-io/api-base@1.4.3", "@privy-io/api-base@^1.4.3":
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@privy-io/api-base/-/api-base-1.4.3.tgz#ca68a399d97e96d2ef99a5f41b60f3fe25410e4b"
+  integrity sha512-U++bkJmeXA7IzMU3Y+cUBnExpxwkOERmoD7C2q6C3UPu2getl/bGJMGeoiXPLvxziMRM4FVpQAhXCtj5OVB1iQ==
   dependencies:
     zod "^3.21.4"
 
-"@privy-io/cross-app-connect@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@privy-io/cross-app-connect/-/cross-app-connect-0.1.3.tgz#d616631211b246815ba9821591ad5530b8b9224b"
-  integrity sha512-crCswhF8OPmynpI0o3iSsJFMTQvO7gUK+TUYVCnxdp2oQhknn4y7v/0c2qTlXIEco1Vdsx9oruhkCWLsrM9vfg==
+"@privy-io/cross-app-connect@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@privy-io/cross-app-connect/-/cross-app-connect-0.1.6.tgz#b0df919173e63cc12b9522a2ca455bd09725bad0"
+  integrity sha512-HqbgBOOwQeOlOGGhUy8H+IgLkgPzly5t7lrC3E1GztNw2yWR2wm7a5W99kbholzcBtomieZ6/kzJGbGZlZmglw==
   dependencies:
     "@noble/curves" "^1.5.0"
     "@noble/hashes" "1.3.2"
     "@scure/base" "~1.1.2"
 
-"@privy-io/js-sdk-core@0.38.0":
-  version "0.38.0"
-  resolved "https://registry.yarnpkg.com/@privy-io/js-sdk-core/-/js-sdk-core-0.38.0.tgz#4d5651a9dcd17bf40882200cc0e6c4e745e77026"
-  integrity sha512-D1ZLHbfYhQhhXFbd/wek72gcjspPR1zHQ+4t6RYSC6xs+XTlbVy6V0asFyaIlzTyUgF0jQnVeOD7rBgpWK4ihw==
+"@privy-io/js-sdk-core@0.42.0":
+  version "0.42.0"
+  resolved "https://registry.yarnpkg.com/@privy-io/js-sdk-core/-/js-sdk-core-0.42.0.tgz#3998fbd4d4bf3ac58df8627e8ac762e011d35b55"
+  integrity sha512-WAIjtZPLLudTAEmBiNCmMOH1NizSGmoW58D7ubKiIosgvQp/OEwkyCkny7SABTZdAtx/x8uR+bU3DXhA/5kFkw==
   dependencies:
     "@ethersproject/abstract-signer" "^5.7.0"
     "@ethersproject/bignumber" "^5.7.0"
@@ -3674,8 +3674,8 @@
     "@ethersproject/providers" "^5.7.2"
     "@ethersproject/transactions" "^5.7.0"
     "@ethersproject/units" "^5.7.0"
-    "@privy-io/api-base" "^1.4.2"
-    "@privy-io/public-api" "2.16.0"
+    "@privy-io/api-base" "^1.4.3"
+    "@privy-io/public-api" "2.18.6"
     eventemitter3 "^5.0.1"
     fetch-retry "^5.0.6"
     jose "^4.15.5"
@@ -3684,21 +3684,21 @@
     set-cookie-parser "^2.6.0"
     uuid ">=8 <10"
 
-"@privy-io/public-api@2.16.0":
-  version "2.16.0"
-  resolved "https://registry.yarnpkg.com/@privy-io/public-api/-/public-api-2.16.0.tgz#1eb31117162c04d654eae5ff56425daa7f74b818"
-  integrity sha512-GwwIJX7LAEdU2rOXo1uNfQ76r0Bq2I1p5AbjANz2BkcEKs4B4H2kg/LH6DHcpQDOmFhjcV0SbwlpGcbyEptOyQ==
+"@privy-io/public-api@2.18.6":
+  version "2.18.6"
+  resolved "https://registry.yarnpkg.com/@privy-io/public-api/-/public-api-2.18.6.tgz#f9ed2f102a5a5faa438a9927cbec0e99328ba40c"
+  integrity sha512-R5oR7WStdzNEYUC/08ZyzNOR50CQ3beQ8Hu2lQu/DiAlRsOEu2bV1kUdOwmyMVz4Ytkr9FG6XVWgbJm24coVdg==
   dependencies:
-    "@privy-io/api-base" "1.4.2"
+    "@privy-io/api-base" "1.4.3"
     bs58 "^5.0.0"
     ethers "^5.7.2"
     libphonenumber-js "^1.10.31"
     zod "^3.22.4"
 
-"@privy-io/react-auth@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@privy-io/react-auth/-/react-auth-2.0.1.tgz#bd6a977577450c13ada9c743b63c3bae51fe2a3e"
-  integrity sha512-1P8hFJUFLcgrE/gwq4IFCRTgAR3l1nDn88ww3rpjytuKIOmr/jyzHNmWL1gW75JqDcf52g+WSFvdm2p9v6fXjQ==
+"@privy-io/react-auth@2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@privy-io/react-auth/-/react-auth-2.3.0.tgz#7fa3a0b56c1930ed8b089a021ed5c9ed73091a04"
+  integrity sha512-vU3Ut32lA2xE3TQ5pZs+5aObyI5+kpWbDmY4wyze0U43kZ2qeWi9TuxvaaEKeOIyMt972KscQZwCKAvtpt7yWQ==
   dependencies:
     "@coinbase/wallet-sdk" "4.0.3"
     "@floating-ui/react" "^0.26.22"
@@ -3706,7 +3706,7 @@
     "@heroicons/react" "^2.1.1"
     "@marsidev/react-turnstile" "^0.4.1"
     "@metamask/eth-sig-util" "^6.0.0"
-    "@privy-io/js-sdk-core" "0.38.0"
+    "@privy-io/js-sdk-core" "0.42.0"
     "@simplewebauthn/browser" "^9.0.1"
     "@solana/wallet-adapter-base" "^0.9.23"
     "@solana/wallet-standard-wallet-adapter-base" "^1.1.2"
