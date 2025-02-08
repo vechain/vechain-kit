@@ -168,10 +168,18 @@ export const WalletSettingsContent = ({
             </ModalBody>
             <ModalFooter w={'full'}>
                 <Button
-                    onClick={() => {
-                        disconnect();
-                        onLogoutSuccess();
-                    }}
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'disconnect-confirm',
+                            props: {
+                                onDisconnect: () => {
+                                    disconnect();
+                                    onLogoutSuccess();
+                                },
+                                onBack: () => setCurrentContent('settings'),
+                            },
+                        })
+                    }
                     variant="vechainKitSecondary"
                     leftIcon={<RiLogoutBoxLine color="#888888" />}
                 >

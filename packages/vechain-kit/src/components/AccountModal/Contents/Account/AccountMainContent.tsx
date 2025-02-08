@@ -28,7 +28,6 @@ import { useWallet } from '@/hooks';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { FeatureAnnouncementCard } from '../../Components/Alerts';
-import { RiLogoutBoxLine } from 'react-icons/ri';
 import React from 'react';
 
 type Props = {
@@ -39,22 +38,13 @@ type Props = {
     wallet: Wallet;
 };
 
-export const AccountMainContent = ({
-    setCurrentContent,
-    wallet,
-    onClose,
-}: Props) => {
+export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { disconnect, connection, account } = useWallet();
+    const { connection, account } = useWallet();
     const { getNotifications } = useNotifications();
     const notifications = getNotifications();
     const hasUnreadNotifications = notifications.some((n) => !n.isRead);
-
-    const handleDisconnect = () => {
-        disconnect();
-        onClose();
-    };
 
     return (
         <ScrollToTopWrapper>
@@ -83,22 +73,6 @@ export const AccountMainContent = ({
                     )}
 
                     <HStack justify={'space-between'}>
-                        <IconButton
-                            p={2}
-                            h={9}
-                            icon={<Icon boxSize={5} as={RiLogoutBoxLine} />}
-                            aria-label="Disconnect"
-                            variant="vechainKitSelector"
-                            onClick={() =>
-                                setCurrentContent({
-                                    type: 'disconnect-confirm',
-                                    props: {
-                                        onDisconnect: handleDisconnect,
-                                        onBack: () => setCurrentContent('main'),
-                                    },
-                                })
-                            }
-                        />
                         <AccountSelector
                             mt={0}
                             onClick={() => {

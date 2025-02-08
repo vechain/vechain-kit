@@ -4,7 +4,7 @@ import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import { useBalances, useWallet } from '@/hooks';
-import { IoPlanet } from 'react-icons/io5';
+import { IoMdApps } from 'react-icons/io';
 
 type Props = {
     mt?: number;
@@ -26,8 +26,8 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 py={3}
                 fontSize="xs"
                 verticalAlign="middle"
-                aria-label="Ecosystem"
-                icon={<Icon as={IoPlanet} boxSize={5} opacity={0.9} />}
+                aria-label="Apps"
+                icon={<Icon as={IoMdApps} boxSize={5} opacity={0.9} />}
                 onClick={() => setCurrentContent('ecosystem')}
             />
             <IconButton
