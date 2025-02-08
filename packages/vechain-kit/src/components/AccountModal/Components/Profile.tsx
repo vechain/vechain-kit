@@ -20,11 +20,13 @@ export const Profile = ({ onEditClick }: ProfileProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
 
+    const baseBackgroundColor = isDark ? 'whiteAlpha.100' : '#00000005';
+
     const headerImageSvg = picasso(account?.address ?? '');
 
     return (
         <Card
-            bg={isDark ? 'blackAlpha.400' : 'whiteAlpha.400'}
+            bg={baseBackgroundColor}
             borderRadius="xl"
             width="full"
             position="relative"
