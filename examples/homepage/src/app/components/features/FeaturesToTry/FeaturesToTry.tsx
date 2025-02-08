@@ -13,7 +13,7 @@ import { useWallet } from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
     useSendTokenModal,
-    useEmbeddedWalletSettingsModal,
+    useAccessAndSecurityModal,
     useExploreEcosystemModal,
     useNotificationsModal,
     useAccountCustomizationModal,
@@ -35,8 +35,7 @@ export function FeaturesToTry() {
     const { open: openAccountCustomizationModal } =
         useAccountCustomizationModal();
     const { open: openSendTokenModal } = useSendTokenModal();
-    const { open: openEmbeddedWalletSettingsModal } =
-        useEmbeddedWalletSettingsModal();
+    const { open: openAccessAndSecurityModal } = useAccessAndSecurityModal();
     const { open: openExploreEcosystemModal } = useExploreEcosystemModal();
     const { open: openNotificationsModal } = useNotificationsModal();
     const { open: openFAQModal } = useFAQModal();
@@ -76,12 +75,12 @@ export function FeaturesToTry() {
             content: openReceiveModal,
         },
         {
-            title: 'Backup & Secure',
+            title: 'Access & Security',
             description:
                 'Secure your embedded wallet with proper backup procedures and update your login methods.',
             icon: RiShieldKeyholeLine,
             link: '#',
-            content: openEmbeddedWalletSettingsModal,
+            content: openAccessAndSecurityModal,
         },
         {
             title: 'Explore Ecosystem',

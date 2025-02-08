@@ -5,7 +5,7 @@ export * from './useTransactionToast';
 export * from './useWalletModal';
 export * from './useChooseNameModal';
 export * from './useSendTokenModal';
-export * from './useEmbeddedWalletSettingsModal';
+export * from './useAccessAndSecurityModal';
 export * from './useExploreEcosystemModal';
 export * from './useNotificationsModal';
 export * from './useFAQModal';

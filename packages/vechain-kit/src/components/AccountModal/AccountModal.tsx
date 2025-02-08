@@ -6,7 +6,6 @@ import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
     WalletSettingsContent,
-    EmbeddedWalletContent,
     SendTokenContent,
     SendTokenSummaryContent,
     ReceiveTokenContent,
@@ -15,6 +14,8 @@ import {
     ChooseNameSearchContent,
     ChooseNameSummaryContent,
     FAQContent,
+    AccessAndSecurityContent,
+    EmbeddedWalletContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -101,9 +102,9 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
-            case 'embedded-wallet':
+            case 'access-and-security':
                 return (
-                    <EmbeddedWalletContent
+                    <AccessAndSecurityContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -136,7 +137,7 @@ export const AccountModal = ({
             case 'privy-linked-accounts':
                 return (
                     <PrivyLinkedAccounts
-                        onBack={() => setCurrentContent('embedded-wallet')}
+                        onBack={() => setCurrentContent('access-and-security')}
                     />
                 );
             case 'ecosystem':
@@ -148,6 +149,12 @@ export const AccountModal = ({
             case 'account-customization':
                 return (
                     <AccountCustomizationContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'embedded-wallet':
+                return (
+                    <EmbeddedWalletContent
                         setCurrentContent={setCurrentContent}
                     />
                 );

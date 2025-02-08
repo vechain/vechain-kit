@@ -9,6 +9,7 @@ export type AccountModalContentTypes =
     | 'main'
     | 'faq'
     | 'settings'
+    | 'access-and-security'
     | 'embedded-wallet'
     | 'receive-token'
     | 'swap-token'

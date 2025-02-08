@@ -25,7 +25,7 @@ export const AccountSelector = ({
                 w="fit-content"
                 p={2}
                 pl={4}
-                h={9}
+                h={14}
                 aria-label="Wallet"
                 onClick={onClick}
                 variant="vechainKitSelector"
@@ -33,7 +33,7 @@ export const AccountSelector = ({
                 <HStack spacing={2} align="center">
                     <AccountAvatar
                         wallet={wallet}
-                        props={{ width: 5, height: 5 }}
+                        props={{ width: 10, height: 10 }}
                     />
                     <Text fontSize={size} fontWeight="500">
                         {humanDomain(wallet?.domain ?? '', 20, 0) ||

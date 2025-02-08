@@ -304,8 +304,8 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     />
                     <ModalCloseButton />
                 </StickyHeaderContainer>
-                <ModalBody>
-                    <VStack spacing={3} align="stretch">
+                <ModalBody w="full">
+                    <VStack spacing={3} align="stretch" w="full">
                         {canLinkGoogle && (
                             <ActionButton
                                 title={t('Link Google Account')}

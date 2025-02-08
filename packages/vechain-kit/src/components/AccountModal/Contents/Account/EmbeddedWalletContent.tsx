@@ -1,57 +1,47 @@
 import {
-    Image,
-    ModalBody,
-    ModalCloseButton,
-    VStack,
-    ModalFooter,
-    ModalHeader,
-    Text,
-    Icon,
-    Link,
-    Button,
-    Divider,
-} from '@chakra-ui/react';
-import { useCrossAppConnectionCache, usePrivy, useWallet } from '@/hooks';
-import React, { useState } from 'react';
-import {
     AddressDisplay,
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
-import { AccountModalContentTypes } from '../../Types';
-import { getPicassoImage } from '@/utils';
-import { useTranslation } from 'react-i18next';
+import { useCrossAppConnectionCache, usePrivy, useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { getPicassoImage } from '@/utils';
+import {
+    Button,
+    Divider,
+    Icon,
+    Image,
+    Link,
+    ModalBody,
+    ModalCloseButton,
+    ModalFooter,
+    ModalHeader,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AccountModalContentTypes } from '../../Types';
 import { IoOpenOutline } from 'react-icons/io5';
+import { WalletSecuredBy } from '../ConnectionDetails/Components';
 import { ActionButton } from '../../Components';
 import { GiHouseKeys } from 'react-icons/gi';
-import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
-import { WalletSecuredBy } from '../ConnectionDetails/Components';
-import { IoIosFingerPrint } from 'react-icons/io';
 
 type Props = {
-    setCurrentContent: React.Dispatch<
-        React.SetStateAction<AccountModalContentTypes>
-    >;
+    setCurrentContent: (content: AccountModalContentTypes) => void;
 };
 
 export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
+    const { connectedWallet, connection } = useWallet();
     const [showFullText, setShowFullText] = useState(false);
-
-    const { connectedWallet } = useWallet();
-
-    const { exportWallet, linkPasskey } = usePrivy();
-
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
-
     const { getConnectionCache } = useCrossAppConnectionCache();
-
-    const { darkMode: isDark, privy } = useVeChainKitConfig();
-    const { connection } = useWallet();
-
     const connectionCache = getConnectionCache();
+    const { darkMode: isDark } = useVeChainKitConfig();
+
+    const { exportWallet } = usePrivy();
 
     return (
         <ScrollToTopWrapper>
@@ -62,11 +52,11 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Access and security')}
+                    {t('Embedded wallet')}
                 </ModalHeader>
 
                 <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
+                    onClick={() => setCurrentContent('access-and-security')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -190,36 +180,6 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         </>
                     )}
 
-                    {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
-
-                    <ActionButton
-                        title={t('Passkey')}
-                        description={t(
-                            'Enable one click login by adding a passkey to your account.',
-                        )}
-                        onClick={() => {
-                            linkPasskey();
-                        }}
-                        leftIcon={IoIosFingerPrint}
-                        rightIcon={undefined}
-                        isDisabled={!privy?.allowPasskeyLinking}
-                    />
-
-                    <ActionButton
-                        title={t('Login methods')}
-                        description={t(
-                            connection.isConnectedWithSocialLogin
-                                ? 'View and manage the login methods linked to your wallet.'
-                                : 'Login methods can be managed only in the app securing your wallet.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('privy-linked-accounts');
-                        }}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={MdManageAccounts}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-
                     <ActionButton
                         title={t('Backup your wallet')}
                         description={t(
@@ -232,7 +192,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         }}
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={GiHouseKeys}
-                        rightIcon={MdOutlineNavigateNext}
+                        // rightIcon={MdOutlineNavigateNext}
                     />
                 </VStack>
             </ModalBody>

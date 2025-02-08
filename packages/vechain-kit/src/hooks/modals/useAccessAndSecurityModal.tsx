@@ -1,7 +1,7 @@
 import { useVeChainKitConfig } from '@/providers';
 import { ReactNode } from 'react';
 
-export const useEmbeddedWalletSettingsModal = () => {
+export const useAccessAndSecurityModal = () => {
     const {
         openAccountModal,
         closeAccountModal,
@@ -10,7 +10,7 @@ export const useEmbeddedWalletSettingsModal = () => {
     } = useVeChainKitConfig();
 
     const open = () => {
-        setAccountModalContent('embedded-wallet');
+        setAccountModalContent('access-and-security');
         openAccountModal();
     };
 
@@ -25,7 +25,7 @@ export const useEmbeddedWalletSettingsModal = () => {
     };
 };
 
-export const EmbeddedWalletSettingsModalProvider = ({
+export const AccessAndSecurityModalProvider = ({
     children,
 }: {
     children: ReactNode;

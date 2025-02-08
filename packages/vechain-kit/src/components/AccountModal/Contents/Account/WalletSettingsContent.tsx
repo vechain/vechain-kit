@@ -143,7 +143,7 @@ export const WalletSettingsContent = ({
                                 'Manage your embedded wallet security settings or back it up to a new device.',
                             )}
                             onClick={() => {
-                                setCurrentContent('embedded-wallet');
+                                setCurrentContent('access-and-security');
                             }}
                             leftIcon={IoShieldOutline}
                             rightIcon={MdOutlineNavigateNext}
