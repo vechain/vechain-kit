@@ -28,6 +28,7 @@ import { ActionButton } from '../../Components';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdManageAccounts, MdOutlineNavigateNext } from 'react-icons/md';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';
+import { IoIosFingerPrint } from 'react-icons/io';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -41,13 +42,13 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
     const { connectedWallet } = useWallet();
 
-    const { exportWallet } = usePrivy();
+    const { exportWallet, linkPasskey } = usePrivy();
 
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
 
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, privy } = useVeChainKitConfig();
     const { connection } = useWallet();
 
     const connectionCache = getConnectionCache();
@@ -61,7 +62,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Embedded Wallet')}
+                    {t('Access and security')}
                 </ModalHeader>
 
                 <ModalBackButton
@@ -192,18 +193,16 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                     {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
 
                     <ActionButton
-                        title={t('Backup your wallet')}
+                        title={t('Passkey')}
                         description={t(
-                            connection.isConnectedWithSocialLogin
-                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
-                                : 'Backup can be done only in the app securing your wallet.',
+                            'Enable one click login by adding a passkey to your account.',
                         )}
                         onClick={() => {
-                            exportWallet();
+                            linkPasskey();
                         }}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={GiHouseKeys}
-                        rightIcon={MdOutlineNavigateNext}
+                        leftIcon={IoIosFingerPrint}
+                        rightIcon={undefined}
+                        isDisabled={!privy?.allowPasskeyLinking}
                     />
 
                     <ActionButton
@@ -218,6 +217,21 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                         }}
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={MdManageAccounts}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
+                        title={t('Backup your wallet')}
+                        description={t(
+                            connection.isConnectedWithSocialLogin
+                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
+                                : 'Backup can be done only in the app securing your wallet.',
+                        )}
+                        onClick={() => {
+                            exportWallet();
+                        }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                        leftIcon={GiHouseKeys}
                         rightIcon={MdOutlineNavigateNext}
                     />
                 </VStack>

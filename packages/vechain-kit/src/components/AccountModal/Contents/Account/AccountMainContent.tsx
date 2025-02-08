@@ -1,13 +1,9 @@
 import {
-    HStack,
-    Icon,
-    IconButton,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
     ModalHeader,
     VStack,
-    Box,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -25,8 +21,6 @@ import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
-import { BiBell } from 'react-icons/bi';
-import { useNotifications } from '@/hooks/notifications';
 import { FeatureAnnouncementCard } from '../../Components/Alerts';
 import React from 'react';
 
@@ -42,9 +36,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { connection, account } = useWallet();
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
     return (
         <ScrollToTopWrapper>
@@ -72,38 +63,13 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         />
                     )}
 
-                    <HStack justify={'space-between'}>
-                        <AccountSelector
-                            mt={0}
-                            onClick={() => {
-                                setCurrentContent('settings');
-                            }}
-                            wallet={wallet}
-                        />
-                        <Box position="relative">
-                            <IconButton
-                                p={2}
-                                h={9}
-                                variant="vechainKitSelector"
-                                aria-label="notifications"
-                                icon={<Icon boxSize={5} as={BiBell} />}
-                                onClick={() =>
-                                    setCurrentContent('notifications')
-                                }
-                            />
-                            {hasUnreadNotifications && (
-                                <Box
-                                    position="absolute"
-                                    top={1}
-                                    right={1}
-                                    width="8px"
-                                    height="8px"
-                                    bg="red.500"
-                                    borderRadius="full"
-                                />
-                            )}
-                        </Box>
-                    </HStack>
+                    <AccountSelector
+                        mt={0}
+                        onClick={() => {
+                            setCurrentContent('settings');
+                        }}
+                        wallet={wallet}
+                    />
 
                     <BalanceSection mt={14} />
 

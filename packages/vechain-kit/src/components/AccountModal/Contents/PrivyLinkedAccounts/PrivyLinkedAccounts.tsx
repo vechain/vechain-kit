@@ -306,19 +306,6 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 </StickyHeaderContainer>
                 <ModalBody>
                     <VStack spacing={3} align="stretch">
-                        <ActionButton
-                            title={t('Handle Passkey Login')}
-                            description={t(
-                                'Enable one click login by adding a passkey to your account.',
-                            )}
-                            onClick={() => {
-                                linkPasskey();
-                            }}
-                            leftIcon={IoIosFingerPrint}
-                            rightIcon={undefined}
-                            isDisabled={!privy?.allowPasskeyLinking}
-                        />
-
                         {canLinkGoogle && (
                             <ActionButton
                                 title={t('Link Google Account')}

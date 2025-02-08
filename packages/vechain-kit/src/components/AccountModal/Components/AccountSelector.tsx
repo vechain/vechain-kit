@@ -20,7 +20,7 @@ export const AccountSelector = ({
     mt,
 }: Props) => {
     return (
-        <HStack mt={mt}>
+        <HStack mt={mt} w={'full'} justify={'center'}>
             <Button
                 w="fit-content"
                 p={2}
@@ -36,7 +36,7 @@ export const AccountSelector = ({
                         props={{ width: 5, height: 5 }}
                     />
                     <Text fontSize={size} fontWeight="500">
-                        {humanDomain(wallet?.domain ?? '', 6, 4) ||
+                        {humanDomain(wallet?.domain ?? '', 20, 0) ||
                             humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
 

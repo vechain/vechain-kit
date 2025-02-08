@@ -30,13 +30,13 @@ type ActionButtonProps = {
     isLoading?: boolean;
     loadingText?: string;
     style?: ButtonProps;
+    extraContent?: React.ReactNode;
 };
 
 export const ActionButton = ({
     leftIcon,
     rightIcon,
     title,
-    description,
     onClick,
     leftImage,
     hide = false,
@@ -48,6 +48,7 @@ export const ActionButton = ({
     isLoading,
     loadingText,
     style,
+    extraContent,
 }: ActionButtonProps) => {
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
@@ -102,9 +103,10 @@ export const ActionButton = ({
                                 {t('Coming Soon!')}
                             </Tag>
                         )}
+                        {extraContent}
                     </HStack>
 
-                    <Text
+                    {/* <Text
                         fontSize={'xs'}
                         fontWeight={'400'}
                         opacity={0.5}
@@ -115,7 +117,7 @@ export const ActionButton = ({
                         pr={rightIcon ? '0px' : '10px'}
                     >
                         {description}
-                    </Text>
+                    </Text> */}
                 </VStack>
 
                 {rightIcon && (

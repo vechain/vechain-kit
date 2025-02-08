@@ -7,6 +7,7 @@ import {
     Button,
     Box,
     Tag,
+    Text,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
@@ -25,11 +26,13 @@ import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
-import { HiOutlineWallet } from 'react-icons/hi2';
 import { useEffect, useRef } from 'react';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { GiPaintBrush } from 'react-icons/gi';
+import { CgProfile } from 'react-icons/cg';
+import { BiBell } from 'react-icons/bi';
+import { useNotifications } from '@/hooks/notifications';
+import { IoShieldOutline } from 'react-icons/io5';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -53,6 +56,10 @@ export const WalletSettingsContent = ({
     const connectionCache = getConnectionCache();
 
     const { data: appInfo } = useFetchAppInfo(privy?.appId ?? '');
+
+    const { getNotifications } = useNotifications();
+    const notifications = getNotifications();
+    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
     useEffect(() => {
         if (contentRef.current) {
@@ -95,24 +102,27 @@ export const WalletSettingsContent = ({
                     )}
                 </VStack>
 
-                <VStack mt={10} w={'full'} spacing={3}>
-                    {/* <ActionButton
-                                title={t('Manage MFA')}
-                                description={t(
-                                    'Manage multi-factor authentication settings for your wallet.',
-                                )}
-                                onClick={() => {
-                                    // linkPasskey();
-                                }}
-                                showComingSoon={true}
-                                isDisabled={!privyUser?.mfaMethods?.length}
-                                hide={connection.isConnectedWithCrossApp}
-                                leftIcon={FaShieldAlt}
-                                rightIcon={MdOutlineNavigateNext}
-                            /> */}
+                <VStack mt={10} w={'full'} spacing={0}>
+                    <ActionButton
+                        title={t('Customize profile')}
+                        description={t(
+                            'Customize your account with a nickname and a picture to easily identify it.',
+                        )}
+                        onClick={() => {
+                            setCurrentContent('account-customization');
+                        }}
+                        leftIcon={CgProfile}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
                     <ActionButton
-                        title={t('Connection Details')}
+                        style={{
+                            marginTop: '10px',
+                            borderBottomRadius: connection.isConnectedWithPrivy
+                                ? '0px'
+                                : '12px',
+                        }}
+                        title={t('Connection details')}
                         description={t(
                             'View the details of your connection to this app.',
                         )}
@@ -123,34 +133,60 @@ export const WalletSettingsContent = ({
                         rightIcon={MdOutlineNavigateNext}
                     />
 
-                    <ActionButton
-                        title={t('Customize account')}
-                        description={t(
-                            'Customize your account with a nickname and a picture to easily identify it.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('account-customization');
-                        }}
-                        leftIcon={GiPaintBrush}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-
                     {connection.isConnectedWithPrivy && (
                         <ActionButton
-                            title={t('Embedded Wallet')}
+                            style={{
+                                borderTopRadius: '0px',
+                            }}
+                            title={t('Access and security')}
                             description={t(
                                 'Manage your embedded wallet security settings or back it up to a new device.',
                             )}
                             onClick={() => {
                                 setCurrentContent('embedded-wallet');
                             }}
-                            leftIcon={HiOutlineWallet}
+                            leftIcon={IoShieldOutline}
                             rightIcon={MdOutlineNavigateNext}
                         />
                     )}
 
                     <ActionButton
-                        title={t('FAQs')}
+                        style={{
+                            marginTop: '10px',
+                            borderBottomRadius: '0px',
+                        }}
+                        title={t('Notifications')}
+                        description={t('View your notifications and updates.')}
+                        onClick={() => {
+                            setCurrentContent('notifications');
+                        }}
+                        leftIcon={BiBell}
+                        rightIcon={MdOutlineNavigateNext}
+                        extraContent={
+                            hasUnreadNotifications && (
+                                <Box
+                                    minWidth="16px"
+                                    height="16px"
+                                    bg="red.500"
+                                    borderRadius="full"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    ml={2}
+                                >
+                                    <Text fontSize="xs" color="white">
+                                        {
+                                            notifications.filter(
+                                                (n) => !n.isRead,
+                                            ).length
+                                        }
+                                    </Text>
+                                </Box>
+                            )
+                        }
+                    />
+                    <ActionButton
+                        title={t('Help')}
                         description={t(
                             'Still have some doubts? Check out our FAQs and learn more.',
                             {
@@ -163,6 +199,9 @@ export const WalletSettingsContent = ({
                         onClick={() => setCurrentContent('faq')}
                         leftIcon={BsQuestionCircle}
                         rightIcon={MdOutlineNavigateNext}
+                        style={{
+                            borderTopRadius: '0px',
+                        }}
                     />
                 </VStack>
             </ModalBody>

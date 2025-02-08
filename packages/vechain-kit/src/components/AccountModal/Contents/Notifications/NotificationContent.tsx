@@ -8,10 +8,13 @@ import {
     ModalFooter,
     Button,
     HStack,
-    Box,
 } from '@chakra-ui/react';
 import { BiBell, BiArchive } from 'react-icons/bi';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import {
+    ModalBackButton,
+    ScrollToTopWrapper,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -82,9 +85,11 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
     });
 
     return (
-        <Box>
+        <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                <ModalBackButton
+                    onClick={() => setCurrentContent('settings')}
+                />
                 <ModalHeader
                     fontSize={'md'}
                     fontWeight={'500'}
@@ -98,7 +103,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'} h="350px">
+            <Container maxW={'container.lg'} h={['auto', '540px']}>
                 <ModalBody w={'full'}>
                     <VStack spacing={4} align="stretch" w="full">
                         <HStack justify="space-between">
@@ -143,6 +148,6 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 </ModalBody>
                 <ModalFooter></ModalFooter>
             </Container>
-        </Box>
+        </ScrollToTopWrapper>
     );
 };
