@@ -41,7 +41,7 @@ export const FAQContent = ({ onGoBack }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Info')}
+                    {t('Help')}
                 </ModalHeader>
                 <ModalBackButton onClick={onGoBack} />
                 <ModalCloseButton />

@@ -5,7 +5,7 @@ import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
-    WalletSettingsContent,
+    SettingsContent,
     SendTokenContent,
     SendTokenSummaryContent,
     ReceiveTokenContent,
@@ -91,7 +91,7 @@ export const AccountModal = ({
                 );
             case 'settings':
                 return (
-                    <WalletSettingsContent
+                    <SettingsContent
                         setCurrentContent={setCurrentContent}
                         onLogoutSuccess={onClose}
                     />

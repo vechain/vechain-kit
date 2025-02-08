@@ -41,7 +41,7 @@ type Props = {
     onLogoutSuccess: () => void;
 };
 
-export const WalletSettingsContent = ({
+export const SettingsContent = ({
     setCurrentContent,
     onLogoutSuccess,
 }: Props) => {

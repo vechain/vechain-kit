@@ -1,5 +1,5 @@
 export * from './AccountMainContent';
 export * from './AccessAndSecurityContent';
-export * from './WalletSettingsContent';
+export * from './SettingsContent';
 export * from './AccountCustomizationContent';
 export * from './EmbeddedWalletContent';
