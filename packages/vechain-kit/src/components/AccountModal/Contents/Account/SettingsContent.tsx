@@ -6,7 +6,6 @@ import {
     ModalHeader,
     Button,
     Box,
-    Tag,
     Text,
 } from '@chakra-ui/react';
 import {
@@ -15,13 +14,8 @@ import {
     useWallet,
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { ActionButton } from '@/components';
-import {
-    AccountAvatar,
-    AddressDisplay,
-    ModalBackButton,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ActionButton, Profile } from '@/components';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +23,6 @@ import { VscDebugDisconnect } from 'react-icons/vsc';
 import { useEffect, useRef } from 'react';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { CgProfile } from 'react-icons/cg';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
@@ -48,9 +41,9 @@ export const SettingsContent = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const { privy, darkMode: isDark, network } = useVeChainKitConfig();
+    const { privy, darkMode: isDark } = useVeChainKitConfig();
 
-    const { connection, disconnect, account } = useWallet();
+    const { connection, disconnect } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -84,7 +77,7 @@ export const SettingsContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack justify={'center'}>
+                {/* <VStack justify={'center'}>
                     <AccountAvatar wallet={account} props={{ maxW: '100px' }} />
                     <AddressDisplay wallet={account} />
                     {network.type !== 'main' && (
@@ -100,10 +93,16 @@ export const SettingsContent = ({
                                 : t('Unknown')}
                         </Tag>
                     )}
-                </VStack>
+                </VStack> */}
 
-                <VStack mt={10} w={'full'} spacing={0}>
-                    <ActionButton
+                <Profile
+                    onEditClick={() =>
+                        setCurrentContent('account-customization')
+                    }
+                />
+
+                <VStack w={'full'} spacing={0}>
+                    {/* <ActionButton
                         title={t('Customize profile')}
                         description={t(
                             'Customize your account with a nickname and a picture to easily identify it.',
@@ -113,7 +112,7 @@ export const SettingsContent = ({
                         }}
                         leftIcon={CgProfile}
                         rightIcon={MdOutlineNavigateNext}
-                    />
+                    /> */}
 
                     <ActionButton
                         style={{

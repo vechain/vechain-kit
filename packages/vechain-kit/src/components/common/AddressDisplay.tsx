@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, VStack, Icon, HStack } from '@chakra-ui/react';
+import { Text, VStack, Icon, HStack, PropsOf } from '@chakra-ui/react';
 import { useState } from 'react';
 import { IoCopyOutline, IoCheckmarkOutline } from 'react-icons/io5';
 import { humanAddress } from '@/utils';
@@ -10,9 +10,15 @@ type Props = {
     wallet: Wallet;
     label?: string;
     size?: string;
+    style?: PropsOf<typeof VStack>;
 };
 
-export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
+export const AddressDisplay = ({
+    wallet,
+    label,
+    size = 'lg',
+    style,
+}: Props) => {
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
@@ -28,7 +34,7 @@ export const AddressDisplay = ({ wallet, label, size = 'lg' }: Props) => {
     };
 
     return (
-        <VStack w={'full'} justifyContent={'center'}>
+        <VStack w={'full'} justifyContent={'center'} {...style}>
             <VStack>
                 {label && (
                     <Text fontSize={'sm'} opacity={0.7}>

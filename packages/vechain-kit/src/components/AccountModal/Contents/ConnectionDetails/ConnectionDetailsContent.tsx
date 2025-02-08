@@ -27,7 +27,6 @@ import {
     WalletSecuredBy,
 } from './Components';
 import { useVeChainKitConfig } from '@/providers';
-import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 type Props = {
     onGoBack: () => void;
@@ -39,7 +38,6 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
 
     const { privy, darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
-    const { source } = useDappKitWallet();
 
     const { data: appInfo } = useFetchAppInfo(privy?.appId ?? '');
 
@@ -77,19 +75,6 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                 {connection.isConnectedWithDappKit && (
                     <VStack align="stretch" textAlign={'center'} mt={5}>
                         <DappKitConnectionCard />
-
-                        <Text
-                            fontSize={'sm'}
-                            opacity={0.5}
-                            textAlign={'center'}
-                        >
-                            {t(
-                                'This is your main wallet and identity. Please be sure to keep it safe and backed up. Go to {{element}} app or extension to manage your security settings.',
-                                {
-                                    element: source,
-                                },
-                            )}
-                        </Text>
                     </VStack>
                 )}
 
