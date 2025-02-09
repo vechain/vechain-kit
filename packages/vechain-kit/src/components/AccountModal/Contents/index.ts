@@ -4,3 +4,4 @@ export * from './Receive';
 export * from './Swap';
 export * from './ChooseName';
 export * from './FAQ';
+export * from './Customization';

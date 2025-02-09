@@ -20,6 +20,20 @@ export type AccountModalContentTypes =
     | 'privy-linked-accounts'
     | 'account-customization'
     | {
+          type: 'account-customization-summary';
+          props: {
+              avatarIpfsHash: string | null;
+              displayName: string;
+              description: string;
+              twitter: string;
+              website: string;
+              email: string;
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+          };
+      }
+    | {
           type: 'app-overview';
           props: {
               name: string;

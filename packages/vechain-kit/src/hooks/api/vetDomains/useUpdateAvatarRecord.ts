@@ -20,7 +20,7 @@ export const useUpdateAvatarRecord = ({
 }: UseUpdateAvatarRecordProps) => {
     const { network } = useVeChainKitConfig();
     const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
-    const { sendTransaction } = useSendTransaction({
+    const { sendTransaction, txReceipt, error } = useSendTransaction({
         onTxConfirmed: onSuccess,
         onTxFailedOrCancelled: onError,
     });
@@ -82,5 +82,7 @@ export const useUpdateAvatarRecord = ({
 
     return {
         updateAvatar,
+        txReceipt,
+        error,
     };
 };

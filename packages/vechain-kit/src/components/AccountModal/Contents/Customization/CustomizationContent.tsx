@@ -22,13 +22,11 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { getAvatarQueryKey, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import { MdOutlineNavigateNext, MdPhotoCamera } from 'react-icons/md';
 import { ActionButton } from '../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
-import { useUpdateAvatarRecord } from '@/hooks';
-import { useQueryClient } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
 import {
     FaRegAddressCard,
@@ -39,6 +37,8 @@ import {
 import { AccountAvatar } from '@/components/common';
 import { picasso } from '@vechain/picasso';
 import { DomainRequiredAlert } from '../../Components/Alerts';
+import { useGetAvatar } from '@/hooks/api/vetDomains';
+import { convertUriToUrl } from '@/utils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -46,14 +46,14 @@ type Props = {
     >;
 };
 
-export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
+export const CustomizationContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { network, darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
+    const { data: currentAvatar } = useGetAvatar(account?.domain ?? '');
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const queryClient = useQueryClient();
     const { onUpload } = useSingleImageUpload({
         compressImage: true,
     });
@@ -64,23 +64,14 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
     const [displayName, setDisplayName] = useState('');
     const [website, setWebsite] = useState('');
     const hasDomain = !!account?.domain;
-
-    const { updateAvatar } = useUpdateAvatarRecord({
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: getAvatarQueryKey(account?.domain ?? ''),
-            });
-
-            await queryClient.refetchQueries({
-                queryKey: getAvatarQueryKey(account?.domain ?? ''),
-            });
-
-            setIsProcessing(false);
+    const [avatarIpfsHash, setAvatarIpfsHash] = useState<string | null>(null);
+    const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(
+        () => {
+            if (!currentAvatar || !network.type) return null;
+            const url = convertUriToUrl(currentAvatar, network.type);
+            return url ?? null;
         },
-        onError: () => {
-            setIsProcessing(false);
-        },
-    });
+    );
 
     const handleImageUpload = async (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -91,6 +82,10 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
         try {
             setIsUploading(true);
             setIsProcessing(true);
+
+            // Create temporary preview URL
+            setPreviewImageUrl(URL.createObjectURL(file));
+
             const uploadedImage = await onUpload(file);
             if (!uploadedImage) throw new Error('Failed to compress image');
 
@@ -99,13 +94,37 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
                 file.name,
                 network.type,
             );
-            await updateAvatar(account?.domain ?? '', 'ipfs://' + ipfsHash);
+            setAvatarIpfsHash(ipfsHash);
         } catch (error) {
             console.error('Error uploading image:', error);
-            setIsProcessing(false);
+            setPreviewImageUrl(null);
         } finally {
             setIsUploading(false);
+            setIsProcessing(false);
         }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (previewImageUrl) {
+                URL.revokeObjectURL(previewImageUrl);
+            }
+        };
+    }, [previewImageUrl]);
+
+    const handleSaveChanges = () => {
+        setCurrentContent({
+            type: 'account-customization-summary',
+            props: {
+                avatarIpfsHash,
+                displayName,
+                description,
+                twitter,
+                website,
+                email,
+                setCurrentContent,
+            },
+        });
     };
 
     return (
@@ -117,7 +136,7 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Customize Account')}
+                    {t('Customization')}
                 </ModalHeader>
                 <ModalBackButton
                     onClick={() => setCurrentContent('settings')}
@@ -173,6 +192,7 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
                                 width: '100px',
                                 height: '100px',
                                 boxShadow: '0px 0px 3px 2px #00000024',
+                                src: previewImageUrl || undefined,
                             }}
                         />
                         {hasDomain && (
@@ -345,8 +365,10 @@ export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
                     variant="solid"
                     borderRadius="xl"
                     colorScheme="blue"
-                    onClick={() => setCurrentContent('settings')}
-                    isDisabled={!hasDomain}
+                    onClick={handleSaveChanges}
+                    isDisabled={!hasDomain || isProcessing}
+                    isLoading={isProcessing}
+                    loadingText={t('Preparing changes...')}
                 >
                     {t('Save Changes')}
                 </Button>

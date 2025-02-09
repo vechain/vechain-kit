@@ -24,7 +24,7 @@ import { NotificationsContent } from './Contents/Notifications/NotificationConte
 import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
-import { AccountCustomizationContent } from './Contents/Account/AccountCustomizationContent';
+import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 
 type Props = {
     isOpen: boolean;
@@ -76,6 +76,12 @@ export const AccountModal = ({
                 case 'disconnect-confirm':
                     return (
                         <DisconnectConfirmContent {...currentContent.props} />
+                    );
+                case 'account-customization-summary':
+                    return (
+                        <CustomizationSummaryContent
+                            {...currentContent.props}
+                        />
                     );
             }
         }
@@ -148,7 +154,7 @@ export const AccountModal = ({
                 );
             case 'account-customization':
                 return (
-                    <AccountCustomizationContent
+                    <CustomizationContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
