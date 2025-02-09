@@ -348,5 +348,14 @@
     "Customize profile": "Customize profile",
     "Help": "Help",
     "Add Passkey": "Add Passkey",
-    "Embedded wallet": "Embedded wallet"
+    "Embedded wallet": "Embedded wallet",
+    "Eg: DevRel @ ENS Labs": "Eg: DevRel @ ENS Labs",
+    "Set a domain first": "Set a domain first",
+    "Enter your display name": "Enter your display name",
+    "A .vet domain is required to customize your profile.": "A .vet domain is required to customize your profile.",
+    "Your profile information will be associated with your domain and visible to other applications.": "Your profile information will be associated with your domain and visible to other applications.",
+    "Email address": "Email address",
+    "Website URL": "Website URL",
+    "Twitter username": "Twitter username",
+    "Save Changes": "Save Changes"
 }
