@@ -17,9 +17,6 @@ import {
     IconButton,
     InputGroup,
     InputLeftElement,
-    Alert,
-    AlertIcon,
-    HStack,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -41,45 +38,12 @@ import {
 } from 'react-icons/fa';
 import { AccountAvatar } from '@/components/common';
 import { picasso } from '@vechain/picasso';
+import { DomainRequiredAlert } from '../../Components/Alerts';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-};
-
-const DomainRequiredAlert = () => {
-    const { t } = useTranslation();
-    const [showFullText, setShowFullText] = useState(false);
-
-    return (
-        <Alert status="warning" fontSize={'xs'} borderRadius={'xl'} p={2}>
-            <VStack spacing={1} align="stretch" w="full">
-                <HStack spacing={2} align="flex-start">
-                    <AlertIcon boxSize={4} />
-                    <Text w="full">
-                        {t(
-                            'A .vet domain is required to customize your profile.',
-                        )}
-                        {showFullText &&
-                            t(
-                                'Your profile information will be associated with your domain and visible to other applications.',
-                            )}
-                        <Button
-                            variant="link"
-                            size="xs"
-                            onClick={() => setShowFullText(!showFullText)}
-                            color="inherit"
-                            pl={6}
-                            mt={0}
-                        >
-                            {t(showFullText ? 'Show Less' : 'Read More')}
-                        </Button>
-                    </Text>
-                </HStack>
-            </VStack>
-        </Alert>
-    );
 };
 
 export const AccountCustomizationContent = ({ setCurrentContent }: Props) => {
