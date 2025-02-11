@@ -3,7 +3,7 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
-import { isValidAddress } from '@/utils';
+import { humanAddress, isValidAddress } from '@/utils';
 import { useCallback } from 'react';
 import { parseEther } from 'viem';
 
@@ -55,9 +55,11 @@ export const useTransferVET = ({
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,
         privyUIOptions: {
-            title: 'Sign to confirm',
-            description: `Transfer ${amount} VET to ${receiverAddress}`,
-            buttonText: 'Sign',
+            title: 'Confirm Transfer',
+            description: `Transfer ${amount} VET to ${humanAddress(
+                receiverAddress,
+            )}`,
+            buttonText: 'Sign to continue',
         },
         onTxConfirmed: async () => {
             await refresh();

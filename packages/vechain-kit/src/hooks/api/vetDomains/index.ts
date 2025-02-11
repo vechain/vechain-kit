@@ -5,3 +5,5 @@ export * from './useIsDomainProtected';
 export * from './useGetDomainsOfAddress';
 export * from './useGetAvatar';
 export * from './useUpdateAvatarRecord';
+export * from './useGetTextRecords';
+export * from './useUpdateTextRecord';

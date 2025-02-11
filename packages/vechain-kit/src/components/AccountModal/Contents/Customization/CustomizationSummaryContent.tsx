@@ -6,86 +6,117 @@ import {
     Button,
     Text,
     ModalFooter,
-    useDisclosure,
+    Box,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { getAvatarQueryKey, useWallet } from '@/hooks';
-import { TransactionModal } from '@/components';
-import { useUpdateAvatarRecord } from '@/hooks';
+import { useWallet, useRefreshMetadata } from '@/hooks';
+import { useUpdateAvatarRecord, useUpdateTextRecord } from '@/hooks';
 import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    avatarIpfsHash: string | null;
-    displayName: string;
-    description: string;
-    twitter: string;
-    website: string;
-    email: string;
+    changes: {
+        avatarIpfsHash?: string | null;
+        displayName?: string;
+        description?: string;
+        twitter?: string;
+        website?: string;
+        email?: string;
+    };
 };
 
 export const CustomizationSummaryContent = ({
     setCurrentContent,
-    avatarIpfsHash,
-    displayName,
-    description,
-    twitter,
-    website,
-    email,
+    changes,
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
-    const transactionModal = useDisclosure();
     const [isProcessing, setIsProcessing] = useState(false);
-    const queryClient = useQueryClient();
+    const { refresh: refreshMetadata } = useRefreshMetadata(
+        account?.address ?? '',
+        account?.domain ?? '',
+    );
 
-    const { updateAvatar, txReceipt, error } = useUpdateAvatarRecord({
+    const updateAvatarMutation = useUpdateAvatarRecord({
         onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: getAvatarQueryKey(account?.domain ?? ''),
-            });
-
-            await queryClient.refetchQueries({
-                queryKey: getAvatarQueryKey(account?.domain ?? ''),
-            });
-
-            transactionModal.onClose();
-
-            setCurrentContent('settings');
+            await refreshMetadata();
         },
-        onError: () => {
-            setIsProcessing(false);
+    });
+
+    const updateTextRecordMutation = useUpdateTextRecord({
+        onSuccess: async () => {
+            await refreshMetadata();
         },
     });
 
     const handleConfirm = async () => {
         try {
             setIsProcessing(true);
-            transactionModal.onOpen();
 
-            if (avatarIpfsHash) {
-                await updateAvatar(
-                    account?.domain ?? '',
-                    'ipfs://' + avatarIpfsHash,
-                );
+            const domain = account?.domain ?? '';
+
+            // Only update records that are present in changes
+            if (changes.displayName) {
+                await updateTextRecordMutation.mutateAsync({
+                    domain,
+                    key: 'display',
+                    value: changes.displayName,
+                });
+            }
+            if (changes.description) {
+                await updateTextRecordMutation.mutateAsync({
+                    domain,
+                    key: 'description',
+                    value: changes.description,
+                });
+            }
+            if (changes.twitter) {
+                await updateTextRecordMutation.mutateAsync({
+                    domain,
+                    key: 'com.x',
+                    value: changes.twitter,
+                });
+            }
+            if (changes.website) {
+                await updateTextRecordMutation.mutateAsync({
+                    domain,
+                    key: 'url',
+                    value: changes.website,
+                });
+            }
+            if (changes.email) {
+                await updateTextRecordMutation.mutateAsync({
+                    domain,
+                    key: 'email',
+                    value: changes.email,
+                });
+            }
+            if (changes.avatarIpfsHash) {
+                await updateAvatarMutation.mutateAsync({
+                    domain,
+                    ipfsUri: 'ipfs://' + changes.avatarIpfsHash,
+                });
             }
 
-            // TODO: Add other profile updates here (displayName, description, etc.)
+            setIsProcessing(false);
+
+            setCurrentContent('settings');
+            // TODO: go to success modal content
         } catch (error) {
             console.error('Error saving changes:', error);
             setIsProcessing(false);
+            // TODO: go to error modal content
         }
     };
 
     const renderField = (label: string, value: string) => {
-        if (!value) return null;
+        if (!value?.trim()) return null;
         return (
             <VStack align="flex-start" w="full" spacing={1}>
                 <Text
@@ -100,7 +131,7 @@ export const CustomizationSummaryContent = ({
     };
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -118,7 +149,7 @@ export const CustomizationSummaryContent = ({
 
             <ModalBody>
                 <VStack spacing={4} align="stretch">
-                    {avatarIpfsHash && (
+                    {changes.avatarIpfsHash && (
                         <VStack align="flex-start" w="full" spacing={1}>
                             <Text
                                 fontSize="sm"
@@ -130,25 +161,19 @@ export const CustomizationSummaryContent = ({
                         </VStack>
                     )}
 
-                    {renderField(t('Display Name'), displayName)}
-                    {renderField(t('Description'), description)}
-                    {renderField(t('Twitter'), twitter)}
-                    {renderField(t('Website'), website)}
-                    {renderField(t('Email'), email)}
+                    {changes.displayName &&
+                        renderField(t('Display Name'), changes.displayName)}
+                    {changes.description &&
+                        renderField(t('Description'), changes.description)}
+                    {changes.twitter &&
+                        renderField(t('Twitter'), changes.twitter)}
+                    {changes.website &&
+                        renderField(t('Website'), changes.website)}
+                    {changes.email && renderField(t('Email'), changes.email)}
                 </VStack>
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {/* <Button
-                    px={4}
-                    width="full"
-                    height="48px"
-                    variant="outline"
-                    borderRadius="xl"
-                    onClick={() => setCurrentContent('account-customization')}
-                >
-                    {t('Back')}
-                </Button> */}
                 <Button
                     px={4}
                     width="full"
@@ -162,21 +187,6 @@ export const CustomizationSummaryContent = ({
                     {t('Confirm')}
                 </Button>
             </ModalFooter>
-
-            <TransactionModal
-                isOpen={transactionModal.isOpen}
-                onClose={() => {
-                    transactionModal.onClose();
-                    setCurrentContent('settings');
-                }}
-                status={status}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? t('Unknown error')}
-                showExplorerButton={true}
-                showSocialButtons={true}
-                showTryAgainButton={true}
-                onTryAgain={handleConfirm}
-            />
-        </>
+        </Box>
     );
 };

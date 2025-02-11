@@ -1,8 +1,22 @@
+export type ENSRecords = {
+    display?: string;
+    description?: string;
+    email?: string;
+    url?: string;
+    twitter?: string;
+    header?: string;
+    notice?: string;
+    location?: string;
+    phone?: string;
+    [key: string]: string | undefined;
+};
+
 export type Wallet = {
     address: string;
     domain?: string;
-    image: string;
-    isLoadingAvatar?: boolean;
+    image?: string;
+    isLoadingMetadata?: boolean;
+    metadata?: ENSRecords;
 } | null;
 
 export type SmartAccount = Wallet & {

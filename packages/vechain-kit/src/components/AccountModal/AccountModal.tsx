@@ -81,6 +81,7 @@ export const AccountModal = ({
                     return (
                         <CustomizationSummaryContent
                             {...currentContent.props}
+                            setCurrentContent={setCurrentContent}
                         />
                     );
             }

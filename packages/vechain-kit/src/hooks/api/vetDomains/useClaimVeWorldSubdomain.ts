@@ -158,7 +158,7 @@ export const useClaimVeWorldSubdomain = ({
         privyUIOptions: {
             title: 'Sign to claim your VeChain nickname',
             description: `Claim ${subdomain} as your VeChain nickname`,
-            buttonText: 'Sign',
+            buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
     });

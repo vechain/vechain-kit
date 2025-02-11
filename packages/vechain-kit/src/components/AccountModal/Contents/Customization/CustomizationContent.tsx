@@ -18,15 +18,18 @@ import {
     InputGroup,
     InputLeftElement,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { AccountModalContentTypes } from '../../Types';
+import {
+    ModalBackButton,
+    StickyFooterContainer,
+    StickyHeaderContainer,
+} from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { MdOutlineNavigateNext, MdPhotoCamera } from 'react-icons/md';
 import { ActionButton } from '../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
 import {
     FaRegAddressCard,
@@ -37,41 +40,72 @@ import {
 import { AccountAvatar } from '@/components/common';
 import { picasso } from '@vechain/picasso';
 import { DomainRequiredAlert } from '../../Components/Alerts';
-import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { convertUriToUrl } from '@/utils';
+import { convertUriToUrl } from '@/utils/uri';
+import { AccountModalContentTypes } from '../../Types';
 
-type Props = {
+export const CustomizationContent = ({
+    setCurrentContent,
+}: {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-};
-
-export const CustomizationContent = ({ setCurrentContent }: Props) => {
+}) => {
     const { t } = useTranslation();
     const { network, darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
-    const { data: currentAvatar } = useGetAvatar(account?.domain ?? '');
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const coverInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const { onUpload } = useSingleImageUpload({
         compressImage: true,
     });
+
+    // Initialize state with account metadata, but only once when component mounts
+    const [displayName, setDisplayName] = useState('');
     const [description, setDescription] = useState('');
     const [twitter, setTwitter] = useState('');
     const [email, setEmail] = useState('');
-    const coverInputRef = useRef<HTMLInputElement>(null);
-    const [displayName, setDisplayName] = useState('');
     const [website, setWebsite] = useState('');
-    const hasDomain = !!account?.domain;
+    const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
     const [avatarIpfsHash, setAvatarIpfsHash] = useState<string | null>(null);
-    const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(
-        () => {
-            if (!currentAvatar || !network.type) return null;
-            const url = convertUriToUrl(currentAvatar, network.type);
-            return url ?? null;
-        },
+    const hasDomain = !!account?.domain;
+
+    // Add these state variables for initial values
+    const [initialAvatarHash, setInitialAvatarHash] = useState<string | null>(
+        null,
     );
+    const [initialDisplayName, setInitialDisplayName] = useState('');
+    const [initialDescription, setInitialDescription] = useState('');
+    const [initialTwitter, setInitialTwitter] = useState('');
+    const [initialWebsite, setInitialWebsite] = useState('');
+    const [initialEmail, setInitialEmail] = useState('');
+
+    // Use useEffect to set initial values only once when account metadata changes
+    useEffect(() => {
+        if (account?.metadata) {
+            const metadata = account.metadata;
+            setDisplayName(metadata.display || '');
+            setDescription(metadata.description || '');
+            setTwitter(metadata.twitter || '');
+            setEmail(metadata.email || '');
+            setWebsite(metadata.url || '');
+
+            // Also set initial values
+            setInitialDisplayName(metadata.display || '');
+            setInitialDescription(metadata.description || '');
+            setInitialTwitter(metadata.twitter || '');
+            setInitialEmail(metadata.email || '');
+            setInitialWebsite(metadata.url || '');
+            setInitialAvatarHash(
+                metadata.avatar ? metadata.avatar.replace('ipfs://', '') : null,
+            );
+            // Convert avatar URI to URL using our utility
+            setPreviewImageUrl(
+                convertUriToUrl(metadata.avatar ?? '', network.type) || null,
+            );
+        }
+    }, [account?.address, network.type]); // Added network.type to dependencies
 
     const handleImageUpload = async (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -112,23 +146,46 @@ export const CustomizationContent = ({ setCurrentContent }: Props) => {
         };
     }, [previewImageUrl]);
 
+    const getChangedValues = () => {
+        const changes: {
+            avatarIpfsHash?: string;
+            displayName?: string;
+            description?: string;
+            twitter?: string;
+            website?: string;
+            email?: string;
+        } = {};
+
+        if (avatarIpfsHash !== initialAvatarHash && avatarIpfsHash)
+            changes.avatarIpfsHash = avatarIpfsHash;
+        if (displayName !== initialDisplayName)
+            changes.displayName = displayName;
+        if (description !== initialDescription)
+            changes.description = description;
+        if (twitter !== initialTwitter) changes.twitter = twitter;
+        if (website !== initialWebsite) changes.website = website;
+        if (email !== initialEmail) changes.email = email;
+        return changes;
+    };
+
+    // Add this function to check if there are any changes
+    const hasChanges = useMemo(() => {
+        const changes = getChangedValues();
+        return Object.keys(changes).length > 0;
+    }, [getChangedValues]);
+
     const handleSaveChanges = () => {
         setCurrentContent({
             type: 'account-customization-summary',
             props: {
-                avatarIpfsHash,
-                displayName,
-                description,
-                twitter,
-                website,
-                email,
                 setCurrentContent,
+                changes: getChangedValues(),
             },
         });
     };
 
     return (
-        <>
+        <Box>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -208,27 +265,26 @@ export const CustomizationContent = ({ setCurrentContent }: Props) => {
                                 boxSize="6"
                             />
                         )}
-                        {isUploading ||
-                            (isProcessing && (
-                                <Box
-                                    position="absolute"
-                                    top="0"
-                                    left="0"
-                                    right="0"
-                                    bottom="0"
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    backgroundColor="rgba(0, 0, 0, 0.5)"
-                                    borderRadius="full"
-                                >
-                                    <Text fontSize="xs" color="white">
-                                        {isUploading
-                                            ? 'Uploading...'
-                                            : 'Processing...'}
-                                    </Text>
-                                </Box>
-                            ))}
+                        {(isUploading || isProcessing) && (
+                            <Box
+                                position="absolute"
+                                top="0"
+                                left="0"
+                                right="0"
+                                bottom="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                backgroundColor="rgba(0, 0, 0, 0.5)"
+                                borderRadius="full"
+                            >
+                                <Text fontSize="xs" color="white">
+                                    {isUploading
+                                        ? 'Uploading...'
+                                        : 'Processing...'}
+                                </Text>
+                            </Box>
+                        )}
                     </Box>
 
                     <CardBody
@@ -357,22 +413,25 @@ export const CustomizationContent = ({ setCurrentContent }: Props) => {
                     }}
                 />
             </ModalBody>
-            <ModalFooter w="full">
-                <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
-                    colorScheme="blue"
-                    onClick={handleSaveChanges}
-                    isDisabled={!hasDomain || isProcessing}
-                    isLoading={isProcessing}
-                    loadingText={t('Preparing changes...')}
-                >
-                    {t('Save Changes')}
-                </Button>
-            </ModalFooter>
-        </>
+
+            <StickyFooterContainer>
+                <ModalFooter w="full" p={0}>
+                    <Button
+                        px={4}
+                        width="full"
+                        height="60px"
+                        variant="solid"
+                        borderRadius="xl"
+                        colorScheme="blue"
+                        onClick={handleSaveChanges}
+                        isDisabled={!hasDomain || isProcessing || !hasChanges}
+                        isLoading={isProcessing}
+                        loadingText={t('Preparing changes...')}
+                    >
+                        {t('Save Changes')}
+                    </Button>
+                </ModalFooter>
+            </StickyFooterContainer>
+        </Box>
     );
 };

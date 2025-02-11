@@ -9,44 +9,47 @@ const nameInterface = new Interface([
     'function setText(bytes32 node, string key, string value) external',
 ]);
 
-type UpdateAvatarVariables = {
+type UpdateTextRecordVariables = {
     domain: string;
-    ipfsUri: string;
+    key: string;
+    value: string;
 };
 
-type UseUpdateAvatarRecordProps = {
-    onSuccess?: () => void | Promise<void>;
-    onError?: () => void | Promise<void>;
+type UseUpdateTextRecordProps = {
+    onSuccess?: () => void;
+    onError?: () => void;
 };
 
-export const useUpdateAvatarRecord = ({
+export const useUpdateTextRecord = ({
     onSuccess,
     onError,
-}: UseUpdateAvatarRecordProps = {}) => {
+}: UseUpdateTextRecordProps = {}) => {
     const { network } = useVeChainKitConfig();
     const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
     const { sendTransaction } = useSendTransaction({
         onTxConfirmed: onSuccess,
         onTxFailedOrCancelled: onError,
         privyUIOptions: {
-            title: 'Update Avatar',
-            description: 'Update the avatar associated with your domain',
+            title: 'Update Profile Information',
+            description:
+                'Update the profile information associated with your domain',
             buttonText: 'Sign to continue',
         },
     });
 
     return useMutation({
-        mutationFn: async ({ domain, ipfsUri }: UpdateAvatarVariables) => {
+        mutationFn: async ({
+            domain,
+            key,
+            value,
+        }: UpdateTextRecordVariables) => {
             if (!domain) throw new Error('Domain is required');
-
             const node = namehash(domain);
 
-            // Get resolver address using read-only call
+            // Get resolver address
             const resolverResponse = await fetch(`${nodeUrl}/accounts/*`, {
                 method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
+                headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
                     clauses: [
                         {
@@ -62,25 +65,23 @@ export const useUpdateAvatarRecord = ({
 
             const [{ data: resolverData, reverted: noResolver }] =
                 await resolverResponse.json();
-            if (noResolver) {
-                throw new Error('Failed to get resolver address');
-            }
+            if (noResolver) throw new Error('Failed to get resolver address');
 
             const { resolverAddress } = nameInterface.decodeFunctionResult(
                 'resolver',
                 resolverData,
             );
 
-            // Send transaction to update avatar text record
+            // Update text record
             const setTextClause = {
                 to: resolverAddress,
                 data: nameInterface.encodeFunctionData('setText', [
                     node,
-                    'avatar',
-                    ipfsUri,
+                    key,
+                    value,
                 ]),
                 value: '0',
-                comment: 'Update avatar record',
+                comment: `Update ${key} record`,
             };
 
             return sendTransaction([setTextClause]);

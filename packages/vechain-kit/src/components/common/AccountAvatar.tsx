@@ -7,7 +7,7 @@ type AccountAvatarProps = {
 };
 
 export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
-    if (wallet?.isLoadingAvatar) {
+    if (wallet?.isLoadingMetadata) {
         return <Spinner size="sm" />;
     }
 

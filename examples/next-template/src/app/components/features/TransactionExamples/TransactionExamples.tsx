@@ -27,6 +27,13 @@ export function TransactionExamples() {
         progress,
     } = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
+        privyUIOptions: {
+            title: 'Send Dummy Transaction',
+            description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
+                account?.address ?? '',
+            )}`,
+            buttonText: 'Sign to continue',
+        },
     });
 
     const {

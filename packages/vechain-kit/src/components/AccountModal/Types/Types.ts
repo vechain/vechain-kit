@@ -22,12 +22,14 @@ export type AccountModalContentTypes =
     | {
           type: 'account-customization-summary';
           props: {
-              avatarIpfsHash: string | null;
-              displayName: string;
-              description: string;
-              twitter: string;
-              website: string;
-              email: string;
+              changes: {
+                  avatarIpfsHash?: string | null;
+                  displayName?: string;
+                  description?: string;
+                  twitter?: string;
+                  website?: string;
+                  email?: string;
+              };
               setCurrentContent: React.Dispatch<
                   React.SetStateAction<AccountModalContentTypes>
               >;

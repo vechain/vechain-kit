@@ -5,6 +5,7 @@ import {
     CardBody,
     CardFooter,
     Icon,
+    Text,
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWallet } from '@/hooks';
@@ -58,6 +59,17 @@ export const Profile = ({ onEditClick }: ProfileProps) => {
                 />
             </Box>
             <CardBody pt="14" pb="6" backgroundColor={'none'} border={'none'}>
+                {account?.metadata?.display && (
+                    <Text
+                        fontSize="md"
+                        fontWeight="bold"
+                        w="full"
+                        textAlign="center"
+                        mt={2}
+                    >
+                        {account?.metadata?.display}
+                    </Text>
+                )}
                 <AddressDisplay wallet={account} />
             </CardBody>
             <CardFooter pt={0} justify="center">

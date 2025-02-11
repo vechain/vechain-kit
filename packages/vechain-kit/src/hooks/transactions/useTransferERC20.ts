@@ -6,7 +6,7 @@ import {
 import { useCallback } from 'react';
 import { ERC20__factory } from '@/contracts/typechain-types';
 import { useQueryClient } from '@tanstack/react-query';
-import { isValidAddress } from '@/utils';
+import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';
 
 type useTransferERC20Props = {
@@ -65,9 +65,11 @@ export const useTransferERC20 = ({
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,
         privyUIOptions: {
-            title: 'Sign to confirm',
-            description: `Transfer ${amount} ${tokenName} to ${receiverAddress}`,
-            buttonText: 'Sign',
+            title: 'Confirm Transfer',
+            description: `Transfer ${amount} ${tokenName} to ${humanAddress(
+                receiverAddress,
+            )}`,
+            buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
     });
