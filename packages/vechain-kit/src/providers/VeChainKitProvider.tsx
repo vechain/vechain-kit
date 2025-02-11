@@ -284,7 +284,7 @@ export const VeChainKitProvider = ({
                         config={{
                             loginMethodsAndOrder: {
                                 // @ts-ignore
-                                primary: privy?.loginMethods,
+                                primary: privy?.loginMethods ?? [],
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',
