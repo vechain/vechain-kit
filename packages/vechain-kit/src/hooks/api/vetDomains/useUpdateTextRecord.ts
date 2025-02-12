@@ -1,7 +1,7 @@
 import { Interface, namehash } from 'ethers';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
     UseSendTransactionReturnValue,
     useSendTransaction,
@@ -25,7 +25,7 @@ type UseUpdateTextRecordProps = {
 };
 
 type UseUpdateTextRecordReturnValue = {
-    sendTransaction: (params: UpdateTextRecordVariables) => Promise<void>;
+    sendTransaction: (params: UpdateTextRecordVariables[]) => Promise<void>;
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 export const useUpdateTextRecord = ({
@@ -36,12 +36,21 @@ export const useUpdateTextRecord = ({
     const { network } = useVeChainKitConfig();
     const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
 
-    const buildClauses = useCallback(
-        async ({ domain, key, value }: UpdateTextRecordVariables) => {
-            if (!domain) throw new Error('Domain is required');
+    // Add resolver cache
+    // We want to mutate the cache by adding new entries
+    // We don't want cache updates to trigger re-renders
+    // We want the cache to persist across renders without being reset
+    const resolverCache = useRef<Record<string, string>>({});
+
+    const getResolverAddress = useCallback(
+        async (domain: string) => {
             const node = namehash(domain);
 
-            // Get resolver address
+            // Check cache first
+            if (resolverCache.current[node]) {
+                return resolverCache.current[node];
+            }
+
             const resolverResponse = await fetch(`${nodeUrl}/accounts/*`, {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
@@ -67,8 +76,24 @@ export const useUpdateTextRecord = ({
                 resolverData,
             );
 
-            return [
-                {
+            // Cache the result
+            resolverCache.current[node] = resolverAddress;
+            return resolverAddress;
+        },
+        [nodeUrl, network.type],
+    );
+
+    const buildClauses = useCallback(
+        async (params: UpdateTextRecordVariables[]) => {
+            const clauses = [];
+
+            for (const { domain, key, value } of params) {
+                if (!domain) throw new Error('Domain is required');
+                const node = namehash(domain);
+
+                const resolverAddress = await getResolverAddress(domain);
+
+                clauses.push({
                     to: resolverAddress,
                     data: nameInterface.encodeFunctionData('setText', [
                         node,
@@ -77,10 +102,11 @@ export const useUpdateTextRecord = ({
                     ]),
                     value: '0',
                     comment: `Update ${key} record`,
-                },
-            ];
+                });
+            }
+            return clauses;
         },
-        [nodeUrl, network.type],
+        [getResolverAddress],
     );
 
     const result = useSendTransaction({
@@ -97,7 +123,7 @@ export const useUpdateTextRecord = ({
 
     return {
         ...result,
-        sendTransaction: async (params: UpdateTextRecordVariables) => {
+        sendTransaction: async (params: UpdateTextRecordVariables[]) => {
             return result.sendTransaction(await buildClauses(params));
         },
     };

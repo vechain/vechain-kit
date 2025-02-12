@@ -173,10 +173,7 @@ export const useSendTransaction = ({
                 onProgress?: (progress: TransactionProgress) => void;
             },
         ) => {
-            if (
-                connection.isConnectedWithSocialLogin ||
-                connection.isConnectedWithCrossApp
-            ) {
+            if (connection.isConnectedWithPrivy) {
                 return await privyWalletProvider.sendTransaction({
                     txClauses: clauses,
                     ...privyUIOptions,

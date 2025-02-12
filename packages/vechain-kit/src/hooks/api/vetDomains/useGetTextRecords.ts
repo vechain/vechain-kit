@@ -3,29 +3,12 @@ import { Interface, namehash } from 'ethers';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
+import { ENS_TEXT_RECORDS, TextRecords } from '@/types';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',
     'function text(bytes32 node, string key) view returns (string)',
 ]);
-
-export const ENS_TEXT_RECORDS = [
-    'display',
-    'avatar',
-    'description',
-    'keywords',
-    'email',
-    'url',
-    'header',
-    'notice',
-    'location',
-    'phone',
-    'com.x',
-] as const;
-
-export type TextRecords = {
-    [K in (typeof ENS_TEXT_RECORDS)[number]]?: string;
-};
 
 /**
  * Get text records for a VET domain from the contract

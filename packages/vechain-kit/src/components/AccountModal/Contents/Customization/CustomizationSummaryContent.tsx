@@ -13,8 +13,9 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet, useRefreshMetadata } from '@/hooks';
-import { useUpdateAvatarRecord, useUpdateTextRecord } from '@/hooks';
+import { useUpdateTextRecord } from '@/hooks';
 import { useState } from 'react';
+import { ENS_TEXT_RECORDS } from '@/types/ensTextRecords';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -42,68 +43,48 @@ export const CustomizationSummaryContent = ({
         account?.address ?? '',
         account?.domain ?? '',
     );
-    const { sendTransaction: updateAvatar } = useUpdateAvatarRecord({
-        signerAccountAddress: account?.address,
-    });
 
     const { sendTransaction: updateTextRecord } = useUpdateTextRecord({
         onSuccess: async () => {
             await refreshMetadata();
+            setIsProcessing(false);
+            setCurrentContent('settings');
         },
     });
 
     const handleConfirm = async () => {
         try {
             setIsProcessing(true);
-
             const domain = account?.domain ?? '';
 
-            // Only update records that are present in changes
-            if (changes.displayName) {
-                await updateTextRecord({
+            const CHANGES_TO_TEXT_RECORDS: Record<
+                keyof Props['changes'],
+                (typeof ENS_TEXT_RECORDS)[number]
+            > = {
+                displayName: 'display',
+                description: 'description',
+                twitter: 'com.x',
+                website: 'url',
+                email: 'email',
+                avatarIpfsHash: 'avatar',
+            } as const;
+
+            // Filter out undefined/null values and map to the correct format
+            const textRecordUpdates = Object.entries(changes)
+                .filter(
+                    (entry): entry is [string, string] =>
+                        entry[1] !== undefined && entry[1] !== null,
+                )
+                .map(([key, value]) => ({
                     domain,
-                    key: 'display',
-                    value: changes.displayName,
-                });
-            }
-            if (changes.description) {
-                await updateTextRecord({
-                    domain,
-                    key: 'description',
-                    value: changes.description,
-                });
-            }
-            if (changes.twitter) {
-                await updateTextRecord({
-                    domain,
-                    key: 'com.x',
-                    value: changes.twitter,
-                });
-            }
-            if (changes.website) {
-                await updateTextRecord({
-                    domain,
-                    key: 'url',
-                    value: changes.website,
-                });
-            }
-            if (changes.email) {
-                await updateTextRecord({
-                    domain,
-                    key: 'email',
-                    value: changes.email,
-                });
-            }
-            if (changes.avatarIpfsHash) {
-                await updateAvatar({
-                    domain,
-                    ipfsUri: 'ipfs://' + changes.avatarIpfsHash,
-                });
+                    key: CHANGES_TO_TEXT_RECORDS[key as keyof Props['changes']],
+                    value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
+                }));
+
+            if (textRecordUpdates.length > 0) {
+                await updateTextRecord(textRecordUpdates);
             }
 
-            setIsProcessing(false);
-
-            setCurrentContent('settings');
             // TODO: go to success modal content
         } catch (error) {
             console.error('Error saving changes:', error);
@@ -141,7 +122,7 @@ export const CustomizationSummaryContent = ({
                 <ModalBackButton
                     onClick={() => setCurrentContent('account-customization')}
                 />
-                <ModalCloseButton />
+                <ModalCloseButton isDisabled={isProcessing} />
             </StickyHeaderContainer>
 
             <ModalBody>
