@@ -1,8 +1,11 @@
 import { Interface, namehash } from 'ethers';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useMutation } from '@tanstack/react-query';
-import { useSendTransaction } from '@/hooks/transactions/useSendTransaction';
+import {
+    useSendTransaction,
+    UseSendTransactionReturnValue,
+} from '@/hooks/transactions/useSendTransaction';
+import { useCallback } from 'react';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',
@@ -17,26 +20,23 @@ type UpdateAvatarVariables = {
 type UseUpdateAvatarRecordProps = {
     onSuccess?: () => void | Promise<void>;
     onError?: () => void | Promise<void>;
+    signerAccountAddress?: string;
 };
+
+type UseUpdateAvatarRecordReturnValue = {
+    sendTransaction: (params: UpdateAvatarVariables) => Promise<void>;
+} & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 export const useUpdateAvatarRecord = ({
     onSuccess,
     onError,
-}: UseUpdateAvatarRecordProps = {}) => {
+    signerAccountAddress,
+}: UseUpdateAvatarRecordProps = {}): UseUpdateAvatarRecordReturnValue => {
     const { network } = useVeChainKitConfig();
     const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
-    const { sendTransaction } = useSendTransaction({
-        onTxConfirmed: onSuccess,
-        onTxFailedOrCancelled: onError,
-        privyUIOptions: {
-            title: 'Update Avatar',
-            description: 'Update the avatar associated with your domain',
-            buttonText: 'Sign to continue',
-        },
-    });
 
-    return useMutation({
-        mutationFn: async ({ domain, ipfsUri }: UpdateAvatarVariables) => {
+    const buildClauses = useCallback(
+        async ({ domain, ipfsUri }: UpdateAvatarVariables) => {
             if (!domain) throw new Error('Domain is required');
 
             const node = namehash(domain);
@@ -71,21 +71,37 @@ export const useUpdateAvatarRecord = ({
                 resolverData,
             );
 
-            // Send transaction to update avatar text record
-            const setTextClause = {
-                to: resolverAddress,
-                data: nameInterface.encodeFunctionData('setText', [
-                    node,
-                    'avatar',
-                    ipfsUri,
-                ]),
-                value: '0',
-                comment: 'Update avatar record',
-            };
-
-            return sendTransaction([setTextClause]);
+            return [
+                {
+                    to: resolverAddress,
+                    data: nameInterface.encodeFunctionData('setText', [
+                        node,
+                        'avatar',
+                        ipfsUri,
+                    ]),
+                    value: '0',
+                    comment: 'Update avatar record',
+                },
+            ];
         },
-        onSuccess,
-        onError,
+        [nodeUrl, network.type],
+    );
+
+    const result = useSendTransaction({
+        signerAccountAddress,
+        onTxConfirmed: onSuccess,
+        onTxFailedOrCancelled: onError,
+        privyUIOptions: {
+            title: 'Update Avatar',
+            description: 'Update the avatar associated with your domain',
+            buttonText: 'Sign to continue',
+        },
     });
+
+    return {
+        ...result,
+        sendTransaction: async (params: UpdateAvatarVariables) => {
+            return result.sendTransaction(await buildClauses(params));
+        },
+    };
 };

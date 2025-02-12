@@ -219,7 +219,9 @@ export const SettingsContent = ({
                         })
                     }
                     variant="vechainKitSecondary"
-                    leftIcon={<RiLogoutBoxLine color="#888888" />}
+                    leftIcon={
+                        <RiLogoutBoxLine color="#888888" fontSize={'20px'} />
+                    }
                 >
                     {t('Logout')}
                 </Button>
