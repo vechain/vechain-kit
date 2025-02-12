@@ -52,6 +52,7 @@ export const CustomizationSummaryContent = ({
         account?.domain ?? '',
     );
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
@@ -60,24 +61,36 @@ export const CustomizationSummaryContent = ({
         },
     });
 
-    const { sendTransaction: updateTextRecord, txReceipt } =
-        useUpdateTextRecord({
-            onSuccess: async () => {
-                await refreshMetadata();
-                setIsSubmitting(false);
-                setCurrentContent({
-                    type: 'successful-operation',
-                    props: {
-                        setCurrentContent,
-                        txId: txReceipt?.meta.txID,
-                    },
-                });
-            },
-        });
+    const {
+        sendTransaction: updateTextRecord,
+        txReceipt,
+        error: txError,
+    } = useUpdateTextRecord({
+        onSuccess: async () => {
+            await refreshMetadata();
+            setIsSubmitting(false);
+            setError(null);
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId: txReceipt?.meta.txID,
+                },
+            });
+        },
+        onError: () => {
+            setError(
+                txError?.reason ??
+                    t('Failed to save changes. Please try again.'),
+            );
+            setIsSubmitting(false);
+        },
+    });
 
     const onSubmit = async (data: FormValues) => {
         try {
             setIsSubmitting(true);
+            setError(null);
 
             const domain = account?.domain ?? '';
 
@@ -110,7 +123,6 @@ export const CustomizationSummaryContent = ({
         } catch (error) {
             console.error('Error saving changes:', error);
             setIsSubmitting(false);
-            // TODO: go to error modal content
         }
     };
 
@@ -174,19 +186,47 @@ export const CustomizationSummaryContent = ({
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                <Button
-                    px={4}
-                    width="full"
-                    height="48px"
-                    variant="solid"
-                    borderRadius="xl"
-                    colorScheme="blue"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    loadingText={t('Saving changes...')}
-                >
-                    {t('Confirm')}
-                </Button>
+                <VStack width="full" spacing={4}>
+                    {error && (
+                        <Text
+                            color="red.500"
+                            mb={2}
+                            textAlign="center"
+                            width="full"
+                        >
+                            {error}
+                        </Text>
+                    )}
+                    <Button
+                        px={4}
+                        width="full"
+                        height="48px"
+                        variant="solid"
+                        borderRadius="xl"
+                        colorScheme="blue"
+                        type="submit"
+                        isLoading={isSubmitting}
+                        loadingText={t('Saving changes...')}
+                    >
+                        {error ? t('Retry') : t('Confirm')}
+                    </Button>
+                    {error && txReceipt?.meta.txID && (
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                            textAlign="center"
+                            width="full"
+                        >
+                            <a
+                                href={`https://explore-testnet.vechain.org/transactions/${txReceipt?.meta.txID}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {t('View transaction on the explorer')}
+                            </a>
+                        </Text>
+                    )}
+                </VStack>
             </ModalFooter>
         </Box>
     );
