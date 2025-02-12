@@ -40,13 +40,10 @@ export const CustomizationSummaryContent = ({
     const [isProcessing, setIsProcessing] = useState(false);
     const { refresh: refreshMetadata } = useRefreshMetadata(
         account?.address ?? '',
+        account?.domain ?? '',
+    );
     const { sendTransaction: updateAvatar } = useUpdateAvatarRecord({
         signerAccountAddress: account?.address,
-
-    const updateAvatarMutation = useUpdateAvatarRecord({
-        onSuccess: async () => {
-            await refreshMetadata();
-        },
     });
 
     const updateTextRecordMutation = useUpdateTextRecord({
