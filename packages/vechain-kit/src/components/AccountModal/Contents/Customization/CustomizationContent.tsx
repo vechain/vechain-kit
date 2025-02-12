@@ -14,7 +14,6 @@ import {
     Textarea,
     FormControl,
     FormLabel,
-    IconButton,
     InputGroup,
     InputLeftElement,
 } from '@chakra-ui/react';
@@ -231,7 +230,8 @@ export const CustomizationContent = ({
                         w="100%"
                         borderRadius="14px 14px 0 0"
                     >
-                        {hasDomain && (
+                        {/* For now we don't allow cover image upload */}
+                        {/* {hasDomain && (
                             <IconButton
                                 aria-label="Update cover"
                                 icon={<MdPhotoCamera />}
@@ -241,7 +241,7 @@ export const CustomizationContent = ({
                                 bottom="2"
                                 onClick={() => coverInputRef.current?.click()}
                             />
-                        )}
+                        )} */}
                     </Box>
                     <Box
                         position="absolute"
