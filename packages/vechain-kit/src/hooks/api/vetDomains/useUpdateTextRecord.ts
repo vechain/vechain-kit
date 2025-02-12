@@ -1,8 +1,11 @@
 import { Interface, namehash } from 'ethers';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useMutation } from '@tanstack/react-query';
-import { useSendTransaction } from '@/hooks/transactions/useSendTransaction';
+import { useCallback } from 'react';
+import {
+    UseSendTransactionReturnValue,
+    useSendTransaction,
+} from '@/hooks/transactions/useSendTransaction';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',
@@ -16,33 +19,25 @@ type UpdateTextRecordVariables = {
 };
 
 type UseUpdateTextRecordProps = {
-    onSuccess?: () => void;
-    onError?: () => void;
+    onSuccess?: () => void | Promise<void>;
+    onError?: () => void | Promise<void>;
+    signerAccountAddress?: string;
 };
+
+type UseUpdateTextRecordReturnValue = {
+    sendTransaction: (params: UpdateTextRecordVariables) => Promise<void>;
+} & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 export const useUpdateTextRecord = ({
     onSuccess,
     onError,
-}: UseUpdateTextRecordProps = {}) => {
+    signerAccountAddress,
+}: UseUpdateTextRecordProps = {}): UseUpdateTextRecordReturnValue => {
     const { network } = useVeChainKitConfig();
     const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
-    const { sendTransaction } = useSendTransaction({
-        onTxConfirmed: onSuccess,
-        onTxFailedOrCancelled: onError,
-        privyUIOptions: {
-            title: 'Update Profile Information',
-            description:
-                'Update the profile information associated with your domain',
-            buttonText: 'Sign to continue',
-        },
-    });
 
-    return useMutation({
-        mutationFn: async ({
-            domain,
-            key,
-            value,
-        }: UpdateTextRecordVariables) => {
+    const buildClauses = useCallback(
+        async ({ domain, key, value }: UpdateTextRecordVariables) => {
             if (!domain) throw new Error('Domain is required');
             const node = namehash(domain);
 
@@ -72,21 +67,38 @@ export const useUpdateTextRecord = ({
                 resolverData,
             );
 
-            // Update text record
-            const setTextClause = {
-                to: resolverAddress,
-                data: nameInterface.encodeFunctionData('setText', [
-                    node,
-                    key,
-                    value,
-                ]),
-                value: '0',
-                comment: `Update ${key} record`,
-            };
-
-            return sendTransaction([setTextClause]);
+            return [
+                {
+                    to: resolverAddress,
+                    data: nameInterface.encodeFunctionData('setText', [
+                        node,
+                        key,
+                        value,
+                    ]),
+                    value: '0',
+                    comment: `Update ${key} record`,
+                },
+            ];
         },
-        onSuccess,
-        onError,
+        [nodeUrl, network.type],
+    );
+
+    const result = useSendTransaction({
+        signerAccountAddress,
+        onTxConfirmed: onSuccess,
+        onTxFailedOrCancelled: onError,
+        privyUIOptions: {
+            title: 'Update Profile Information',
+            description:
+                'Update the profile information associated with your domain',
+            buttonText: 'Sign to continue',
+        },
     });
+
+    return {
+        ...result,
+        sendTransaction: async (params: UpdateTextRecordVariables) => {
+            return result.sendTransaction(await buildClauses(params));
+        },
+    };
 };

@@ -46,7 +46,7 @@ export const CustomizationSummaryContent = ({
         signerAccountAddress: account?.address,
     });
 
-    const updateTextRecordMutation = useUpdateTextRecord({
+    const { sendTransaction: updateTextRecord } = useUpdateTextRecord({
         onSuccess: async () => {
             await refreshMetadata();
         },
@@ -60,35 +60,35 @@ export const CustomizationSummaryContent = ({
 
             // Only update records that are present in changes
             if (changes.displayName) {
-                await updateTextRecordMutation.mutateAsync({
+                await updateTextRecord({
                     domain,
                     key: 'display',
                     value: changes.displayName,
                 });
             }
             if (changes.description) {
-                await updateTextRecordMutation.mutateAsync({
+                await updateTextRecord({
                     domain,
                     key: 'description',
                     value: changes.description,
                 });
             }
             if (changes.twitter) {
-                await updateTextRecordMutation.mutateAsync({
+                await updateTextRecord({
                     domain,
                     key: 'com.x',
                     value: changes.twitter,
                 });
             }
             if (changes.website) {
-                await updateTextRecordMutation.mutateAsync({
+                await updateTextRecord({
                     domain,
                     key: 'url',
                     value: changes.website,
                 });
             }
             if (changes.email) {
-                await updateTextRecordMutation.mutateAsync({
+                await updateTextRecord({
                     domain,
                     key: 'email',
                     value: changes.email,
