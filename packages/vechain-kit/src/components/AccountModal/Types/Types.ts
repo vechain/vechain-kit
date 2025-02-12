@@ -20,6 +20,15 @@ export type AccountModalContentTypes =
     | 'privy-linked-accounts'
     | 'account-customization'
     | {
+          type: 'successful-operation';
+          props: {
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+              txId?: string;
+          };
+      }
+    | {
           type: 'account-customization-summary';
           props: {
               changes: {

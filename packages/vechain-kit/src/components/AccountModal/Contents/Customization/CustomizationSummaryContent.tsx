@@ -60,13 +60,20 @@ export const CustomizationSummaryContent = ({
         },
     });
 
-    const { sendTransaction: updateTextRecord } = useUpdateTextRecord({
-        onSuccess: async () => {
-            await refreshMetadata();
-            setIsSubmitting(false);
-            setCurrentContent('settings');
-        },
-    });
+    const { sendTransaction: updateTextRecord, txReceipt } =
+        useUpdateTextRecord({
+            onSuccess: async () => {
+                await refreshMetadata();
+                setIsSubmitting(false);
+                setCurrentContent({
+                    type: 'successful-operation',
+                    props: {
+                        setCurrentContent,
+                        txId: txReceipt?.meta.txID,
+                    },
+                });
+            },
+        });
 
     const onSubmit = async (data: FormValues) => {
         try {
@@ -134,6 +141,7 @@ export const CustomizationSummaryContent = ({
                     {t('Confirm Changes')}
                 </ModalHeader>
                 <ModalBackButton
+                    isDisabled={isSubmitting}
                     onClick={() => setCurrentContent('account-customization')}
                 />
                 <ModalCloseButton isDisabled={isSubmitting} />

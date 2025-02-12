@@ -25,6 +25,7 @@ import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemCo
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
+import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 
 type Props = {
     isOpen: boolean;
@@ -80,6 +81,13 @@ export const AccountModal = ({
                 case 'account-customization-summary':
                     return (
                         <CustomizationSummaryContent
+                            {...currentContent.props}
+                            setCurrentContent={setCurrentContent}
+                        />
+                    );
+                case 'successful-operation':
+                    return (
+                        <SuccessfulOperationContent
                             {...currentContent.props}
                             setCurrentContent={setCurrentContent}
                         />
