@@ -14,8 +14,9 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet, useRefreshMetadata } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
-import { useState } from 'react';
 import { ENS_TEXT_RECORDS } from '@/types/ensTextRecords';
+import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -31,6 +32,15 @@ type Props = {
     };
 };
 
+type FormValues = {
+    avatarIpfsHash?: string;
+    displayName?: string;
+    description?: string;
+    twitter?: string;
+    website?: string;
+    email?: string;
+};
+
 export const CustomizationSummaryContent = ({
     setCurrentContent,
     changes,
@@ -38,27 +48,34 @@ export const CustomizationSummaryContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
-    const [isProcessing, setIsProcessing] = useState(false);
     const { refresh: refreshMetadata } = useRefreshMetadata(
-        account?.address ?? '',
         account?.domain ?? '',
     );
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { handleSubmit } = useForm<FormValues>({
+        defaultValues: {
+            ...changes,
+            avatarIpfsHash: changes.avatarIpfsHash ?? undefined,
+        },
+    });
 
     const { sendTransaction: updateTextRecord } = useUpdateTextRecord({
         onSuccess: async () => {
             await refreshMetadata();
-            setIsProcessing(false);
+            setIsSubmitting(false);
             setCurrentContent('settings');
         },
     });
 
-    const handleConfirm = async () => {
+    const onSubmit = async (data: FormValues) => {
         try {
-            setIsProcessing(true);
+            setIsSubmitting(true);
+
             const domain = account?.domain ?? '';
 
             const CHANGES_TO_TEXT_RECORDS: Record<
-                keyof Props['changes'],
+                keyof FormValues,
                 (typeof ENS_TEXT_RECORDS)[number]
             > = {
                 displayName: 'display',
@@ -69,26 +86,23 @@ export const CustomizationSummaryContent = ({
                 avatarIpfsHash: 'avatar',
             } as const;
 
-            // Filter out undefined/null values and map to the correct format
-            const textRecordUpdates = Object.entries(changes)
+            const textRecordUpdates = Object.entries(data)
                 .filter(
                     (entry): entry is [string, string] =>
                         entry[1] !== undefined && entry[1] !== null,
                 )
                 .map(([key, value]) => ({
                     domain,
-                    key: CHANGES_TO_TEXT_RECORDS[key as keyof Props['changes']],
+                    key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
                     value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
                 }));
 
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
             }
-
-            // TODO: go to success modal content
         } catch (error) {
             console.error('Error saving changes:', error);
-            setIsProcessing(false);
+            setIsSubmitting(false);
             // TODO: go to error modal content
         }
     };
@@ -109,7 +123,7 @@ export const CustomizationSummaryContent = ({
     };
 
     return (
-        <Box>
+        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
             <StickyHeaderContainer>
                 <ModalHeader
                     fontSize={'md'}
@@ -122,7 +136,7 @@ export const CustomizationSummaryContent = ({
                 <ModalBackButton
                     onClick={() => setCurrentContent('account-customization')}
                 />
-                <ModalCloseButton isDisabled={isProcessing} />
+                <ModalCloseButton isDisabled={isSubmitting} />
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -159,8 +173,9 @@ export const CustomizationSummaryContent = ({
                     variant="solid"
                     borderRadius="xl"
                     colorScheme="blue"
-                    onClick={handleConfirm}
-                    isLoading={isProcessing}
+                    type="submit"
+                    isLoading={isSubmitting}
+                    loadingText={t('Saving changes...')}
                 >
                     {t('Confirm')}
                 </Button>

@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getAvatarQueryKey, getTextRecordsQueryKey } from '../vetDomains';
 import { useVeChainKitConfig } from '@/providers';
 
-export const useRefreshMetadata = (address: string, domain: string) => {
+export const useRefreshMetadata = (domain: string) => {
     const queryClient = useQueryClient();
     const { network } = useVeChainKitConfig();
 

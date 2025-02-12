@@ -42,6 +42,16 @@ import { picasso } from '@vechain/picasso';
 import { DomainRequiredAlert } from '../../Components/Alerts';
 import { convertUriToUrl } from '@/utils/uri';
 import { AccountModalContentTypes } from '../../Types';
+import { useForm } from 'react-hook-form';
+
+// Add FormValues type
+type FormValues = {
+    displayName: string;
+    description: string;
+    twitter: string;
+    email: string;
+    website: string;
+};
 
 export const CustomizationContent = ({
     setCurrentContent,
@@ -56,17 +66,10 @@ export const CustomizationContent = ({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
     const { onUpload } = useSingleImageUpload({
         compressImage: true,
     });
 
-    // Initialize state with account metadata, but only once when component mounts
-    const [displayName, setDisplayName] = useState('');
-    const [description, setDescription] = useState('');
-    const [twitter, setTwitter] = useState('');
-    const [email, setEmail] = useState('');
-    const [website, setWebsite] = useState('');
     const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
     const [avatarIpfsHash, setAvatarIpfsHash] = useState<string | null>(null);
     const hasDomain = !!account?.domain;
@@ -81,31 +84,37 @@ export const CustomizationContent = ({
     const [initialWebsite, setInitialWebsite] = useState('');
     const [initialEmail, setInitialEmail] = useState('');
 
-    // Use useEffect to set initial values only once when account metadata changes
+    // Initialize form with account metadata
+    const { register, watch } = useForm<FormValues>({
+        defaultValues: {
+            displayName: account?.metadata?.display || '',
+            description: account?.metadata?.description || '',
+            twitter: account?.metadata?.['com.x'] || '',
+            email: account?.metadata?.email || '',
+            website: account?.metadata?.url || '',
+        },
+    });
+
+    // Set initial values for comparison
     useEffect(() => {
         if (account?.metadata) {
             const metadata = account.metadata;
-            setDisplayName(metadata.display || '');
-            setDescription(metadata.description || '');
-            setTwitter(metadata.twitter || '');
-            setEmail(metadata.email || '');
-            setWebsite(metadata.url || '');
-
-            // Also set initial values
             setInitialDisplayName(metadata.display || '');
             setInitialDescription(metadata.description || '');
-            setInitialTwitter(metadata.twitter || '');
+            setInitialTwitter(metadata['com.x'] || '');
             setInitialEmail(metadata.email || '');
             setInitialWebsite(metadata.url || '');
             setInitialAvatarHash(
                 metadata.avatar ? metadata.avatar.replace('ipfs://', '') : null,
             );
-            // Convert avatar URI to URL using our utility
             setPreviewImageUrl(
                 convertUriToUrl(metadata.avatar ?? '', network.type) || null,
             );
         }
-    }, [account?.address, network.type]); // Added network.type to dependencies
+    }, [account?.metadata, network.type]);
+
+    // Watch all form values for changes
+    const formValues = watch();
 
     const handleImageUpload = async (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -115,7 +124,6 @@ export const CustomizationContent = ({
 
         try {
             setIsUploading(true);
-            setIsProcessing(true);
 
             // Create temporary preview URL
             setPreviewImageUrl(URL.createObjectURL(file));
@@ -134,7 +142,6 @@ export const CustomizationContent = ({
             setPreviewImageUrl(null);
         } finally {
             setIsUploading(false);
-            setIsProcessing(false);
         }
     };
 
@@ -146,6 +153,7 @@ export const CustomizationContent = ({
         };
     }, [previewImageUrl]);
 
+    // Update getChangedValues to use form values
     const getChangedValues = () => {
         const changes: {
             avatarIpfsHash?: string;
@@ -158,13 +166,15 @@ export const CustomizationContent = ({
 
         if (avatarIpfsHash !== initialAvatarHash && avatarIpfsHash)
             changes.avatarIpfsHash = avatarIpfsHash;
-        if (displayName !== initialDisplayName)
-            changes.displayName = displayName;
-        if (description !== initialDescription)
-            changes.description = description;
-        if (twitter !== initialTwitter) changes.twitter = twitter;
-        if (website !== initialWebsite) changes.website = website;
-        if (email !== initialEmail) changes.email = email;
+        if (formValues.displayName !== initialDisplayName)
+            changes.displayName = formValues.displayName;
+        if (formValues.description !== initialDescription)
+            changes.description = formValues.description;
+        if (formValues.twitter !== initialTwitter)
+            changes.twitter = formValues.twitter;
+        if (formValues.website !== initialWebsite)
+            changes.website = formValues.website;
+        if (formValues.email !== initialEmail) changes.email = formValues.email;
         return changes;
     };
 
@@ -265,7 +275,7 @@ export const CustomizationContent = ({
                                 boxSize="6"
                             />
                         )}
-                        {(isUploading || isProcessing) && (
+                        {isUploading && (
                             <Box
                                 position="absolute"
                                 top="0"
@@ -324,10 +334,7 @@ export const CustomizationContent = ({
                             <FormControl isDisabled={!hasDomain}>
                                 <FormLabel>Display Name</FormLabel>
                                 <Input
-                                    value={displayName}
-                                    onChange={(e) =>
-                                        setDisplayName(e.target.value)
-                                    }
+                                    {...register('displayName')}
                                     placeholder={
                                         !hasDomain
                                             ? t('Set a domain first')
@@ -339,10 +346,7 @@ export const CustomizationContent = ({
                             <FormControl isDisabled={!hasDomain}>
                                 <FormLabel>Description</FormLabel>
                                 <Textarea
-                                    value={description}
-                                    onChange={(e) =>
-                                        setDescription(e.target.value)
-                                    }
+                                    {...register('description')}
                                     placeholder={t('Eg: DevRel @ ENS Labs')}
                                     maxLength={200}
                                 />
@@ -356,10 +360,7 @@ export const CustomizationContent = ({
                                             <Icon as={FaTwitter} />
                                         </InputLeftElement>
                                         <Input
-                                            value={twitter}
-                                            onChange={(e) =>
-                                                setTwitter(e.target.value)
-                                            }
+                                            {...register('twitter')}
                                             placeholder={t('Twitter username')}
                                         />
                                     </InputGroup>
@@ -368,10 +369,7 @@ export const CustomizationContent = ({
                                             <Icon as={FaGlobe} />
                                         </InputLeftElement>
                                         <Input
-                                            value={website}
-                                            onChange={(e) =>
-                                                setWebsite(e.target.value)
-                                            }
+                                            {...register('website')}
                                             placeholder={t('Website URL')}
                                             type="url"
                                         />
@@ -381,10 +379,7 @@ export const CustomizationContent = ({
                                             <Icon as={FaEnvelope} />
                                         </InputLeftElement>
                                         <Input
-                                            value={email}
-                                            onChange={(e) =>
-                                                setEmail(e.target.value)
-                                            }
+                                            {...register('email')}
                                             placeholder={t('Email address')}
                                             type="email"
                                         />
@@ -424,8 +419,8 @@ export const CustomizationContent = ({
                         borderRadius="xl"
                         colorScheme="blue"
                         onClick={handleSaveChanges}
-                        isDisabled={!hasDomain || isProcessing || !hasChanges}
-                        isLoading={isProcessing}
+                        isDisabled={!hasDomain || !hasChanges}
+                        isLoading={isUploading}
                         loadingText={t('Preparing changes...')}
                     >
                         {t('Save Changes')}
