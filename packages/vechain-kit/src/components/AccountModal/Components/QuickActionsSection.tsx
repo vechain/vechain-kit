@@ -29,7 +29,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 aria-label="Apps"
                 icon={
                     <VStack spacing={2}>
-                        <Icon as={IoMdApps} boxSize={6} opacity={0.9} />
+                        <Icon as={IoMdApps} boxSize={5} opacity={0.9} />
                         <Text fontSize="sm" fontWeight={'400'}>
                             Apps
                         </Text>
@@ -44,7 +44,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 aria-label="Swap"
                 icon={
                     <VStack spacing={2}>
-                        <Icon as={MdSwapHoriz} boxSize={6} opacity={0.9} />
+                        <Icon as={MdSwapHoriz} boxSize={5} opacity={0.9} />
                         <Text fontSize="sm" fontWeight={'400'}>
                             Swap
                         </Text>
@@ -61,7 +61,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                     <VStack spacing={2}>
                         <Icon
                             as={FaRegArrowAltCircleDown}
-                            boxSize={6}
+                            boxSize={5}
                             opacity={0.9}
                         />
                         <Text fontSize="sm" fontWeight={'400'}>
@@ -78,7 +78,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 aria-label="Send"
                 icon={
                     <VStack spacing={2}>
-                        <Icon as={FiSend} boxSize={6} opacity={0.9} />
+                        <Icon as={FiSend} boxSize={5} opacity={0.9} />
                         <Text fontSize="sm" fontWeight={'400'}>
                             Send
                         </Text>
