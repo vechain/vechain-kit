@@ -12,6 +12,7 @@ type useTransferVETProps = {
     receiverAddress: string;
     amount: string;
     onSuccess?: () => void;
+    onError?: () => void;
 };
 
 type useTransferVETReturnValue = {
@@ -23,6 +24,7 @@ export const useTransferVET = ({
     receiverAddress,
     amount,
     onSuccess,
+    onError,
 }: useTransferVETProps): useTransferVETReturnValue => {
     const { refresh } = useRefreshBalances();
 
@@ -65,6 +67,7 @@ export const useTransferVET = ({
             await refresh();
             onSuccess?.();
         },
+        onTxFailedOrCancelled: onError,
     });
 
     return {

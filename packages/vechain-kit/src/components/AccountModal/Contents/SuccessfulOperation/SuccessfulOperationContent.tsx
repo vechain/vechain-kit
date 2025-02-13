@@ -19,21 +19,30 @@ import { motion } from 'framer-motion';
 import { getConfig } from '@/config';
 import { GoLinkExternal } from 'react-icons/go';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
+import { ShareButtons } from '@/components/TransactionModal';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
     txId?: string;
+    title: string;
+    description: string;
+    onDone: () => void;
+    showSocialButtons?: boolean;
 };
 
 export const SuccessfulOperationContent = ({
-    setCurrentContent,
     txId,
+    title,
+    description,
+    onDone,
+    showSocialButtons = false,
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
+    const socialDescription = `${explorerUrl}/${txId}`;
 
     return (
         <Box>
@@ -44,7 +53,7 @@ export const SuccessfulOperationContent = ({
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Profile Updated')}
+                    {title}
                 </ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -69,15 +78,24 @@ export const SuccessfulOperationContent = ({
                     </motion.div>
 
                     <Text fontSize="md" textAlign="center">
-                        {t('Your profile has been successfully updated!')}
+                        {description}
                     </Text>
+
+                    {showSocialButtons && txId && (
+                        <VStack>
+                            <Text fontSize="sm">{t('Share on')}</Text>
+                            <ShareButtons
+                                descriptionEncoded={socialDescription}
+                            />
+                        </VStack>
+                    )}
                 </VStack>
             </ModalBody>
 
             <ModalFooter justifyContent={'center'}>
                 <VStack width="full" spacing={4}>
                     <Button
-                        onClick={() => setCurrentContent('settings')}
+                        onClick={onDone}
                         variant="vechainKitSecondary"
                         width="full"
                     >

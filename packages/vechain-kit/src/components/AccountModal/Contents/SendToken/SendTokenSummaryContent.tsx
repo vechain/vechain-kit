@@ -9,7 +9,6 @@ import {
     Divider,
     ModalFooter,
     useDisclosure,
-    Icon,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -19,12 +18,11 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { useTransferERC20, useTransferVET, useWallet } from '@/hooks';
-import { ExchangeWarningAlert, TransactionModal } from '@/components';
-import { GiConfirmed } from 'react-icons/gi';
+import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { convertUriToUrl } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -71,6 +69,9 @@ export const SendTokenSummaryContent = ({
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -79,35 +80,92 @@ export const SendTokenSummaryContent = ({
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
 
-    const transferERC20 = useTransferERC20({
+    const {
+        sendTransaction: transferERC20,
+        txReceipt: transferERC20Receipt,
+        error: transferERC20Error,
+    } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
+        onSuccess: () => {
+            setIsSubmitting(false);
+            setError(null);
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId: transferERC20Receipt?.meta.txID,
+                    title: t('Transaction successful'),
+                    description: t('Tokens transferred successfully.'),
+                    onDone: () => {
+                        setCurrentContent('main');
+                    },
+                    showSocialButtons: true,
+                },
+            });
+        },
+        onError: () => {
+            setIsSubmitting(false);
+            setError(transferERC20Error?.reason ?? t('Transaction failed:'));
+        },
     });
 
-    const transferVET = useTransferVET({
+    const {
+        sendTransaction: transferVET,
+        txReceipt: transferVETReceipt,
+        error: transferVETError,
+    } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
+        onSuccess: () => {
+            setIsSubmitting(false);
+            setError(null);
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId: transferVETReceipt?.meta.txID,
+                    title: t('Transaction successful'),
+                    description: t('VET transferred successfully.'),
+                    onDone: () => {
+                        setCurrentContent('main');
+                    },
+                    showSocialButtons: true,
+                },
+            });
+        },
+        onError: () => {
+            setIsSubmitting(false);
+            setError(transferVETError?.reason ?? t('Transaction failed:'));
+        },
     });
+
+    const getTxReceipt = () => {
+        return selectedToken.symbol === 'VET'
+            ? transferVETReceipt
+            : transferERC20Receipt;
+    };
 
     const handleSend = async () => {
         transactionModal.onOpen();
         try {
+            setIsSubmitting(true);
+            setError(null);
+
             if (selectedToken.symbol === 'VET') {
-                await transferVET.sendTransaction();
+                await transferVET();
             } else {
-                await transferERC20.sendTransaction();
+                await transferERC20();
             }
         } catch (error) {
             console.error(t('Transaction failed:'), error);
+            setIsSubmitting(false);
         }
     };
-
-    const { status, error, txReceipt } =
-        selectedToken.symbol === 'VET' ? transferVET : transferERC20;
 
     return (
         <>
@@ -121,6 +179,7 @@ export const SendTokenSummaryContent = ({
                     Send
                 </ModalHeader>
                 <ModalBackButton
+                    isDisabled={isSubmitting}
                     onClick={() =>
                         setCurrentContent({
                             type: 'send-token',
@@ -130,7 +189,7 @@ export const SendTokenSummaryContent = ({
                         })
                     }
                 />
-                <ModalCloseButton />
+                <ModalCloseButton isDisabled={isSubmitting} />
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -198,35 +257,51 @@ export const SendTokenSummaryContent = ({
 
             {/* <StickyFooterContainer> */}
             <ModalFooter>
-                <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
-                    colorScheme="blue"
-                    onClick={handleSend}
-                    rightIcon={<Icon as={GiConfirmed} />}
-                >
-                    {t('Confirm')}
-                </Button>
+                <VStack width="full" spacing={4}>
+                    {error && (
+                        <Text
+                            color="red.500"
+                            mb={2}
+                            textAlign="center"
+                            width="full"
+                        >
+                            {error}
+                        </Text>
+                    )}
+                    <Button
+                        px={4}
+                        width="full"
+                        height="48px"
+                        variant="solid"
+                        borderRadius="xl"
+                        colorScheme="blue"
+                        onClick={handleSend}
+                        isLoading={isSubmitting}
+                        loadingText={t('Sending...')}
+                    >
+                        {error ? t('Retry') : t('Confirm')}
+                    </Button>
+                    {error && getTxReceipt()?.meta.txID && (
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                            textAlign="center"
+                            width="full"
+                        >
+                            <a
+                                href={`https://explore-testnet.vechain.org/transactions/${
+                                    getTxReceipt()?.meta.txID
+                                }`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {t('View transaction on the explorer')}
+                            </a>
+                        </Text>
+                    )}
+                </VStack>
             </ModalFooter>
             {/* </StickyFooterContainer> */}
-
-            <TransactionModal
-                isOpen={transactionModal.isOpen}
-                onClose={() => {
-                    transactionModal.onClose();
-                    setCurrentContent('main');
-                }}
-                status={status}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? t('Unknown error')}
-                showExplorerButton={true}
-                showSocialButtons={true}
-                showTryAgainButton={true}
-                onTryAgain={handleSend}
-            />
         </>
     );
 };

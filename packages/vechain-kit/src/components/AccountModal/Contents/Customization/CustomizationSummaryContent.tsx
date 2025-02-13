@@ -75,6 +75,13 @@ export const CustomizationSummaryContent = ({
                 props: {
                     setCurrentContent,
                     txId: txReceipt?.meta.txID,
+                    title: t('Profile Updated'),
+                    description: t(
+                        'Your changes have been saved successfully.',
+                    ),
+                    onDone: () => {
+                        setCurrentContent('settings');
+                    },
                 },
             });
         },

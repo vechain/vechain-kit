@@ -372,5 +372,13 @@
     "Your profile has been successfully updated!": "Your profile has been successfully updated!",
     "Profile Updated": "Profile Updated",
     "Retry": "Retry",
-    "Failed to save changes. Please try again.": "Failed to save changes. Please try again."
+    "Failed to save changes. Please try again.": "Failed to save changes. Please try again.",
+    "Profile updated": "Profile updated",
+    "Your changes have been saved successfully.": "Your changes have been saved successfully.",
+    "VET transferred successfully.": "VET transferred successfully.",
+    "Transaction successful": "Transaction successful",
+    "Tokens transferred successfully.": "Tokens transferred successfully.",
+    "Share on": "Share on",
+    "Share": "Share",
+    "Sending...": "Sending..."
 }

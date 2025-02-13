@@ -26,6 +26,10 @@ export type AccountModalContentTypes =
                   React.SetStateAction<AccountModalContentTypes>
               >;
               txId?: string;
+              title: string;
+              description: string;
+              onDone: () => void;
+              showSocialButtons?: boolean;
           };
       }
     | {
