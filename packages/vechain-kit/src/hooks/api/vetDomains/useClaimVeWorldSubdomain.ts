@@ -20,6 +20,7 @@ type useClaimVeWorldSubdomainProps = {
     subdomain: string;
     domain: string;
     onSuccess?: () => void;
+    onError?: () => void;
     onSuccessMessageTitle?: number;
     alreadyOwned?: boolean;
 };
@@ -35,6 +36,7 @@ export const useClaimVeWorldSubdomain = ({
     subdomain,
     domain,
     onSuccess,
+    onError,
     alreadyOwned = false,
 }: useClaimVeWorldSubdomainProps): useClaimVeWorldSubdomainReturnValue => {
     const queryClient = useQueryClient();
@@ -161,6 +163,7 @@ export const useClaimVeWorldSubdomain = ({
             buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
+        onTxFailedOrCancelled: onError,
     });
 
     return {

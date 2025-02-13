@@ -3,7 +3,6 @@ import {
     ModalCloseButton,
     ModalHeader,
     VStack,
-    Button,
     Text,
     HStack,
     Divider,
@@ -13,6 +12,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplayCard,
+    TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
@@ -262,53 +262,14 @@ export const SendTokenSummaryContent = ({
 
             {/* <StickyFooterContainer> */}
             <ModalFooter>
-                <VStack width="full" spacing={4}>
-                    {error && (
-                        <Text
-                            color="red.500"
-                            mb={2}
-                            textAlign="center"
-                            width="full"
-                        >
-                            {error}
-                        </Text>
-                    )}
-                    <Button
-                        px={4}
-                        width="full"
-                        height="48px"
-                        variant="solid"
-                        borderRadius="xl"
-                        colorScheme="blue"
-                        onClick={handleSend}
-                        isLoading={isSubmitting}
-                        loadingText={
-                            isTxWaitingConfirmation
-                                ? t('Waiting for confirmation...')
-                                : t('Sending...')
-                        }
-                    >
-                        {error ? t('Retry') : t('Confirm')}
-                    </Button>
-                    {error && getTxReceipt()?.meta.txID && (
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? 'whiteAlpha.600' : 'gray.500'}
-                            textAlign="center"
-                            width="full"
-                        >
-                            <a
-                                href={`https://explore-testnet.vechain.org/transactions/${
-                                    getTxReceipt()?.meta.txID
-                                }`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {t('View transaction on the explorer')}
-                            </a>
-                        </Text>
-                    )}
-                </VStack>
+                <TransactionButtonAndStatus
+                    error={error}
+                    isSubmitting={isSubmitting}
+                    isTxWaitingConfirmation={isTxWaitingConfirmation}
+                    handleSend={handleSend}
+                    transactionPendingText={t('Sending...')}
+                    txReceipt={getTxReceipt()}
+                />
             </ModalFooter>
             {/* </StickyFooterContainer> */}
         </>

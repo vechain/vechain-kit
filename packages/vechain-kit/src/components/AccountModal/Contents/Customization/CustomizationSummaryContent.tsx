@@ -3,12 +3,15 @@ import {
     ModalCloseButton,
     ModalHeader,
     VStack,
-    Button,
     Text,
     ModalFooter,
     Box,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import {
+    ModalBackButton,
+    StickyHeaderContainer,
+    TransactionButtonAndStatus,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -68,7 +71,7 @@ export const CustomizationSummaryContent = ({
         isTransactionPending,
     } = useUpdateTextRecord({
         onSuccess: async () => {
-            await refreshMetadata();
+            refreshMetadata();
             setError(null);
             setCurrentContent({
                 type: 'successful-operation',
@@ -190,51 +193,15 @@ export const CustomizationSummaryContent = ({
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                <VStack width="full" spacing={4}>
-                    {error && (
-                        <Text
-                            color="red.500"
-                            mb={2}
-                            textAlign="center"
-                            width="full"
-                        >
-                            {error}
-                        </Text>
-                    )}
-                    <Button
-                        px={4}
-                        width="full"
-                        height="48px"
-                        variant="solid"
-                        borderRadius="xl"
-                        colorScheme="blue"
-                        type="submit"
-                        isLoading={isTransactionPending}
-                        loadingText={
-                            isWaitingForWalletConfirmation
-                                ? t('Waiting for confirmation...')
-                                : t('Saving changes...')
-                        }
-                    >
-                        {error ? t('Retry') : t('Confirm')}
-                    </Button>
-                    {error && txReceipt?.meta.txID && (
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? 'whiteAlpha.600' : 'gray.500'}
-                            textAlign="center"
-                            width="full"
-                        >
-                            <a
-                                href={`https://explore-testnet.vechain.org/transactions/${txReceipt?.meta.txID}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {t('View transaction on the explorer')}
-                            </a>
-                        </Text>
-                    )}
-                </VStack>
+                <TransactionButtonAndStatus
+                    error={error}
+                    isSubmitting={isTransactionPending}
+                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                    handleSend={handleSubmit(onSubmit)}
+                    transactionPendingText={t('Saving changes...')}
+                    txReceipt={txReceipt}
+                    isSubmitForm={true}
+                />
             </ModalFooter>
         </Box>
     );

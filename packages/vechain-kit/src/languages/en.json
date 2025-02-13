@@ -383,5 +383,9 @@
     "Sending...": "Sending...",
     "Something went wrong. Please try again.": "Something went wrong. Please try again.",
     "Waiting for confirmation...": "Waiting for confirmation...",
-    "Transaction rejected by the user": "Transaction rejected by the user"
+    "Transaction rejected by the user": "Transaction rejected by the user",
+    "Claiming name...": "Claiming name...",
+    "Name claimed": "Name claimed",
+    "Your {{name}}.veworld.vet name has been claimed successfully.": "Your {{name}}.veworld.vet name has been claimed successfully.",
+    "Waiting wallet confirmation...": "Waiting wallet confirmation..."
 }
