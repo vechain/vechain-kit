@@ -112,7 +112,9 @@ export const useUpdateTextRecord = ({
     const result = useSendTransaction({
         signerAccountAddress,
         onTxConfirmed: onSuccess,
-        onTxFailedOrCancelled: onError,
+        onTxFailedOrCancelled: async () => {
+            onError?.();
+        },
         privyUIOptions: {
             title: 'Update Profile Information',
             description:

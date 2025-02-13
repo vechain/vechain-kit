@@ -8,7 +8,6 @@ import {
     HStack,
     Divider,
     ModalFooter,
-    useDisclosure,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -65,7 +64,6 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connection } = useWallet();
-    const transactionModal = useDisclosure();
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
 
@@ -109,7 +107,10 @@ export const SendTokenSummaryContent = ({
         },
         onError: () => {
             setIsSubmitting(false);
-            setError(transferERC20Error?.reason ?? t('Transaction failed:'));
+            setError(
+                transferERC20Error?.reason ??
+                    t('Something went wrong. Please try again.'),
+            );
         },
     });
 
@@ -140,7 +141,10 @@ export const SendTokenSummaryContent = ({
         },
         onError: () => {
             setIsSubmitting(false);
-            setError(transferVETError?.reason ?? t('Transaction failed:'));
+            setError(
+                transferVETError?.reason ??
+                    t('Something went wrong. Please try again.'),
+            );
         },
     });
 
@@ -151,7 +155,6 @@ export const SendTokenSummaryContent = ({
     };
 
     const handleSend = async () => {
-        transactionModal.onOpen();
         try {
             setIsSubmitting(true);
             setError(null);

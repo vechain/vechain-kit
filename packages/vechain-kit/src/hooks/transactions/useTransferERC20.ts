@@ -74,7 +74,9 @@ export const useTransferERC20 = ({
             buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
-        onTxFailedOrCancelled: onError,
+        onTxFailedOrCancelled: async () => {
+            onError?.();
+        },
     });
 
     return {

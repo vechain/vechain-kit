@@ -67,7 +67,9 @@ export const useTransferVET = ({
             await refresh();
             onSuccess?.();
         },
-        onTxFailedOrCancelled: onError,
+        onTxFailedOrCancelled: async () => {
+            onError?.();
+        },
     });
 
     return {
