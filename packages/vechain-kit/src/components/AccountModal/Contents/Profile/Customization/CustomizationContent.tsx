@@ -26,16 +26,16 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { MdOutlineNavigateNext, MdPhotoCamera } from 'react-icons/md';
-import { ActionButton } from '../../Components';
+import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
 import { FaRegAddressCard, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { AccountAvatar } from '@/components/common';
 import { picasso } from '@vechain/picasso';
-import { DomainRequiredAlert } from '../../Components/Alerts';
+import { DomainRequiredAlert } from '../../../Components/Alerts';
 import { convertUriToUrl } from '@/utils/uri';
-import { AccountModalContentTypes } from '../../Types';
+import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
 import { FaXTwitter } from 'react-icons/fa6';
 
@@ -200,9 +200,7 @@ export const CustomizationContent = ({
                 >
                     {t('Customization')}
                 </ModalHeader>
-                <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
-                />
+                <ModalBackButton onClick={() => setCurrentContent('profile')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

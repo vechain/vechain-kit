@@ -387,5 +387,6 @@
     "Claiming name...": "Claiming name...",
     "Name claimed": "Name claimed",
     "Your {{name}}.veworld.vet name has been claimed successfully.": "Your {{name}}.veworld.vet name has been claimed successfully.",
-    "Waiting wallet confirmation...": "Waiting wallet confirmation..."
+    "Waiting wallet confirmation...": "Waiting wallet confirmation...",
+    "Profile": "Profile"
 }

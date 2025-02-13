@@ -13,7 +13,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { ActionButton, Profile } from '@/components';
+import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
@@ -29,19 +29,15 @@ type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    onLogoutSuccess: () => void;
 };
 
-export const SettingsContent = ({
-    setCurrentContent,
-    onLogoutSuccess,
-}: Props) => {
+export const SettingsContent = ({ setCurrentContent }: Props) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
     const { privy, darkMode: isDark } = useVeChainKitConfig();
 
-    const { connection, account } = useWallet();
+    const { connection } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -75,15 +71,6 @@ export const SettingsContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <Profile
-                    onEditClick={() =>
-                        setCurrentContent('account-customization')
-                    }
-                    onLogoutSuccess={onLogoutSuccess}
-                    setCurrentContent={setCurrentContent}
-                    address={account?.address ?? ''}
-                />
-
                 <VStack w={'full'} spacing={0}>
                     <ActionButton
                         style={{

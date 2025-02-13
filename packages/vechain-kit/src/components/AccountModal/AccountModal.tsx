@@ -16,6 +16,7 @@ import {
     FAQContent,
     AccessAndSecurityContent,
     EmbeddedWalletContent,
+    ProfileContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -106,7 +107,11 @@ export const AccountModal = ({
                 );
             case 'settings':
                 return (
-                    <SettingsContent
+                    <SettingsContent setCurrentContent={setCurrentContent} />
+                );
+            case 'profile':
+                return (
+                    <ProfileContent
                         setCurrentContent={setCurrentContent}
                         onLogoutSuccess={onClose}
                     />

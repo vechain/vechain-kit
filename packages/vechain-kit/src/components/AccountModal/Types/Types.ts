@@ -10,6 +10,7 @@ export type AccountModalContentTypes =
     | 'main'
     | 'faq'
     | 'settings'
+    | 'profile'
     | 'access-and-security'
     | 'embedded-wallet'
     | 'receive-token'

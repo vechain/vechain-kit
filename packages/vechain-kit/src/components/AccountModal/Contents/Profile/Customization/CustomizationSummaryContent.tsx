@@ -12,7 +12,7 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
 } from '@/components/common';
-import { AccountModalContentTypes } from '../../Types';
+import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet, useRefreshMetadata } from '@/hooks';

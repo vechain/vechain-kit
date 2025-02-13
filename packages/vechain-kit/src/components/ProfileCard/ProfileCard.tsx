@@ -17,26 +17,23 @@ import { useVeChainKitConfig } from '@/providers';
 import { FaEdit, FaEnvelope, FaGlobe, FaShare } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { picasso } from '@vechain/picasso';
-import { AccountModalContentTypes } from '../Types';
 import { FaXTwitter } from 'react-icons/fa6';
 
-export type ProfileProps = {
+export type ProfileCardProps = {
     address: string;
     onEditClick?: () => void;
     showHeader?: boolean;
-    setCurrentContent?: (content: AccountModalContentTypes) => void;
-    onLogoutSuccess?: () => void;
+    onLogout?: () => void;
 };
 
-export const Profile = ({
+export const ProfileCard = ({
     onEditClick,
     address,
     showHeader = true,
-    setCurrentContent,
-    onLogoutSuccess,
-}: ProfileProps) => {
+    onLogout,
+}: ProfileCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { account, disconnect } = useWallet();
+    const { account } = useWallet();
 
     const baseBackgroundColor = isDark ? 'whiteAlpha.100' : '#00000005';
     const headerImageSvg = picasso(account?.address ?? '');
@@ -167,19 +164,7 @@ export const Profile = ({
                                 variant="ghost"
                                 leftIcon={<Icon as={RiLogoutBoxLine} />}
                                 colorScheme="red"
-                                onClick={() =>
-                                    setCurrentContent?.({
-                                        type: 'disconnect-confirm',
-                                        props: {
-                                            onDisconnect: () => {
-                                                disconnect();
-                                                onLogoutSuccess?.();
-                                            },
-                                            onBack: () =>
-                                                setCurrentContent?.('settings'),
-                                        },
-                                    })
-                                }
+                                onClick={onLogout}
                             >
                                 Logout
                             </Button>

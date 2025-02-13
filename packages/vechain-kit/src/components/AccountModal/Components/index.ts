@@ -5,4 +5,3 @@ export * from './BalanceSection';
 export * from './Tabs/AssetsSection';
 export * from './QuickActionsSection';
 export * from './Alerts';
-export * from './Profile';
