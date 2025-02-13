@@ -14,14 +14,7 @@ import {
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import {
-    FaEdit,
-    FaEnvelope,
-    FaGlobe,
-    FaLink,
-    FaShare,
-    FaTwitter,
-} from 'react-icons/fa';
+import { FaEdit, FaEnvelope, FaGlobe, FaShare } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { picasso } from '@vechain/picasso';
 import { AccountModalContentTypes } from '../Types';
