@@ -21,13 +21,13 @@ import { GoLinkExternal } from 'react-icons/go';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { ShareButtons } from '@/components/TransactionModal';
 
-type Props = {
+export type SuccessfulOperationContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
     txId?: string;
     title: string;
-    description: string;
+    description?: string;
     onDone: () => void;
     showSocialButtons?: boolean;
 };
@@ -38,7 +38,7 @@ export const SuccessfulOperationContent = ({
     description,
     onDone,
     showSocialButtons = false,
-}: Props) => {
+}: SuccessfulOperationContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
@@ -77,13 +77,15 @@ export const SuccessfulOperationContent = ({
                         />
                     </motion.div>
 
-                    <Text fontSize="md" textAlign="center">
-                        {description}
-                    </Text>
+                    {description && (
+                        <Text fontSize="md" textAlign="center">
+                            {description}
+                        </Text>
+                    )}
 
                     {showSocialButtons && txId && (
-                        <VStack>
-                            <Text fontSize="sm">{t('Share on')}</Text>
+                        <VStack mt={2}>
+                            <Text fontSize="xs">{t('Share on')}</Text>
                             <ShareButtons
                                 descriptionEncoded={socialDescription}
                             />

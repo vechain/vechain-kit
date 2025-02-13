@@ -4,6 +4,7 @@ import {
 } from '../Contents';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
+import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
 
 export type AccountModalContentTypes =
     | 'main'
@@ -21,16 +22,7 @@ export type AccountModalContentTypes =
     | 'account-customization'
     | {
           type: 'successful-operation';
-          props: {
-              setCurrentContent: React.Dispatch<
-                  React.SetStateAction<AccountModalContentTypes>
-              >;
-              txId?: string;
-              title: string;
-              description: string;
-              onDone: () => void;
-              showSocialButtons?: boolean;
-          };
+          props: SuccessfulOperationContentProps;
       }
     | {
           type: 'account-customization-summary';

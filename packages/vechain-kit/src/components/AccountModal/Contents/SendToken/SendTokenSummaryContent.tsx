@@ -67,7 +67,6 @@ export const SendTokenSummaryContent = ({
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Get the final image URL
@@ -82,6 +81,9 @@ export const SendTokenSummaryContent = ({
         sendTransaction: transferERC20,
         txReceipt: transferERC20Receipt,
         error: transferERC20Error,
+        isWaitingForWalletConfirmation:
+            transferERC20WaitingForWalletConfirmation,
+        isTransactionPending: transferERC20Pending,
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -89,7 +91,6 @@ export const SendTokenSummaryContent = ({
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
         onSuccess: () => {
-            setIsSubmitting(false);
             setError(null);
             setCurrentContent({
                 type: 'successful-operation',
@@ -97,7 +98,6 @@ export const SendTokenSummaryContent = ({
                     setCurrentContent,
                     txId: transferERC20Receipt?.meta.txID,
                     title: t('Transaction successful'),
-                    description: t('Tokens transferred successfully.'),
                     onDone: () => {
                         setCurrentContent('main');
                     },
@@ -106,7 +106,6 @@ export const SendTokenSummaryContent = ({
             });
         },
         onError: () => {
-            setIsSubmitting(false);
             setError(
                 transferERC20Error?.reason ??
                     t('Something went wrong. Please try again.'),
@@ -118,12 +117,13 @@ export const SendTokenSummaryContent = ({
         sendTransaction: transferVET,
         txReceipt: transferVETReceipt,
         error: transferVETError,
+        isWaitingForWalletConfirmation: transferVETWaitingForWalletConfirmation,
+        isTransactionPending: transferVETPending,
     } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         onSuccess: () => {
-            setIsSubmitting(false);
             setError(null);
             setCurrentContent({
                 type: 'successful-operation',
@@ -131,7 +131,6 @@ export const SendTokenSummaryContent = ({
                     setCurrentContent,
                     txId: transferVETReceipt?.meta.txID,
                     title: t('Transaction successful'),
-                    description: t('VET transferred successfully.'),
                     onDone: () => {
                         setCurrentContent('main');
                     },
@@ -140,7 +139,6 @@ export const SendTokenSummaryContent = ({
             });
         },
         onError: () => {
-            setIsSubmitting(false);
             setError(
                 transferVETError?.reason ??
                     t('Something went wrong. Please try again.'),
@@ -156,7 +154,6 @@ export const SendTokenSummaryContent = ({
 
     const handleSend = async () => {
         try {
-            setIsSubmitting(true);
             setError(null);
 
             if (selectedToken.symbol === 'VET') {
@@ -166,9 +163,14 @@ export const SendTokenSummaryContent = ({
             }
         } catch (error) {
             console.error(t('Transaction failed:'), error);
-            setIsSubmitting(false);
         }
     };
+
+    const isTxWaitingConfirmation =
+        transferERC20WaitingForWalletConfirmation ||
+        transferVETWaitingForWalletConfirmation;
+    const isSubmitting =
+        isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
 
     return (
         <>
@@ -280,7 +282,11 @@ export const SendTokenSummaryContent = ({
                         colorScheme="blue"
                         onClick={handleSend}
                         isLoading={isSubmitting}
-                        loadingText={t('Sending...')}
+                        loadingText={
+                            isTxWaitingConfirmation
+                                ? t('Waiting for confirmation...')
+                                : t('Sending...')
+                        }
                     >
                         {error ? t('Retry') : t('Confirm')}
                     </Button>

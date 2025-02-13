@@ -51,7 +51,6 @@ export const CustomizationSummaryContent = ({
     const { refresh: refreshMetadata } = useRefreshMetadata(
         account?.domain ?? '',
     );
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const { handleSubmit } = useForm<FormValues>({
@@ -65,10 +64,11 @@ export const CustomizationSummaryContent = ({
         sendTransaction: updateTextRecord,
         txReceipt,
         error: txError,
+        isWaitingForWalletConfirmation,
+        isTransactionPending,
     } = useUpdateTextRecord({
         onSuccess: async () => {
             await refreshMetadata();
-            setIsSubmitting(false);
             setError(null);
             setCurrentContent({
                 type: 'successful-operation',
@@ -90,13 +90,11 @@ export const CustomizationSummaryContent = ({
                 txError?.reason ??
                     t('Failed to save changes. Please try again.'),
             );
-            setIsSubmitting(false);
         },
     });
 
     const onSubmit = async (data: FormValues) => {
         try {
-            setIsSubmitting(true);
             setError(null);
 
             const domain = account?.domain ?? '';
@@ -129,7 +127,6 @@ export const CustomizationSummaryContent = ({
             }
         } catch (error) {
             console.error('Error saving changes:', error);
-            setIsSubmitting(false);
         }
     };
 
@@ -160,10 +157,10 @@ export const CustomizationSummaryContent = ({
                     {t('Confirm Changes')}
                 </ModalHeader>
                 <ModalBackButton
-                    isDisabled={isSubmitting}
+                    isDisabled={isTransactionPending}
                     onClick={() => setCurrentContent('account-customization')}
                 />
-                <ModalCloseButton isDisabled={isSubmitting} />
+                <ModalCloseButton isDisabled={isTransactionPending} />
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -212,8 +209,12 @@ export const CustomizationSummaryContent = ({
                         borderRadius="xl"
                         colorScheme="blue"
                         type="submit"
-                        isLoading={isSubmitting}
-                        loadingText={t('Saving changes...')}
+                        isLoading={isTransactionPending}
+                        loadingText={
+                            isWaitingForWalletConfirmation
+                                ? t('Waiting for confirmation...')
+                                : t('Saving changes...')
+                        }
                     >
                         {error ? t('Retry') : t('Confirm')}
                     </Button>

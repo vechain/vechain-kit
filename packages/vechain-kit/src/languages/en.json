@@ -381,5 +381,7 @@
     "Share on": "Share on",
     "Share": "Share",
     "Sending...": "Sending...",
-    "Something went wrong. Please try again.": "Something went wrong. Please try again."
+    "Something went wrong. Please try again.": "Something went wrong. Please try again.",
+    "Waiting for confirmation...": "Waiting for confirmation...",
+    "Transaction rejected by the user": "Transaction rejected by the user"
 }
