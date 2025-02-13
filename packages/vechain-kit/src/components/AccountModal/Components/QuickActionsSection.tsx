@@ -1,4 +1,4 @@
-import { Grid, Icon, IconButton } from '@chakra-ui/react';
+import { Grid, Icon, IconButton, VStack, Text } from '@chakra-ui/react';
 import { MdSwapHoriz } from 'react-icons/md';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
@@ -27,7 +27,14 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 fontSize="xs"
                 verticalAlign="middle"
                 aria-label="Apps"
-                icon={<Icon as={IoMdApps} boxSize={5} opacity={0.9} />}
+                icon={
+                    <VStack spacing={2}>
+                        <Icon as={IoMdApps} boxSize={6} opacity={0.9} />
+                        <Text fontSize="sm" fontWeight={'400'}>
+                            Apps
+                        </Text>
+                    </VStack>
+                }
                 onClick={() => setCurrentContent('ecosystem')}
             />
             <IconButton
@@ -35,7 +42,14 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 h="auto"
                 py={3}
                 aria-label="Swap"
-                icon={<Icon as={MdSwapHoriz} boxSize={5} opacity={0.9} />}
+                icon={
+                    <VStack spacing={2}>
+                        <Icon as={MdSwapHoriz} boxSize={6} opacity={0.9} />
+                        <Text fontSize="sm" fontWeight={'400'}>
+                            Swap
+                        </Text>
+                    </VStack>
+                }
                 onClick={() => setCurrentContent('swap-token')}
             />
             <IconButton
@@ -44,11 +58,16 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 py={3}
                 aria-label="Receive"
                 icon={
-                    <Icon
-                        as={FaRegArrowAltCircleDown}
-                        boxSize={5}
-                        opacity={0.9}
-                    />
+                    <VStack spacing={2}>
+                        <Icon
+                            as={FaRegArrowAltCircleDown}
+                            boxSize={6}
+                            opacity={0.9}
+                        />
+                        <Text fontSize="sm" fontWeight={'400'}>
+                            Receive
+                        </Text>
+                    </VStack>
                 }
                 onClick={() => setCurrentContent('receive-token')}
             />
@@ -57,7 +76,14 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 h="auto"
                 py={3}
                 aria-label="Send"
-                icon={<Icon as={FiSend} boxSize={5} opacity={0.9} />}
+                icon={
+                    <VStack spacing={2}>
+                        <Icon as={FiSend} boxSize={6} opacity={0.9} />
+                        <Text fontSize="sm" fontWeight={'400'}>
+                            Send
+                        </Text>
+                    </VStack>
+                }
                 isDisabled={totalBalance === 0}
                 onClick={() =>
                     setCurrentContent({
