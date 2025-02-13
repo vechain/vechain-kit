@@ -1,24 +1,29 @@
 'use client';
 
-import { Text, VStack, Icon, HStack, PropsOf } from '@chakra-ui/react';
+import {
+    Text,
+    VStack,
+    Icon,
+    PropsOf,
+    Input,
+    InputGroup,
+    InputRightElement,
+    InputLeftElement,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import { IoCopyOutline, IoCheckmarkOutline } from 'react-icons/io5';
 import { humanAddress } from '@/utils';
 import { Wallet } from '@/types';
+import { FaRegAddressCard } from 'react-icons/fa';
+import { HiOutlineWallet } from 'react-icons/hi2';
 
 type Props = {
     wallet: Wallet;
     label?: string;
-    size?: string;
     style?: PropsOf<typeof VStack>;
 };
 
-export const AddressDisplay = ({
-    wallet,
-    label,
-    size = 'lg',
-    style,
-}: Props) => {
+export const AddressDisplay = ({ wallet, label, style }: Props) => {
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
@@ -35,76 +40,112 @@ export const AddressDisplay = ({
 
     return (
         <VStack w={'full'} justifyContent={'center'} {...style}>
-            <VStack>
+            <VStack w={'full'} spacing={4}>
                 {label && (
                     <Text fontSize={'sm'} opacity={0.7}>
                         {label}
                     </Text>
                 )}
                 {wallet?.domain ? (
-                    <VStack>
-                        <HStack
-                            onClick={() =>
-                                copyToClipboard(
-                                    wallet.domain || '',
-                                    setCopiedDomain,
-                                )
-                            }
-                            cursor="pointer"
-                            spacing={2}
-                        >
-                            <Text fontSize={size} fontWeight={'500'}>
-                                {wallet.domain}
-                            </Text>
-                            <Icon
-                                boxSize={5}
-                                aria-label="Copy Domain"
-                                as={
-                                    copiedDomain
-                                        ? IoCheckmarkOutline
-                                        : IoCopyOutline
+                    <VStack spacing={2} w={'full'}>
+                        <InputGroup>
+                            <InputLeftElement>
+                                <Icon as={FaRegAddressCard} opacity={0.5} />
+                            </InputLeftElement>
+                            <Input
+                                cursor="pointer"
+                                value={wallet.domain}
+                                readOnly
+                                onClick={() =>
+                                    copyToClipboard(
+                                        wallet.domain || '',
+                                        setCopiedDomain,
+                                    )
                                 }
-                                cursor="pointer"
                             />
-                        </HStack>
-                        <HStack
-                            onClick={() =>
-                                copyToClipboard(wallet.address ?? '', setCopied)
-                            }
-                            cursor="pointer"
-                            spacing={2}
-                        >
-                            <Text fontSize={'sm'}>
-                                {'('}
-                                {humanAddress(wallet.address ?? '', 8, 7)}
-                                {')'}
-                            </Text>
-                            <Icon
-                                boxSize={4}
-                                aria-label="Copy Address"
-                                as={copied ? IoCheckmarkOutline : IoCopyOutline}
+                            <InputRightElement>
+                                <Icon
+                                    opacity={0.5}
+                                    onClick={() =>
+                                        copyToClipboard(
+                                            wallet.domain || '',
+                                            setCopiedDomain,
+                                        )
+                                    }
+                                    cursor="pointer"
+                                    as={
+                                        copiedDomain
+                                            ? IoCheckmarkOutline
+                                            : IoCopyOutline
+                                    }
+                                />
+                            </InputRightElement>
+                        </InputGroup>
+
+                        <InputGroup>
+                            <InputLeftElement>
+                                <Icon as={HiOutlineWallet} opacity={0.5} />
+                            </InputLeftElement>
+                            <Input
                                 cursor="pointer"
+                                value={humanAddress(wallet.address ?? '', 8, 7)}
+                                readOnly
+                                onClick={() =>
+                                    copyToClipboard(
+                                        wallet.address ?? '',
+                                        setCopied,
+                                    )
+                                }
                             />
-                        </HStack>
+                            <InputRightElement>
+                                <Icon
+                                    opacity={0.5}
+                                    cursor="pointer"
+                                    onClick={() =>
+                                        copyToClipboard(
+                                            wallet.address ?? '',
+                                            setCopied,
+                                        )
+                                    }
+                                    as={
+                                        copied
+                                            ? IoCheckmarkOutline
+                                            : IoCopyOutline
+                                    }
+                                />
+                            </InputRightElement>
+                        </InputGroup>
                     </VStack>
                 ) : (
-                    <HStack
-                        onClick={() =>
-                            copyToClipboard(wallet?.address ?? '', setCopied)
-                        }
-                        cursor="pointer"
-                        spacing={2}
-                    >
-                        <Text fontSize={size}>
-                            {humanAddress(wallet?.address ?? '', 6, 4)}
-                        </Text>
-                        <Icon
-                            boxSize={5}
-                            aria-label="Copy Address"
-                            as={copied ? IoCheckmarkOutline : IoCopyOutline}
+                    <InputGroup>
+                        <InputLeftElement>
+                            <Icon as={HiOutlineWallet} opacity={0.5} />
+                        </InputLeftElement>
+                        <Input
                             cursor="pointer"
+                            value={humanAddress(wallet?.address ?? '', 6, 4)}
+                            readOnly
+                            onClick={() =>
+                                copyToClipboard(
+                                    wallet?.address ?? '',
+                                    setCopied,
+                                )
+                            }
                         />
-                    </HStack>
+                        <InputRightElement>
+                            <Icon
+                                opacity={0.5}
+                                onClick={() =>
+                                    copyToClipboard(
+                                        wallet?.address ?? '',
+                                        setCopied,
+                                    )
+                                }
+                                cursor="pointer"
+                                as={copied ? IoCheckmarkOutline : IoCopyOutline}
+                            />
+                        </InputRightElement>
+                    </InputGroup>
                 )}
             </VStack>
         </VStack>

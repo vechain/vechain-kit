@@ -3,7 +3,6 @@ export type ENSRecords = {
     description?: string;
     email?: string;
     url?: string;
-    twitter?: string;
     header?: string;
     notice?: string;
     location?: string;

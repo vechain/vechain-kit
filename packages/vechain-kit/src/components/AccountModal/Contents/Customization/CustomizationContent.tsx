@@ -30,18 +30,14 @@ import { ActionButton } from '../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
-import {
-    FaRegAddressCard,
-    FaTwitter,
-    FaEnvelope,
-    FaGlobe,
-} from 'react-icons/fa';
+import { FaRegAddressCard, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { AccountAvatar } from '@/components/common';
 import { picasso } from '@vechain/picasso';
 import { DomainRequiredAlert } from '../../Components/Alerts';
 import { convertUriToUrl } from '@/utils/uri';
 import { AccountModalContentTypes } from '../../Types';
 import { useForm } from 'react-hook-form';
+import { FaXTwitter } from 'react-icons/fa6';
 
 // Add FormValues type
 type FormValues = {
@@ -357,7 +353,7 @@ export const CustomizationContent = ({
                                 <VStack spacing={3}>
                                     <InputGroup>
                                         <InputLeftElement>
-                                            <Icon as={FaTwitter} />
+                                            <Icon as={FaXTwitter} />
                                         </InputLeftElement>
                                         <Input
                                             {...register('twitter')}
