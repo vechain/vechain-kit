@@ -388,5 +388,12 @@
     "Name claimed": "Name claimed",
     "Your {{name}}.veworld.vet name has been claimed successfully.": "Your {{name}}.veworld.vet name has been claimed successfully.",
     "Waiting wallet confirmation...": "Waiting wallet confirmation...",
-    "Profile": "Profile"
+    "Profile": "Profile",
+    "Display name must be less than 25 characters": "Display name must be less than 25 characters",
+    "Description must be less than 100 characters": "Description must be less than 100 characters",
+    "Please enter a valid Twitter handle without @": "Please enter a valid Twitter handle without @",
+    "Website URL must start with https://": "Website URL must start with https://",
+    "Please enter a valid email address": "Please enter a valid email address",
+    "Social Links": "Social Links",
+    "Edit": "Edit"
 }

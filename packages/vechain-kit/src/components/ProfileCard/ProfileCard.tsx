@@ -18,6 +18,7 @@ import { FaEdit, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { picasso } from '@vechain/picasso';
 import { FaXTwitter } from 'react-icons/fa6';
+import { useTranslation } from 'react-i18next';
 
 export type ProfileCardProps = {
     address: string;
@@ -38,6 +39,8 @@ export const ProfileCard = ({
     showDescription = true,
     showDisplayName = true,
 }: ProfileCardProps) => {
+    const { t } = useTranslation();
+
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
 
@@ -133,7 +136,7 @@ export const ProfileCard = ({
                             )}
                             {account?.metadata?.['com.x'] && (
                                 <Link
-                                    href={`https://twitter.com/${account?.metadata?.['com.x']}`}
+                                    href={`https://x.com/${account?.metadata?.['com.x']}`}
                                     target="_blank"
                                 >
                                     <Icon as={FaXTwitter} />
@@ -156,7 +159,7 @@ export const ProfileCard = ({
                                 leftIcon={<Icon as={FaEdit} />}
                                 onClick={onEditClick ?? (() => {})}
                             >
-                                Edit
+                                {t('Edit')}
                             </Button>
                             <Button
                                 size="sm"
@@ -165,7 +168,7 @@ export const ProfileCard = ({
                                 colorScheme="red"
                                 onClick={onLogout}
                             >
-                                Logout
+                                {t('Logout')}
                             </Button>
                         </HStack>
                     </VStack>

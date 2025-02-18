@@ -39,7 +39,7 @@ import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
 import { FaXTwitter } from 'react-icons/fa6';
 
-// Add FormValues type
+// Update FormValues type to include validation
 type FormValues = {
     displayName: string;
     description: string;
@@ -79,8 +79,12 @@ export const CustomizationContent = ({
     const [initialWebsite, setInitialWebsite] = useState('');
     const [initialEmail, setInitialEmail] = useState('');
 
-    // Initialize form with account metadata
-    const { register, watch } = useForm<FormValues>({
+    // Update form initialization with validation rules
+    const {
+        register,
+        watch,
+        formState: { errors, isValid },
+    } = useForm<FormValues>({
         defaultValues: {
             displayName: account?.metadata?.display || '',
             description: account?.metadata?.description || '',
@@ -88,6 +92,7 @@ export const CustomizationContent = ({
             email: account?.metadata?.email || '',
             website: account?.metadata?.url || '',
         },
+        mode: 'onChange',
     });
 
     // Set initial values for comparison
@@ -327,59 +332,146 @@ export const CustomizationContent = ({
                                 rightIcon={MdOutlineNavigateNext}
                             />
 
-                            <FormControl isDisabled={!hasDomain}>
+                            <FormControl
+                                isDisabled={!hasDomain}
+                                isInvalid={!!errors.displayName}
+                            >
                                 <FormLabel>Display Name</FormLabel>
                                 <Input
-                                    {...register('displayName')}
+                                    {...register('displayName', {
+                                        maxLength: {
+                                            value: 25,
+                                            message: t(
+                                                'Display name must be less than 25 characters',
+                                            ),
+                                        },
+                                    })}
                                     placeholder={
                                         !hasDomain
                                             ? t('Set a domain first')
                                             : t('Enter your display name')
                                     }
                                 />
+                                {errors.displayName && (
+                                    <Text color="red.500" fontSize="sm" mt={1}>
+                                        {errors.displayName.message}
+                                    </Text>
+                                )}
                             </FormControl>
 
-                            <FormControl isDisabled={!hasDomain}>
+                            <FormControl
+                                isDisabled={!hasDomain}
+                                isInvalid={!!errors.description}
+                            >
                                 <FormLabel>Description</FormLabel>
                                 <Textarea
-                                    {...register('description')}
+                                    {...register('description', {
+                                        maxLength: {
+                                            value: 100,
+                                            message: t(
+                                                'Description must be less than 100 characters',
+                                            ),
+                                        },
+                                    })}
                                     placeholder={t('Eg: DevRel @ ENS Labs')}
-                                    maxLength={200}
                                 />
+                                {errors.description && (
+                                    <Text color="red.500" fontSize="sm" mt={1}>
+                                        {errors.description.message}
+                                    </Text>
+                                )}
                             </FormControl>
 
                             <FormControl isDisabled={!hasDomain}>
                                 <FormLabel>Social Links</FormLabel>
                                 <VStack spacing={3}>
-                                    <InputGroup>
-                                        <InputLeftElement>
-                                            <Icon as={FaXTwitter} />
-                                        </InputLeftElement>
-                                        <Input
-                                            {...register('twitter')}
-                                            placeholder={t('Twitter username')}
-                                        />
-                                    </InputGroup>
-                                    <InputGroup>
-                                        <InputLeftElement>
-                                            <Icon as={FaGlobe} />
-                                        </InputLeftElement>
-                                        <Input
-                                            {...register('website')}
-                                            placeholder={t('Website URL')}
-                                            type="url"
-                                        />
-                                    </InputGroup>
-                                    <InputGroup>
-                                        <InputLeftElement>
-                                            <Icon as={FaEnvelope} />
-                                        </InputLeftElement>
-                                        <Input
-                                            {...register('email')}
-                                            placeholder={t('Email address')}
-                                            type="email"
-                                        />
-                                    </InputGroup>
+                                    <FormControl isInvalid={!!errors.twitter}>
+                                        <InputGroup>
+                                            <InputLeftElement>
+                                                <Icon as={FaXTwitter} />
+                                            </InputLeftElement>
+                                            <Input
+                                                {...register('twitter', {
+                                                    pattern: {
+                                                        value: /^[A-Za-z0-9_]+$/,
+                                                        message: t(
+                                                            'Please enter a valid Twitter handle without @',
+                                                        ),
+                                                    },
+                                                })}
+                                                placeholder={t(
+                                                    'Twitter username',
+                                                )}
+                                            />
+                                        </InputGroup>
+                                        {errors.twitter && (
+                                            <Text
+                                                color="red.500"
+                                                fontSize="sm"
+                                                mt={1}
+                                            >
+                                                {errors.twitter.message}
+                                            </Text>
+                                        )}
+                                    </FormControl>
+
+                                    <FormControl isInvalid={!!errors.website}>
+                                        <InputGroup>
+                                            <InputLeftElement>
+                                                <Icon as={FaGlobe} />
+                                            </InputLeftElement>
+                                            <Input
+                                                {...register('website', {
+                                                    pattern: {
+                                                        value: /^https:\/\/.+/,
+                                                        message: t(
+                                                            'Website URL must start with https://',
+                                                        ),
+                                                    },
+                                                })}
+                                                placeholder={t('Website URL')}
+                                                type="url"
+                                            />
+                                        </InputGroup>
+                                        {errors.website && (
+                                            <Text
+                                                color="red.500"
+                                                fontSize="sm"
+                                                mt={1}
+                                            >
+                                                {errors.website.message}
+                                            </Text>
+                                        )}
+                                    </FormControl>
+
+                                    <FormControl isInvalid={!!errors.email}>
+                                        <InputGroup>
+                                            <InputLeftElement>
+                                                <Icon as={FaEnvelope} />
+                                            </InputLeftElement>
+                                            <Input
+                                                {...register('email', {
+                                                    pattern: {
+                                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                        message: t(
+                                                            'Please enter a valid email address',
+                                                        ),
+                                                    },
+                                                })}
+                                                placeholder={t('Email address')}
+                                                type="email"
+                                            />
+                                        </InputGroup>
+                                        {errors.email && (
+                                            <Text
+                                                color="red.500"
+                                                fontSize="sm"
+                                                mt={1}
+                                            >
+                                                {errors.email.message}
+                                            </Text>
+                                        )}
+                                    </FormControl>
                                 </VStack>
                             </FormControl>
                         </VStack>
@@ -415,7 +507,7 @@ export const CustomizationContent = ({
                         borderRadius="xl"
                         colorScheme="blue"
                         onClick={handleSaveChanges}
-                        isDisabled={!hasDomain || !hasChanges}
+                        isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}
                         loadingText={t('Preparing changes...')}
                     >
