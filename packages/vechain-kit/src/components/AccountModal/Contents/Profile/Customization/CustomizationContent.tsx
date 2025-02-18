@@ -200,7 +200,9 @@ export const CustomizationContent = ({
                 >
                     {t('Customization')}
                 </ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('profile')} />
+                <ModalBackButton
+                    onClick={() => setCurrentContent('settings')}
+                />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

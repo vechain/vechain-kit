@@ -24,6 +24,9 @@ export type ProfileCardProps = {
     onEditClick?: () => void;
     showHeader?: boolean;
     onLogout?: () => void;
+    showLinks?: boolean;
+    showDescription?: boolean;
+    showDisplayName?: boolean;
 };
 
 export const ProfileCard = ({
@@ -31,6 +34,9 @@ export const ProfileCard = ({
     address,
     showHeader = true,
     onLogout,
+    showLinks = true,
+    showDescription = true,
+    showDisplayName = true,
 }: ProfileCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
@@ -84,7 +90,7 @@ export const ProfileCard = ({
             </Box>
             <CardBody pt="14" pb="6" backgroundColor={'none'} border={'none'}>
                 <VStack w={'full'} spacing={2}>
-                    {account?.metadata?.display && (
+                    {showDisplayName && account?.metadata?.display && (
                         <Text
                             fontSize="xl"
                             fontWeight="bold"
@@ -96,13 +102,13 @@ export const ProfileCard = ({
                         </Text>
                     )}
 
-                    {account?.metadata?.description && (
+                    {showDescription && account?.metadata?.description && (
                         <Text fontSize="sm" opacity={0.7}>
                             {account?.metadata?.description}
                         </Text>
                     )}
 
-                    {hasLinks && (
+                    {showLinks && hasLinks && (
                         <HStack
                             w={'full'}
                             justify={'center'}

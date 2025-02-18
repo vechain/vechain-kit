@@ -66,7 +66,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     <AccountSelector
                         mt={0}
                         onClick={() => {
-                            setCurrentContent('profile');
+                            setCurrentContent('settings');
                         }}
                         wallet={wallet}
                     />

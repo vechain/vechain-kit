@@ -56,6 +56,8 @@ export const AddressDisplay = ({ wallet, label, style }: Props) => {
                                 cursor="pointer"
                                 value={wallet.domain}
                                 readOnly
+                                fontSize={'sm'}
+                                fontWeight={'700'}
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet.domain || '',
@@ -90,6 +92,8 @@ export const AddressDisplay = ({ wallet, label, style }: Props) => {
                                 cursor="pointer"
                                 value={humanAddress(wallet.address ?? '', 8, 7)}
                                 readOnly
+                                fontSize={'sm'}
+                                fontWeight={'700'}
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet.address ?? '',
@@ -125,6 +129,8 @@ export const AddressDisplay = ({ wallet, label, style }: Props) => {
                             cursor="pointer"
                             value={humanAddress(wallet?.address ?? '', 6, 4)}
                             readOnly
+                            fontSize={'sm'}
+                            fontWeight={'700'}
                             onClick={() =>
                                 copyToClipboard(
                                     wallet?.address ?? '',

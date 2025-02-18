@@ -6,6 +6,7 @@ import {
     ModalHeader,
     Box,
     Text,
+    Button,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
@@ -13,7 +14,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { ActionButton } from '@/components';
+import { ActionButton, ProfileCard } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
@@ -24,20 +25,25 @@ import { BsQuestionCircle } from 'react-icons/bs';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
+import { RiLogoutBoxLine } from 'react-icons/ri';
 
-type Props = {
+export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    onLogoutSuccess: () => void;
 };
 
-export const SettingsContent = ({ setCurrentContent }: Props) => {
+export const SettingsContent = ({
+    setCurrentContent,
+    onLogoutSuccess,
+}: SettingsContentProps) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
     const { privy, darkMode: isDark } = useVeChainKitConfig();
 
-    const { connection } = useWallet();
+    const { connection, account, disconnect } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -72,6 +78,29 @@ export const SettingsContent = ({ setCurrentContent }: Props) => {
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} spacing={0}>
+                    <ProfileCard
+                        showDescription={false}
+                        showLinks={false}
+                        showDisplayName={false}
+                        onEditClick={() =>
+                            setCurrentContent('account-customization')
+                        }
+                        address={account?.address ?? ''}
+                        onLogout={() => {
+                            setCurrentContent?.({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: () => {
+                                        disconnect();
+                                        onLogoutSuccess?.();
+                                    },
+                                    onBack: () =>
+                                        setCurrentContent?.('settings'),
+                                },
+                            });
+                        }}
+                    />
+
                     <ActionButton
                         style={{
                             marginTop: '10px',
@@ -162,7 +191,28 @@ export const SettingsContent = ({ setCurrentContent }: Props) => {
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter />
+            <ModalFooter>
+                <Button
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'disconnect-confirm',
+                            props: {
+                                onDisconnect: () => {
+                                    disconnect();
+                                    onLogoutSuccess();
+                                },
+                                onBack: () => setCurrentContent('settings'),
+                            },
+                        })
+                    }
+                    variant="vechainKitSecondary"
+                    leftIcon={
+                        <RiLogoutBoxLine color="#888888" fontSize={'16px'} />
+                    }
+                >
+                    {t('Logout')}
+                </Button>
+            </ModalFooter>
         </Box>
     );
 };

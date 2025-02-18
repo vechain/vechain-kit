@@ -107,7 +107,10 @@ export const AccountModal = ({
                 );
             case 'settings':
                 return (
-                    <SettingsContent setCurrentContent={setCurrentContent} />
+                    <SettingsContent
+                        setCurrentContent={setCurrentContent}
+                        onLogoutSuccess={onClose}
+                    />
                 );
             case 'profile':
                 return (
