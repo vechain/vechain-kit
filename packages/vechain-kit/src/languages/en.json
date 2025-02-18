@@ -395,5 +395,7 @@
     "Website URL must start with https://": "Website URL must start with https://",
     "Please enter a valid email address": "Please enter a valid email address",
     "Social Links": "Social Links",
-    "Edit": "Edit"
+    "Edit": "Edit",
+    "Amount is required": "Amount is required",
+    "Please enter a valid number": "Please enter a valid number"
 }
