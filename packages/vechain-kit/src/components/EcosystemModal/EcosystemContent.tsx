@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    Icon,
     Image,
     ModalBody,
     ModalCloseButton,
@@ -21,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
 import { handlePopupError } from '@/utils/handlePopupError';
-import { IoMdApps } from 'react-icons/io';
 
 type Props = {
     onClose: () => void;
@@ -105,8 +103,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                         display={'flex'}
                         gap={2}
                     >
-                        <Icon as={IoMdApps} size={'20px'} />
-                        {t('Select an app')}
+                        {t('Already have an app account?')}
                     </ModalHeader>
                     <ModalCloseButton />
                 </StickyHeaderContainer>

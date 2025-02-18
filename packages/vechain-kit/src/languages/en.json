@@ -399,5 +399,7 @@
     "Amount is required": "Amount is required",
     "Please enter a valid number": "Please enter a valid number",
     "Use social login with VeChain": "Use social login with VeChain",
-    "Connecting to VeChain": "Connecting to VeChain"
+    "Connecting to VeChain": "Connecting to VeChain",
+    "Already have an app account?": "Already have an app account?",
+    "Other options": "Other options"
 }

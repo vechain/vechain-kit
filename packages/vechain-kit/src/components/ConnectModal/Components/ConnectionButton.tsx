@@ -8,6 +8,7 @@ interface ConnectionButtonProps {
     text?: string;
     icon?: IconType;
     customIcon?: ReactElement;
+    rightIcon?: ReactElement;
 }
 
 export const ConnectionButton = ({
@@ -16,6 +17,7 @@ export const ConnectionButton = ({
     text,
     icon,
     customIcon,
+    rightIcon,
 }: ConnectionButtonProps) => {
     // If text not provided we just show a button with an icon
     if (!text) {
@@ -59,8 +61,11 @@ export const ConnectionButton = ({
                     ) : (
                         <Icon as={icon} w={'25px'} h={'25px'} />
                     )}
-                    <Text ml={customIcon ? 1 : 0}>{text}</Text>
+                    <Text opacity={0.9} ml={customIcon ? 1 : 0}>
+                        {text}
+                    </Text>
                 </HStack>
+                {rightIcon}
             </Button>
         );
     }

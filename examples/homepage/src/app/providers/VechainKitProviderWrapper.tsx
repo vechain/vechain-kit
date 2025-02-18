@@ -89,12 +89,12 @@ export function VechainKitProviderWrapper({ children }: Props) {
             }}
             loginMethods={[
                 // { method: 'email', gridColumn: 4 },
-                { method: 'google', gridColumn: 4 },
+                // { method: 'google', gridColumn: 4 },
                 { method: 'vechain', gridColumn: 4 },
-                { method: 'dappkit', gridColumn: 1 },
-                { method: 'ecosystem', gridColumn: 1 },
-                { method: 'passkey', gridColumn: 1 },
-                { method: 'more', gridColumn: 1 },
+                { method: 'dappkit', gridColumn: 4 },
+                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'passkey', gridColumn: 1 },
+                // { method: 'more', gridColumn: 1 },
             ]}
             darkMode={isDarkMode}
             language={i18n.language}
