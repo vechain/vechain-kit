@@ -101,8 +101,9 @@ export const ChooseNameSummaryContent = ({
                             },
                         })
                     }
+                    isDisabled={isTransactionPending}
                 />
-                <ModalCloseButton />
+                <ModalCloseButton isDisabled={isTransactionPending} />
             </StickyHeaderContainer>
 
             <ModalBody>
