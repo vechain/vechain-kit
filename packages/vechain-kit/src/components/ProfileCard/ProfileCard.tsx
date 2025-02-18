@@ -14,7 +14,7 @@ import {
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { FaEdit, FaEnvelope, FaGlobe, FaShare } from 'react-icons/fa';
+import { FaEdit, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { picasso } from '@vechain/picasso';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -149,7 +149,7 @@ export const ProfileCard = ({
                 <CardFooter pt={0} justify="space-between">
                     <VStack w="full" justify="space-between" spacing={4}>
                         <Divider />
-                        <HStack w="full" justify="space-between">
+                        <HStack w="full" justify="space-around">
                             <Button
                                 size="sm"
                                 variant="ghost"
@@ -157,13 +157,6 @@ export const ProfileCard = ({
                                 onClick={onEditClick ?? (() => {})}
                             >
                                 Edit
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                leftIcon={<Icon as={FaShare} />}
-                            >
-                                Share
                             </Button>
                             <Button
                                 size="sm"
