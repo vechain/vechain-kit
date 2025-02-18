@@ -52,9 +52,9 @@ export function FeaturesToTry() {
             content: openChooseNameModal,
         },
         {
-            title: 'Set Profile Image',
+            title: 'Customize Profile',
             description:
-                'Customize your account with a profile image to enhance your identity across VeChain applications.',
+                'Customize your account with a profile image, display name, bio and more to enhance your identity across VeChain applications.',
             icon: CgProfile,
             link: '#',
             content: openAccountCustomizationModal,

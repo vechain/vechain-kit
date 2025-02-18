@@ -1,12 +1,18 @@
 'use client';
 
 import { VStack, Text, Button, Box, HStack, Grid } from '@chakra-ui/react';
-import { WalletButton, useAccountModal } from '@vechain/vechain-kit';
+import {
+    WalletButton,
+    useAccountModal,
+    ProfileCard,
+    useWallet,
+} from '@vechain/vechain-kit';
 import { MdBrush } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export function UIControls() {
     const { open } = useAccountModal();
+    const { account } = useWallet();
 
     return (
         <CollapsibleCard
@@ -212,6 +218,29 @@ export function UIControls() {
                         </VStack>
                     </HStack>
                 </HStack>
+                <VStack
+                    w={'full'}
+                    justifyContent={'center'}
+                    spacing={6}
+                    p={6}
+                    borderRadius="md"
+                    bg="whiteAlpha.50"
+                >
+                    <Text fontWeight="bold">Profile Cards</Text>
+                    <Text fontSize="sm" textAlign="center" color="gray.400">
+                        Import the profile card component and use it in your
+                        app. You can pass in an address and it will display all
+                        the information set by the user. You can decide to hide
+                        specific sections. (Customize your profile to see how
+                        this card changes)
+                    </Text>
+                    <VStack w={'fit-content'}>
+                        <ProfileCard
+                            address={account?.address ?? ''}
+                            showEdit={false}
+                        />
+                    </VStack>
+                </VStack>
             </VStack>
         </CollapsibleCard>
     );

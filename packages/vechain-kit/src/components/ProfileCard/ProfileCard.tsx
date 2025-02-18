@@ -12,22 +12,28 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
-import { useWallet } from '@/hooks';
+import {
+    useGetAvatar,
+    useGetTextRecords,
+    useVechainDomain,
+    useWallet,
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { FaEdit, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
-import { picasso } from '@vechain/picasso';
 import { FaXTwitter } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
+import { convertUriToUrl, getPicassoImage } from '@/utils';
 
 export type ProfileCardProps = {
     address: string;
     onEditClick?: () => void;
-    showHeader?: boolean;
     onLogout?: () => void;
+    showHeader?: boolean;
     showLinks?: boolean;
     showDescription?: boolean;
     showDisplayName?: boolean;
+    showEdit?: boolean;
 };
 
 export const ProfileCard = ({
@@ -38,21 +44,27 @@ export const ProfileCard = ({
     showLinks = true,
     showDescription = true,
     showDisplayName = true,
+    showEdit = true,
 }: ProfileCardProps) => {
     const { t } = useTranslation();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, network } = useVeChainKitConfig();
     const { account } = useWallet();
 
+    const activeAccountDomain = useVechainDomain(address);
+    const activeAccountAvatar = useGetAvatar(activeAccountDomain?.data?.domain);
+    const activeAccountTextRecords = useGetTextRecords(
+        activeAccountDomain?.data?.domain,
+    );
     const baseBackgroundColor = isDark ? 'whiteAlpha.100' : '#00000005';
-    const headerImageSvg = picasso(account?.address ?? '');
+    const headerImageSvg = getPicassoImage(address);
 
     const isConnectedAccount = address === account?.address;
 
     const hasLinks =
-        account?.metadata?.url ||
-        account?.metadata?.['com.x'] ||
-        account?.metadata?.email;
+        activeAccountTextRecords?.data?.url ||
+        activeAccountTextRecords?.data?.['com.x'] ||
+        activeAccountTextRecords?.data?.email;
 
     return (
         <Card
@@ -69,9 +81,7 @@ export const ProfileCard = ({
                 position="relative"
                 h="80px"
                 background={
-                    showHeader
-                        ? `no-repeat url('data:image/svg+xml;utf8,${headerImageSvg}')`
-                        : 'none'
+                    showHeader ? `no-repeat url('${headerImageSvg}')` : 'none'
                 }
                 w="100%"
                 borderRadius="14px 14px 0 0"
@@ -83,7 +93,20 @@ export const ProfileCard = ({
                 transform="translateX(-50%)"
             >
                 <AccountAvatar
-                    wallet={account}
+                    wallet={{
+                        address,
+                        domain: activeAccountDomain?.data?.domain,
+                        image:
+                            convertUriToUrl(
+                                activeAccountAvatar?.data ?? '',
+                                network.type,
+                            ) ?? getPicassoImage(address),
+                        isLoadingMetadata:
+                            activeAccountAvatar?.isLoading ||
+                            activeAccountDomain?.isLoading ||
+                            activeAccountTextRecords?.isLoading,
+                        metadata: activeAccountTextRecords?.data,
+                    }}
                     props={{
                         width: '100px',
                         height: '100px',
@@ -93,23 +116,25 @@ export const ProfileCard = ({
             </Box>
             <CardBody pt="14" pb="6" backgroundColor={'none'} border={'none'}>
                 <VStack w={'full'} spacing={2}>
-                    {showDisplayName && account?.metadata?.display && (
-                        <Text
-                            fontSize="xl"
-                            fontWeight="bold"
-                            w="full"
-                            textAlign="center"
-                            mt={2}
-                        >
-                            {account?.metadata?.display}
-                        </Text>
-                    )}
+                    {showDisplayName &&
+                        activeAccountTextRecords?.data?.display && (
+                            <Text
+                                fontSize="xl"
+                                fontWeight="bold"
+                                w="full"
+                                textAlign="center"
+                                mt={2}
+                            >
+                                {activeAccountTextRecords?.data?.display}
+                            </Text>
+                        )}
 
-                    {showDescription && account?.metadata?.description && (
-                        <Text fontSize="sm" opacity={0.7}>
-                            {account?.metadata?.description}
-                        </Text>
-                    )}
+                    {showDescription &&
+                        activeAccountTextRecords?.data?.description && (
+                            <Text fontSize="sm" opacity={0.7}>
+                                {activeAccountTextRecords?.data?.description}
+                            </Text>
+                        )}
 
                     {showLinks && hasLinks && (
                         <HStack
@@ -118,25 +143,25 @@ export const ProfileCard = ({
                             spacing={5}
                             mt={4}
                         >
-                            {account?.metadata?.email && (
+                            {activeAccountTextRecords?.data?.email && (
                                 <Link
-                                    href={`mailto:${account?.metadata?.email}`}
+                                    href={`mailto:${activeAccountTextRecords?.data?.email}`}
                                     target="_blank"
                                 >
                                     <Icon as={FaEnvelope} />
                                 </Link>
                             )}
-                            {account?.metadata?.url && (
+                            {activeAccountTextRecords?.data?.url && (
                                 <Link
-                                    href={account?.metadata?.url}
+                                    href={activeAccountTextRecords?.data?.url}
                                     target="_blank"
                                 >
                                     <Icon as={FaGlobe} />
                                 </Link>
                             )}
-                            {account?.metadata?.['com.x'] && (
+                            {activeAccountTextRecords?.data?.['com.x'] && (
                                 <Link
-                                    href={`https://x.com/${account?.metadata?.['com.x']}`}
+                                    href={`https://x.com/${activeAccountTextRecords?.data?.['com.x']}`}
                                     target="_blank"
                                 >
                                     <Icon as={FaXTwitter} />
@@ -145,10 +170,26 @@ export const ProfileCard = ({
                         </HStack>
                     )}
 
-                    <AddressDisplay wallet={account} style={{ mt: 4 }} />
+                    <AddressDisplay
+                        wallet={{
+                            address,
+                            domain: activeAccountDomain?.data?.domain,
+                            image:
+                                convertUriToUrl(
+                                    activeAccountAvatar?.data ?? '',
+                                    network.type,
+                                ) ?? getPicassoImage(address),
+                            isLoadingMetadata:
+                                activeAccountAvatar?.isLoading ||
+                                activeAccountDomain?.isLoading ||
+                                activeAccountTextRecords?.isLoading,
+                            metadata: activeAccountTextRecords?.data,
+                        }}
+                        style={{ mt: 4 }}
+                    />
                 </VStack>
             </CardBody>
-            {isConnectedAccount && (
+            {isConnectedAccount && showEdit && (
                 <CardFooter pt={0} justify="space-between">
                     <VStack w="full" justify="space-between" spacing={4}>
                         <Divider />
