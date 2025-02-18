@@ -216,10 +216,7 @@ export const VeChainKitProvider = (
         privy,
         feeDelegation,
         dappKit,
-        loginModalUI = {
-            description:
-                'Choose between social login through VeChain or by connecting your wallet.',
-        },
+        loginModalUI,
         loginMethods,
         darkMode = false,
         i18n: i18nConfig,

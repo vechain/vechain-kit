@@ -397,5 +397,7 @@
     "Social Links": "Social Links",
     "Edit": "Edit",
     "Amount is required": "Amount is required",
-    "Please enter a valid number": "Please enter a valid number"
+    "Please enter a valid number": "Please enter a valid number",
+    "Use social login with VeChain": "Use social login with VeChain",
+    "Connecting to VeChain": "Connecting to VeChain"
 }

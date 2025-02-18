@@ -197,7 +197,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                             fontSize={'sm'}
                             textAlign={'center'}
                         >
-                            {loginModalUI?.description || t('Login')}
+                            {loginModalUI?.description}
                         </Text>
                     </HStack>
                 )}

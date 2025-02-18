@@ -1,8 +1,7 @@
-import { Divider, GridItem, HStack, Text } from '@chakra-ui/react';
+import { GridItem } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton, EmailLoginButton } from '@/components';
 import { VechainKitProviderProps } from '@/providers';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
 
@@ -25,16 +24,16 @@ export const SocialLoginButtons = ({
     );
 
     return (
-        <GridItem colSpan={gridColumn} w={'full'}>
-            {selfHostedPrivyLoginMethods?.map((loginMethod, index) => (
-                <React.Fragment key={loginMethod.method}>
+        <>
+            {selfHostedPrivyLoginMethods?.map((loginMethod) => (
+                <>
                     {loginMethod.method === 'email' && (
                         <GridItem colSpan={4} w={'full'}>
                             <EmailLoginButton />
                         </GridItem>
                     )}
                     {loginMethod.method === 'google' && (
-                        <GridItem colSpan={4} w={'full'}>
+                        <GridItem colSpan={gridColumn ?? 4} w={'full'}>
                             <ConnectionButton
                                 isDark={isDark}
                                 onClick={() =>
@@ -47,19 +46,8 @@ export const SocialLoginButtons = ({
                             />
                         </GridItem>
                     )}
-
-                    {index !==
-                        (selfHostedPrivyLoginMethods?.length ?? 0) - 1 && (
-                        <GridItem colSpan={4} w={'full'}>
-                            <HStack>
-                                <Divider />
-                                <Text fontSize={'xs'}>or</Text>
-                                <Divider />
-                            </HStack>
-                        </GridItem>
-                    )}
-                </React.Fragment>
+                </>
             ))}
-        </GridItem>
+        </>
     );
 };

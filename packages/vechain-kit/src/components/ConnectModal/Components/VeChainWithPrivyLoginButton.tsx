@@ -9,6 +9,9 @@ type Props = {
     gridColumn?: number;
 };
 
+/// This button is used to login with VeChain using Privy on
+/// platforms like VeBetterDAO and VeChain Kit Homepage.
+/// It is a very specific scenario.
 export const VeChainWithPrivyLoginButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
     const { login: viewMoreLogin } = usePrivy();
@@ -19,7 +22,7 @@ export const VeChainWithPrivyLoginButton = ({ isDark, gridColumn }: Props) => {
                 isDark={isDark}
                 onClick={viewMoreLogin}
                 customIcon={<VechainLogo boxSize={'20px'} isDark={isDark} />}
-                text={t('Login with VeChain')}
+                text={t('Use social login with VeChain')}
             />
         </GridItem>
     );

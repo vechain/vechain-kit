@@ -42,9 +42,9 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                     isDark={isDark}
                     onClick={handleLoginWithVeChain}
                     customIcon={
-                        <VechainLogo boxSize={'20px'} isDark={isDark} />
+                        <VechainLogo boxSize={'22px'} isDark={isDark} />
                     }
-                    text={t('Login with VeChain')}
+                    text={t('Use social login with VeChain')}
                 />
             </GridItem>
 
@@ -55,7 +55,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                 }}
                 onTryAgain={handleLoginWithVeChain}
                 error={loginError}
-                title={t('Connecting with VeChain')}
+                title={t('Connecting to VeChain')}
                 loadingText={t(
                     'Please approve the request in the connection request window...',
                 )}
