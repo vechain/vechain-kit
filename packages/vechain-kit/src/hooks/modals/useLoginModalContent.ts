@@ -3,7 +3,8 @@ import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { useMemo } from 'react';
 
 type LoginModalContentConfig = {
-    showSocialLogin: boolean;
+    showGoogleLogin: boolean;
+    showEmailLogin: boolean;
     showPasskey: boolean;
     showVeChainLogin: boolean;
     showDappKit: boolean;
@@ -46,8 +47,12 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         () => isLoginMethodEnabled('passkey'),
         [loginMethods],
     );
-    const showLoginWithSocial = useMemo(
-        () => isLoginMethodEnabled(['google', 'email']),
+    const showLoginWithEmail = useMemo(
+        () => isLoginMethodEnabled('email'),
+        [loginMethods],
+    );
+    const showLoginWithGoogle = useMemo(
+        () => isLoginMethodEnabled('google'),
         [loginMethods],
     );
     const showMoreLogin = useMemo(
@@ -57,7 +62,8 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
 
     // Base configuration that's common across all cases
     const baseConfig: LoginModalContentConfig = {
-        showSocialLogin: showLoginWithSocial,
+        showGoogleLogin: showLoginWithGoogle,
+        showEmailLogin: showLoginWithEmail,
         showPasskey: showLoginWithPasskey,
         showVeChainLogin: showLoginWithVeChain,
         showDappKit: showLoginWithDappKit,
@@ -70,7 +76,8 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         // External apps (no self hosted privy)
         return {
             ...baseConfig,
-            showSocialLogin: false,
+            showGoogleLogin: false,
+            showEmailLogin: false,
             showPasskey: false,
         };
     }

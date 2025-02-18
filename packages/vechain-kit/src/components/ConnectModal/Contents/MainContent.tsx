@@ -20,13 +20,16 @@ import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect, useMemo } from 'react';
 import { useFetchAppInfo, useWallet } from '@/hooks';
 import { VeChainLoginButton } from '../Components/VeChainLoginButton';
-import { SocialLoginButtons } from '../Components/SocialLoginButtons';
 import { PasskeyLoginButton } from '../Components/PasskeyLoginButton';
 import { DappKitButton } from '../Components/DappKitButton';
 import { EcosystemButton } from '../Components/EcosystemButton';
 import { PrivyButton } from '../Components/PrivyButton';
 import { useTranslation } from 'react-i18next';
-import { VeChainWithPrivyLoginButton } from '../Components';
+import {
+    EmailLoginButton,
+    LoginWithGoogleButton,
+    VeChainWithPrivyLoginButton,
+} from '../Components';
 import { useLoginModalContent } from '@/hooks';
 
 type Props = {
@@ -47,7 +50,8 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { login: viewMoreLogin } = usePrivy();
 
     const {
-        showSocialLogin,
+        showGoogleLogin,
+        showEmailLogin,
         showPasskey,
         showVeChainLogin,
         showDappKit,
@@ -75,8 +79,10 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
             loginMethods.forEach(({ method, gridColumn }) => {
                 switch (method) {
                     case 'email':
+                        layout.emailLoginColumn = gridColumn || 4;
+                        break;
                     case 'google':
-                        layout.socialLoginColumn = gridColumn || 4;
+                        layout.googleLoginColumn = gridColumn || 4;
                         break;
                     case 'vechain':
                         layout.veChainColumn = gridColumn || 4;
@@ -101,7 +107,8 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
 
         // Fall back to existing layout logic if no order is specified
         const visibleButtons = {
-            socialLogin: showSocialLogin,
+            googleLogin: showGoogleLogin,
+            emailLogin: showEmailLogin,
             veChainLogin: showVeChainLogin,
             dappKit: showDappKit,
             ecosystem: showEcosystem,
@@ -114,7 +121,8 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
             visibleButtons.veChainLogin &&
             visibleButtons.dappKit &&
             visibleButtons.ecosystem &&
-            !visibleButtons.socialLogin
+            !visibleButtons.googleLogin &&
+            !visibleButtons.emailLogin
         ) {
             return {
                 veChainColumn: 4, // Full width
@@ -124,9 +132,9 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
         }
 
         // For cases with social login (self hosted privy)
-        if (visibleButtons.socialLogin) {
+        if (visibleButtons.googleLogin) {
             return {
-                socialLoginColumn: 4,
+                googleLoginColumn: 4,
                 veChainColumn: 4,
                 dappKitColumn: 1,
                 ecosystemColumn: 1,
@@ -148,7 +156,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
         };
     }, [
         loginMethods,
-        showSocialLogin,
+        showGoogleLogin,
         showVeChainLogin,
         showDappKit,
         showEcosystem,
@@ -204,56 +212,155 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
 
                 <Stack spacing={4} w={'full'} align={'center'}>
                     <Grid templateColumns="repeat(4, 1fr)" gap={2} w={'full'}>
-                        {showSocialLogin && (
-                            <SocialLoginButtons
-                                isDark={isDark}
-                                loginMethods={loginMethods}
-                                gridColumn={gridLayout.socialLoginColumn}
-                            />
-                        )}
+                        {loginMethods?.map(({ method, gridColumn }) => {
+                            switch (method) {
+                                case 'email':
+                                    return (
+                                        showEmailLogin && <EmailLoginButton />
+                                    );
+                                case 'google':
+                                    return (
+                                        showGoogleLogin && (
+                                            <LoginWithGoogleButton
+                                                isDark={isDark}
+                                                gridColumn={gridColumn}
+                                            />
+                                        )
+                                    );
+                                case 'vechain':
+                                    return (
+                                        showVeChainLogin &&
+                                        (isOfficialVeChainApp ? (
+                                            <VeChainWithPrivyLoginButton
+                                                key="vechain"
+                                                isDark={isDark}
+                                                gridColumn={gridColumn}
+                                            />
+                                        ) : (
+                                            <VeChainLoginButton
+                                                key="vechain"
+                                                isDark={isDark}
+                                                gridColumn={gridColumn}
+                                            />
+                                        ))
+                                    );
+                                case 'passkey':
+                                    return (
+                                        showPasskey && (
+                                            <PasskeyLoginButton
+                                                key="passkey"
+                                                isDark={isDark}
+                                                gridColumn={gridColumn}
+                                            />
+                                        )
+                                    );
+                                case 'dappkit':
+                                    return (
+                                        showDappKit && (
+                                            <DappKitButton
+                                                key="dappkit"
+                                                isDark={isDark}
+                                                gridColumn={gridColumn}
+                                            />
+                                        )
+                                    );
+                                case 'ecosystem':
+                                    return (
+                                        showEcosystem && (
+                                            <EcosystemButton
+                                                key="ecosystem"
+                                                isDark={isDark}
+                                                appsInfo={Object.values(
+                                                    appsInfo || {},
+                                                )}
+                                                isLoading={
+                                                    isEcosystemAppsLoading
+                                                }
+                                                gridColumn={gridColumn}
+                                            />
+                                        )
+                                    );
+                                case 'more':
+                                    return (
+                                        showMoreLogin && (
+                                            <PrivyButton
+                                                key="more"
+                                                isDark={isDark}
+                                                onViewMoreLogin={viewMoreLogin}
+                                                gridColumn={gridColumn}
+                                            />
+                                        )
+                                    );
+                                default:
+                                    return null;
+                            }
+                        })}
 
-                        {showVeChainLogin &&
-                            (isOfficialVeChainApp ? (
-                                <VeChainWithPrivyLoginButton
-                                    isDark={isDark}
-                                    gridColumn={gridLayout.veChainColumn}
-                                />
-                            ) : (
-                                <VeChainLoginButton
-                                    isDark={isDark}
-                                    gridColumn={gridLayout.veChainColumn}
-                                />
-                            ))}
+                        {!loginMethods?.length && (
+                            <Grid
+                                templateColumns="repeat(4, 1fr)"
+                                gap={2}
+                                w={'full'}
+                            >
+                                {showGoogleLogin && (
+                                    <LoginWithGoogleButton
+                                        isDark={isDark}
+                                        gridColumn={
+                                            gridLayout.googleLoginColumn
+                                        }
+                                    />
+                                )}
 
-                        {gridLayout.passkeyColumn && (
-                            <PasskeyLoginButton
-                                isDark={isDark}
-                                gridColumn={gridLayout.passkeyColumn}
-                            />
-                        )}
+                                {showEmailLogin && <EmailLoginButton />}
 
-                        {showDappKit && (
-                            <DappKitButton
-                                isDark={isDark}
-                                gridColumn={gridLayout.dappKitColumn}
-                            />
-                        )}
+                                {showVeChainLogin &&
+                                    (isOfficialVeChainApp ? (
+                                        <VeChainWithPrivyLoginButton
+                                            isDark={isDark}
+                                            gridColumn={
+                                                gridLayout.veChainColumn
+                                            }
+                                        />
+                                    ) : (
+                                        <VeChainLoginButton
+                                            isDark={isDark}
+                                            gridColumn={
+                                                gridLayout.veChainColumn
+                                            }
+                                        />
+                                    ))}
 
-                        {showEcosystem && (
-                            <EcosystemButton
-                                isDark={isDark}
-                                appsInfo={Object.values(appsInfo || {})}
-                                isLoading={isEcosystemAppsLoading}
-                                gridColumn={gridLayout.ecosystemColumn}
-                            />
-                        )}
+                                {gridLayout.passkeyColumn && (
+                                    <PasskeyLoginButton
+                                        isDark={isDark}
+                                        gridColumn={gridLayout.passkeyColumn}
+                                    />
+                                )}
 
-                        {showMoreLogin && (
-                            <PrivyButton
-                                isDark={isDark}
-                                onViewMoreLogin={viewMoreLogin}
-                                gridColumn={gridLayout.moreLoginColumn}
-                            />
+                                {showDappKit && (
+                                    <DappKitButton
+                                        isDark={isDark}
+                                        gridColumn={gridLayout.dappKitColumn}
+                                    />
+                                )}
+
+                                {showEcosystem && (
+                                    <EcosystemButton
+                                        isDark={isDark}
+                                        appsInfo={Object.values(appsInfo || {})}
+                                        isLoading={isEcosystemAppsLoading}
+                                        gridColumn={gridLayout.ecosystemColumn}
+                                    />
+                                )}
+
+                                {showMoreLogin && (
+                                    <PrivyButton
+                                        isDark={isDark}
+                                        onViewMoreLogin={viewMoreLogin}
+                                        gridColumn={gridLayout.moreLoginColumn}
+                                    />
+                                )}
+                            </Grid>
                         )}
                     </Grid>
                 </Stack>

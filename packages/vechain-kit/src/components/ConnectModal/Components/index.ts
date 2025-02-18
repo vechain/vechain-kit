@@ -3,7 +3,7 @@ export * from './EmailLoginButton';
 export * from './VeChainLoginButton';
 export * from './EcosystemButton';
 export * from './PrivyButton';
-export * from './SocialLoginButtons';
+export * from './LoginWithGoogleButton';
 export * from './PasskeyLoginButton';
 export * from './DappKitButton';
 export * from './VeChainWithPrivyLoginButton';
