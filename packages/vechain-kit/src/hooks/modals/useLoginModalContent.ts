@@ -68,7 +68,7 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         showVeChainLogin: showLoginWithVeChain,
         showDappKit: showLoginWithDappKit,
         showEcosystem: showEcosystemLogin,
-        showMoreLogin: false,
+        showMoreLogin: showMoreLogin,
         isOfficialVeChainApp: false,
     };
 
@@ -79,6 +79,7 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
             showGoogleLogin: false,
             showEmailLogin: false,
             showPasskey: false,
+            showMoreLogin: false,
         };
     }
 
@@ -93,6 +94,5 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
     // Self hosted privy app
     return {
         ...baseConfig,
-        showMoreLogin,
     };
 };
