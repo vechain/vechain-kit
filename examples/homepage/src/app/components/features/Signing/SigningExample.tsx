@@ -185,7 +185,7 @@ export function SigningExample(): ReactElement {
                     <Button
                         as={Link}
                         isExternal
-                        href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/SigningExample/SigningExample.tsx"
+                        href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/SigningExample/SigningExample.tsx"
                         w="full"
                         variant="outline"
                         rightIcon={<FaCode />}
