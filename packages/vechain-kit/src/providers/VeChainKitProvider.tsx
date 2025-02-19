@@ -39,15 +39,15 @@ const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'cm153hrup0817axti38avlfyg', //greencart
 ];
 
+type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
+type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
+
 type LoginMethodOrder = {
     method:
-        | 'email'
-        | 'google'
-        | 'passkey'
-        | 'vechain'
-        | 'dappkit'
-        | 'ecosystem'
-        | 'more';
+        | AlwaysAvailableMethods
+        | (VechainKitProviderProps['privy'] extends undefined
+              ? never
+              : PrivyDependentMethods);
     gridColumn?: number;
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
 };
@@ -150,24 +150,86 @@ export const useVeChainKitConfig = () => {
     return context;
 };
 
+const validateConfig = (
+    props: Omit<VechainKitProviderProps, 'queryClient'>,
+) => {
+    const errors: string[] = [];
+
+    // Validate fee delegation
+    if (!props.feeDelegation) {
+        errors.push('feeDelegation configuration is required');
+    } else {
+        if (!props.feeDelegation.delegatorUrl) {
+            errors.push('feeDelegation.delegatorUrl is required');
+        }
+    }
+
+    // Validate network
+    if (!props.network) {
+        errors.push('network configuration is required');
+    } else {
+        if (!props.network.type) {
+            errors.push('network.type is required');
+        }
+        if (!['main', 'test'].includes(props.network.type)) {
+            errors.push('network.type must be either "main" or "test"');
+        }
+    }
+
+    // Validate login methods if Privy is not configured
+    if (props.loginMethods) {
+        if (!props.privy) {
+            const invalidMethods = props.loginMethods.filter((method) =>
+                ['email', 'google', 'passkey', 'more'].includes(method.method),
+            );
+
+            if (invalidMethods.length > 0) {
+                errors.push(
+                    `Login methods ${invalidMethods
+                        .map((m) => `"${m.method}"`)
+                        .join(', ')} require Privy configuration. ` +
+                        `Please either remove these methods or configure the privy prop.`,
+                );
+            }
+        }
+    }
+
+    if (errors.length > 0) {
+        throw new Error(
+            'VeChainKit Configuration Error:\n' + errors.join('\n'),
+        );
+    }
+
+    return props;
+};
+
 /**
  * Provider to wrap the application with Privy and DAppKit
  */
-export const VeChainKitProvider = ({
-    children,
-    privy,
-    feeDelegation,
-    dappKit,
-    loginModalUI = {
-        description:
-            'Choose between social login through VeChain or by connecting your wallet.',
-    },
-    loginMethods,
-    darkMode = false,
-    i18n: i18nConfig,
-    language = 'en',
-    network,
-}: Omit<VechainKitProviderProps, 'queryClient'>) => {
+export const VeChainKitProvider = (
+    props: Omit<VechainKitProviderProps, 'queryClient'>,
+) => {
+    // Validate all configurations at the start
+    const validatedProps = validateConfig(props);
+    const {
+        children,
+        privy,
+        feeDelegation,
+        dappKit,
+        loginModalUI = {
+            description:
+                'Choose between social login through VeChain or by connecting your wallet.',
+        },
+        loginMethods,
+        darkMode = false,
+        i18n: i18nConfig,
+        language = 'en',
+        network,
+    } = validatedProps;
+
+    // Remove the validateLoginMethods call since it's now handled in validateConfig
+    const validatedLoginMethods = loginMethods;
+
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
     const closeConnectModal = useCallback(
@@ -206,13 +268,13 @@ export const VeChainKitProvider = ({
         useState<AccountModalContentTypes>('main');
 
     const allowedEcosystemApps = useMemo(() => {
-        const userEcosystemMethods = loginMethods?.find(
+        const userEcosystemMethods = validatedLoginMethods?.find(
             (method) => method.method === 'ecosystem',
         );
         return (
             userEcosystemMethods?.allowedApps ?? DEFAULT_PRIVY_ECOSYSTEM_APP_IDS
         );
-    }, [loginMethods]);
+    }, [validatedLoginMethods]);
 
     let privyAppId: string, privyClientId: string;
     if (!privy) {
@@ -258,7 +320,7 @@ export const VeChainKitProvider = ({
                         feeDelegation,
                         dappKit,
                         loginModalUI,
-                        loginMethods,
+                        loginMethods: validatedLoginMethods,
                         darkMode,
                         i18n: i18nConfig,
                         language,
