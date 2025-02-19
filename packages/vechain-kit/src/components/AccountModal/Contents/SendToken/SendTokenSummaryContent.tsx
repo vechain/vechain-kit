@@ -3,28 +3,25 @@ import {
     ModalCloseButton,
     ModalHeader,
     VStack,
-    Button,
     Text,
     HStack,
     Divider,
     ModalFooter,
-    useDisclosure,
-    Icon,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplayCard,
+    TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
 import { useTransferERC20, useTransferVET, useWallet } from '@/hooks';
-import { ExchangeWarningAlert, TransactionModal } from '@/components';
-import { GiConfirmed } from 'react-icons/gi';
+import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { convertUriToUrl } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -67,9 +64,10 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connection } = useWallet();
-    const transactionModal = useDisclosure();
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
+
+    const [error, setError] = useState<string | null>(null);
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {
@@ -79,35 +77,100 @@ export const SendTokenSummaryContent = ({
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
 
-    const transferERC20 = useTransferERC20({
+    const {
+        sendTransaction: transferERC20,
+        txReceipt: transferERC20Receipt,
+        error: transferERC20Error,
+        isWaitingForWalletConfirmation:
+            transferERC20WaitingForWalletConfirmation,
+        isTransactionPending: transferERC20Pending,
+    } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
+        onSuccess: () => {
+            setError(null);
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId: transferERC20Receipt?.meta.txID,
+                    title: t('Transaction successful'),
+                    onDone: () => {
+                        setCurrentContent('main');
+                    },
+                    showSocialButtons: true,
+                },
+            });
+        },
+        onError: () => {
+            setError(
+                transferERC20Error?.reason ??
+                    t('Something went wrong. Please try again.'),
+            );
+        },
     });
 
-    const transferVET = useTransferVET({
+    const {
+        sendTransaction: transferVET,
+        txReceipt: transferVETReceipt,
+        error: transferVETError,
+        isWaitingForWalletConfirmation: transferVETWaitingForWalletConfirmation,
+        isTransactionPending: transferVETPending,
+    } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
+        onSuccess: () => {
+            setError(null);
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId: transferVETReceipt?.meta.txID,
+                    title: t('Transaction successful'),
+                    onDone: () => {
+                        setCurrentContent('main');
+                    },
+                    showSocialButtons: true,
+                },
+            });
+        },
+        onError: () => {
+            setError(
+                transferVETError?.reason ??
+                    t('Something went wrong. Please try again.'),
+            );
+        },
     });
 
+    const getTxReceipt = () => {
+        return selectedToken.symbol === 'VET'
+            ? transferVETReceipt
+            : transferERC20Receipt;
+    };
+
     const handleSend = async () => {
-        transactionModal.onOpen();
         try {
+            setError(null);
+
             if (selectedToken.symbol === 'VET') {
-                await transferVET.sendTransaction();
+                await transferVET();
             } else {
-                await transferERC20.sendTransaction();
+                await transferERC20();
             }
         } catch (error) {
             console.error(t('Transaction failed:'), error);
         }
     };
 
-    const { status, error, txReceipt } =
-        selectedToken.symbol === 'VET' ? transferVET : transferERC20;
+    const isTxWaitingConfirmation =
+        transferERC20WaitingForWalletConfirmation ||
+        transferVETWaitingForWalletConfirmation;
+    const isSubmitting =
+        isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
 
     return (
         <>
@@ -121,6 +184,7 @@ export const SendTokenSummaryContent = ({
                     Send
                 </ModalHeader>
                 <ModalBackButton
+                    isDisabled={isSubmitting}
                     onClick={() =>
                         setCurrentContent({
                             type: 'send-token',
@@ -130,7 +194,7 @@ export const SendTokenSummaryContent = ({
                         })
                     }
                 />
-                <ModalCloseButton />
+                <ModalCloseButton isDisabled={isSubmitting} />
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -198,35 +262,16 @@ export const SendTokenSummaryContent = ({
 
             {/* <StickyFooterContainer> */}
             <ModalFooter>
-                <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
-                    colorScheme="blue"
-                    onClick={handleSend}
-                    rightIcon={<Icon as={GiConfirmed} />}
-                >
-                    {t('Confirm')}
-                </Button>
+                <TransactionButtonAndStatus
+                    error={error}
+                    isSubmitting={isSubmitting}
+                    isTxWaitingConfirmation={isTxWaitingConfirmation}
+                    handleSend={handleSend}
+                    transactionPendingText={t('Sending...')}
+                    txReceipt={getTxReceipt()}
+                />
             </ModalFooter>
             {/* </StickyFooterContainer> */}
-
-            <TransactionModal
-                isOpen={transactionModal.isOpen}
-                onClose={() => {
-                    transactionModal.onClose();
-                    setCurrentContent('main');
-                }}
-                status={status}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? t('Unknown error')}
-                showExplorerButton={true}
-                showSocialButtons={true}
-                showTryAgainButton={true}
-                onTryAgain={handleSend}
-            />
         </>
     );
 };

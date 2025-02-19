@@ -3,17 +3,19 @@ import {
     ModalCloseButton,
     ModalHeader,
     VStack,
-    Button,
     ModalFooter,
-    useDisclosure,
     Text,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import {
+    ModalBackButton,
+    StickyHeaderContainer,
+    TransactionButtonAndStatus,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { TransactionModal } from '@/components/TransactionModal';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useState } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -30,22 +32,51 @@ export const ChooseNameSummaryContent = ({
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const transactionModal = useDisclosure();
 
-    const { sendTransaction, status, txReceipt, error, progress } =
-        useClaimVeWorldSubdomain({
-            subdomain: name,
-            domain: 'veworld.vet',
-            alreadyOwned: isOwnDomain,
-        });
+    const [error, setError] = useState<string | null>(null);
+
+    const {
+        sendTransaction,
+        txReceipt,
+        error: txError,
+        isWaitingForWalletConfirmation,
+        isTransactionPending,
+    } = useClaimVeWorldSubdomain({
+        subdomain: name,
+        domain: 'veworld.vet',
+        alreadyOwned: isOwnDomain,
+        onSuccess: () => {
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId: txReceipt?.meta.txID,
+                    title: t('Name claimed'),
+                    description: t(
+                        `Your {{name}}.veworld.vet name has been claimed successfully.`,
+                        {
+                            name,
+                        },
+                    ),
+                    onDone: () => {
+                        setCurrentContent('account-customization');
+                    },
+                },
+            });
+        },
+        onError: () => {
+            setError(
+                txError?.reason ??
+                    t('Failed to save changes. Please try again.'),
+            );
+        },
+    });
 
     const handleConfirm = async () => {
-        transactionModal.onOpen();
         try {
             await sendTransaction();
         } catch (error) {
             console.error('Transaction failed:', error);
-            transactionModal.onClose();
         }
     };
 
@@ -70,8 +101,9 @@ export const ChooseNameSummaryContent = ({
                             },
                         })
                     }
+                    isDisabled={isTransactionPending}
                 />
-                <ModalCloseButton />
+                <ModalCloseButton isDisabled={isTransactionPending} />
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -85,53 +117,16 @@ export const ChooseNameSummaryContent = ({
                 </VStack>
             </ModalBody>
 
-            <ModalFooter gap={4}>
-                <Button
-                    px={4}
-                    width="full"
-                    height="48px"
-                    variant="outline"
-                    borderRadius="xl"
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'choose-name-search',
-                            props: {
-                                setCurrentContent,
-                                name,
-                            },
-                        })
-                    }
-                >
-                    {t('Cancel')}
-                </Button>
-                <Button
-                    px={4}
-                    width="full"
-                    height="48px"
-                    variant="solid"
-                    borderRadius="xl"
-                    colorScheme="blue"
-                    onClick={handleConfirm}
-                >
-                    {t('Confirm')}
-                </Button>
+            <ModalFooter gap={4} w="full">
+                <TransactionButtonAndStatus
+                    error={error}
+                    isSubmitting={isTransactionPending}
+                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                    handleSend={handleConfirm}
+                    transactionPendingText={t('Claiming name...')}
+                    txReceipt={txReceipt}
+                />
             </ModalFooter>
-
-            <TransactionModal
-                isOpen={transactionModal.isOpen}
-                onClose={() => {
-                    transactionModal.onClose();
-                    setCurrentContent('account-customization');
-                }}
-                status={status}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
-                showExplorerButton={true}
-                showSocialButtons={true}
-                showTryAgainButton={true}
-                progress={progress}
-                onTryAgain={handleConfirm}
-            />
         </>
     );
 };

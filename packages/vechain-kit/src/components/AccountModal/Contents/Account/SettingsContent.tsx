@@ -4,9 +4,9 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    Button,
     Box,
     Text,
+    Button,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
@@ -14,20 +14,20 @@ import {
     useWallet,
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { ActionButton, Profile } from '@/components';
+import { ActionButton, ProfileCard } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { useEffect, useRef } from 'react';
-import { RiLogoutBoxLine } from 'react-icons/ri';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
+import { RiLogoutBoxLine } from 'react-icons/ri';
 
-type Props = {
+export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -37,13 +37,13 @@ type Props = {
 export const SettingsContent = ({
     setCurrentContent,
     onLogoutSuccess,
-}: Props) => {
+}: SettingsContentProps) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
     const { privy, darkMode: isDark } = useVeChainKitConfig();
 
-    const { connection, disconnect } = useWallet();
+    const { connection, account, disconnect } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -77,42 +77,29 @@ export const SettingsContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                {/* <VStack justify={'center'}>
-                    <AccountAvatar wallet={account} props={{ maxW: '100px' }} />
-                    <AddressDisplay wallet={account} />
-                    {network.type !== 'main' && (
-                        <Tag
-                            size={'sm'}
-                            colorScheme={'blue'}
-                            width={'fit-content'}
-                            justifyContent={'center'}
-                            padding={'10px'}
-                        >
-                            {network.type === 'test'
-                                ? t('Testnet')
-                                : t('Unknown')}
-                        </Tag>
-                    )}
-                </VStack> */}
-
-                <Profile
-                    onEditClick={() =>
-                        setCurrentContent('account-customization')
-                    }
-                />
-
                 <VStack w={'full'} spacing={0}>
-                    {/* <ActionButton
-                        title={t('Customize profile')}
-                        description={t(
-                            'Customize your account with a nickname and a picture to easily identify it.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('account-customization');
+                    <ProfileCard
+                        showDescription={false}
+                        showLinks={false}
+                        showDisplayName={false}
+                        onEditClick={() =>
+                            setCurrentContent('account-customization')
+                        }
+                        address={account?.address ?? ''}
+                        onLogout={() => {
+                            setCurrentContent?.({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: () => {
+                                        disconnect();
+                                        onLogoutSuccess?.();
+                                    },
+                                    onBack: () =>
+                                        setCurrentContent?.('settings'),
+                                },
+                            });
                         }}
-                        leftIcon={CgProfile}
-                        rightIcon={MdOutlineNavigateNext}
-                    /> */}
+                    />
 
                     <ActionButton
                         style={{
@@ -204,7 +191,7 @@ export const SettingsContent = ({
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter w={'full'}>
+            <ModalFooter>
                 <Button
                     onClick={() =>
                         setCurrentContent({
@@ -219,7 +206,9 @@ export const SettingsContent = ({
                         })
                     }
                     variant="vechainKitSecondary"
-                    leftIcon={<RiLogoutBoxLine color="#888888" />}
+                    leftIcon={
+                        <RiLogoutBoxLine color="#888888" fontSize={'16px'} />
+                    }
                 >
                     {t('Logout')}
                 </Button>

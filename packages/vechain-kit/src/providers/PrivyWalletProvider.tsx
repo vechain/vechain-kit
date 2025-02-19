@@ -342,12 +342,13 @@ export const PrivyWalletProvider = ({
                             title,
                             description:
                                 description ??
-                                (typeof funcData === 'object' &&
-                                funcData !== null &&
-                                'functionName' in funcData
-                                    ? (funcData as { functionName: string })
-                                          .functionName
-                                    : ' '),
+                                ((txClauses[index] as EnhancedClause).comment ||
+                                    (typeof funcData === 'object' &&
+                                    funcData !== null &&
+                                    'functionName' in funcData
+                                        ? (funcData as { functionName: string })
+                                              .functionName
+                                        : ' ')),
                             buttonText,
                         },
                     })

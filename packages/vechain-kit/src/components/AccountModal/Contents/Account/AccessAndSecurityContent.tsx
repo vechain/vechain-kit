@@ -5,6 +5,7 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
+    Icon,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet } from '@/hooks';
 import React from 'react';
@@ -21,6 +22,8 @@ import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
 import { IoIosFingerPrint } from 'react-icons/io';
 import { HiOutlineWallet } from 'react-icons/hi2';
+import { IoShieldOutline } from 'react-icons/io5';
+import { GiHouseKeys } from 'react-icons/gi';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -31,7 +34,7 @@ type Props = {
 export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
 
-    const { linkPasskey } = usePrivy();
+    const { linkPasskey, exportWallet } = usePrivy();
 
     const { darkMode: isDark, privy } = useVeChainKitConfig();
     const { connection } = useWallet();
@@ -61,11 +64,23 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     align="flex-start"
                     w={'full'}
                 >
-                    <Text fontSize={'sm'} opacity={0.5}>
-                        {t(
-                            'Manage your embedded wallet security settings or back it up to a new device.',
-                        )}
-                    </Text>
+                    <VStack w="full" justifyContent="center" spacing={3} mb={3}>
+                        <Icon
+                            opacity={0.5}
+                            as={IoShieldOutline}
+                            fontSize={'50px'}
+                        />
+                        <Text
+                            fontSize={'sm'}
+                            opacity={0.5}
+                            textAlign={'center'}
+                        >
+                            {t(
+                                'Manage your embedded wallet security settings or back it up to a new device.',
+                            )}
+                        </Text>
+                    </VStack>
+
                     {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
 
                     <ActionButton
@@ -78,7 +93,10 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         }}
                         leftIcon={IoIosFingerPrint}
                         rightIcon={undefined}
-                        isDisabled={!privy?.allowPasskeyLinking}
+                        isDisabled={
+                            !privy?.allowPasskeyLinking ||
+                            !connection.isConnectedWithPrivy
+                        }
                     />
 
                     <ActionButton
@@ -94,6 +112,21 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={GrUserAdmin}
                         rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
+                        title={t('Backup your wallet')}
+                        description={t(
+                            connection.isConnectedWithSocialLogin
+                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
+                                : 'Backup can be done only in the app securing your wallet.',
+                        )}
+                        onClick={() => {
+                            exportWallet();
+                        }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                        leftIcon={GiHouseKeys}
+                        // rightIcon={MdOutlineNavigateNext}
                     />
 
                     <ActionButton

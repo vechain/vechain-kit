@@ -87,6 +87,7 @@ type UseSendTransactionProps = {
  * Return value of the {@link useSendTransaction} hook
  * @param sendTransaction function to trigger the transaction
  * @param isTransactionPending boolean indicating if the transaction is waiting for the wallet to sign it
+ * @param isWaitingForWalletConfirmation boolean indicating if the transaction is waiting for the wallet to confirm it
  * @param txReceipt the transaction receipt
  * @param status the status of the transaction (see {@link TransactionStatus})
  * @param resetStatus function to reset the status to "ready"
@@ -95,6 +96,7 @@ type UseSendTransactionProps = {
 export type UseSendTransactionReturnValue = {
     sendTransaction: (clauses?: EnhancedClause[]) => Promise<void>;
     isTransactionPending: boolean;
+    isWaitingForWalletConfirmation: boolean;
     txReceipt: Connex.Thor.Transaction.Receipt | null;
     status: TransactionStatus;
     resetStatus: () => void;
@@ -173,10 +175,7 @@ export const useSendTransaction = ({
                 onProgress?: (progress: TransactionProgress) => void;
             },
         ) => {
-            if (
-                connection.isConnectedWithSocialLogin ||
-                connection.isConnectedWithCrossApp
-            ) {
+            if (connection.isConnectedWithPrivy) {
                 return await privyWalletProvider.sendTransaction({
                     txClauses: clauses,
                     ...privyUIOptions,
@@ -408,9 +407,14 @@ export const useSendTransaction = ({
         );
     }, [sendTransactionPending, isTxReceiptLoading, status]);
 
+    const isWaitingForWalletConfirmation = useMemo(() => {
+        return status === 'pending';
+    }, [sendTransactionPending, status]);
+
     return {
         sendTransaction: sendTransactionAdapter,
         isTransactionPending,
+        isWaitingForWalletConfirmation,
         txReceipt: txReceipt ?? null,
         status,
         resetStatus,

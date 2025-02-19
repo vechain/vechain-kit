@@ -6,15 +6,15 @@ import {
     Input,
     Button,
     Text,
-    InputGroup,
     Box,
     HStack,
     Center,
     Icon,
     ModalFooter,
     Image,
+    FormControl,
 } from '@chakra-ui/react';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -24,6 +24,7 @@ import { compareAddresses, isValidAddress, TOKEN_LOGOS } from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useForm } from 'react-hook-form';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -47,6 +48,12 @@ export type SendTokenContentProps = {
     preselectedToken?: Token;
 };
 
+// Add form values type
+type FormValues = {
+    amount: string;
+    toAddressOrDomain: string;
+};
+
 export const SendTokenContent = ({
     setCurrentContent,
     isNavigatingFromMain = false,
@@ -54,20 +61,33 @@ export const SendTokenContent = ({
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-
-    const [toAddressOrDomain, setToAddress] = useState('');
-    const [amount, setAmount] = useState('');
-    const [error, setError] = useState<string | null>(null);
-    const [isSelectingToken, setIsSelectingToken] = useState(
-        isNavigatingFromMain && !preselectedToken,
-    );
-
     const [selectedToken, setSelectedToken] = useState<Token | null>(
         preselectedToken ?? null,
     );
-    const [addressError, setAddressError] = useState<string | null>(null);
+    const [isSelectingToken, setIsSelectingToken] = useState(
+        isNavigatingFromMain && !preselectedToken,
+    );
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
+
+    // Form setup with validation rules
+    const {
+        register,
+        watch,
+        setValue,
+        setError,
+        formState: { errors, isValid },
+        handleSubmit,
+    } = useForm<FormValues>({
+        defaultValues: {
+            amount: '',
+            toAddressOrDomain: '',
+        },
+        mode: 'onChange',
+    });
+
+    // Watch form values
+    const { toAddressOrDomain } = watch();
 
     const {
         domain: resolvedDomain,
@@ -75,80 +95,48 @@ export const SendTokenContent = ({
         isLoading: isLoadingDomain,
     } = useVechainDomain({ addressOrDomain: toAddressOrDomain });
 
-    const validateAddress = useCallback(
-        (value: string) => {
-            if (!value) {
-                setAddressError(t('Address is required'));
-                return false;
-            }
-
-            const isValidReceiver =
-                !compareAddresses(
-                    resolvedAddress ?? ZeroAddress,
-                    ZeroAddress,
-                ) || isValidAddress(value);
-
-            if (!isValidReceiver) {
-                setAddressError(t('Invalid address or domain'));
-                return false;
-            }
-
-            return true;
-        },
-        [resolvedAddress],
-    );
-
-    const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newAmount = e.target.value;
-
-        // Clear any previous errors
-        setError(null);
-
-        // Only allow numbers and decimals
-        if (newAmount && !/^\d*\.?\d*$/.test(newAmount)) {
-            return;
-        }
-
-        setAmount(newAmount);
-
-        // Validate against balance if we have a selected token
-        if (selectedToken && newAmount) {
-            const numericAmount = parseFloat(newAmount);
-            if (numericAmount > selectedToken.numericBalance) {
-                setError(
-                    t(`Insufficient {{symbol}} balance`, {
-                        symbol: selectedToken.symbol,
-                    }),
-                );
-            }
-        }
-    };
-
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            const maxAmount = selectedToken.numericBalance.toString();
-            setAmount(maxAmount);
-            // Clear any previous errors since we're setting a valid amount
-            setError(null);
+            setValue('amount', selectedToken.numericBalance.toString());
         }
     };
 
-    const handleSend = () => {
-        // Validate address when send is clicked
-        const isAddressValid = validateAddress(toAddressOrDomain);
+    const onSubmit = async (data: FormValues) => {
+        if (!selectedToken) return;
 
-        if (!isAddressValid || !selectedToken) {
+        const isValidReceiver =
+            !compareAddresses(resolvedAddress ?? ZeroAddress, ZeroAddress) ||
+            isValidAddress(data.toAddressOrDomain);
+
+        if (!isValidReceiver) {
+            setError('toAddressOrDomain', {
+                type: 'manual',
+                message: t('Invalid address or domain'),
+            });
             return;
         }
 
-        // Pass the data as state when changing content
+        // Validate amount
+        if (selectedToken) {
+            const numericAmount = parseFloat(data.amount);
+            if (numericAmount > selectedToken.numericBalance) {
+                setError('amount', {
+                    type: 'manual',
+                    message: t(`Insufficient {{symbol}} balance`, {
+                        symbol: selectedToken.symbol,
+                    }),
+                });
+                return;
+            }
+        }
+
         setCurrentContent({
             type: 'send-token-summary',
             props: {
-                toAddressOrDomain,
-                resolvedDomain: resolvedDomain,
-                resolvedAddress: resolvedAddress,
-                amount,
+                toAddressOrDomain: data.toAddressOrDomain,
+                resolvedDomain,
+                resolvedAddress,
+                amount: data.amount,
                 selectedToken,
                 setCurrentContent,
             },
@@ -196,116 +184,137 @@ export const SendTokenContent = ({
                         p={6}
                         borderRadius="xl"
                         bg={isDark ? '#1a1a1a' : 'gray.50'}
-                        height="auto"
-                        minHeight="100px"
                     >
                         <VStack align="stretch" spacing={2}>
-                            <HStack justify="space-between">
-                                <Input
-                                    placeholder="0"
-                                    value={amount}
-                                    onChange={handleAmountChange}
-                                    variant="unstyled"
-                                    fontSize="4xl"
-                                    fontWeight="bold"
-                                    border="none"
-                                    _focus={{ border: 'none' }}
-                                    isInvalid={!!error}
-                                />
-                                {selectedToken ? (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        borderRadius="full"
-                                        px={6}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        borderColor={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        _hover={{
-                                            bg: isDark
-                                                ? 'whiteAlpha.800'
-                                                : 'blackAlpha.800',
-                                            color: isDark
-                                                ? 'blackAlpha.700'
-                                                : 'whiteAlpha.700',
-                                        }}
-                                        onClick={() =>
-                                            setIsSelectingToken(true)
-                                        }
-                                        leftIcon={
-                                            <Image
-                                                src={
-                                                    TOKEN_LOGOS[
-                                                        selectedToken.symbol
-                                                    ]
-                                                }
-                                                alt={`${selectedToken.symbol} logo`}
-                                                boxSize="20px"
-                                                borderRadius="full"
-                                                fallback={
-                                                    <Box
-                                                        boxSize="20px"
-                                                        borderRadius="full"
-                                                        bg="whiteAlpha.200"
-                                                        display="flex"
-                                                        alignItems="center"
-                                                        justifyContent="center"
-                                                    >
-                                                        <Text
-                                                            fontSize="8px"
-                                                            fontWeight="bold"
+                            <FormControl isInvalid={!!errors.amount}>
+                                <HStack justify="space-between">
+                                    <Input
+                                        {...register('amount', {
+                                            required: t('Amount is required'),
+                                            pattern: {
+                                                value: /^\d*\.?\d*$/,
+                                                message: t(
+                                                    'Please enter a valid number',
+                                                ),
+                                            },
+                                            validate: (value) => {
+                                                if (!value) return true;
+                                                const numericValue =
+                                                    parseFloat(value);
+                                                return (
+                                                    !isNaN(numericValue) ||
+                                                    t(
+                                                        'Please enter a valid number',
+                                                    )
+                                                );
+                                            },
+                                        })}
+                                        placeholder="0"
+                                        variant="unstyled"
+                                        fontSize="4xl"
+                                        fontWeight="bold"
+                                    />
+                                    {selectedToken ? (
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            borderRadius="full"
+                                            px={6}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            borderColor={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.800'
+                                                    : 'blackAlpha.800',
+                                                color: isDark
+                                                    ? 'blackAlpha.700'
+                                                    : 'whiteAlpha.700',
+                                            }}
+                                            onClick={() =>
+                                                setIsSelectingToken(true)
+                                            }
+                                            leftIcon={
+                                                <Image
+                                                    src={
+                                                        TOKEN_LOGOS[
+                                                            selectedToken.symbol
+                                                        ]
+                                                    }
+                                                    alt={`${selectedToken.symbol} logo`}
+                                                    boxSize="20px"
+                                                    borderRadius="full"
+                                                    fallback={
+                                                        <Box
+                                                            boxSize="20px"
+                                                            borderRadius="full"
+                                                            bg="whiteAlpha.200"
+                                                            display="flex"
+                                                            alignItems="center"
+                                                            justifyContent="center"
                                                         >
-                                                            {selectedToken.symbol.slice(
-                                                                0,
-                                                                3,
-                                                            )}
-                                                        </Text>
-                                                    </Box>
-                                                }
-                                            />
-                                        }
-                                    >
-                                        {selectedToken.symbol}
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        borderRadius="full"
-                                        px={6}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        borderColor={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        _hover={{
-                                            bg: isDark
-                                                ? 'whiteAlpha.300'
-                                                : 'blackAlpha.300',
-                                            color: isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700',
-                                        }}
-                                        onClick={() =>
-                                            setIsSelectingToken(true)
-                                        }
-                                    >
-                                        {t('Select token')}
-                                    </Button>
+                                                            <Text
+                                                                fontSize="8px"
+                                                                fontWeight="bold"
+                                                            >
+                                                                {selectedToken.symbol.slice(
+                                                                    0,
+                                                                    3,
+                                                                )}
+                                                            </Text>
+                                                        </Box>
+                                                    }
+                                                />
+                                            }
+                                        >
+                                            {selectedToken.symbol}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            borderRadius="full"
+                                            px={6}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            borderColor={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                                color: isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700',
+                                            }}
+                                            onClick={() =>
+                                                setIsSelectingToken(true)
+                                            }
+                                        >
+                                            {t('Select token')}
+                                        </Button>
+                                    )}
+                                </HStack>
+                                {errors.amount && (
+                                    <Text color="red.500" fontSize="sm">
+                                        {errors.amount.message}
+                                    </Text>
                                 )}
-                            </HStack>
+                            </FormControl>
+
                             {selectedToken && (
                                 <HStack
                                     spacing={1}
@@ -336,11 +345,6 @@ export const SendTokenContent = ({
                                     </Text>
                                 </HStack>
                             )}
-                            {error && (
-                                <Text color="red.500" fontSize="sm">
-                                    {error}
-                                </Text>
-                            )}
                         </VStack>
                     </Box>
 
@@ -364,18 +368,13 @@ export const SendTokenContent = ({
                         />
                     </Center>
 
-                    {/* Address Input Section */}
-                    <Box
-                        borderRadius="xl"
-                        bg={isDark ? '#1a1a1a' : 'gray.50'}
-                        height="auto"
-                        minHeight="100px"
-                        display="flex"
-                        alignItems="center"
-                    >
+                    <Box borderRadius="xl" bg={isDark ? '#1a1a1a' : 'gray.50'}>
                         <VStack align="stretch" spacing={2} p={6} width="100%">
-                            <InputGroup size="lg">
+                            <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
+                                    {...register('toAddressOrDomain', {
+                                        required: t('Address is required'),
+                                    })}
                                     placeholder={t(
                                         'Type the receiver address or domain',
                                     )}
@@ -383,22 +382,16 @@ export const SendTokenContent = ({
                                         fontSize: 'md',
                                         fontWeight: 'normal',
                                     }}
-                                    value={toAddressOrDomain}
-                                    onChange={(e) => {
-                                        setToAddress(e.target.value);
-                                        setAddressError(null);
-                                    }}
                                     fontSize="lg"
                                     fontWeight="bold"
                                     variant="unstyled"
-                                    isInvalid={!!addressError}
                                 />
-                            </InputGroup>
-                            {addressError && (
-                                <Text color="red.500" fontSize="sm">
-                                    {addressError}
-                                </Text>
-                            )}
+                                {errors.toAddressOrDomain && (
+                                    <Text color="red.500" fontSize="sm">
+                                        {errors.toAddressOrDomain.message}
+                                    </Text>
+                                )}
+                            </FormControl>
                         </VStack>
                     </Box>
                 </VStack>
@@ -407,15 +400,8 @@ export const SendTokenContent = ({
             <ModalFooter>
                 <Button
                     variant="vechainKitSecondary"
-                    isDisabled={
-                        !selectedToken ||
-                        !amount ||
-                        !toAddressOrDomain ||
-                        !!error ||
-                        !!addressError ||
-                        isLoadingDomain
-                    }
-                    onClick={handleSend}
+                    isDisabled={!selectedToken || !isValid || isLoadingDomain}
+                    onClick={handleSubmit(onSubmit)}
                 >
                     {selectedToken ? t('Send') : t('Select Token')}
                 </Button>

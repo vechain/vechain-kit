@@ -1,5 +1,4 @@
 import { Wallet } from '@/types';
-import { notFoundImage } from '@/utils';
 import { Image, ImageProps, Spinner } from '@chakra-ui/react';
 
 type AccountAvatarProps = {
@@ -8,7 +7,7 @@ type AccountAvatarProps = {
 };
 
 export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
-    if (wallet?.isLoadingAvatar) {
+    if (wallet?.isLoadingMetadata) {
         return <Spinner size="sm" />;
     }
 
@@ -16,7 +15,6 @@ export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
         <Image
             src={props?.src ?? wallet?.image}
             alt={props?.alt ?? wallet?.domain}
-            fallbackSrc={notFoundImage}
             objectFit="cover"
             rounded="full"
             {...props}

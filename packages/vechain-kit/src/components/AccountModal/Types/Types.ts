@@ -4,11 +4,13 @@ import {
 } from '../Contents';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
+import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
 
 export type AccountModalContentTypes =
     | 'main'
     | 'faq'
     | 'settings'
+    | 'profile'
     | 'access-and-security'
     | 'embedded-wallet'
     | 'receive-token'
@@ -19,6 +21,26 @@ export type AccountModalContentTypes =
     | 'notifications'
     | 'privy-linked-accounts'
     | 'account-customization'
+    | {
+          type: 'successful-operation';
+          props: SuccessfulOperationContentProps;
+      }
+    | {
+          type: 'account-customization-summary';
+          props: {
+              changes: {
+                  avatarIpfsHash?: string | null;
+                  displayName?: string;
+                  description?: string;
+                  twitter?: string;
+                  website?: string;
+                  email?: string;
+              };
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+          };
+      }
     | {
           type: 'app-overview';
           props: {

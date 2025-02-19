@@ -2,8 +2,20 @@
 
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { useGetChainId, useGetNodeUrl, useContractVersion } from '@/hooks';
-import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
+import {
+    useGetChainId,
+    useGetNodeUrl,
+    useContractVersion,
+    useGetAvatar,
+    useGetTextRecords,
+    useVechainDomain,
+} from '@/hooks';
+import {
+    compareAddresses,
+    convertUriToUrl,
+    getPicassoImage,
+    VECHAIN_PRIVY_APP_ID,
+} from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '.';
 import { useVeChainKitConfig } from '@/providers';
@@ -148,22 +160,34 @@ export const useWallet = (): UseWalletReturnType => {
         ? dappKitAccount
         : smartAccount?.address;
 
-    const activeMetadata = useWalletMetadata(activeAddress, network.type);
+    const activeAccountDomain = useVechainDomain(activeAddress ?? '');
+    const activeAccountAvatar = useGetAvatar(activeAccountDomain?.data?.domain);
+    const activeAccountTextRecords = useGetTextRecords(
+        activeAccountDomain?.data?.domain,
+    );
+
+    // const activeMetadata = useWalletMetadata(activeAddress ?? '', network.type);
     const connectedMetadata = useWalletMetadata(
-        connectedWalletAddress,
+        connectedWalletAddress ?? '',
         network.type,
     );
     const smartAccountMetadata = useWalletMetadata(
-        smartAccount?.address,
+        smartAccount?.address ?? '',
         network.type,
     );
 
     const account = activeAddress
         ? {
               address: activeAddress,
-              domain: activeMetadata.domain,
-              image: activeMetadata.image,
-              isLoadingAvatar: activeMetadata.isLoading,
+              domain: activeAccountDomain?.data?.domain,
+              image: activeAccountAvatar.data
+                  ? convertUriToUrl(activeAccountAvatar.data, network.type)
+                  : getPicassoImage(activeAddress ?? ''),
+              isLoadingMetadata:
+                  activeAccountAvatar?.isLoading ||
+                  activeAccountDomain?.isLoading ||
+                  activeAccountTextRecords?.isLoading,
+              metadata: activeAccountTextRecords?.data,
           }
         : null;
 
@@ -172,7 +196,8 @@ export const useWallet = (): UseWalletReturnType => {
               address: connectedWalletAddress,
               domain: connectedMetadata.domain,
               image: connectedMetadata.image,
-              isLoadingAvatar: connectedMetadata.isLoading,
+              isLoadingMetadata: connectedMetadata.isLoading,
+              metadata: connectedMetadata.records,
           }
         : null;
 
@@ -225,7 +250,8 @@ export const useWallet = (): UseWalletReturnType => {
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
             version: smartAccountVersion ?? null,
-            isLoadingAvatar: smartAccountMetadata.isLoading,
+            isLoadingMetadata: smartAccountMetadata.isLoading,
+            metadata: smartAccountMetadata.records,
         },
         connectedWallet,
         privyUser: user,

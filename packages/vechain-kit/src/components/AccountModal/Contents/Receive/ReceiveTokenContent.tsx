@@ -47,7 +47,6 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
             <Container maxW={'container.lg'}>
                 <ModalBody>
                     <VStack spacing={6} align="center" w="full">
-                        <AddressDisplay wallet={account} size="lg" />
                         <QRCode
                             value={account?.address ?? ''}
                             size={200}
@@ -58,6 +57,8 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                                 borderRadius: '16px',
                             }}
                         />
+
+                        <AddressDisplay wallet={account} style={{ w: '85%' }} />
 
                         <Text fontSize="sm" textAlign="center">
                             {t('Copy your address or scan this QR code')}

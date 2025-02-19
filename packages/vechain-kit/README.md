@@ -125,7 +125,7 @@ By default we have a list of default apps that will be shown as ecosystem login 
 
 Fee delegation is mandatory in order to use this kit. Learn how to setup fee delegation in the following guide:
 
-[Fee Delegation](https://app.gitbook.com/o/PqN0Gs1QEzg8tbeJCHXC/s/S8udqSGhGctlwwL1kst7/~/changes/42/vechain-kit/fee-delegation)
+[Fee Delegation](https://docs.vechain-kit.vechain.org/vechain-kit/fee-delegation)
 
 ### Setup Privy (optional)
 

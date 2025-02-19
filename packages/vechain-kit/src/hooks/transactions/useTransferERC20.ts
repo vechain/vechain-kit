@@ -6,7 +6,7 @@ import {
 import { useCallback } from 'react';
 import { ERC20__factory } from '@/contracts/typechain-types';
 import { useQueryClient } from '@tanstack/react-query';
-import { isValidAddress } from '@/utils';
+import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';
 
 type useTransferERC20Props = {
@@ -17,6 +17,7 @@ type useTransferERC20Props = {
     tokenName: string;
     onSuccess?: () => void;
     onSuccessMessageTitle?: number;
+    onError?: () => void;
 };
 
 type useTransferERC20ReturnValue = {
@@ -32,6 +33,7 @@ export const useTransferERC20 = ({
     tokenAddress,
     tokenName,
     onSuccess,
+    onError,
 }: useTransferERC20Props): useTransferERC20ReturnValue => {
     const queryClient = useQueryClient();
     const { refresh } = useRefreshBalances();
@@ -65,11 +67,16 @@ export const useTransferERC20 = ({
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,
         privyUIOptions: {
-            title: 'Sign to confirm',
-            description: `Transfer ${amount} ${tokenName} to ${receiverAddress}`,
-            buttonText: 'Sign',
+            title: 'Confirm Transfer',
+            description: `Transfer ${amount} ${tokenName} to ${humanAddress(
+                receiverAddress,
+            )}`,
+            buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
+        onTxFailedOrCancelled: async () => {
+            onError?.();
+        },
     });
 
     return {

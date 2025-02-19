@@ -16,6 +16,7 @@ import {
     FAQContent,
     AccessAndSecurityContent,
     EmbeddedWalletContent,
+    ProfileContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -24,7 +25,8 @@ import { NotificationsContent } from './Contents/Notifications/NotificationConte
 import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
-import { AccountCustomizationContent } from './Contents/Account/AccountCustomizationContent';
+import { CustomizationContent, CustomizationSummaryContent } from './Contents';
+import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 
 type Props = {
     isOpen: boolean;
@@ -77,6 +79,20 @@ export const AccountModal = ({
                     return (
                         <DisconnectConfirmContent {...currentContent.props} />
                     );
+                case 'account-customization-summary':
+                    return (
+                        <CustomizationSummaryContent
+                            {...currentContent.props}
+                            setCurrentContent={setCurrentContent}
+                        />
+                    );
+                case 'successful-operation':
+                    return (
+                        <SuccessfulOperationContent
+                            {...currentContent.props}
+                            setCurrentContent={setCurrentContent}
+                        />
+                    );
             }
         }
 
@@ -92,6 +108,13 @@ export const AccountModal = ({
             case 'settings':
                 return (
                     <SettingsContent
+                        setCurrentContent={setCurrentContent}
+                        onLogoutSuccess={onClose}
+                    />
+                );
+            case 'profile':
+                return (
+                    <ProfileContent
                         setCurrentContent={setCurrentContent}
                         onLogoutSuccess={onClose}
                     />
@@ -148,7 +171,7 @@ export const AccountModal = ({
                 );
             case 'account-customization':
                 return (
-                    <AccountCustomizationContent
+                    <CustomizationContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
