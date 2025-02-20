@@ -188,6 +188,7 @@
   "Please complete the passkey authentication...": "パスキー認証を完了してください...",
   "Please confirm the transaction in your wallet.": "ウォレットでトランザクションを確認してください。",
   "Please do not close this window, it will take just a few seconds.": "このウィンドウを閉じないでください。処理には数秒かかります。",
+  "Privy Status": "Privy ステータス",
   "Privy builds user onboarding and embedded wallet infrastructure to enable better products built on crypto rails. This means embedding asset control within applications themselves to enable users, businesses or machines to use digital assets through seamless product experiences.": "Privy は、暗号化レールに基づいて構築されたより良い製品を実現するために、ユーザーオンボーディングと組み込みウォレットのインフラストラクチャを構築します。 つまり、アプリケーション自体に資産管理を組み込むことにより、ユーザー、企業、または機械がシームレスな製品体験を通じてデジタル資産を使用できるようにします。",
   "Processing transaction...": "トランザクションを処理しています...",
   "Profile Picture": "プロフィール画像",
