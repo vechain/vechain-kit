@@ -12,7 +12,7 @@ export const LoginUIControl = () => {
         <CollapsibleCard
             title="Login UI Examples"
             icon={MdLogin}
-            defaultIsOpen={false}
+            defaultIsOpen={true}
         >
             <VStack spacing={6} align="stretch" w={'full'}>
                 <Text textAlign="center">
@@ -130,6 +130,13 @@ export const LoginUIControl = () => {
                             </VStack>
                         </VStack>
                     </Grid>
+
+                    <Text fontSize="sm" fontWeight="medium" color="blue.300">
+                        Note: The modal variant is the default login button
+                        variant. You can pass an additional description and
+                        Image to the modal when configuring you the
+                        VeChainKitProvider.
+                    </Text>
                 </VStack>
             </VStack>
         </CollapsibleCard>

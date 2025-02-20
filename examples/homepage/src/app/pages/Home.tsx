@@ -22,6 +22,7 @@ import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesT
 import { DataReadingExample } from '../components/features/DataReading';
 import { VechainLogoHorizontal } from '@vechain/vechain-kit/assets';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
+import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -99,6 +100,9 @@ export default function Home(): ReactElement {
 
                     <Introduction />
                     <LoginUIControl />
+
+                    <LoginToContinueBox />
+
                     <Logo />
                 </VStack>
             </Container>
