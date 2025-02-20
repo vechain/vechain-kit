@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useChooseNameModal = () => {
@@ -7,7 +7,7 @@ export const useChooseNameModal = () => {
         closeAccountModal,
         isAccountModalOpen,
         setAccountModalContent,
-    } = useVeChainKitConfig();
+    } = useModal();
 
     const open = () => {
         setAccountModalContent('choose-name');

@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useExploreEcosystemModal = () => {
@@ -7,7 +7,7 @@ export const useExploreEcosystemModal = () => {
         closeAccountModal,
         isAccountModalOpen,
         setAccountModalContent,
-    } = useVeChainKitConfig();
+    } = useModal();
 
     const open = () => {
         setAccountModalContent('ecosystem');
