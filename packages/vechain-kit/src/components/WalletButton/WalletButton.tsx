@@ -1,4 +1,9 @@
-import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react';
+import {
+    Button,
+    ButtonProps,
+    useDisclosure,
+    useMediaQuery,
+} from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { ConnectModal, AccountModal } from '@/components';
@@ -6,23 +11,28 @@ import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
+import { ConnectPopover } from '../ConnectModal';
 
 export type WalletButtonProps = {
     mobileVariant?: WalletDisplayVariant;
     desktopVariant?: WalletDisplayVariant;
     buttonStyle?: ButtonProps;
+    connectionVariant?: 'modal' | 'popover';
 };
 
 export const WalletButton = ({
     mobileVariant = 'iconAndDomain',
     desktopVariant = 'iconDomainAndAddress',
     buttonStyle,
+    connectionVariant = 'modal',
 }: WalletButtonProps) => {
     const { t } = useTranslation();
     const { darkMode } = useVeChainKitConfig();
 
     const { connection, account } = useWallet();
     const { setSource, connect } = useDappKitWallet();
+
+    const [isMobile] = useMediaQuery('(max-width: 768px)');
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
@@ -43,6 +53,11 @@ export const WalletButton = ({
                     mobileVariant={mobileVariant}
                     desktopVariant={desktopVariant}
                     onOpen={accountModal.onOpen}
+                    buttonStyle={buttonStyle}
+                />
+            ) : connectionVariant === 'popover' && !isMobile ? (
+                <ConnectPopover
+                    isLoading={connection.isLoading}
                     buttonStyle={buttonStyle}
                 />
             ) : (

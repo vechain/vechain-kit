@@ -12,7 +12,7 @@ const variants = {
         fontWeight: '400',
         border: '1px solid #ebebeb',
         py: 6,
-        px: 4,
+        px: 3,
         borderRadius: 16,
         _hover: {
             bg: '#eaeaea',
@@ -32,7 +32,7 @@ const variants = {
         fontSize: '14px',
         fontWeight: '400',
         py: 6,
-        px: 4,
+        px: 3,
         borderRadius: 16,
         border: '1px solid #5e5e5e',
         _hover: {
