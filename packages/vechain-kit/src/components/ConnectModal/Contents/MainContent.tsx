@@ -1,15 +1,12 @@
 import {
-    Grid,
     HStack,
     Image,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
     ModalHeader,
-    Stack,
     Text,
 } from '@chakra-ui/react';
-import { usePrivy } from '@privy-io/react-auth';
 import { useVeChainKitConfig } from '@/providers';
 import {
     ModalFAQButton,
@@ -18,19 +15,9 @@ import {
 } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
-import { useFetchAppInfo, useWallet } from '@/hooks';
-import { VeChainLoginButton } from '../Components/VeChainLoginButton';
-import { PasskeyLoginButton } from '../Components/PasskeyLoginButton';
-import { DappKitButton } from '../Components/DappKitButton';
-import { EcosystemButton } from '../Components/EcosystemButton';
-import { PrivyButton } from '../Components/PrivyButton';
+import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
-import {
-    EmailLoginButton,
-    LoginWithGoogleButton,
-    VeChainWithPrivyLoginButton,
-} from '../Components';
-import { useLoginModalContent } from '@/hooks';
+import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -44,25 +31,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
 
     const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
-    const { loginModalUI, privyEcosystemAppIDS, loginMethods } =
-        useVeChainKitConfig();
-    // View more login
-    const { login: viewMoreLogin } = usePrivy();
-
-    const {
-        showGoogleLogin,
-        showEmailLogin,
-        showPasskey,
-        showVeChainLogin,
-        showDappKit,
-        showEcosystem,
-        showMoreLogin,
-        isOfficialVeChainApp,
-    } = useLoginModalContent();
-
-    // Load ecosystem apps info, doing it here to avoid loading when opening the modal
-    const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
-        useFetchAppInfo(privyEcosystemAppIDS);
+    const { loginModalUI } = useVeChainKitConfig();
 
     useEffect(() => {
         if (connection.isConnected) {
@@ -115,94 +84,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                         </Text>
                     </HStack>
                 )}
-
-                <Stack spacing={4} w={'full'} align={'center'}>
-                    <Grid templateColumns="repeat(4, 1fr)" gap={2} w={'full'}>
-                        {loginMethods?.map(({ method, gridColumn }) => {
-                            switch (method) {
-                                case 'email':
-                                    return (
-                                        showEmailLogin && <EmailLoginButton />
-                                    );
-                                case 'google':
-                                    return (
-                                        showGoogleLogin && (
-                                            <LoginWithGoogleButton
-                                                isDark={isDark}
-                                                gridColumn={gridColumn}
-                                            />
-                                        )
-                                    );
-                                case 'vechain':
-                                    return (
-                                        showVeChainLogin &&
-                                        (isOfficialVeChainApp ? (
-                                            <VeChainWithPrivyLoginButton
-                                                key="vechain"
-                                                isDark={isDark}
-                                                gridColumn={gridColumn}
-                                            />
-                                        ) : (
-                                            <VeChainLoginButton
-                                                key="vechain"
-                                                isDark={isDark}
-                                                gridColumn={gridColumn}
-                                            />
-                                        ))
-                                    );
-                                case 'passkey':
-                                    return (
-                                        showPasskey && (
-                                            <PasskeyLoginButton
-                                                key="passkey"
-                                                isDark={isDark}
-                                                gridColumn={gridColumn}
-                                            />
-                                        )
-                                    );
-                                case 'dappkit':
-                                    return (
-                                        showDappKit && (
-                                            <DappKitButton
-                                                key="dappkit"
-                                                isDark={isDark}
-                                                gridColumn={gridColumn}
-                                            />
-                                        )
-                                    );
-                                case 'ecosystem':
-                                    return (
-                                        showEcosystem && (
-                                            <EcosystemButton
-                                                key="ecosystem"
-                                                isDark={isDark}
-                                                appsInfo={Object.values(
-                                                    appsInfo || {},
-                                                )}
-                                                isLoading={
-                                                    isEcosystemAppsLoading
-                                                }
-                                                gridColumn={gridColumn}
-                                            />
-                                        )
-                                    );
-                                case 'more':
-                                    return (
-                                        showMoreLogin && (
-                                            <PrivyButton
-                                                key="more"
-                                                isDark={isDark}
-                                                onViewMoreLogin={viewMoreLogin}
-                                                gridColumn={gridColumn}
-                                            />
-                                        )
-                                    );
-                                default:
-                                    return null;
-                            }
-                        })}
-                    </Grid>
-                </Stack>
+                <ConnectionOptionsStack />
             </ModalBody>
 
             <ModalFooter>

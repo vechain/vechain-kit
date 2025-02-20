@@ -38,15 +38,13 @@ export const ConnectionButton = ({
     if (text) {
         return (
             <Button {...style} variant={variant} w={'full'} onClick={onClick}>
-                <HStack w={'full'} justify={'flex-start'} gap={4}>
+                <HStack w={'full'} justify={'flex-start'} gap={2}>
                     {customIcon ? (
                         customIcon
                     ) : (
                         <Icon as={icon} w={'25px'} h={'25px'} />
                     )}
-                    <Text opacity={0.9} ml={customIcon ? 1 : 0}>
-                        {text}
-                    </Text>
+                    <Text opacity={0.9}>{text}</Text>
                 </HStack>
                 {rightIcon}
             </Button>
