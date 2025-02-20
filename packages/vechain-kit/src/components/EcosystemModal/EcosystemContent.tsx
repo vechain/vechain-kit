@@ -162,6 +162,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                                             appInfo.name,
                                         );
                                     }}
+                                    justifyContent={'flex-start'}
                                 >
                                     <Image
                                         src={appInfo.logo_url}
