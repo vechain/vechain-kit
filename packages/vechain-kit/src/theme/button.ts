@@ -6,19 +6,47 @@ const baseStyle = defineStyle({
 
 const variants = {
     loginIn: defineStyle(() => ({
-        bg: '#f2f2f2',
-        color: '#2a2a2a',
+        bg: 'white',
+        color: '#1a1a1a',
+        fontSize: '14px',
+        fontWeight: '400',
+        border: '1px solid #ebebeb',
+        py: 6,
+        px: 4,
+        borderRadius: 16,
         _hover: {
             bg: '#eaeaea',
         },
         _dark: {
-            bg: '#1f1f1e',
-            color: '#ffffff',
+            bg: 'transparent',
+            color: 'white',
             _hover: {
-                bg: '#3c3c39',
+                bg: '#2a2a2a',
             },
-            // border: '1px solid #5e5e5e',
+            border: '1px solid #ffffff1a',
         },
+    })),
+    loginWithVechain: defineStyle(() => ({
+        bg: '#1a1a1a',
+        color: 'white',
+        fontSize: '14px',
+        fontWeight: '400',
+        py: 6,
+        px: 4,
+        borderRadius: 16,
+        border: '1px solid #5e5e5e',
+        _hover: {
+            bg: '#2a2a2a',
+        },
+        _dark: {
+            bg: 'white',
+            color: '#1a1a1a',
+            _hover: {
+                bg: '#eaeaea',
+            },
+            border: '1px solid #ffffff1a',
+        },
+        transition: 'all 0.2s',
     })),
     vechainKitSelector: defineStyle(({ colorMode }) => ({
         bg: 'transparent',
