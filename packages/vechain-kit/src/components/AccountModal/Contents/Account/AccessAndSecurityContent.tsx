@@ -36,7 +36,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
 
     const { linkPasskey, exportWallet } = usePrivy();
 
-    const { darkMode: isDark, privy } = useVeChainKitConfig();
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
 
     return (
