@@ -1,8 +1,6 @@
 import { Button, ButtonProps, useDisclosure } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { usePrivy } from '@privy-io/react-auth';
-import { useEffect } from 'react';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
@@ -25,7 +23,6 @@ export const WalletButton = ({
 
     const { connection, account } = useWallet();
     const { setSource, connect } = useDappKitWallet();
-    const { authenticated, user, createWallet } = usePrivy();
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
@@ -38,22 +35,6 @@ export const WalletButton = ({
             connectModal.onOpen();
         }
     };
-
-    useEffect(() => {
-        const embeddedWallet = user?.wallet?.address;
-
-        const asyncCreateWallet = async () => {
-            try {
-                await createWallet();
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        if (authenticated && !connection.isLoading && !embeddedWallet) {
-            asyncCreateWallet();
-        }
-    }, [authenticated, connection, user]);
 
     return (
         <VechainKitThemeProvider darkMode={darkMode}>
