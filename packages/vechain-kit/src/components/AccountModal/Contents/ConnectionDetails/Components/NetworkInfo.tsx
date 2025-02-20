@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { useWallet } from '@/hooks';
+import { useWallet, useFetchPrivyStatus } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { HStack, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ export const NetworkInfo = () => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
     const { connection, smartAccount } = useWallet();
+    const { data: privyStatus } = useFetchPrivyStatus();
 
     return (
         <>
@@ -37,16 +38,26 @@ export const NetworkInfo = () => {
                 </Text>
             </HStack>
             {connection.isConnectedWithPrivy ? (
-                <HStack w="full" justifyContent="space-between">
-                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                        {t('Smart Account')}:
-                    </Text>
-                    <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                        {smartAccount.version
-                            ? `v${smartAccount.version}`
-                            : 'v1'}
-                    </Text>
-                </HStack>
+                <>
+                    <HStack w="full" justifyContent="space-between">
+                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                            {t('Smart Account')}:
+                        </Text>
+                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                            {smartAccount.version
+                                ? `v${smartAccount.version}`
+                                : 'v1'}
+                        </Text>
+                    </HStack>
+                    <HStack w="full" justifyContent="space-between">
+                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                            {t('Privy Status')}:
+                        </Text>
+                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
+                            {privyStatus}
+                        </Text>
+                    </HStack>
+                </>
             ) : (
                 smartAccount.isDeployed && (
                     <HStack w="full" justifyContent="space-between">
