@@ -2,8 +2,6 @@ import {
     createContext,
     ReactNode,
     useContext,
-    useState,
-    useCallback,
     useEffect,
     useMemo,
 } from 'react';
@@ -12,11 +10,6 @@ import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyLoginMethod } from '@/types';
-import {
-    ConnectModal,
-    AccountModal,
-    AccountModalContentTypes,
-} from '../components';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
@@ -33,6 +26,7 @@ import { getConfig } from '@/config';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
 import { initializeI18n } from '@/utils/i18n';
+import { ModalProvider } from './ModalProvider';
 
 const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
@@ -113,25 +107,6 @@ type VeChainKitConfig = {
     i18n?: VechainKitProviderProps['i18n'];
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
-    // Connect Modal
-    openConnectModal: () => void;
-    closeConnectModal: () => void;
-    isConnectModalOpen: boolean;
-    // Account Modal
-    openAccountModal: () => void;
-    closeAccountModal: () => void;
-    isAccountModalOpen: boolean;
-    setAccountModalContent: React.Dispatch<
-        React.SetStateAction<AccountModalContentTypes>
-    >;
-    // Transaction Modal
-    openTransactionModal: () => void;
-    closeTransactionModal: () => void;
-    isTransactionModalOpen: boolean;
-    // Transaction Toast
-    openTransactionToast: () => void;
-    closeTransactionToast: () => void;
-    isTransactionToastOpen: boolean;
 };
 
 /**
@@ -216,10 +191,7 @@ export const VeChainKitProvider = (
         privy,
         feeDelegation,
         dappKit,
-        loginModalUI = {
-            description:
-                'Choose between social login through VeChain or by connecting your wallet.',
-        },
+        loginModalUI,
         loginMethods,
         darkMode = false,
         i18n: i18nConfig,
@@ -229,43 +201,6 @@ export const VeChainKitProvider = (
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
-
-    const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
-    const openConnectModal = useCallback(() => setIsConnectModalOpen(true), []);
-    const closeConnectModal = useCallback(
-        () => setIsConnectModalOpen(false),
-        [],
-    );
-
-    const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    const openAccountModal = useCallback(() => setIsAccountModalOpen(true), []);
-    const closeAccountModal = useCallback(
-        () => setIsAccountModalOpen(false),
-        [],
-    );
-
-    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
-    const openTransactionModal = useCallback(
-        () => setIsTransactionModalOpen(true),
-        [],
-    );
-    const closeTransactionModal = useCallback(
-        () => setIsTransactionModalOpen(false),
-        [],
-    );
-
-    const [isTransactionToastOpen, setIsTransactionToastOpen] = useState(false);
-    const openTransactionToast = useCallback(
-        () => setIsTransactionToastOpen(true),
-        [],
-    );
-    const closeTransactionToast = useCallback(
-        () => setIsTransactionToastOpen(false),
-        [],
-    );
-
-    const [accountModalContent, setAccountModalContent] =
-        useState<AccountModalContentTypes>('main');
 
     const allowedEcosystemApps = useMemo(() => {
         const userEcosystemMethods = validatedLoginMethods?.find(
@@ -325,19 +260,6 @@ export const VeChainKitProvider = (
                         i18n: i18nConfig,
                         language,
                         network,
-                        openConnectModal,
-                        closeConnectModal,
-                        isConnectModalOpen,
-                        openAccountModal,
-                        closeAccountModal,
-                        isAccountModalOpen,
-                        setAccountModalContent,
-                        openTransactionModal,
-                        closeTransactionModal,
-                        isTransactionModalOpen,
-                        openTransactionToast,
-                        closeTransactionToast,
-                        isTransactionToastOpen,
                     }}
                 >
                     <PrivyProvider
@@ -415,16 +337,7 @@ export const VeChainKitProvider = (
                                     feeDelegation.delegateAllTransactions
                                 }
                             >
-                                {children}
-                                <ConnectModal
-                                    isOpen={isConnectModalOpen}
-                                    onClose={closeConnectModal}
-                                />
-                                <AccountModal
-                                    isOpen={isAccountModalOpen}
-                                    onClose={closeAccountModal}
-                                    initialContent={accountModalContent}
-                                />
+                                <ModalProvider>{children}</ModalProvider>
                             </PrivyWalletProvider>
                         </DAppKitProvider>
                     </PrivyProvider>

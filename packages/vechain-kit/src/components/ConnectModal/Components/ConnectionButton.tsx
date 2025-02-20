@@ -1,4 +1,4 @@
-import { Button, Icon, Text } from '@chakra-ui/react';
+import { Button, ButtonProps, HStack, Icon, Text } from '@chakra-ui/react';
 import { ReactElement } from 'react';
 import { IconType } from 'react-icons';
 
@@ -8,28 +8,24 @@ interface ConnectionButtonProps {
     text?: string;
     icon?: IconType;
     customIcon?: ReactElement;
+    rightIcon?: ReactElement;
+    style?: ButtonProps;
+    variant?: string;
 }
 
 export const ConnectionButton = ({
-    isDark,
     onClick,
     text,
     icon,
     customIcon,
+    rightIcon,
+    style,
+    variant = 'loginIn',
 }: ConnectionButtonProps) => {
+    // If text not provided we just show a button with an icon
     if (!text) {
         return (
-            <Button
-                variant={'loginIn'}
-                fontSize={'14px'}
-                fontWeight={'400'}
-                backgroundColor={isDark ? 'transparent' : '#ffffff'}
-                border={`1px solid ${isDark ? '#ffffff1a' : '#ebebeb'}`}
-                p={6}
-                borderRadius={16}
-                w={'full'}
-                onClick={onClick}
-            >
+            <Button {...style} variant={variant} w={'full'} onClick={onClick}>
                 {customIcon ? (
                     customIcon
                 ) : (
@@ -41,25 +37,18 @@ export const ConnectionButton = ({
 
     if (text) {
         return (
-            <Button
-                variant={'loginIn'}
-                fontSize={'14px'}
-                fontWeight={'400'}
-                backgroundColor={isDark ? 'transparent' : '#ffffff'}
-                border={`1px solid ${isDark ? '#ffffff0a' : '#ebebeb'}`}
-                p={6}
-                borderRadius={16}
-                w={'full'}
-                onClick={onClick}
-                leftIcon={
-                    customIcon ? (
+            <Button {...style} variant={variant} w={'full'} onClick={onClick}>
+                <HStack w={'full'} justify={'flex-start'} gap={4}>
+                    {customIcon ? (
                         customIcon
                     ) : (
                         <Icon as={icon} w={'25px'} h={'25px'} />
-                    )
-                }
-            >
-                {text && <Text>{text}</Text>}
+                    )}
+                    <Text opacity={0.9} ml={customIcon ? 1 : 0}>
+                        {text}
+                    </Text>
+                </HStack>
+                {rightIcon}
             </Button>
         );
     }

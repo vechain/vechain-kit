@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useAccountCustomizationModal = () => {
@@ -7,7 +7,7 @@ export const useAccountCustomizationModal = () => {
         closeAccountModal,
         isAccountModalOpen,
         setAccountModalContent,
-    } = useVeChainKitConfig();
+    } = useModal();
 
     const open = () => {
         setAccountModalContent('account-customization');

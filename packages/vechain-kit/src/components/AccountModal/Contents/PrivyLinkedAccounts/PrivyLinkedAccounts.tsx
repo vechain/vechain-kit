@@ -172,7 +172,14 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     };
 
     const canUnlink = () => {
-        return user?.linkedAccounts && user?.linkedAccounts?.length > 1;
+        // the embedded wallet is always in this list, so we need to exclude it
+        const linkedAccountsExcludingWallet = user?.linkedAccounts?.filter(
+            (account) => account.type !== 'wallet',
+        );
+        return (
+            linkedAccountsExcludingWallet &&
+            linkedAccountsExcludingWallet?.length > 1
+        );
     };
 
     const handleUnlink = async (account: any) => {
@@ -180,52 +187,56 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
 
         setIsLoadingUnlink(true);
 
-        switch (account.type) {
-            case 'google_oauth':
-                await unlinkGoogle(account.subject);
-                break;
-            case 'email':
-                await unlinkEmail(account.address);
-                break;
-            case 'passkey':
-                await unlinkPasskey(account.subject);
-                break;
-            case 'phone':
-                await unlinkPhone(account.number);
-                break;
-            case 'spotify_oauth':
-                await unlinkSpotify(account.subject);
-                break;
-            case 'apple_oauth':
-                await unlinkApple(account.subject);
-                break;
-            case 'instagram_oauth':
-                await unlinkInstagram(account.subject);
-                break;
-            case 'tiktok_oauth':
-                await unlinkTiktok(account.subject);
-                break;
-            case 'github_oauth':
-                await unlinkGithub(account.subject);
-                break;
-            case 'linkedin_oauth':
-                await unlinkLinkedIn(account.subject);
-                break;
-            case 'telegram':
-                await unlinkTelegram(account.subject);
-                break;
-            case 'farcaster':
-                await unlinkFarcaster(account.subject);
-                break;
-            case 'discord_oauth':
-                await unlinkDiscord(account.subject);
-                break;
-            default:
-                break;
+        try {
+            switch (account.type) {
+                case 'google_oauth':
+                    await unlinkGoogle(account.subject);
+                    break;
+                case 'email':
+                    await unlinkEmail(account.address);
+                    break;
+                case 'passkey':
+                    await unlinkPasskey(account.subject);
+                    break;
+                case 'phone':
+                    await unlinkPhone(account.number);
+                    break;
+                case 'spotify_oauth':
+                    await unlinkSpotify(account.subject);
+                    break;
+                case 'apple_oauth':
+                    await unlinkApple(account.subject);
+                    break;
+                case 'instagram_oauth':
+                    await unlinkInstagram(account.subject);
+                    break;
+                case 'tiktok_oauth':
+                    await unlinkTiktok(account.subject);
+                    break;
+                case 'github_oauth':
+                    await unlinkGithub(account.subject);
+                    break;
+                case 'linkedin_oauth':
+                    await unlinkLinkedIn(account.subject);
+                    break;
+                case 'telegram':
+                    await unlinkTelegram(account.subject);
+                    break;
+                case 'farcaster':
+                    await unlinkFarcaster(account.subject);
+                    break;
+                case 'discord_oauth':
+                    await unlinkDiscord(account.subject);
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoadingUnlink(false);
+            setUnlinkingAccount(null);
         }
-
-        setIsLoadingUnlink(false);
-        setUnlinkingAccount(null);
     };
 
     const getAccountDescription = (account: any) => {

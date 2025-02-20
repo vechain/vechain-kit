@@ -27,7 +27,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     const isDarkMode = colorMode === 'dark';
 
-    const appLogo = 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png';
+    // const appLogo = 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png';
     const coloredLogo =
         'https://i.ibb.co/7G4PQNZ/vechain-kit-logo-colored-circle.png';
 
@@ -88,15 +88,14 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     },
                 },
             }}
-            loginModalUI={{
-                logo: appLogo,
-                description:
-                    'Choose between social login through VeChain or by connecting your wallet.',
-            }}
             loginMethods={[
+                // { method: 'email', gridColumn: 4 },
+                // { method: 'google', gridColumn: 4 },
                 { method: 'vechain', gridColumn: 4 },
-                { method: 'dappkit', gridColumn: 2 },
-                { method: 'ecosystem', gridColumn: 2 },
+                { method: 'dappkit', gridColumn: 4 },
+                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'passkey', gridColumn: 1 },
+                // { method: 'more', gridColumn: 1 },
             ]}
             darkMode={isDarkMode}
             language={i18n.language}

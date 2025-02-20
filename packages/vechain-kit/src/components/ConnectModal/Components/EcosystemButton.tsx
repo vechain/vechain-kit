@@ -1,8 +1,9 @@
-import { GridItem, useDisclosure } from '@chakra-ui/react';
+import { GridItem, Icon, useDisclosure } from '@chakra-ui/react';
 import { ConnectionButton, EcosystemModal } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
-import { IoMdApps } from 'react-icons/io';
+import { AiOutlineUser } from 'react-icons/ai';
+import { IoIosArrowForward } from 'react-icons/io';
 
 type Props = {
     isDark: boolean;
@@ -26,10 +27,13 @@ export const EcosystemButton = ({
                 <ConnectionButton
                     isDark={isDark}
                     onClick={ecosystemModal.onOpen}
-                    icon={IoMdApps}
+                    icon={AiOutlineUser}
                     text={
-                        gridColumn && gridColumn >= 2 ? t('Other') : undefined
+                        gridColumn && gridColumn >= 2
+                            ? t('Other options')
+                            : undefined
                     }
+                    rightIcon={<Icon as={IoIosArrowForward} />}
                 />
             </GridItem>
 
