@@ -20,7 +20,8 @@
             }
         ],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@vechain-kit/*": ["../../packages/vechain-kit/src/*"],
         }
     },
     "include": [

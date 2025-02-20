@@ -146,8 +146,8 @@ const validateConfig = (
         if (!props.network.type) {
             errors.push('network.type is required');
         }
-        if (!['main', 'test'].includes(props.network.type)) {
-            errors.push('network.type must be either "main" or "test"');
+        if (!['main', 'test', 'solo'].includes(props.network.type)) {
+            errors.push('network.type must be either "main", "test" or "solo"');
         }
     }
 
