@@ -21,6 +21,7 @@ import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
 import { VechainLogoHorizontal } from '@vechain/vechain-kit/assets';
+import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -97,6 +98,7 @@ export default function Home(): ReactElement {
                     </HStack>
 
                     <Introduction />
+                    <LoginUIControl />
                     <Logo />
                 </VStack>
             </Container>
