@@ -1,5 +1,5 @@
 import { useWallet } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useWalletModal = () => {
@@ -11,7 +11,7 @@ export const useWalletModal = () => {
         openAccountModal,
         closeAccountModal,
         isAccountModalOpen,
-    } = useVeChainKitConfig();
+    } = useModal();
 
     const open = () => {
         if (connection.isConnected) {

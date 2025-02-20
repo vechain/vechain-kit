@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useTransactionToast = () => {
@@ -6,7 +6,7 @@ export const useTransactionToast = () => {
         openTransactionToast: open,
         closeTransactionToast: close,
         isTransactionToastOpen: isOpen,
-    } = useVeChainKitConfig();
+    } = useModal();
     return { open, close, isOpen };
 };
 

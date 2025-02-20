@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useConnectModal = () => {
@@ -6,7 +6,7 @@ export const useConnectModal = () => {
         openConnectModal: open,
         closeConnectModal: close,
         isConnectModalOpen: isOpen,
-    } = useVeChainKitConfig();
+    } = useModal();
     return { open, close, isOpen };
 };
 
