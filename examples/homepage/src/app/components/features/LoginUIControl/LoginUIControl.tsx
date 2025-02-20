@@ -59,26 +59,6 @@ export const LoginUIControl = () => {
 
                             <VStack alignItems="flex-start" spacing={2}>
                                 <Box w={'fit-content'}>
-                                    <WalletButton connectionVariant="popover" />
-                                </Box>
-                                <Text
-                                    fontSize="sm"
-                                    fontWeight="medium"
-                                    color="blue.300"
-                                    bg="whiteAlpha.100"
-                                    px={3}
-                                    py={1}
-                                    borderRadius="full"
-                                >
-                                    variant: "popover"
-                                </Text>
-                            </VStack>
-                        </VStack>
-
-                        {/* Second Column Items */}
-                        <VStack alignItems="flex-start" spacing={8}>
-                            <VStack alignItems="flex-start" spacing={2}>
-                                <Box w={'fit-content'}>
                                     <WalletButton
                                         connectionVariant="modal"
                                         buttonStyle={{
@@ -107,6 +87,26 @@ export const LoginUIControl = () => {
                                     borderRadius="full"
                                 >
                                     variant: "modal" (with custom styling)
+                                </Text>
+                            </VStack>
+                        </VStack>
+
+                        {/* Second Column Items */}
+                        <VStack alignItems="flex-start" spacing={8}>
+                            <VStack alignItems="flex-start" spacing={2}>
+                                <Box w={'fit-content'}>
+                                    <WalletButton connectionVariant="popover" />
+                                </Box>
+                                <Text
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color="blue.300"
+                                    bg="whiteAlpha.100"
+                                    px={3}
+                                    py={1}
+                                    borderRadius="full"
+                                >
+                                    variant: "popover"
                                 </Text>
                             </VStack>
 

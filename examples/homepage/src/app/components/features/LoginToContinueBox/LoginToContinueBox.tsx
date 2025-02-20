@@ -17,6 +17,7 @@ export function LoginToContinueBox() {
             boxShadow="xl"
             bg="whiteAlpha.100"
             backdropFilter="blur(10px)"
+            zIndex={2}
         >
             <Text fontSize="lg" fontWeight="medium" textAlign="center">
                 Connect your wallet to explore all features

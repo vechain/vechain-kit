@@ -11,7 +11,7 @@ const variants = {
     vechainKitBase: (props: StyleFunctionProps) =>
         definePartsStyle({
             popper: {
-                zIndex: 999,
+                zIndex: 1000,
             },
             content: {
                 borderRadius: '24px',
