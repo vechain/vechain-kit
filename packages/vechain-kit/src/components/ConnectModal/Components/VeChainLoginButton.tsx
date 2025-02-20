@@ -1,10 +1,11 @@
 import { GridItem } from '@chakra-ui/react';
 import { useState } from 'react';
-import { VechainLogo } from '@/assets';
+import { VechainLogoDark, VechainLogoLight } from '@/assets';
 import { ConnectionButton, LoginLoadingModal } from '@/components';
 import { useLoginWithVeChain } from '@/hooks';
 import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { IconType } from 'react-icons';
 
 type Props = {
     isDark: boolean;
@@ -41,10 +42,13 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                 <ConnectionButton
                     isDark={isDark}
                     onClick={handleLoginWithVeChain}
-                    customIcon={
-                        <VechainLogo boxSize={'20px'} isDark={isDark} />
+                    icon={
+                        isDark
+                            ? (VechainLogoLight as IconType)
+                            : (VechainLogoDark as IconType)
                     }
-                    text={t('Login with VeChain')}
+                    text={t('Use social login with VeChain')}
+                    variant={'loginWithVechain'}
                 />
             </GridItem>
 
@@ -55,7 +59,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                 }}
                 onTryAgain={handleLoginWithVeChain}
                 error={loginError}
-                title={t('Connecting with VeChain')}
+                title={t('Connecting to VeChain')}
                 loadingText={t(
                     'Please approve the request in the connection request window...',
                 )}

@@ -32,12 +32,12 @@ import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
 import { FaRegAddressCard, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { AccountAvatar } from '@/components/common';
-import { picasso } from '@vechain/picasso';
 import { DomainRequiredAlert } from '../../../Components/Alerts';
 import { convertUriToUrl } from '@/utils/uri';
 import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
 import { FaXTwitter } from 'react-icons/fa6';
+import { getPicassoImage } from '@/utils';
 
 // Update FormValues type to include validation
 type FormValues = {
@@ -225,7 +225,7 @@ export const CustomizationContent = ({
                         backgroundPosition="center"
                         position="relative"
                         h="80px"
-                        background={`no-repeat url('data:image/svg+xml;utf8,${picasso(
+                        background={`no-repeat url('${getPicassoImage(
                             account?.address ?? '',
                         )}')`}
                         w="100%"
@@ -385,7 +385,10 @@ export const CustomizationContent = ({
                             <FormControl isDisabled={!hasDomain}>
                                 <FormLabel>Social Links</FormLabel>
                                 <VStack spacing={3}>
-                                    <FormControl isInvalid={!!errors.twitter}>
+                                    <FormControl
+                                        isInvalid={!!errors.twitter}
+                                        isDisabled={!hasDomain}
+                                    >
                                         <InputGroup>
                                             <InputLeftElement>
                                                 <Icon as={FaXTwitter} />
@@ -415,7 +418,10 @@ export const CustomizationContent = ({
                                         )}
                                     </FormControl>
 
-                                    <FormControl isInvalid={!!errors.website}>
+                                    <FormControl
+                                        isInvalid={!!errors.website}
+                                        isDisabled={!hasDomain}
+                                    >
                                         <InputGroup>
                                             <InputLeftElement>
                                                 <Icon as={FaGlobe} />
@@ -444,7 +450,10 @@ export const CustomizationContent = ({
                                         )}
                                     </FormControl>
 
-                                    <FormControl isInvalid={!!errors.email}>
+                                    <FormControl
+                                        isInvalid={!!errors.email}
+                                        isDisabled={!hasDomain}
+                                    >
                                         <InputGroup>
                                             <InputLeftElement>
                                                 <Icon as={FaEnvelope} />

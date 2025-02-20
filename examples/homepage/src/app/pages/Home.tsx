@@ -27,7 +27,7 @@ export default function Home(): ReactElement {
     const { colorMode, toggleColorMode } = useColorMode();
     const featuresRef = useRef<HTMLDivElement>(null);
     const [hasScrolled, setHasScrolled] = useState(false);
-    const isDesktop = useMediaQuery('(min-width: 768px)');
+    const [isDesktop] = useMediaQuery('(min-width: 768px)');
 
     const scrollToFeatures = () => {
         featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
