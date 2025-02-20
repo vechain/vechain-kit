@@ -1,3 +1,5 @@
+import { LoginMethodOrderOption } from '@privy-io/react-auth';
+
 export type ENSRecords = {
     display?: string;
     description?: string;
@@ -111,21 +113,7 @@ export type PrivyAppInfo = {
     url: string;
 };
 
-export type PrivyLoginMethod =
-    | 'wallet'
-    | 'email'
-    | 'sms'
-    | 'google'
-    | 'twitter'
-    | 'discord'
-    | 'github'
-    | 'linkedin'
-    | 'spotify'
-    | 'instagram'
-    | 'tiktok'
-    | 'apple'
-    | 'farcaster'
-    | 'telegram';
+export type PrivyLoginMethod = LoginMethodOrderOption;
 
 export type TransactionProgress = {
     currentStep: number;

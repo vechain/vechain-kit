@@ -1,4 +1,4 @@
-import { usePrivy } from '@privy-io/react-auth';
+import { LinkedAccountWithMetadata, usePrivy } from '@privy-io/react-auth';
 import {
     ModalBody,
     ModalCloseButton,
@@ -34,9 +34,10 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { IoIosFingerPrint } from 'react-icons/io';
+import { humanAddress } from '@/utils';
 
 type ConfirmUnlinkProps = {
     accountType: string;
@@ -95,7 +96,7 @@ type PrivyLinkedAccountsProps = {
 
 export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, privy, dappKit } = useVeChainKitConfig();
     const [unlinkingAccount, setUnlinkingAccount] = useState<any>(null);
     const [showLinkOptions, setShowLinkOptions] = useState(false);
     const [showFullText, setShowFullText] = useState(false);
@@ -130,9 +131,25 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         unlinkPhone,
         unlinkPasskey,
         unlinkDiscord,
+        linkWallet,
     } = usePrivy();
 
-    const { privy } = useVeChainKitConfig();
+    const canLinkWallets = useMemo(() => {
+        const privyWallets =
+            privy?.loginMethods?.filter((method) =>
+                [
+                    'rabby_wallet',
+                    'coinbase_wallet',
+                    'rainbow',
+                    'phantom',
+                    'metamask',
+                ].includes(method),
+            ) ?? [];
+
+        const dappKitWallets = dappKit?.allowedWallets ?? [];
+
+        return privyWallets.length > 0 || dappKitWallets.length > 0;
+    }, [privy?.loginMethods, dappKit?.allowedWallets]);
 
     const getAccountIcon = (type: string) => {
         switch (type) {
@@ -174,7 +191,10 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const canUnlink = () => {
         // the embedded wallet is always in this list, so we need to exclude it
         const linkedAccountsExcludingWallet = user?.linkedAccounts?.filter(
-            (account) => account.type !== 'wallet',
+            (account) =>
+                account.type !== 'wallet' ||
+                (account.type === 'wallet' &&
+                    account.connectorType !== 'embedded'),
         );
         return (
             linkedAccountsExcludingWallet &&
@@ -239,7 +259,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         }
     };
 
-    const getAccountDescription = (account: any) => {
+    const getAccountDescription = (account: LinkedAccountWithMetadata) => {
         switch (account.type) {
             case 'google_oauth':
                 return account.email;
@@ -249,6 +269,10 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 return `${account.authenticatorName} - ${account.createdWithBrowser}`;
             case 'phone':
                 return account.number;
+            case 'wallet':
+                return `${humanAddress(account.address)} - ${
+                    account.walletClientType
+                }`;
             default:
                 return '';
         }
@@ -448,6 +472,16 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 leftIcon={FaDiscord}
                             />
                         )}
+                        {canLinkWallets && (
+                            <ActionButton
+                                title={t('Link External Wallet')}
+                                description={t(
+                                    'Connect an external wallet for easier access',
+                                )}
+                                onClick={() => linkWallet()}
+                                leftIcon={FaWallet}
+                            />
+                        )}
                         {!canLinkGoogle &&
                             !canLinkEmail &&
                             !canLinkTwitter &&
@@ -565,7 +599,12 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     </VStack>
 
                     {user?.linkedAccounts
-                        ?.filter((account) => account.type !== 'wallet')
+                        ?.filter(
+                            (account) =>
+                                account.type !== 'wallet' ||
+                                (account.type === 'wallet' &&
+                                    account.connectorType !== 'embedded'),
+                        )
                         .map((account) => (
                             <Flex
                                 key={account.type}

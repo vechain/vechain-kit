@@ -154,9 +154,8 @@ export default function App({ Component, pageProps }: AppProps) {
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: ['google', 'twitter', 'sms', 'email'],
+                loginMethods: ['google', 'twitter', 'sms', 'email', 'metamask'],
                 appearance: {
-                    walletList: ['metamask', 'rainbow'],
                     accentColor: '#696FFD',
                     loginMessage: 'Select a social media profile',
                     logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
@@ -164,7 +163,6 @@ export default function App({ Component, pageProps }: AppProps) {
                 embeddedWallets: {
                     createOnLogin: 'all-users',
                 },
-                allowPasskeyLinking: true,
             }}
             ...
             //other props

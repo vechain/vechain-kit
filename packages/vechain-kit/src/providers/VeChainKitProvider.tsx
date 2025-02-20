@@ -5,7 +5,12 @@ import {
     useEffect,
     useMemo,
 } from 'react';
-import { PrivyProvider, WalletListEntry } from '@privy-io/react-auth';
+import {
+    LoginMethodOrderOption,
+    NonEmptyArray,
+    PrivyProvider,
+    WalletListEntry,
+} from '@privy-io/react-auth';
 import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
@@ -52,7 +57,7 @@ export type VechainKitProviderProps = {
         appId: string;
         clientId: string;
         appearance: {
-            walletList: WalletListEntry[];
+            walletList?: WalletListEntry[];
             accentColor: `#${string}`;
             loginMessage: string;
             logo: string;
@@ -61,7 +66,6 @@ export type VechainKitProviderProps = {
             createOnLogin: 'users-without-wallets' | 'all-users' | 'off';
         };
         loginMethods: PrivyLoginMethod[];
-        allowPasskeyLinking?: boolean;
     };
     feeDelegation: {
         delegatorUrl: string;
@@ -266,13 +270,20 @@ export const VeChainKitProvider = (
                         appId={privyAppId}
                         clientId={privyClientId}
                         config={{
+                            // loginMethods: privy?.loginMethods,
                             loginMethodsAndOrder: {
-                                // @ts-ignore
-                                primary: privy?.loginMethods ?? [],
+                                primary: (privy?.loginMethods.slice(0, 4) ??
+                                    []) as NonEmptyArray<LoginMethodOrderOption>,
+                                overflow: (privy?.loginMethods.slice(4) ??
+                                    []) as Array<LoginMethodOrderOption>,
+                            },
+                            externalWallets: {
+                                walletConnect: {
+                                    enabled: false,
+                                },
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',
-                                walletList: privy?.appearance.walletList,
                                 accentColor: privy?.appearance.accentColor,
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
@@ -281,9 +292,9 @@ export const VeChainKitProvider = (
                                 createOnLogin:
                                     privy?.embeddedWallets?.createOnLogin ??
                                     'all-users',
+                                showWalletUIs: true,
                             },
                         }}
-                        allowPasskeyLinking={privy?.allowPasskeyLinking}
                     >
                         <DAppKitProvider
                             nodeUrl={
