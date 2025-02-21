@@ -12,7 +12,7 @@ export const fetchPrivyStatus = async (): Promise<string> => {
         return data.page.status ?? 'No data';
     } catch (error) {
         console.error("Error fetching data:", error);
-        return 'ERROR_FETCHING';
+        return 'Error fetching data';
     }
 };
 
