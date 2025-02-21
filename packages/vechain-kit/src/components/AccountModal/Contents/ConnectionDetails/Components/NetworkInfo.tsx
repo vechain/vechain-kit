@@ -11,82 +11,62 @@ export const NetworkInfo = () => {
     const { connection, smartAccount } = useWallet();
     const { data: privyStatus } = useFetchPrivyStatus();
 
+    const textColor = isDark ? '#dfdfdd' : '#4d4d4d';
+
+    const InfoRow = ({ label, value }: { label: string; value: string }) => (
+        <HStack w="full" justifyContent="space-between">
+            <Text fontSize="sm" color={textColor}>
+                {label}:
+            </Text>
+            <Text fontSize="sm" color={textColor}>
+                {value}
+            </Text>
+        </HStack>
+    );
+
+    const smartAccountVersion = smartAccount.version 
+        ? `v${smartAccount.version}` 
+        : 'v1';
+
     return (
         <>
-            <HStack w="full" justifyContent="space-between">
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {t('Connection Type')}:
-                </Text>
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {connection.source.type}
-                </Text>
-            </HStack>
-            <HStack w="full" justifyContent="space-between">
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {t('Network')}:
-                </Text>
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {network.type}
-                </Text>
-            </HStack>
-            <HStack w="full" justifyContent="space-between">
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {t('Node URL')}:
-                </Text>
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {network.nodeUrl || getConfig(network.type).nodeUrl}
-                </Text>
-            </HStack>
+            <InfoRow 
+                label={t('Connection Type')} 
+                value={connection.source.type} 
+            />
+            <InfoRow 
+                label={t('Network')} 
+                value={network.type} 
+            />
+            <InfoRow 
+                label={t('Node URL')} 
+                value={network.nodeUrl || getConfig(network.type).nodeUrl} 
+            />
+
             {connection.isConnectedWithPrivy ? (
                 <>
-                    <HStack w="full" justifyContent="space-between">
-                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                            {t('Smart Account')}:
-                        </Text>
-                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                            {smartAccount.version
-                                ? `v${smartAccount.version}`
-                                : 'v1'}
-                        </Text>
-                    </HStack>
-                    <HStack w="full" justifyContent="space-between">
-                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                            {t('Privy Status')}:
-                        </Text>
-                        <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                            {privyStatus}
-                        </Text>
-                    </HStack>
+                    <InfoRow 
+                        label={t('Smart Account')} 
+                        value={smartAccountVersion} 
+                    />
+                    <InfoRow 
+                        label={t('Privy Status')} 
+                        value={privyStatus || ''} 
+                    />
                 </>
             ) : (
                 smartAccount.isDeployed && (
-                    <HStack w="full" justifyContent="space-between">
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
-                            {t('Smart Account')}:
-                        </Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
-                            {smartAccount.version
-                                ? `v${smartAccount.version}`
-                                : 'v1'}
-                        </Text>
-                    </HStack>
+                    <InfoRow 
+                        label={t('Smart Account')} 
+                        value={smartAccountVersion} 
+                    />
                 )
             )}
 
-            <HStack w="full" justifyContent="space-between">
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {t('VeChain Kit')}:
-                </Text>
-                <Text fontSize="sm" color={isDark ? '#dfdfdd' : '#4d4d4d'}>
-                    {packageJson.version}
-                </Text>
-            </HStack>
+            <InfoRow 
+                label={t('VeChain Kit')} 
+                value={packageJson.version} 
+            />
         </>
     );
 };

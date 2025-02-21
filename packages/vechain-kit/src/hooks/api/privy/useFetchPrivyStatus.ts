@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-export const FetchPrivyStatus = async (): Promise<string | null> => {
+export const fetchPrivyStatus = async (): Promise<string> => {
     try {
         const response = await fetch('https://status.privy.io/summary.json');
 
@@ -9,16 +9,16 @@ export const FetchPrivyStatus = async (): Promise<string | null> => {
         }
 
         const data = await response.json();
-        return data.page.status ?? null;
+        return data.page.status ?? 'No data';
     } catch (error) {
         console.error("Error fetching data:", error);
-        return null;
+        return 'ERROR_FETCHING';
     }
 };
 
 export const useFetchPrivyStatus = () => {
     return useQuery({
         queryKey: ['PRIVY_STATUS'],
-        queryFn: FetchPrivyStatus
+        queryFn: fetchPrivyStatus
     });
 };
