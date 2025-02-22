@@ -36,7 +36,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
 
     const { linkPasskey, exportWallet } = usePrivy();
 
-    const { darkMode: isDark, privy } = useVeChainKitConfig();
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
 
     return (
@@ -93,10 +93,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         }}
                         leftIcon={IoIosFingerPrint}
                         rightIcon={undefined}
-                        isDisabled={
-                            !privy?.allowPasskeyLinking ||
-                            !connection.isConnectedWithPrivy
-                        }
+                        isDisabled={!connection.isConnectedWithPrivy}
                     />
 
                     <ActionButton

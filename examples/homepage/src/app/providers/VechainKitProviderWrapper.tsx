@@ -4,7 +4,7 @@ import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
-import { NETWORK_TYPE } from "@vechain-kit/config/network";
+import { NETWORK_TYPE } from '@vechain-kit/config/network';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -39,23 +39,17 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 loginMethods: [
                     'google',
                     'twitter',
-                    // 'sms',
+                    'farcaster',
                     'email',
                     'discord',
-                    'farcaster',
                     'tiktok',
-                    'wallet',
+                    'rabby_wallet',
+                    'coinbase_wallet',
+                    'rainbow',
+                    'phantom',
+                    'metamask',
                 ],
                 appearance: {
-                    walletList: [
-                        'metamask',
-                        'rainbow',
-                        'coinbase_wallet',
-                        'detected_ethereum_wallets',
-                        'rabby_wallet',
-                        'safe',
-                        'uniswap',
-                    ],
                     accentColor: '#696FFD',
                     loginMessage: 'Select a login method',
                     logo: 'https://i.ibb.co/0Mxcw49/V-color.png',
@@ -63,7 +57,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 embeddedWallets: {
                     createOnLogin: 'all-users',
                 },
-                allowPasskeyLinking: true,
             }}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
