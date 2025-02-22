@@ -20,7 +20,11 @@ export const getIpfsMetadata = async <T>(
     const newUri = convertUriToUrl(uri, networkType);
     if (!newUri) throw new Error('Invalid URI');
 
-    const response = await fetch(newUri);
+    const response = await fetch(newUri, {
+        headers: {
+            'X-Project-Id': 'vechain-kit',
+        },
+    });
     const data = await response.text();
 
     if (parseJson) return JSON.parse(data);
