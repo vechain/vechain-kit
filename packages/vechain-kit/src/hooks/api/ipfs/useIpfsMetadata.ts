@@ -22,7 +22,7 @@ export const getIpfsMetadata = async <T>(
 
     const response = await fetch(newUri, {
         headers: {
-            'X-Project-Id': 'vechain-kit',
+            'x-project-id': 'vechain-kit',
         },
     });
     const data = await response.text();

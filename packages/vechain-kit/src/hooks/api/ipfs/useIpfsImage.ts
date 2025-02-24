@@ -25,7 +25,7 @@ export const getIpfsImage = async (
 
     const response = await fetch(convertUriToUrl(uri, networkType) ?? '', {
         headers: {
-            'X-Project-Id': 'vechain-kit',
+            'x-roject-id': 'vechain-kit',
         },
     });
 

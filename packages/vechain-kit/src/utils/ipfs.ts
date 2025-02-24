@@ -46,7 +46,7 @@ export async function uploadBlobToIPFS(
             {
                 method: 'POST',
                 headers: {
-                    'X-Project-Id': 'vechain-kit',
+                    'x-project-id': 'vechain-kit',
                 },
                 body: form,
             },
