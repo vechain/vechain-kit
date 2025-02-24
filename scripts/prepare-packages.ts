@@ -50,6 +50,11 @@ const preparePackages = async () => {
     await exec('yarn install:all');
     console.log('       - ✅  Built!');
 
+    console.log(' Translate:');
+    console.log('       - 🌍 Run translations...');
+    await exec('cd packages/vechain-kit && yarn translate && cd -');
+    console.log('       - ✅  Translated!');
+
     console.log(' Test:');
     console.log('       - 🧪 Testing packages...');
     await exec('yarn test');
