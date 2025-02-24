@@ -45,9 +45,6 @@ export async function uploadBlobToIPFS(
             getConfig(networkType).ipfsPinningService,
             {
                 method: 'POST',
-                headers: {
-                    'x-project-id': 'vechain-kit',
-                },
                 body: form,
             },
         );
