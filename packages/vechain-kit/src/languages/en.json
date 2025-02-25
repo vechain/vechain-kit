@@ -404,5 +404,12 @@
     "Already have an app account?": "Already have an app account?",
     "Other options": "Other options",
     "Link External Wallet": "Link External Wallet",
-    "Connect an external wallet for easier access": "Connect an external wallet for easier access"
+    "Connect an external wallet for easier access": "Connect an external wallet for easier access",
+    "Token Contract Address": "Token Contract Address",
+    "Please enter a valid contract address": "Please enter a valid contract address",
+    "Invalid contract address": "Invalid contract address",
+    "Existing Custom Tokens": "Existing Custom Tokens",
+    "Add Token": "Add Token",
+    "Token already added": "Token already added",
+    "Manage Custom Tokens": "Manage Custom Tokens"
 }
