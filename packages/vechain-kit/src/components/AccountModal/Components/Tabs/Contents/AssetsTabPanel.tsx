@@ -1,9 +1,12 @@
-import { VStack } from '@chakra-ui/react';
+import { Button, Icon, VStack } from '@chakra-ui/react';
 import { useBalances, useWallet } from '@/hooks';
 import { AssetButton } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
+import { useTranslation } from 'react-i18next';
+import { RiEdit2Line } from 'react-icons/ri';
 
 export type AssetsTabPanelProps = {
     setCurrentContent: React.Dispatch<
@@ -14,10 +17,16 @@ export type AssetsTabPanelProps = {
 export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
     const { account } = useWallet();
     const { balances, prices } = useBalances({ address: account?.address });
-    const { network } = useVeChainKitConfig();
+    const { network, developerMode } = useVeChainKitConfig();
+    const { customTokens } = useCustomTokens();
+    const { t } = useTranslation();
+
+    const openCustomTokenModal = () => {
+        setCurrentContent('add-custom-token');
+    };
 
     const handleTokenSelect = (token: {
-        symbol: string;
+        address: string;
         amount: number;
         price: number;
     }) => {
@@ -27,90 +36,78 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                 setCurrentContent,
                 isNavigatingFromMain: false,
                 preselectedToken: {
-                    symbol: token.symbol,
+                    symbol:
+                        customTokens.find((t) => t.address === token.address)
+                            ?.symbol ?? 'Unknown',
                     balance: token.amount.toString(),
-                    address:
-                        token.symbol === 'VET'
-                            ? '0x'
-                            : token.symbol === 'VTHO'
-                            ? getConfig(network.type).vthoContractAddress
-                            : token.symbol === 'B3TR'
-                            ? getConfig(network.type).b3trContractAddress
-                            : token.symbol === 'VOT3'
-                            ? getConfig(network.type).vot3ContractAddress
-                            : token.symbol === 'veDelegate'
-                            ? getConfig(network.type).veDelegate
-                            : '',
+                    address: token.address,
                     numericBalance: token.amount,
                     price: token.price,
                 },
             },
         });
     };
+    // Preload contract addresses to avoid redundant calls
+    const contractAddresses = {
+        VET: '0x', // VET (Native token, no contract)
+        VTHO: getConfig(network.type).vthoContractAddress,
+        B3TR: getConfig(network.type).b3trContractAddress,
+        VOT3: getConfig(network.type).vot3ContractAddress,
+    };
 
-    // Create array of base assets
-    const baseAssets = [
-        {
-            symbol: 'VET',
-            amount: balances.vet,
-            usdValue: balances.vet * prices.vet,
-            price: prices.vet,
-        },
-        {
-            symbol: 'VTHO',
-            amount: balances.vtho,
-            usdValue: balances.vtho * prices.vtho,
-            price: prices.vtho,
-        },
-        {
-            symbol: 'B3TR',
-            amount: balances.b3tr,
-            usdValue: balances.b3tr * prices.b3tr,
-            price: prices.b3tr,
-        },
-    ].sort((a, b) => b.usdValue - a.usdValue);
+    // Convert balances and prices into lookup maps for quick access
+    const balanceMap = new Map(
+        balances.map(({ address, value }) => [address, value]),
+    );
+    const priceMap = new Map(
+        prices.map(({ address, price }) => [address, price]),
+    );
+
+    // Define base assets
+    const baseAssets = Object.entries(contractAddresses).map(
+        ([symbol, address]) => ({
+            address,
+            symbol,
+            amount: balanceMap.get(address) ?? 0,
+            price: priceMap.get(address) ?? 0,
+        }),
+    );
+    //Format the custom tokens
+    const otherTokens = customTokens.map((token) => ({
+        ...token,
+        amount: balanceMap.get(token.address) ?? 0,
+        price: priceMap.get(token.address) ?? 0,
+    }));
+
+    const allTokens = baseAssets
+        .concat(otherTokens)
+        .sort((a, b) => b.amount * b.price - a.amount * a.price); // Sort by USD value
 
     return (
         <VStack spacing={2} align="stretch" mt={2}>
-            {baseAssets.map((token) => (
+            {allTokens.map((token) => (
                 <AssetButton
-                    key={token.symbol}
+                    key={token.address}
                     symbol={token.symbol}
                     amount={token.amount}
-                    usdValue={token.usdValue}
+                    usdValue={token.amount * token.price}
                     isDisabled={token.amount === 0}
                     onClick={() => handleTokenSelect(token)}
                 />
             ))}
-            {balances.vot3 > 0 && (
-                <AssetButton
-                    symbol="VOT3"
-                    amount={balances.vot3}
-                    usdValue={balances.vot3 * prices.b3tr}
-                    isDisabled={balances.vot3 === 0}
-                    onClick={() =>
-                        handleTokenSelect({
-                            symbol: 'VOT3',
-                            amount: balances.vot3,
-                            price: prices.b3tr,
-                        })
-                    }
-                />
-            )}
-            {balances.veDelegate > 0 && (
-                <AssetButton
-                    symbol="veDelegate"
-                    amount={balances.veDelegate}
-                    usdValue={balances.veDelegate * prices.b3tr}
-                    isDisabled={balances.veDelegate === 0}
-                    onClick={() =>
-                        handleTokenSelect({
-                            symbol: 'veDelegate',
-                            amount: balances.veDelegate,
-                            price: prices.b3tr,
-                        })
-                    }
-                />
+
+            {/* Plus Icon to add a new token */}
+            {developerMode && (
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    colorScheme="gray"
+                    leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
+                    onClick={openCustomTokenModal}
+                    alignSelf="center" // Centers the button
+                >
+                    {t('Manage Custom Tokens')}
+                </Button>
             )}
         </VStack>
     );
