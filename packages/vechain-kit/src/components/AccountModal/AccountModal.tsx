@@ -27,6 +27,7 @@ import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
+import { ManageCustomTokenContent } from './Contents/ManageCustomToken';
 
 type Props = {
     isOpen: boolean;
@@ -178,6 +179,12 @@ export const AccountModal = ({
             case 'embedded-wallet':
                 return (
                     <EmbeddedWalletContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'add-custom-token':
+                return (
+                    <ManageCustomTokenContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
