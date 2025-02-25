@@ -1,17 +1,21 @@
 import { formatEther } from 'viem';
-import { useAccountBalance } from '..';
+import { useAccountBalance, useGetCustomTokenBalances } from '..';
 import {
     useGetB3trBalance,
     useGetVot3Balance,
     useGetVeDelegateBalance,
     useGetTokenUsdPrice,
 } from '..';
+import { getConfig } from '@/config';
+import { useVeChainKitConfig } from '@/providers';
 
 type UseBalancesProps = {
     address?: string;
 };
 
 export const useBalances = ({ address = '' }: UseBalancesProps) => {
+    const { network } = useVeChainKitConfig();
+
     const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);
     const { data: vetUsdPrice, isLoading: vetUsdPriceLoading } =
         useGetTokenUsdPrice('VET');
@@ -29,6 +33,19 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
         useGetVeDelegateBalance(address);
 
+    // Get custom token balances
+    const customTokenBalancesQueries = useGetCustomTokenBalances(address);
+
+    // Extract balances from queries
+    const customTokenBalances = customTokenBalancesQueries
+        .map((query) => query.data)
+        .filter(Boolean); // Remove undefined results
+
+    // Check if any custom token queries are still loading
+    const customTokensLoading = customTokenBalancesQueries.some(
+        (query) => query.isLoading,
+    );
+
     const isLoading =
         vetLoading ||
         b3trLoading ||
@@ -36,28 +53,64 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         vetUsdPriceLoading ||
         b3trUsdPriceLoading ||
         veDelegateLoading ||
-        vthoUsdPriceLoading;
+        vthoUsdPriceLoading ||
+        customTokensLoading;
 
-    const balances = {
-        vet: Number(vetData?.balance || 0),
-        vtho: Number(vetData?.energy || 0),
-        b3tr: Number(formatEther(BigInt(b3trBalance?.original || '0'))),
-        vot3: Number(formatEther(BigInt(vot3Balance?.original || '0'))),
-        veDelegate: Number(formatEther(BigInt(veDelegateBalance || '0'))),
+    // Get contract addresses from config
+    const contractAddresses = {
+        vet: '0x', // VET has no contract address since it's the native token
+        vtho: getConfig(network.type).vthoContractAddress,
+        b3tr: getConfig(network.type).b3trContractAddress,
+        vot3: getConfig(network.type).vot3ContractAddress,
+        veDelegate: getConfig(network.type).veDelegate,
     };
 
-    const prices = {
-        vet: vetUsdPrice || 0,
-        vtho: vthoUsdPrice || 0,
-        b3tr: b3trUsdPrice || 0,
-    };
+    // Base balances using contract addresses
+    const balances = [
+        {
+            address: contractAddresses.vet,
+            value: Number(vetData?.balance || 0),
+        },
+        {
+            address: contractAddresses.vtho,
+            value: Number(vetData?.energy || 0),
+        },
+        {
+            address: contractAddresses.b3tr,
+            value: Number(formatEther(BigInt(b3trBalance?.original || '0'))),
+        },
+        {
+            address: contractAddresses.vot3,
+            value: Number(formatEther(BigInt(vot3Balance?.original || '0'))),
+        },
+        {
+            address: contractAddresses.veDelegate,
+            value: Number(formatEther(BigInt(veDelegateBalance || '0'))),
+        },
+    ];
 
-    const totalBalance =
-        balances.vet * prices.vet +
-        balances.b3tr * prices.b3tr +
-        balances.vot3 * prices.b3tr +
-        balances.vtho * prices.vtho +
-        balances.veDelegate * prices.b3tr;
+    // Add custom token balances using contract addresses
+    customTokenBalances.forEach((token) => {
+        if (token) {
+            balances.push({
+                address: token.address,
+                value: Number(formatEther(BigInt(token.original))),
+            });
+        }
+    });
+
+    // Prices mapped by address
+    const prices = [
+        { address: contractAddresses.vet, price: vetUsdPrice || 0 },
+        { address: contractAddresses.vtho, price: vthoUsdPrice || 0 },
+        { address: contractAddresses.b3tr, price: b3trUsdPrice || 0 },
+    ];
+
+    // Dynamically compute total balance using contract addresses
+    const totalBalance = balances.reduce((acc, { address, value }) => {
+        const price = prices.find((p) => p.address === address)?.price || 0;
+        return acc + value * price;
+    }, 0);
 
     return {
         isLoading,
