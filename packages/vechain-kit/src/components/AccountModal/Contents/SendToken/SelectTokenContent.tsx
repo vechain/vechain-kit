@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
 
 export type Token = {
     symbol: string;
@@ -43,53 +44,58 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { balances, prices } = useBalances({
         address: account?.address ?? '',
     });
+    const { customTokens } = useCustomTokens();
     const [searchQuery, setSearchQuery] = useState('');
 
     const { network } = useVeChainKitConfig();
+    const config = getConfig(network.type); // Cache config to avoid redundant function calls
 
-    // Transform balances into tokens array with numeric values
-    const tokens: Token[] = [
-        {
-            symbol: 'VET',
-            balance: balances.vet.toString(),
-            address: '0x',
-            numericBalance: balances.vet,
-            price: prices.vet,
-        },
-        {
-            symbol: 'VTHO',
-            balance: balances.vtho.toString(),
-            address: getConfig(network.type).vthoContractAddress,
-            numericBalance: balances.vtho,
-            price: prices.vtho,
-        },
-        {
-            symbol: 'B3TR',
-            balance: balances.b3tr.toString(),
-            address: getConfig(network.type).b3trContractAddress,
-            numericBalance: balances.b3tr,
-            price: prices.b3tr,
-        },
-        {
-            symbol: 'VOT3',
-            balance: balances.vot3.toString(),
-            address: getConfig(network.type).vot3ContractAddress,
-            numericBalance: balances.vot3,
-            price: prices.b3tr,
-        },
-        {
-            symbol: 'veDelegate',
-            balance: balances.veDelegate.toString(),
-            address: getConfig(network.type).veDelegate,
-            numericBalance: balances.veDelegate,
-            price: prices.b3tr,
-        },
-    ];
+    // Preload contract addresses for quick access
+    const contractAddresses = {
+        VET: '0x',
+        VTHO: config.vthoContractAddress,
+        B3TR: config.b3trContractAddress,
+        VOT3: config.vot3ContractAddress,
+        veDelegate: config.veDelegate,
+    };
+
+    // Create lookup maps for fast balance and price retrieval
+    const balanceMap = new Map(
+        balances.map(({ address, value }) => [address, value]),
+    );
+    const priceMap = new Map(
+        prices.map(({ address, price }) => [address, price]),
+    );
+
+    // Create base tokens list
+    const baseTokens: Token[] = Object.entries(contractAddresses).map(
+        ([symbol, address]) => ({
+            symbol,
+            balance: (balanceMap.get(address) || 0).toString(),
+            address,
+            numericBalance: balanceMap.get(address) || 0,
+            price: priceMap.get(address) || 0,
+        }),
+    );
+
+    // Add custom tokens dynamically
+    const customTokensList: Token[] = customTokens.map(
+        ({ address, symbol }) => ({
+            symbol,
+            balance: (balanceMap.get(address) || 0).toString(),
+            address,
+            numericBalance: balanceMap.get(address) ?? 0,
+            price: priceMap.get(address) ?? 0,
+        }),
+    );
+
+    // Merge base tokens and custom tokens
+    const tokens = [...baseTokens, ...customTokensList];
 
     // Filter tokens based on search query
     const filteredTokens = tokens
-        .filter((token) =>
-            token.symbol.toLowerCase().includes(searchQuery.toLowerCase()),
+        .filter(({ symbol }) =>
+            symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
             // Sort by balance first (tokens with balance > 0 come first)
@@ -164,7 +170,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
 
                                 return (
                                     <AssetButton
-                                        key={token.symbol}
+                                        key={token.address}
                                         symbol={token.symbol}
                                         amount={token.numericBalance}
                                         usdValue={usdValue}

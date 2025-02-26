@@ -212,7 +212,7 @@ export const SendTokenSummaryContent = ({
                             imageSrc={account?.image ?? ''}
                             imageAlt="From account"
                             balance={selectedToken.numericBalance}
-                            symbol={selectedToken.symbol}
+                            tokenAddress={selectedToken.address}
                         />
 
                         <AddressDisplayCard
@@ -221,7 +221,7 @@ export const SendTokenSummaryContent = ({
                             domain={resolvedDomain}
                             imageSrc={toImageSrc ?? ''}
                             imageAlt="To account"
-                            symbol={selectedToken.symbol}
+                            tokenAddress={selectedToken.address}
                         />
 
                         <Divider />

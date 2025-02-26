@@ -98,6 +98,7 @@ export type VechainKitProviderProps = {
             options?: Connex.Signer.CertOptions;
         };
     };
+    allowCustomTokens?: boolean;
 };
 
 type VeChainKitConfig = {
@@ -111,6 +112,7 @@ type VeChainKitConfig = {
     i18n?: VechainKitProviderProps['i18n'];
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
+    allowCustomTokens?: boolean;
 };
 
 /**
@@ -201,6 +203,7 @@ export const VeChainKitProvider = (
         i18n: i18nConfig,
         language = 'en',
         network,
+        allowCustomTokens,
     } = validatedProps;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
@@ -264,6 +267,7 @@ export const VeChainKitProvider = (
                         i18n: i18nConfig,
                         language,
                         network,
+                        allowCustomTokens,
                     }}
                 >
                     <PrivyProvider

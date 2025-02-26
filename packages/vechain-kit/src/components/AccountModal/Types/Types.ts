@@ -21,6 +21,7 @@ export type AccountModalContentTypes =
     | 'notifications'
     | 'privy-linked-accounts'
     | 'account-customization'
+    | 'add-custom-token'
     | {
           type: 'successful-operation';
           props: SuccessfulOperationContentProps;

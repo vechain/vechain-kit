@@ -18,7 +18,7 @@ type AddressDisplayCardProps = {
     imageAlt?: string;
     hideAddress?: boolean;
     balance?: number;
-    symbol?: string;
+    tokenAddress?: string;
 };
 
 export const AddressDisplayCard = ({
@@ -29,7 +29,7 @@ export const AddressDisplayCard = ({
     imageAlt = 'Account',
     hideAddress = false,
     balance,
-    symbol,
+    tokenAddress,
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
@@ -38,13 +38,17 @@ export const AddressDisplayCard = ({
         address: address,
     });
 
+    // Convert balances into lookup maps for quick access
+    const balanceMap = new Map(
+        balances.map(({ address, value }) => [address, value]),
+    );
+    const symbol = balances.find(({ address }) => address === tokenAddress); //TODO: Insted of using find, useBalances should return a map to easy access
+
     // Use the specific token balance if symbol is provided
     const displayBalance =
         balance !== undefined
             ? balance
-            : (symbol &&
-                  balances[symbol.toLowerCase() as keyof typeof balances]) ||
-              0;
+            : (tokenAddress && balanceMap.get(tokenAddress)) || 0;
 
     return (
         <Box

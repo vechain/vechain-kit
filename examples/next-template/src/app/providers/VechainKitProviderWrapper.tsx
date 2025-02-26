@@ -4,7 +4,7 @@ import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
-import { NETWORK_TYPE } from "@vechain-kit/config/network";
+import { NETWORK_TYPE } from '@vechain-kit/config/network';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -56,6 +56,15 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     },
                 },
             }}
+            loginMethods={[
+                // { method: 'email', gridColumn: 4 },
+                // { method: 'google', gridColumn: 4 },
+                { method: 'vechain', gridColumn: 4 },
+                { method: 'dappkit', gridColumn: 4 },
+                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'passkey', gridColumn: 1 },
+                // { method: 'more', gridColumn: 1 },
+            ]}
             loginModalUI={{
                 logo: appLogo,
                 description:
@@ -66,6 +75,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as NETWORK_TYPE,
             }}
+            allowCustomTokens={true}
         >
             {children}
         </VeChainKitProvider>

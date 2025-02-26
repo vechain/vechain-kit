@@ -3,17 +3,25 @@ import { useWallet } from './useWallet';
 import {
     getAccountBalanceQueryKey,
     getB3trBalanceQueryKey,
-    getVot3BalanceQueryKey,
     getVeDelegateBalanceQueryKey,
+    getVot3BalanceQueryKey,
     getTokenUsdPriceQueryKey,
+    getCustomTokenBalanceQueryKey,
 } from '..';
+import { useCustomTokens } from './useCustomTokens';
 
 export const useRefreshBalances = () => {
     const queryClient = useQueryClient();
     const { account } = useWallet();
+    const { customTokens } = useCustomTokens();
 
     const refresh = async () => {
         const address = account?.address ?? '';
+
+        // Generate query keys for custom token balances
+        const customTokenQueryKeys = customTokens.map((token) =>
+            getCustomTokenBalanceQueryKey(token.address, address),
+        );
 
         // First invalidate all queries
         await Promise.all([
@@ -38,6 +46,9 @@ export const useRefreshBalances = () => {
             queryClient.cancelQueries({
                 queryKey: getTokenUsdPriceQueryKey('B3TR'),
             }),
+            ...customTokenQueryKeys.map((queryKey) =>
+                queryClient.cancelQueries({ queryKey }),
+            ),
         ]);
 
         // Then refetch all queries
@@ -63,6 +74,9 @@ export const useRefreshBalances = () => {
             queryClient.refetchQueries({
                 queryKey: getTokenUsdPriceQueryKey('B3TR'),
             }),
+            ...customTokenQueryKeys.map((queryKey) =>
+                queryClient.refetchQueries({ queryKey }),
+            ),
         ]);
     };
 
