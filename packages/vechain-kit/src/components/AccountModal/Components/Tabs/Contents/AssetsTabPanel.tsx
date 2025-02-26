@@ -17,7 +17,7 @@ export type AssetsTabPanelProps = {
 export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
     const { account } = useWallet();
     const { balances, prices } = useBalances({ address: account?.address });
-    const { network, developerMode } = useVeChainKitConfig();
+    const { network, allowCustomTokens } = useVeChainKitConfig();
     const { customTokens } = useCustomTokens();
     const { t } = useTranslation();
 
@@ -97,7 +97,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
             ))}
 
             {/* Plus Icon to add a new token */}
-            {developerMode && (
+            {allowCustomTokens && (
                 <Button
                     size="sm"
                     variant="ghost"
