@@ -195,7 +195,7 @@ export function SigningExample(): ReactElement {
                     <Button
                         as={Link}
                         isExternal
-                        href="https://docs.vechain-kit.vechain.org/vechain-kit/sign-messages"
+                        href="https://docs.vechainkit.vechain.org/vechain-kit/sign-messages"
                         w="full"
                         variant="outline"
                         rightIcon={<MdFingerprint />}

@@ -135,7 +135,7 @@ const { data: vetPrice } =
                         <Button
                             as={Link}
                             isExternal
-                            href="https://docs.vechain-kit.vechain.org/vechain-kit/hooks"
+                            href="https://docs.vechainkit.vechain.org/vechain-kit/hooks"
                             w="full"
                             variant="outline"
                             rightIcon={<MdDataUsage />}

@@ -19,11 +19,11 @@ It offers:
 
 > **Note**: Currently supports React and Next.js only
 
-📚 For detailed documentation, visit our [VeChain Kit Docs](https://docs.vechain-kit.vechain.org/)
+📚 For detailed documentation, visit our [VeChain Kit Docs](https://docs.vechainkit.vechain.org/)
 
 ## Demo & Examples
 
--   [Live Demo](https://vechain-kit.vechain.org/)
+-   [Live Demo](https://vechainkit.vechain.org/)
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
 
@@ -125,7 +125,7 @@ By default we have a list of default apps that will be shown as ecosystem login 
 
 Fee delegation is mandatory in order to use this kit. Learn how to setup fee delegation in the following guide:
 
-[Fee Delegation](https://docs.vechain-kit.vechain.org/vechain-kit/fee-delegation)
+[Fee Delegation](https://docs.vechainkit.vechain.org/vechain-kit/fee-delegation)
 
 ### Setup Privy (optional)
 

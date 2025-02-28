@@ -26,14 +26,14 @@ It offers:
 
 > **Note**: Currently supports React and Next.js only
 
-📚 For detailed documentation, visit our [VeChain Kit Docs](https://docs.vechain-kit.vechain.org/)
+📚 For detailed documentation, visit our [VeChain Kit Docs](https://docs.vechainkit.vechain.org/)
 
 ## Demo & Examples
 
--   [Live Demo](https://vechain-kit.vechain.org/)
+-   [Live Demo](https://vechainkit.vechain.org/)
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
--   [Docs](https://docs.vechain-kit.vechain.org/)
+-   [Docs](https://docs.vechainkit.vechain.org/)
 
 ## Table of Contents
 

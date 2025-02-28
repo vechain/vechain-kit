@@ -85,7 +85,7 @@ export function Introduction() {
                             <Button
                                 leftIcon={<IoDocumentText />}
                                 as={Link}
-                                href="https://docs.vechain-kit.vechain.org/"
+                                href="https://docs.vechainkit.vechain.org/"
                                 isExternal
                                 rel="noopener noreferrer"
                                 colorScheme="gray"

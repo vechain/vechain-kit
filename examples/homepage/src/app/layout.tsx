@@ -84,7 +84,7 @@ export default function RootLayout({
                 <meta name="type" property="og:type" content="website" />
                 <meta
                     property="og:url"
-                    content="https://vechain-kit.vechain.org/"
+                    content="https://vechainkit.vechain.org/"
                 />
                 <meta
                     property="og:description"

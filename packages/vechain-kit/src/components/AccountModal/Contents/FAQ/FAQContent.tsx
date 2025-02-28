@@ -115,7 +115,7 @@ export const FAQContent = ({ onGoBack }: Props) => {
 
                     <Button
                         as={Link}
-                        href="https://docs.vechain-kit.vechain.org/"
+                        href="https://docs.vechainkit.vechain.org/"
                         isExternal
                         variant="outline"
                         rightIcon={<Icon as={FaExternalLinkAlt} />}
