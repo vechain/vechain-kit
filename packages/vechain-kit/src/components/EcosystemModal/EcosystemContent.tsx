@@ -61,9 +61,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             } catch (error) {
                 const popupError = handlePopupError({
                     error,
-                    safariMessage: t(
-                        'Safari blocked the login window. Please try again, it should work now.',
-                    ),
                     rejectedMessage: t('Login request was cancelled.'),
                     defaultMessage: t('Failed to connect with ecosystem app'),
                 });
