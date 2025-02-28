@@ -72,18 +72,12 @@ const LoadingContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const [showTimeout, setShowTimeout] = React.useState(false);
-    const [showSafariMessage, setShowSafariMessage] = React.useState(false);
 
     React.useEffect(() => {
-        // Show Safari message immediately
-        if (isSafari) {
-            setShowSafariMessage(true);
-        }
-
-        // Keep the regular timeout for non-Safari browsers
+        // Show timeout message after 8 seconds
         const timer = setTimeout(() => {
             setShowTimeout(true);
-        }, 9000);
+        }, 8000);
 
         return () => clearTimeout(timer);
     }, [isSafari]);
@@ -112,24 +106,12 @@ const LoadingContent = ({
                 >
                     <Spinner size="xl" />
                 </VStack>
-                {loadingText && !showTimeout && !showSafariMessage && (
+                {loadingText && !showTimeout && (
                     <Text size="sm" textAlign={'center'}>
                         {loadingText}
                     </Text>
                 )}
-                {showSafariMessage && (
-                    <VStack mt={4} spacing={2}>
-                        <Text color="orange.300" size="sm" textAlign={'center'}>
-                            {t('Safari may block the login window.')}
-                        </Text>
-                        <Text size="sm" textAlign={'center'}>
-                            {t(
-                                "Please click 'Try again' to open the login window.",
-                            )}
-                        </Text>
-                    </VStack>
-                )}
-                {!showSafariMessage && showTimeout && (
+                {showTimeout && (
                     <VStack mt={4} spacing={2}>
                         <Text color="orange.300" size="sm" textAlign={'center'}>
                             {t('This is taking longer than expected.')}
@@ -143,7 +125,7 @@ const LoadingContent = ({
                 )}
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
-                {(showTimeout || showSafariMessage) && (
+                {showTimeout && (
                     <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         {t('Try again')}
