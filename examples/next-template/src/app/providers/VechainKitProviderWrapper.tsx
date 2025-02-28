@@ -27,7 +27,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     const isDarkMode = colorMode === 'dark';
 
-    const appLogo = 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png';
     const coloredLogo =
         'https://i.ibb.co/7G4PQNZ/vechain-kit-logo-colored-circle.png';
 
@@ -66,7 +65,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // { method: 'more', gridColumn: 1 },
             ]}
             loginModalUI={{
-                logo: appLogo,
                 description:
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}

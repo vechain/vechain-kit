@@ -27,9 +27,8 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     const isDarkMode = colorMode === 'dark';
 
-    // const appLogo = 'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png';
-    const coloredLogo =
-        'https://i.ibb.co/7G4PQNZ/vechain-kit-logo-colored-circle.png';
+    const logo =
+        'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
 
     return (
         <VeChainKitProvider
@@ -52,7 +51,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 appearance: {
                     accentColor: '#696FFD',
                     loginMessage: 'Select a login method',
-                    logo: 'https://i.ibb.co/0Mxcw49/V-color.png',
+                    logo: logo,
                 },
                 embeddedWallets: {
                     createOnLogin: 'all-users',
@@ -75,9 +74,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                             typeof window !== 'undefined'
                                 ? window.location.origin
                                 : '',
-                        icons: [
-                            typeof window !== 'undefined' ? coloredLogo : '',
-                        ],
+                        icons: [typeof window !== 'undefined' ? logo : ''],
                     },
                 },
             }}
@@ -95,6 +92,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE as NETWORK_TYPE,
             }}
+            allowCustomTokens={true}
         >
             {children}
         </VeChainKitProvider>
