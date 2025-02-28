@@ -131,7 +131,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                             <Text fontSize={'sm'} opacity={0.5}>
                                 {t('Click')}{' '}
                                 <Link
-                                    href="https://docs.vechain-kit.vechain.org/vechain-kit/embedded-wallets"
+                                    href="https://docs.vechainkit.vechain.org/vechain-kit/embedded-wallets"
                                     isExternal
                                     color="gray.500"
                                     fontSize={'14px'}
