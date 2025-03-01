@@ -21,7 +21,7 @@ import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { convertUriToUrl } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -105,13 +105,17 @@ export const SendTokenSummaryContent = ({
                 },
             });
         },
-        onError: () => {
+    });
+
+    // Use useEffect to handle error updates
+    useEffect(() => {
+        if (transferERC20Error) {
             setError(
-                transferERC20Error?.reason ??
+                transferERC20Error.reason ||
                     t('Something went wrong. Please try again.'),
             );
-        },
-    });
+        }
+    }, [transferERC20Error, t]);
 
     const {
         sendTransaction: transferVET,

@@ -16,7 +16,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { isSafari } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -72,15 +72,22 @@ const LoadingContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const [showTimeout, setShowTimeout] = React.useState(false);
+    const [showMobileBrowserMessage, setShowMobileBrowserMessage] =
+        React.useState(false);
 
     React.useEffect(() => {
-        // Show timeout message after 8 seconds
+        // Show mobile browser message immediately
+        if (isMobile) {
+            setShowMobileBrowserMessage(true);
+        }
+
+        // Keep the regular timeout for non-mobile browsers
         const timer = setTimeout(() => {
             setShowTimeout(true);
-        }, 8000);
+        }, 7000);
 
         return () => clearTimeout(timer);
-    }, [isSafari]);
+    }, [isMobile]);
 
     return (
         <>
@@ -106,12 +113,24 @@ const LoadingContent = ({
                 >
                     <Spinner size="xl" />
                 </VStack>
-                {loadingText && !showTimeout && (
+                {loadingText && !showTimeout && !showMobileBrowserMessage && (
                     <Text size="sm" textAlign={'center'}>
                         {loadingText}
                     </Text>
                 )}
-                {showTimeout && (
+                {showMobileBrowserMessage && (
+                    <VStack mt={4} spacing={2}>
+                        <Text color="orange.300" size="sm" textAlign={'center'}>
+                            {t('Your mobile browser blocked the login window.')}
+                        </Text>
+                        <Text size="sm" textAlign={'center'}>
+                            {t(
+                                "Please click 'Try again' to open the login window or change your browser settings.",
+                            )}
+                        </Text>
+                    </VStack>
+                )}
+                {!showMobileBrowserMessage && showTimeout && (
                     <VStack mt={4} spacing={2}>
                         <Text color="orange.300" size="sm" textAlign={'center'}>
                             {t('This is taking longer than expected.')}
@@ -125,7 +144,7 @@ const LoadingContent = ({
                 )}
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
-                {showTimeout && (
+                {(showTimeout || showMobileBrowserMessage) && (
                     <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         {t('Try again')}

@@ -19,7 +19,7 @@ import { useWallet, useRefreshMetadata } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { ENS_TEXT_RECORDS } from '@/types/ensTextRecords';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -88,13 +88,17 @@ export const CustomizationSummaryContent = ({
                 },
             });
         },
-        onError: () => {
+    });
+
+    // Use useEffect to handle error updates
+    useEffect(() => {
+        if (txError) {
             setError(
-                txError?.reason ??
+                txError.reason ||
                     t('Failed to save changes. Please try again.'),
             );
-        },
-    });
+        }
+    }, [txError, t]);
 
     const onSubmit = async (data: FormValues) => {
         try {

@@ -15,7 +15,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -64,16 +64,21 @@ export const ChooseNameSummaryContent = ({
                 },
             });
         },
-        onError: () => {
+    });
+
+    // Use useEffect to handle error updates
+    useEffect(() => {
+        if (txError) {
             setError(
-                txError?.reason ??
+                txError.reason ||
                     t('Failed to save changes. Please try again.'),
             );
-        },
-    });
+        }
+    }, [txError, t]);
 
     const handleConfirm = async () => {
         try {
+            setError(null);
             await sendTransaction();
         } catch (error) {
             console.error('Transaction failed:', error);

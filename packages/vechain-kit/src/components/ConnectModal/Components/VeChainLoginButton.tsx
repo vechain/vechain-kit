@@ -1,7 +1,7 @@
 import { GridItem } from '@chakra-ui/react';
 import { useState } from 'react';
 import { VechainLogoDark, VechainLogoLight } from '@/assets';
-import { ConnectionButton, LoginLoadingModal } from '@/components';
+import { ConnectionButton, LoginLoadingModal, SocialIcons } from '@/components';
 import { useLoginWithVeChain } from '@/hooks';
 import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -49,6 +49,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                     }
                     text={t('Use social login with VeChain')}
                     variant={'loginWithVechain'}
+                    rightIcon={<SocialIcons />}
                 />
             </GridItem>
 

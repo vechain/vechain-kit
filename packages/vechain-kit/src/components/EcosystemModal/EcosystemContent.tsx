@@ -61,8 +61,13 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             } catch (error) {
                 const popupError = handlePopupError({
                     error,
+                    mobileBrowserPopupMessage: t(
+                        "Your mobile browser blocked the login window. Please click 'Try again' to open the login window or change your browser settings.",
+                    ),
                     rejectedMessage: t('Login request was cancelled.'),
-                    defaultMessage: t('Failed to connect with ecosystem app'),
+                    defaultMessage: t(
+                        'An unexpected issue occurred while logging in with this app. Please try again or contact support.',
+                    ),
                 });
                 setLoginError(popupError.message);
             }
