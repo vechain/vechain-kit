@@ -1,7 +1,6 @@
 'use client';
 
 import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
-import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import {
     useGetChainId,
     useGetNodeUrl,
@@ -9,6 +8,7 @@ import {
     useGetAvatar,
     useGetTextRecords,
     useVechainDomain,
+    useDAppKitWallet,
 } from '@/hooks';
 import {
     compareAddresses,
@@ -73,7 +73,7 @@ export const useWallet = (): UseWalletReturnType => {
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
-        useDappKitWallet();
+        useDAppKitWallet();
 
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();

@@ -3,8 +3,7 @@
 import { useCallback, useState } from 'react';
 import { SignTypedDataParams } from '@privy-io/react-auth';
 import { usePrivyWalletProvider } from '@/providers';
-import { useWallet } from '@/hooks';
-import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
+import { useWallet, useDAppKitWallet } from '@/hooks';
 
 type UseSignTypedDataReturnValue = {
     signTypedData: (data: SignTypedDataParams) => Promise<string>;
@@ -28,7 +27,7 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
-    const { signTypedData: signTypedDataDappKit } = useDappKitWallet();
+    const { signTypedData: signTypedDataDappKit } = useDAppKitWallet();
     const signTypedData = useCallback(
         async (data: SignTypedDataParams): Promise<string> => {
             setIsSigningPending(true);

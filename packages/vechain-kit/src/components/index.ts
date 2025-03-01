@@ -7,3 +7,4 @@ export * from './common';
 export * from './LoginLoadingModal';
 export * from './EcosystemModal';
 export * from './ProfileCard';
+export { WalletButton as DAppKitWalletButton } from '@vechain/dapp-kit-react';

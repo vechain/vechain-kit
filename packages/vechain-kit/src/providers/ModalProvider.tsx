@@ -10,7 +10,7 @@ import {
     AccountModalContentTypes,
     ConnectModal,
 } from '../components';
-import { useDappKitWallet } from '@/hooks';
+import { useDAppKitWallet } from '@/hooks';
 
 type ModalContextType = {
     // Connect Modal
@@ -46,7 +46,7 @@ export const useModal = () => {
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
-    const { setSource, connect } = useDappKitWallet();
+    const { setSource, connect } = useDAppKitWallet();
     const openConnectModal = useCallback(() => {
         // If the user is in the veworld app, connect to the wallet
         if (window.vechain && window.vechain.isInAppBrowser) {

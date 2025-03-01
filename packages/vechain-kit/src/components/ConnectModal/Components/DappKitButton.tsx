@@ -1,5 +1,5 @@
 import { GridItem, Icon } from '@chakra-ui/react';
-import { useWalletModal } from '@vechain/dapp-kit-react';
+import { useDAppKitWalletModal } from '@/hooks';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -12,7 +12,7 @@ type Props = {
 
 export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
     const { t } = useTranslation();
-    const { open: openDappKitModal } = useWalletModal();
+    const { open: openDappKitModal } = useDAppKitWalletModal();
 
     return (
         <GridItem colSpan={gridColumn ? gridColumn : 2} w={'full'}>

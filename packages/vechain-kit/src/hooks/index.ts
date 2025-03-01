@@ -1,7 +1,8 @@
 export { usePrivy } from '@privy-io/react-auth';
 export {
     useConnex,
-    useWallet as useDappKitWallet,
+    useWallet as useDAppKitWallet,
+    useWalletModal as useDAppKitWalletModal,
 } from '@vechain/dapp-kit-react';
 export * from './api';
 export * from './modals';

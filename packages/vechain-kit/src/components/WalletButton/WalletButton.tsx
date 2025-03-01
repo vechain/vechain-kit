@@ -4,8 +4,7 @@ import {
     useDisclosure,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
-import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
+import { useWallet, useDAppKitWallet } from '@/hooks';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
@@ -30,7 +29,7 @@ export const WalletButton = ({
     const { darkMode } = useVeChainKitConfig();
 
     const { connection, account } = useWallet();
-    const { setSource, connect } = useDappKitWallet();
+    const { setSource, connect } = useDAppKitWallet();
 
     const [isMobile] = useMediaQuery('(max-width: 768px)');
 
