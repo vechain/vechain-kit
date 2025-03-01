@@ -17,11 +17,11 @@ export const DomainRequiredAlert = () => {
         <Alert status="warning" fontSize={'xs'} borderRadius={'xl'} p={2}>
             <VStack spacing={1} align="stretch" w="full">
                 <HStack spacing={2} align="flex-start">
-                    <AlertIcon boxSize={4} />
+                    <AlertIcon boxSize={4} mt={'10px'} />
                     <Text w="full">
                         {t(
                             'A .vet domain is required to customize your profile.',
-                        )}
+                        )}{' '}
                         {showFullText &&
                             t(
                                 'Your profile information will be associated with your domain and visible to other applications.',

@@ -18,8 +18,6 @@ import { useBalances, useWallet } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
-import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
 
 export type Token = {
     symbol: string;
@@ -41,68 +39,29 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
-    const { balances, prices } = useBalances({
-        address: account?.address ?? '',
-    });
-    const { customTokens } = useCustomTokens();
+    const { tokens } = useBalances({ address: account?.address ?? '' });
     const [searchQuery, setSearchQuery] = useState('');
 
-    const { network } = useVeChainKitConfig();
-    const config = getConfig(network.type); // Cache config to avoid redundant function calls
-
-    // Preload contract addresses for quick access
-    const contractAddresses = {
-        VET: '0x',
-        VTHO: config.vthoContractAddress,
-        B3TR: config.b3trContractAddress,
-        VOT3: config.vot3ContractAddress,
-        veDelegate: config.veDelegate,
-    };
-
-    // Create lookup maps for fast balance and price retrieval
-    const balanceMap = new Map(
-        balances.map(({ address, value }) => [address, value]),
-    );
-    const priceMap = new Map(
-        prices.map(({ address, price }) => [address, price]),
-    );
-
-    // Create base tokens list
-    const baseTokens: Token[] = Object.entries(contractAddresses).map(
-        ([symbol, address]) => ({
+    // Convert tokens object to array and add custom tokens
+    const allTokens: Token[] = [
+        ...Object.entries(tokens).map(([symbol, data]) => ({
             symbol,
-            balance: (balanceMap.get(address) || 0).toString(),
-            address,
-            numericBalance: balanceMap.get(address) || 0,
-            price: priceMap.get(address) || 0,
-        }),
-    );
+            balance: data.value.toString(),
+            address: data.address,
+            numericBalance: data.value,
+            price: data.price,
+        })),
+    ];
 
-    // Add custom tokens dynamically
-    const customTokensList: Token[] = customTokens.map(
-        ({ address, symbol }) => ({
-            symbol,
-            balance: (balanceMap.get(address) || 0).toString(),
-            address,
-            numericBalance: balanceMap.get(address) ?? 0,
-            price: priceMap.get(address) ?? 0,
-        }),
-    );
-
-    // Merge base tokens and custom tokens
-    const tokens = [...baseTokens, ...customTokensList];
-
-    // Filter tokens based on search query
-    const filteredTokens = tokens
+    // Filter and sort tokens
+    const filteredTokens = allTokens
         .filter(({ symbol }) =>
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            // Sort by balance first (tokens with balance > 0 come first)
             if (a.numericBalance > 0 !== b.numericBalance > 0) {
                 return b.numericBalance > 0 ? 1 : -1;
             }
-            // If both have or don't have balance, sort by USD value
             return b.numericBalance * b.price - a.numericBalance * a.price;
         });
 

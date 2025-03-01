@@ -3,7 +3,6 @@ import { useBalances, useWallet } from '@/hooks';
 import { AssetButton } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
 import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
 import { useTranslation } from 'react-i18next';
 import { RiEdit2Line } from 'react-icons/ri';
@@ -16,18 +15,15 @@ export type AssetsTabPanelProps = {
 
 export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
     const { account } = useWallet();
-    const { balances, prices } = useBalances({ address: account?.address });
-    const { network, allowCustomTokens } = useVeChainKitConfig();
+    const { tokens } = useBalances({ address: account?.address });
+    const { allowCustomTokens } = useVeChainKitConfig();
     const { customTokens } = useCustomTokens();
     const { t } = useTranslation();
 
-    const openCustomTokenModal = () => {
-        setCurrentContent('add-custom-token');
-    };
-
     const handleTokenSelect = (token: {
+        symbol: string;
         address: string;
-        amount: number;
+        value: number;
         price: number;
     }) => {
         setCurrentContent({
@@ -36,52 +32,27 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                 setCurrentContent,
                 isNavigatingFromMain: false,
                 preselectedToken: {
-                    symbol:
-                        customTokens.find((t) => t.address === token.address)
-                            ?.symbol ?? 'Unknown',
-                    balance: token.amount.toString(),
+                    symbol: token.symbol,
+                    balance: token.value.toString(),
                     address: token.address,
-                    numericBalance: token.amount,
+                    numericBalance: token.value,
                     price: token.price,
                 },
             },
         });
     };
-    // Preload contract addresses to avoid redundant calls
-    const contractAddresses = {
-        VET: '0x', // VET (Native token, no contract)
-        VTHO: getConfig(network.type).vthoContractAddress,
-        B3TR: getConfig(network.type).b3trContractAddress,
-        VOT3: getConfig(network.type).vot3ContractAddress,
-    };
 
-    // Convert balances and prices into lookup maps for quick access
-    const balanceMap = new Map(
-        balances.map(({ address, value }) => [address, value]),
-    );
-    const priceMap = new Map(
-        prices.map(({ address, price }) => [address, price]),
-    );
-
-    // Define base assets
-    const baseAssets = Object.entries(contractAddresses).map(
-        ([symbol, address]) => ({
-            address,
-            symbol,
-            amount: balanceMap.get(address) ?? 0,
-            price: priceMap.get(address) ?? 0,
-        }),
-    );
-    //Format the custom tokens
-    const otherTokens = customTokens.map((token) => ({
-        ...token,
-        amount: balanceMap.get(token.address) ?? 0,
-        price: priceMap.get(token.address) ?? 0,
-    }));
-
-    const allTokens = baseAssets
-        .concat(otherTokens)
-        .sort((a, b) => b.amount * b.price - a.amount * a.price); // Sort by USD value
+    // Combine base tokens and custom tokens
+    const allTokens = [
+        ...Object.values(tokens),
+        ...customTokens
+            .filter((token) => !tokens[token.symbol]) // Only add custom tokens not in base tokens
+            .map((token) => ({
+                ...token,
+                value: tokens[token.symbol]?.value ?? 0,
+                price: tokens[token.symbol]?.price ?? 0,
+            })),
+    ].sort((a, b) => b.value * b.price - a.value * a.price);
 
     return (
         <VStack spacing={2} align="stretch" mt={2}>
@@ -89,22 +60,21 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                 <AssetButton
                     key={token.address}
                     symbol={token.symbol}
-                    amount={token.amount}
-                    usdValue={token.amount * token.price}
-                    isDisabled={token.amount === 0}
+                    amount={token.value}
+                    usdValue={token.value * token.price}
+                    isDisabled={token.value === 0}
                     onClick={() => handleTokenSelect(token)}
                 />
             ))}
 
-            {/* Plus Icon to add a new token */}
             {allowCustomTokens && (
                 <Button
                     size="sm"
                     variant="ghost"
                     colorScheme="gray"
                     leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
-                    onClick={openCustomTokenModal}
-                    alignSelf="center" // Centers the button
+                    onClick={() => setCurrentContent('add-custom-token')}
+                    alignSelf="center"
                 >
                     {t('Manage Custom Tokens')}
                 </Button>

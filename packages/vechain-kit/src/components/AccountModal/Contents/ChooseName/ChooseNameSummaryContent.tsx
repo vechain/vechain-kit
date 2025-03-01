@@ -15,7 +15,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useState } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -32,8 +31,6 @@ export const ChooseNameSummaryContent = ({
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-
-    const [error, setError] = useState<string | null>(null);
 
     const {
         sendTransaction,
@@ -54,21 +51,13 @@ export const ChooseNameSummaryContent = ({
                     title: t('Name claimed'),
                     description: t(
                         `Your {{name}}.veworld.vet name has been claimed successfully.`,
-                        {
-                            name,
-                        },
+                        { name },
                     ),
                     onDone: () => {
                         setCurrentContent('account-customization');
                     },
                 },
             });
-        },
-        onError: () => {
-            setError(
-                txError?.reason ??
-                    t('Failed to save changes. Please try again.'),
-            );
         },
     });
 
@@ -119,7 +108,7 @@ export const ChooseNameSummaryContent = ({
 
             <ModalFooter gap={4} w="full">
                 <TransactionButtonAndStatus
-                    error={error}
+                    transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     handleSend={handleConfirm}

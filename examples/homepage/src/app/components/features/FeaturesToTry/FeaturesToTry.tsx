@@ -87,7 +87,7 @@ export function FeaturesToTry() {
             description:
                 'Explore other apps built on VeChain, and add shortcuts for faster access.',
             icon: RiUserSettingsLine,
-            link: 'https://vechain.github.io/smart-accounts-factory/',
+            link: 'https://vechain.github.io/smart-accounts/',
             content: openExploreEcosystemModal,
         },
         {

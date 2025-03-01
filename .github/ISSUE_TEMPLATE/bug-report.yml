@@ -4,12 +4,13 @@ title: "🐛 [BUG] - <title>"
 labels: [
 "bug"
 ]
+projects: ["vechain/projects/51", "vechain/projects/9"]
 body:
 - type: textarea
   id: description
   attributes:
     label: "Description"
-    description: Please enter an explicit description of your issue.
+    description: Please enter an explicit description of your issue, including screenshots if applicable.
     placeholder: Short and explicit description of your incident...
   validations:
     required: true
@@ -26,16 +27,6 @@ body:
     render: bash
   validations:
     required: true
-- type: textarea
-  id: screenshot
-  attributes:
-    label: "Screenshots"
-    description: If applicable, add screenshots to help explain your problem.
-    value: |
-      ![DESCRIPTION](LINK.png)
-    render: bash
-  validations:
-    required: false
 - type: input
   id: kit-version
   attributes:

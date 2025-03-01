@@ -140,8 +140,11 @@ export const usePrivyCrossAppSdk = () => {
             } catch (error) {
                 throw handlePopupError({
                     error,
+                    mobileBrowserPopupMessage:
+                        "Your mobile browser blocked the signing window. Please click 'Try again' to open the signing window or change your browser settings.",
                     rejectedMessage: 'Signing request was cancelled.',
-                    defaultMessage: 'Failed to sign message',
+                    defaultMessage:
+                        'An unexpected issue occurred while signing a message. Please try again or contact support.',
                 });
             }
         },
@@ -153,11 +156,15 @@ export const usePrivyCrossAppSdk = () => {
             try {
                 return await signTypedDataAsync(data);
             } catch (error) {
-                throw handlePopupError({
+                const errorType = handlePopupError({
                     error,
+                    mobileBrowserPopupMessage:
+                        "Your mobile browser blocked the signing window. Please click 'Try again' to open the signing window or change your browser settings.",
                     rejectedMessage: 'Signing request was cancelled.',
-                    defaultMessage: 'Failed to sign typed data',
+                    defaultMessage:
+                        'An unexpected issue occurred while signing typed data. Please try again or contact support.',
                 });
+                throw errorType;
             }
         },
         [signTypedDataAsync],

@@ -248,6 +248,7 @@ export const useSendTransaction = ({
                 setSendTransactionTx(null);
                 setSendTransactionPending(true);
                 setSendTransactionError(null);
+                setError(undefined);
                 const response = await sendTransaction(
                     await convertClauses(_clauses ?? []),
                     {

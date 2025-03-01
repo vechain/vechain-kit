@@ -78,16 +78,20 @@ export const getAvatar = async (
         const [{ data: lookupData, reverted: noLookup }] =
             await avatarResponse.json();
 
-        if (noLookup) {
+        if (noLookup || lookupData === '0x') {
             return null;
         }
 
-        const { avatar } = nameInterface.decodeFunctionResult(
-            'text',
-            lookupData,
-        );
-
-        return avatar === '' ? null : avatar;
+        try {
+            const { avatar } = nameInterface.decodeFunctionResult(
+                'text',
+                lookupData,
+            );
+            return avatar === '' ? null : avatar;
+        } catch (decodeError) {
+            console.error('Failed to decode avatar data:', decodeError);
+            return null;
+        }
     } catch (error) {
         console.error('Error fetching avatar:', error);
         throw error;

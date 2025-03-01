@@ -411,5 +411,15 @@
     "Existing Custom Tokens": "Existing Custom Tokens",
     "Add Token": "Add Token",
     "Token already added": "Token already added",
-    "Manage Custom Tokens": "Manage Custom Tokens"
+    "Manage Custom Tokens": "Manage Custom Tokens",
+    "Mobile browser may block the login window.": "Mobile browser may block the login window.",
+    "Please click 'Try again' to open the login window or change your browser settings.": "Please click 'Try again' to open the login window or change your browser settings.",
+    "Your mobile browser blocked the login window.": "Your mobile browser blocked the login window.",
+    "Your mobile browser blocked the login window. Please click 'Try again' to open the login window or change your browser settings.": "Your mobile browser blocked the login window. Please click 'Try again' to open the login window or change your browser settings.",
+    "There was an unexpected issue logging in with VeChain. Please try again or contact support.": "There was an unexpected issue logging in with VeChain. Please try again or contact support.",
+    "There was an unexpected issue signing a message. Please try again or contact support.": "There was an unexpected issue signing a message. Please try again or contact support.",
+    "Failed to sign typed data": "Failed to sign typed data",
+    "Your mobile browser blocked the signing window. Please click 'Try again' to open the signing window or change your browser settings.": "Your mobile browser blocked the signing window. Please click 'Try again' to open the signing window or change your browser settings.",
+    "An unexpected issue occurred while signing typed data. Please try again or contact support.": "An unexpected issue occurred while signing typed data. Please try again or contact support.",
+    "An unexpected issue occurred while logging in with this app. Please try again or contact support.": "An unexpected issue occurred while logging in with this app. Please try again or contact support."
 }

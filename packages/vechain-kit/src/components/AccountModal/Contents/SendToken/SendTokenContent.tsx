@@ -209,6 +209,14 @@ export const SendTokenContent = ({
                                                 );
                                             },
                                         })}
+                                        onChange={(e) => {
+                                            const trimmed =
+                                                e.target.value.trim();
+                                            e.target.value = trimmed;
+                                            setValue('amount', trimmed, {
+                                                shouldValidate: true,
+                                            });
+                                        }}
                                         placeholder="0"
                                         variant="unstyled"
                                         fontSize="4xl"
@@ -375,6 +383,13 @@ export const SendTokenContent = ({
                                     {...register('toAddressOrDomain', {
                                         required: t('Address is required'),
                                     })}
+                                    onChange={(e) => {
+                                        const trimmed = e.target.value.trim();
+                                        e.target.value = trimmed;
+                                        setValue('toAddressOrDomain', trimmed, {
+                                            shouldValidate: true,
+                                        });
+                                    }}
                                     placeholder={t(
                                         'Type the receiver address or domain',
                                     )}

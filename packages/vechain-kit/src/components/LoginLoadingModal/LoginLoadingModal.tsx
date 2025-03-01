@@ -16,7 +16,7 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { isSafari } from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 type LoginLoadingModalProps = {
     isOpen: boolean;
@@ -74,13 +74,13 @@ const LoadingContent = ({
     const [showTimeout, setShowTimeout] = React.useState(false);
 
     React.useEffect(() => {
-        // Show timeout message after 8 seconds
+        // Keep the regular timeout for non-mobile browsers
         const timer = setTimeout(() => {
             setShowTimeout(true);
-        }, 8000);
+        }, 7000);
 
         return () => clearTimeout(timer);
-    }, [isSafari]);
+    }, [isMobile]);
 
     return (
         <>
