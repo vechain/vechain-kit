@@ -17,9 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet, useRefreshMetadata } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
-import { ENS_TEXT_RECORDS } from '@/types/ensTextRecords';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -54,8 +52,6 @@ export const CustomizationSummaryContent = ({
     const { refresh: refreshMetadata } = useRefreshMetadata(
         account?.domain ?? '',
     );
-    const [error, setError] = useState<string | null>(null);
-
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
             ...changes,
@@ -72,7 +68,6 @@ export const CustomizationSummaryContent = ({
     } = useUpdateTextRecord({
         onSuccess: async () => {
             refreshMetadata();
-            setError(null);
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -90,26 +85,10 @@ export const CustomizationSummaryContent = ({
         },
     });
 
-    // Use useEffect to handle error updates
-    useEffect(() => {
-        if (txError) {
-            setError(
-                txError.reason ||
-                    t('Failed to save changes. Please try again.'),
-            );
-        }
-    }, [txError, t]);
-
     const onSubmit = async (data: FormValues) => {
         try {
-            setError(null);
-
             const domain = account?.domain ?? '';
-
-            const CHANGES_TO_TEXT_RECORDS: Record<
-                keyof FormValues,
-                (typeof ENS_TEXT_RECORDS)[number]
-            > = {
+            const CHANGES_TO_TEXT_RECORDS = {
                 displayName: 'display',
                 description: 'description',
                 twitter: 'com.x',
@@ -198,7 +177,7 @@ export const CustomizationSummaryContent = ({
 
             <ModalFooter gap={4} w="full">
                 <TransactionButtonAndStatus
-                    error={error}
+                    transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     handleSend={handleSubmit(onSubmit)}

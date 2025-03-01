@@ -21,7 +21,7 @@ import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { convertUriToUrl } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -67,8 +67,6 @@ export const SendTokenSummaryContent = ({
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
 
-    const [error, setError] = useState<string | null>(null);
-
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -91,7 +89,6 @@ export const SendTokenSummaryContent = ({
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
         onSuccess: () => {
-            setError(null);
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -107,16 +104,6 @@ export const SendTokenSummaryContent = ({
         },
     });
 
-    // Use useEffect to handle error updates
-    useEffect(() => {
-        if (transferERC20Error) {
-            setError(
-                transferERC20Error.reason ||
-                    t('Something went wrong. Please try again.'),
-            );
-        }
-    }, [transferERC20Error, t]);
-
     const {
         sendTransaction: transferVET,
         txReceipt: transferVETReceipt,
@@ -128,7 +115,6 @@ export const SendTokenSummaryContent = ({
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         onSuccess: () => {
-            setError(null);
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -143,10 +129,7 @@ export const SendTokenSummaryContent = ({
             });
         },
         onError: () => {
-            setError(
-                transferVETError?.reason ??
-                    t('Something went wrong. Please try again.'),
-            );
+            // Handle error internally
         },
     });
 
@@ -158,8 +141,6 @@ export const SendTokenSummaryContent = ({
 
     const handleSend = async () => {
         try {
-            setError(null);
-
             if (selectedToken.symbol === 'VET') {
                 await transferVET();
             } else {
@@ -264,10 +245,13 @@ export const SendTokenSummaryContent = ({
                 </VStack>
             </ModalBody>
 
-            {/* <StickyFooterContainer> */}
             <ModalFooter>
                 <TransactionButtonAndStatus
-                    error={error}
+                    transactionError={
+                        selectedToken.symbol === 'VET'
+                            ? transferVETError
+                            : transferERC20Error
+                    }
                     isSubmitting={isSubmitting}
                     isTxWaitingConfirmation={isTxWaitingConfirmation}
                     handleSend={handleSend}
@@ -275,7 +259,6 @@ export const SendTokenSummaryContent = ({
                     txReceipt={getTxReceipt()}
                 />
             </ModalFooter>
-            {/* </StickyFooterContainer> */}
         </>
     );
 };

@@ -15,7 +15,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useState, useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -32,8 +31,6 @@ export const ChooseNameSummaryContent = ({
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-
-    const [error, setError] = useState<string | null>(null);
 
     const {
         sendTransaction,
@@ -54,9 +51,7 @@ export const ChooseNameSummaryContent = ({
                     title: t('Name claimed'),
                     description: t(
                         `Your {{name}}.veworld.vet name has been claimed successfully.`,
-                        {
-                            name,
-                        },
+                        { name },
                     ),
                     onDone: () => {
                         setCurrentContent('account-customization');
@@ -66,19 +61,8 @@ export const ChooseNameSummaryContent = ({
         },
     });
 
-    // Use useEffect to handle error updates
-    useEffect(() => {
-        if (txError) {
-            setError(
-                txError.reason ||
-                    t('Failed to save changes. Please try again.'),
-            );
-        }
-    }, [txError, t]);
-
     const handleConfirm = async () => {
         try {
-            setError(null);
             await sendTransaction();
         } catch (error) {
             console.error('Transaction failed:', error);
@@ -124,7 +108,7 @@ export const ChooseNameSummaryContent = ({
 
             <ModalFooter gap={4} w="full">
                 <TransactionButtonAndStatus
-                    error={error}
+                    transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     handleSend={handleConfirm}

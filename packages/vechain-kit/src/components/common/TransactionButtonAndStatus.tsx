@@ -1,6 +1,8 @@
 import { useVeChainKitConfig } from '@/providers';
 import { Button, Text, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
+import { TransactionStatusErrorType } from '@/types';
 
 export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;
@@ -8,12 +10,12 @@ export type TransactionButtonAndStatusProps = {
     handleSend: () => void;
     transactionPendingText: string;
     txReceipt: Connex.Thor.Transaction.Receipt | null;
-    error: string | null;
+    transactionError?: Error | TransactionStatusErrorType | null;
     isSubmitForm?: boolean;
 };
 
 export const TransactionButtonAndStatus = ({
-    error,
+    transactionError,
     isSubmitting,
     isTxWaitingConfirmation,
     handleSend,
@@ -24,11 +26,19 @@ export const TransactionButtonAndStatus = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
+    const errorMessage = useMemo(() => {
+        if (!transactionError) return null;
+        return (
+            (transactionError as any).reason ||
+            t('Something went wrong. Please try again.')
+        );
+    }, [transactionError, t]);
+
     return (
         <VStack width="full" spacing={4}>
-            {error && (
+            {errorMessage && (
                 <Text color="#da5a5a" textAlign="center" width="full">
-                    {error}
+                    {errorMessage}
                 </Text>
             )}
             <Button
@@ -47,9 +57,9 @@ export const TransactionButtonAndStatus = ({
                         : transactionPendingText
                 }
             >
-                {error ? t('Retry') : t('Confirm')}
+                {errorMessage ? t('Retry') : t('Confirm')}
             </Button>
-            {error && txReceipt?.meta.txID && (
+            {errorMessage && txReceipt?.meta.txID && (
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'gray.500'}
