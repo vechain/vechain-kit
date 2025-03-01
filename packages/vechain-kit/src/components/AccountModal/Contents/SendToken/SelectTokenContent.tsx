@@ -18,7 +18,6 @@ import { useBalances, useWallet } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
 
 export type Token = {
     symbol: string;
@@ -41,7 +40,6 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
     const { tokens } = useBalances({ address: account?.address ?? '' });
-    const { customTokens } = useCustomTokens();
     const [searchQuery, setSearchQuery] = useState('');
 
     // Convert tokens object to array and add custom tokens
@@ -52,13 +50,6 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
             address: data.address,
             numericBalance: data.value,
             price: data.price,
-        })),
-        ...customTokens.map(({ address, symbol }) => ({
-            symbol,
-            balance: (tokens[symbol]?.value || 0).toString(),
-            address,
-            numericBalance: tokens[symbol]?.value ?? 0,
-            price: tokens[symbol]?.price ?? 0,
         })),
     ];
 
