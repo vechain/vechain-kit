@@ -70,22 +70,27 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         {
             address: contractAddresses.vet,
             value: Number(vetData?.balance || 0),
+            symbol: 'VET',
         },
         {
             address: contractAddresses.vtho,
             value: Number(vetData?.energy || 0),
+            symbol: 'VTHO',
         },
         {
             address: contractAddresses.b3tr,
             value: Number(formatEther(BigInt(b3trBalance?.original || '0'))),
+            symbol: 'B3TR',
         },
         {
             address: contractAddresses.vot3,
             value: Number(formatEther(BigInt(vot3Balance?.original || '0'))),
+            symbol: 'VOT3',
         },
         {
             address: contractAddresses.veDelegate,
             value: Number(formatEther(BigInt(veDelegateBalance || '0'))),
+            symbol: 'veDelegate',
         },
     ];
 
@@ -95,6 +100,7 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             balances.push({
                 address: token.address,
                 value: Number(formatEther(BigInt(token.original))),
+                symbol: token.symbol,
             });
         }
     });
@@ -112,10 +118,37 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         return acc + value * price;
     }, 0);
 
+    // Create a tokens mapping for easier access
+    const tokens = balances.reduce(
+        (acc, balance) => {
+            acc[balance.symbol] = {
+                ...balance,
+                price:
+                    prices.find((p) => p.address === balance.address)?.price ||
+                    0,
+                usdValue:
+                    (prices.find((p) => p.address === balance.address)?.price ||
+                        0) * balance.value,
+            };
+            return acc;
+        },
+        {} as Record<
+            string,
+            {
+                address: string;
+                value: number;
+                symbol: string;
+                price: number;
+                usdValue: number;
+            }
+        >,
+    );
+
     return {
         isLoading,
         balances,
         prices,
         totalBalance,
+        tokens, // New tokens mapping
     };
 };

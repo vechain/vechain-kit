@@ -32,7 +32,7 @@ It offers:
 
 -   [Live Demo](https://vechainkit.vechain.org/)
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
--   [Smart Account Factory](https://vechain.github.io/smart-accounts-factory/)
+-   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 -   [Docs](https://docs.vechainkit.vechain.org/)
 
 ## Table of Contents

@@ -34,21 +34,17 @@ export const AddressDisplayCard = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
 
-    const { balances, isLoading } = useBalances({
+    const { tokens, isLoading } = useBalances({
         address: address,
     });
 
-    // Convert balances into lookup maps for quick access
-    const balanceMap = new Map(
-        balances.map(({ address, value }) => [address, value]),
-    );
-    const symbol = balances.find(({ address }) => address === tokenAddress); //TODO: Insted of using find, useBalances should return a map to easy access
-
-    // Use the specific token balance if symbol is provided
+    // Find token by address instead of using it as a key
+    const tokenData = tokenAddress
+        ? Object.values(tokens).find((token) => token.address === tokenAddress)
+        : null;
     const displayBalance =
-        balance !== undefined
-            ? balance
-            : (tokenAddress && balanceMap.get(tokenAddress)) || 0;
+        balance !== undefined ? balance : tokenData?.value || 0;
+    const displaySymbol = tokenData?.symbol || '';
 
     return (
         <Box
@@ -102,7 +98,7 @@ export const AddressDisplayCard = ({
                     <Skeleton isLoaded={!isLoading}>
                         <Text fontSize="xs" opacity={0.5}>
                             {compactFormatter.format(displayBalance)}
-                            {symbol && ` ${symbol}`}
+                            {displaySymbol && ` ${displaySymbol}`}
                         </Text>
                     </Skeleton>
                 </VStack>

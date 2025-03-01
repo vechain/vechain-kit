@@ -10,7 +10,6 @@ import {
     Icon,
     Image,
     Link,
-    HStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
 import { FaGithub } from 'react-icons/fa';
@@ -35,28 +34,6 @@ export function Introduction() {
             backdropFilter="blur(10px)"
         >
             <VStack spacing={6} align="stretch">
-                <HStack justifyContent="center">
-                    <Image
-                        src={
-                            'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png'
-                        }
-                        maxW={'350px'}
-                        maxH={'175px'}
-                        alt="logo"
-                        animation="bounce-intro 3s infinite"
-                        transform="rotate(-10deg)"
-                        sx={{
-                            '@keyframes bounce-intro': {
-                                '0%, 100%': {
-                                    transform: 'rotate(0deg) translateX(0)',
-                                },
-                                '50%': {
-                                    transform: 'rotate(0deg) translateY(5px)',
-                                },
-                            },
-                        }}
-                    />
-                </HStack>
                 <Heading as="h1" size="lg" textAlign="center">
                     Welcome to VeChain Kit!
                 </Heading>
@@ -125,14 +102,14 @@ export function Introduction() {
                             <Button
                                 leftIcon={
                                     <Image
-                                        src="https://vechain.github.io/smart-accounts-factory/assets/logo-DnOsqNR_.png"
+                                        src="https://vechain.github.io/smart-accounts/assets/logo-DnOsqNR_.png"
                                         alt="Smart Account Factory"
                                         width={7}
                                         height={7}
                                     />
                                 }
                                 as="a"
-                                href="https://vechain.github.io/smart-accounts-factory/"
+                                href="https://vechain.github.io/smart-accounts/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 variant="outline"
@@ -181,7 +158,7 @@ export function Introduction() {
                                 within the VeChain network.
                             </Text>
                             <Link
-                                href="https://vechain.github.io/smart-accounts-factory/"
+                                href="https://vechain.github.io/smart-accounts/"
                                 style={{
                                     textDecoration: 'underline',
                                     fontWeight: 'bold',

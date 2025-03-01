@@ -16,46 +16,20 @@ export const AssetIcons = ({
     iconSize = 20,
     ml = 0,
 }: AssetIconsProps) => {
-    const { balances, prices } = useBalances({ address: address ?? '' });
+    const { tokens } = useBalances({ address: address ?? '' });
     const { darkMode } = useVeChainKitConfig();
     const marginLeft = iconSize / 2;
 
     // Create array of tokens with balances and their values
-    const tokens = [
-        {
-            symbol: 'VET',
-            balance: balances.vet,
-            value: balances.vet * prices.vet,
-        },
-        {
-            symbol: 'VTHO',
-            balance: balances.vtho,
-            value: balances.vtho * prices.vtho,
-        },
-        {
-            symbol: 'B3TR',
-            balance: balances.b3tr,
-            value: balances.b3tr * prices.b3tr,
-        },
-        {
-            symbol: 'VOT3',
-            balance: balances.vot3,
-            value: balances.vot3 * prices.b3tr,
-        },
-        {
-            symbol: 'veDelegate',
-            balance: balances.veDelegate,
-            value: balances.veDelegate * prices.b3tr,
-        },
-    ]
-        .filter((token) => token.balance > 0)
-        .sort((a, b) => a.value - b.value); // Changed to ascending order
+    const tokensList = Object.values(tokens)
+        .filter((token) => token.value > 0)
+        .sort((a, b) => b.usdValue - a.usdValue);
 
-    const tokensToShow = tokens.slice(0, maxIcons);
-    const remainingTokens = tokens.length - maxIcons;
+    const tokensToShow = tokensList.slice(0, maxIcons);
+    const remainingTokens = tokensList.length - maxIcons;
 
     if (!address) return null;
-    if (tokens.length === 0) return null;
+    if (tokensList.length === 0) return null;
 
     return (
         <HStack spacing={0} ml={ml}>

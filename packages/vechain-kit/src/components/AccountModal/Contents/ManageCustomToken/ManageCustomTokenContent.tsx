@@ -38,13 +38,19 @@ export const ManageCustomTokenContent = ({
 }: ManageCustomTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { addToken, removeToken, isTokenIncluded, customTokens } =
-        useCustomTokens();
+    const {
+        addToken,
+        removeToken,
+        isTokenIncluded,
+        isDefaultToken,
+        customTokens,
+    } = useCustomTokens();
 
     // Form setup with validation rules
     const {
         register,
         setError,
+        setValue,
         formState: { errors, isValid },
         handleSubmit,
     } = useForm<FormValues>({
@@ -57,7 +63,10 @@ export const ManageCustomTokenContent = ({
     const onSubmit = async (data: FormValues) => {
         if (!data.newTokenAddress) return;
 
-        if (isTokenIncluded(data.newTokenAddress)) {
+        if (
+            isTokenIncluded(data.newTokenAddress) ||
+            isDefaultToken(data.newTokenAddress)
+        ) {
             return setError('newTokenAddress', {
                 type: 'manual',
                 message: t('Token already added'),
@@ -108,6 +117,13 @@ export const ManageCustomTokenContent = ({
                                             /^0x[a-fA-F0-9]{40}$/.test(value) ||
                                             t('Invalid contract address'),
                                     })}
+                                    onChange={(e) => {
+                                        const trimmed = e.target.value.trim();
+                                        e.target.value = trimmed;
+                                        setValue('newTokenAddress', trimmed, {
+                                            shouldValidate: true,
+                                        });
+                                    }}
                                     placeholder="0x..."
                                     variant="outline"
                                     fontSize="md"
