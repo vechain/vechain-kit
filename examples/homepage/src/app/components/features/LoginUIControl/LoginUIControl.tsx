@@ -106,7 +106,7 @@ export const LoginUIControl = () => {
                                     py={1}
                                     borderRadius="full"
                                 >
-                                    variant: "popover"
+                                    variant: "popover" (desktop only)
                                 </Text>
                             </VStack>
 
