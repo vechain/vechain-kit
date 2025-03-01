@@ -1,12 +1,17 @@
 'use client';
 
 import { VStack, Text, Box, Grid, Button } from '@chakra-ui/react';
-import { WalletButton, useConnectModal } from '@vechain/vechain-kit';
+import {
+    WalletButton,
+    useConnectModal,
+    useDAppKitWalletModal,
+} from '@vechain/vechain-kit';
 import { MdLogin } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export const LoginUIControl = () => {
     const { open } = useConnectModal();
+    const { open: openWalletModal } = useDAppKitWalletModal();
 
     return (
         <CollapsibleCard
@@ -126,6 +131,25 @@ export const LoginUIControl = () => {
                                     borderRadius="full"
                                 >
                                     custom button (with onClick)
+                                </Text>
+                            </VStack>
+
+                            <VStack alignItems="flex-start" spacing={2}>
+                                <Box w={'fit-content'}>
+                                    <Button onClick={openWalletModal}>
+                                        Open only "Connect Wallet"
+                                    </Button>
+                                </Box>
+                                <Text
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color="blue.300"
+                                    bg="whiteAlpha.100"
+                                    px={3}
+                                    py={1}
+                                    borderRadius="full"
+                                >
+                                    aka: dapp-kit connect modal
                                 </Text>
                             </VStack>
                         </VStack>
