@@ -20,8 +20,6 @@ export const useLoginWithVeChain = () => {
         } catch (error) {
             throw handlePopupError({
                 error,
-                safariMessage:
-                    'Safari blocked the login window. Please try again, it should work now.',
                 rejectedMessage: 'Login request was cancelled.',
                 defaultMessage: 'VeChain login failed',
             });

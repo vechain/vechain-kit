@@ -140,8 +140,6 @@ export const usePrivyCrossAppSdk = () => {
             } catch (error) {
                 throw handlePopupError({
                     error,
-                    safariMessage:
-                        'Safari blocked the signing window. Please try again, it should work now.',
                     rejectedMessage: 'Signing request was cancelled.',
                     defaultMessage: 'Failed to sign message',
                 });
@@ -157,8 +155,6 @@ export const usePrivyCrossAppSdk = () => {
             } catch (error) {
                 throw handlePopupError({
                     error,
-                    safariMessage:
-                        'Safari blocked the signing window. Please try again, it should work now.',
                     rejectedMessage: 'Signing request was cancelled.',
                     defaultMessage: 'Failed to sign typed data',
                 });
