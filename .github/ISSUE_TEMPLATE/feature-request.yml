@@ -4,6 +4,7 @@ title: "💡 [REQUEST] - <title>"
 labels: [
 "feature"
 ]
+projects: ["vechain/projects/51", "vechain/projects/9"]
 body:
 - type: textarea
   id: summary

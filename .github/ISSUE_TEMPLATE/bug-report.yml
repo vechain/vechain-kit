@@ -4,6 +4,7 @@ title: "🐛 [BUG] - <title>"
 labels: [
 "bug"
 ]
+projects: ["vechain/projects/51", "vechain/projects/9"]
 body:
 - type: textarea
   id: description
