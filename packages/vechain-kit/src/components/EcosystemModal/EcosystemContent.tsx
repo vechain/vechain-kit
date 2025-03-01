@@ -19,7 +19,6 @@ import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
-import { handlePopupError } from '@/utils/handlePopupError';
 
 type Props = {
     onClose: () => void;
@@ -59,17 +58,25 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                 });
                 onClose();
             } catch (error) {
-                const popupError = handlePopupError({
-                    error,
-                    mobileBrowserPopupMessage: t(
-                        "Your mobile browser blocked the login window. Please click 'Try again' to open the login window or change your browser settings.",
-                    ),
-                    rejectedMessage: t('Login request was cancelled.'),
-                    defaultMessage: t(
-                        'An unexpected issue occurred while logging in with this app. Please try again or contact support.',
-                    ),
-                });
-                setLoginError(popupError.message);
+                const errorMsg = (error as { message?: string })?.message;
+
+                // Handle user rejection or other errors
+                if (
+                    errorMsg?.includes('rejected') ||
+                    errorMsg?.includes('closed')
+                ) {
+                    return new Error('Login request was cancelled.');
+                }
+
+                // If it's an Error instance, return it, otherwise create new Error
+                const errorToShow =
+                    error instanceof Error
+                        ? error
+                        : new Error(
+                              "'An unexpected issue occurred while logging in with this app. Please try again or contact support.',",
+                          );
+
+                setLoginError(errorToShow.message);
             }
         } catch (error) {
             console.error(t('Login failed:'), error);

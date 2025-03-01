@@ -72,15 +72,8 @@ const LoadingContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const [showTimeout, setShowTimeout] = React.useState(false);
-    const [showMobileBrowserMessage, setShowMobileBrowserMessage] =
-        React.useState(false);
 
     React.useEffect(() => {
-        // Show mobile browser message immediately
-        if (isMobile) {
-            setShowMobileBrowserMessage(true);
-        }
-
         // Keep the regular timeout for non-mobile browsers
         const timer = setTimeout(() => {
             setShowTimeout(true);
@@ -113,24 +106,12 @@ const LoadingContent = ({
                 >
                     <Spinner size="xl" />
                 </VStack>
-                {loadingText && !showTimeout && !showMobileBrowserMessage && (
+                {loadingText && !showTimeout && (
                     <Text size="sm" textAlign={'center'}>
                         {loadingText}
                     </Text>
                 )}
-                {showMobileBrowserMessage && (
-                    <VStack mt={4} spacing={2}>
-                        <Text color="orange.300" size="sm" textAlign={'center'}>
-                            {t('Your mobile browser blocked the login window.')}
-                        </Text>
-                        <Text size="sm" textAlign={'center'}>
-                            {t(
-                                "Please click 'Try again' to open the login window or change your browser settings.",
-                            )}
-                        </Text>
-                    </VStack>
-                )}
-                {!showMobileBrowserMessage && showTimeout && (
+                {showTimeout && (
                     <VStack mt={4} spacing={2}>
                         <Text color="orange.300" size="sm" textAlign={'center'}>
                             {t('This is taking longer than expected.')}
@@ -144,7 +125,7 @@ const LoadingContent = ({
                 )}
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
-                {(showTimeout || showMobileBrowserMessage) && (
+                {showTimeout && (
                     <Button variant="vechainKitSecondary" onClick={onTryAgain}>
                         <Icon mr={2} size={'sm'} as={MdOutlineRefresh} />
                         {t('Try again')}
