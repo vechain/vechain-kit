@@ -17,7 +17,7 @@ import {
     VECHAIN_PRIVY_APP_ID,
 } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
-import { useSmartAccount } from '.';
+import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
