@@ -28,15 +28,21 @@ export interface SimpleAccountFactoryInterface extends Interface {
     nameOrSignature:
       | "DEFAULT_ADMIN_ROLE"
       | "UPGRADE_INTERFACE_VERSION"
-      | "accountImplementation"
+      | "accountImplementationV1"
+      | "accountImplementationV3"
+      | "accountNeedsUpgradeToVersion"
+      | "b3tr"
       | "createAccount"
       | "createAccountWithSalt"
+      | "currentAccountImplementationAddress"
+      | "currentAccountImplementationVersion"
       | "getAccountAddress"
       | "getAccountAddressWithSalt"
       | "getRoleAdmin"
       | "grantRole"
       | "hasRole"
       | "initialize"
+      | "initializeV3"
       | "proxiableUUID"
       | "renounceRole"
       | "revokeRole"
@@ -64,9 +70,18 @@ export interface SimpleAccountFactoryInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "accountImplementation",
+    functionFragment: "accountImplementationV1",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "accountImplementationV3",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "accountNeedsUpgradeToVersion",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "b3tr", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "createAccount",
     values: [AddressLike]
@@ -74,6 +89,14 @@ export interface SimpleAccountFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "createAccountWithSalt",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "currentAccountImplementationAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "currentAccountImplementationVersion",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getAccountAddress",
@@ -98,6 +121,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initializeV3",
+    values: [AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "proxiableUUID",
@@ -130,15 +157,32 @@ export interface SimpleAccountFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "accountImplementation",
+    functionFragment: "accountImplementationV1",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "accountImplementationV3",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "accountNeedsUpgradeToVersion",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "b3tr", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "createAccount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "createAccountWithSalt",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "currentAccountImplementationAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "currentAccountImplementationVersion",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -156,6 +200,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initializeV3",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "proxiableUUID",
     data: BytesLike
@@ -323,7 +371,17 @@ export interface SimpleAccountFactory extends BaseContract {
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
 
-  accountImplementation: TypedContractMethod<[], [string], "view">;
+  accountImplementationV1: TypedContractMethod<[], [string], "view">;
+
+  accountImplementationV3: TypedContractMethod<[], [string], "view">;
+
+  accountNeedsUpgradeToVersion: TypedContractMethod<
+    [accountAddress: AddressLike, targetVersion: BigNumberish],
+    [boolean],
+    "view"
+  >;
+
+  b3tr: TypedContractMethod<[], [string], "view">;
 
   createAccount: TypedContractMethod<
     [owner: AddressLike],
@@ -335,6 +393,18 @@ export interface SimpleAccountFactory extends BaseContract {
     [owner: AddressLike, salt: BigNumberish],
     [string],
     "nonpayable"
+  >;
+
+  currentAccountImplementationAddress: TypedContractMethod<
+    [],
+    [string],
+    "view"
+  >;
+
+  currentAccountImplementationVersion: TypedContractMethod<
+    [],
+    [bigint],
+    "view"
   >;
 
   getAccountAddress: TypedContractMethod<
@@ -365,6 +435,12 @@ export interface SimpleAccountFactory extends BaseContract {
 
   initialize: TypedContractMethod<[], [void], "nonpayable">;
 
+  initializeV3: TypedContractMethod<
+    [newImplementationV3: AddressLike, b3trToken: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   proxiableUUID: TypedContractMethod<[], [string], "view">;
 
   renounceRole: TypedContractMethod<
@@ -391,7 +467,7 @@ export interface SimpleAccountFactory extends BaseContract {
     "payable"
   >;
 
-  version: TypedContractMethod<[], [string], "view">;
+  version: TypedContractMethod<[], [bigint], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -404,7 +480,20 @@ export interface SimpleAccountFactory extends BaseContract {
     nameOrSignature: "UPGRADE_INTERFACE_VERSION"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "accountImplementation"
+    nameOrSignature: "accountImplementationV1"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "accountImplementationV3"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "accountNeedsUpgradeToVersion"
+  ): TypedContractMethod<
+    [accountAddress: AddressLike, targetVersion: BigNumberish],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "b3tr"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "createAccount"
@@ -416,6 +505,12 @@ export interface SimpleAccountFactory extends BaseContract {
     [string],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "currentAccountImplementationAddress"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "currentAccountImplementationVersion"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "getAccountAddress"
   ): TypedContractMethod<[owner: AddressLike], [string], "view">;
@@ -447,6 +542,13 @@ export interface SimpleAccountFactory extends BaseContract {
     nameOrSignature: "initialize"
   ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
+    nameOrSignature: "initializeV3"
+  ): TypedContractMethod<
+    [newImplementationV3: AddressLike, b3trToken: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "proxiableUUID"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
@@ -475,7 +577,7 @@ export interface SimpleAccountFactory extends BaseContract {
   >;
   getFunction(
     nameOrSignature: "version"
-  ): TypedContractMethod<[], [string], "view">;
+  ): TypedContractMethod<[], [bigint], "view">;
 
   getEvent(
     key: "AccountCreated"

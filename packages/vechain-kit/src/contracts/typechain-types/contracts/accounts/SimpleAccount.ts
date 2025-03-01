@@ -41,6 +41,7 @@ export interface SimpleAccountInterface extends Interface {
       | "supportsInterface"
       | "transferOwnership"
       | "upgradeToAndCall"
+      | "usedNonces"
       | "version"
   ): FunctionFragment;
 
@@ -48,6 +49,7 @@ export interface SimpleAccountInterface extends Interface {
     nameOrSignatureOrTopic:
       | "EIP712DomainChanged"
       | "Initialized"
+      | "OwnershipTransferred"
       | "SimpleAccountInitialized"
       | "Upgraded"
   ): EventFragment;
@@ -74,9 +76,10 @@ export interface SimpleAccountInterface extends Interface {
       AddressLike[],
       BigNumberish[],
       BytesLike[],
-      BigNumberish[],
-      BigNumberish[],
-      BytesLike[]
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
     ]
   ): string;
   encodeFunctionData(
@@ -128,6 +131,10 @@ export interface SimpleAccountInterface extends Interface {
   encodeFunctionData(
     functionFragment: "upgradeToAndCall",
     values: [AddressLike, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "usedNonces",
+    values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
@@ -182,6 +189,7 @@ export interface SimpleAccountInterface extends Interface {
     functionFragment: "upgradeToAndCall",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "usedNonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 }
 
@@ -200,6 +208,19 @@ export namespace InitializedEvent {
   export type OutputTuple = [version: bigint];
   export interface OutputObject {
     version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -309,9 +330,10 @@ export interface SimpleAccount extends BaseContract {
       to: AddressLike[],
       value: BigNumberish[],
       data: BytesLike[],
-      validAfter: BigNumberish[],
-      validBefore: BigNumberish[],
-      signatures: BytesLike[]
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
     ],
     [void],
     "payable"
@@ -384,7 +406,9 @@ export interface SimpleAccount extends BaseContract {
     "payable"
   >;
 
-  version: TypedContractMethod<[], [string], "view">;
+  usedNonces: TypedContractMethod<[arg0: BytesLike], [boolean], "view">;
+
+  version: TypedContractMethod<[], [bigint], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -431,9 +455,10 @@ export interface SimpleAccount extends BaseContract {
       to: AddressLike[],
       value: BigNumberish[],
       data: BytesLike[],
-      validAfter: BigNumberish[],
-      validBefore: BigNumberish[],
-      signatures: BytesLike[]
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
     ],
     [void],
     "payable"
@@ -508,8 +533,11 @@ export interface SimpleAccount extends BaseContract {
     "payable"
   >;
   getFunction(
+    nameOrSignature: "usedNonces"
+  ): TypedContractMethod<[arg0: BytesLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "version"
-  ): TypedContractMethod<[], [string], "view">;
+  ): TypedContractMethod<[], [bigint], "view">;
 
   getEvent(
     key: "EIP712DomainChanged"
@@ -524,6 +552,13 @@ export interface SimpleAccount extends BaseContract {
     InitializedEvent.InputTuple,
     InitializedEvent.OutputTuple,
     InitializedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "SimpleAccountInitialized"
@@ -561,6 +596,17 @@ export interface SimpleAccount extends BaseContract {
       InitializedEvent.InputTuple,
       InitializedEvent.OutputTuple,
       InitializedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "SimpleAccountInitialized(address)": TypedContractEvent<
