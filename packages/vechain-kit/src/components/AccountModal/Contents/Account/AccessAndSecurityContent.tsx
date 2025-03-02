@@ -76,24 +76,24 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             textAlign={'center'}
                         >
                             {t(
-                                'Manage your embedded wallet security settings or back it up to a new device.',
+                                'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
                             )}
                         </Text>
                     </VStack>
 
                     {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
-
                     <ActionButton
-                        title={t('Passkey')}
+                        title={t('Your embedded wallet')}
                         description={t(
-                            'Enable one click login by adding a passkey to your account.',
+                            connection.isConnectedWithSocialLogin
+                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
+                                : 'Backup can be done only in the app securing your wallet.',
                         )}
                         onClick={() => {
-                            linkPasskey();
+                            setCurrentContent('embedded-wallet');
                         }}
-                        leftIcon={IoIosFingerPrint}
-                        rightIcon={undefined}
-                        isDisabled={!connection.isConnectedWithPrivy}
+                        leftIcon={HiOutlineWallet}
+                        rightIcon={MdOutlineNavigateNext}
                     />
 
                     <ActionButton
@@ -112,6 +112,19 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     />
 
                     <ActionButton
+                        title={t('Passkey')}
+                        description={t(
+                            'Enable one click login by adding a passkey to your account.',
+                        )}
+                        onClick={() => {
+                            linkPasskey();
+                        }}
+                        leftIcon={IoIosFingerPrint}
+                        rightIcon={undefined}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                    />
+
+                    <ActionButton
                         title={t('Backup your wallet')}
                         description={t(
                             connection.isConnectedWithSocialLogin
@@ -124,20 +137,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={GiHouseKeys}
                         // rightIcon={MdOutlineNavigateNext}
-                    />
-
-                    <ActionButton
-                        title={t('Embedded wallet')}
-                        description={t(
-                            connection.isConnectedWithSocialLogin
-                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
-                                : 'Backup can be done only in the app securing your wallet.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('embedded-wallet');
-                        }}
-                        leftIcon={HiOutlineWallet}
-                        rightIcon={MdOutlineNavigateNext}
                     />
                 </VStack>
             </ModalBody>
