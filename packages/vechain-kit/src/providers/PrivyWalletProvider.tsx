@@ -227,9 +227,10 @@ export const PrivyWalletProvider = ({
                         Address.of(
                             getConfig(network.type).accountFactoryAddress,
                         ),
-                        ABIContract.ofAbi([]) // Replace with your actual factory ABI
-                            .getFunction('createAccount'),
-                        [connectedWallet.address],
+                        ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
+                            'createAccount',
+                        ),
+                        [connectedWallet.address ?? ''],
                     ),
                 );
             }

@@ -11,7 +11,7 @@ const SimpleAccountFactoryInterface =
 export const getCurrentAccountImplementationVersion = async (
     thor: Connex.Thor,
     networkType?: NETWORK_TYPE,
-): Promise<string> => {
+): Promise<number> => {
     if (!networkType) throw new Error('Network type is required');
 
     const functionFragment = SimpleAccountFactoryInterface.getFunction(
@@ -25,7 +25,7 @@ export const getCurrentAccountImplementationVersion = async (
 
     if (res.reverted) throw new Error('Reverted');
 
-    return res.decoded[0];
+    return parseInt(res.decoded[0]);
 };
 
 export const getCurrentAccountImplementationVersionQueryKey = (
