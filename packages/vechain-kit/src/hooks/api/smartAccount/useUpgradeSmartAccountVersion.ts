@@ -9,7 +9,6 @@ import { humanAddress, isValidAddress } from '@/utils';
 import { useSmartAccountImplementationAddress } from '@/hooks/api/smartAccount/useSmartAccountImplementationAddress';
 
 type UseUpgradeSmartAccountVersionProps = {
-    fromAddress: string;
     smartAccountAddress: string;
     targetVersion: number;
     onSuccess?: () => void;

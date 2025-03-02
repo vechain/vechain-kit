@@ -25,6 +25,7 @@ import {
     useUpgradeSmartAccountVersion,
     useHasV1SmartAccount,
     useSmartAccountVersion,
+    useIsSmartAccountDeployed,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { BaseModal } from '../common/BaseModal';
@@ -38,13 +39,7 @@ import { FcCheckmark } from 'react-icons/fc';
 import { GoLinkExternal } from 'react-icons/go';
 import { getConfig } from '@/config';
 
-interface UpgradeSmartAccountModalProps {
-    onSuccess?: () => void;
-}
-
-export const UpgradeSmartAccountModal = ({
-    onSuccess,
-}: UpgradeSmartAccountModalProps) => {
+export const UpgradeSmartAccountModal = () => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -59,13 +54,20 @@ export const UpgradeSmartAccountModal = ({
     // Instead of using useSmartAccountNeedsUpgrade, we will use useHasV1SmartAccount
     // smartAccountNeedsUpgrade will return false if the account is not deployed
     // but we want to enforce the upgrade, so we will both create the smart account and upgrade it at once
-    const { data: isLegacySmartAccount, isLoading: isCheckingUpgrade } =
-        useHasV1SmartAccount(connectedWallet?.address);
+    const {
+        data: isLegacySmartAccount,
+        isLoading: isCheckingLegacySmartAccount,
+    } = useHasV1SmartAccount(connectedWallet?.address);
 
     const {
         data: smartAccountVersion,
         isLoading: isCheckingSmartAccountVersion,
     } = useSmartAccountVersion(smartAccountAddress ?? '');
+
+    const {
+        data: isSmartAccountDeployed,
+        isLoading: isCheckingSmartAccountDeployed,
+    } = useIsSmartAccountDeployed(smartAccountAddress ?? '');
 
     // Set up the upgrade transaction
     const {
@@ -76,15 +78,10 @@ export const UpgradeSmartAccountModal = ({
         txReceipt,
         resetStatus: resetUpgradeState,
     } = useUpgradeSmartAccountVersion({
-        fromAddress: connectedWallet?.address ?? '',
         smartAccountAddress: smartAccountAddress ?? '',
         targetVersion: 3,
         onSuccess: () => {
             setIsTransactionSuccess(true);
-            setTimeout(() => {
-                onSuccess?.();
-                onClose();
-            }, 3000); // Show success state for 3 seconds before closing
         },
         onError: () => {
             console.error('Error upgrading Smart Account');
@@ -93,27 +90,40 @@ export const UpgradeSmartAccountModal = ({
 
     // Automatically open the modal when needed
     useEffect(() => {
+        // If the modal is still checking the legacy smart account or the smart account version, don't open it
+        if (
+            isCheckingLegacySmartAccount ||
+            isCheckingSmartAccountVersion ||
+            isCheckingSmartAccountDeployed
+        ) {
+            return;
+        }
+
+        // If the modal is already open, don't open it again
+        if (isOpen) {
+            return;
+        }
+
         // If the user is connected and has a legacy smart account (even if not deployed)
         // and the smart account is not already upgraded, open the modal
         if (
             connectedWallet &&
             isLegacySmartAccount &&
-            !isOpen &&
-            !isCheckingUpgrade &&
-            !isCheckingSmartAccountVersion &&
-            (smartAccountVersion === undefined || // return undefined when the contract is not deployed
-                (smartAccountVersion && smartAccountVersion !== 3))
+            ((isSmartAccountDeployed && smartAccountVersion !== 3) ||
+                !isSmartAccountDeployed)
         ) {
             onOpen();
         }
     }, [
         isLegacySmartAccount,
         isOpen,
-        isCheckingUpgrade,
+        isCheckingLegacySmartAccount,
         onOpen,
         connectedWallet,
         smartAccountVersion,
         isCheckingSmartAccountVersion,
+        isCheckingSmartAccountDeployed,
+        isSmartAccountDeployed,
     ]);
 
     // Handle the upgrade process
