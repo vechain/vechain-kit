@@ -28,24 +28,31 @@ export const useNotificationAlerts = () => {
         }
     }, [connection.isConnectedWithPrivy, account?.address]);
 
-    // Multiclause Warning Alert
+    // Multiclause Support Alert
     useEffect(() => {
         if (!connection.isConnectedWithPrivy || !account?.address) return;
 
         const notifications = getNotifications();
+        // Only shows the new "now supported" notification to users who have seen the warning
         const hasMulticlauseWarning = notifications.some(
             (n) =>
                 n.id === `multiclause_warning_${account.address.toLowerCase()}`,
         );
+        const hasMulticlauseSupport = notifications.some(
+            (n) =>
+                n.id === `multiclause_support_${account.address.toLowerCase()}`,
+        );
 
-        if (!hasMulticlauseWarning) {
+        // Only show the support notification if they had the warning before
+        // and don't already have the support notification
+        if (hasMulticlauseWarning && !hasMulticlauseSupport) {
             addNotification({
-                id: `multiclause_warning_${account.address.toLowerCase()}`,
-                title: t('Multiclause Transaction temporary disabled'),
+                id: `multiclause_support_${account.address.toLowerCase()}`,
+                title: t('Multiclause Transactions Are Now Supported'),
                 description: t(
-                    'Currently, multiclause transactions are not supported for smart accounts. Your multiclause transaction will be split into multiple transactions.',
+                    'Good news! Multiclause transactions are now fully supported for smart accounts. You can now enjoy a better user experience, lower gas costs, and enchanced security.',
                 ),
-                status: 'warning',
+                status: 'info',
             });
         }
     }, [connection.isConnectedWithPrivy, account?.address]);
