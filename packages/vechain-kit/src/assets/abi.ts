@@ -1043,6 +1043,25 @@ export const SimpleAccountFactoryABI = [
     {
         inputs: [
             {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+        ],
+        name: 'hasLegacyAccount',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
                 internalType: 'bytes32',
                 name: 'role',
                 type: 'bytes32',

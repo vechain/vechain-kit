@@ -40,6 +40,7 @@ export interface SimpleAccountFactoryInterface extends Interface {
       | "getAccountAddressWithSalt"
       | "getRoleAdmin"
       | "grantRole"
+      | "hasLegacyAccount"
       | "hasRole"
       | "initialize"
       | "initializeV3"
@@ -113,6 +114,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "grantRole",
     values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasLegacyAccount",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "hasRole",
@@ -198,6 +203,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "hasLegacyAccount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
@@ -427,6 +436,12 @@ export interface SimpleAccountFactory extends BaseContract {
     "nonpayable"
   >;
 
+  hasLegacyAccount: TypedContractMethod<
+    [owner: AddressLike],
+    [boolean],
+    "view"
+  >;
+
   hasRole: TypedContractMethod<
     [role: BytesLike, account: AddressLike],
     [boolean],
@@ -531,6 +546,9 @@ export interface SimpleAccountFactory extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "hasLegacyAccount"
+  ): TypedContractMethod<[owner: AddressLike], [boolean], "view">;
   getFunction(
     nameOrSignature: "hasRole"
   ): TypedContractMethod<
