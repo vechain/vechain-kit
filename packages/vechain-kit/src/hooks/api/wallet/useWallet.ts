@@ -4,7 +4,7 @@ import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
 import {
     useGetChainId,
     useGetNodeUrl,
-    useContractVersion,
+    useSmartAccountVersion,
     useGetAvatar,
     useGetTextRecords,
     useVechainDomain,
@@ -202,7 +202,7 @@ export const useWallet = (): UseWalletReturnType => {
         : null;
 
     // Get smart account version
-    const { data: smartAccountVersion } = useContractVersion(
+    const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
     );
 
