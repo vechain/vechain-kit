@@ -1,6 +1,11 @@
 'use client';
 
-import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
+import {
+    Wallet as PrivyWallet,
+    useLoginWithOAuth,
+    usePrivy,
+    User,
+} from '@privy-io/react-auth';
 import {
     useGetChainId,
     useGetNodeUrl,
@@ -143,14 +148,18 @@ export const useWallet = (): UseWalletReturnType => {
     ]);
 
     // Get embedded wallet
-    const privyEmbeddedWallet = user?.wallet?.address;
+    const privyEmbeddedWallet = user?.linkedAccounts?.find(
+        (account) =>
+            account.type === 'wallet' && account.connectorType === 'embedded',
+    ) as PrivyWallet;
+    const privyEmbeddedWalletAddress = privyEmbeddedWallet?.address;
 
     // Get connected and selected accounts
     const connectedWalletAddress = isConnectedWithDappKit
         ? dappKitAccount
         : isConnectedWithCrossApp
         ? crossAppAddress
-        : privyEmbeddedWallet;
+        : privyEmbeddedWalletAddress;
 
     // Get smart account
     const { data: smartAccount } = useSmartAccount(connectedWalletAddress);
