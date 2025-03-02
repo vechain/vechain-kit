@@ -5,3 +5,4 @@ export * from './useGetSmartAccountAddress';
 export * from './useSmartAccountNeedsUpgrade';
 export * from './useSmartAccountImplementationAddress';
 export * from './useUpgradeSmartAccountVersion';
+export * from './useHasV1SmartAccount';

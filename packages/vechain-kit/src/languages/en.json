@@ -421,5 +421,19 @@
     "Failed to sign typed data": "Failed to sign typed data",
     "Your mobile browser blocked the signing window. Please click 'Try again' to open the signing window or change your browser settings.": "Your mobile browser blocked the signing window. Please click 'Try again' to open the signing window or change your browser settings.",
     "An unexpected issue occurred while signing typed data. Please try again or contact support.": "An unexpected issue occurred while signing typed data. Please try again or contact support.",
-    "An unexpected issue occurred while logging in with this app. Please try again or contact support.": "An unexpected issue occurred while logging in with this app. Please try again or contact support."
+    "An unexpected issue occurred while logging in with this app. Please try again or contact support.": "An unexpected issue occurred while logging in with this app. Please try again or contact support.",
+    "Your embedded wallet": "Your embedded wallet",
+    "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.": "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.",
+    "Upgrade Successful!": "Upgrade Successful!",
+    "Smart Account Upgrade Required": "Smart Account Upgrade Required",
+    "Your smart account needs to be upgraded to the latest version (v3).": "Your smart account needs to be upgraded to the latest version (v3).",
+    "Benefits of this upgrade:": "Benefits of this upgrade:",
+    "Improved security features": "Improved security features",
+    "Better transaction handling": "Better transaction handling",
+    "Enhanced compatibility with dApps": "Enhanced compatibility with dApps",
+    "Reduced gas costs for operations": "Reduced gas costs for operations",
+    "Upgrade failed": "Upgrade failed",
+    "Important": "Important",
+    "This upgrade is necessary to continue using all features of your smart account. Please complete it now.": "This upgrade is necessary to continue using all features of your smart account. Please complete it now.",
+    "Upgrading...": "Upgrading..."
 }

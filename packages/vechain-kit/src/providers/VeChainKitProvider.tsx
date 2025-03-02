@@ -32,6 +32,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
 import { initializeI18n } from '@/utils/i18n';
 import { ModalProvider } from './ModalProvider';
+import { UpgradeSmartAccountModal } from '@/components';
 
 const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
@@ -352,7 +353,10 @@ export const VeChainKitProvider = (
                                     feeDelegation.delegateAllTransactions
                                 }
                             >
-                                <ModalProvider>{children}</ModalProvider>
+                                <ModalProvider>
+                                    <UpgradeSmartAccountModal />
+                                    {children}
+                                </ModalProvider>
                             </PrivyWalletProvider>
                         </DAppKitProvider>
                     </PrivyProvider>
