@@ -101,8 +101,8 @@ export const UpgradeSmartAccountModal = ({
             !isOpen &&
             !isCheckingUpgrade &&
             !isCheckingSmartAccountVersion &&
-            smartAccountVersion !== undefined &&
-            smartAccountVersion !== 3
+            (smartAccountVersion === undefined || // return undefined when the contract is not deployed
+                (smartAccountVersion && smartAccountVersion !== 3))
         ) {
             onOpen();
         }
