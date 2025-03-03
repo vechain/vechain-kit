@@ -6,7 +6,7 @@ import {
     useRefreshBalances,
 } from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
-import { useSmartAccountImplementationAddress } from '@/hooks/api/smartAccount/useSmartAccountImplementationAddress';
+import { useAccountImplementationAddress } from '@/hooks';
 
 type UseUpgradeSmartAccountVersionProps = {
     smartAccountAddress: string;
@@ -21,7 +21,7 @@ type UseUpgradeSmartAccountVersionReturnValue = {
 
 const simpleAccountInterface = SimpleAccount__factory.createInterface();
 
-export const useUpgradeSmartAccountVersion = ({
+export const useUpgradeSmartAccount = ({
     smartAccountAddress,
     targetVersion,
     onSuccess,
@@ -31,7 +31,7 @@ export const useUpgradeSmartAccountVersion = ({
 
     // Fetch the new implementation address for the requested version
     const { data: newImplementationAddress } =
-        useSmartAccountImplementationAddress(targetVersion);
+        useAccountImplementationAddress(targetVersion);
 
     const buildClauses = useCallback(async () => {
         if (!smartAccountAddress || !isValidAddress(smartAccountAddress)) {

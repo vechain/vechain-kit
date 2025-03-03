@@ -38,6 +38,7 @@ export interface SimpleAccountFactoryInterface extends Interface {
       | "currentAccountImplementationVersion"
       | "getAccountAddress"
       | "getAccountAddressWithSalt"
+      | "getAccountVersion"
       | "getRoleAdmin"
       | "grantRole"
       | "hasLegacyAccount"
@@ -48,6 +49,7 @@ export interface SimpleAccountFactoryInterface extends Interface {
       | "renounceRole"
       | "revokeRole"
       | "supportsInterface"
+      | "upgradeRequired"
       | "upgradeToAndCall"
       | "version"
   ): FunctionFragment;
@@ -108,6 +110,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getAccountVersion",
+    values: [AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getRoleAdmin",
     values: [BytesLike]
   ): string;
@@ -146,6 +152,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "upgradeRequired",
+    values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "upgradeToAndCall",
@@ -199,6 +209,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getAccountVersion",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getRoleAdmin",
     data: BytesLike
   ): Result;
@@ -224,6 +238,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeRequired",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -428,6 +446,12 @@ export interface SimpleAccountFactory extends BaseContract {
     "view"
   >;
 
+  getAccountVersion: TypedContractMethod<
+    [account: AddressLike, owner: AddressLike],
+    [[bigint, boolean] & { accountVersion: bigint; isDeployed: boolean }],
+    "view"
+  >;
+
   getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], "view">;
 
   grantRole: TypedContractMethod<
@@ -472,6 +496,12 @@ export interface SimpleAccountFactory extends BaseContract {
 
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
+    [boolean],
+    "view"
+  >;
+
+  upgradeRequired: TypedContractMethod<
+    [account: AddressLike, owner: AddressLike, targetVersion: BigNumberish],
     [boolean],
     "view"
   >;
@@ -537,6 +567,13 @@ export interface SimpleAccountFactory extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "getAccountVersion"
+  ): TypedContractMethod<
+    [account: AddressLike, owner: AddressLike],
+    [[bigint, boolean] & { accountVersion: bigint; isDeployed: boolean }],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "getRoleAdmin"
   ): TypedContractMethod<[role: BytesLike], [string], "view">;
   getFunction(
@@ -586,6 +623,13 @@ export interface SimpleAccountFactory extends BaseContract {
   getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "upgradeRequired"
+  ): TypedContractMethod<
+    [account: AddressLike, owner: AddressLike, targetVersion: BigNumberish],
+    [boolean],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "upgradeToAndCall"
   ): TypedContractMethod<

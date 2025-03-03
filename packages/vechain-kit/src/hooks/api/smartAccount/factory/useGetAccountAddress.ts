@@ -8,7 +8,7 @@ import { getConfig } from '@/config';
 const SimpleAccountFactoryInterface =
     SimpleAccountFactory__factory.createInterface();
 
-export const getSmartAccountAddress = async (
+export const getAccountAddress = async (
     thor: Connex.Thor,
     ownerAddress?: string,
     networkType?: NETWORK_TYPE,
@@ -31,24 +31,31 @@ export const getSmartAccountAddress = async (
     return res.decoded[0];
 };
 
-export const getSmartAccountAddressQueryKey = (
+export const getAccountAddressQueryKey = (
     ownerAddress?: string,
     networkType?: NETWORK_TYPE,
-) => ['VECHAIN_KIT', 'SMART_ACCOUNT', 'ADDRESS', ownerAddress, networkType];
+) => [
+    'VECHAIN_KIT',
+    'SMART_ACCOUNT',
+    'FACTORY',
+    'ADDRESS',
+    ownerAddress,
+    networkType,
+];
 
 /**
  * Get the address of a smart account
  * @param ownerAddress - The address of the owner of the smart account
  * @returns The address of the smart account
  */
-export const useGetSmartAccountAddress = (ownerAddress?: string) => {
+export const useGetAccountAddress = (ownerAddress?: string) => {
     const { thor } = useConnex();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: getSmartAccountAddressQueryKey(ownerAddress, network.type),
+        queryKey: getAccountAddressQueryKey(ownerAddress, network.type),
         queryFn: async () =>
-            getSmartAccountAddress(thor, ownerAddress, network.type),
+            getAccountAddress(thor, ownerAddress, network.type),
         enabled: !!thor && !!ownerAddress && !!network,
     });
 };

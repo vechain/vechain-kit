@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useGetNodeUrl } from '../utility';
+import { useGetNodeUrl } from '@/hooks';
 import { ThorClient } from '@vechain/sdk-network';
 import { Address } from '@vechain/sdk-core';
 

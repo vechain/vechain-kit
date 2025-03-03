@@ -10,13 +10,10 @@ const SimpleAccountFactoryInterface =
 
 export const getSmartAccountNeedsUpgrade = async (
     thor: Connex.Thor,
-    contractAddress?: string,
-    targetVersion?: number,
-    networkType?: NETWORK_TYPE,
+    contractAddress: string,
+    targetVersion: number,
+    networkType: NETWORK_TYPE,
 ): Promise<boolean> => {
-    if (!contractAddress) throw new Error('Contract address is required');
-    if (!networkType) throw new Error('Network type is required');
-
     const functionFragment = SimpleAccountFactoryInterface.getFunction(
         'accountNeedsUpgradeToVersion',
     ).format('json');
@@ -32,12 +29,13 @@ export const getSmartAccountNeedsUpgrade = async (
 };
 
 export const getSmartAccountNeedsUpgradeQueryKey = (
-    contractAddress?: string,
-    targetVersion?: number,
-    networkType?: NETWORK_TYPE,
+    contractAddress: string,
+    targetVersion: number,
+    networkType: NETWORK_TYPE,
 ) => [
     'VECHAIN_KIT',
     'SMART_ACCOUNT',
+    'FACTORY',
     'NEEDS_UPGRADE',
     contractAddress,
     targetVersion,
@@ -50,9 +48,9 @@ export const getSmartAccountNeedsUpgradeQueryKey = (
  * @param targetVersion - The target version of the smart account
  * @returns True if the smart account needs an upgrade, false otherwise
  */
-export const useSmartAccountNeedsUpgrade = (
-    contractAddress?: string,
-    targetVersion?: number,
+export const useAccountNeedsUpgradeToVersion = (
+    contractAddress: string,
+    targetVersion: number,
 ) => {
     const { thor } = useConnex();
     const { network } = useVeChainKitConfig();
@@ -70,6 +68,11 @@ export const useSmartAccountNeedsUpgrade = (
                 targetVersion,
                 network.type,
             ),
-        enabled: !!thor && !!contractAddress && !!targetVersion && !!network,
+        enabled:
+            !!thor &&
+            !!network &&
+            !!contractAddress &&
+            !!targetVersion &&
+            contractAddress !== '',
     });
 };

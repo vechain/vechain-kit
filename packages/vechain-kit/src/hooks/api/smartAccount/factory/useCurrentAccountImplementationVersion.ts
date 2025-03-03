@@ -33,6 +33,7 @@ export const getCurrentAccountImplementationVersionQueryKey = (
 ) => [
     'VECHAIN_KIT',
     'SMART_ACCOUNT',
+    'FACTORY',
     'CURRENT_ACCOUNT_IMPLEMENTATION_VERSION',
     networkType,
 ];

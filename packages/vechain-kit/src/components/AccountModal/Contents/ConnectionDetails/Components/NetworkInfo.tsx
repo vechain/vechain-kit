@@ -1,9 +1,5 @@
 import { getConfig } from '@/config';
-import {
-    useWallet,
-    useFetchPrivyStatus,
-    useSmartAccountVersion,
-} from '@/hooks';
+import { useWallet, useFetchPrivyStatus, useGetAccountVersion } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { HStack, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -12,14 +8,15 @@ import packageJson from '../../../../../../package.json';
 export const NetworkInfo = () => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
-    const { connection, smartAccount } = useWallet();
+    const { connection, smartAccount, connectedWallet } = useWallet();
     const { data: privyStatus, isLoading: isPrivyStatusLoading } =
         useFetchPrivyStatus();
-    const {
-        data: smartAccountVersion,
-        isLoading: isSmartAccountVersionLoading,
-        error: smartAccountVersionError,
-    } = useSmartAccountVersion(smartAccount.address);
+
+    const { data: accountVersion, isLoading: isAccountVersionLoading } =
+        useGetAccountVersion(
+            smartAccount.address ?? '',
+            connectedWallet?.address ?? '',
+        );
 
     const textColor = isDark ? '#dfdfdd' : '#4d4d4d';
 
@@ -42,18 +39,6 @@ export const NetworkInfo = () => {
         </HStack>
     );
 
-    const getSmartAccountVersionDisplay = () => {
-        if (isSmartAccountVersionLoading) return 'Loading...';
-
-        if (smartAccountVersionError || !smartAccountVersion) {
-            return `v1 ${smartAccount.isDeployed ? '' : '(not deployed)'}`;
-        }
-
-        return `v${smartAccountVersion} ${
-            smartAccount.isDeployed ? '' : '(not deployed)'
-        }`;
-    };
-
     return (
         <>
             <InfoRow
@@ -71,8 +56,10 @@ export const NetworkInfo = () => {
                 <>
                     <InfoRow
                         label={t('Smart Account')}
-                        value={getSmartAccountVersionDisplay()}
-                        isLoading={isSmartAccountVersionLoading}
+                        value={`v${accountVersion?.version ?? ''} ${
+                            accountVersion?.isDeployed ? '' : '(not deployed)'
+                        }`}
+                        isLoading={isAccountVersionLoading}
                     />
                     <InfoRow
                         label={t('Privy Status')}
@@ -84,8 +71,8 @@ export const NetworkInfo = () => {
                 smartAccount.isDeployed && (
                     <InfoRow
                         label={t('Smart Account')}
-                        value={getSmartAccountVersionDisplay()}
-                        isLoading={isSmartAccountVersionLoading}
+                        value={`v${accountVersion?.version ?? ''}`}
+                        isLoading={isAccountVersionLoading}
                     />
                 )
             )}
