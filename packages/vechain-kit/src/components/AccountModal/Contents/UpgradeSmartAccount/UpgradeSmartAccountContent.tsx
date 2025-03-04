@@ -20,23 +20,22 @@ import {
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { useUpgradeSmartAccount } from '@/hooks';
+import { useUpgradeSmartAccount, useWallet } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
     handleClose: () => void;
-    smartAccountAddress: string;
 };
 
 export const UpgradeSmartAccountContent = ({
     setCurrentContent,
     handleClose,
-    smartAccountAddress,
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { smartAccount } = useWallet();
 
     // Set up the upgrade transaction
     const {
@@ -46,7 +45,7 @@ export const UpgradeSmartAccountContent = ({
         error: upgradeError,
         txReceipt,
     } = useUpgradeSmartAccount({
-        smartAccountAddress,
+        smartAccountAddress: smartAccount?.address ?? '',
         targetVersion: 3,
         onSuccess: () => {
             setCurrentContent({
@@ -95,7 +94,7 @@ export const UpgradeSmartAccountContent = ({
 
             <ModalBody>
                 <VStack spacing={6} align="stretch">
-                    <Text fontSize="md" textAlign="center">
+                    <Text fontSize="sm" textAlign="center">
                         {t(
                             'Your smart account needs to be upgraded to the latest version (v3).',
                         )}
@@ -128,26 +127,17 @@ export const UpgradeSmartAccountContent = ({
                         </Box>
                     </Alert>
 
-                    <Alert
-                        status="warning"
-                        variant="subtle"
-                        flexDirection="column"
-                        alignItems="center"
-                        justifyContent="center"
-                        textAlign="center"
-                        borderRadius="lg"
-                        py={4}
-                    >
+                    <Alert status="warning" borderRadius="md">
+                        <AlertIcon as={IoWarningOutline} />
                         <Box>
-                            <AlertIcon
-                                boxSize="24px"
-                                mr={0}
-                                as={IoWarningOutline}
-                            />
-                            <AlertTitle mt={4} mb={1} fontSize="lg">
+                            <AlertTitle fontSize="sm">
                                 {t('Important')}
                             </AlertTitle>
-                            <AlertDescription maxWidth="sm">
+                            <AlertDescription
+                                fontSize="xs"
+                                lineHeight="17px"
+                                display="block"
+                            >
                                 {t(
                                     'This upgrade is necessary to continue interacting with VeChain blockchain. Please complete it now.',
                                 )}
@@ -158,19 +148,21 @@ export const UpgradeSmartAccountContent = ({
             </ModalBody>
 
             <ModalFooter justifyContent="center">
-                <TransactionButtonAndStatus
-                    buttonText={t('Upgrade account')}
-                    onConfirm={handleUpgrade}
-                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    isSubmitting={isTransactionPending}
-                    transactionPendingText={t('Upgrading...')}
-                    txReceipt={txReceipt}
-                    transactionError={upgradeError}
-                />
+                <VStack spacing={3} w="full">
+                    <TransactionButtonAndStatus
+                        buttonText={t('Upgrade account')}
+                        onConfirm={handleUpgrade}
+                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                        isSubmitting={isTransactionPending}
+                        transactionPendingText={t('Upgrading...')}
+                        txReceipt={txReceipt}
+                        transactionError={upgradeError}
+                    />
 
-                <Button mt={5} variant={'link'} onClick={handleClose}>
-                    {t('Close and do this later')}
-                </Button>
+                    <Button mt={2} variant={'link'} onClick={handleClose}>
+                        {t('Close and do this later')}
+                    </Button>
+                </VStack>
             </ModalFooter>
         </>
     );

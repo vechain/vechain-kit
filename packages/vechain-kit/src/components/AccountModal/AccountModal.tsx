@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-    useWallet,
-    useNotificationAlerts,
-    useAccountUpgradeRequired,
-} from '@/hooks';
+import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
@@ -47,26 +43,17 @@ export const AccountModal = ({
 }: Props) => {
     useNotificationAlerts();
 
-    const { account, smartAccount, connectedWallet } = useWallet();
+    const { account } = useWallet();
     const [currentContent, setCurrentContent] =
         useState<AccountModalContentTypes>(initialContent);
 
-    // Check if smart account upgrade is required
-    const { data: isAccountUpgradeRequired } = useAccountUpgradeRequired(
-        smartAccount?.address ?? '',
-        connectedWallet?.address ?? '',
-        3,
-    );
-
     useEffect(() => {
         if (isOpen) {
-            if (isAccountUpgradeRequired) {
-                setCurrentContent('upgrade-smart-account');
-            } else if (initialContent) {
+            if (initialContent) {
                 setCurrentContent(initialContent);
             }
         }
-    }, [isOpen, initialContent, isAccountUpgradeRequired]);
+    }, [isOpen, initialContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
@@ -209,7 +196,6 @@ export const AccountModal = ({
                     <UpgradeSmartAccountContent
                         setCurrentContent={setCurrentContent}
                         handleClose={onClose}
-                        smartAccountAddress={smartAccount?.address ?? ''}
                     />
                 );
         }

@@ -1,12 +1,10 @@
 import { useCallback } from 'react';
 import { SimpleAccount__factory } from '@/contracts/typechain-types';
-import {
-    useSendTransaction,
-    UseSendTransactionReturnValue,
-    useRefreshBalances,
-} from '@/hooks';
+import { useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
 import { useAccountImplementationAddress } from '@/hooks';
+import { useRefreshSmartAccountQueries } from './useRefreshSmartAccountQueries';
+import { useRefreshFactoryQueries } from '../factory/useRefreshFactoryQueries';
 
 type UseUpgradeSmartAccountVersionProps = {
     smartAccountAddress: string;
@@ -27,7 +25,8 @@ export const useUpgradeSmartAccount = ({
     onSuccess,
     onError,
 }: UseUpgradeSmartAccountVersionProps): UseUpgradeSmartAccountVersionReturnValue => {
-    const { refresh } = useRefreshBalances();
+    const { refresh: refreshSmartAccount } = useRefreshSmartAccountQueries();
+    const { refresh: refreshFactory } = useRefreshFactoryQueries();
 
     // Fetch the new implementation address for the requested version
     const { data: newImplementationAddress } =
@@ -59,9 +58,9 @@ export const useUpgradeSmartAccount = ({
     }, [smartAccountAddress, newImplementationAddress, targetVersion]);
 
     const handleOnSuccess = useCallback(async () => {
-        await refresh();
+        await Promise.all([refreshSmartAccount(), refreshFactory()]);
         onSuccess?.();
-    }, [refresh, onSuccess]);
+    }, [refreshSmartAccount, refreshFactory, onSuccess]);
 
     const result = useSendTransaction({
         privyUIOptions: {

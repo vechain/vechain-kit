@@ -26,7 +26,7 @@ export const ProfileContent = ({
 
     const { darkMode: isDark } = useVeChainKitConfig();
 
-    const { account, disconnect, connection } = useWallet();
+    const { account, disconnect } = useWallet();
 
     return (
         <Box>

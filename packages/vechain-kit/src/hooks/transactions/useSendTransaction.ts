@@ -364,11 +364,21 @@ export const useSendTransaction = ({
             if (txReceipt?.reverted && !error?.type) {
                 (async () => {
                     const revertReason = await explainTxRevertReason(txReceipt);
+
+                    const message = revertReason
+                        ?.filter((clause) => {
+                            return clause.reverted && clause.revertReason;
+                        })
+                        .map((clause) => {
+                            return clause.revertReason;
+                        })
+                        .join(', ');
+
                     setError({
                         type: 'RevertReasonError',
-                        reason:
-                            revertReason?.[0]?.revertReason ??
-                            'Transaction reverted',
+                        reason: message
+                            ? 'Transaction reverted with: ' + message
+                            : 'Transaction reverted',
                     });
                 })();
                 return;

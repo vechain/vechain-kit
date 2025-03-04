@@ -1,11 +1,49 @@
 import { useEffect } from 'react';
-import { useWallet, useNotifications } from '@/hooks';
+import {
+    useWallet,
+    useNotifications,
+    useUpgradeRequiredForAccount,
+} from '@/hooks';
 import { useTranslation } from 'react-i18next';
 
 export const useNotificationAlerts = () => {
     const { t } = useTranslation();
-    const { account, connection } = useWallet();
+    const { account, connection, smartAccount } = useWallet();
     const { addNotification, getNotifications } = useNotifications();
+
+    // Check if smart account needs upgrade to version 3 (only for deployed smart accounts)
+    const { data: upgradeRequired } = useUpgradeRequiredForAccount(
+        smartAccount?.address ?? '',
+        3, // Target version
+    );
+
+    // Smart Account Upgrade Alert
+    useEffect(() => {
+        if (
+            !connection.isConnectedWithPrivy ||
+            !account?.address ||
+            !upgradeRequired
+        )
+            return;
+
+        const notifications = getNotifications();
+        const hasUpgradeNotification = notifications.some(
+            (n) =>
+                n.id ===
+                `smart_account_upgrade_${account.address.toLowerCase()}`,
+        );
+
+        if (!hasUpgradeNotification && upgradeRequired) {
+            addNotification({
+                id: `smart_account_upgrade_${account.address.toLowerCase()}`,
+                title: t('Smart Account Upgrade Required'),
+                description: t(
+                    'A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.',
+                ),
+                status: 'warning',
+            });
+        }
+    }, [connection.isConnectedWithPrivy, account?.address, upgradeRequired]);
 
     // Smart Account Alert
     useEffect(() => {

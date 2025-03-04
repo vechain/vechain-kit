@@ -8,7 +8,7 @@ import { getConfig } from '@/config';
 const SimpleAccountFactoryInterface =
     SimpleAccountFactory__factory.createInterface();
 
-export const getAccountUpgradeRequired = async (
+export const getUpgradeRequired = async (
     thor: Connex.Thor,
     accountAddress: string,
     ownerAddress: string,
@@ -30,7 +30,7 @@ export const getAccountUpgradeRequired = async (
     return res.decoded[0];
 };
 
-export const getAccountUpgradeRequiredQueryKey = (
+export const getUpgradeRequiredQueryKey = (
     accountAddress: string,
     ownerAddress: string,
     targetVersion: number,
@@ -53,7 +53,7 @@ export const getAccountUpgradeRequiredQueryKey = (
  * @param targetVersion - The version of the smart account to check for
  * @returns True if the smart account has a v1 smart account, false otherwise
  */
-export const useAccountUpgradeRequired = (
+export const useUpgradeRequired = (
     accountAddress: string,
     ownerAddress: string,
     targetVersion: number,
@@ -62,14 +62,14 @@ export const useAccountUpgradeRequired = (
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: getAccountUpgradeRequiredQueryKey(
+        queryKey: getUpgradeRequiredQueryKey(
             accountAddress,
             ownerAddress,
             targetVersion,
             network.type,
         ),
         queryFn: async () =>
-            getAccountUpgradeRequired(
+            getUpgradeRequired(
                 thor,
                 accountAddress,
                 ownerAddress,

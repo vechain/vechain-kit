@@ -1,8 +1,9 @@
 import { useVeChainKitConfig } from '@/providers';
-import { Button, Text, VStack } from '@chakra-ui/react';
+import { Button, Link, Text, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { TransactionStatusErrorType } from '@/types';
+import { getConfig } from '@/config';
 
 export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;
@@ -27,6 +28,9 @@ export const TransactionButtonAndStatus = ({
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
+
+    console.log('transactionError', transactionError);
 
     const errorMessage = useMemo(() => {
         if (!transactionError) return null;
@@ -66,20 +70,20 @@ export const TransactionButtonAndStatus = ({
                     : t('Confirm')}
             </Button>
             {errorMessage && txReceipt?.meta.txID && (
-                <Text
+                <Link
+                    isExternal
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'gray.500'}
                     textAlign="center"
                     width="full"
+                    href={`${getConfig(network.type).explorerUrl}/${
+                        txReceipt?.meta.txID
+                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
-                    <a
-                        href={`https://explore-testnet.vechain.org/transactions/${txReceipt?.meta.txID}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {t('View transaction on the explorer')}
-                    </a>
-                </Text>
+                    {t('View transaction on the explorer')}
+                </Link>
             )}
         </VStack>
     );
