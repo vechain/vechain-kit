@@ -443,5 +443,7 @@
     "Upgrade account": "Upgrade account",
     "Your account has been successfully upgraded to the latest version. You can now enjoy a better user experience, lower gas costs, and enhanced security.": "Your account has been successfully upgraded to the latest version. You can now enjoy a better user experience, lower gas costs, and enhanced security.",
     "Account upgrade required": "Account upgrade required",
-    "A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.": "A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain."
+    "A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.": "A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.",
+    "Account Upgrade Required": "Account Upgrade Required",
+    "Upgrade Now": "Upgrade Now"
 }

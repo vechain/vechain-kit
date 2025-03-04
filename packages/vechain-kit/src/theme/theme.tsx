@@ -3,6 +3,7 @@ import { modalTheme } from './modal';
 import { cardTheme } from './card';
 import { buttonTheme } from './button';
 import { popoverTheme } from './popover';
+import { alertTheme } from './alert';
 
 const themeConfig: ThemeConfig = {
     useSystemColorMode: false,
@@ -14,6 +15,7 @@ const themeConfig: ThemeConfig = {
         Card: cardTheme,
         Button: buttonTheme,
         Popover: popoverTheme,
+        Alert: alertTheme,
     },
     cssVarPrefix: 'vechainKit',
 };

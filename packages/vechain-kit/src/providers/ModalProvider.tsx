@@ -21,6 +21,8 @@ type ModalContextType = {
     openAccountModal: () => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
+    // Account Modal Content State
+    accountModalContent: AccountModalContentTypes;
     setAccountModalContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -101,6 +103,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 closeAccountModal,
                 isAccountModalOpen,
                 setAccountModalContent,
+                accountModalContent,
                 openTransactionModal,
                 closeTransactionModal,
                 isTransactionModalOpen,

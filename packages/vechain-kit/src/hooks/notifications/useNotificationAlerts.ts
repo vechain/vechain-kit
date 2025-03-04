@@ -6,6 +6,18 @@ import {
 } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 
+export const DEFAULT_NOTIFICATIONS = [
+    {
+        id: 'welcome',
+        title: 'Welcome to the VeChain',
+        description:
+            'Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.',
+        timestamp: Date.now(),
+        status: 'success' as const,
+        isRead: false,
+    },
+];
+
 export const useNotificationAlerts = () => {
     const { t } = useTranslation();
     const { account, connection, smartAccount } = useWallet();
@@ -36,11 +48,15 @@ export const useNotificationAlerts = () => {
         if (!hasUpgradeNotification && upgradeRequired) {
             addNotification({
                 id: `smart_account_upgrade_${account.address.toLowerCase()}`,
-                title: t('Smart Account Upgrade Required'),
+                title: t('Account Upgrade Required'),
                 description: t(
                     'A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.',
                 ),
                 status: 'warning',
+                action: {
+                    label: t('Upgrade Now', 'Upgrade Now'),
+                    content: 'upgrade-smart-account',
+                },
             });
         }
     }, [connection.isConnectedWithPrivy, account?.address, upgradeRequired]);

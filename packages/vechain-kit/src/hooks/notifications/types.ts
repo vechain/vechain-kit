@@ -1,3 +1,10 @@
+import { AccountModalContentTypes } from '@/components';
+
+export type NotificationAction = {
+    label: string;
+    content: AccountModalContentTypes;
+};
+
 export type Notification = {
     id: string;
     title: string;
@@ -5,4 +12,5 @@ export type Notification = {
     timestamp: number;
     status: 'success' | 'info' | 'warning' | 'error';
     isRead: boolean;
+    action?: NotificationAction;
 };

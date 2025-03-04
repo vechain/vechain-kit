@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -29,6 +29,7 @@ import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { ManageCustomTokenContent } from './Contents/ManageCustomToken';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
+import { useModal } from '@/providers/ModalProvider';
 
 type Props = {
     isOpen: boolean;
@@ -42,18 +43,18 @@ export const AccountModal = ({
     initialContent = 'main',
 }: Props) => {
     useNotificationAlerts();
-
     const { account } = useWallet();
-    const [currentContent, setCurrentContent] =
-        useState<AccountModalContentTypes>(initialContent);
+
+    const {
+        accountModalContent: currentContent,
+        setAccountModalContent: setCurrentContent,
+    } = useModal();
 
     useEffect(() => {
-        if (isOpen) {
-            if (initialContent) {
-                setCurrentContent(initialContent);
-            }
+        if (isOpen && initialContent) {
+            setCurrentContent(initialContent);
         }
-    }, [isOpen, initialContent]);
+    }, [isOpen, initialContent, setCurrentContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
