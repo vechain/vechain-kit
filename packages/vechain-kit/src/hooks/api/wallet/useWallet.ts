@@ -239,6 +239,7 @@ export const useWallet = (): UseWalletReturnType => {
             window.dispatchEvent(new Event('wallet_disconnected'));
         } catch (error) {
             console.error('Error during disconnect:', error);
+        } finally {
         }
     }, [
         isConnectedWithDappKit,

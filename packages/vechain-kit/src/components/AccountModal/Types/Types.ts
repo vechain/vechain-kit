@@ -2,6 +2,7 @@ import {
     ChooseNameSearchContentProps,
     ChooseNameSummaryContentProps,
 } from '../Contents';
+import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
@@ -22,6 +23,7 @@ export type AccountModalContentTypes =
     | 'privy-linked-accounts'
     | 'account-customization'
     | 'add-custom-token'
+    | 'upgrade-smart-account'
     | {
           type: 'successful-operation';
           props: SuccessfulOperationContentProps;
@@ -66,8 +68,5 @@ export type AccountModalContentTypes =
       }
     | {
           type: 'disconnect-confirm';
-          props: {
-              onDisconnect: () => void;
-              onBack: () => void;
-          };
+          props: DisconnectConfirmContentProps;
       };

@@ -15,12 +15,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
-type Props = {
+export type DisconnectConfirmContentProps = {
     onDisconnect: () => void;
     onBack: () => void;
 };
 
-export const DisconnectConfirmContent = ({ onDisconnect, onBack }: Props) => {
+export const DisconnectConfirmContent = ({
+    onDisconnect,
+    onBack,
+}: DisconnectConfirmContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 

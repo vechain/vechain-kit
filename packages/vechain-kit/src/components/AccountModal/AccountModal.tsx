@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useWallet, useNotificationAlerts } from '@/hooks';
+import {
+    useWallet,
+    useNotificationAlerts,
+    useAccountUpgradeRequired,
+} from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
@@ -28,6 +32,7 @@ import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmCo
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { ManageCustomTokenContent } from './Contents/ManageCustomToken';
+import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 
 type Props = {
     isOpen: boolean;
@@ -42,15 +47,26 @@ export const AccountModal = ({
 }: Props) => {
     useNotificationAlerts();
 
-    const { account } = useWallet();
+    const { account, smartAccount, connectedWallet } = useWallet();
     const [currentContent, setCurrentContent] =
         useState<AccountModalContentTypes>(initialContent);
 
+    // Check if smart account upgrade is required
+    const { data: isAccountUpgradeRequired } = useAccountUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+
     useEffect(() => {
-        if (isOpen && initialContent) {
-            setCurrentContent(initialContent);
+        if (isOpen) {
+            if (isAccountUpgradeRequired) {
+                setCurrentContent('upgrade-smart-account');
+            } else if (initialContent) {
+                setCurrentContent(initialContent);
+            }
         }
-    }, [isOpen, initialContent]);
+    }, [isOpen, initialContent, isAccountUpgradeRequired]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
@@ -186,6 +202,14 @@ export const AccountModal = ({
                 return (
                     <ManageCustomTokenContent
                         setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'upgrade-smart-account':
+                return (
+                    <UpgradeSmartAccountContent
+                        setCurrentContent={setCurrentContent}
+                        handleClose={onClose}
+                        smartAccountAddress={smartAccount?.address ?? ''}
                     />
                 );
         }

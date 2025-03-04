@@ -439,5 +439,8 @@
     "Good news! Multiclause transactions are now fully supported for smart accounts. You can now enjoy a better user experience, lower gas costs, and enchanced security.": "Good news! Multiclause transactions are now fully supported for smart accounts. You can now enjoy a better user experience, lower gas costs, and enchanced security.",
     "At": "At",
     "This upgrade is necessary to continue interacting with VeChain blockchain. Please complete it now.": "This upgrade is necessary to continue interacting with VeChain blockchain. Please complete it now.",
-    "Close and do this later": "Close and do this later"
+    "Close and do this later": "Close and do this later",
+    "Upgrade account": "Upgrade account",
+    "Your account has been successfully upgraded to the latest version. You can now enjoy a better user experience, lower gas costs, and enhanced security.": "Your account has been successfully upgraded to the latest version. You can now enjoy a better user experience, lower gas costs, and enhanced security.",
+    "Account upgrade required": "Account upgrade required"
 }

@@ -7,21 +7,23 @@ import { TransactionStatusErrorType } from '@/types';
 export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;
     isTxWaitingConfirmation: boolean;
-    handleSend: () => void;
+    onConfirm: () => void;
     transactionPendingText: string;
     txReceipt: Connex.Thor.Transaction.Receipt | null;
     transactionError?: Error | TransactionStatusErrorType | null;
     isSubmitForm?: boolean;
+    buttonText: string;
 };
 
 export const TransactionButtonAndStatus = ({
     transactionError,
     isSubmitting,
     isTxWaitingConfirmation,
-    handleSend,
+    onConfirm,
     transactionPendingText,
     txReceipt,
     isSubmitForm = false,
+    buttonText,
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -48,7 +50,7 @@ export const TransactionButtonAndStatus = ({
                 variant="solid"
                 borderRadius="xl"
                 colorScheme="blue"
-                onClick={handleSend}
+                onClick={onConfirm}
                 type={isSubmitForm ? 'submit' : 'button'}
                 isLoading={isSubmitting}
                 loadingText={
@@ -57,7 +59,11 @@ export const TransactionButtonAndStatus = ({
                         : transactionPendingText
                 }
             >
-                {errorMessage ? t('Retry') : t('Confirm')}
+                {errorMessage
+                    ? t('Retry')
+                    : buttonText
+                    ? buttonText
+                    : t('Confirm')}
             </Button>
             {errorMessage && txReceipt?.meta.txID && (
                 <Text
