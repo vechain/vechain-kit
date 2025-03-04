@@ -30,8 +30,6 @@ export const TransactionButtonAndStatus = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const { network } = useVeChainKitConfig();
 
-    console.log('transactionError', transactionError);
-
     const errorMessage = useMemo(() => {
         if (!transactionError) return null;
         return (

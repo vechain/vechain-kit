@@ -28,7 +28,6 @@ export const NotificationItem = ({
     const { setAccountModalContent } = useModal();
 
     const handleAction = () => {
-        console.log('notification.action', notification.action);
         if (notification.action) {
             setAccountModalContent(notification.action.content);
         }
