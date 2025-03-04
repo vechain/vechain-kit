@@ -30,7 +30,6 @@ export interface SimpleAccountFactoryInterface extends Interface {
       | "UPGRADE_INTERFACE_VERSION"
       | "accountImplementationV1"
       | "accountImplementationV3"
-      | "accountNeedsUpgradeToVersion"
       | "b3tr"
       | "createAccount"
       | "createAccountWithSalt"
@@ -50,6 +49,7 @@ export interface SimpleAccountFactoryInterface extends Interface {
       | "revokeRole"
       | "supportsInterface"
       | "upgradeRequired"
+      | "upgradeRequiredForAccount"
       | "upgradeToAndCall"
       | "version"
   ): FunctionFragment;
@@ -79,10 +79,6 @@ export interface SimpleAccountFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "accountImplementationV3",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "accountNeedsUpgradeToVersion",
-    values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "b3tr", values?: undefined): string;
   encodeFunctionData(
@@ -158,6 +154,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "upgradeRequiredForAccount",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "upgradeToAndCall",
     values: [AddressLike, BytesLike]
   ): string;
@@ -177,10 +177,6 @@ export interface SimpleAccountFactoryInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "accountImplementationV3",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "accountNeedsUpgradeToVersion",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "b3tr", data: BytesLike): Result;
@@ -242,6 +238,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "upgradeRequired",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeRequiredForAccount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -402,12 +402,6 @@ export interface SimpleAccountFactory extends BaseContract {
 
   accountImplementationV3: TypedContractMethod<[], [string], "view">;
 
-  accountNeedsUpgradeToVersion: TypedContractMethod<
-    [accountAddress: AddressLike, targetVersion: BigNumberish],
-    [boolean],
-    "view"
-  >;
-
   b3tr: TypedContractMethod<[], [string], "view">;
 
   createAccount: TypedContractMethod<
@@ -506,6 +500,12 @@ export interface SimpleAccountFactory extends BaseContract {
     "view"
   >;
 
+  upgradeRequiredForAccount: TypedContractMethod<
+    [accountAddress: AddressLike, targetVersion: BigNumberish],
+    [boolean],
+    "view"
+  >;
+
   upgradeToAndCall: TypedContractMethod<
     [newImplementation: AddressLike, data: BytesLike],
     [void],
@@ -530,13 +530,6 @@ export interface SimpleAccountFactory extends BaseContract {
   getFunction(
     nameOrSignature: "accountImplementationV3"
   ): TypedContractMethod<[], [string], "view">;
-  getFunction(
-    nameOrSignature: "accountNeedsUpgradeToVersion"
-  ): TypedContractMethod<
-    [accountAddress: AddressLike, targetVersion: BigNumberish],
-    [boolean],
-    "view"
-  >;
   getFunction(
     nameOrSignature: "b3tr"
   ): TypedContractMethod<[], [string], "view">;
@@ -627,6 +620,13 @@ export interface SimpleAccountFactory extends BaseContract {
     nameOrSignature: "upgradeRequired"
   ): TypedContractMethod<
     [account: AddressLike, owner: AddressLike, targetVersion: BigNumberish],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "upgradeRequiredForAccount"
+  ): TypedContractMethod<
+    [accountAddress: AddressLike, targetVersion: BigNumberish],
     [boolean],
     "view"
   >;

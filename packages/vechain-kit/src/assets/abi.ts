@@ -855,30 +855,6 @@ export const SimpleAccountFactoryABI = [
         type: 'function',
     },
     {
-        inputs: [
-            {
-                internalType: 'address',
-                name: 'accountAddress',
-                type: 'address',
-            },
-            {
-                internalType: 'uint256',
-                name: 'targetVersion',
-                type: 'uint256',
-            },
-        ],
-        name: 'accountNeedsUpgradeToVersion',
-        outputs: [
-            {
-                internalType: 'bool',
-                name: '',
-                type: 'bool',
-            },
-        ],
-        stateMutability: 'view',
-        type: 'function',
-    },
-    {
         inputs: [],
         name: 'b3tr',
         outputs: [
@@ -998,6 +974,35 @@ export const SimpleAccountFactoryABI = [
                 internalType: 'address',
                 name: '',
                 type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+        ],
+        name: 'getAccountVersion',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: 'accountVersion',
+                type: 'uint256',
+            },
+            {
+                internalType: 'bool',
+                name: 'isDeployed',
+                type: 'bool',
             },
         ],
         stateMutability: 'view',
@@ -1166,6 +1171,59 @@ export const SimpleAccountFactoryABI = [
             },
         ],
         name: 'supportsInterface',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'targetVersion',
+                type: 'uint256',
+            },
+        ],
+        name: 'upgradeRequired',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'accountAddress',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'targetVersion',
+                type: 'uint256',
+            },
+        ],
+        name: 'upgradeRequiredForAccount',
         outputs: [
             {
                 internalType: 'bool',

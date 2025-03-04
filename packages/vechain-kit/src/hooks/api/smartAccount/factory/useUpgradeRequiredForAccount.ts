@@ -8,14 +8,14 @@ import { getConfig } from '@/config';
 const SimpleAccountFactoryInterface =
     SimpleAccountFactory__factory.createInterface();
 
-export const getSmartAccountNeedsUpgrade = async (
+export const getUpgradeRequiredForAccount = async (
     thor: Connex.Thor,
     contractAddress: string,
     targetVersion: number,
     networkType: NETWORK_TYPE,
 ): Promise<boolean> => {
     const functionFragment = SimpleAccountFactoryInterface.getFunction(
-        'accountNeedsUpgradeToVersion',
+        'upgradeRequiredForAccount',
     ).format('json');
 
     const res = await thor
@@ -28,7 +28,7 @@ export const getSmartAccountNeedsUpgrade = async (
     return res.decoded[0];
 };
 
-export const getSmartAccountNeedsUpgradeQueryKey = (
+export const getUpgradeRequiredForAccountQueryKey = (
     contractAddress: string,
     targetVersion: number,
     networkType: NETWORK_TYPE,
@@ -36,7 +36,7 @@ export const getSmartAccountNeedsUpgradeQueryKey = (
     'VECHAIN_KIT',
     'SMART_ACCOUNT',
     'FACTORY',
-    'NEEDS_UPGRADE',
+    'NEEDS_UPGRADE_FOR_ACCOUNT',
     contractAddress,
     targetVersion,
     networkType,
@@ -48,7 +48,7 @@ export const getSmartAccountNeedsUpgradeQueryKey = (
  * @param targetVersion - The target version of the smart account
  * @returns True if the smart account needs an upgrade, false otherwise
  */
-export const useAccountNeedsUpgradeToVersion = (
+export const useUpgradeRequiredForAccount = (
     contractAddress: string,
     targetVersion: number,
 ) => {
@@ -56,13 +56,13 @@ export const useAccountNeedsUpgradeToVersion = (
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: getSmartAccountNeedsUpgradeQueryKey(
+        queryKey: getUpgradeRequiredForAccountQueryKey(
             contractAddress,
             targetVersion,
             network.type,
         ),
         queryFn: async () =>
-            getSmartAccountNeedsUpgrade(
+            getUpgradeRequiredForAccount(
                 thor,
                 contractAddress,
                 targetVersion,

@@ -14,10 +14,10 @@ import {
     Box,
     Link,
     HStack,
+    ModalCloseButton,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RiShieldKeyholeLine } from 'react-icons/ri';
 import { IoWarningOutline } from 'react-icons/io5';
 import {
     useWallet,
@@ -26,11 +26,7 @@ import {
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { BaseModal } from '../common/BaseModal';
-import {
-    StickyHeaderContainer,
-    StickyFooterContainer,
-    TransactionButtonAndStatus,
-} from '../common';
+import { StickyHeaderContainer, TransactionButtonAndStatus } from '../common';
 import { motion } from 'framer-motion';
 import { FcCheckmark } from 'react-icons/fc';
 import { GoLinkExternal } from 'react-icons/go';
@@ -105,34 +101,27 @@ export const UpgradeSmartAccountModal = () => {
         <BaseModal
             isOpen={isOpen}
             onClose={handleClose}
-            isCloseable={false}
+            isCloseable={true}
             isCentered
             blockScrollOnMount={true}
             allowExternalFocus={true}
         >
             <StickyHeaderContainer>
                 <ModalHeader
-                    fontSize="xl"
-                    fontWeight="600"
-                    textAlign="center"
+                    fontSize={'md'}
+                    fontWeight={'500'}
+                    textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
                     {isTransactionSuccess
                         ? t('Upgrade Successful!')
                         : t('Smart Account Upgrade Required')}
                 </ModalHeader>
+                <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
 
             <ModalBody>
                 <VStack spacing={5} align="center">
-                    {!isTransactionSuccess && (
-                        <Icon
-                            as={RiShieldKeyholeLine}
-                            boxSize={12}
-                            color="blue.400"
-                        />
-                    )}
-
                     {isTransactionSuccess ? (
                         <VStack align="center" p={6} spacing={3}>
                             <motion.div
@@ -150,7 +139,7 @@ export const UpgradeSmartAccountModal = () => {
                         </VStack>
                     ) : (
                         <>
-                            <Text textAlign="center" fontSize="md">
+                            <Text textAlign="center" fontSize="sm">
                                 {t(
                                     'Your smart account needs to be upgraded to the latest version (v3).',
                                 )}
@@ -159,34 +148,37 @@ export const UpgradeSmartAccountModal = () => {
                             <Alert status="info" borderRadius="md">
                                 <AlertIcon />
                                 <Box>
-                                    <AlertTitle>
+                                    <AlertTitle fontSize="sm">
                                         {t('Benefits of this upgrade:')}
                                     </AlertTitle>
-                                    <AlertDescription>
+                                    <AlertDescription fontSize="xs">
                                         <VStack
                                             align="start"
                                             spacing={0}
                                             mt={1}
                                         >
-                                            <Text fontSize="sm">
+                                            <Text
+                                                fontSize="xs"
+                                                lineHeight="1.2"
+                                            >
                                                 •{' '}
                                                 {t(
                                                     'Improved security features',
                                                 )}
                                             </Text>
-                                            <Text fontSize="sm">
+                                            <Text fontSize="xs">
                                                 •{' '}
                                                 {t(
                                                     'Better transaction handling',
                                                 )}
                                             </Text>
-                                            <Text fontSize="sm">
+                                            <Text fontSize="xs">
                                                 •{' '}
                                                 {t(
                                                     'Enhanced compatibility with dApps',
                                                 )}
                                             </Text>
-                                            <Text fontSize="sm">
+                                            <Text fontSize="xs">
                                                 •{' '}
                                                 {t(
                                                     'Reduced gas costs for operations',
@@ -201,10 +193,10 @@ export const UpgradeSmartAccountModal = () => {
                                 <Alert status="error" borderRadius="md">
                                     <AlertIcon />
                                     <Box>
-                                        <AlertTitle>
+                                        <AlertTitle fontSize="sm">
                                             {t('Upgrade failed')}
                                         </AlertTitle>
-                                        <AlertDescription>
+                                        <AlertDescription fontSize="xs">
                                             {String(upgradeError)}
                                         </AlertDescription>
                                     </Box>
@@ -215,15 +207,17 @@ export const UpgradeSmartAccountModal = () => {
                                 <Alert status="warning" borderRadius="md">
                                     <AlertIcon as={IoWarningOutline} />
                                     <Box>
-                                        <AlertTitle>
+                                        <AlertTitle fontSize="sm">
                                             {t('Important')}
                                         </AlertTitle>
-                                        <AlertDescription>
-                                            <Text fontSize="sm">
-                                                {t(
-                                                    'This upgrade is necessary to continue using all features of your smart account. Please complete it now.',
-                                                )}
-                                            </Text>
+                                        <AlertDescription
+                                            fontSize="xs"
+                                            lineHeight="17px"
+                                            display="block"
+                                        >
+                                            {t(
+                                                'This upgrade is necessary to continue interacting with VeChain blockchain. Please complete it now.',
+                                            )}
                                         </AlertDescription>
                                     </Box>
                                 </Alert>
@@ -233,43 +227,41 @@ export const UpgradeSmartAccountModal = () => {
                 </VStack>
             </ModalBody>
 
-            <StickyFooterContainer>
-                <ModalFooter justifyContent="center">
-                    {isTransactionSuccess ? (
-                        <VStack w="full" spacing={4}>
-                            <Button
-                                onClick={handleClose}
-                                variant="vechainKitSecondary"
-                                width="full"
-                            >
-                                {t('Close')}
-                            </Button>
+            <ModalFooter justifyContent="center">
+                {isTransactionSuccess ? (
+                    <VStack w="full" spacing={4}>
+                        <Button
+                            onClick={handleClose}
+                            variant="vechainKitSecondary"
+                            width="full"
+                        >
+                            {t('Close')}
+                        </Button>
 
-                            {txReceipt?.meta.txID && (
-                                <Link
-                                    href={`${explorerUrl}/${txReceipt.meta.txID}`}
-                                    isExternal
-                                    opacity={0.5}
-                                    fontSize="14px"
-                                    textDecoration="underline"
+                        {txReceipt?.meta.txID && (
+                            <Link
+                                href={`${explorerUrl}/${txReceipt.meta.txID}`}
+                                isExternal
+                                opacity={0.5}
+                                fontSize="14px"
+                                textDecoration="underline"
+                            >
+                                <HStack
+                                    spacing={1}
+                                    alignItems="center"
+                                    w="full"
+                                    justifyContent="center"
                                 >
-                                    <HStack
-                                        spacing={1}
-                                        alignItems="center"
-                                        w="full"
-                                        justifyContent="center"
-                                    >
-                                        <Text>
-                                            {t(
-                                                'View transaction on the explorer',
-                                            )}
-                                        </Text>
-                                        <Icon size="sm" as={GoLinkExternal} />
-                                    </HStack>
-                                </Link>
-                            )}
-                        </VStack>
-                    ) : (
+                                    <Text>
+                                        {t('View transaction on the explorer')}
+                                    </Text>
+                                    <Icon size="sm" as={GoLinkExternal} />
+                                </HStack>
+                            </Link>
+                        )}
+                    </VStack>
+                ) : (
+                    <VStack w="full" spacing={4}>
                         <TransactionButtonAndStatus
                             isSubmitting={isTransactionPending}
                             isTxWaitingConfirmation={
@@ -280,9 +272,17 @@ export const UpgradeSmartAccountModal = () => {
                             txReceipt={txReceipt}
                             transactionError={upgradeError}
                         />
-                    )}
-                </ModalFooter>
-            </StickyFooterContainer>
+                        <Button
+                            onClick={handleClose}
+                            variant={'link'}
+                            width="full"
+                            isDisabled={isTransactionPending}
+                        >
+                            {t('Close and do this later')}
+                        </Button>
+                    </VStack>
+                )}
+            </ModalFooter>
         </BaseModal>
     );
 };

@@ -1,5 +1,5 @@
 export * from './useGetAccountAddress';
-export * from './useAccountNeedsUpgradeToVersion';
+export * from './useUpgradeRequiredForAccount';
 export * from './useAccountImplementationAddress';
 export * from './useHasV1SmartAccount';
 export * from './useAccountUpgradeRequired';
