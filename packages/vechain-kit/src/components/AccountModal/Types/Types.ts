@@ -13,6 +13,7 @@ export type AccountModalContentTypes =
     | 'profile'
     | 'access-and-security'
     | 'embedded-wallet'
+    | 'manage-mfa'
     | 'receive-token'
     | 'swap-token'
     | 'connection-details'
