@@ -145,8 +145,8 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         title={t('Manage MFA')}
                         description={t(
                             user?.mfaMethods
-                                ? 'MFA is enabled. Click to manage your MFA settings'
-                                : 'Enable MFA to add an extra layer of security to your wallet'
+                                ? 'MFA is enabled. Click to manage your MFA settings.'
+                                : 'Enable MFA to add an extra layer of security to your wallet.'
                         )}
                         onClick={() => {
                             showMfaEnrollmentModal();
