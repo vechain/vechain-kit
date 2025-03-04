@@ -298,6 +298,9 @@ export const VeChainKitProvider = (
                                     'all-users',
                                 showWalletUIs: true,
                             },
+                            passkeys: {
+                                shouldUnlinkOnUnenrollMfa: false,
+                            },
                         }}
                     >
                         <DAppKitProvider

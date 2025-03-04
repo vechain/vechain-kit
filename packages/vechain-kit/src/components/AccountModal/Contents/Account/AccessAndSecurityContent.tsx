@@ -7,7 +7,7 @@ import {
     Text,
     Icon,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet } from '@/hooks';
+import { usePrivy, useWallet, useMfaEnrollment } from '@/hooks';
 import React from 'react';
 import {
     ModalBackButton,
@@ -21,7 +21,7 @@ import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
 import { IoIosFingerPrint } from 'react-icons/io';
-import { HiOutlineWallet } from 'react-icons/hi2';
+import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 
@@ -34,7 +34,8 @@ type Props = {
 export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
 
-    const { linkPasskey, exportWallet } = usePrivy();
+    const { linkPasskey, exportWallet, user } = usePrivy();
+    const {showMfaEnrollmentModal} = useMfaEnrollment();
 
     const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
@@ -137,6 +138,20 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             setCurrentContent('embedded-wallet');
                         }}
                         leftIcon={HiOutlineWallet}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
+                        title={t('Manage MFA')}
+                        description={t(
+                            user?.mfaMethods
+                                ? 'MFA is enabled. Click to manage your MFA settings'
+                                : 'Enable MFA to add an extra layer of security to your wallet'
+                        )}
+                        onClick={() => {
+                            showMfaEnrollmentModal();
+                        }}
+                        leftIcon={HiOutlineShieldCheck}
                         rightIcon={MdOutlineNavigateNext}
                     />
                 </VStack>
