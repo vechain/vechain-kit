@@ -25,19 +25,8 @@ function AppContent({ children }: { children: React.ReactNode }) {
 
     return (
         <div
-            className="background-wrapper"
             style={{
-                width: '100%',
-                height: '100%',
-                backgroundSize: '100%',
-                backgroundImage:
-                    colorMode === 'dark'
-                        ? 'url(/images/spider-web-element-onblack-background-long.png)'
-                        : 'none',
-                backgroundPosition: 'top center',
-                backgroundRepeat: 'no-repeat',
                 backgroundColor: bgColor,
-                transition: 'background-color 0.2s ease-in-out',
             }}
         >
             <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>
