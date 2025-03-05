@@ -36,6 +36,7 @@ import { ModalProvider } from './ModalProvider';
 const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
     'cm153hrup0817axti38avlfyg', //greencart
+    'clv9sfos20j6x1431ga80d95f', //mughsot
 ];
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
