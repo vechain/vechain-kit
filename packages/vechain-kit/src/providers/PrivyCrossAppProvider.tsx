@@ -108,6 +108,7 @@ export const usePrivyCrossAppSdk = () => {
 
     const login = useCallback(
         async (appID: string) => {
+            console.log('🚀 ~ appID:', appID);
             try {
                 setIsConnecting(true);
                 setConnectionError(null);
@@ -121,6 +122,8 @@ export const usePrivyCrossAppSdk = () => {
                 }
 
                 const result = await connectAsync({ connector });
+
+                console.log('🚀 ~ result:', connector, result);
                 return result;
             } catch (error) {
                 setConnectionError(error as Error);

@@ -3,6 +3,8 @@ import { useCrossAppConnectionCache } from '@/hooks/cache/useCrossAppConnectionC
 import { useFetchAppInfo } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
+import mixpanel from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod, VePrivySocialLoginMethod } from '@/types';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
@@ -17,7 +19,17 @@ export const useLoginWithVeChain = () => {
                 logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
                 appId: VECHAIN_PRIVY_APP_ID,
             });
+            console.log(
+                '🚀 ~ login ~ appsInfo?.[VECHAIN_PRIVY_APP_ID]?:',
+                appsInfo?.[VECHAIN_PRIVY_APP_ID],
+            );
+            mixpanel.AuthTracking.loginSuccess(
+                userId: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.name,
+                loginMethod: VeLoginMethod.VECHAIN,
+                platform: VePrivySocialLoginMethod.VECHAIN,
+            );
         } catch (error) {
+            mixpanel.AuthTracking.loginFailed();
             throw handlePopupError({
                 error,
                 mobileBrowserPopupMessage:

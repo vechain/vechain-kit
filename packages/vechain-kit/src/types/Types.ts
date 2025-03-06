@@ -142,3 +142,20 @@ export enum VePassportUserStatus {
     WHITELIST = 'WHITELIST',
     BLACKLIST = 'BLACKLIST',
 }
+
+export enum VeLoginMethod {
+    EMAIL = 'email',
+    GOOGLE = 'google',
+    VECHAIN = 'vechain',
+    DAPPKIT = 'dappkit',
+    ECOSYSTEM = 'ecosystem',
+    PASSKEY = 'passkey',
+    MORE = 'more',
+}
+
+export enum VePrivySocialLoginMethod {
+    EMAIL = 'email',
+    X = 'X',
+    DISCORD = 'Discord',
+    VECHAIN = 'VeChain',
+}

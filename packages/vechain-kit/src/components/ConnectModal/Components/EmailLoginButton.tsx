@@ -14,6 +14,8 @@ import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import mixpanel from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types';
 
 export const EmailLoginButton = () => {
     const { t } = useTranslation();
@@ -21,12 +23,14 @@ export const EmailLoginButton = () => {
 
     // Email login
     const [email, setEmail] = useState('');
+    console.log('🚀 ~ EmailLoginButton ~ email:', email);
 
     const { sendCode, state: emailState } = useLoginWithEmail({});
 
     const emailCodeVerificationModal = useDisclosure();
 
     const handleSendCode = async () => {
+        mixpanel.AuthTracking.preferredLoginMethod(VeLoginMethod.EMAIL);
         await sendCode({ email });
         // onClose();
         emailCodeVerificationModal.onOpen();
