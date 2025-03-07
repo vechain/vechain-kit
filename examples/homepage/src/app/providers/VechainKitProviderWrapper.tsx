@@ -32,31 +32,31 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: [
-                    'google',
-                    'twitter',
-                    'farcaster',
-                    'email',
-                    'discord',
-                    'tiktok',
-                    'rabby_wallet',
-                    'coinbase_wallet',
-                    'rainbow',
-                    'phantom',
-                    'metamask',
-                ],
-                appearance: {
-                    accentColor: '#696FFD',
-                    loginMessage: 'Select a login method',
-                    logo: logo,
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
+            // privy={{
+            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+            //     loginMethods: [
+            //         'google',
+            //         'twitter',
+            //         'farcaster',
+            //         'email',
+            //         'discord',
+            //         'tiktok',
+            //         'rabby_wallet',
+            //         'coinbase_wallet',
+            //         'rainbow',
+            //         'phantom',
+            //         'metamask',
+            //     ],
+            //     appearance: {
+            //         accentColor: '#696FFD',
+            //         loginMessage: 'Select a login method',
+            //         logo: logo,
+            //     },
+            //     embeddedWallets: {
+            //         createOnLogin: 'all-users',
+            //     },
+            // }}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: false,

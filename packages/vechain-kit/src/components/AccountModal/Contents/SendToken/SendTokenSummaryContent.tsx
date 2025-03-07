@@ -254,9 +254,10 @@ export const SendTokenSummaryContent = ({
                     }
                     isSubmitting={isSubmitting}
                     isTxWaitingConfirmation={isTxWaitingConfirmation}
-                    handleSend={handleSend}
+                    onConfirm={handleSend}
                     transactionPendingText={t('Sending...')}
                     txReceipt={getTxReceipt()}
+                    buttonText={t('Confirm')}
                 />
             </ModalFooter>
         </>

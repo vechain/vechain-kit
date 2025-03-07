@@ -180,10 +180,10 @@ export const CustomizationSummaryContent = ({
                     transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    handleSend={handleSubmit(onSubmit)}
+                    onConfirm={handleSubmit(onSubmit)}
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
-                    isSubmitForm={true}
+                    buttonText={t('Confirm')}
                 />
             </ModalFooter>
         </Box>

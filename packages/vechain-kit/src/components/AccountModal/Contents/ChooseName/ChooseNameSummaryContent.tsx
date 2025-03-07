@@ -111,9 +111,10 @@ export const ChooseNameSummaryContent = ({
                     transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    handleSend={handleConfirm}
+                    onConfirm={handleConfirm}
                     transactionPendingText={t('Claiming name...')}
                     txReceipt={txReceipt}
+                    buttonText={t('Confirm')}
                 />
             </ModalFooter>
         </>
