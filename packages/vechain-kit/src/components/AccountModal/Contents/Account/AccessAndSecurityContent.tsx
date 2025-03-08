@@ -6,6 +6,7 @@ import {
     ModalHeader,
     Text,
     Icon,
+    Button,
 } from '@chakra-ui/react';
 import { usePrivy, useWallet, useMfaEnrollment } from '@/hooks';
 import React from 'react';
@@ -23,6 +24,7 @@ import { GrUserAdmin } from 'react-icons/gr';
 import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -134,7 +136,27 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter w={'full'}></ModalFooter>
+            <ModalFooter w={'full'}>
+                {connection.isConnectedWithVeChain &&
+                    connection.isConnectedWithCrossApp && (
+                        <Button
+                            px={4}
+                            width="full"
+                            height="60px"
+                            variant="solid"
+                            borderRadius="xl"
+                            onClick={() => {
+                                window.open(
+                                    'https://governance.vebetterdao.org/',
+                                    '_blank',
+                                );
+                            }}
+                        >
+                            {t('Manage on VeBetterDAO')}
+                            <Icon as={FaExternalLinkAlt} ml={2} />
+                        </Button>
+                    )}
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };
