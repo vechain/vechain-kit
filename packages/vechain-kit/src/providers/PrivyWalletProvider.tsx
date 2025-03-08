@@ -38,6 +38,7 @@ export interface PrivyWalletProviderContextType {
         title?: string;
         description?: string;
         buttonText?: string;
+        suggestedMaxGas?: number;
     }) => Promise<string>;
     signTypedData: (data: SignTypedDataParams) => Promise<string>;
     signMessage: (message: string) => Promise<string>;
@@ -236,11 +237,13 @@ export const PrivyWalletProvider = ({
         title = 'Sign Transaction',
         description,
         buttonText = 'Sign',
+        suggestedMaxGas,
     }: {
         txClauses: Connex.VM.Clause[];
         title?: string;
         description?: string;
         buttonText?: string;
+        suggestedMaxGas?: number;
     }): Promise<string> => {
         if (
             !smartAccount ||
@@ -426,10 +429,15 @@ export const PrivyWalletProvider = ({
             },
         );
 
+        const parsedGasLimit = Math.max(
+            gasResult.totalGas,
+            suggestedMaxGas ?? 0,
+        );
+
         // build the transaction in VeChain format, with delegation enabled
         const txBody = await thor.transactions.buildTransactionBody(
             clauses,
-            gasResult.totalGas,
+            parsedGasLimit,
             { isDelegated: true },
         );
 

@@ -177,6 +177,7 @@ export const useSendTransaction = ({
                     txClauses: clauses,
                     ...privyUIOptions,
                     ...options,
+                    suggestedMaxGas,
                 });
             }
 
