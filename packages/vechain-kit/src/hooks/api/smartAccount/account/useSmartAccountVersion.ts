@@ -19,7 +19,7 @@ export const getVersion = async (
         .method(JSON.parse(functionFragment))
         .call();
 
-    throw new Error('Reverted');
+    if (res.reverted) throw new Error('Reverted');
 
     return parseInt(res.decoded[0]);
 };
