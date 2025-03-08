@@ -26,6 +26,7 @@ import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { FaRegAddressCard } from 'react-icons/fa';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -116,6 +117,19 @@ export const SettingsContent = ({
                             setCurrentContent('connection-details');
                         }}
                         leftIcon={VscDebugDisconnect}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
+                        style={{
+                            borderTopRadius: '0px',
+                        }}
+                        title={t('Choose account name')}
+                        description={t('Choose a name for your account.')}
+                        onClick={() => {
+                            setCurrentContent('choose-name');
+                        }}
+                        leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
                     />
 
