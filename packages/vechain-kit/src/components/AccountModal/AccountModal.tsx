@@ -17,6 +17,7 @@ import {
     AccessAndSecurityContent,
     EmbeddedWalletContent,
     ProfileContent,
+    AssetsContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -27,7 +28,7 @@ import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
-import { ManageCustomTokenContent } from './Contents/ManageCustomToken';
+import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 
@@ -124,6 +125,8 @@ export const AccountModal = ({
                         onLogoutSuccess={onClose}
                     />
                 );
+            case 'assets':
+                return <AssetsContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent

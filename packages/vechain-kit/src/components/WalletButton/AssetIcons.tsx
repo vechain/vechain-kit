@@ -1,13 +1,19 @@
-import { HStack, Text, Circle, Image } from '@chakra-ui/react';
+import { HStack, Text, Circle, Image, StackProps } from '@chakra-ui/react';
 import { useBalances } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS } from '@/utils';
+import { useTranslation } from 'react-i18next';
 
 type AssetIconsProps = {
-    address?: string;
+    address: string;
     maxIcons?: number;
     iconSize?: number;
     ml?: number;
+    style?: StackProps;
+    iconsGap?: number;
+    rightIcon?: React.ReactNode;
+    showNoAssetsWarning?: boolean;
+    onClick?: () => void;
 };
 
 export const AssetIcons = ({
@@ -15,10 +21,16 @@ export const AssetIcons = ({
     maxIcons = 3,
     iconSize = 20,
     ml = 0,
+    style,
+    iconsGap = 0,
+    rightIcon,
+    showNoAssetsWarning = false,
+    onClick,
 }: AssetIconsProps) => {
-    const { tokens } = useBalances({ address: address ?? '' });
+    const { t } = useTranslation();
+    const { tokens } = useBalances({ address });
     const { darkMode } = useVeChainKitConfig();
-    const marginLeft = iconSize / 2;
+    const marginLeft = iconsGap < 1 ? `-${iconSize / 2}px` : `${iconsGap}px`;
 
     // Create array of tokens with balances and their values
     const tokensList = Object.values(tokens)
@@ -29,14 +41,14 @@ export const AssetIcons = ({
     const remainingTokens = tokensList.length - maxIcons;
 
     if (!address) return null;
-    if (tokensList.length === 0) return null;
+    if (tokensList.length === 0 && !showNoAssetsWarning) return null;
 
     return (
-        <HStack spacing={0} ml={ml}>
+        <HStack spacing={0} ml={ml} {...style} onClick={onClick}>
             {tokensToShow.map((token, index) => (
                 <Circle
                     key={token.symbol}
-                    ml={index > 0 ? `-${marginLeft}px` : '0'}
+                    ml={index > 0 ? marginLeft : '0'}
                     zIndex={index}
                     size={`${iconSize}px`}
                     borderRadius="full"
@@ -75,6 +87,18 @@ export const AssetIcons = ({
                     </Text>
                 </Circle>
             )}
+
+            {tokensList.length === 0 && showNoAssetsWarning && (
+                <Text
+                    fontSize={'sm'}
+                    color={darkMode ? 'white' : 'black'}
+                    opacity={0.9}
+                >
+                    {t('No assets')}
+                </Text>
+            )}
+
+            {rightIcon}
         </HStack>
     );
 };

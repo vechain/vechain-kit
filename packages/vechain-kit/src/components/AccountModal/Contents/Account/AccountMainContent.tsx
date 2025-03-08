@@ -13,7 +13,6 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
-    AssetsSection,
     BalanceSection,
     QuickActionsSection,
 } from '@/components';
@@ -56,7 +55,11 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack w={'full'} overflow={'hidden'}>
+                <VStack
+                    w={'full'}
+                    overflow={'hidden'}
+                    justifyContent={'flex-start'}
+                >
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
@@ -65,20 +68,22 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
 
                     <AccountSelector
                         mt={0}
+                        style={{ justifyContent: 'flex-start' }}
                         onClick={() => {
                             setCurrentContent('settings');
                         }}
                         wallet={wallet}
                     />
 
-                    <BalanceSection mt={14} />
+                    <BalanceSection
+                        mt={8}
+                        onAssetsClick={() => {
+                            setCurrentContent('assets');
+                        }}
+                    />
 
                     <QuickActionsSection
-                        mt={14}
-                        setCurrentContent={setCurrentContent}
-                    />
-                    <AssetsSection
-                        mt={2}
+                        mt={8}
                         setCurrentContent={setCurrentContent}
                     />
                 </VStack>

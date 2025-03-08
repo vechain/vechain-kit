@@ -450,5 +450,9 @@
     "Upgrade Now": "Upgrade Now",
     "To continue interacting with VeChain blockchain and complete your operation, your smart account needs to be upgraded to the latest version (v3).": "To continue interacting with VeChain blockchain and complete your operation, your smart account needs to be upgraded to the latest version (v3).",
     "Customize": "Customize",
-    "Choose a name for your account.": "Choose a name for your account."
+    "Choose a name for your account.": "Choose a name for your account.",
+    "Quick actions": "Quick actions",
+    "Total balance": "Total balance",
+    "Bridge": "Bridge",
+    "No assets": "No assets"
 }
