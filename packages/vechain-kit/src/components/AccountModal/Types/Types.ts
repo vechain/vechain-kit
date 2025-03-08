@@ -26,6 +26,7 @@ export type AccountModalContentTypes =
     | 'add-custom-token'
     | 'upgrade-smart-account'
     | 'assets'
+    | 'bridge'
     | {
           type: 'successful-operation';
           props: SuccessfulOperationContentProps;

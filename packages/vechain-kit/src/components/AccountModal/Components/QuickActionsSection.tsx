@@ -108,7 +108,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                             </Text>
                         </VStack>
                     }
-                    onClick={() => setCurrentContent('ecosystem')}
+                    onClick={() => setCurrentContent('bridge')}
                 />
                 <IconButton
                     variant="vechainKitSelector"

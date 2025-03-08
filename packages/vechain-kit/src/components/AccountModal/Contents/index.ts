@@ -7,3 +7,4 @@ export * from './FAQ';
 export * from './Profile';
 export * from './UpgradeSmartAccount';
 export * from './Assets';
+export * from './Bridge';

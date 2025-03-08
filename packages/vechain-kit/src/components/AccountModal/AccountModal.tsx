@@ -18,6 +18,7 @@ import {
     EmbeddedWalletContent,
     ProfileContent,
     AssetsContent,
+    BridgeContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -127,6 +128,8 @@ export const AccountModal = ({
                 );
             case 'assets':
                 return <AssetsContent setCurrentContent={setCurrentContent} />;
+            case 'bridge':
+                return <BridgeContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent
