@@ -1,9 +1,11 @@
 import {
+    HStack,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
     ModalHeader,
     VStack,
+    Tag,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -29,7 +31,7 @@ type Props = {
 
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, network } = useVeChainKitConfig();
     const { connection, account } = useWallet();
 
     return (
@@ -62,14 +64,28 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         />
                     )}
 
-                    <AccountSelector
-                        mt={0}
-                        style={{ justifyContent: 'flex-start' }}
-                        onClick={() => {
-                            setCurrentContent('profile');
-                        }}
-                        wallet={wallet}
-                    />
+                    <HStack w={'full'} justifyContent={'space-between'}>
+                        <AccountSelector
+                            mt={0}
+                            style={{ justifyContent: 'flex-start' }}
+                            onClick={() => {
+                                setCurrentContent('profile');
+                            }}
+                            wallet={wallet}
+                        />
+                        {network?.type !== 'main' && (
+                            <Tag
+                                size="xl"
+                                colorScheme="orange"
+                                fontSize={'xs'}
+                                p={2}
+                                textTransform={'capitalize'}
+                                textAlign={'center'}
+                            >
+                                {`${network?.type} network`}
+                            </Tag>
+                        )}
+                    </HStack>
 
                     <BalanceSection
                         mt={8}

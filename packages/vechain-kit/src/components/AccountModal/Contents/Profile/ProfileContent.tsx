@@ -3,6 +3,7 @@ import {
     ModalCloseButton,
     ModalHeader,
     Box,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { ProfileCard } from '@/components';
@@ -64,6 +65,7 @@ export const ProfileContent = ({
                     }}
                 />
             </ModalBody>
+            <ModalFooter />
         </Box>
     );
 };
