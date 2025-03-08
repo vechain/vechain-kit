@@ -143,12 +143,6 @@ export type PrivyAppInfo = {
 
 export type PrivyLoginMethod = LoginMethodOrderOption;
 
-export type TransactionProgress = {
-    currentStep: number;
-    totalSteps: number;
-    currentStepDescription?: string;
-};
-
 export interface CrossAppConnectionCache {
     timestamp: number;
     ecosystemApp: {

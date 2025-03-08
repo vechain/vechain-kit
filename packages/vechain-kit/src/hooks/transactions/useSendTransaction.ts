@@ -8,7 +8,6 @@ import {
     EnhancedClause,
     TransactionStatus,
     TransactionStatusErrorType,
-    TransactionProgress,
 } from '@/types';
 import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
 
@@ -101,7 +100,6 @@ export type UseSendTransactionReturnValue = {
     status: TransactionStatus;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
-    progress?: TransactionProgress;
 };
 
 /**
@@ -172,7 +170,6 @@ export const useSendTransaction = ({
                 title?: string;
                 description?: string;
                 buttonText?: string;
-                onProgress?: (progress: TransactionProgress) => void;
             },
         ) => {
             if (connection.isConnectedWithPrivy) {
@@ -238,9 +235,6 @@ export const useSendTransaction = ({
         string | null
     >(null);
 
-    // Add progress state
-    const [progress, setProgress] = useState<TransactionProgress>();
-
     const sendTransactionAdapter = useCallback(
         async (_clauses?: EnhancedClause[]): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
@@ -253,7 +247,6 @@ export const useSendTransaction = ({
                     await convertClauses(_clauses ?? []),
                     {
                         ...privyUIOptions,
-                        onProgress: setProgress,
                     },
                 );
                 // If we send the transaction with the smart account, we get the txid as a string
@@ -271,7 +264,6 @@ export const useSendTransaction = ({
                 onTxFailedOrCancelled?.();
             } finally {
                 setSendTransactionPending(false);
-                setProgress(undefined);
             }
         },
         [sendTransaction, clauses, convertClauses, privyUIOptions],
@@ -430,6 +422,5 @@ export const useSendTransaction = ({
         status,
         resetStatus,
         error,
-        progress,
     };
 };

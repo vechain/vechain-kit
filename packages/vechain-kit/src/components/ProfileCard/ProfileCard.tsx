@@ -200,7 +200,7 @@ export const ProfileCard = ({
                                 leftIcon={<Icon as={FaEdit} />}
                                 onClick={onEditClick ?? (() => {})}
                             >
-                                {t('Edit')}
+                                {t('Customize')}
                             </Button>
                             <Button
                                 size="sm"

@@ -27,7 +27,6 @@ export function TransactionExamples() {
         resetStatus,
         isTransactionPending,
         error,
-        progress,
     } = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
         privyUIOptions: {
@@ -164,14 +163,12 @@ export function TransactionExamples() {
                     error={error}
                     txReceipt={txReceipt}
                     resetStatus={resetStatus}
-                    progress={progress}
                 />
 
                 <TransactionModal
                     isOpen={isTransactionModalOpen}
                     onClose={closeTransactionModal}
                     status={status}
-                    progress={progress}
                     txId={txReceipt?.meta.txID}
                     errorDescription={error?.reason ?? 'Unknown error'}
                     showSocialButtons={true}

@@ -8,10 +8,9 @@ import {
     Heading,
     Spinner,
     Button,
-    Progress,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { TransactionStatusErrorType, TransactionProgress } from '@/types';
+import { TransactionStatusErrorType } from '@/types';
 import { FcCheckmark } from 'react-icons/fc';
 import { IoOpenOutline } from 'react-icons/io5';
 import { MdOutlineErrorOutline } from 'react-icons/md';
@@ -27,7 +26,6 @@ export type TransactionToastProps = {
     txReceipt: any;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
-    progress?: TransactionProgress;
 };
 
 type StatusConfig = {
@@ -43,7 +41,6 @@ export const TransactionToast = ({
     txReceipt,
     error,
     resetStatus,
-    progress,
 }: TransactionToastProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -101,29 +98,6 @@ export const TransactionToast = ({
                 <VStack w={'full'} align={'flex-start'} spacing={2}>
                     <Heading size={'xs'}>{config.title}</Heading>
 
-                    {connection.isConnectedWithCrossApp &&
-                        progress &&
-                        status === 'pending' && (
-                            <VStack w="full" spacing={2}>
-                                <Progress
-                                    value={
-                                        (progress.currentStep /
-                                            progress.totalSteps) *
-                                        100
-                                    }
-                                    width="100%"
-                                    size="xs"
-                                    borderRadius="xl"
-                                />
-                                <Text fontSize="xs" opacity={0.5}>
-                                    {progress.currentStepDescription ||
-                                        `${t('Step')} ${
-                                            progress.currentStep
-                                        } ${t('of')} ${progress.totalSteps}`}
-                                </Text>
-                            </VStack>
-                        )}
-
                     {error && <Text fontSize={'xs'}>{error.reason}</Text>}
 
                     {txReceipt && status !== 'pending' && (
@@ -143,7 +117,6 @@ export const TransactionToast = ({
         txReceipt,
         explorerUrl,
         error,
-        progress,
         connection.isConnectedWithCrossApp,
     ]);
 
