@@ -14,6 +14,7 @@ export type TransactionButtonAndStatusProps = {
     transactionError?: Error | TransactionStatusErrorType | null;
     isSubmitForm?: boolean;
     buttonText: string;
+    isDisabled?: boolean;
 };
 
 export const TransactionButtonAndStatus = ({
@@ -25,6 +26,7 @@ export const TransactionButtonAndStatus = ({
     txReceipt,
     isSubmitForm = false,
     buttonText,
+    isDisabled = false,
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -55,6 +57,7 @@ export const TransactionButtonAndStatus = ({
                 onClick={onConfirm}
                 type={isSubmitForm ? 'submit' : 'button'}
                 isLoading={isSubmitting}
+                isDisabled={isDisabled}
                 loadingText={
                     isTxWaitingConfirmation
                         ? t('Waiting wallet confirmation...')

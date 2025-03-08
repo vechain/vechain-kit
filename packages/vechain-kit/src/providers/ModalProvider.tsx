@@ -9,6 +9,7 @@ import {
     AccountModal,
     AccountModalContentTypes,
     ConnectModal,
+    UpgradeSmartAccountModal,
 } from '../components';
 import { useDAppKitWallet } from '@/hooks';
 
@@ -34,6 +35,10 @@ type ModalContextType = {
     openTransactionToast: () => void;
     closeTransactionToast: () => void;
     isTransactionToastOpen: boolean;
+    // Upgrade Smart Account Modal
+    openUpgradeSmartAccountModal: () => void;
+    closeUpgradeSmartAccountModal: () => void;
+    isUpgradeSmartAccountModalOpen: boolean;
 };
 
 const ModalContext = createContext<ModalContextType | null>(null);
@@ -90,6 +95,16 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         [],
     );
 
+    const [isUpgradeSmartAccountModalOpen, setIsUpgradeSmartAccountModalOpen] =
+        useState(false);
+    const openUpgradeSmartAccountModal = useCallback(
+        () => setIsUpgradeSmartAccountModalOpen(true),
+        [],
+    );
+    const closeUpgradeSmartAccountModal = useCallback(
+        () => setIsUpgradeSmartAccountModalOpen(false),
+        [],
+    );
     const [accountModalContent, setAccountModalContent] =
         useState<AccountModalContentTypes>('main');
 
@@ -110,6 +125,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 openTransactionToast,
                 closeTransactionToast,
                 isTransactionToastOpen,
+                openUpgradeSmartAccountModal,
+                closeUpgradeSmartAccountModal,
+                isUpgradeSmartAccountModalOpen,
             }}
         >
             {children}
@@ -121,6 +139,10 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 isOpen={isAccountModalOpen}
                 onClose={closeAccountModal}
                 initialContent={accountModalContent}
+            />
+            <UpgradeSmartAccountModal
+                isOpen={isUpgradeSmartAccountModalOpen}
+                onClose={closeUpgradeSmartAccountModal}
             />
         </ModalContext.Provider>
     );

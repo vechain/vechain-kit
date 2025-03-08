@@ -28,7 +28,7 @@ const config: AppConfig = {
     veDelegateTokenContractAddress:
         '0xD3f7b82Df5705D34f64C634d2dEf6B1cB3116950',
     oracleContractAddress: '0xdcCAaBd81B38e0dEEf4c202bC7F1261A4D9192C6',
-    accountFactoryAddress: '0xf6a95B5691B425236e0199549Cac190486952759',
+    accountFactoryAddress: '0x713b908Bcf77f3E00EFEf328E50b657a1A23AeaF',
     cleanifyCampaignsContractAddress:
         '0x22d19ACBD2cBf6b2B6C546395c26B9Cb448248BF',
     cleanifyChallengesContractAddress:
