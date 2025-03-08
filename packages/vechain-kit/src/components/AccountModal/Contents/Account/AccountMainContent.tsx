@@ -5,11 +5,7 @@ import {
     ModalHeader,
     VStack,
 } from '@chakra-ui/react';
-import {
-    StickyHeaderContainer,
-    VersionFooter,
-    ScrollToTopWrapper,
-} from '@/components/common';
+import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
@@ -70,7 +66,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         mt={0}
                         style={{ justifyContent: 'flex-start' }}
                         onClick={() => {
-                            setCurrentContent('settings');
+                            setCurrentContent('profile');
                         }}
                         wallet={wallet}
                     />
@@ -88,9 +84,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter>
-                <VersionFooter />
-            </ModalFooter>
+            <ModalFooter />
         </ScrollToTopWrapper>
     );
 };

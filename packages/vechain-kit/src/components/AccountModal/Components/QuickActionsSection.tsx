@@ -32,7 +32,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     return (
         <VStack w={'full'} mt={mt} spacing={4}>
             <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.5}>
-                {t('Quick actions')}
+                {t('Activities')}
             </Heading>
             <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
                 <IconButton
@@ -116,12 +116,12 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                     py={3}
                     fontSize="xs"
                     verticalAlign="middle"
-                    aria-label="Apps"
+                    aria-label="Ecosystem"
                     icon={
                         <VStack spacing={2}>
                             <Icon as={IoMdApps} boxSize={6} opacity={0.9} />
                             <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Apps')}
+                                {t('Ecosystem')}
                             </Text>
                         </VStack>
                     }
