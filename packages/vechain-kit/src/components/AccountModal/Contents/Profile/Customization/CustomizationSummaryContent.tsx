@@ -24,6 +24,7 @@ import {
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
+import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -72,6 +73,11 @@ export const CustomizationSummaryContent = ({
         },
     });
 
+    const domain = account?.domain ?? '';
+
+    // Pre-fetch the resolver address
+    const { data: resolverAddress } = useGetResolverAddress(domain);
+
     const {
         sendTransaction: updateTextRecord,
         txReceipt,
@@ -79,6 +85,7 @@ export const CustomizationSummaryContent = ({
         isWaitingForWalletConfirmation,
         isTransactionPending,
     } = useUpdateTextRecord({
+        resolverAddress, // Pass the pre-fetched resolver address
         onSuccess: async () => {
             refreshMetadata();
             setCurrentContent({

@@ -109,6 +109,24 @@ export type UseSendTransactionReturnValue = {
  * It returns a function to send the transaction and a status to indicate the state
  * of the transaction (together with the transaction id).
  *
+ * * ⚠️ IMPORTANT: When using this hook with Privy cross-app connections, ensure all
+ * data fetching is done before triggering the transaction. Fetching data after
+ * the transaction is triggered may cause browser popup blocking. Pre-fetch any
+ * required data and pass it to your transaction building logic.
+ *
+ * @example
+ * ```typescript
+ * // ❌ Bad: Fetching during transaction
+ * const sendTx = async () => {
+ *   const data = await fetchSomeData(); // May cause popup blocking
+ *   return sendTransaction(data);
+ * };
+ *
+ * // ✅ Good: Pre-fetch data
+ * const { data } = useQuery(['someData'], fetchSomeData);
+ * const sendTx = () => sendTransaction(data); // No async operations
+ * ```
+ *
  * @param signerAccount the signer account to use
  * @param clauses clauses to send in the transaction
  * @param onTxConfirmed callback to run when the tx is confirmed
