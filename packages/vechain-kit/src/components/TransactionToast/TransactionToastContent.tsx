@@ -121,12 +121,7 @@ export const TransactionToastContent = ({
     if (!config) return null;
 
     return (
-        <HStack
-            justify="space-between"
-            alignItems={'flex-start'}
-            w="full"
-            minW="200px"
-        >
+        <HStack justify="space-between" alignItems={'flex-start'} w="full">
             <VStack spacing={4}>
                 <HStack
                     spacing={4}
