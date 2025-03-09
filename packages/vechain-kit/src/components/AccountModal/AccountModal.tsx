@@ -67,6 +67,8 @@ export const AccountModal = ({
                     return (
                         <SendTokenSummaryContent {...currentContent.props} />
                     );
+                case 'choose-name':
+                    return <ChooseNameContent {...currentContent.props} />;
                 case 'choose-name-search':
                     return (
                         <ChooseNameSearchContent {...currentContent.props} />
@@ -151,10 +153,6 @@ export const AccountModal = ({
             case 'swap-token':
                 return (
                     <SwapTokenContent setCurrentContent={setCurrentContent} />
-                );
-            case 'choose-name':
-                return (
-                    <ChooseNameContent setCurrentContent={setCurrentContent} />
                 );
             case 'faq':
                 return (

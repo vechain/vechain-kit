@@ -93,7 +93,14 @@ export const SettingsContent = ({
                         title={t('Choose account name')}
                         description={t('Choose a name for your account.')}
                         onClick={() => {
-                            setCurrentContent('choose-name');
+                            setCurrentContent({
+                                type: 'choose-name',
+                                props: {
+                                    setCurrentContent,
+                                    onBack: () => setCurrentContent('settings'),
+                                    initialContentSource: 'settings',
+                                },
+                            });
                         }}
                         leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}

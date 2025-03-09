@@ -18,10 +18,14 @@ export type ChooseNameContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    onBack?: () => void;
+    initialContentSource?: AccountModalContentTypes;
 };
 
 export const ChooseNameContent = ({
     setCurrentContent,
+    onBack = () => setCurrentContent('settings'),
+    initialContentSource = 'settings',
 }: ChooseNameContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -37,9 +41,7 @@ export const ChooseNameContent = ({
                 >
                     {t('Choose your account name')}
                 </ModalHeader>
-                <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
-                />
+                <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -77,6 +79,7 @@ export const ChooseNameContent = ({
                             props: {
                                 name: '',
                                 setCurrentContent: setCurrentContent,
+                                initialContentSource,
                             },
                         })
                     }

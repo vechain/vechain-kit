@@ -1,8 +1,11 @@
 import {
+    ChooseNameContentProps,
     ChooseNameSearchContentProps,
     ChooseNameSummaryContentProps,
+    CustomizationSummaryContentProps,
 } from '../Contents';
 import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
+import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
@@ -18,7 +21,6 @@ export type AccountModalContentTypes =
     | 'receive-token'
     | 'swap-token'
     | 'connection-details'
-    | 'choose-name'
     | 'ecosystem'
     | 'notifications'
     | 'privy-linked-accounts'
@@ -33,34 +35,18 @@ export type AccountModalContentTypes =
       }
     | {
           type: 'account-customization-summary';
-          props: {
-              changes: {
-                  avatarIpfsHash?: string | null;
-                  displayName?: string;
-                  description?: string;
-                  twitter?: string;
-                  website?: string;
-                  email?: string;
-              };
-              setCurrentContent: React.Dispatch<
-                  React.SetStateAction<AccountModalContentTypes>
-              >;
-          };
+          props: CustomizationSummaryContentProps;
       }
     | {
           type: 'app-overview';
-          props: {
-              name: string;
-              image: string;
-              url: string;
-              description?: string;
-          };
+          props: AppOverviewContentProps;
       }
     | { type: 'send-token'; props: SendTokenContentProps }
     | {
           type: 'send-token-summary';
           props: SendTokenSummaryContentProps;
       }
+    | { type: 'choose-name'; props: ChooseNameContentProps }
     | {
           type: 'choose-name-search';
           props: ChooseNameSearchContentProps;

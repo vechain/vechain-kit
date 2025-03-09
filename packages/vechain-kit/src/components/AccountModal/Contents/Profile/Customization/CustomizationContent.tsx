@@ -320,10 +320,23 @@ export const CustomizationContent = ({
                                             props: {
                                                 name: '',
                                                 setCurrentContent,
+                                                initialContentSource:
+                                                    'account-customization',
                                             },
                                         });
                                     } else {
-                                        setCurrentContent('choose-name');
+                                        setCurrentContent({
+                                            type: 'choose-name',
+                                            props: {
+                                                setCurrentContent,
+                                                initialContentSource:
+                                                    'account-customization',
+                                                onBack: () =>
+                                                    setCurrentContent(
+                                                        'account-customization',
+                                                    ),
+                                            },
+                                        });
                                     }
                                 }}
                                 leftIcon={FaRegAddressCard}

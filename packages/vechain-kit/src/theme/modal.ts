@@ -14,7 +14,7 @@ const variants = {
                 scrollbarWidth: 'none',
                 overflow: 'scroll',
                 overflowX: 'hidden',
-                maxHeight: '540px',
+                maxHeight: '550px',
                 borderRadius: '24px',
                 backgroundColor:
                     props.colorMode === 'dark' ? '#1f1f1e' : 'white',

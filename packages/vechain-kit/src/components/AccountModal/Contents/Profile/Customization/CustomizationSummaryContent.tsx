@@ -25,7 +25,7 @@ import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
-type Props = {
+export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -51,7 +51,7 @@ type FormValues = {
 export const CustomizationSummaryContent = ({
     setCurrentContent,
     changes,
-}: Props) => {
+}: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connectedWallet } = useWallet();
