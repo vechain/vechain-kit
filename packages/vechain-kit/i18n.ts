@@ -45,16 +45,21 @@ const customLanguageDetector = {
             return propLanguage;
         }
 
-        // Get browser language
-        const browserLang = navigator.language.split('-')[0];
-        if (browserLang && supportedLanguages.includes(browserLang)) {
-            return browserLang;
+        // Check if we're in a browser environment
+        if (typeof window !== 'undefined') {
+            // Get browser language
+            const browserLang = navigator.language.split('-')[0];
+            if (browserLang && supportedLanguages.includes(browserLang)) {
+                return browserLang;
+            }
         }
 
         return 'en'; // fallback
     },
     cacheUserLanguage: (lng: string) => {
-        localStorage.setItem('i18nextLng', lng);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('i18nextLng', lng);
+        }
     },
 };
 
