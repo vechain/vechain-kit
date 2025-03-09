@@ -53,11 +53,22 @@ export const TransactionToastContent = ({
         );
     }, [txError, t]);
 
+    // overwrite status to avoid flickering
+    const isSendingTransaction = status === 'waitingConfirmation';
+    if (isSendingTransaction) {
+        status = 'pending';
+    }
+
     const statusConfig = {
         pending: {
             icon: <Spinner size="md" />,
             title: t('Processing transaction...'),
-            description: description,
+            description: isSendingTransaction
+                ? t(
+                      'Transaction is being processed, it can take up to 15 seconds.',
+                  )
+                : description ??
+                  t('Please confirm the transaction in your wallet.'),
             closeDisabled: true,
         },
         waitingConfirmation: {
