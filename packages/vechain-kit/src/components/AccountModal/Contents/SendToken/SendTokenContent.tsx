@@ -46,6 +46,7 @@ export type SendTokenContentProps = {
     >;
     isNavigatingFromMain?: boolean;
     preselectedToken?: Token;
+    onBack?: () => void;
 };
 
 // Add form values type
@@ -58,6 +59,7 @@ export const SendTokenContent = ({
     setCurrentContent,
     isNavigatingFromMain = false,
     preselectedToken,
+    onBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -174,7 +176,7 @@ export const SendTokenContent = ({
                 >
                     {t('Send')}
                 </ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

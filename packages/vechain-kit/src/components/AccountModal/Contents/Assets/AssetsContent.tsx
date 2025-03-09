@@ -56,6 +56,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                     numericBalance: token.value,
                     price: token.price,
                 },
+                onBack: () => setCurrentContent('assets'),
             },
         });
     };

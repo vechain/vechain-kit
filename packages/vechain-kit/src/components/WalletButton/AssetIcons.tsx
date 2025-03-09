@@ -68,7 +68,7 @@ export const AssetIcons = ({
             ))}
             {remainingTokens > 0 && (
                 <Circle
-                    ml={`-${marginLeft}px`}
+                    ml={marginLeft}
                     zIndex={tokensToShow.length}
                     size={`${iconSize}px`}
                     borderRadius="full"

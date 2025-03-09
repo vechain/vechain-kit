@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { VscRefresh } from 'react-icons/vsc';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { MdOutlineNavigateNext } from 'react-icons/md';
+import { useVeChainKitConfig } from '@/providers';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -21,6 +22,7 @@ export const BalanceSection = ({
     mt?: number;
     onAssetsClick?: () => void;
 }) => {
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
     const { account } = useWallet();
     const { isLoading, totalBalance } = useBalances({
@@ -87,12 +89,16 @@ export const BalanceSection = ({
                     }
                     style={{
                         mt: 2,
-                        backgroundColor: 'whiteAlpha.200',
+                        backgroundColor: isDark
+                            ? 'whiteAlpha.200'
+                            : 'blackAlpha.200',
                         borderRadius: 'xl',
                         p: 2,
                         cursor: 'pointer',
                         _hover: {
-                            backgroundColor: 'whiteAlpha.300',
+                            backgroundColor: isDark
+                                ? 'whiteAlpha.300'
+                                : 'blackAlpha.300',
                         },
                     }}
                 />
