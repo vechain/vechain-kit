@@ -17,23 +17,17 @@ import { useMemo, useCallback } from 'react';
 export function TransactionExamples() {
     const { account, connectedWallet } = useWallet();
 
-    const {
-        sendTransaction,
-        status,
-        txReceipt,
-        resetStatus,
-        isTransactionPending,
-        error,
-    } = useSendTransaction({
-        signerAccountAddress: account?.address ?? '',
-        privyUIOptions: {
-            title: 'Send Dummy Transaction',
-            description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                account?.address ?? '',
-            )}`,
-            buttonText: 'Sign to continue',
-        },
-    });
+    const { sendTransaction, status, txReceipt, isTransactionPending, error } =
+        useSendTransaction({
+            signerAccountAddress: account?.address ?? '',
+            privyUIOptions: {
+                title: 'Send Dummy Transaction',
+                description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
+                    account?.address ?? '',
+                )}`,
+                buttonText: 'Sign to continue',
+            },
+        });
 
     const {
         open: openTransactionModal,
@@ -107,9 +101,9 @@ export function TransactionExamples() {
                 isOpen={isTransactionToastOpen}
                 onClose={closeTransactionToast}
                 status={status}
-                error={error}
+                txError={error}
                 txReceipt={txReceipt}
-                resetStatus={resetStatus}
+                onTryAgain={handleTransactionWithToast}
             />
 
             <TransactionModal

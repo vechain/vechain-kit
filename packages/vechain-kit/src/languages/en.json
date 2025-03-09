@@ -465,5 +465,7 @@
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "A .vet domain is required to customize your profile. Choose an account name to get started.",
     "Set up a passkey for easier access": "Set up a passkey for easier access",
     "Set up Passkey": "Set up Passkey",
-    "Transaction is being processed, it can take up to 15 seconds.": "Transaction is being processed, it can take up to 15 seconds."
+    "Transaction is being processed, it can take up to 15 seconds.": "Transaction is being processed, it can take up to 15 seconds.",
+    "Ready": "Ready",
+    "Unknown status": "Unknown status"
 }
