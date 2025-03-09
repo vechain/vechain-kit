@@ -2,7 +2,6 @@ import {
     HStack,
     ModalBody,
     ModalCloseButton,
-    ModalFooter,
     ModalHeader,
     VStack,
     Tag,
@@ -100,7 +99,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter />
         </ScrollToTopWrapper>
     );
 };

@@ -45,7 +45,11 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
                 <ModalBody>
                     <VStack spacing={6} align="center" w="full">
                         <Image
-                            src={'https://swap.vechain.energy/assets/logo.svg'}
+                            src={
+                                isDark
+                                    ? 'https://app.vechain.energy/assets/logo-dark.svg'
+                                    : 'https://app.vechain.energy/assets/logo-light.svg'
+                            }
                             alt="bridge token"
                             w={'200px'}
                             h={'200px'}
