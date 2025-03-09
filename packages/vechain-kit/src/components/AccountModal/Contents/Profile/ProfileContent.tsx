@@ -59,7 +59,7 @@ export const ProfileContent = ({
                                     disconnect();
                                     onLogoutSuccess?.();
                                 },
-                                onBack: () => setCurrentContent?.('settings'),
+                                onBack: () => setCurrentContent?.('profile'),
                             },
                         });
                     }}
