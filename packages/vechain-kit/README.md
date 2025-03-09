@@ -1,10 +1,10 @@
+#### An all-in-one library for building VeChain applications.
+
 <div align="center">
-    <h1><code>vechain-kit</code></h1>
-    <p>
-        <strong>An all-in-one library for building VeChain applications</strong>
-    </p>
     <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
 </div>
+
+## Introduction
 
 VeChain Kit is a comprehensive library designed to make building VeChain applications fast and straightforward.
 
