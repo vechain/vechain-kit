@@ -28,7 +28,7 @@ import { CgProfile } from 'react-icons/cg';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 
 export function FeaturesToTry() {
-    const { account } = useWallet();
+    const { account, connection } = useWallet();
 
     // Use the modal hooks
     const { open: openChooseNameModal } = useChooseNameModal();
@@ -81,6 +81,7 @@ export function FeaturesToTry() {
             icon: RiShieldKeyholeLine,
             link: '#',
             content: openAccessAndSecurityModal,
+            disabled: !connection.isConnectedWithPrivy,
         },
         {
             title: 'Explore Ecosystem',
@@ -111,6 +112,13 @@ export function FeaturesToTry() {
         <VStack spacing={6} align="stretch">
             <Text fontSize="xl" fontWeight="bold">
                 Features
+            </Text>
+            <Text fontSize="sm" color="gray.500">
+                The following features are available for your users and for you
+                both accessible by using the VeChain Kit main modal or by adding
+                custom call to action buttons to your app and opening the
+                content you need on demand. Try them out by clicking on the
+                cards below.
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
