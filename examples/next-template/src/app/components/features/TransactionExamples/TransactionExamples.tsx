@@ -17,17 +17,23 @@ import { useMemo, useCallback } from 'react';
 export function TransactionExamples() {
     const { account, connectedWallet } = useWallet();
 
-    const { sendTransaction, status, txReceipt, isTransactionPending, error } =
-        useSendTransaction({
-            signerAccountAddress: account?.address ?? '',
-            privyUIOptions: {
-                title: 'Send Dummy Transaction',
-                description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                    account?.address ?? '',
-                )}`,
-                buttonText: 'Sign to continue',
-            },
-        });
+    const {
+        sendTransaction,
+        status,
+        txReceipt,
+        isTransactionPending,
+        error,
+        resetStatus,
+    } = useSendTransaction({
+        signerAccountAddress: account?.address ?? '',
+        privyUIOptions: {
+            title: 'Send Dummy Transaction',
+            description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
+                account?.address ?? '',
+            )}`,
+            buttonText: 'Sign to continue',
+        },
+    });
 
     const {
         open: openTransactionModal,
@@ -73,6 +79,11 @@ export function TransactionExamples() {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses, openTransactionModal]);
 
+    const handleTryAgain = useCallback(async () => {
+        resetStatus();
+        await sendTransaction(clauses);
+    }, [sendTransaction, clauses, resetStatus]);
+
     return (
         <>
             <Box>
@@ -103,7 +114,7 @@ export function TransactionExamples() {
                 status={status}
                 txError={error}
                 txReceipt={txReceipt}
-                onTryAgain={handleTransactionWithToast}
+                onTryAgain={handleTryAgain}
             />
 
             <TransactionModal
@@ -112,12 +123,16 @@ export function TransactionExamples() {
                 status={status}
                 txReceipt={txReceipt}
                 txError={error}
-                showSocialButtons={true}
-                showExplorerButton={true}
-                onTryAgain={handleTransactionWithModal}
-                description={`This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                    account?.address
-                }`}
+                onTryAgain={handleTryAgain}
+                uiConfig={{
+                    title: 'Test Transaction',
+                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
+                        account?.address
+                    }`,
+                    showShareOnSocials: true,
+                    showExplorerButton: true,
+                    isClosable: true,
+                }}
             />
         </>
     );

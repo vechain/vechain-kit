@@ -467,5 +467,7 @@
     "Set up Passkey": "Set up Passkey",
     "Transaction is being processed, it can take up to 15 seconds.": "Transaction is being processed, it can take up to 15 seconds.",
     "Ready": "Ready",
-    "Unknown status": "Unknown status"
+    "Unknown status": "Unknown status",
+    "Confirm transaction": "Confirm transaction",
+    "Confirm the transaction in your wallet to complete it.": "Confirm the transaction in your wallet to complete it."
 }

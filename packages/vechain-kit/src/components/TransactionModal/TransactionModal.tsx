@@ -6,47 +6,44 @@ import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;
+    onTryAgain: () => void;
     status: TransactionStatus;
-    title?: ReactNode;
-    description?: string;
-    showSocialButtons?: boolean;
-    socialDescriptionEncoded?: string;
-    onTryAgain?: () => void;
-    showExplorerButton?: boolean;
-    txReceipt?: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: Connex.Thor.Transaction.Receipt | null;
     txError?: Error | TransactionStatusErrorType;
-    isClosable?: boolean;
+    uiConfig?: {
+        isClosable?: boolean;
+        showShareOnSocials?: boolean;
+        showExplorerButton?: boolean;
+        loadingIcon?: ReactNode;
+        successIcon?: ReactNode;
+        errorIcon?: ReactNode;
+        title?: ReactNode;
+        description?: string;
+        showSocialButtons?: boolean;
+    };
 };
 
 export const TransactionModal = ({
     isOpen,
     onClose,
     status,
-    title,
-    description,
-    showSocialButtons = false,
-    socialDescriptionEncoded,
-    onTryAgain,
-    showExplorerButton = false,
+    uiConfig,
     txReceipt,
     txError,
-    isClosable = true,
+    onTryAgain,
 }: TransactionModalProps) => {
     return (
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
-            trapFocus={false}
-            closeOnOverlayClick={status !== 'pending' && isClosable}
+            allowExternalFocus={true}
+            blockScrollOnMount={true}
+            closeOnOverlayClick={status !== 'pending' && uiConfig?.isClosable}
         >
             <TransactionModalContent
                 status={status}
-                title={title}
-                description={description}
-                showSocialButtons={showSocialButtons}
-                socialDescriptionEncoded={socialDescriptionEncoded}
                 onTryAgain={onTryAgain}
-                showExplorerButton={showExplorerButton}
+                uiConfig={uiConfig}
                 txReceipt={txReceipt}
                 onClose={onClose}
                 txError={txError}

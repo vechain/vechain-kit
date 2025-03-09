@@ -336,6 +336,11 @@ export function TransactionExamples() {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses, openTransactionModal]);
 
+    const handleTryAgain = useCallback(async () => {
+        resetStatus();
+        await sendTransaction(clauses);
+    }, [sendTransaction, clauses, resetStatus]);
+
     return (
         <>
             <button
@@ -346,18 +351,22 @@ export function TransactionExamples() {
                 Send B3TR
             </button>
 
-             <TransactionModal
+            <TransactionModal
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
                 status={status}
                 txReceipt={txReceipt}
                 txError={error}
-                showSocialButtons={true}
-                showExplorerButton={true}
-                onTryAgain={handleTransactionWithModal}
-                description={`This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                    account?.address
-                }`}
+                onTryAgain={handleTryAgain}
+                uiConfig={{
+                    title: 'Test Transaction',
+                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
+                        account?.address
+                    }`,
+                    showShareOnSocials: true,
+                    showExplorerButton: true,
+                    isClosable: true,
+                }}
             />
         </>
     );

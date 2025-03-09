@@ -22,21 +22,7 @@ import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { ShareButtons } from './Components/ShareButtons';
 import { StickyHeaderContainer } from '../common';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-
-export type TransactionModalContentProps = {
-    status: TransactionStatus;
-    title?: ReactNode;
-    description?: string;
-    showSocialButtons?: boolean;
-    socialDescriptionEncoded?: string;
-    onTryAgain?: () => void;
-    showExplorerButton?: boolean;
-    txReceipt?: Connex.Thor.Transaction.Receipt | null;
-    onClose?: () => void;
-    txError?: Error | TransactionStatusErrorType;
-    isClosable?: boolean;
-};
+import { TransactionModalProps } from './TransactionModal';
 
 type StatusConfig = {
     title: ReactNode;
@@ -46,17 +32,12 @@ type StatusConfig = {
 
 export const TransactionModalContent = ({
     status,
-    title,
-    description,
-    showSocialButtons,
-    socialDescriptionEncoded,
+    uiConfig,
     onTryAgain,
-    showExplorerButton,
     txReceipt,
-    onClose,
     txError,
-    isClosable = true,
-}: TransactionModalContentProps) => {
+    onClose,
+}: Omit<TransactionModalProps, 'isOpen'>) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
 
@@ -78,22 +59,22 @@ export const TransactionModalContent = ({
             case 'pending':
                 return {
                     title:
-                        title ??
+                        uiConfig?.title ??
                         (isSendingTransaction
                             ? t('Sending Transaction...')
                             : t('Waiting for confirmation')),
-                    icon: <Spinner size="xl" />,
+                    icon: uiConfig?.loadingIcon ?? <Spinner size="xl" />,
                     description: isSendingTransaction
                         ? t(
                               'Transaction is being processed, it can take up to 15 seconds.',
                           )
-                        : description ??
+                        : uiConfig?.description ??
                           t('Please confirm the transaction in your wallet.'),
                 };
             case 'error':
                 return {
-                    title: title ?? t('Something went wrong'),
-                    icon: (
+                    title: uiConfig?.title ?? t('Something went wrong'),
+                    icon: uiConfig?.errorIcon ?? (
                         <Icon
                             as={MdOutlineErrorOutline}
                             color="red"
@@ -105,8 +86,8 @@ export const TransactionModalContent = ({
                 };
             case 'success':
                 return {
-                    title: title ?? t('Transaction completed!'),
-                    icon: (
+                    title: uiConfig?.title ?? t('Transaction completed!'),
+                    icon: uiConfig?.successIcon ?? (
                         <Icon
                             as={IoIosCheckmarkCircleOutline}
                             color="#00ff45de"
@@ -114,6 +95,16 @@ export const TransactionModalContent = ({
                         />
                     ),
                     description: '',
+                };
+            case 'ready':
+                return {
+                    title: uiConfig?.title ?? t('Confirm transaction'),
+                    icon: null,
+                    description:
+                        uiConfig?.description ??
+                        t(
+                            'Confirm the transaction in your wallet to complete it.',
+                        ),
                 };
             default:
                 return {
@@ -125,9 +116,9 @@ export const TransactionModalContent = ({
     };
 
     const statusConfig = getStatusConfig();
-    const socialDescription =
-        socialDescriptionEncoded ??
-        `${getConfig(network.type).explorerUrl}/${txReceipt?.meta.txID}`;
+    const socialDescription = `${getConfig(network.type).explorerUrl}/${
+        txReceipt?.meta.txID
+    }`;
 
     return (
         <Box>
@@ -141,26 +132,28 @@ export const TransactionModalContent = ({
                     {statusConfig.title}
                 </ModalHeader>
                 <ModalCloseButton
-                    isDisabled={status === 'pending' && !isClosable}
+                    isDisabled={status === 'pending' && !uiConfig?.isClosable}
                 />
             </StickyHeaderContainer>
 
             <ModalBody>
                 <VStack align="center" p={6} spacing={3}>
-                    <motion.div
-                        transition={{
-                            duration: 4,
-                            ease: 'easeInOut',
-                            repeat: Infinity,
-                        }}
-                        animate={{
-                            scale: [1, 1.1, 1],
-                        }}
-                    >
-                        {statusConfig.icon}
-                    </motion.div>
+                    {statusConfig.icon && (
+                        <motion.div
+                            transition={{
+                                duration: 4,
+                                ease: 'easeInOut',
+                                repeat: Infinity,
+                            }}
+                            animate={{
+                                scale: [1, 1.1, 1],
+                            }}
+                        >
+                            {statusConfig.icon}
+                        </motion.div>
+                    )}
 
-                    {status === 'success' && showSocialButtons && (
+                    {status === 'success' && uiConfig?.showShareOnSocials && (
                         <VStack mt={2}>
                             <Text fontSize="xs">{t('Share on')}</Text>
                             <ShareButtons
@@ -168,17 +161,25 @@ export const TransactionModalContent = ({
                             />
                         </VStack>
                     )}
+
+                    {statusConfig.description && (
+                        <Text
+                            fontSize={status === 'ready' ? 'md' : 'sm'}
+                            textAlign="center"
+                            color={status === 'error' ? 'red' : 'inherit'}
+                            mt={5}
+                            style={{
+                                lineBreak: 'anywhere',
+                            }}
+                        >
+                            {statusConfig.description}
+                        </Text>
+                    )}
                 </VStack>
             </ModalBody>
 
             <ModalFooter justifyContent="center">
                 <VStack width="full" spacing={4}>
-                    {statusConfig.description && (
-                        <Text fontSize="sm" textAlign="center">
-                            {statusConfig.description}
-                        </Text>
-                    )}
-
                     {status === 'error' && !!onTryAgain && (
                         <Button
                             variant="vechainKitPrimary"
@@ -190,7 +191,19 @@ export const TransactionModalContent = ({
                         </Button>
                     )}
 
-                    {(status === 'success' || status === 'error') && (
+                    {status === 'ready' && (
+                        <Button
+                            onClick={onTryAgain}
+                            variant="vechainKitPrimary"
+                            width="full"
+                        >
+                            {t('Confirm')}
+                        </Button>
+                    )}
+
+                    {(status === 'success' ||
+                        status === 'error' ||
+                        status === 'ready') && (
                         <Button
                             onClick={onClose}
                             variant="vechainKitSecondary"
@@ -200,7 +213,7 @@ export const TransactionModalContent = ({
                         </Button>
                     )}
 
-                    {showExplorerButton && txReceipt?.meta.txID && (
+                    {uiConfig?.showExplorerButton && txReceipt?.meta.txID && (
                         <Link
                             href={`${getConfig(network.type).explorerUrl}/${
                                 txReceipt?.meta.txID
