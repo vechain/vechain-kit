@@ -242,11 +242,8 @@ export const SendTokenContent = ({
                                             }
                                             _hover={{
                                                 bg: isDark
-                                                    ? 'whiteAlpha.800'
-                                                    : 'blackAlpha.800',
-                                                color: isDark
-                                                    ? 'blackAlpha.700'
-                                                    : 'whiteAlpha.700',
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
                                             }}
                                             onClick={() =>
                                                 setIsSelectingToken(true)
