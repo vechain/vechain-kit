@@ -181,7 +181,7 @@ export const TransactionModalContent = ({
 
                     {status === 'error' && !!onTryAgain && (
                         <Button
-                            variant="vechainKitSecondary"
+                            variant="vechainKitPrimary"
                             onClick={onTryAgain}
                             width="full"
                         >

@@ -149,7 +149,7 @@ export const TransactionToastContent = ({
                     borderRadius={'full'}
                     aria-label="Close"
                     ml={5}
-                    leftIcon={<Icon as={IoCloseOutline} boxSize={2} />}
+                    leftIcon={<Icon as={IoCloseOutline} boxSize={4} />}
                 >
                     {t('Close')}
                 </Button>
