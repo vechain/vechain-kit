@@ -58,7 +58,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
 
                         <Text fontSize="sm" textAlign="center">
                             {t(
-                                "Exchange your digital assets between VeChain and other blockchain networks easily and securely. You can also buy VET (VeChain's digital currency) directly using regular money like US dollars or euros through trusted partners, who ensure safe and compliant transactions.",
+                                'Exchange your digital assets between VeChain and other blockchain networks easily and securely. Swaps are executed through partners that leverage both decentralized and centralized exchanges to convert tokens.',
                             )}
                         </Text>
                     </VStack>
