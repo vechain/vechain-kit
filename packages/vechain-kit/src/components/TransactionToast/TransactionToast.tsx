@@ -7,8 +7,8 @@ export type TransactionToastProps = {
     isOpen: boolean;
     onClose: () => void;
     status: TransactionStatus;
-    txReceipt?: Connex.Thor.Transaction.Receipt | null;
-    onTryAgain?: () => void;
+    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    onTryAgain: () => void;
     txError?: Error | TransactionStatusErrorType;
     description?: string;
 };
@@ -38,6 +38,7 @@ export const TransactionToast = ({
                 p={5}
                 boxShadow="lg"
                 maxW="sm"
+                minW="300px"
             >
                 <TransactionToastContent
                     status={status}

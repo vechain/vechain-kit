@@ -7,6 +7,7 @@ import {
     Heading,
     Spinner,
     Button,
+    IconButton,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
@@ -19,15 +20,15 @@ import { useTranslation } from 'react-i18next';
 
 type TransactionToastContentProps = {
     status: TransactionStatus;
-    txReceipt?: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    onTryAgain: () => void;
     txError?: Error | TransactionStatusErrorType;
-    onTryAgain?: () => void;
     description?: string;
     onClose: () => void;
 };
 
 type StatusConfig = {
-    icon: React.ReactElement;
+    icon: React.ReactElement | null;
     title: string;
     closeDisabled: boolean;
     description?: string;
@@ -53,64 +54,79 @@ export const TransactionToastContent = ({
         );
     }, [txError, t]);
 
-    // overwrite status to avoid flickering
-    const isSendingTransaction = status === 'waitingConfirmation';
-    if (isSendingTransaction) {
-        status = 'pending';
-    }
+    const getStatusConfig = (): StatusConfig => {
+        // overwrite status to avoid flickering
+        const isSendingTransaction = status === 'waitingConfirmation';
+        if (isSendingTransaction) {
+            status = 'pending';
+        }
 
-    const statusConfig = {
-        pending: {
-            icon: <Spinner size="md" />,
-            title: t('Processing transaction...'),
-            description: isSendingTransaction
-                ? t(
-                      'Transaction is being processed, it can take up to 15 seconds.',
-                  )
-                : description ??
-                  t('Please confirm the transaction in your wallet.'),
-            closeDisabled: true,
-        },
-        waitingConfirmation: {
-            icon: <Spinner size="md" />,
-            title: t('Waiting for confirmation') + '...',
-            closeDisabled: true,
-            description: description,
-        },
-        error: {
-            icon: (
-                <Icon
-                    as={MdOutlineErrorOutline}
-                    color={'red'}
-                    fontSize={'40px'}
-                />
-            ),
-            title: t('Transaction failed'),
-            closeDisabled: false,
-            description: errorMessage,
-        },
-        success: {
-            icon: <Icon as={FcCheckmark} fontSize={'40px'} />,
-            title: t('Transaction successful!'),
-            closeDisabled: false,
-            description: undefined,
-        },
-    } as const satisfies Record<
-        Exclude<TransactionStatus, 'ready' | 'unknown'>,
-        StatusConfig
-    >;
-
-    const isValidStatus = (
-        status: TransactionStatus,
-    ): status is Exclude<TransactionStatus, 'ready' | 'unknown'> => {
-        return status in statusConfig;
+        switch (status) {
+            case 'pending':
+                return {
+                    icon: <Spinner size="md" />,
+                    title: isSendingTransaction
+                        ? t('Processing transaction...')
+                        : t('Waiting for confirmation...'),
+                    closeDisabled: true,
+                    description: isSendingTransaction
+                        ? t(
+                              'Transaction is being processed, it can take up to 15 seconds.',
+                          )
+                        : description ??
+                          t('Please confirm the transaction in your wallet.'),
+                };
+            case 'error':
+                return {
+                    icon: (
+                        <Icon
+                            as={MdOutlineErrorOutline}
+                            color={'red'}
+                            fontSize={'40px'}
+                        />
+                    ),
+                    title: t('Transaction failed'),
+                    closeDisabled: false,
+                    description: errorMessage,
+                };
+            case 'success':
+                return {
+                    icon: <Icon as={FcCheckmark} fontSize={'40px'} />,
+                    title: t('Transaction successful!'),
+                    closeDisabled: false,
+                    description: undefined,
+                };
+            case 'ready':
+                return {
+                    icon: null,
+                    title: t('Confirm transaction'),
+                    closeDisabled: false,
+                    description:
+                        description ??
+                        t(
+                            'Confirm the transaction in your wallet to complete it.',
+                        ),
+                };
+            default:
+                return {
+                    icon: null,
+                    title: '',
+                    closeDisabled: false,
+                    description: '',
+                };
+        }
     };
 
-    if (!isValidStatus(status)) return null;
-    const config = statusConfig[status];
+    const config = getStatusConfig();
+    if (!config) return null;
 
     return (
-        <HStack justify="space-between" alignItems={'flex-start'} w="full">
+        <HStack
+            justify="space-between"
+            alignItems={'flex-start'}
+            w="full"
+            minW="200px"
+        >
             <VStack spacing={4}>
                 <HStack
                     spacing={4}
@@ -132,9 +148,11 @@ export const TransactionToastContent = ({
                             )}
                         </VStack>
 
-                        {status === 'error' && onTryAgain && (
+                        {(status === 'error' || status === 'ready') && (
                             <Button size="xs" onClick={onTryAgain}>
-                                {t('Try again')}
+                                {status === 'error'
+                                    ? t('Try again')
+                                    : t('Confirm')}
                             </Button>
                         )}
 
@@ -153,17 +171,14 @@ export const TransactionToastContent = ({
             </VStack>
 
             {!config.closeDisabled && (
-                <Button
+                <IconButton
                     onClick={onClose}
                     variant="ghost"
                     size="sm"
                     borderRadius={'full'}
                     aria-label="Close"
-                    ml={5}
-                    leftIcon={<Icon as={IoCloseOutline} boxSize={4} />}
-                >
-                    {t('Close')}
-                </Button>
+                    icon={<Icon as={IoCloseOutline} boxSize={4} />}
+                />
             )}
         </HStack>
     );
