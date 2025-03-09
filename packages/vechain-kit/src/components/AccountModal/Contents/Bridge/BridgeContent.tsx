@@ -67,11 +67,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
 
             <ModalFooter>
                 <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
+                    variant="vechainKitSecondary"
                     onClick={() => {
                         window.open('https://swap.vechain.energy/', '_blank');
                     }}

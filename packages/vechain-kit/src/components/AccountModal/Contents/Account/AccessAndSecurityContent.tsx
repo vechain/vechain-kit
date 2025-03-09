@@ -140,11 +140,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                 {connection.isConnectedWithVeChain &&
                     connection.isConnectedWithCrossApp && (
                         <Button
-                            px={4}
-                            width="full"
-                            height="60px"
-                            variant="solid"
-                            borderRadius="xl"
+                            variant="vechainKitSecondary"
                             onClick={() => {
                                 window.open(
                                     'https://governance.vebetterdao.org/',

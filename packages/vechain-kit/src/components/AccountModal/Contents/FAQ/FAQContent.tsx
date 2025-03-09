@@ -117,10 +117,8 @@ export const FAQContent = ({ onGoBack }: Props) => {
                         as={Link}
                         href="https://docs.vechainkit.vechain.org/"
                         isExternal
-                        variant="outline"
+                        variant="vechainKitSecondary"
                         rightIcon={<Icon as={FaExternalLinkAlt} />}
-                        size="lg"
-                        height="60px"
                         mt={4}
                     >
                         {t('For developers')}

@@ -63,11 +63,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
 
             <ModalFooter>
                 <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
+                    variant="vechainKitSecondary"
                     onClick={() => {
                         window.open('https://swap.tbc.vet/', '_blank');
                     }}

@@ -61,8 +61,7 @@ const variants = {
         transition: 'all 0.2s',
     })),
     vechainKitPrimary: defineStyle(() => ({
-        fontSize: 'sm',
-        fontWeight: '400',
+        fontSize: 'md',
         px: 4,
         width: 'full',
         height: '60px',
@@ -84,8 +83,7 @@ const variants = {
         transition: 'all 0.2s',
     })),
     vechainKitSecondary: defineStyle(() => ({
-        fontSize: 'sm',
-        fontWeight: '400',
+        fontSize: 'md',
         px: 4,
         width: 'full',
         height: '60px',

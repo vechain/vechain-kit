@@ -507,12 +507,7 @@ export const CustomizationContent = ({
             <StickyFooterContainer>
                 <ModalFooter w="full" p={0}>
                     <Button
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
-                        colorScheme="blue"
+                        variant="vechainKitPrimary"
                         onClick={handleSaveChanges}
                         isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}

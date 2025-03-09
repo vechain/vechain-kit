@@ -6,6 +6,7 @@ import {
     Text,
     Button,
     Icon,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -65,23 +66,24 @@ export const ChooseNameContent = ({
                             )}
                         </Text>
                     </VStack>
-
-                    <Button
-                        variant="vechainKitPrimary"
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'choose-name-search',
-                                props: {
-                                    name: '',
-                                    setCurrentContent: setCurrentContent,
-                                },
-                            })
-                        }
-                    >
-                        {t('Choose name')}
-                    </Button>
                 </VStack>
             </ModalBody>
+            <ModalFooter>
+                <Button
+                    variant="vechainKitPrimary"
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'choose-name-search',
+                            props: {
+                                name: '',
+                                setCurrentContent: setCurrentContent,
+                            },
+                        })
+                    }
+                >
+                    {t('Choose name')}
+                </Button>
+            </ModalFooter>
         </>
     );
 };
