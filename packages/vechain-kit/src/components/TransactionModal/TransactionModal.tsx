@@ -1,111 +1,56 @@
-import { ReactNode, useMemo } from 'react';
-import {
-    ConfirmationModalContent,
-    ErrorModalContent,
-    LoadingModalContent,
-    SuccessModalContent,
-} from './Contents';
+import { ReactNode } from 'react';
 import { BaseModal } from '../common/BaseModal';
+import { TransactionModalContent } from './TransactionModalContent';
+import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    status: string;
-    pendingTitle?: ReactNode;
-    confirmationTitle?: ReactNode;
-    errorTitle?: ReactNode;
-    errorDescription?: string;
-    successTitle?: ReactNode;
+    status: TransactionStatus;
+    title?: ReactNode;
+    description?: string;
     showSocialButtons?: boolean;
     socialDescriptionEncoded?: string;
-    showTryAgainButton?: boolean;
     onTryAgain?: () => void;
     showExplorerButton?: boolean;
-    txId?: string;
+    txReceipt?: Connex.Thor.Transaction.Receipt | null;
+    txError?: Error | TransactionStatusErrorType;
+    isClosable?: boolean;
 };
 
 export const TransactionModal = ({
     isOpen,
     onClose,
     status,
-    pendingTitle,
-    confirmationTitle,
-    errorTitle,
-    errorDescription,
-    successTitle,
+    title,
+    description,
     showSocialButtons = false,
     socialDescriptionEncoded,
-    showTryAgainButton,
     onTryAgain,
-    showExplorerButton,
-    txId,
+    showExplorerButton = false,
+    txReceipt,
+    txError,
+    isClosable = true,
 }: TransactionModalProps) => {
-    const modalContent = useMemo(() => {
-        if (status === 'pending')
-            return (
-                <ConfirmationModalContent
-                    title={confirmationTitle}
-                    onTryAgain={onTryAgain}
-                />
-            );
-        if (status === 'waitingConfirmation')
-            return (
-                <LoadingModalContent
-                    title={pendingTitle}
-                    showExplorerButton={showExplorerButton}
-                    txId={txId}
-                    onTryAgain={onTryAgain}
-                />
-            );
-        if (status === 'error')
-            return (
-                <ErrorModalContent
-                    title={errorTitle}
-                    description={errorDescription}
-                    showTryAgainButton={showTryAgainButton}
-                    onTryAgain={onTryAgain}
-                    showExplorerButton={showExplorerButton}
-                    txId={txId}
-                    onClose={onClose}
-                />
-            );
-        if (status === 'success')
-            return (
-                <SuccessModalContent
-                    title={successTitle}
-                    showSocialButtons={showSocialButtons}
-                    socialDescriptionEncoded={socialDescriptionEncoded}
-                    showExplorerButton={showExplorerButton}
-                    txId={txId}
-                    onClose={onClose}
-                />
-            );
-        return null;
-    }, [
-        status,
-        confirmationTitle,
-        pendingTitle,
-        showExplorerButton,
-        txId,
-        errorTitle,
-        errorDescription,
-        showTryAgainButton,
-        onTryAgain,
-        successTitle,
-        showSocialButtons,
-        socialDescriptionEncoded,
-    ]);
-
-    if (!modalContent) return null;
-
     return (
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
             trapFocus={false}
-            closeOnOverlayClick={status !== 'pending'}
+            closeOnOverlayClick={status !== 'pending' && isClosable}
         >
-            {modalContent}
+            <TransactionModalContent
+                status={status}
+                title={title}
+                description={description}
+                showSocialButtons={showSocialButtons}
+                socialDescriptionEncoded={socialDescriptionEncoded}
+                onTryAgain={onTryAgain}
+                showExplorerButton={showExplorerButton}
+                txReceipt={txReceipt}
+                onClose={onClose}
+                txError={txError}
+            />
         </BaseModal>
     );
 };

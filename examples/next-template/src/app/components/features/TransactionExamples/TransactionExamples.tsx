@@ -116,12 +116,14 @@ export function TransactionExamples() {
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
                 status={status}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
+                txReceipt={txReceipt}
+                txError={error}
                 showSocialButtons={true}
                 showExplorerButton={true}
                 onTryAgain={handleTransactionWithModal}
-                showTryAgainButton={true}
+                description={`This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
+                    account?.address
+                }`}
             />
         </>
     );
