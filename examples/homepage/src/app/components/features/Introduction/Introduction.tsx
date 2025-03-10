@@ -203,9 +203,9 @@ export function Introduction() {
                             logo: 'https://i.ibb.co/zVx7ncgq/download-2.png',
                         },
                         {
-                            name: 'Smart Account Factory',
-                            href: 'https://vechain.github.io/smart-accounts/',
-                            logo: 'https://vechain.github.io/smart-accounts/assets/logo-DnOsqNR_.png',
+                            name: 'ScoopUp',
+                            href: 'https://scoopup.vet/',
+                            logo: 'https://scoopup.vet/images/logo.webp',
                         },
                         {
                             name: 'VeLottery',
@@ -231,7 +231,7 @@ export function Introduction() {
                                 <Image
                                     src={app.logo}
                                     alt={app.name}
-                                    width={10}
+                                    width={'auto'}
                                     height={10}
                                     borderRadius="md"
                                 />
