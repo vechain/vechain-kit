@@ -1,12 +1,15 @@
 import {
-    HStack,
     ModalBody,
     ModalCloseButton,
     ModalHeader,
     VStack,
     Tag,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
+import {
+    StickyHeaderContainer,
+    ScrollToTopWrapper,
+    ModalFAQButton,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
@@ -36,6 +39,16 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
+                <ModalFAQButton
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'faq',
+                            props: {
+                                onGoBack: () => setCurrentContent('main'),
+                            },
+                        })
+                    }
+                />
                 <ModalHeader
                     w={'full'}
                     color={isDark ? '#dfdfdd' : 'rgb(77, 77, 77)'}
@@ -63,28 +76,27 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         />
                     )}
 
-                    <HStack w={'full'} justifyContent={'space-between'}>
-                        <AccountSelector
-                            mt={0}
-                            style={{ justifyContent: 'flex-start' }}
-                            onClick={() => {
-                                setCurrentContent('profile');
-                            }}
-                            wallet={wallet}
-                        />
-                        {network?.type !== 'main' && (
-                            <Tag
-                                size="xl"
-                                colorScheme="orange"
-                                fontSize={'xs'}
-                                p={2}
-                                textTransform={'capitalize'}
-                                textAlign={'center'}
-                            >
-                                {`${network?.type} network`}
-                            </Tag>
-                        )}
-                    </HStack>
+                    <AccountSelector
+                        mt={0}
+                        style={{ justifyContent: 'flex-start' }}
+                        onClick={() => {
+                            setCurrentContent('profile');
+                        }}
+                        wallet={wallet}
+                    />
+
+                    {network?.type !== 'main' && (
+                        <Tag
+                            size="xl"
+                            colorScheme="orange"
+                            fontSize={'xs'}
+                            p={2}
+                            textTransform={'capitalize'}
+                            textAlign={'center'}
+                        >
+                            {`${network?.type} network`}
+                        </Tag>
+                    )}
 
                     <BalanceSection
                         mt={8}

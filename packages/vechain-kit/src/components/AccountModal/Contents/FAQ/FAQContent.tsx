@@ -25,11 +25,11 @@ import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
 
-type Props = {
+export type FAQContentProps = {
     onGoBack: () => void;
 };
 
-export const FAQContent = ({ onGoBack }: Props) => {
+export const FAQContent = ({ onGoBack }: FAQContentProps) => {
     const { network, darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
 

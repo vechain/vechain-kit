@@ -7,13 +7,13 @@ import {
 } from '../Contents';
 import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
+import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
 
 export type AccountModalContentTypes =
     | 'main'
-    | 'faq'
     | 'settings'
     | 'profile'
     | 'access-and-security'
@@ -62,4 +62,8 @@ export type AccountModalContentTypes =
     | {
           type: 'upgrade-smart-account';
           props: UpgradeSmartAccountContentProps;
+      }
+    | {
+          type: 'faq';
+          props: FAQContentProps;
       };

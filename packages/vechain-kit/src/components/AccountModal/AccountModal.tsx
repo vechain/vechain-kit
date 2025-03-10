@@ -106,6 +106,8 @@ export const AccountModal = ({
                     return (
                         <UpgradeSmartAccountContent {...currentContent.props} />
                     );
+                case 'faq':
+                    return <FAQContent {...currentContent.props} />;
             }
         }
 
@@ -157,12 +159,6 @@ export const AccountModal = ({
             case 'swap-token':
                 return (
                     <SwapTokenContent setCurrentContent={setCurrentContent} />
-                );
-            case 'faq':
-                return (
-                    <FAQContent
-                        onGoBack={() => setCurrentContent('settings')}
-                    />
                 );
             case 'connection-details':
                 return (

@@ -1,10 +1,19 @@
 'use client';
 
-import { Text, Icon, HStack, Button, StackProps } from '@chakra-ui/react';
+import {
+    Text,
+    Icon,
+    HStack,
+    Button,
+    StackProps,
+    IconButton,
+} from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountAvatar } from '@/components/common';
+import { useState } from 'react';
+import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
 
 type Props = {
     wallet: Wallet;
@@ -21,8 +30,25 @@ export const AccountSelector = ({
     mt,
     style,
 }: Props) => {
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = async () => {
+        await navigator.clipboard.writeText(
+            wallet?.domain ?? wallet?.address ?? '',
+        );
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 2000);
+    };
     return (
-        <HStack mt={mt} w={'full'} {...style}>
+        <HStack
+            mt={mt}
+            w={'full'}
+            {...style}
+            justifyContent={'flex-start'}
+            alignItems={'center'}
+        >
             <Button
                 w="fit-content"
                 p={2}
@@ -50,6 +76,16 @@ export const AccountSelector = ({
                     />
                 </HStack>
             </Button>
+
+            <IconButton
+                aria-label="Copy address"
+                icon={<Icon as={copied ? IoCheckmarkOutline : IoCopyOutline} />}
+                onClick={copyToClipboard}
+                variant="ghost"
+                size="sm"
+                opacity={0.5}
+                _hover={{ opacity: 0.8 }}
+            />
         </HStack>
     );
 };

@@ -5,12 +5,11 @@ import {
     Text,
     AlertDescription,
     IconButton,
-    Button,
     VStack,
+    AlertTitle,
 } from '@chakra-ui/react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
-import { useModal } from '@/providers/ModalProvider';
 import { Notification } from '@/hooks/notifications/types';
 
 type Props = {
@@ -25,13 +24,6 @@ export const NotificationItem = ({
     onMarkAsRead,
 }: Props) => {
     const { t } = useTranslation();
-    const { setAccountModalContent } = useModal();
-
-    const handleAction = () => {
-        if (notification.action) {
-            setAccountModalContent(notification.action.content);
-        }
-    };
 
     if (notification.isRead && !isArchiveView) {
         return null;
@@ -49,29 +41,14 @@ export const NotificationItem = ({
         >
             <AlertIcon boxSize={'16px'} />
             <Box>
-                <Text fontSize="sm" fontWeight="500">
+                <AlertTitle fontSize={'sm'}>
+                    {' '}
                     {/* @ts-ignore */}
                     {t(notification.title)}
-                </Text>
+                </AlertTitle>
                 <AlertDescription fontSize={'xs'} lineHeight={'1.2'}>
-                    <VStack spacing={2} alignItems={'flex-start'}>
-                        <Text>
-                            {/* @ts-ignore */}
-                            {t(notification.description)}
-                        </Text>
-                        {notification.action && (
-                            <Button
-                                size="sm"
-                                variant="link"
-                                onClick={handleAction}
-                                mt={2}
-                                color="blue.500"
-                            >
-                                {/* @ts-ignore */}
-                                {t(notification.action.label)}
-                            </Button>
-                        )}
-                    </VStack>
+                    {/* @ts-ignore */}
+                    {t(notification.description)}
                 </AlertDescription>
             </Box>
             {!isArchiveView && !notification.isRead && (

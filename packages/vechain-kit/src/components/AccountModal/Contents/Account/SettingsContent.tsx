@@ -192,7 +192,15 @@ export const SettingsContent = ({
                                       '',
                             },
                         )}
-                        onClick={() => setCurrentContent('faq')}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'faq',
+                                props: {
+                                    onGoBack: () =>
+                                        setCurrentContent('settings'),
+                                },
+                            })
+                        }
                         leftIcon={BsQuestionCircle}
                         rightIcon={MdOutlineNavigateNext}
                         style={{
