@@ -42,7 +42,7 @@ export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
                             fontSize="sm"
                             color={isDark ? '#dfdfdd' : '#4d4d4d'}
                         >
-                            {t('Connected at')}:
+                            {t('At')}:
                         </Text>
                         <Text
                             fontSize="sm"

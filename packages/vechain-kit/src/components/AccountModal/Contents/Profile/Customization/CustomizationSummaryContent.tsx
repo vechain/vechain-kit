@@ -15,9 +15,15 @@ import {
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useWallet, useRefreshMetadata } from '@/hooks';
+import {
+    useWallet,
+    useRefreshMetadata,
+    useUpgradeRequired,
+    useUpgradeSmartAccountModal,
+} from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -48,10 +54,17 @@ export const CustomizationSummaryContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { account } = useWallet();
+    const { account, connectedWallet } = useWallet();
     const { refresh: refreshMetadata } = useRefreshMetadata(
         account?.domain ?? '',
     );
+    const { data: upgradeRequired } = useUpgradeRequired(
+        account?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
             ...changes,
@@ -131,6 +144,12 @@ export const CustomizationSummaryContent = ({
         );
     };
 
+    useEffect(() => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+        }
+    }, [upgradeRequired, openUpgradeSmartAccountModal]);
+
     return (
         <Box as="form" onSubmit={handleSubmit(onSubmit)}>
             <StickyHeaderContainer>
@@ -180,10 +199,11 @@ export const CustomizationSummaryContent = ({
                     transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    handleSend={handleSubmit(onSubmit)}
+                    onConfirm={handleSubmit(onSubmit)}
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
-                    isSubmitForm={true}
+                    buttonText={t('Confirm')}
+                    isDisabled={isTransactionPending || upgradeRequired}
                 />
             </ModalFooter>
         </Box>

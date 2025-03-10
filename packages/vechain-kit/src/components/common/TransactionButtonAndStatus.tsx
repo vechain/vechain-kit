@@ -1,30 +1,36 @@
 import { useVeChainKitConfig } from '@/providers';
-import { Button, Text, VStack } from '@chakra-ui/react';
+import { Button, Link, Text, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 import { TransactionStatusErrorType } from '@/types';
+import { getConfig } from '@/config';
 
 export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;
     isTxWaitingConfirmation: boolean;
-    handleSend: () => void;
+    onConfirm: () => void;
     transactionPendingText: string;
     txReceipt: Connex.Thor.Transaction.Receipt | null;
     transactionError?: Error | TransactionStatusErrorType | null;
     isSubmitForm?: boolean;
+    buttonText: string;
+    isDisabled?: boolean;
 };
 
 export const TransactionButtonAndStatus = ({
     transactionError,
     isSubmitting,
     isTxWaitingConfirmation,
-    handleSend,
+    onConfirm,
     transactionPendingText,
     txReceipt,
     isSubmitForm = false,
+    buttonText,
+    isDisabled = false,
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
 
     const errorMessage = useMemo(() => {
         if (!transactionError) return null;
@@ -48,32 +54,37 @@ export const TransactionButtonAndStatus = ({
                 variant="solid"
                 borderRadius="xl"
                 colorScheme="blue"
-                onClick={handleSend}
+                onClick={onConfirm}
                 type={isSubmitForm ? 'submit' : 'button'}
                 isLoading={isSubmitting}
+                isDisabled={isDisabled}
                 loadingText={
                     isTxWaitingConfirmation
                         ? t('Waiting wallet confirmation...')
                         : transactionPendingText
                 }
             >
-                {errorMessage ? t('Retry') : t('Confirm')}
+                {errorMessage
+                    ? t('Retry')
+                    : buttonText
+                    ? buttonText
+                    : t('Confirm')}
             </Button>
             {errorMessage && txReceipt?.meta.txID && (
-                <Text
+                <Link
+                    isExternal
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'gray.500'}
                     textAlign="center"
                     width="full"
+                    href={`${getConfig(network.type).explorerUrl}/${
+                        txReceipt?.meta.txID
+                    }`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
-                    <a
-                        href={`https://explore-testnet.vechain.org/transactions/${txReceipt?.meta.txID}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {t('View transaction on the explorer')}
-                    </a>
-                </Text>
+                    {t('View transaction on the explorer')}
+                </Link>
             )}
         </VStack>
     );

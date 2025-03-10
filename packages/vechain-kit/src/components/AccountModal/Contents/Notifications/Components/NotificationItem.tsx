@@ -5,10 +5,13 @@ import {
     Text,
     AlertDescription,
     IconButton,
+    Button,
+    VStack,
 } from '@chakra-ui/react';
 import { IoCloseCircle } from 'react-icons/io5';
-import { Notification } from '../types';
 import { useTranslation } from 'react-i18next';
+import { useModal } from '@/providers/ModalProvider';
+import { Notification } from '@/hooks/notifications/types';
 
 type Props = {
     notification: Notification;
@@ -22,6 +25,13 @@ export const NotificationItem = ({
     onMarkAsRead,
 }: Props) => {
     const { t } = useTranslation();
+    const { setAccountModalContent } = useModal();
+
+    const handleAction = () => {
+        if (notification.action) {
+            setAccountModalContent(notification.action.content);
+        }
+    };
 
     if (notification.isRead && !isArchiveView) {
         return null;
@@ -44,8 +54,24 @@ export const NotificationItem = ({
                     {t(notification.title)}
                 </Text>
                 <AlertDescription fontSize={'xs'} lineHeight={'1.2'}>
-                    {/* @ts-ignore */}
-                    {t(notification.description)}
+                    <VStack spacing={2} alignItems={'flex-start'}>
+                        <Text>
+                            {/* @ts-ignore */}
+                            {t(notification.description)}
+                        </Text>
+                        {notification.action && (
+                            <Button
+                                size="sm"
+                                variant="link"
+                                onClick={handleAction}
+                                mt={2}
+                                color="blue.500"
+                            >
+                                {/* @ts-ignore */}
+                                {t(notification.action.label)}
+                            </Button>
+                        )}
+                    </VStack>
                 </AlertDescription>
             </Box>
             {!isArchiveView && !notification.isRead && (

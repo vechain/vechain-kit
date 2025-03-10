@@ -8,7 +8,7 @@ const SimpleAccountFactoryInterface =
 export const getVersion = async (
     thor: Connex.Thor,
     contractAddress?: string,
-): Promise<string> => {
+): Promise<number> => {
     if (!contractAddress) throw new Error('Contract address is required');
 
     const functionFragment =
@@ -21,24 +21,26 @@ export const getVersion = async (
 
     if (res.reverted) throw new Error('Reverted');
 
-    return res.decoded[0];
+    return parseInt(res.decoded[0]);
 };
 
 export const getVersionQueryKey = (contractAddress?: string) => [
-    'VECHAIN_KIT_CONTRACT_VERSION',
+    'VECHAIN_KIT',
+    'SMART_ACCOUNT',
+    'VERSION',
     contractAddress,
 ];
 
 /**
- * Get the version of the contract
- * @returns The version of the contract
+ * Get the version of the smart account
+ * @returns The version of the smart account
  */
-export const useContractVersion = (contractAddress?: string) => {
+export const useSmartAccountVersion = (contractAddress?: string) => {
     const { thor } = useConnex();
 
     return useQuery({
         queryKey: getVersionQueryKey(contractAddress),
         queryFn: async () => getVersion(thor, contractAddress),
-        enabled: !!thor && !!contractAddress,
+        enabled: !!thor && contractAddress !== '',
     });
 };

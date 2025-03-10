@@ -21,9 +21,15 @@ type Props = {
     wallet: Wallet;
     label?: string;
     style?: PropsOf<typeof VStack>;
+    showHumanAddress?: boolean;
 };
 
-export const AddressDisplay = ({ wallet, label, style }: Props) => {
+export const AddressDisplay = ({
+    wallet,
+    label,
+    style,
+    showHumanAddress = true,
+}: Props) => {
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
@@ -90,7 +96,15 @@ export const AddressDisplay = ({ wallet, label, style }: Props) => {
                             </InputLeftElement>
                             <Input
                                 cursor="pointer"
-                                value={humanAddress(wallet.address ?? '', 8, 7)}
+                                value={
+                                    showHumanAddress
+                                        ? humanAddress(
+                                              wallet.address ?? '',
+                                              8,
+                                              7,
+                                          )
+                                        : wallet.address
+                                }
                                 readOnly
                                 fontSize={'sm'}
                                 fontWeight={'700'}
@@ -127,7 +141,11 @@ export const AddressDisplay = ({ wallet, label, style }: Props) => {
                         </InputLeftElement>
                         <Input
                             cursor="pointer"
-                            value={humanAddress(wallet?.address ?? '', 6, 4)}
+                            value={
+                                showHumanAddress
+                                    ? humanAddress(wallet?.address ?? '', 6, 4)
+                                    : wallet?.address
+                            }
                             readOnly
                             fontSize={'sm'}
                             fontWeight={'700'}

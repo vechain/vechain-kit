@@ -15,6 +15,12 @@ import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import {
+    useUpgradeRequired,
+    useUpgradeSmartAccountModal,
+    useWallet,
+} from '@/hooks';
+import { useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -31,6 +37,14 @@ export const ChooseNameSummaryContent = ({
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { account, connectedWallet } = useWallet();
+    const { data: upgradeRequired } = useUpgradeRequired(
+        account?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
 
     const {
         sendTransaction,
@@ -68,6 +82,12 @@ export const ChooseNameSummaryContent = ({
             console.error('Transaction failed:', error);
         }
     };
+
+    useEffect(() => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+        }
+    }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
     return (
         <>
@@ -111,9 +131,11 @@ export const ChooseNameSummaryContent = ({
                     transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    handleSend={handleConfirm}
+                    onConfirm={handleConfirm}
                     transactionPendingText={t('Claiming name...')}
                     txReceipt={txReceipt}
+                    buttonText={t('Confirm')}
+                    isDisabled={isTransactionPending || upgradeRequired}
                 />
             </ModalFooter>
         </>

@@ -23,7 +23,7 @@ export type Wallet = {
 export type SmartAccount = Wallet & {
     isDeployed: boolean;
     isActive: boolean;
-    version: string | null;
+    version: number | null;
 };
 
 export type ConnectionSource = {
@@ -59,6 +59,34 @@ export type ExecuteWithAuthorizationSignData = {
         to: string | null | undefined;
         value: string;
         data: string;
+    };
+};
+
+export type ExecuteBatchWithAuthorizationSignData = {
+    domain: {
+        name: string;
+        version: string;
+        chainId: number;
+        verifyingContract: string;
+    };
+    types: {
+        ExecuteBatchWithAuthorization: {
+            name: string;
+            type: string;
+        }[];
+        EIP712Domain: {
+            name: string;
+            type: string;
+        }[];
+    };
+    primaryType: string;
+    message: {
+        to: string[] | null | undefined;
+        value: string[] | null | undefined;
+        data: string[] | null | undefined;
+        validAfter: number;
+        validBefore: number;
+        nonce: string;
     };
 };
 
@@ -114,12 +142,6 @@ export type PrivyAppInfo = {
 };
 
 export type PrivyLoginMethod = LoginMethodOrderOption;
-
-export type TransactionProgress = {
-    currentStep: number;
-    totalSteps: number;
-    currentStepDescription?: string;
-};
 
 export interface CrossAppConnectionCache {
     timestamp: number;

@@ -320,7 +320,6 @@ export function TransactionExamples() {
         resetStatus,
         isTransactionPending,
         error,
-        progress,
     } = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
     });
@@ -351,7 +350,6 @@ export function TransactionExamples() {
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
                 status={status}
-                progress={progress}
                 txId={txReceipt?.meta.txID}
                 errorDescription={error?.reason ?? 'Unknown error'}
                 showSocialButtons={true}

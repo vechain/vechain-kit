@@ -16,12 +16,18 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
-import { useTransferERC20, useTransferVET, useWallet } from '@/hooks';
+import {
+    useTransferERC20,
+    useTransferVET,
+    useUpgradeRequired,
+    useUpgradeSmartAccountModal,
+    useWallet,
+} from '@/hooks';
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { convertUriToUrl } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -63,9 +69,16 @@ export const SendTokenSummaryContent = ({
 }: SendTokenSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { account, connection } = useWallet();
+    const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
+    const { data: upgradeRequired } = useUpgradeRequired(
+        account?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {
@@ -156,6 +169,12 @@ export const SendTokenSummaryContent = ({
         transferVETWaitingForWalletConfirmation;
     const isSubmitting =
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
+
+    useEffect(() => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+        }
+    }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
     return (
         <>
@@ -254,9 +273,11 @@ export const SendTokenSummaryContent = ({
                     }
                     isSubmitting={isSubmitting}
                     isTxWaitingConfirmation={isTxWaitingConfirmation}
-                    handleSend={handleSend}
+                    onConfirm={handleSend}
                     transactionPendingText={t('Sending...')}
                     txReceipt={getTxReceipt()}
+                    buttonText={t('Confirm')}
+                    isDisabled={isSubmitting || upgradeRequired}
                 />
             </ModalFooter>
         </>
