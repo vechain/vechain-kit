@@ -173,8 +173,15 @@ export const UpgradeSmartAccountContent = ({
                         isDisabled={!upgradeRequired}
                     />
 
-                    <Button mt={2} variant={'link'} onClick={handleClose}>
-                        {t('Close and do this later')}
+                    <Button
+                        mt={2}
+                        variant={'link'}
+                        onClick={handleClose}
+                        isDisabled={isTransactionPending}
+                    >
+                        {upgradeRequired
+                            ? t('Close and do this later')
+                            : t('Close')}
                     </Button>
                 </VStack>
             </ModalFooter>
