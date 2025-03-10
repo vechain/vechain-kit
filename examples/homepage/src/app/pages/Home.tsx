@@ -240,13 +240,14 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <VStack spacing={0}>
+            <VStack spacing={0} align="center">
                 <Text fontSize={'md'} fontWeight={'bold'}>
                     Powered by
                 </Text>
                 <VechainLogoHorizontal
                     maxW={200}
                     isDark={colorMode === 'dark'}
+                    mt={-6}
                 />
             </VStack>
         </HStack>
