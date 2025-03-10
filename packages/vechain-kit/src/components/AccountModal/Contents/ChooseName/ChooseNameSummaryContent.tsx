@@ -28,12 +28,14 @@ export type ChooseNameSummaryContentProps = {
     >;
     name: string;
     isOwnDomain: boolean;
+    initialContentSource?: AccountModalContentTypes;
 };
 
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
     isOwnDomain,
+    initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -68,7 +70,7 @@ export const ChooseNameSummaryContent = ({
                         { name },
                     ),
                     onDone: () => {
-                        setCurrentContent('account-customization');
+                        setCurrentContent(initialContentSource);
                     },
                 },
             });
@@ -107,6 +109,7 @@ export const ChooseNameSummaryContent = ({
                             props: {
                                 setCurrentContent,
                                 name,
+                                initialContentSource,
                             },
                         })
                     }

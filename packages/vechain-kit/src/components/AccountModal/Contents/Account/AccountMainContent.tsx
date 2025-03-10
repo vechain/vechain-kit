@@ -1,19 +1,15 @@
 import {
+    HStack,
     ModalBody,
     ModalCloseButton,
-    ModalFooter,
     ModalHeader,
     VStack,
+    Tag,
 } from '@chakra-ui/react';
-import {
-    StickyHeaderContainer,
-    VersionFooter,
-    ScrollToTopWrapper,
-} from '@/components/common';
+import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
-    AssetsSection,
     BalanceSection,
     QuickActionsSection,
 } from '@/components';
@@ -34,7 +30,7 @@ type Props = {
 
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, network } = useVeChainKitConfig();
     const { connection, account } = useWallet();
 
     return (
@@ -56,36 +52,53 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack w={'full'} overflow={'hidden'}>
+                <VStack
+                    w={'full'}
+                    overflow={'hidden'}
+                    justifyContent={'flex-start'}
+                >
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
                         />
                     )}
 
-                    <AccountSelector
-                        mt={0}
-                        onClick={() => {
-                            setCurrentContent('settings');
-                        }}
-                        wallet={wallet}
-                    />
+                    <HStack w={'full'} justifyContent={'space-between'}>
+                        <AccountSelector
+                            mt={0}
+                            style={{ justifyContent: 'flex-start' }}
+                            onClick={() => {
+                                setCurrentContent('profile');
+                            }}
+                            wallet={wallet}
+                        />
+                        {network?.type !== 'main' && (
+                            <Tag
+                                size="xl"
+                                colorScheme="orange"
+                                fontSize={'xs'}
+                                p={2}
+                                textTransform={'capitalize'}
+                                textAlign={'center'}
+                            >
+                                {`${network?.type} network`}
+                            </Tag>
+                        )}
+                    </HStack>
 
-                    <BalanceSection mt={14} />
+                    <BalanceSection
+                        mt={8}
+                        onAssetsClick={() => {
+                            setCurrentContent('assets');
+                        }}
+                    />
 
                     <QuickActionsSection
-                        mt={14}
-                        setCurrentContent={setCurrentContent}
-                    />
-                    <AssetsSection
-                        mt={2}
+                        mt={8}
                         setCurrentContent={setCurrentContent}
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter>
-                <VersionFooter />
-            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

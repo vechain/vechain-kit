@@ -43,7 +43,11 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
                         {humanAddress(account.address ?? '', 4, 4)}
                     </Text>
                 </VStack>
-                <AssetIcons ml={2} address={account.address} maxIcons={3} />
+                <AssetIcons
+                    ml={2}
+                    address={account.address ?? ''}
+                    maxIcons={3}
+                />
             </HStack>
         );
     }

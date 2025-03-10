@@ -30,11 +30,13 @@ export type ChooseNameSearchContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    initialContentSource?: AccountModalContentTypes;
 };
 
 export const ChooseNameSearchContent = ({
     name: initialName,
     setCurrentContent,
+    initialContentSource = 'settings',
 }: ChooseNameSearchContentProps) => {
     const { t } = useTranslation();
     const { account } = useWallet();
@@ -122,6 +124,7 @@ export const ChooseNameSearchContent = ({
                     name,
                     isOwnDomain,
                     setCurrentContent,
+                    initialContentSource,
                 },
             });
         }
@@ -136,6 +139,7 @@ export const ChooseNameSearchContent = ({
                 name: baseName,
                 isOwnDomain: true,
                 setCurrentContent,
+                initialContentSource,
             },
         });
     };
@@ -152,12 +156,7 @@ export const ChooseNameSearchContent = ({
                     {t('Choose Name')}
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() =>
-                        // if the user has a domain, go to accounts
-                        account?.domain
-                            ? setCurrentContent('account-customization')
-                            : setCurrentContent('choose-name')
-                    }
+                    onClick={() => setCurrentContent(initialContentSource)}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -237,11 +236,7 @@ export const ChooseNameSearchContent = ({
 
             <ModalFooter>
                 <Button
-                    px={4}
-                    width="full"
-                    height="60px"
-                    variant="solid"
-                    borderRadius="xl"
+                    variant="vechainKitSecondary"
                     isDisabled={
                         !isAvailable ||
                         !!error ||

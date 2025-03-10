@@ -18,7 +18,7 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
 } from '@/components/common';
-import { useUpgradeSmartAccount, useWallet } from '@/hooks';
+import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
 import { UpgradeSmartAccountModalContentsTypes } from '../UpgradeSmartAccountModal';
 
 type Props = {
@@ -34,7 +34,12 @@ export const UpgradeSmartAccountContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { smartAccount } = useWallet();
+    const { smartAccount, connectedWallet } = useWallet();
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
 
     // Set up the upgrade transaction
     const {
@@ -149,13 +154,18 @@ export const UpgradeSmartAccountContent = ({
             <ModalFooter justifyContent="center">
                 <VStack spacing={3} w="full">
                     <TransactionButtonAndStatus
-                        buttonText={t('Upgrade account')}
+                        buttonText={
+                            upgradeRequired
+                                ? t('Upgrade account')
+                                : t('Account already upgraded')
+                        }
                         onConfirm={handleUpgrade}
                         isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                         isSubmitting={isTransactionPending}
                         transactionPendingText={t('Upgrading...')}
                         txReceipt={txReceipt}
                         transactionError={upgradeError}
+                        isDisabled={!upgradeRequired}
                     />
                 </VStack>
             </ModalFooter>

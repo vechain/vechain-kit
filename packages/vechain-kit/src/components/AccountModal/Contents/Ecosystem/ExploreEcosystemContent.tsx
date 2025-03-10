@@ -113,7 +113,7 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Apps')}
+                    {t('Ecosystem')}
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />

@@ -49,11 +49,7 @@ export const TransactionButtonAndStatus = ({
             )}
             <Button
                 px={4}
-                width="full"
-                height="48px"
-                variant="solid"
-                borderRadius="xl"
-                colorScheme="blue"
+                variant="vechainKitPrimary"
                 onClick={onConfirm}
                 type={isSubmitForm ? 'submit' : 'button'}
                 isLoading={isSubmitting}

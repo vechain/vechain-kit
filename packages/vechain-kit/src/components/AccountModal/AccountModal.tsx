@@ -17,6 +17,8 @@ import {
     AccessAndSecurityContent,
     EmbeddedWalletContent,
     ProfileContent,
+    AssetsContent,
+    BridgeContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -27,7 +29,7 @@ import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
-import { ManageCustomTokenContent } from './Contents/ManageCustomToken';
+import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 
@@ -65,6 +67,8 @@ export const AccountModal = ({
                     return (
                         <SendTokenSummaryContent {...currentContent.props} />
                     );
+                case 'choose-name':
+                    return <ChooseNameContent {...currentContent.props} />;
                 case 'choose-name-search':
                     return (
                         <ChooseNameSearchContent {...currentContent.props} />
@@ -124,6 +128,10 @@ export const AccountModal = ({
                         onLogoutSuccess={onClose}
                     />
                 );
+            case 'assets':
+                return <AssetsContent setCurrentContent={setCurrentContent} />;
+            case 'bridge':
+                return <BridgeContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent
@@ -145,10 +153,6 @@ export const AccountModal = ({
             case 'swap-token':
                 return (
                     <SwapTokenContent setCurrentContent={setCurrentContent} />
-                );
-            case 'choose-name':
-                return (
-                    <ChooseNameContent setCurrentContent={setCurrentContent} />
                 );
             case 'faq':
                 return (

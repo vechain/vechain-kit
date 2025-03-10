@@ -25,8 +25,9 @@ export const useUpgradeSmartAccount = ({
     onSuccess,
     onError,
 }: UseUpgradeSmartAccountVersionProps): UseUpgradeSmartAccountVersionReturnValue => {
-    const { refresh: refreshSmartAccount } = useRefreshSmartAccountQueries();
-    const { refresh: refreshFactory } = useRefreshFactoryQueries();
+    const { refresh: refreshFactoryQueries } = useRefreshFactoryQueries();
+    const { refresh: refreshSmartAccountQueries } =
+        useRefreshSmartAccountQueries();
 
     // Fetch the new implementation address for the requested version
     const { data: newImplementationAddress } =
@@ -57,10 +58,14 @@ export const useUpgradeSmartAccount = ({
         ];
     }, [smartAccountAddress, newImplementationAddress, targetVersion]);
 
-    const handleOnSuccess = useCallback(async () => {
-        await Promise.all([refreshSmartAccount(), refreshFactory()]);
+    const handleOnSuccess = async () => {
+        // Refresh all relevant queries
+        await Promise.all([
+            refreshFactoryQueries(),
+            refreshSmartAccountQueries(),
+        ]);
         onSuccess?.();
-    }, [refreshSmartAccount, refreshFactory, onSuccess]);
+    };
 
     const result = useSendTransaction({
         privyUIOptions: {

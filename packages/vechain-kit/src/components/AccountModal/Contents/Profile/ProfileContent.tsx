@@ -3,6 +3,7 @@ import {
     ModalCloseButton,
     ModalHeader,
     Box,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { ProfileCard } from '@/components';
@@ -58,12 +59,13 @@ export const ProfileContent = ({
                                     disconnect();
                                     onLogoutSuccess?.();
                                 },
-                                onBack: () => setCurrentContent?.('settings'),
+                                onBack: () => setCurrentContent?.('profile'),
                             },
                         });
                     }}
                 />
             </ModalBody>
+            <ModalFooter />
         </Box>
     );
 };

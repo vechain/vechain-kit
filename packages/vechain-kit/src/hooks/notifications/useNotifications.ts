@@ -83,6 +83,23 @@ export const useNotifications = () => {
         [account?.address, getNotifications, getStorageKeys],
     );
 
+    const deleteNotification = useCallback(
+        (notificationId: string) => {
+            if (!account?.address) return;
+
+            const keys = getStorageKeys(account.address);
+            const notifications = getNotifications();
+            const updatedNotifications = notifications.filter(
+                (n) => n.id !== notificationId,
+            );
+            localStorage.setItem(
+                keys.notifications,
+                JSON.stringify(updatedNotifications),
+            );
+        },
+        [account?.address, getNotifications, getStorageKeys],
+    );
+
     const clearAllNotifications = useCallback(() => {
         if (!account?.address) return;
 
@@ -150,5 +167,6 @@ export const useNotifications = () => {
         addNotification,
         clearAllNotifications,
         markAsRead,
+        deleteNotification,
     };
 };

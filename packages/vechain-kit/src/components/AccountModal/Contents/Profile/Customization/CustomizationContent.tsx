@@ -205,9 +205,7 @@ export const CustomizationContent = ({
                 >
                     {t('Customization')}
                 </ModalHeader>
-                <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
-                />
+                <ModalBackButton onClick={() => setCurrentContent('profile')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -322,10 +320,23 @@ export const CustomizationContent = ({
                                             props: {
                                                 name: '',
                                                 setCurrentContent,
+                                                initialContentSource:
+                                                    'account-customization',
                                             },
                                         });
                                     } else {
-                                        setCurrentContent('choose-name');
+                                        setCurrentContent({
+                                            type: 'choose-name',
+                                            props: {
+                                                setCurrentContent,
+                                                initialContentSource:
+                                                    'account-customization',
+                                                onBack: () =>
+                                                    setCurrentContent(
+                                                        'account-customization',
+                                                    ),
+                                            },
+                                        });
                                     }
                                 }}
                                 leftIcon={FaRegAddressCard}
@@ -509,12 +520,7 @@ export const CustomizationContent = ({
             <StickyFooterContainer>
                 <ModalFooter w="full" p={0}>
                     <Button
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
-                        colorScheme="blue"
+                        variant="vechainKitPrimary"
                         onClick={handleSaveChanges}
                         isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}

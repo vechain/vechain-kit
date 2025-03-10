@@ -1,6 +1,6 @@
 'use client';
 
-import { Text, Icon, HStack, Button } from '@chakra-ui/react';
+import { Text, Icon, HStack, Button, StackProps } from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
@@ -11,6 +11,7 @@ type Props = {
     size?: string;
     onClick?: () => void;
     mt?: number;
+    style?: StackProps;
 };
 
 export const AccountSelector = ({
@@ -18,14 +19,15 @@ export const AccountSelector = ({
     size = 'md',
     onClick,
     mt,
+    style,
 }: Props) => {
     return (
-        <HStack mt={mt} w={'full'} justify={'center'}>
+        <HStack mt={mt} w={'full'} {...style}>
             <Button
                 w="fit-content"
                 p={2}
                 pl={4}
-                h={14}
+                h={12}
                 aria-label="Wallet"
                 onClick={onClick}
                 variant="vechainKitSelector"
@@ -33,10 +35,10 @@ export const AccountSelector = ({
                 <HStack spacing={2} align="center">
                     <AccountAvatar
                         wallet={wallet}
-                        props={{ width: 10, height: 10 }}
+                        props={{ width: 7, height: 7 }}
                     />
                     <Text fontSize={size} fontWeight="500">
-                        {humanDomain(wallet?.domain ?? '', 20, 0) ||
+                        {humanDomain(wallet?.domain ?? '', 15, 0) ||
                             humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
 

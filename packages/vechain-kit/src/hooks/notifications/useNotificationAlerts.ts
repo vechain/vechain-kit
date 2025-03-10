@@ -21,7 +21,8 @@ export const DEFAULT_NOTIFICATIONS = [
 export const useNotificationAlerts = () => {
     const { t } = useTranslation();
     const { account, connection, smartAccount } = useWallet();
-    const { addNotification, getNotifications } = useNotifications();
+    const { addNotification, getNotifications, markAsRead } =
+        useNotifications();
 
     // Check if smart account needs upgrade to version 3 (only for deployed smart accounts)
     const { data: upgradeRequired } = useUpgradeRequiredForAccount(
@@ -31,23 +32,18 @@ export const useNotificationAlerts = () => {
 
     // Smart Account Upgrade Alert
     useEffect(() => {
-        if (
-            !connection.isConnectedWithPrivy ||
-            !account?.address ||
-            !upgradeRequired
-        )
-            return;
+        if (!connection.isConnectedWithPrivy || !account?.address) return;
 
         const notifications = getNotifications();
+        const upgradeNotificationId = `smart_account_upgrade_${account.address.toLowerCase()}`;
         const hasUpgradeNotification = notifications.some(
-            (n) =>
-                n.id ===
-                `smart_account_upgrade_${account.address.toLowerCase()}`,
+            (n) => n.id === upgradeNotificationId,
         );
 
+        // Show notification if upgrade is required and not already shown
         if (!hasUpgradeNotification && upgradeRequired) {
             addNotification({
-                id: `smart_account_upgrade_${account.address.toLowerCase()}`,
+                id: upgradeNotificationId,
                 title: t('Account Upgrade Required'),
                 description: t(
                     'A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.',
@@ -58,6 +54,10 @@ export const useNotificationAlerts = () => {
                     content: 'upgrade-smart-account',
                 },
             });
+        }
+        // Remove notification if upgrade is no longer required
+        else if (hasUpgradeNotification && !upgradeRequired) {
+            markAsRead(upgradeNotificationId);
         }
     }, [connection.isConnectedWithPrivy, account?.address, upgradeRequired]);
 

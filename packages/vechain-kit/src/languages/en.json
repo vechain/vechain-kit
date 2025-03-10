@@ -450,5 +450,19 @@
     "Upgrade Now": "Upgrade Now",
     "To continue interacting with VeChain blockchain and complete your operation, your smart account needs to be upgraded to the latest version (v3).": "To continue interacting with VeChain blockchain and complete your operation, your smart account needs to be upgraded to the latest version (v3).",
     "Customize": "Customize",
-    "Choose a name for your account.": "Choose a name for your account."
+    "Choose a name for your account.": "Choose a name for your account.",
+    "Quick actions": "Quick actions",
+    "Total balance": "Total balance",
+    "Bridge": "Bridge",
+    "No assets": "No assets",
+    "Activities": "Activities",
+    "Login methods and Passkeys": "Login methods and Passkeys",
+    "Launch vechain.energy": "Launch vechain.energy",
+    "Account already upgraded": "Account already upgraded",
+    "Your smart account is already upgraded to this version.": "Your smart account is already upgraded to this version.",
+    "Manage on VeBetterDAO": "Manage on VeBetterDAO",
+    "Exchange your digital assets between VeChain and other blockchain networks easily and securely. Swaps are executed through partners that leverage both decentralized and centralized exchanges to convert tokens.": "Exchange your digital assets between VeChain and other blockchain networks easily and securely. Swaps are executed through partners that leverage both decentralized and centralized exchanges to convert tokens.",
+    "A .vet domain is required to customize your profile. Choose an account name to get started.": "A .vet domain is required to customize your profile. Choose an account name to get started.",
+    "Set up a passkey for easier access": "Set up a passkey for easier access",
+    "Set up Passkey": "Set up Passkey"
 }

@@ -22,7 +22,7 @@ type Props = {
     >;
 };
 
-export const SwapTokenContent = ({ setCurrentContent }: Props) => {
+export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
@@ -35,7 +35,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                     textAlign={'center'}
                     color={isDark ? '#dfdfdd' : '#4d4d4d'}
                 >
-                    {t('Swap')}
+                    {t('Bridge')}
                 </ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -45,8 +45,12 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                 <ModalBody>
                     <VStack spacing={6} align="center" w="full">
                         <Image
-                            src={'https://i.ibb.co/S75JGc9/download-1.png'}
-                            alt="swap token"
+                            src={
+                                isDark
+                                    ? 'https://app.vechain.energy/assets/logo-dark.svg'
+                                    : 'https://app.vechain.energy/assets/logo-light.svg'
+                            }
+                            alt="bridge token"
                             w={'200px'}
                             h={'200px'}
                             borderRadius={'xl'}
@@ -54,7 +58,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
 
                         <Text fontSize="sm" textAlign="center">
                             {t(
-                                "BetterSwap is VeChain's trusted decentralized exchange (DEX) for seamless token swaps. Effortlessly trade VeChain assets in a secure, fast, and user-friendly environment. Click below to get started!",
+                                'Exchange your digital assets between VeChain and other blockchain networks easily and securely. Swaps are executed through partners that leverage both decentralized and centralized exchanges to convert tokens.',
                             )}
                         </Text>
                     </VStack>
@@ -65,10 +69,10 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                 <Button
                     variant="vechainKitSecondary"
                     onClick={() => {
-                        window.open('https://swap.tbc.vet/', '_blank');
+                        window.open('https://swap.vechain.energy/', '_blank');
                     }}
                 >
-                    {t('Launch BetterSwap')}
+                    {t('Launch vechain.energy')}
                     <Icon as={FaExternalLinkAlt} ml={2} />
                 </Button>
             </ModalFooter>

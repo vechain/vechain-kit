@@ -17,7 +17,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { ShortcutButton } from './Components/ShortcutButton';
 
-type Props = {
+export type AppOverviewContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -33,7 +33,7 @@ export const AppOverviewContent = ({
     image,
     url,
     description,
-}: Props) => {
+}: AppOverviewContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
@@ -81,11 +81,7 @@ export const AppOverviewContent = ({
             <ModalFooter>
                 <VStack w="full" spacing={4}>
                     <Button
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
+                        variant="vechainKitSecondary"
                         onClick={() => {
                             window.open(url, '_blank');
                         }}

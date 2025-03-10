@@ -20,7 +20,7 @@ import {
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { useUpgradeSmartAccount, useWallet } from '@/hooks';
+import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,7 +35,12 @@ export const UpgradeSmartAccountContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { smartAccount } = useWallet();
+    const { smartAccount, connectedWallet } = useWallet();
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
 
     // Set up the upgrade transaction
     const {
@@ -95,9 +100,13 @@ export const UpgradeSmartAccountContent = ({
             <ModalBody>
                 <VStack spacing={6} align="stretch">
                     <Text fontSize="sm" textAlign="center">
-                        {t(
-                            'Your smart account needs to be upgraded to the latest version (v3).',
-                        )}
+                        {upgradeRequired
+                            ? t(
+                                  'Your smart account needs to be upgraded to the latest version (v3).',
+                              )
+                            : t(
+                                  'Your smart account is already upgraded to this version.',
+                              )}
                     </Text>
 
                     <Alert status="info" borderRadius="md">
@@ -150,13 +159,18 @@ export const UpgradeSmartAccountContent = ({
             <ModalFooter justifyContent="center">
                 <VStack spacing={3} w="full">
                     <TransactionButtonAndStatus
-                        buttonText={t('Upgrade account')}
+                        buttonText={
+                            upgradeRequired
+                                ? t('Upgrade account')
+                                : t('Account already upgraded')
+                        }
                         onConfirm={handleUpgrade}
                         isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                         isSubmitting={isTransactionPending}
                         transactionPendingText={t('Upgrading...')}
                         txReceipt={txReceipt}
                         transactionError={upgradeError}
+                        isDisabled={!upgradeRequired}
                     />
 
                     <Button mt={2} variant={'link'} onClick={handleClose}>

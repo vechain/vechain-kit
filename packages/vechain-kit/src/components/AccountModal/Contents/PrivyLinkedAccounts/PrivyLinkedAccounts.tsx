@@ -341,6 +341,15 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 </StickyHeaderContainer>
                 <ModalBody w="full">
                     <VStack spacing={3} align="stretch" w="full">
+                        <ActionButton
+                            title={t('Set up Passkey')}
+                            description={t(
+                                'Set up a passkey for easier access',
+                            )}
+                            onClick={() => linkPasskey()}
+                            leftIcon={IoIosFingerPrint}
+                        />
+
                         {canLinkGoogle && (
                             <ActionButton
                                 title={t('Link Google Account')}

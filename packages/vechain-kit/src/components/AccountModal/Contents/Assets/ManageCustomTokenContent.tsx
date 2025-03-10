@@ -87,7 +87,7 @@ export const ManageCustomTokenContent = ({
                 >
                     {t('Manage Custom Tokens')}
                 </ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                <ModalBackButton onClick={() => setCurrentContent('assets')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
