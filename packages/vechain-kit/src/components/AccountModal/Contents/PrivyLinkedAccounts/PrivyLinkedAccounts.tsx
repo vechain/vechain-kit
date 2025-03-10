@@ -688,34 +688,33 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 </Button>
                             </Flex>
                         ))}
-
-                    <Button
-                        mt={2}
-                        w="full"
-                        variant="vechainKitSecondary"
-                        onClick={() => setShowLinkOptions(true)}
-                        leftIcon={<Icon as={FaPlus} />}
-                        isDisabled={
-                            !canLinkGoogle &&
-                            !canLinkEmail &&
-                            !canLinkTwitter &&
-                            !canLinkSms &&
-                            !canLinkSpotify &&
-                            !canLinkApple &&
-                            !canLinkInstagram &&
-                            !canLinkTiktok &&
-                            !canLinkGithub &&
-                            !canLinkLinkedin &&
-                            !canLinkTelegram &&
-                            !canLinkFarcaster &&
-                            !canLinkDiscord
-                        }
-                    >
-                        {t('Add Login Method')}
-                    </Button>
                 </VStack>
             </ModalBody>
-            <ModalFooter></ModalFooter>
+            <ModalFooter>
+                <Button
+                    w="full"
+                    variant="vechainKitSecondary"
+                    onClick={() => setShowLinkOptions(true)}
+                    leftIcon={<Icon as={FaPlus} />}
+                    isDisabled={
+                        !canLinkGoogle &&
+                        !canLinkEmail &&
+                        !canLinkTwitter &&
+                        !canLinkSms &&
+                        !canLinkSpotify &&
+                        !canLinkApple &&
+                        !canLinkInstagram &&
+                        !canLinkTiktok &&
+                        !canLinkGithub &&
+                        !canLinkLinkedin &&
+                        !canLinkTelegram &&
+                        !canLinkFarcaster &&
+                        !canLinkDiscord
+                    }
+                >
+                    {t('Add Login Method')}
+                </Button>
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

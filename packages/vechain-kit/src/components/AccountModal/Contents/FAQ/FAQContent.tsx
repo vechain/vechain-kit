@@ -11,6 +11,7 @@ import {
     Heading,
     Tag,
     Select,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import {
@@ -112,19 +113,20 @@ export const FAQContent = ({ onGoBack }: Props) => {
                     </Heading>
 
                     <FAQAccordion />
-
-                    <Button
-                        as={Link}
-                        href="https://docs.vechainkit.vechain.org/"
-                        isExternal
-                        variant="vechainKitSecondary"
-                        rightIcon={<Icon as={FaExternalLinkAlt} />}
-                        mt={4}
-                    >
-                        {t('For developers')}
-                    </Button>
                 </VStack>
             </ModalBody>
+            <ModalFooter>
+                <Button
+                    as={Link}
+                    href="https://docs.vechainkit.vechain.org/"
+                    isExternal
+                    variant="vechainKitSecondary"
+                    rightIcon={<Icon as={FaExternalLinkAlt} />}
+                    mt={4}
+                >
+                    {t('For developers')}
+                </Button>
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };
