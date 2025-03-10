@@ -110,7 +110,7 @@ const variants = {
     mainContentButton: defineStyle(({ colorMode }) => ({
         width: '100%',
         backgroundColor:
-            colorMode === 'dark' ? 'whiteAlpha.200' : 'blackAlpha100',
+            colorMode === 'dark' ? 'whiteAlpha.200' : 'blackAlpha.100',
         borderRadius: 'xl',
         p: 3,
         cursor: 'pointer',

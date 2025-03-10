@@ -102,14 +102,14 @@ export const BalanceSection = ({
                         mt: 2,
                         backgroundColor: isDark
                             ? 'whiteAlpha.200'
-                            : 'blackAlpha.200',
+                            : 'blackAlpha.100',
                         borderRadius: 'xl',
                         p: 3,
                         cursor: 'pointer',
                         _hover: {
                             backgroundColor: isDark
                                 ? 'whiteAlpha.300'
-                                : 'blackAlpha.300',
+                                : 'blackAlpha.200',
                         },
                         justifyContent: 'space-between',
                     }}
