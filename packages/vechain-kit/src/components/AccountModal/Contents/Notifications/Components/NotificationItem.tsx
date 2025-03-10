@@ -2,10 +2,8 @@ import {
     Alert,
     AlertIcon,
     Box,
-    Text,
     AlertDescription,
     IconButton,
-    VStack,
     AlertTitle,
 } from '@chakra-ui/react';
 import { IoCloseCircle } from 'react-icons/io5';
@@ -42,7 +40,6 @@ export const NotificationItem = ({
             <AlertIcon boxSize={'16px'} />
             <Box>
                 <AlertTitle fontSize={'sm'}>
-                    {' '}
                     {/* @ts-ignore */}
                     {t(notification.title)}
                 </AlertTitle>
