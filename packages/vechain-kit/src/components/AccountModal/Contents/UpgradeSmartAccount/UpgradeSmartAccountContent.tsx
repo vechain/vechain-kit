@@ -16,23 +16,26 @@ import { useTranslation } from 'react-i18next';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useVeChainKitConfig } from '@/providers';
 import {
+    ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
 
-type Props = {
+export type UpgradeSmartAccountContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    handleClose: () => void;
+    handleClose?: () => void;
+    initialContent?: AccountModalContentTypes;
 };
 
 export const UpgradeSmartAccountContent = ({
     setCurrentContent,
     handleClose,
-}: Props) => {
+    initialContent = 'access-and-security',
+}: UpgradeSmartAccountContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { smartAccount, connectedWallet } = useWallet();
@@ -63,7 +66,11 @@ export const UpgradeSmartAccountContent = ({
                         'Your account has been successfully upgraded to the latest version. You can now enjoy a better user experience, lower gas costs, and enhanced security.',
                     ),
                     onDone: () => {
-                        handleClose();
+                        if (handleClose) {
+                            handleClose();
+                        } else {
+                            setCurrentContent(initialContent);
+                        }
                     },
                     showSocialButtons: false,
                 },
@@ -94,6 +101,11 @@ export const UpgradeSmartAccountContent = ({
                 >
                     {t('Account upgrade required')}
                 </ModalHeader>
+                <ModalBackButton
+                    onClick={() => {
+                        setCurrentContent(initialContent);
+                    }}
+                />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -176,7 +188,13 @@ export const UpgradeSmartAccountContent = ({
                     <Button
                         mt={2}
                         variant={'link'}
-                        onClick={handleClose}
+                        onClick={() => {
+                            if (handleClose) {
+                                handleClose();
+                            } else {
+                                setCurrentContent(initialContent);
+                            }
+                        }}
                         isDisabled={isTransactionPending}
                     >
                         {upgradeRequired

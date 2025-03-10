@@ -102,6 +102,10 @@ export const AccountModal = ({
                             setCurrentContent={setCurrentContent}
                         />
                     );
+                case 'upgrade-smart-account':
+                    return (
+                        <UpgradeSmartAccountContent {...currentContent.props} />
+                    );
             }
         }
 
@@ -194,13 +198,6 @@ export const AccountModal = ({
                 return (
                     <ManageCustomTokenContent
                         setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'upgrade-smart-account':
-                return (
-                    <UpgradeSmartAccountContent
-                        setCurrentContent={setCurrentContent}
-                        handleClose={onClose}
                     />
                 );
         }

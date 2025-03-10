@@ -3,6 +3,7 @@ import {
     ChooseNameSearchContentProps,
     ChooseNameSummaryContentProps,
     CustomizationSummaryContentProps,
+    UpgradeSmartAccountContentProps,
 } from '../Contents';
 import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
@@ -26,7 +27,6 @@ export type AccountModalContentTypes =
     | 'privy-linked-accounts'
     | 'account-customization'
     | 'add-custom-token'
-    | 'upgrade-smart-account'
     | 'assets'
     | 'bridge'
     | {
@@ -58,4 +58,8 @@ export type AccountModalContentTypes =
     | {
           type: 'disconnect-confirm';
           props: DisconnectConfirmContentProps;
+      }
+    | {
+          type: 'upgrade-smart-account';
+          props: UpgradeSmartAccountContentProps;
       };

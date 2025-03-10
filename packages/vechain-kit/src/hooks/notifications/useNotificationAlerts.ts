@@ -46,13 +46,9 @@ export const useNotificationAlerts = () => {
                 id: upgradeNotificationId,
                 title: t('Account Upgrade Required'),
                 description: t(
-                    'A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.',
+                    "A new upgrade is available for your smart account. Please head over to the 'Access and Security' section to upgrade it.",
                 ),
                 status: 'warning',
-                action: {
-                    label: t('Upgrade Now', 'Upgrade Now'),
-                    content: 'upgrade-smart-account',
-                },
             });
         }
         // Remove notification if upgrade is no longer required
