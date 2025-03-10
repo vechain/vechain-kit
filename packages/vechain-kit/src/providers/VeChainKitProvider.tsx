@@ -316,6 +316,7 @@ export const VeChainKitProvider = (
                             modalParent={dappKit.modalParent}
                             onSourceClick={dappKit.onSourceClick}
                             usePersistence={dappKit.usePersistence ?? true}
+                            allowedWallets={dappKit.allowedWallets}
                             walletConnectOptions={dappKit.walletConnectOptions}
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={{
