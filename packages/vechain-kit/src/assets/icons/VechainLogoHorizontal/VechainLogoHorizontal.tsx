@@ -13,10 +13,10 @@ export const VechainLogoHorizontal: React.FC<Props> = ({
         <Image
             src={
                 isDark
-                    ? 'https://i.ibb.co/zGdf6FS/01-Logo-Orizzontale-Negativo-RGB.png'
-                    : 'https://i.ibb.co/KNVyJTM/01-Logo-Orizzontale-Positivo-RGB.png'
+                    ? '../../logo/vechain-logo-quartz.png'
+                    : '../../logo/vechain-logo-navy.png'
             }
-            alt="Vechain Logo Horizontal"
+            alt="VeChain Logo Horizontal"
             {...props}
         />
     );
