@@ -47,11 +47,11 @@ export const getUpgradeRequiredQueryKey = (
 ];
 
 /**
- * Check if a smart account has a v1 smart account
+ * Check if a smart account needs an upgrade (even if it's not yet deployed)
  * @param accountAddress - The address of the smart account
  * @param ownerAddress - The address of the owner of the smart account
  * @param targetVersion - The version of the smart account to check for
- * @returns True if the smart account has a v1 smart account, false otherwise
+ * @returns True if the smart account needs an upgrade, false otherwise
  */
 export const useUpgradeRequired = (
     accountAddress: string,

@@ -28,23 +28,6 @@ export function UIControls() {
                 </Text>
 
                 <HStack w={'full'} justifyContent={'space-between'}>
-                    {/* <VStack
-                        w={'full'}
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Text fontWeight="bold">Login Modal UI</Text>
-                        <Text fontSize="sm" textAlign="center" color="gray.400">
-                            Login Modal UI is customizable. You can customize
-                            the login modal UI by slecting different variants.
-                        </Text>
-                        <Button onClick={openConnectModal}>
-                            Variant "full"
-                        </Button>
-                    </VStack> */}
-
                     {/* Mobile Variants */}
                     <HStack w={'full'} justifyContent={'center'}>
                         <VStack
