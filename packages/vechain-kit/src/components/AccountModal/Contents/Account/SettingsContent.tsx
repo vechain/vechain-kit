@@ -44,7 +44,7 @@ export const SettingsContent = ({
 
     const { privy, darkMode: isDark } = useVeChainKitConfig();
 
-    const { connection, disconnect } = useWallet();
+    const { connection, disconnect, account } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -89,14 +89,26 @@ export const SettingsContent = ({
                         title={t('Choose account name')}
                         description={t('Choose a name for your account.')}
                         onClick={() => {
-                            setCurrentContent({
-                                type: 'choose-name',
-                                props: {
-                                    setCurrentContent,
-                                    onBack: () => setCurrentContent('settings'),
-                                    initialContentSource: 'settings',
-                                },
-                            });
+                            if (account?.domain) {
+                                setCurrentContent({
+                                    type: 'choose-name-search',
+                                    props: {
+                                        name: '',
+                                        setCurrentContent,
+                                        initialContentSource: 'settings',
+                                    },
+                                });
+                            } else {
+                                setCurrentContent({
+                                    type: 'choose-name',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContentSource: 'settings',
+                                        onBack: () =>
+                                            setCurrentContent('settings'),
+                                    },
+                                });
+                            }
                         }}
                         leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
