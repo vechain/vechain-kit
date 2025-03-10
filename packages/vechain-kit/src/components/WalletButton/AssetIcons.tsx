@@ -57,13 +57,23 @@ export const AssetIcons = ({
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <Image
-                        src={TOKEN_LOGOS[token.symbol]}
-                        alt={`${token.symbol} logo`}
-                        width={`${iconSize * 0.8}px`}
-                        height={`${iconSize * 0.8}px`}
-                        rounded="full"
-                    />
+                    {TOKEN_LOGOS[token.symbol] ? (
+                        <Image
+                            src={TOKEN_LOGOS[token.symbol]}
+                            alt={`${token.symbol} logo`}
+                            width={`${iconSize * 0.8}px`}
+                            height={`${iconSize * 0.8}px`}
+                            rounded="full"
+                        />
+                    ) : (
+                        <Text
+                            fontSize={`${iconSize * 0.4}px`}
+                            fontWeight="bold"
+                            color={darkMode ? 'black' : 'white'}
+                        >
+                            {token.symbol.slice(0, 3)}
+                        </Text>
+                    )}
                 </Circle>
             ))}
             {remainingTokens > 0 && (

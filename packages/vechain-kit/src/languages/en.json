@@ -469,5 +469,8 @@
     "Ready": "Ready",
     "Unknown status": "Unknown status",
     "Confirm transaction": "Confirm transaction",
-    "Confirm the transaction in your wallet to complete it.": "Confirm the transaction in your wallet to complete it."
+    "Confirm the transaction in your wallet to complete it.": "Confirm the transaction in your wallet to complete it.",
+    "Upgrade Smart Account to V3": "Upgrade Smart Account to V3",
+    "A new version is available for your account": "A new version is available for your account",
+    "A new upgrade is available for your smart account. Please head over to the 'Access and Security' section to upgrade it.": "A new upgrade is available for your smart account. Please head over to the 'Access and Security' section to upgrade it."
 }

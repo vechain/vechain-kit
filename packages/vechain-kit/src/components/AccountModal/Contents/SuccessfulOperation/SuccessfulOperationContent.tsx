@@ -78,7 +78,7 @@ export const SuccessfulOperationContent = ({
                     </motion.div>
 
                     {description && (
-                        <Text fontSize="md" textAlign="center">
+                        <Text fontSize="sm" textAlign="center">
                             {description}
                         </Text>
                     )}

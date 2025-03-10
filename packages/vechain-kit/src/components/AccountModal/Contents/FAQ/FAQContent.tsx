@@ -11,6 +11,7 @@ import {
     Heading,
     Tag,
     Select,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import {
@@ -24,11 +25,11 @@ import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
 
-type Props = {
+export type FAQContentProps = {
     onGoBack: () => void;
 };
 
-export const FAQContent = ({ onGoBack }: Props) => {
+export const FAQContent = ({ onGoBack }: FAQContentProps) => {
     const { network, darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
 
@@ -112,19 +113,20 @@ export const FAQContent = ({ onGoBack }: Props) => {
                     </Heading>
 
                     <FAQAccordion />
-
-                    <Button
-                        as={Link}
-                        href="https://docs.vechainkit.vechain.org/"
-                        isExternal
-                        variant="vechainKitSecondary"
-                        rightIcon={<Icon as={FaExternalLinkAlt} />}
-                        mt={4}
-                    >
-                        {t('For developers')}
-                    </Button>
                 </VStack>
             </ModalBody>
+            <ModalFooter>
+                <Button
+                    as={Link}
+                    href="https://docs.vechainkit.vechain.org/"
+                    isExternal
+                    variant="vechainKitSecondary"
+                    rightIcon={<Icon as={FaExternalLinkAlt} />}
+                    mt={4}
+                >
+                    {t('For developers')}
+                </Button>
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

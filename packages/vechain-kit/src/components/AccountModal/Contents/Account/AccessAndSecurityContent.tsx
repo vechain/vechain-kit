@@ -8,7 +8,12 @@ import {
     Icon,
     Button,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet, useMfaEnrollment } from '@/hooks';
+import {
+    usePrivy,
+    useWallet,
+    useMfaEnrollment,
+    useUpgradeRequired,
+} from '@/hooks';
 import React from 'react';
 import {
     ModalBackButton,
@@ -39,7 +44,13 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { showMfaEnrollmentModal } = useMfaEnrollment();
 
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { connection } = useWallet();
+    const { connection, smartAccount, connectedWallet } = useWallet();
+
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
 
     return (
         <ScrollToTopWrapper>
@@ -134,6 +145,25 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={HiOutlineShieldCheck}
                     />
+
+                    {upgradeRequired && (
+                        <ActionButton
+                            title={t('Upgrade Smart Account to V3')}
+                            description={t(
+                                'A new version is available for your account',
+                            )}
+                            onClick={() => {
+                                setCurrentContent({
+                                    type: 'upgrade-smart-account',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContent: 'access-and-security',
+                                    },
+                                });
+                            }}
+                            leftIcon={HiOutlineShieldCheck}
+                        />
+                    )}
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>
