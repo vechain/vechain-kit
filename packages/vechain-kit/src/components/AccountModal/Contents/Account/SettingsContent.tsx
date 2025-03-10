@@ -15,11 +15,7 @@ import {
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    VersionFooter,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
@@ -218,8 +214,6 @@ export const SettingsContent = ({
                     >
                         {t('Logout')}
                     </Button>
-
-                    <VersionFooter />
                 </VStack>
             </ModalFooter>
         </Box>

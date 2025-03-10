@@ -21,8 +21,7 @@ export const DEFAULT_NOTIFICATIONS = [
 export const useNotificationAlerts = () => {
     const { t } = useTranslation();
     const { account, connection, smartAccount } = useWallet();
-    const { addNotification, getNotifications, markAsRead } =
-        useNotifications();
+    const { addNotification, getNotifications } = useNotifications();
 
     // Check if smart account needs upgrade to version 3 (only for deployed smart accounts)
     const { data: upgradeRequired } = useUpgradeRequiredForAccount(
@@ -50,10 +49,6 @@ export const useNotificationAlerts = () => {
                 ),
                 status: 'warning',
             });
-        }
-        // Remove notification if upgrade is no longer required
-        else if (hasUpgradeNotification && !upgradeRequired) {
-            markAsRead(upgradeNotificationId);
         }
     }, [connection.isConnectedWithPrivy, account?.address, upgradeRequired]);
 

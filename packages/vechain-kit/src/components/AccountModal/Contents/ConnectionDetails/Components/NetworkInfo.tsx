@@ -24,16 +24,26 @@ export const NetworkInfo = () => {
         label,
         value,
         isLoading = false,
+        href,
     }: {
         label: string;
         value: string | number;
         isLoading?: boolean;
+        href?: string;
     }) => (
         <HStack w="full" justifyContent="space-between">
             <Text fontSize="sm" color={textColor}>
                 {label}:
             </Text>
-            <Text fontSize="sm" color={textColor}>
+            <Text
+                fontSize="sm"
+                color={textColor}
+                as={href ? 'a' : undefined}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: href ? 'underline' : 'none' }}
+            >
                 {isLoading ? 'Loading...' : value}
             </Text>
         </HStack>
@@ -77,7 +87,11 @@ export const NetworkInfo = () => {
                 )
             )}
 
-            <InfoRow label={t('VeChain Kit')} value={packageJson.version} />
+            <InfoRow
+                label={t('VeChain Kit')}
+                value={packageJson.version}
+                href={`https://github.com/vechain/vechain-kit/releases/tag/${packageJson.version}`}
+            />
         </>
     );
 };
