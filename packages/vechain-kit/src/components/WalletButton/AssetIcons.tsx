@@ -104,6 +104,7 @@ export const AssetIcons = ({
                         fontSize={'sm'}
                         color={darkMode ? 'white' : 'black'}
                         opacity={0.9}
+                        fontWeight="700"
                     >
                         {t('No assets')}
                     </Text>

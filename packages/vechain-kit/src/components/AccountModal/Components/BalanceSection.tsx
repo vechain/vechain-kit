@@ -78,6 +78,13 @@ export const BalanceSection = ({
                         onClick={handleRefresh}
                         icon={<Icon as={VscRefresh} boxSize={4} />}
                         isLoading={isLoading || isRefreshing}
+                        sx={{
+                            '& > span.chakra-button__spinner': {
+                                width: '16px',
+                                height: '16px',
+                                position: 'absolute',
+                            },
+                        }}
                     />
                 </Box>
             </HStack>
@@ -102,7 +109,7 @@ export const BalanceSection = ({
                         mt: 2,
                         backgroundColor: isDark
                             ? 'whiteAlpha.200'
-                            : 'blackAlpha.100',
+                            : 'blackAlpha.50',
                         borderRadius: 'xl',
                         p: 3,
                         cursor: 'pointer',
