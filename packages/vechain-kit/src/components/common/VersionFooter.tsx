@@ -1,5 +1,5 @@
 import { HStack, Link, StackProps } from '@chakra-ui/react';
-import { VechainLogoHorizontal } from '../../assets';
+import { VechainLogo } from '../../assets';
 import packageJson from '../../../package.json';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -16,7 +16,7 @@ export const VersionFooter = ({ ...props }: Props) => {
             spacing={0}
             {...props}
         >
-            <VechainLogoHorizontal isDark={isDark} w={'69px'} opacity={0.4} />
+            <VechainLogo isDark={isDark} w={'70px'} h={'auto'} opacity={0.4} />
             <Link
                 fontSize={'11px'}
                 fontWeight={'800'}
