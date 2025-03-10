@@ -20,7 +20,7 @@ import { IoMdMoon } from 'react-icons/io';
 import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
-import { VechainLogoHorizontal } from '@vechain/vechain-kit/assets';
+import { VechainLogo } from '@vechain/vechain-kit/assets';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
 
@@ -240,13 +240,15 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <VStack spacing={0}>
+            <VStack spacing={0} align="center">
                 <Text fontSize={'md'} fontWeight={'bold'}>
                     Powered by
                 </Text>
-                <VechainLogoHorizontal
+                <VechainLogo
                     maxW={200}
                     isDark={colorMode === 'dark'}
+                    w="200px"
+                    h="auto"
                 />
             </VStack>
         </HStack>

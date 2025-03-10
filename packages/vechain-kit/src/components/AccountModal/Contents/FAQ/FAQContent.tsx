@@ -19,7 +19,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
-import { VechainLogoHorizontal } from '@/assets';
+import { VechainLogo } from '@/assets';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
@@ -51,9 +51,10 @@ export const FAQContent = ({ onGoBack }: Props) => {
                 <VStack spacing={6} align="stretch">
                     <VStack>
                         <HStack justify={'center'}>
-                            <VechainLogoHorizontal
+                            <VechainLogo
                                 isDark={isDark}
                                 w={'200px'}
+                                h={'auto'}
                             />
                         </HStack>
                         <Text fontSize="sm" opacity={0.7} textAlign={'center'}>
