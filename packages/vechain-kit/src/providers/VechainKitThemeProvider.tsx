@@ -1,4 +1,8 @@
-import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
+import {
+    ChakraProvider,
+    createStandaloneToast,
+    ColorModeScript,
+} from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
 import { VechainKitTheme } from '@/theme';
 
@@ -44,6 +48,23 @@ const EnsureChakraProvider = ({
     );
 };
 
+const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
+    try {
+        // Check if ColorModeScript already exists by looking for its data attribute
+        const existingScript = document.querySelector(
+            '[data-chakra-color-mode]',
+        );
+        if (existingScript) {
+            return null; // Don't render another one if it exists
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+    // If no ColorModeScript exists, provide one
+    return <ColorModeScript initialColorMode={darkMode ? 'dark' : 'light'} />;
+};
+
 export const VechainKitThemeProvider = ({
     children,
     darkMode = false,
@@ -61,6 +82,7 @@ export const VechainKitThemeProvider = ({
 
     return (
         <>
+            <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider theme={theme}>
                 {children}
             </EnsureChakraProvider>
