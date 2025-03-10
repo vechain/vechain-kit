@@ -27,12 +27,15 @@ export interface SimpleAccountInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "UPGRADE_INTERFACE_VERSION"
+      | "customEip712Domain"
       | "eip712Domain"
       | "execute"
       | "executeBatch"
       | "executeBatchWithAuthorization"
+      | "executeBatchWithCustomAuthorization"
       | "executeWithAuthorization"
       | "initialize"
+      | "maskedChainId"
       | "onERC1155BatchReceived"
       | "onERC1155Received"
       | "onERC721Received"
@@ -56,6 +59,10 @@ export interface SimpleAccountInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "UPGRADE_INTERFACE_VERSION",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "customEip712Domain",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -83,6 +90,18 @@ export interface SimpleAccountInterface extends Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "executeBatchWithCustomAuthorization",
+    values: [
+      AddressLike[],
+      BigNumberish[],
+      BytesLike[],
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "executeWithAuthorization",
     values: [
       AddressLike,
@@ -96,6 +115,10 @@ export interface SimpleAccountInterface extends Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maskedChainId",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
@@ -143,6 +166,10 @@ export interface SimpleAccountInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "customEip712Domain",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "eip712Domain",
     data: BytesLike
   ): Result;
@@ -156,10 +183,18 @@ export interface SimpleAccountInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "executeBatchWithCustomAuthorization",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "executeWithAuthorization",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "maskedChainId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
@@ -297,6 +332,22 @@ export interface SimpleAccount extends BaseContract {
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
 
+  customEip712Domain: TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        customDomainVersion: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+
   eip712Domain: TypedContractMethod<
     [],
     [
@@ -339,6 +390,20 @@ export interface SimpleAccount extends BaseContract {
     "payable"
   >;
 
+  executeBatchWithCustomAuthorization: TypedContractMethod<
+    [
+      to: AddressLike[],
+      value: BigNumberish[],
+      data: BytesLike[],
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
+    ],
+    [void],
+    "payable"
+  >;
+
   executeWithAuthorization: TypedContractMethod<
     [
       to: AddressLike,
@@ -353,6 +418,8 @@ export interface SimpleAccount extends BaseContract {
   >;
 
   initialize: TypedContractMethod<[anOwner: AddressLike], [void], "nonpayable">;
+
+  maskedChainId: TypedContractMethod<[], [bigint], "view">;
 
   onERC1155BatchReceived: TypedContractMethod<
     [
@@ -418,6 +485,23 @@ export interface SimpleAccount extends BaseContract {
     nameOrSignature: "UPGRADE_INTERFACE_VERSION"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "customEip712Domain"
+  ): TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        customDomainVersion: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "eip712Domain"
   ): TypedContractMethod<
     [],
@@ -464,6 +548,21 @@ export interface SimpleAccount extends BaseContract {
     "payable"
   >;
   getFunction(
+    nameOrSignature: "executeBatchWithCustomAuthorization"
+  ): TypedContractMethod<
+    [
+      to: AddressLike[],
+      value: BigNumberish[],
+      data: BytesLike[],
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
+    ],
+    [void],
+    "payable"
+  >;
+  getFunction(
     nameOrSignature: "executeWithAuthorization"
   ): TypedContractMethod<
     [
@@ -480,6 +579,9 @@ export interface SimpleAccount extends BaseContract {
   getFunction(
     nameOrSignature: "initialize"
   ): TypedContractMethod<[anOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "maskedChainId"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "onERC1155BatchReceived"
   ): TypedContractMethod<

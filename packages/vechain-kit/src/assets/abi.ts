@@ -184,6 +184,49 @@ export const SimpleAccountABI = [
     },
     {
         inputs: [],
+        name: 'customEip712Domain',
+        outputs: [
+            {
+                internalType: 'bytes1',
+                name: 'fields',
+                type: 'bytes1',
+            },
+            {
+                internalType: 'string',
+                name: 'name',
+                type: 'string',
+            },
+            {
+                internalType: 'string',
+                name: 'customDomainVersion',
+                type: 'string',
+            },
+            {
+                internalType: 'uint256',
+                name: 'chainId',
+                type: 'uint256',
+            },
+            {
+                internalType: 'address',
+                name: 'verifyingContract',
+                type: 'address',
+            },
+            {
+                internalType: 'bytes32',
+                name: 'salt',
+                type: 'bytes32',
+            },
+            {
+                internalType: 'uint256[]',
+                name: 'extensions',
+                type: 'uint256[]',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
         name: 'eip712Domain',
         outputs: [
             {
@@ -317,6 +360,49 @@ export const SimpleAccountABI = [
     {
         inputs: [
             {
+                internalType: 'address[]',
+                name: 'to',
+                type: 'address[]',
+            },
+            {
+                internalType: 'uint256[]',
+                name: 'value',
+                type: 'uint256[]',
+            },
+            {
+                internalType: 'bytes[]',
+                name: 'data',
+                type: 'bytes[]',
+            },
+            {
+                internalType: 'uint256',
+                name: 'validAfter',
+                type: 'uint256',
+            },
+            {
+                internalType: 'uint256',
+                name: 'validBefore',
+                type: 'uint256',
+            },
+            {
+                internalType: 'bytes32',
+                name: 'nonce',
+                type: 'bytes32',
+            },
+            {
+                internalType: 'bytes',
+                name: 'signature',
+                type: 'bytes',
+            },
+        ],
+        name: 'executeBatchWithCustomAuthorization',
+        outputs: [],
+        stateMutability: 'payable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
                 internalType: 'address',
                 name: 'to',
                 type: 'address',
@@ -363,6 +449,19 @@ export const SimpleAccountABI = [
         name: 'initialize',
         outputs: [],
         stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'maskedChainId',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
         type: 'function',
     },
     {
@@ -900,6 +999,30 @@ export const SimpleAccountFactoryABI = [
             },
         ],
         name: 'createAccountWithSalt',
+        outputs: [
+            {
+                internalType: 'contract SimpleAccount',
+                name: 'createdAccount',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: '_version',
+                type: 'uint256',
+            },
+        ],
+        name: 'createAccountWithVersion',
         outputs: [
             {
                 internalType: 'contract SimpleAccount',

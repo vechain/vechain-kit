@@ -33,6 +33,7 @@ export interface SimpleAccountFactoryInterface extends Interface {
       | "b3tr"
       | "createAccount"
       | "createAccountWithSalt"
+      | "createAccountWithVersion"
       | "currentAccountImplementationAddress"
       | "currentAccountImplementationVersion"
       | "getAccountAddress"
@@ -87,6 +88,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createAccountWithSalt",
+    values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "createAccountWithVersion",
     values: [AddressLike, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -186,6 +191,10 @@ export interface SimpleAccountFactoryInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "createAccountWithSalt",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "createAccountWithVersion",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -416,6 +425,12 @@ export interface SimpleAccountFactory extends BaseContract {
     "nonpayable"
   >;
 
+  createAccountWithVersion: TypedContractMethod<
+    [owner: AddressLike, _version: BigNumberish],
+    [string],
+    "nonpayable"
+  >;
+
   currentAccountImplementationAddress: TypedContractMethod<
     [],
     [string],
@@ -540,6 +555,13 @@ export interface SimpleAccountFactory extends BaseContract {
     nameOrSignature: "createAccountWithSalt"
   ): TypedContractMethod<
     [owner: AddressLike, salt: BigNumberish],
+    [string],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "createAccountWithVersion"
+  ): TypedContractMethod<
+    [owner: AddressLike, _version: BigNumberish],
     [string],
     "nonpayable"
   >;
