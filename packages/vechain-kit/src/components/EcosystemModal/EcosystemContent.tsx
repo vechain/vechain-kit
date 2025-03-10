@@ -102,10 +102,10 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         <Box>
             <>
                 <StickyHeaderContainer>
-                    <ModalHeader alignItems={'center'} display={'flex'} gap={2}>
+                    <ModalHeader>
                         {t('Already have an app account?')}
+                        <ModalCloseButton />
                     </ModalHeader>
-                    <ModalCloseButton />
                 </StickyHeaderContainer>
 
                 {/* {loginModalUI?.logo && (
