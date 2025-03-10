@@ -15,7 +15,6 @@ import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { isMobile } from 'react-device-detect';
 
 type LoginLoadingModalProps = {
@@ -70,7 +69,6 @@ const LoadingContent = ({
     onTryAgain?: () => void;
 }) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const [showTimeout, setShowTimeout] = React.useState(false);
 
     React.useEffect(() => {
@@ -85,14 +83,7 @@ const LoadingContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {title ?? t('Connecting...')}
-                </ModalHeader>
+                <ModalHeader>{title ?? t('Connecting...')}</ModalHeader>
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -146,19 +137,11 @@ const ErrorContent = ({
     onTryAgain: () => void;
 }) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Connection Failed')}
-                </ModalHeader>
+                <ModalHeader>{t('Connection Failed')}</ModalHeader>
                 <ModalCloseButton
                     onClick={() => {
                         onClose();

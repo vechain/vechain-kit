@@ -68,14 +68,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Select Token')}
-                </ModalHeader>
+                <ModalHeader>{t('Select Token')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -142,7 +135,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                     )}
                 </VStack>
             </ModalBody>
-            <ModalFooter />
+            <ModalFooter pt={0} />
         </>
     );
 };

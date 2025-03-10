@@ -29,14 +29,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Bridge')}
-                </ModalHeader>
+                <ModalHeader>{t('Bridge')}</ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

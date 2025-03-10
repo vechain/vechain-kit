@@ -22,7 +22,6 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
@@ -43,7 +42,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { exportWallet } = usePrivy();
     const { showMfaEnrollmentModal } = useMfaEnrollment();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection, smartAccount, connectedWallet } = useWallet();
 
     const { data: upgradeRequired } = useUpgradeRequired(
@@ -55,14 +53,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Access and security')}
-                </ModalHeader>
+                <ModalHeader>{t('Access and security')}</ModalHeader>
 
                 <ModalBackButton
                     onClick={() => setCurrentContent('settings')}

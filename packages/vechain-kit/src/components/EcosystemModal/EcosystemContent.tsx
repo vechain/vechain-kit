@@ -102,16 +102,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         <Box>
             <>
                 <StickyHeaderContainer>
-                    <ModalHeader
-                        fontSize={'md'}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                        color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        justifyContent={'center'}
-                        alignItems={'center'}
-                        display={'flex'}
-                        gap={2}
-                    >
+                    <ModalHeader alignItems={'center'} display={'flex'} gap={2}>
                         {t('Already have an app account?')}
                     </ModalHeader>
                     <ModalCloseButton />
@@ -192,7 +183,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                         </Text>
                     )}
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter pt={0} />
             </>
 
             <LoginLoadingModal

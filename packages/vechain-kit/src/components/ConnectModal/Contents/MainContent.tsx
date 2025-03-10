@@ -43,14 +43,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
         <>
             <StickyHeaderContainer>
                 <ModalFAQButton onClick={() => setCurrentContent('faq')} />
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'00'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Log in or sign up')}
-                </ModalHeader>
+                <ModalHeader>{t('Log in or sign up')}</ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

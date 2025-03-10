@@ -50,23 +50,28 @@ export const AccountSelector = ({
             alignItems={'center'}
         >
             <Button
-                w="fit-content"
-                p={2}
-                pl={4}
+                w="full"
                 h={12}
                 aria-label="Wallet"
                 onClick={onClick}
-                variant="vechainKitSelector"
+                variant="mainContentButton"
             >
-                <HStack spacing={2} align="center">
-                    <AccountAvatar
-                        wallet={wallet}
-                        props={{ width: 7, height: 7 }}
-                    />
-                    <Text fontSize={size} fontWeight="500">
-                        {humanDomain(wallet?.domain ?? '', 15, 0) ||
-                            humanAddress(wallet?.address ?? '', 6, 4)}
-                    </Text>
+                <HStack
+                    spacing={2}
+                    align="center"
+                    justifyContent={'space-between'}
+                    w={'full'}
+                >
+                    <HStack spacing={2} justifyContent={'flex-start'}>
+                        <AccountAvatar
+                            wallet={wallet}
+                            props={{ width: 7, height: 7 }}
+                        />
+                        <Text fontSize={size} fontWeight="500">
+                            {humanDomain(wallet?.domain ?? '', 15, 0) ||
+                                humanAddress(wallet?.address ?? '', 6, 4)}
+                        </Text>
+                    </HStack>
 
                     <Icon
                         boxSize={5}

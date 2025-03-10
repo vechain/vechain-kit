@@ -96,7 +96,7 @@ type PrivyLinkedAccountsProps = {
 
 export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, privy, dappKit } = useVeChainKitConfig();
+    const { privy, dappKit } = useVeChainKitConfig();
     const [unlinkingAccount, setUnlinkingAccount] = useState<any>(null);
     const [showLinkOptions, setShowLinkOptions] = useState(false);
     const [showFullText, setShowFullText] = useState(false);
@@ -326,14 +326,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         return (
             <ScrollToTopWrapper>
                 <StickyHeaderContainer>
-                    <ModalHeader
-                        fontSize={'md'}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                        color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                    >
-                        {t('Add Login Method')}
-                    </ModalHeader>
+                    <ModalHeader>{t('Add Login Method')}</ModalHeader>
                     <ModalBackButton
                         onClick={() => setShowLinkOptions(false)}
                     />
@@ -516,7 +509,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                             )}
                     </VStack>
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter pt={0} />
             </ScrollToTopWrapper>
         );
     }
@@ -525,14 +518,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         return (
             <ScrollToTopWrapper>
                 <StickyHeaderContainer>
-                    <ModalHeader
-                        fontSize={'md'}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                        color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                    >
-                        {t('Remove Login Method')}
-                    </ModalHeader>
+                    <ModalHeader>{t('Remove Login Method')}</ModalHeader>
                     <ModalBackButton
                         onClick={() => setUnlinkingAccount(null)}
                     />
@@ -549,7 +535,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         onCancel={() => setUnlinkingAccount(null)}
                     />
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter pt={0} />
             </ScrollToTopWrapper>
         );
     }
@@ -557,14 +543,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Login methods')}
-                </ModalHeader>
+                <ModalHeader>{t('Login methods')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

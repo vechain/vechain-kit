@@ -36,14 +36,7 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Help')}
-                </ModalHeader>
+                <ModalHeader>{t('Help')}</ModalHeader>
                 <ModalBackButton onClick={onGoBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -115,7 +108,7 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                     <FAQAccordion />
                 </VStack>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter w="full">
                 <Button
                     as={Link}
                     href="https://docs.vechainkit.vechain.org/"

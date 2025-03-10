@@ -40,21 +40,14 @@ export const SuccessfulOperationContent = ({
     showSocialButtons = false,
 }: SuccessfulOperationContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const socialDescription = `${explorerUrl}/${txId}`;
 
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {title}
-                </ModalHeader>
+                <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

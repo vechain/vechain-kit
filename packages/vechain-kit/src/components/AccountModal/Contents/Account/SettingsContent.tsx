@@ -42,7 +42,7 @@ export const SettingsContent = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
 
     const { connection, disconnect, account } = useWallet();
 
@@ -64,14 +64,7 @@ export const SettingsContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Settings')}
-                </ModalHeader>
+                <ModalHeader>{t('Settings')}</ModalHeader>
 
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />

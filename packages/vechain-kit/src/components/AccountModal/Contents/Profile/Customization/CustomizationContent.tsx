@@ -197,14 +197,7 @@ export const CustomizationContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Customization')}
-                </ModalHeader>
+                <ModalHeader>{t('Customization')}</ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('profile')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

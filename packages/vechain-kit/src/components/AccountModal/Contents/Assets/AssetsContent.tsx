@@ -88,14 +88,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={darkMode ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Assets')}
-                </ModalHeader>
+                <ModalHeader>{t('Assets')}</ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

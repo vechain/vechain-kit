@@ -5,7 +5,6 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useCrossAppConnectionCache, useWallet } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
 import { getPicassoImage } from '@/utils';
 import {
     Divider,
@@ -34,19 +33,11 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
-    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Embedded wallet')}
-                </ModalHeader>
+                <ModalHeader>{t('Embedded wallet')}</ModalHeader>
 
                 <ModalBackButton
                     onClick={() => setCurrentContent('access-and-security')}

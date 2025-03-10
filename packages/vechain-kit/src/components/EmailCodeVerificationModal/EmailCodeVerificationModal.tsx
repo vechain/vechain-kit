@@ -55,16 +55,7 @@ export const EmailCodeVerificationModal = ({
     return (
         <BaseModal isOpen={isOpen} onClose={onClose} trapFocus={false}>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                    display={'flex'}
-                    gap={2}
-                >
+                <ModalHeader alignItems={'center'} display={'flex'} gap={2}>
                     {t('Enter confirmation code')}
                 </ModalHeader>
                 <ModalCloseButton />

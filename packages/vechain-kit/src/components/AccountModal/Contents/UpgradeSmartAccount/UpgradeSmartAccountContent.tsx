@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoWarningOutline } from 'react-icons/io5';
-import { useVeChainKitConfig } from '@/providers';
 import {
     ModalBackButton,
     StickyHeaderContainer,
@@ -37,7 +36,6 @@ export const UpgradeSmartAccountContent = ({
     initialContent = 'access-and-security',
 }: UpgradeSmartAccountContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { smartAccount, connectedWallet } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -93,14 +91,7 @@ export const UpgradeSmartAccountContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Account upgrade required')}
-                </ModalHeader>
+                <ModalHeader>{t('Account upgrade required')}</ModalHeader>
                 <ModalBackButton
                     onClick={() => {
                         setCurrentContent(initialContent);

@@ -1,4 +1,11 @@
-import { Heading, VStack, HStack, Icon, IconButton } from '@chakra-ui/react';
+import {
+    Heading,
+    VStack,
+    HStack,
+    Icon,
+    IconButton,
+    Box,
+} from '@chakra-ui/react';
 import { useBalances, useRefreshBalances, useWallet } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,36 +54,39 @@ export const BalanceSection = ({
             </Heading>
             <HStack
                 w={'full'}
-                justifyContent={'flex-start'}
+                justifyContent={'space-between'}
                 alignItems={'baseline'}
                 role="group"
             >
-                <Heading size={'3xl'} fontWeight={'500'}>
+                <Heading size={'2xl'} fontWeight={'700'}>
                     ${compactFormatter.format(totalBalance ?? 0)}
                 </Heading>
 
-                <IconButton
-                    aria-label="Refresh balances"
-                    size={'xl'}
-                    ml={'10px'}
-                    variant="link"
-                    onClick={handleRefresh}
-                    icon={<Icon as={VscRefresh} boxSize={6} />}
-                    isLoading={isLoading || isRefreshing}
+                <Box
+                    display="flex"
                     alignItems="center"
-                    display={
-                        isLoading || isRefreshing
-                            ? 'inline-flex'
-                            : { base: 'inline-flex', md: 'none' }
-                    }
-                    _groupHover={{ display: 'inline-flex' }}
-                />
+                    justifyContent="center"
+                    w="32px"
+                    h="32px"
+                >
+                    <IconButton
+                        aria-label="Refresh balances"
+                        variant="ghost"
+                        size="sm"
+                        opacity={0.5}
+                        _hover={{ opacity: 0.8 }}
+                        onClick={handleRefresh}
+                        icon={<Icon as={VscRefresh} boxSize={4} />}
+                        isLoading={isLoading || isRefreshing}
+                    />
+                </Box>
             </HStack>
             <HStack w={'full'} justifyContent={'flex-start'}>
                 <AssetIcons
                     onClick={onAssetsClick}
                     maxIcons={10}
-                    iconSize={20}
+                    iconSize={26}
+                    iconsGap={2}
                     address={account?.address ?? ''}
                     showNoAssetsWarning={true}
                     rightIcon={
@@ -88,18 +98,20 @@ export const BalanceSection = ({
                         />
                     }
                     style={{
+                        width: '100%',
                         mt: 2,
                         backgroundColor: isDark
                             ? 'whiteAlpha.200'
                             : 'blackAlpha.200',
                         borderRadius: 'xl',
-                        p: 2,
+                        p: 3,
                         cursor: 'pointer',
                         _hover: {
                             backgroundColor: isDark
                                 ? 'whiteAlpha.300'
                                 : 'blackAlpha.300',
                         },
+                        justifyContent: 'space-between',
                     }}
                 />
             </HStack>

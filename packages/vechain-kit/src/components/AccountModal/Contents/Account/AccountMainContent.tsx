@@ -4,6 +4,7 @@ import {
     ModalHeader,
     VStack,
     Tag,
+    ModalFooter,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -33,7 +34,7 @@ type Props = {
 
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const { connection, account } = useWallet();
 
     return (
@@ -49,13 +50,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         })
                     }
                 />
-                <ModalHeader
-                    w={'full'}
-                    color={isDark ? '#dfdfdd' : 'rgb(77, 77, 77)'}
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                >
+                <ModalHeader>
                     {connection.isConnectedWithPrivy
                         ? t('Account')
                         : t('Wallet')}
@@ -69,6 +64,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     w={'full'}
                     overflow={'hidden'}
                     justifyContent={'flex-start'}
+                    spacing={6}
                 >
                     {!account?.domain && (
                         <FeatureAnnouncementCard
@@ -77,7 +73,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     )}
 
                     <AccountSelector
-                        mt={0}
                         style={{ justifyContent: 'flex-start' }}
                         onClick={() => {
                             setCurrentContent('profile');
@@ -92,25 +87,23 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             fontSize={'xs'}
                             p={2}
                             textTransform={'capitalize'}
-                            textAlign={'center'}
                         >
                             {`${network?.type} network`}
                         </Tag>
                     )}
 
                     <BalanceSection
-                        mt={8}
                         onAssetsClick={() => {
                             setCurrentContent('assets');
                         }}
                     />
 
                     <QuickActionsSection
-                        mt={8}
                         setCurrentContent={setCurrentContent}
                     />
                 </VStack>
             </ModalBody>
+            <ModalFooter pt={0}></ModalFooter>
         </ScrollToTopWrapper>
     );
 };

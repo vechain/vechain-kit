@@ -107,6 +107,18 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
+    mainContentButton: defineStyle(({ colorMode }) => ({
+        width: '100%',
+        backgroundColor:
+            colorMode === 'dark' ? 'whiteAlpha.200' : 'blackAlpha.200',
+        borderRadius: 'xl',
+        p: 3,
+        cursor: 'pointer',
+        _hover: {
+            backgroundColor:
+                colorMode === 'dark' ? 'whiteAlpha.300' : 'blackAlpha.300',
+        },
+    })),
 };
 
 export const buttonTheme = defineStyleConfig({

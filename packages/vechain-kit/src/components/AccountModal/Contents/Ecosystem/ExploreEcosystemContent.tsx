@@ -107,14 +107,7 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Ecosystem')}
-                </ModalHeader>
+                <ModalHeader>{t('Ecosystem')}</ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -173,7 +166,7 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                 </VStack>
             </ModalBody>
 
-            <ModalFooter />
+            <ModalFooter pt={0} />
         </Box>
     );
 };

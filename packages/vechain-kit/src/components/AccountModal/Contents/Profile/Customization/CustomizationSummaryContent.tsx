@@ -160,14 +160,7 @@ export const CustomizationSummaryContent = ({
     return (
         <Box as="form" onSubmit={handleSubmit(onSubmit)}>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Confirm Changes')}
-                </ModalHeader>
+                <ModalHeader>{t('Confirm Changes')}</ModalHeader>
                 <ModalBackButton
                     isDisabled={isTransactionPending}
                     onClick={() => setCurrentContent('account-customization')}

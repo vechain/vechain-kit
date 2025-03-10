@@ -18,7 +18,6 @@ import {
     PrivyConnectionCard,
     WalletSecuredBy,
 } from './Components';
-import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     onGoBack: () => void;
@@ -28,7 +27,6 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const { t } = useTranslation();
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
 
     const connectionCache = getConnectionCache();
@@ -36,14 +34,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Connection Details')}
-                </ModalHeader>
+                <ModalHeader>{t('Connection Details')}</ModalHeader>
 
                 <ModalBackButton
                     onClick={() => {
@@ -70,7 +61,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
 
                 {connection.isConnectedWithPrivy && <WalletSecuredBy />}
             </ModalBody>
-            <ModalFooter></ModalFooter>
+            <ModalFooter pt={0} />
         </ScrollToTopWrapper>
     );
 };
