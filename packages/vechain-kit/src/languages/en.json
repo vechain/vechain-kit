@@ -464,5 +464,10 @@
     "Exchange your digital assets between VeChain and other blockchain networks easily and securely. Swaps are executed through partners that leverage both decentralized and centralized exchanges to convert tokens.": "Exchange your digital assets between VeChain and other blockchain networks easily and securely. Swaps are executed through partners that leverage both decentralized and centralized exchanges to convert tokens.",
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "A .vet domain is required to customize your profile. Choose an account name to get started.",
     "Set up a passkey for easier access": "Set up a passkey for easier access",
-    "Set up Passkey": "Set up Passkey"
+    "Set up Passkey": "Set up Passkey",
+    "Transaction is being processed, it can take up to 15 seconds.": "Transaction is being processed, it can take up to 15 seconds.",
+    "Ready": "Ready",
+    "Unknown status": "Unknown status",
+    "Confirm transaction": "Confirm transaction",
+    "Confirm the transaction in your wallet to complete it.": "Confirm the transaction in your wallet to complete it."
 }

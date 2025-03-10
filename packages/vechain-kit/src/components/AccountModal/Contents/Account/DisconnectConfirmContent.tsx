@@ -47,23 +47,23 @@ export const DisconnectConfirmContent = ({
                     <Text fontSize="md" textAlign="center">
                         {t('Are you sure you want to disconnect your wallet?')}
                     </Text>
-
-                    <VStack spacing={3} w="full">
-                        <Button
-                            height="60px"
-                            colorScheme="red"
-                            w="full"
-                            onClick={onDisconnect}
-                        >
-                            {t('Disconnect')}
-                        </Button>
-                        <Button variant="vechainKitSecondary" onClick={onBack}>
-                            {t('Cancel')}
-                        </Button>
-                    </VStack>
                 </VStack>
             </ModalBody>
-            <ModalFooter></ModalFooter>
+            <ModalFooter w="full">
+                <VStack spacing={3} w="full">
+                    <Button
+                        height="60px"
+                        colorScheme="red"
+                        w="full"
+                        onClick={onDisconnect}
+                    >
+                        {t('Disconnect')}
+                    </Button>
+                    <Button variant="vechainKitSecondary" onClick={onBack}>
+                        {t('Cancel')}
+                    </Button>
+                </VStack>
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

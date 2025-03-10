@@ -21,9 +21,9 @@ export function TransactionExamples() {
         sendTransaction,
         status,
         txReceipt,
-        resetStatus,
         isTransactionPending,
         error,
+        resetStatus,
     } = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
         privyUIOptions: {
@@ -79,6 +79,11 @@ export function TransactionExamples() {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses, openTransactionModal]);
 
+    const handleTryAgain = useCallback(async () => {
+        resetStatus();
+        await sendTransaction(clauses);
+    }, [sendTransaction, clauses, resetStatus]);
+
     return (
         <>
             <Box>
@@ -107,21 +112,27 @@ export function TransactionExamples() {
                 isOpen={isTransactionToastOpen}
                 onClose={closeTransactionToast}
                 status={status}
-                error={error}
+                txError={error}
                 txReceipt={txReceipt}
-                resetStatus={resetStatus}
+                onTryAgain={handleTryAgain}
             />
 
             <TransactionModal
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
                 status={status}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
-                showSocialButtons={true}
-                showExplorerButton={true}
-                onTryAgain={handleTransactionWithModal}
-                showTryAgainButton={true}
+                txReceipt={txReceipt}
+                txError={error}
+                onTryAgain={handleTryAgain}
+                uiConfig={{
+                    title: 'Test Transaction',
+                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
+                        account?.address
+                    }`,
+                    showShareOnSocials: true,
+                    showExplorerButton: true,
+                    isClosable: true,
+                }}
             />
         </>
     );
