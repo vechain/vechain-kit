@@ -28,7 +28,6 @@ import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
 import { VeBetterLogo } from '@/assets';
-import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -60,7 +59,6 @@ const DEFAULT_APPS: XAppMetadata[] = [
         external_url: 'https://vet.domains',
         logo: 'https://vet.domains/assets/walletconnect.png',
         banner: 'https://vet.domains/assets/walletconnect.png',
-        logoComponent: <VETLogo w="80px" h="auto" />,
         screenshots: [],
         social_urls: [],
         app_urls: [],
