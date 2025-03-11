@@ -13,7 +13,6 @@ import {
     Spinner,
 } from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
@@ -90,7 +89,7 @@ export const TransactionModalContent = ({
                     icon: uiConfig?.successIcon ?? (
                         <Icon
                             as={IoIosCheckmarkCircleOutline}
-                            color="#00ff45de"
+                            color="#22c55e"
                             fontSize="100px"
                         />
                     ),
@@ -131,24 +130,17 @@ export const TransactionModalContent = ({
 
             <ModalBody>
                 <VStack align="center" p={6} spacing={3}>
-                    {statusConfig.icon && (
-                        <motion.div
-                            transition={{
-                                duration: 4,
-                                ease: 'easeInOut',
-                                repeat: Infinity,
-                            }}
-                            animate={{
-                                scale: [1, 1.1, 1],
-                            }}
-                        >
-                            {statusConfig.icon}
-                        </motion.div>
-                    )}
+                    {statusConfig.icon}
 
                     {status === 'success' && uiConfig?.showShareOnSocials && (
-                        <VStack mt={2}>
-                            <Text fontSize="xs">{t('Share on')}</Text>
+                        <VStack mt={2} spacing={3}>
+                            <Text
+                                fontSize="sm"
+                                fontWeight={'bold'}
+                                opacity={0.5}
+                            >
+                                {t('Share on')}
+                            </Text>
                             <ShareButtons
                                 descriptionEncoded={socialDescription}
                             />

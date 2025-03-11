@@ -28,7 +28,7 @@ export function TransactionExamples() {
         error,
         resetStatus,
     } = useSendTransaction({
-        signerAccountAddress: account?.address ?? '',
+        signerAccountAddress: '0x0000000000000000000000000000000000000000',
         privyUIOptions: {
             title: 'Send Dummy Transaction',
             description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
