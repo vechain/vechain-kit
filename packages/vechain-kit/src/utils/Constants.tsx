@@ -1,5 +1,6 @@
 import { VeBetterIcon, VTHOLogo } from '@/assets';
 import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
+import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: 'https://cryptologos.cc/logos/vechain-vet-logo.png',
@@ -14,6 +15,7 @@ export const TOKEN_SYMBOL_COMPONENTS: Record<string, JSX.Element> = {
     VET: <VETLogo w="24px" h="24px" />,
     VTHO: <VTHOLogo w="24px" h="24px" />,
     B3TR: <VeBetterIcon w="24px" h="24px" />,
+    VOT3: <VOT3Logo w="24px" h="24px" />,
 };
 
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
