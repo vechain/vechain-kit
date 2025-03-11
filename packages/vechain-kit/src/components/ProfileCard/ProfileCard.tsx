@@ -114,7 +114,7 @@ export const ProfileCard = ({
                     }}
                 />
             </Box>
-            <CardBody pt="14" pb="6" backgroundColor={'none'} border={'none'}>
+            <CardBody mt={10} backgroundColor={'none'} border={'none'}>
                 <VStack w={'full'} spacing={2}>
                     {showDisplayName &&
                         activeAccountTextRecords?.data?.display && (
@@ -190,7 +190,7 @@ export const ProfileCard = ({
                 </VStack>
             </CardBody>
             {isConnectedAccount && showEdit && (
-                <CardFooter pt={0} justify="space-between">
+                <CardFooter justify="space-between">
                     <VStack w="full" justify="space-between" spacing={4}>
                         <Divider />
                         <HStack w="full" justify="space-between">

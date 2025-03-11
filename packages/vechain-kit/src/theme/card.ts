@@ -18,6 +18,10 @@ const variants = {
                     props.colorMode === 'dark'
                         ? '1px solid #2d2d2d'
                         : '1px solid #eaeaea',
+                p: 5,
+            },
+            footer: {
+                p: 5,
             },
         }),
 

@@ -24,7 +24,7 @@ const variants = {
             },
             header: {
                 w: 'full',
-                color: props.colorMode === 'dark' ? '#dfdfdd' : '#4d4d4d',
+                color: props.colorMode === 'dark' ? '#dfdfdd' : '#2e2e2e',
                 fontSize: 'md',
                 fontWeight: '700',
                 textAlign: 'center',
