@@ -21,6 +21,7 @@ export const AppComponent = ({ xApp, setCurrentContent }: Props) => {
         <Skeleton
             isLoaded={!appMetadataLoading && !isLogoLoading}
             borderRadius="md"
+            height="100%"
         >
             <SharedAppCard
                 name={appMetadata?.name ?? ''}
