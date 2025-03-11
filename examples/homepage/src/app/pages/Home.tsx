@@ -10,6 +10,7 @@ import {
     useColorMode,
     IconButton,
     useMediaQuery,
+    Flex,
 } from '@chakra-ui/react';
 import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
@@ -240,17 +241,25 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <VStack spacing={0} align="center">
-                <Text fontSize={'md'} fontWeight={'bold'}>
+            <Flex
+                direction={{ base: 'column', md: 'row' }}
+                align="center"
+                wrap="wrap"
+                justify="center"
+                gap={2}
+            >
+                <Text fontSize="md" fontWeight="bold">
                     Made by
                 </Text>
                 <VechainLogo
-                    maxW={200}
+                    maxW="200px"
                     isDark={colorMode === 'dark'}
                     w="200px"
                     h="auto"
+                    ml={{ base: 0, sm: -6 }}
+                    mt={{ base: -6, md: 0 }}
                 />
-            </VStack>
+            </Flex>
         </HStack>
     );
 };

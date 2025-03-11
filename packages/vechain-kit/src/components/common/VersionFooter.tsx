@@ -25,7 +25,7 @@ export const VersionFooter = ({ ...props }: Props) => {
             />
             <Link
                 fontSize={'11px'}
-                fontWeight={'800'}
+                fontWeight={'500'}
                 opacity={0.4}
                 textAlign={'left'}
                 href={`https://github.com/vechain/vechain-kit/releases/tag/${packageJson.version}`}

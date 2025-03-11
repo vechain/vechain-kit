@@ -49,6 +49,7 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                                 isDark={isDark}
                                 w={'200px'}
                                 h={'auto'}
+                                ml={-6}
                             />
                         </HStack>
                         <Text fontSize="sm" opacity={0.7} textAlign={'center'}>
