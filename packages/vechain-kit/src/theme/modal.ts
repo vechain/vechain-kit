@@ -22,6 +22,13 @@ const variants = {
             closeButton: {
                 borderRadius: '50%',
             },
+            header: {
+                w: 'full',
+                color: props.colorMode === 'dark' ? '#dfdfdd' : '#4d4d4d',
+                fontSize: 'md',
+                fontWeight: '700',
+                textAlign: 'center',
+            },
         }),
     vechainKitTransactionToast: (props: StyleFunctionProps) =>
         definePartsStyle({

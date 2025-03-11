@@ -168,14 +168,7 @@ export const SendTokenContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Send')}
-                </ModalHeader>
+                <ModalHeader>{t('Send')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

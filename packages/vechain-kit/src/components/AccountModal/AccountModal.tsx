@@ -102,6 +102,12 @@ export const AccountModal = ({
                             setCurrentContent={setCurrentContent}
                         />
                     );
+                case 'upgrade-smart-account':
+                    return (
+                        <UpgradeSmartAccountContent {...currentContent.props} />
+                    );
+                case 'faq':
+                    return <FAQContent {...currentContent.props} />;
             }
         }
 
@@ -154,12 +160,6 @@ export const AccountModal = ({
                 return (
                     <SwapTokenContent setCurrentContent={setCurrentContent} />
                 );
-            case 'faq':
-                return (
-                    <FAQContent
-                        onGoBack={() => setCurrentContent('settings')}
-                    />
-                );
             case 'connection-details':
                 return (
                     <ConnectionDetailsContent
@@ -194,13 +194,6 @@ export const AccountModal = ({
                 return (
                     <ManageCustomTokenContent
                         setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'upgrade-smart-account':
-                return (
-                    <UpgradeSmartAccountContent
-                        setCurrentContent={setCurrentContent}
-                        handleClose={onClose}
                     />
                 );
         }

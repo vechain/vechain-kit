@@ -17,7 +17,6 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { useNotifications } from '@/hooks/notifications';
 import { useState } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
@@ -31,7 +30,6 @@ type Props = {
 
 export const NotificationsContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const {
         getNotifications,
         getArchivedNotifications,
@@ -90,12 +88,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 <ModalBackButton
                     onClick={() => setCurrentContent('settings')}
                 />
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
+                <ModalHeader>
                     {isArchiveView
                         ? t('Archived Notifications')
                         : t('Notifications')}
@@ -146,7 +139,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                         )}
                     </VStack>
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter pt={0} />
             </Container>
         </ScrollToTopWrapper>
     );

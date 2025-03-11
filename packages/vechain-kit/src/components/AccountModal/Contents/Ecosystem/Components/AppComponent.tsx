@@ -18,7 +18,10 @@ export const AppComponent = ({ xApp, setCurrentContent }: Props) => {
     );
 
     return (
-        <Skeleton isLoaded={!appMetadataLoading && !isLogoLoading}>
+        <Skeleton
+            isLoaded={!appMetadataLoading && !isLogoLoading}
+            borderRadius="md"
+        >
             <SharedAppCard
                 name={appMetadata?.name ?? ''}
                 imageUrl={logo?.image ?? ''}
@@ -31,6 +34,7 @@ export const AppComponent = ({ xApp, setCurrentContent }: Props) => {
                             image: logo?.image ?? '',
                             url: appMetadata?.external_url ?? '',
                             description: appMetadata?.description ?? '',
+                            setCurrentContent,
                         },
                     });
                 }}

@@ -68,7 +68,6 @@ export const SendTokenSummaryContent = ({
     selectedToken,
 }: SendTokenSummaryContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatar(resolvedDomain);
     const { network } = useVeChainKitConfig();
@@ -179,14 +178,7 @@ export const SendTokenSummaryContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    Send
-                </ModalHeader>
+                <ModalHeader>Send</ModalHeader>
                 <ModalBackButton
                     isDisabled={isSubmitting}
                     onClick={() =>

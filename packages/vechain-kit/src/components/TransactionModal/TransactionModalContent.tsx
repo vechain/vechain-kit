@@ -39,7 +39,7 @@ export const TransactionModalContent = ({
     onClose,
 }: Omit<TransactionModalProps, 'isOpen'>) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
 
     const errorMessage = useMemo(() => {
         if (!txError) return null;
@@ -123,14 +123,7 @@ export const TransactionModalContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize="md"
-                    fontWeight="500"
-                    textAlign="center"
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {statusConfig.title}
-                </ModalHeader>
+                <ModalHeader>{statusConfig.title}</ModalHeader>
                 <ModalCloseButton
                     isDisabled={status === 'pending' && !uiConfig?.isClosable}
                 />

@@ -79,14 +79,7 @@ export const ManageCustomTokenContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Manage Custom Tokens')}
-                </ModalHeader>
+                <ModalHeader>{t('Manage Custom Tokens')}</ModalHeader>
                 <ModalBackButton onClick={() => setCurrentContent('assets')} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

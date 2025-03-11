@@ -147,14 +147,7 @@ export const ChooseNameSearchContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Choose Name')}
-                </ModalHeader>
+                <ModalHeader>{t('Choose Name')}</ModalHeader>
                 <ModalBackButton
                     onClick={() => setCurrentContent(initialContentSource)}
                 />

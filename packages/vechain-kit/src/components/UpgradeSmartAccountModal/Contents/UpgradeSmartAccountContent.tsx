@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoWarningOutline } from 'react-icons/io5';
-import { useVeChainKitConfig } from '@/providers';
 import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
@@ -33,7 +32,6 @@ export const UpgradeSmartAccountContent = ({
     handleClose,
 }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { smartAccount, connectedWallet } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -85,14 +83,7 @@ export const UpgradeSmartAccountContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Account upgrade required')}
-                </ModalHeader>
+                <ModalHeader>{t('Account upgrade required')}</ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

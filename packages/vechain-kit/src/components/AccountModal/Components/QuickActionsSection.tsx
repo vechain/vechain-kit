@@ -7,19 +7,100 @@ import {
     Heading,
 } from '@chakra-ui/react';
 import { MdSwapHoriz } from 'react-icons/md';
-import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import { useBalances, useWallet } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
-import { PiBridgeThin } from 'react-icons/pi';
+import { LuArrowDownToLine } from 'react-icons/lu';
+import { RiSwap3Line } from 'react-icons/ri';
 
 type Props = {
     mt?: number;
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+};
+
+type QuickAction = {
+    icon: React.ElementType;
+    label: string;
+    onClick: (setCurrentContent: Props['setCurrentContent']) => void;
+    isDisabled?: (totalBalance: number) => boolean;
+};
+
+const QUICK_ACTIONS: QuickAction[] = [
+    {
+        icon: MdSwapHoriz,
+        label: 'Swap',
+        onClick: (setCurrentContent) => setCurrentContent('swap-token'),
+    },
+    {
+        icon: LuArrowDownToLine,
+        label: 'Receive',
+        onClick: (setCurrentContent) => setCurrentContent('receive-token'),
+    },
+    {
+        icon: FiSend,
+        label: 'Send',
+        onClick: (setCurrentContent) =>
+            setCurrentContent({
+                type: 'send-token',
+                props: {
+                    setCurrentContent,
+                    isNavigatingFromMain: true,
+                },
+            }),
+        isDisabled: (totalBalance) => totalBalance === 0,
+    },
+    {
+        icon: RiSwap3Line,
+        label: 'Bridge',
+        onClick: (setCurrentContent) => setCurrentContent('bridge'),
+    },
+    {
+        icon: IoMdApps,
+        label: 'Ecosystem',
+        onClick: (setCurrentContent) => setCurrentContent('ecosystem'),
+    },
+    {
+        icon: IoMdSettings,
+        label: 'Settings',
+        onClick: (setCurrentContent) => setCurrentContent('settings'),
+    },
+];
+
+const QuickActionButton = ({
+    icon,
+    label,
+    onClick,
+    isDisabled,
+}: {
+    icon: React.ElementType;
+    label: string;
+    onClick: () => void;
+    isDisabled?: boolean;
+}) => {
+    const { t } = useTranslation();
+
+    return (
+        <IconButton
+            variant="mainContentButton"
+            h="80px"
+            w="full"
+            aria-label={label}
+            isDisabled={isDisabled}
+            icon={
+                <VStack spacing={4}>
+                    <Icon as={icon} boxSize={5} opacity={0.9} />
+                    <Text fontSize="sm" fontWeight="600">
+                        {t(label, label)}
+                    </Text>
+                </VStack>
+            }
+            onClick={onClick}
+        />
+    );
 };
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
@@ -35,116 +116,15 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                 {t('Activities')}
             </Heading>
             <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
-                <IconButton
-                    variant="vechainKitSelector"
-                    h="auto"
-                    py={3}
-                    aria-label="Swap"
-                    icon={
-                        <VStack spacing={2}>
-                            <Icon as={MdSwapHoriz} boxSize={6} opacity={0.9} />
-                            <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Swap')}
-                            </Text>
-                        </VStack>
-                    }
-                    onClick={() => setCurrentContent('swap-token')}
-                />
-                <IconButton
-                    variant="vechainKitSelector"
-                    h="auto"
-                    py={3}
-                    aria-label="Receive"
-                    icon={
-                        <VStack spacing={2}>
-                            <Icon
-                                as={FaRegArrowAltCircleDown}
-                                boxSize={6}
-                                opacity={0.9}
-                            />
-                            <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Receive')}
-                            </Text>
-                        </VStack>
-                    }
-                    onClick={() => setCurrentContent('receive-token')}
-                />
-                <IconButton
-                    variant="vechainKitSelector"
-                    h="auto"
-                    py={3}
-                    aria-label="Send"
-                    icon={
-                        <VStack spacing={2}>
-                            <Icon as={FiSend} boxSize={6} opacity={0.9} />
-                            <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Send')}
-                            </Text>
-                        </VStack>
-                    }
-                    isDisabled={totalBalance === 0}
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'send-token',
-                            props: {
-                                setCurrentContent,
-                                isNavigatingFromMain: true,
-                            },
-                        })
-                    }
-                />
-                <IconButton
-                    variant="vechainKitSelector"
-                    h="auto"
-                    py={3}
-                    fontSize="xs"
-                    verticalAlign="middle"
-                    aria-label="Bridge"
-                    icon={
-                        <VStack spacing={2}>
-                            <Icon as={PiBridgeThin} boxSize={6} opacity={0.9} />
-                            <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Bridge')}
-                            </Text>
-                        </VStack>
-                    }
-                    onClick={() => setCurrentContent('bridge')}
-                />
-                <IconButton
-                    variant="vechainKitSelector"
-                    h="auto"
-                    py={3}
-                    fontSize="xs"
-                    verticalAlign="middle"
-                    aria-label="Ecosystem"
-                    icon={
-                        <VStack spacing={2}>
-                            <Icon as={IoMdApps} boxSize={6} opacity={0.9} />
-                            <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Ecosystem')}
-                            </Text>
-                        </VStack>
-                    }
-                    onClick={() => setCurrentContent('ecosystem')}
-                />
-
-                <IconButton
-                    variant="vechainKitSelector"
-                    h="auto"
-                    py={3}
-                    fontSize="xs"
-                    verticalAlign="middle"
-                    aria-label="Settings"
-                    icon={
-                        <VStack spacing={2}>
-                            <Icon as={IoMdSettings} boxSize={6} opacity={0.9} />
-                            <Text fontSize="sm" fontWeight={'400'}>
-                                {t('Settings')}
-                            </Text>
-                        </VStack>
-                    }
-                    onClick={() => setCurrentContent('settings')}
-                />
+                {QUICK_ACTIONS.map((action) => (
+                    <QuickActionButton
+                        key={action.label}
+                        icon={action.icon}
+                        label={action.label}
+                        onClick={() => action.onClick(setCurrentContent)}
+                        isDisabled={action.isDisabled?.(totalBalance)}
+                    />
+                ))}
             </Grid>
         </VStack>
     );

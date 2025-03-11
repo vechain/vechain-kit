@@ -21,8 +21,7 @@ export const DEFAULT_NOTIFICATIONS = [
 export const useNotificationAlerts = () => {
     const { t } = useTranslation();
     const { account, connection, smartAccount } = useWallet();
-    const { addNotification, getNotifications, markAsRead } =
-        useNotifications();
+    const { addNotification, getNotifications } = useNotifications();
 
     // Check if smart account needs upgrade to version 3 (only for deployed smart accounts)
     const { data: upgradeRequired } = useUpgradeRequiredForAccount(
@@ -46,18 +45,10 @@ export const useNotificationAlerts = () => {
                 id: upgradeNotificationId,
                 title: t('Account Upgrade Required'),
                 description: t(
-                    'A new upgrade is available for your smart account. Please upgrade now to continue interacting with VeChain blockchain.',
+                    "A new upgrade is available for your smart account. Please head over to the 'Access and Security' section to upgrade it.",
                 ),
                 status: 'warning',
-                action: {
-                    label: t('Upgrade Now', 'Upgrade Now'),
-                    content: 'upgrade-smart-account',
-                },
             });
-        }
-        // Remove notification if upgrade is no longer required
-        else if (hasUpgradeNotification && !upgradeRequired) {
-            markAsRead(upgradeNotificationId);
         }
     }, [connection.isConnectedWithPrivy, account?.address, upgradeRequired]);
 

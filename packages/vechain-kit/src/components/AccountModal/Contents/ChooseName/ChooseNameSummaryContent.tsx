@@ -14,7 +14,6 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import {
     useUpgradeRequired,
     useUpgradeSmartAccountModal,
@@ -38,7 +37,6 @@ export const ChooseNameSummaryContent = ({
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { account, connectedWallet } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -94,14 +92,7 @@ export const ChooseNameSummaryContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Confirm Name')}
-                </ModalHeader>
+                <ModalHeader>{t('Confirm Name')}</ModalHeader>
                 <ModalBackButton
                     onClick={() =>
                         setCurrentContent({

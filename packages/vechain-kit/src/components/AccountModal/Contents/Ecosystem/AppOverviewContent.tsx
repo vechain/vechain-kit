@@ -13,7 +13,6 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { ShortcutButton } from './Components/ShortcutButton';
 
@@ -35,19 +34,11 @@ export const AppOverviewContent = ({
     description,
 }: AppOverviewContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {name}
-                </ModalHeader>
+                <ModalHeader>{name}</ModalHeader>
                 <ModalBackButton
                     onClick={() => setCurrentContent('ecosystem')}
                 />

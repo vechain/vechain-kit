@@ -15,11 +15,7 @@ import {
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    VersionFooter,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
@@ -46,9 +42,9 @@ export const SettingsContent = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
 
-    const { connection, disconnect } = useWallet();
+    const { connection, disconnect, account } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -68,14 +64,7 @@ export const SettingsContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Settings')}
-                </ModalHeader>
+                <ModalHeader>{t('Settings')}</ModalHeader>
 
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -93,14 +82,26 @@ export const SettingsContent = ({
                         title={t('Choose account name')}
                         description={t('Choose a name for your account.')}
                         onClick={() => {
-                            setCurrentContent({
-                                type: 'choose-name',
-                                props: {
-                                    setCurrentContent,
-                                    onBack: () => setCurrentContent('settings'),
-                                    initialContentSource: 'settings',
-                                },
-                            });
+                            if (account?.domain) {
+                                setCurrentContent({
+                                    type: 'choose-name-search',
+                                    props: {
+                                        name: '',
+                                        setCurrentContent,
+                                        initialContentSource: 'settings',
+                                    },
+                                });
+                            } else {
+                                setCurrentContent({
+                                    type: 'choose-name',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContentSource: 'settings',
+                                        onBack: () =>
+                                            setCurrentContent('settings'),
+                                    },
+                                });
+                            }
                         }}
                         leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
@@ -184,7 +185,15 @@ export const SettingsContent = ({
                                       '',
                             },
                         )}
-                        onClick={() => setCurrentContent('faq')}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'faq',
+                                props: {
+                                    onGoBack: () =>
+                                        setCurrentContent('settings'),
+                                },
+                            })
+                        }
                         leftIcon={BsQuestionCircle}
                         rightIcon={MdOutlineNavigateNext}
                         style={{
@@ -218,8 +227,6 @@ export const SettingsContent = ({
                     >
                         {t('Logout')}
                     </Button>
-
-                    <VersionFooter />
                 </VStack>
             </ModalFooter>
         </Box>

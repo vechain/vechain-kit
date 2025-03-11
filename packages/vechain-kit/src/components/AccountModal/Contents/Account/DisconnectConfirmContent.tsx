@@ -13,7 +13,6 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 
 export type DisconnectConfirmContentProps = {
     onDisconnect: () => void;
@@ -25,19 +24,11 @@ export const DisconnectConfirmContent = ({
     onBack,
 }: DisconnectConfirmContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Disconnect Wallet')}
-                </ModalHeader>
+                <ModalHeader>{t('Disconnect Wallet')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

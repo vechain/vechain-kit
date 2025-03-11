@@ -8,7 +8,12 @@ import {
     Icon,
     Button,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet, useMfaEnrollment } from '@/hooks';
+import {
+    usePrivy,
+    useWallet,
+    useMfaEnrollment,
+    useUpgradeRequired,
+} from '@/hooks';
 import React from 'react';
 import {
     ModalBackButton,
@@ -17,7 +22,6 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
@@ -38,20 +42,18 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { exportWallet } = usePrivy();
     const { showMfaEnrollmentModal } = useMfaEnrollment();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
-    const { connection } = useWallet();
+    const { connection, smartAccount, connectedWallet } = useWallet();
+
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Access and security')}
-                </ModalHeader>
+                <ModalHeader>{t('Access and security')}</ModalHeader>
 
                 <ModalBackButton
                     onClick={() => setCurrentContent('settings')}
@@ -134,6 +136,25 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={HiOutlineShieldCheck}
                     />
+
+                    {upgradeRequired && (
+                        <ActionButton
+                            title={t('Upgrade Smart Account to V3')}
+                            description={t(
+                                'A new version is available for your account',
+                            )}
+                            onClick={() => {
+                                setCurrentContent({
+                                    type: 'upgrade-smart-account',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContent: 'access-and-security',
+                                    },
+                                });
+                            }}
+                            leftIcon={HiOutlineShieldCheck}
+                        />
+                    )}
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>

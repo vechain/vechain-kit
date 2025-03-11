@@ -1,12 +1,16 @@
 import {
-    HStack,
     ModalBody,
     ModalCloseButton,
     ModalHeader,
     VStack,
     Tag,
+    ModalFooter,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
+import {
+    StickyHeaderContainer,
+    ScrollToTopWrapper,
+    ModalFAQButton,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
@@ -30,19 +34,23 @@ type Props = {
 
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const { connection, account } = useWallet();
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    w={'full'}
-                    color={isDark ? '#dfdfdd' : 'rgb(77, 77, 77)'}
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                >
+                <ModalFAQButton
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'faq',
+                            props: {
+                                onGoBack: () => setCurrentContent('main'),
+                            },
+                        })
+                    }
+                />
+                <ModalHeader>
                     {connection.isConnectedWithPrivy
                         ? t('Account')
                         : t('Wallet')}
@@ -56,6 +64,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     w={'full'}
                     overflow={'hidden'}
                     justifyContent={'flex-start'}
+                    spacing={6}
                 >
                     {!account?.domain && (
                         <FeatureAnnouncementCard
@@ -63,42 +72,38 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         />
                     )}
 
-                    <HStack w={'full'} justifyContent={'space-between'}>
-                        <AccountSelector
-                            mt={0}
-                            style={{ justifyContent: 'flex-start' }}
-                            onClick={() => {
-                                setCurrentContent('profile');
-                            }}
-                            wallet={wallet}
-                        />
-                        {network?.type !== 'main' && (
-                            <Tag
-                                size="xl"
-                                colorScheme="orange"
-                                fontSize={'xs'}
-                                p={2}
-                                textTransform={'capitalize'}
-                                textAlign={'center'}
-                            >
-                                {`${network?.type} network`}
-                            </Tag>
-                        )}
-                    </HStack>
+                    <AccountSelector
+                        style={{ justifyContent: 'flex-start' }}
+                        onClick={() => {
+                            setCurrentContent('profile');
+                        }}
+                        wallet={wallet}
+                    />
+
+                    {network?.type !== 'main' && (
+                        <Tag
+                            size="xl"
+                            colorScheme="orange"
+                            fontSize={'xs'}
+                            p={2}
+                            textTransform={'capitalize'}
+                        >
+                            {`${network?.type} network`}
+                        </Tag>
+                    )}
 
                     <BalanceSection
-                        mt={8}
                         onAssetsClick={() => {
                             setCurrentContent('assets');
                         }}
                     />
 
                     <QuickActionsSection
-                        mt={8}
                         setCurrentContent={setCurrentContent}
                     />
                 </VStack>
             </ModalBody>
+            <ModalFooter pt={0}></ModalFooter>
         </ScrollToTopWrapper>
     );
 };
