@@ -17,7 +17,7 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
     useCurrentAllocationsRoundId,
     useEcosystemShortcuts,
@@ -100,7 +100,18 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
 
     const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
         dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    ).map((dapp) => {
+        // If the dapp has a logo component, we need to clone it and pass the isDark prop
+        if (dapp.logoComponent) {
+            return {
+                ...dapp,
+                logoComponent: React.cloneElement(dapp.logoComponent, {
+                    isDark,
+                }),
+            };
+        }
+        return dapp;
+    });
 
     const { shortcuts } = useEcosystemShortcuts();
 
@@ -151,6 +162,9 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                                     url={dapp.external_url}
                                     setCurrentContent={setCurrentContent}
                                     description={dapp.description}
+                                    {...(dapp.logoComponent && {
+                                        logoComponent: dapp.logoComponent,
+                                    })}
                                 />
                             </GridItem>
                         ))}
