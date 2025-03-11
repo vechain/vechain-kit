@@ -81,7 +81,7 @@ export const SendTokenSummaryContent = ({
         }
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
-    console.log('amount in summary', amount, selectedToken.numericBalance);
+
     const {
         sendTransaction: transferERC20,
         txReceipt: transferERC20Receipt,

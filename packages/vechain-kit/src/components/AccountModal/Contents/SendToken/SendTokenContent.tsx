@@ -69,7 +69,7 @@ export const SendTokenContent = ({
     );
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
-    console.log(preselectedToken);
+
     // Form setup with validation rules
     const {
         register,
@@ -100,8 +100,6 @@ export const SendTokenContent = ({
             setValue('amount', selectedToken.numericBalance);
         }
     };
-
-    console.log('amount', watch('amount'), selectedToken?.numericBalance);
 
     const onSubmit = async (data: FormValues) => {
         if (!selectedToken) return;

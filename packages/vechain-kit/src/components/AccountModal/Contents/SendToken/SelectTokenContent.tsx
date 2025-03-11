@@ -41,7 +41,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { account } = useWallet();
     const { tokens } = useBalances({ address: account?.address ?? '' });
     const [searchQuery, setSearchQuery] = useState('');
-    console.log(tokens);
+
     // Convert tokens object to array and add custom tokens
     const allTokens: Token[] = [
         ...Object.entries(tokens).map(([symbol, data]) => ({
