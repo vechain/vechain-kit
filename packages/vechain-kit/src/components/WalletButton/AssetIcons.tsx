@@ -1,8 +1,9 @@
 import { HStack, Text, Circle, Image, StackProps } from '@chakra-ui/react';
 import { useBalances } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { TOKEN_LOGOS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
+import React from 'react';
 
 type AssetIconsProps = {
     address: string;
@@ -58,7 +59,16 @@ export const AssetIcons = ({
                         alignItems="center"
                         justifyContent="center"
                     >
-                        {TOKEN_LOGOS[token.symbol] ? (
+                        {TOKEN_LOGO_COMPONENTS[token.symbol] ? (
+                            React.cloneElement(
+                                TOKEN_LOGO_COMPONENTS[token.symbol],
+                                {
+                                    width: `${iconSize * 0.8}px`,
+                                    height: `${iconSize * 0.8}px`,
+                                    rounded: 'full',
+                                },
+                            )
+                        ) : TOKEN_LOGOS[token.symbol] ? (
                             <Image
                                 src={TOKEN_LOGOS[token.symbol]}
                                 alt={`${token.symbol} logo`}

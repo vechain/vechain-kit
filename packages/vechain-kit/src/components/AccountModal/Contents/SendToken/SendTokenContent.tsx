@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -20,7 +21,12 @@ import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent } from './SelectTokenContent';
 import { ZeroAddress } from 'ethers';
-import { compareAddresses, isValidAddress, TOKEN_LOGOS } from '@/utils';
+import {
+    compareAddresses,
+    isValidAddress,
+    TOKEN_LOGOS,
+    TOKEN_LOGO_COMPONENTS,
+} from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -242,36 +248,52 @@ export const SendTokenContent = ({
                                                 setIsSelectingToken(true)
                                             }
                                             leftIcon={
-                                                <Image
-                                                    src={
-                                                        TOKEN_LOGOS[
+                                                TOKEN_LOGO_COMPONENTS[
+                                                    selectedToken.symbol
+                                                ] ? (
+                                                    React.cloneElement(
+                                                        TOKEN_LOGO_COMPONENTS[
                                                             selectedToken.symbol
-                                                        ]
-                                                    }
-                                                    alt={`${selectedToken.symbol} logo`}
-                                                    boxSize="20px"
-                                                    borderRadius="full"
-                                                    fallback={
-                                                        <Box
-                                                            boxSize="20px"
-                                                            borderRadius="full"
-                                                            bg="whiteAlpha.200"
-                                                            display="flex"
-                                                            alignItems="center"
-                                                            justifyContent="center"
-                                                        >
-                                                            <Text
-                                                                fontSize="8px"
-                                                                fontWeight="bold"
+                                                        ],
+                                                        {
+                                                            boxSize: '20px',
+                                                            borderRadius:
+                                                                'full',
+                                                        },
+                                                    )
+                                                ) : (
+                                                    <Image
+                                                        src={
+                                                            TOKEN_LOGOS[
+                                                                selectedToken
+                                                                    .symbol
+                                                            ]
+                                                        }
+                                                        alt={`${selectedToken.symbol} logo`}
+                                                        boxSize="20px"
+                                                        borderRadius="full"
+                                                        fallback={
+                                                            <Box
+                                                                boxSize="20px"
+                                                                borderRadius="full"
+                                                                bg="whiteAlpha.200"
+                                                                display="flex"
+                                                                alignItems="center"
+                                                                justifyContent="center"
                                                             >
-                                                                {selectedToken.symbol.slice(
-                                                                    0,
-                                                                    3,
-                                                                )}
-                                                            </Text>
-                                                        </Box>
-                                                    }
-                                                />
+                                                                <Text
+                                                                    fontSize="8px"
+                                                                    fontWeight="bold"
+                                                                >
+                                                                    {selectedToken.symbol.slice(
+                                                                        0,
+                                                                        3,
+                                                                    )}
+                                                                </Text>
+                                                            </Box>
+                                                        }
+                                                    />
+                                                )
                                             }
                                         >
                                             {selectedToken.symbol}

@@ -1,4 +1,4 @@
-import { PrivyLogo, VechainLogoHorizontal } from '@/assets';
+import { PrivyLogo, VechainLogo } from '@/assets';
 import { useCrossAppConnectionCache, useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { HStack, Icon, Image, Text, VStack } from '@chakra-ui/react';
@@ -29,10 +29,15 @@ export const WalletSecuredBy = () => {
             </Text>
             <HStack justify={'center'}>
                 <PrivyLogo isDark={isDark} w={'50px'} />
-                <Icon as={PiLineVertical} ml={2} />
+                <Icon as={PiLineVertical} ml={3} />
 
                 {connection.isConnectedWithVeChain ? (
-                    <VechainLogoHorizontal isDark={isDark} w={'69px'} />
+                    <VechainLogo
+                        isDark={isDark}
+                        w={'80px'}
+                        h={'auto'}
+                        mb={'3px'}
+                    />
                 ) : (
                     connection.isConnectedWithCrossApp &&
                     connectionCache && (
