@@ -204,7 +204,7 @@ export const CustomizationContent = ({
 
             <ModalBody>
                 <Card
-                    bg={isDark ? 'whiteAlpha.100' : '#00000005'}
+                    bg={isDark ? '#1e1e21' : '#00000005'}
                     borderRadius="xl"
                     width="full"
                     position="relative"
@@ -357,7 +357,7 @@ export const CustomizationContent = ({
                                     }
                                 />
                                 {errors.displayName && (
-                                    <Text color="red.500" fontSize="sm" mt={1}>
+                                    <Text color="#ef4444" fontSize="sm" mt={1}>
                                         {errors.displayName.message}
                                     </Text>
                                 )}
@@ -380,7 +380,7 @@ export const CustomizationContent = ({
                                     placeholder={t('Eg: DevRel @ ENS Labs')}
                                 />
                                 {errors.description && (
-                                    <Text color="red.500" fontSize="sm" mt={1}>
+                                    <Text color="#ef4444" fontSize="sm" mt={1}>
                                         {errors.description.message}
                                     </Text>
                                 )}
@@ -413,7 +413,7 @@ export const CustomizationContent = ({
                                         </InputGroup>
                                         {errors.twitter && (
                                             <Text
-                                                color="red.500"
+                                                color="#ef4444"
                                                 fontSize="sm"
                                                 mt={1}
                                             >
@@ -445,7 +445,7 @@ export const CustomizationContent = ({
                                         </InputGroup>
                                         {errors.website && (
                                             <Text
-                                                color="red.500"
+                                                color="#ef4444"
                                                 fontSize="sm"
                                                 mt={1}
                                             >
@@ -477,7 +477,7 @@ export const CustomizationContent = ({
                                         </InputGroup>
                                         {errors.email && (
                                             <Text
-                                                color="red.500"
+                                                color="#ef4444"
                                                 fontSize="sm"
                                                 mt={1}
                                             >

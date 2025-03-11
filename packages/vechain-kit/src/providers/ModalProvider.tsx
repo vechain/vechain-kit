@@ -69,7 +69,10 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    const openAccountModal = useCallback(() => setIsAccountModalOpen(true), []);
+    const openAccountModal = useCallback(() => {
+        setAccountModalContent('main');
+        setIsAccountModalOpen(true);
+    }, []);
     const closeAccountModal = useCallback(
         () => setIsAccountModalOpen(false),
         [],

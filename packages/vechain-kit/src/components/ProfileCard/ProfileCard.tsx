@@ -56,7 +56,7 @@ export const ProfileCard = ({
     const activeAccountTextRecords = useGetTextRecords(
         activeAccountDomain?.data?.domain,
     );
-    const baseBackgroundColor = isDark ? 'whiteAlpha.100' : '#00000005';
+    const baseBackgroundColor = isDark ? '#1e1e21' : '#00000005';
     const headerImageSvg = getPicassoImage(address);
 
     const isConnectedAccount = address === account?.address;

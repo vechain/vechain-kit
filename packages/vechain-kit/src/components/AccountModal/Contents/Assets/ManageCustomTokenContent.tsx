@@ -123,7 +123,7 @@ export const ManageCustomTokenContent = ({
                                     fontWeight="medium"
                                 />
                                 {errors.newTokenAddress && (
-                                    <Text color="red.500" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm">
                                         {errors.newTokenAddress.message}
                                     </Text>
                                 )}

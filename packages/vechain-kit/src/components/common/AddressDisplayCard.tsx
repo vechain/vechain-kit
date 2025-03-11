@@ -51,7 +51,7 @@ export const AddressDisplayCard = ({
             w="full"
             p={2}
             borderRadius="lg"
-            bg={isDark ? '#ffffff0f' : 'gray.50'}
+            bg={isDark ? '#00000038' : 'gray.50'}
             wordBreak="break-word"
         >
             <Text fontSize="sm" fontWeight="bold" mb={2}>

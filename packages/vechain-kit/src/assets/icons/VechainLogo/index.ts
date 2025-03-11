@@ -1,6 +1,8 @@
 export * from './VechainLogo';
 export * from './VechainLogoDark';
 export * from './VechainLogoLight';
+export * from './VechainLogoHorizontalDark';
+export * from './VechainLogoHorizontalLight';
 
 export * from './VechainIcon';
 export * from './VechainIconLight';

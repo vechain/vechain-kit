@@ -48,7 +48,6 @@ export function FeaturesToTry() {
                 'Replace your complex address with a memorable .vet domain name',
             icon: FaRegAddressCard,
             highlight: !account?.domain,
-            link: '#',
             content: openChooseNameModal,
         },
         {
@@ -56,7 +55,6 @@ export function FeaturesToTry() {
             description:
                 'Customize your account with a profile image, display name, bio and more to enhance your identity across VeChain applications.',
             icon: CgProfile,
-            link: '#',
             content: openAccountCustomizationModal,
         },
         {
@@ -64,14 +62,12 @@ export function FeaturesToTry() {
             description:
                 'Send and receive VET, VTHO, and other tokens seamlessly',
             icon: RiExchangeLine,
-            link: '#',
             content: openSendTokenModal,
         },
         {
             title: 'Receive Assets',
             description: 'Receive VET, VTHO, and other tokens from anyone',
             icon: FaRegArrowAltCircleDown,
-            link: '#',
             content: openReceiveModal,
         },
         {
@@ -79,7 +75,6 @@ export function FeaturesToTry() {
             description:
                 'Secure your embedded wallet with proper backup procedures and update your login methods.',
             icon: RiShieldKeyholeLine,
-            link: '#',
             content: openAccessAndSecurityModal,
             disabled: !connection.isConnectedWithPrivy,
         },
@@ -88,7 +83,6 @@ export function FeaturesToTry() {
             description:
                 'Explore other apps built on VeChain, and add shortcuts for faster access.',
             icon: RiUserSettingsLine,
-            link: 'https://vechain.github.io/smart-accounts/',
             content: openExploreEcosystemModal,
         },
         {
@@ -96,14 +90,12 @@ export function FeaturesToTry() {
             description:
                 'Stay updated with the kit or ecosystem updates, and account alerts',
             icon: IoMdNotifications,
-            link: '#',
             content: openNotificationsModal,
         },
         {
             title: 'FAQ',
             description: 'Find answers to common questions about VeChain',
             icon: BsQuestionCircle,
-            link: '#',
             content: openFAQModal,
         },
     ];
@@ -113,7 +105,7 @@ export function FeaturesToTry() {
             <Text fontSize="xl" fontWeight="bold">
                 Features
             </Text>
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="sm" opacity={0.5}>
                 The following features are available for your users and for you
                 both accessible by using the VeChain Kit main modal or by adding
                 custom call to action buttons to your app and opening the

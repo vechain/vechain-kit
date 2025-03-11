@@ -15,7 +15,6 @@ import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { motion } from 'framer-motion';
 import { getConfig } from '@/config';
 import { GoLinkExternal } from 'react-icons/go';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
@@ -53,22 +52,11 @@ export const SuccessfulOperationContent = ({
 
             <ModalBody>
                 <VStack align={'center'} p={6} spacing={3}>
-                    <motion.div
-                        transition={{
-                            duration: 4,
-                            ease: 'easeInOut',
-                            repeat: Infinity,
-                        }}
-                        animate={{
-                            scale: [1, 1.1, 1],
-                        }}
-                    >
-                        <Icon
-                            as={IoIosCheckmarkCircleOutline}
-                            fontSize={'100px'}
-                            color={'#00ff45de'}
-                        />
-                    </motion.div>
+                    <Icon
+                        as={IoIosCheckmarkCircleOutline}
+                        fontSize={'100px'}
+                        color={'#22c55e'}
+                    />
 
                     {description && (
                         <Text fontSize="sm" textAlign="center">
@@ -77,8 +65,14 @@ export const SuccessfulOperationContent = ({
                     )}
 
                     {showSocialButtons && txId && (
-                        <VStack mt={2}>
-                            <Text fontSize="xs">{t('Share on')}</Text>
+                        <VStack mt={2} spacing={3}>
+                            <Text
+                                fontSize="sm"
+                                fontWeight={'bold'}
+                                opacity={0.5}
+                            >
+                                {t('Share on')}
+                            </Text>
                             <ShareButtons
                                 descriptionEncoded={socialDescription}
                             />

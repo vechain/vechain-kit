@@ -173,7 +173,7 @@ export const ChooseNameSearchContent = ({
                             paddingRight="120px"
                             fontSize="lg"
                             height="60px"
-                            bg={isDark ? '#1a1a1a' : 'white'}
+                            bg={isDark ? '#00000038' : 'white'}
                             border={`1px solid ${
                                 isDark ? '#ffffff29' : '#ebebeb'
                             }`}
@@ -198,7 +198,9 @@ export const ChooseNameSearchContent = ({
                             <Box
                                 mr={4}
                                 fontSize="sm"
-                                color={isDark ? 'whiteAlpha.800' : 'gray.500'}
+                                color={
+                                    isDark ? 'whiteAlpha.800' : 'blackAlpha.600'
+                                }
                             >
                                 .veworld.vet
                             </Box>
@@ -206,7 +208,7 @@ export const ChooseNameSearchContent = ({
                     </InputGroup>
 
                     {error && hasInteracted && (
-                        <Text color="red.500" fontSize="sm">
+                        <Text color="#ef4444" fontSize="sm">
                             {error}
                         </Text>
                     )}
@@ -214,7 +216,7 @@ export const ChooseNameSearchContent = ({
                     {!error && hasInteracted && name.length >= 3 && (
                         <Text
                             fontSize="sm"
-                            color={isAvailable ? 'green.500' : 'red.500'}
+                            color={isAvailable ? 'green.500' : '#ef4444'}
                             fontWeight="500"
                         >
                             {isOwnDomain

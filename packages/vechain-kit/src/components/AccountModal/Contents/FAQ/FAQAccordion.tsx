@@ -134,7 +134,7 @@ export const FAQAccordion = () => {
             <InputGroup size="lg">
                 <Input
                     placeholder={t('Search FAQ')}
-                    bg={isDark ? '#1a1a1a' : 'gray.50'}
+                    bg={isDark ? '#00000038' : 'gray.50'}
                     borderRadius="xl"
                     height="56px"
                     pl={12}
@@ -142,7 +142,9 @@ export const FAQAccordion = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <InputLeftElement h="56px" w="56px" pl={4}>
-                    <CiSearch color={isDark ? 'whiteAlpha.400' : 'gray.400'} />
+                    <CiSearch
+                        color={isDark ? 'whiteAlpha.400' : 'blackAlpha.600'}
+                    />
                 </InputLeftElement>
             </InputGroup>
 
@@ -150,7 +152,7 @@ export const FAQAccordion = () => {
                 <VStack
                     spacing={2}
                     py={8}
-                    color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                 >
                     <Icon as={FiSlash} boxSize={12} opacity={0.5} />
                     <Text fontSize="lg">{t('No questions found')}</Text>
@@ -166,13 +168,15 @@ export const FAQAccordion = () => {
                                 <>
                                     <AccordionButton
                                         bg={
-                                            isDark ? 'whiteAlpha.50' : 'gray.50'
+                                            isDark
+                                                ? 'whiteAlpha.50'
+                                                : 'blackAlpha.50'
                                         }
                                         borderRadius="xl"
                                         _hover={{
                                             bg: isDark
                                                 ? 'whiteAlpha.100'
-                                                : 'gray.100',
+                                                : 'blackAlpha.100',
                                         }}
                                     >
                                         <Box flex="1" textAlign="left" py={2}>

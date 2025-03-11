@@ -1,6 +1,6 @@
 import { GridItem } from '@chakra-ui/react';
 import { useState } from 'react';
-import { VechainIconDark, VechainIconLight } from '@/assets';
+import { VechainLogoDark, VechainLogoLight } from '@/assets';
 import { ConnectionButton, LoginLoadingModal, SocialIcons } from '@/components';
 import { useLoginWithVeChain } from '@/hooks';
 import { useDisclosure } from '@chakra-ui/react';
@@ -44,8 +44,8 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                     onClick={handleLoginWithVeChain}
                     icon={
                         isDark
-                            ? (VechainIconLight as IconType)
-                            : (VechainIconDark as IconType)
+                            ? (VechainLogoLight as IconType)
+                            : (VechainLogoDark as IconType)
                     }
                     text={t('Use social login with VeChain')}
                     variant={'loginWithVechain'}

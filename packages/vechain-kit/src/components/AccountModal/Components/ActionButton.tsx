@@ -53,9 +53,7 @@ export const ActionButton = ({
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const baseBackgroundColor =
-        backgroundColor ?? colorMode === 'dark'
-            ? 'whiteAlpha.100'
-            : '#00000005';
+        backgroundColor ?? colorMode === 'dark' ? '#ffffff05' : '#00000005';
     return (
         <Button
             w={'full'}
@@ -68,7 +66,12 @@ export const ActionButton = ({
             isLoading={isLoading}
             loadingText={loadingText}
             bgColor={baseBackgroundColor}
-            _hover={_hover}
+            _hover={
+                _hover ?? {
+                    backgroundColor:
+                        colorMode === 'dark' ? '#ffffff0d' : 'blackAlpha.200',
+                }
+            }
             {...style}
         >
             <HStack w={'full'} justify={'space-between'}>

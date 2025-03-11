@@ -139,10 +139,10 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                     )}
                     <InputGroup size="lg">
                         <Input
-                            placeholder={t('Search dApps')}
+                            placeholder={t('Search Apps')}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            bg={isDark ? '#1a1a1a' : 'gray.50'}
+                            bg={isDark ? '#00000038' : 'gray.50'}
                             borderRadius="xl"
                             height="56px"
                             pl={12}

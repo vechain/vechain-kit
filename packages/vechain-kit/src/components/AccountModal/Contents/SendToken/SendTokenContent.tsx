@@ -184,7 +184,7 @@ export const SendTokenContent = ({
                     <Box
                         p={6}
                         borderRadius="xl"
-                        bg={isDark ? '#1a1a1a' : 'gray.50'}
+                        bg={isDark ? '#00000038' : 'gray.50'}
                     >
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.amount}>
@@ -331,7 +331,7 @@ export const SendTokenContent = ({
                                     )}
                                 </HStack>
                                 {errors.amount && (
-                                    <Text color="red.500" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm">
                                         {errors.amount.message}
                                     </Text>
                                 )}
@@ -376,7 +376,7 @@ export const SendTokenContent = ({
                         marginTop="-20px"
                         marginBottom="-20px"
                         marginX="auto"
-                        bg={isDark ? '#262626' : 'gray.100'}
+                        bg={isDark ? '#151515' : 'gray.100'}
                         borderRadius="xl"
                         w="40px"
                         h="40px"
@@ -390,7 +390,10 @@ export const SendTokenContent = ({
                         />
                     </Center>
 
-                    <Box borderRadius="xl" bg={isDark ? '#1a1a1a' : 'gray.50'}>
+                    <Box
+                        borderRadius="xl"
+                        bg={isDark ? '#00000038' : 'gray.50'}
+                    >
                         <VStack align="stretch" spacing={2} p={6} width="100%">
                             <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
@@ -416,7 +419,7 @@ export const SendTokenContent = ({
                                     variant="unstyled"
                                 />
                                 {errors.toAddressOrDomain && (
-                                    <Text color="red.500" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm">
                                         {errors.toAddressOrDomain.message}
                                     </Text>
                                 )}

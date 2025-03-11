@@ -97,7 +97,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 <InputGroup size="lg">
                     <Input
                         placeholder="Search token"
-                        bg={darkMode ? '#1a1a1a' : 'gray.50'}
+                        bg={darkMode ? '#00000038' : 'gray.50'}
                         borderRadius="xl"
                         height="56px"
                         pl={12}
