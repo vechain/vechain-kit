@@ -8,7 +8,7 @@ const APP_SOURCE: string = document.title || '';
 // Ensure Mixpanel is initialized only once
 if (MIXPANEL_PROJECT_TOKEN) {
     mixpanel.init(MIXPANEL_PROJECT_TOKEN, { debug: true });
-    console.log('Mixpanel initialised');
+    // console.log('Mixpanel initialised');
 }
 
 // Define interfaces for event properties
@@ -51,11 +51,15 @@ const incrementUserProperty = (property: string, value: number = 1): void => {
 
 // **User Authentication & Drop-off Tracking**
 const AuthTracking = {
-    loginSuccess: (
-        userId: string,
-        loginMethod: VeLoginMethod,
-        platform: VePrivySocialLoginMethod,
-    ): void => {
+    loginSuccess: ({
+        userId,
+        loginMethod,
+        platform,
+    }: {
+        userId: string;
+        loginMethod: VeLoginMethod;
+        platform?: VePrivySocialLoginMethod;
+    }): void => {
         identifyUser(userId);
         setUserProperties({
             last_login_date: new Date().toISOString(),
@@ -65,8 +69,8 @@ const AuthTracking = {
         trackEvent('User Logged In', { loginMethod, platform });
     },
 
-    loginFailed: (): void => {
-        trackEvent('Login Failed');
+    loginFailed: (loginMethod: VeLoginMethod): void => {
+        trackEvent('Login Failed', { loginMethod });
     },
 
     loginDropOff: (): void => {
