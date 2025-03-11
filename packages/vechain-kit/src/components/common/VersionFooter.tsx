@@ -22,6 +22,7 @@ export const VersionFooter = ({ ...props }: Props) => {
                 h={'auto'}
                 opacity={0.4}
                 mr={1}
+                ml={'-16px'}
             />
             <Link
                 fontSize={'11px'}
