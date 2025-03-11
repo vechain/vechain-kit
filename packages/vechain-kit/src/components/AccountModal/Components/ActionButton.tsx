@@ -53,7 +53,7 @@ export const ActionButton = ({
     const { t } = useTranslation();
     const { colorMode } = useColorMode();
     const baseBackgroundColor =
-        backgroundColor ?? colorMode === 'dark' ? '#ffffff05' : '#00000005';
+        backgroundColor ?? colorMode === 'dark' ? '#ffffff0a' : '#00000005';
     return (
         <Button
             w={'full'}
@@ -69,7 +69,7 @@ export const ActionButton = ({
             _hover={
                 _hover ?? {
                     backgroundColor:
-                        colorMode === 'dark' ? '#ffffff0d' : 'blackAlpha.200',
+                        colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
                 }
             }
             {...style}
