@@ -7,7 +7,8 @@ import {
     VStack,
     ButtonProps,
 } from '@chakra-ui/react';
-import { TOKEN_LOGOS, TOKEN_SYMBOL_COMPONENTS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import React from 'react';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -46,8 +47,11 @@ export const AssetButton = ({
         {...buttonProps}
     >
         <HStack>
-            {TOKEN_SYMBOL_COMPONENTS[symbol] ? (
-                TOKEN_SYMBOL_COMPONENTS[symbol]
+            {TOKEN_LOGO_COMPONENTS[symbol] ? (
+                React.cloneElement(TOKEN_LOGO_COMPONENTS[symbol], {
+                    boxSize: '24px',
+                    borderRadius: 'full',
+                })
             ) : (
                 <Image
                     src={TOKEN_LOGOS[symbol]}

@@ -11,11 +11,11 @@ export const TOKEN_LOGOS: Record<string, string> = {
         'https://vechain.github.io/token-registry/assets/1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
 };
 
-export const TOKEN_SYMBOL_COMPONENTS: Record<string, JSX.Element> = {
-    VET: <VETLogo w="24px" h="24px" />,
-    VTHO: <VTHOLogo w="24px" h="24px" />,
-    B3TR: <VeBetterIcon w="24px" h="24px" />,
-    VOT3: <VOT3Logo w="24px" h="24px" />,
+export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {
+    VET: <VETLogo />,
+    VTHO: <VTHOLogo />,
+    B3TR: <VeBetterIcon />,
+    VOT3: <VOT3Logo />,
 };
 
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
