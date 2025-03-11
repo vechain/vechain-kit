@@ -5,6 +5,7 @@ import {
     VStack,
     Tag,
     ModalFooter,
+    HStack,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -81,15 +82,17 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     />
 
                     {network?.type !== 'main' && (
-                        <Tag
-                            size="xl"
-                            colorScheme="orange"
-                            fontSize={'xs'}
-                            p={2}
-                            textTransform={'capitalize'}
-                        >
-                            {`${network?.type} network`}
-                        </Tag>
+                        <HStack w={'full'} justifyContent={'flex-start'}>
+                            <Tag
+                                size="xl"
+                                colorScheme="orange"
+                                fontSize={'xs'}
+                                p={2}
+                                textTransform={'capitalize'}
+                            >
+                                {`${network?.type} network`}
+                            </Tag>
+                        </HStack>
                     )}
 
                     <BalanceSection
