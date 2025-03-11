@@ -16,7 +16,13 @@ export const VersionFooter = ({ ...props }: Props) => {
             spacing={0}
             {...props}
         >
-            <VechainLogo isDark={isDark} w={'70px'} h={'auto'} opacity={0.4} />
+            <VechainLogo
+                isDark={isDark}
+                w={'70px'}
+                h={'auto'}
+                opacity={0.4}
+                mr={2}
+            />
             <Link
                 fontSize={'11px'}
                 fontWeight={'800'}

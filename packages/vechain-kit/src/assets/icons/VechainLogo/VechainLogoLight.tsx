@@ -5,7 +5,7 @@ type Props = Omit<IconProps, 'dangerouslySetInnerHTML'>;
 
 export const VechainLogoLight: React.FC<Props> = ({ ...props }) => {
     return (
-        <Icon viewBox="0 0 920 446" {...props}>
+        <Icon viewBox="0 0 800 420" {...props}>
             <path
                 fill="#002234"
                 d="M258.92,152.85h-11.7c-2.86,0-5.47,1.66-6.71,4.27l-30.73,64.69-.03-.07-8.19,17.23.03.07-8.18,17.22-40.91-86.15h11.67c2.86,0,5.47,1.66,6.71,4.27l26.7,55.9,8.19-17.24-21.57-45.13c-4.37-9.2-13.57-15.06-23.66-15.06h-32.61l8.17,17.26h.03l49.09,103.4h16.37l57.33-120.66Z"
