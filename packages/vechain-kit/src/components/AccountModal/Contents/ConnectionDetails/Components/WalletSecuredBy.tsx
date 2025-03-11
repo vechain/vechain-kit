@@ -29,10 +29,15 @@ export const WalletSecuredBy = () => {
             </Text>
             <HStack justify={'center'}>
                 <PrivyLogo isDark={isDark} w={'50px'} />
-                <Icon as={PiLineVertical} ml={2} />
+                <Icon as={PiLineVertical} ml={3} />
 
                 {connection.isConnectedWithVeChain ? (
-                    <VechainLogo isDark={isDark} w={'80px'} h={'auto'} />
+                    <VechainLogo
+                        isDark={isDark}
+                        w={'80px'}
+                        h={'auto'}
+                        mb={'3px'}
+                    />
                 ) : (
                     connection.isConnectedWithCrossApp &&
                     connectionCache && (
