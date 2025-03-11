@@ -32,7 +32,7 @@ export const WalletSecuredBy = () => {
                 <Icon as={PiLineVertical} ml={2} />
 
                 {connection.isConnectedWithVeChain ? (
-                    <VechainLogo isDark={isDark} w={'70px'} h={'auto'} />
+                    <VechainLogo isDark={isDark} w={'80px'} h={'auto'} />
                 ) : (
                     connection.isConnectedWithCrossApp &&
                     connectionCache && (
