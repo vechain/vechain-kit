@@ -15,11 +15,18 @@ import {
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useWallet, useRefreshMetadata } from '@/hooks';
+import {
+    useWallet,
+    useRefreshMetadata,
+    useUpgradeRequired,
+    useUpgradeSmartAccountModal,
+} from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 
-type Props = {
+export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -45,19 +52,31 @@ type FormValues = {
 export const CustomizationSummaryContent = ({
     setCurrentContent,
     changes,
-}: Props) => {
+}: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { account } = useWallet();
+    const { account, connectedWallet } = useWallet();
     const { refresh: refreshMetadata } = useRefreshMetadata(
         account?.domain ?? '',
     );
+    const { data: upgradeRequired } = useUpgradeRequired(
+        account?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
             ...changes,
             avatarIpfsHash: changes.avatarIpfsHash ?? undefined,
         },
     });
+
+    const domain = account?.domain ?? '';
+
+    // Pre-fetch the resolver address
+    const { data: resolverAddress } = useGetResolverAddress(domain);
 
     const {
         sendTransaction: updateTextRecord,
@@ -66,6 +85,7 @@ export const CustomizationSummaryContent = ({
         isWaitingForWalletConfirmation,
         isTransactionPending,
     } = useUpdateTextRecord({
+        resolverAddress, // Pass the pre-fetched resolver address
         onSuccess: async () => {
             refreshMetadata();
             setCurrentContent({
@@ -131,17 +151,16 @@ export const CustomizationSummaryContent = ({
         );
     };
 
+    useEffect(() => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+        }
+    }, [upgradeRequired, openUpgradeSmartAccountModal]);
+
     return (
         <Box as="form" onSubmit={handleSubmit(onSubmit)}>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Confirm Changes')}
-                </ModalHeader>
+                <ModalHeader>{t('Confirm Changes')}</ModalHeader>
                 <ModalBackButton
                     isDisabled={isTransactionPending}
                     onClick={() => setCurrentContent('account-customization')}
@@ -180,10 +199,11 @@ export const CustomizationSummaryContent = ({
                     transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    handleSend={handleSubmit(onSubmit)}
+                    onConfirm={handleSubmit(onSubmit)}
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
-                    isSubmitForm={true}
+                    buttonText={t('Confirm')}
+                    isDisabled={isTransactionPending || upgradeRequired}
                 />
             </ModalFooter>
         </Box>

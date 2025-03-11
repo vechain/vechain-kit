@@ -13,11 +13,10 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { ShortcutButton } from './Components/ShortcutButton';
 
-type Props = {
+export type AppOverviewContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -35,21 +34,13 @@ export const AppOverviewContent = ({
     url,
     description,
     logoComponent,
-}: Props) => {
+}: AppOverviewContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
 
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {name}
-                </ModalHeader>
+                <ModalHeader>{name}</ModalHeader>
                 <ModalBackButton
                     onClick={() => setCurrentContent('ecosystem')}
                 />
@@ -86,11 +77,7 @@ export const AppOverviewContent = ({
             <ModalFooter>
                 <VStack w="full" spacing={4}>
                     <Button
-                        px={4}
-                        width="full"
-                        height="60px"
-                        variant="solid"
-                        borderRadius="xl"
+                        variant="vechainKitSecondary"
                         onClick={() => {
                             window.open(url, '_blank');
                         }}

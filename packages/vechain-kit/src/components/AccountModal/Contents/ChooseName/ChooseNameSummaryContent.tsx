@@ -14,7 +14,12 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import {
+    useUpgradeRequired,
+    useUpgradeSmartAccountModal,
+    useWallet,
+} from '@/hooks';
+import { useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -22,15 +27,24 @@ export type ChooseNameSummaryContentProps = {
     >;
     name: string;
     isOwnDomain: boolean;
+    initialContentSource?: AccountModalContentTypes;
 };
 
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
     isOwnDomain,
+    initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { account, connectedWallet } = useWallet();
+    const { data: upgradeRequired } = useUpgradeRequired(
+        account?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
 
     const {
         sendTransaction,
@@ -54,7 +68,7 @@ export const ChooseNameSummaryContent = ({
                         { name },
                     ),
                     onDone: () => {
-                        setCurrentContent('account-customization');
+                        setCurrentContent(initialContentSource);
                     },
                 },
             });
@@ -69,17 +83,16 @@ export const ChooseNameSummaryContent = ({
         }
     };
 
+    useEffect(() => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+        }
+    }, [upgradeRequired, openUpgradeSmartAccountModal]);
+
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Confirm Name')}
-                </ModalHeader>
+                <ModalHeader>{t('Confirm Name')}</ModalHeader>
                 <ModalBackButton
                     onClick={() =>
                         setCurrentContent({
@@ -87,6 +100,7 @@ export const ChooseNameSummaryContent = ({
                             props: {
                                 setCurrentContent,
                                 name,
+                                initialContentSource,
                             },
                         })
                     }
@@ -111,9 +125,11 @@ export const ChooseNameSummaryContent = ({
                     transactionError={txError}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    handleSend={handleConfirm}
+                    onConfirm={handleConfirm}
                     transactionPendingText={t('Claiming name...')}
                     txReceipt={txReceipt}
+                    buttonText={t('Confirm')}
+                    isDisabled={isTransactionPending || upgradeRequired}
                 />
             </ModalFooter>
         </>

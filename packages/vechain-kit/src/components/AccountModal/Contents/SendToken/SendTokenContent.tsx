@@ -46,6 +46,7 @@ export type SendTokenContentProps = {
     >;
     isNavigatingFromMain?: boolean;
     preselectedToken?: Token;
+    onBack?: () => void;
 };
 
 // Add form values type
@@ -58,6 +59,7 @@ export const SendTokenContent = ({
     setCurrentContent,
     isNavigatingFromMain = false,
     preselectedToken,
+    onBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -166,15 +168,8 @@ export const SendTokenContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Send')}
-                </ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                <ModalHeader>{t('Send')}</ModalHeader>
+                <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -240,11 +235,8 @@ export const SendTokenContent = ({
                                             }
                                             _hover={{
                                                 bg: isDark
-                                                    ? 'whiteAlpha.800'
-                                                    : 'blackAlpha.800',
-                                                color: isDark
-                                                    ? 'blackAlpha.700'
-                                                    : 'whiteAlpha.700',
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
                                             }}
                                             onClick={() =>
                                                 setIsSelectingToken(true)

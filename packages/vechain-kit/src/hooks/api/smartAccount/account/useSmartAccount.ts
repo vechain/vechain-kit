@@ -1,7 +1,7 @@
 import { SimpleAccountFactoryABI } from '@/assets';
 import { useQuery } from '@tanstack/react-query';
 import { ABIContract, Address } from '@vechain/sdk-core';
-import { useGetNodeUrl } from '../utility/useGetNodeUrl';
+import { useGetNodeUrl } from '@/hooks';
 import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';

@@ -14,13 +14,20 @@ const variants = {
                 scrollbarWidth: 'none',
                 overflow: 'scroll',
                 overflowX: 'hidden',
-                maxHeight: '540px',
+                maxHeight: '550px',
                 borderRadius: '24px',
                 backgroundColor:
                     props.colorMode === 'dark' ? '#1f1f1e' : 'white',
             },
             closeButton: {
                 borderRadius: '50%',
+            },
+            header: {
+                w: 'full',
+                color: props.colorMode === 'dark' ? '#dfdfdd' : '#4d4d4d',
+                fontSize: 'md',
+                fontWeight: '700',
+                textAlign: 'center',
             },
         }),
     vechainKitTransactionToast: (props: StyleFunctionProps) =>

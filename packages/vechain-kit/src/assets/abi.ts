@@ -60,7 +60,7 @@ export const SimpleAccountABI = [
     },
     {
         inputs: [],
-        name: 'FailedCall',
+        name: 'FailedInnerCall',
         type: 'error',
     },
     {
@@ -71,6 +71,22 @@ export const SimpleAccountABI = [
     {
         inputs: [],
         name: 'NotInitializing',
+        type: 'error',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'uint256',
+                name: 'value',
+                type: 'uint256',
+            },
+            {
+                internalType: 'uint256',
+                name: 'length',
+                type: 'uint256',
+            },
+        ],
+        name: 'StringsInsufficientHexLength',
         type: 'error',
     },
     {
@@ -114,6 +130,25 @@ export const SimpleAccountABI = [
             {
                 indexed: true,
                 internalType: 'address',
+                name: 'previousOwner',
+                type: 'address',
+            },
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
+        ],
+        name: 'OwnershipTransferred',
+        type: 'event',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: 'address',
                 name: 'owner',
                 type: 'address',
             },
@@ -142,6 +177,49 @@ export const SimpleAccountABI = [
                 internalType: 'string',
                 name: '',
                 type: 'string',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'customEip712Domain',
+        outputs: [
+            {
+                internalType: 'bytes1',
+                name: 'fields',
+                type: 'bytes1',
+            },
+            {
+                internalType: 'string',
+                name: 'name',
+                type: 'string',
+            },
+            {
+                internalType: 'string',
+                name: 'customDomainVersion',
+                type: 'string',
+            },
+            {
+                internalType: 'uint256',
+                name: 'chainId',
+                type: 'uint256',
+            },
+            {
+                internalType: 'address',
+                name: 'verifyingContract',
+                type: 'address',
+            },
+            {
+                internalType: 'bytes32',
+                name: 'salt',
+                type: 'bytes32',
+            },
+            {
+                internalType: 'uint256[]',
+                name: 'extensions',
+                type: 'uint256[]',
             },
         ],
         stateMutability: 'view',
@@ -239,6 +317,92 @@ export const SimpleAccountABI = [
     {
         inputs: [
             {
+                internalType: 'address[]',
+                name: 'to',
+                type: 'address[]',
+            },
+            {
+                internalType: 'uint256[]',
+                name: 'value',
+                type: 'uint256[]',
+            },
+            {
+                internalType: 'bytes[]',
+                name: 'data',
+                type: 'bytes[]',
+            },
+            {
+                internalType: 'uint256',
+                name: 'validAfter',
+                type: 'uint256',
+            },
+            {
+                internalType: 'uint256',
+                name: 'validBefore',
+                type: 'uint256',
+            },
+            {
+                internalType: 'bytes32',
+                name: 'nonce',
+                type: 'bytes32',
+            },
+            {
+                internalType: 'bytes',
+                name: 'signature',
+                type: 'bytes',
+            },
+        ],
+        name: 'executeBatchWithAuthorization',
+        outputs: [],
+        stateMutability: 'payable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address[]',
+                name: 'to',
+                type: 'address[]',
+            },
+            {
+                internalType: 'uint256[]',
+                name: 'value',
+                type: 'uint256[]',
+            },
+            {
+                internalType: 'bytes[]',
+                name: 'data',
+                type: 'bytes[]',
+            },
+            {
+                internalType: 'uint256',
+                name: 'validAfter',
+                type: 'uint256',
+            },
+            {
+                internalType: 'uint256',
+                name: 'validBefore',
+                type: 'uint256',
+            },
+            {
+                internalType: 'bytes32',
+                name: 'nonce',
+                type: 'bytes32',
+            },
+            {
+                internalType: 'bytes',
+                name: 'signature',
+                type: 'bytes',
+            },
+        ],
+        name: 'executeBatchWithCustomAuthorization',
+        outputs: [],
+        stateMutability: 'payable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
                 internalType: 'address',
                 name: 'to',
                 type: 'address',
@@ -285,6 +449,19 @@ export const SimpleAccountABI = [
         name: 'initialize',
         outputs: [],
         stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'maskedChainId',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
         type: 'function',
     },
     {
@@ -448,6 +625,19 @@ export const SimpleAccountABI = [
         inputs: [
             {
                 internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
+        ],
+        name: 'transferOwnership',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
                 name: 'newImplementation',
                 type: 'address',
             },
@@ -460,6 +650,38 @@ export const SimpleAccountABI = [
         name: 'upgradeToAndCall',
         outputs: [],
         stateMutability: 'payable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'bytes32',
+                name: '',
+                type: 'bytes32',
+            },
+        ],
+        name: 'usedNonces',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'version',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'pure',
         type: 'function',
     },
     {
@@ -524,7 +746,7 @@ export const SimpleAccountFactoryABI = [
     },
     {
         inputs: [],
-        name: 'FailedCall',
+        name: 'FailedInnerCall',
         type: 'error',
     },
     {
@@ -707,10 +929,36 @@ export const SimpleAccountFactoryABI = [
     },
     {
         inputs: [],
-        name: 'accountImplementation',
+        name: 'accountImplementationV1',
         outputs: [
             {
                 internalType: 'contract SimpleAccount',
+                name: '',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'accountImplementationV3',
+        outputs: [
+            {
+                internalType: 'contract SimpleAccount',
+                name: '',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'b3tr',
+        outputs: [
+            {
+                internalType: 'contract IERC20',
                 name: '',
                 type: 'address',
             },
@@ -730,11 +978,85 @@ export const SimpleAccountFactoryABI = [
         outputs: [
             {
                 internalType: 'contract SimpleAccount',
-                name: 'ret',
+                name: 'createdAccount',
                 type: 'address',
             },
         ],
         stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'salt',
+                type: 'uint256',
+            },
+        ],
+        name: 'createAccountWithSalt',
+        outputs: [
+            {
+                internalType: 'contract SimpleAccount',
+                name: 'createdAccount',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: '_version',
+                type: 'uint256',
+            },
+        ],
+        name: 'createAccountWithVersion',
+        outputs: [
+            {
+                internalType: 'contract SimpleAccount',
+                name: 'createdAccount',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'currentAccountImplementationAddress',
+        outputs: [
+            {
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'currentAccountImplementationVersion',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        stateMutability: 'view',
         type: 'function',
     },
     {
@@ -751,6 +1073,59 @@ export const SimpleAccountFactoryABI = [
                 internalType: 'address',
                 name: '',
                 type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'salt',
+                type: 'uint256',
+            },
+        ],
+        name: 'getAccountAddressWithSalt',
+        outputs: [
+            {
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+        ],
+        name: 'getAccountVersion',
+        outputs: [
+            {
+                internalType: 'uint256',
+                name: 'accountVersion',
+                type: 'uint256',
+            },
+            {
+                internalType: 'bool',
+                name: 'isDeployed',
+                type: 'bool',
             },
         ],
         stateMutability: 'view',
@@ -796,6 +1171,25 @@ export const SimpleAccountFactoryABI = [
     {
         inputs: [
             {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+        ],
+        name: 'hasLegacyAccount',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
                 internalType: 'bytes32',
                 name: 'role',
                 type: 'bytes32',
@@ -820,6 +1214,24 @@ export const SimpleAccountFactoryABI = [
     {
         inputs: [],
         name: 'initialize',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'newImplementationV3',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'b3trToken',
+                type: 'address',
+            },
+        ],
+        name: 'initializeV3',
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
@@ -896,6 +1308,59 @@ export const SimpleAccountFactoryABI = [
         inputs: [
             {
                 internalType: 'address',
+                name: 'account',
+                type: 'address',
+            },
+            {
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'targetVersion',
+                type: 'uint256',
+            },
+        ],
+        name: 'upgradeRequired',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'accountAddress',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'targetVersion',
+                type: 'uint256',
+            },
+        ],
+        name: 'upgradeRequiredForAccount',
+        outputs: [
+            {
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
                 name: 'newImplementation',
                 type: 'address',
             },
@@ -915,9 +1380,9 @@ export const SimpleAccountFactoryABI = [
         name: 'version',
         outputs: [
             {
-                internalType: 'string',
+                internalType: 'uint256',
                 name: '',
-                type: 'string',
+                type: 'uint256',
             },
         ],
         stateMutability: 'pure',

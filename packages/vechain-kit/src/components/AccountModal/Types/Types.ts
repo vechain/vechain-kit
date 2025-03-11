@@ -1,14 +1,19 @@
 import {
+    ChooseNameContentProps,
     ChooseNameSearchContentProps,
     ChooseNameSummaryContentProps,
+    CustomizationSummaryContentProps,
+    UpgradeSmartAccountContentProps,
 } from '../Contents';
+import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
+import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
+import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
 
 export type AccountModalContentTypes =
     | 'main'
-    | 'faq'
     | 'settings'
     | 'profile'
     | 'access-and-security'
@@ -17,47 +22,31 @@ export type AccountModalContentTypes =
     | 'receive-token'
     | 'swap-token'
     | 'connection-details'
-    | 'choose-name'
     | 'ecosystem'
     | 'notifications'
     | 'privy-linked-accounts'
     | 'account-customization'
     | 'add-custom-token'
+    | 'assets'
+    | 'bridge'
     | {
           type: 'successful-operation';
           props: SuccessfulOperationContentProps;
       }
     | {
           type: 'account-customization-summary';
-          props: {
-              changes: {
-                  avatarIpfsHash?: string | null;
-                  displayName?: string;
-                  description?: string;
-                  twitter?: string;
-                  website?: string;
-                  email?: string;
-              };
-              setCurrentContent: React.Dispatch<
-                  React.SetStateAction<AccountModalContentTypes>
-              >;
-          };
+          props: CustomizationSummaryContentProps;
       }
     | {
           type: 'app-overview';
-          props: {
-              name: string;
-              image: string;
-              url: string;
-              description?: string;
-              logoComponent?: JSX.Element;
-          };
+          props: AppOverviewContentProps;
       }
     | { type: 'send-token'; props: SendTokenContentProps }
     | {
           type: 'send-token-summary';
           props: SendTokenSummaryContentProps;
       }
+    | { type: 'choose-name'; props: ChooseNameContentProps }
     | {
           type: 'choose-name-search';
           props: ChooseNameSearchContentProps;
@@ -68,8 +57,13 @@ export type AccountModalContentTypes =
       }
     | {
           type: 'disconnect-confirm';
-          props: {
-              onDisconnect: () => void;
-              onBack: () => void;
-          };
+          props: DisconnectConfirmContentProps;
+      }
+    | {
+          type: 'upgrade-smart-account';
+          props: UpgradeSmartAccountContentProps;
+      }
+    | {
+          type: 'faq';
+          props: FAQContentProps;
       };

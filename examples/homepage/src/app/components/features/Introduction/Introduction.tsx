@@ -10,17 +10,13 @@ import {
     Icon,
     Image,
     Link,
+    HStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
 import { FaGithub } from 'react-icons/fa';
-import { IoDocumentText } from 'react-icons/io5';
-import {
-    MdBrush,
-    MdCode,
-    MdOutlineUpcoming,
-    MdConstruction,
-} from 'react-icons/md';
-import { RiUserSettingsLine } from 'react-icons/ri';
+import { IoDocumentText, IoWalletOutline } from 'react-icons/io5';
+import { MdBrush, MdCode } from 'react-icons/md';
+import { CiLogin } from 'react-icons/ci';
 import { SiNpm } from 'react-icons/si';
 
 export function Introduction() {
@@ -39,9 +35,10 @@ export function Introduction() {
                 </Heading>
 
                 <Text textAlign="center">
-                    This is a demonstration of VeChain Kit features and
-                    capabilities. Learn how to integrate VeChain in your dApp
-                    using our resources below.
+                    VeChain Kit is a comprehensive library, for React and
+                    NextJs, designed to make building VeChain applications fast
+                    and straightforward. Learn how to integrate VeChain in your
+                    dApp using our resources below.
                     {connection.isConnected
                         ? ''
                         : ' Login to view all available features.'}
@@ -69,7 +66,7 @@ export function Introduction() {
                                 size="lg"
                                 width="100%"
                             >
-                                Get Started
+                                Get Started with our Docs
                             </Button>
                         </SimpleGrid>
                         <SimpleGrid
@@ -86,7 +83,7 @@ export function Introduction() {
                                 colorScheme="red"
                                 width="100%"
                             >
-                                NPM
+                                View Package on NPM
                             </Button>
                             <Button
                                 leftIcon={<FaGithub />}
@@ -97,7 +94,7 @@ export function Introduction() {
                                 colorScheme="gray"
                                 width="100%"
                             >
-                                GitHub
+                                View GitHub Repository
                             </Button>
                             <Button
                                 leftIcon={
@@ -115,7 +112,7 @@ export function Introduction() {
                                 variant="outline"
                                 width="100%"
                             >
-                                Smart Account Factory
+                                Learn about Smart Accounts
                             </Button>
                         </SimpleGrid>
                     </VStack>
@@ -123,20 +120,18 @@ export function Introduction() {
             </VStack>
 
             <VStack mt={14} spacing={6} align="stretch">
-                <Text textAlign="center" fontWeight="bold" fontSize="lg">
-                    Key Objectives
-                </Text>
-
                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
-                            <Icon as={MdCode} boxSize={6} color="blue.400" />
-                            <Text fontWeight="bold">Easier Integration</Text>
+                            <Icon as={CiLogin} boxSize={6} color="blue.400" />
+                            <Text fontWeight="bold">
+                                VeChain Wallet Connection
+                            </Text>
                             <Text>
-                                We provide a standardized "kit" for dApp
-                                developers to quickly integrate social login and
-                                VeChain Smart Accounts, without the overhead of
-                                manual contract deployment and configuration.
+                                Easily connect your users to your dApp with out
+                                of the box wallet connection options. Choose
+                                between: VeWorld, Sync2, Wallet Connect, VeChain
+                                social login, Privy social login, and more.
                             </Text>
                         </VStack>
                     </Box>
@@ -144,75 +139,108 @@ export function Introduction() {
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
                             <Icon
-                                as={RiUserSettingsLine}
+                                as={IoWalletOutline}
                                 boxSize={6}
-                                color="green.400"
+                                color="blue.400"
                             />
                             <Text fontWeight="bold">
-                                Unified Ecosystem Accounts
+                                Make your dApp a super dApp
                             </Text>
                             <Text>
-                                Leverage Privy's Ecosystem feature to enable a
-                                single wallet per user across multiple apps,
-                                ensuring a consistent and cohesive user identity
-                                within the VeChain network.
+                                By using VeChain Kit, your users will have asset
+                                management, profile management, transaction
+                                signing, and more. All of this is handled for
+                                you, so you can focus on building your dApp.
                             </Text>
-                            <Link
-                                href="https://vechain.github.io/smart-accounts/"
-                                style={{
-                                    textDecoration: 'underline',
-                                    fontWeight: 'bold',
-                                }}
-                                target="_blank"
-                            >
-                                Try it!
-                            </Link>
+                        </VStack>
+                    </Box>
+
+                    <Box p={4} borderRadius="md" borderWidth="1px">
+                        <VStack align="start" spacing={3}>
+                            <Icon as={MdCode} boxSize={6} color="green.400" />
+                            <Text fontWeight="bold">
+                                Speed up your development
+                            </Text>
+                            <Text>
+                                Use our hooks and components to speed up your
+                                development. No need to worry about the
+                                underlying VeChain infrastructure, we handle it
+                                for you.
+                            </Text>
                         </VStack>
                     </Box>
 
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
                             <Icon as={MdBrush} boxSize={6} color="purple.400" />
-                            <Text fontWeight="bold">Developer Tools</Text>
+                            <Text fontWeight="bold">
+                                Customize the kit with your needs
+                            </Text>
                             <Text>
-                                Hooks to read and write data to the blockchain,
-                                UI components for your app, and out of the box
-                                wallet and identity management for your users.
+                                The kit is designed to be customizable to your
+                                needs. Decide what features you want to use and
+                                which ones you don't. Add call to action buttons
+                                to your app to guide your users to the features
+                                they need.
                             </Text>
                         </VStack>
                     </Box>
+                </SimpleGrid>
+            </VStack>
 
-                    <Box
-                        p={4}
-                        borderRadius="md"
-                        borderWidth="1px"
-                        bgGradient="linear(to-r, gray.50, gray.100)"
-                        position="relative"
-                        _dark={{
-                            bgGradient: 'linear(to-r, gray.700, gray.800)',
-                        }}
-                    >
-                        <VStack align="start" spacing={3}>
-                            <Icon
-                                as={MdOutlineUpcoming}
-                                boxSize={6}
-                                color="orange.400"
-                            />
-                            <Text fontWeight="bold">More Coming Soon</Text>
-                            <Text>
-                                Stay tuned for additional features and
-                                improvements as we continue to enhance the
-                                VeChain Kit ecosystem.
-                            </Text>
-                            <Box position="absolute" bottom={2} right={2}>
-                                <Icon
-                                    as={MdConstruction}
-                                    boxSize={5}
-                                    color="gray.400"
+            <VStack mt={8} spacing={4} align="stretch">
+                <Heading size="sm" textAlign="center">
+                    Explore some of the apps built with VeChain Kit
+                </Heading>
+                <Text textAlign="center" fontSize="xs">
+                    (This website is built with VeChain Kit as well!)
+                </Text>
+                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+                    {[
+                        {
+                            name: 'EatGreen',
+                            href: 'https://eatgreen.aworld.org/',
+                            logo: 'https://i.ibb.co/zVx7ncgq/download-2.png',
+                        },
+                        {
+                            name: 'ScoopUp',
+                            href: 'https://scoopup.vet/',
+                            logo: 'https://scoopup.vet/images/logo.webp',
+                        },
+                        {
+                            name: 'VeLottery',
+                            href: 'https://velottery.vet/',
+                            logo: 'https://velottery.vet/assets/logo.png',
+                        },
+                    ].map((app) => (
+                        <Box
+                            key={app.name}
+                            p={3}
+                            borderRadius="md"
+                            borderWidth="1px"
+                            role="group"
+                            as={Link}
+                            href={app.href}
+                            isExternal
+                        >
+                            <HStack
+                                align="start"
+                                spacing={2}
+                                alignItems={'center'}
+                            >
+                                <Image
+                                    src={app.logo}
+                                    alt={app.name}
+                                    width={'auto'}
+                                    height={10}
+                                    borderRadius="md"
                                 />
-                            </Box>
-                        </VStack>
-                    </Box>
+                                <Text fontWeight="bold" fontSize="sm">
+                                    {app.name}
+                                </Text>
+                            </HStack>
+                        </Box>
+                    ))}
                 </SimpleGrid>
             </VStack>
         </Box>

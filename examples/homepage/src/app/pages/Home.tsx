@@ -242,7 +242,7 @@ const Logo = () => {
         >
             <VStack spacing={0} align="center">
                 <Text fontSize={'md'} fontWeight={'bold'}>
-                    Powered by
+                    Made by
                 </Text>
                 <VechainLogo
                     maxW={200}

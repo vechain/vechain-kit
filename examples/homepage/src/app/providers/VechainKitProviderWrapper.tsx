@@ -49,7 +49,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     'metamask',
                 ],
                 appearance: {
-                    accentColor: '#696FFD',
                     loginMessage: 'Select a login method',
                     logo: logo,
                 },

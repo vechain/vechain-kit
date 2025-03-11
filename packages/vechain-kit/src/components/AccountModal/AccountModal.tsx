@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -17,6 +17,8 @@ import {
     AccessAndSecurityContent,
     EmbeddedWalletContent,
     ProfileContent,
+    AssetsContent,
+    BridgeContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -27,7 +29,9 @@ import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
-import { ManageCustomTokenContent } from './Contents/ManageCustomToken';
+import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
+import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
+import { useModal } from '@/providers/ModalProvider';
 
 type Props = {
     isOpen: boolean;
@@ -41,16 +45,18 @@ export const AccountModal = ({
     initialContent = 'main',
 }: Props) => {
     useNotificationAlerts();
-
     const { account } = useWallet();
-    const [currentContent, setCurrentContent] =
-        useState<AccountModalContentTypes>(initialContent);
+
+    const {
+        accountModalContent: currentContent,
+        setAccountModalContent: setCurrentContent,
+    } = useModal();
 
     useEffect(() => {
         if (isOpen && initialContent) {
             setCurrentContent(initialContent);
         }
-    }, [isOpen, initialContent]);
+    }, [isOpen, initialContent, setCurrentContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
@@ -61,6 +67,8 @@ export const AccountModal = ({
                     return (
                         <SendTokenSummaryContent {...currentContent.props} />
                     );
+                case 'choose-name':
+                    return <ChooseNameContent {...currentContent.props} />;
                 case 'choose-name-search':
                     return (
                         <ChooseNameSearchContent {...currentContent.props} />
@@ -94,6 +102,12 @@ export const AccountModal = ({
                             setCurrentContent={setCurrentContent}
                         />
                     );
+                case 'upgrade-smart-account':
+                    return (
+                        <UpgradeSmartAccountContent {...currentContent.props} />
+                    );
+                case 'faq':
+                    return <FAQContent {...currentContent.props} />;
             }
         }
 
@@ -120,6 +134,10 @@ export const AccountModal = ({
                         onLogoutSuccess={onClose}
                     />
                 );
+            case 'assets':
+                return <AssetsContent setCurrentContent={setCurrentContent} />;
+            case 'bridge':
+                return <BridgeContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent
@@ -141,16 +159,6 @@ export const AccountModal = ({
             case 'swap-token':
                 return (
                     <SwapTokenContent setCurrentContent={setCurrentContent} />
-                );
-            case 'choose-name':
-                return (
-                    <ChooseNameContent setCurrentContent={setCurrentContent} />
-                );
-            case 'faq':
-                return (
-                    <FAQContent
-                        onGoBack={() => setCurrentContent('settings')}
-                    />
                 );
             case 'connection-details':
                 return (

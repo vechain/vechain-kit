@@ -27,12 +27,15 @@ export interface SimpleAccountInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "UPGRADE_INTERFACE_VERSION"
+      | "customEip712Domain"
       | "eip712Domain"
       | "execute"
       | "executeBatch"
       | "executeBatchWithAuthorization"
+      | "executeBatchWithCustomAuthorization"
       | "executeWithAuthorization"
       | "initialize"
+      | "maskedChainId"
       | "onERC1155BatchReceived"
       | "onERC1155Received"
       | "onERC721Received"
@@ -41,6 +44,7 @@ export interface SimpleAccountInterface extends Interface {
       | "supportsInterface"
       | "transferOwnership"
       | "upgradeToAndCall"
+      | "usedNonces"
       | "version"
   ): FunctionFragment;
 
@@ -48,12 +52,17 @@ export interface SimpleAccountInterface extends Interface {
     nameOrSignatureOrTopic:
       | "EIP712DomainChanged"
       | "Initialized"
+      | "OwnershipTransferred"
       | "SimpleAccountInitialized"
       | "Upgraded"
   ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "UPGRADE_INTERFACE_VERSION",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "customEip712Domain",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -74,9 +83,22 @@ export interface SimpleAccountInterface extends Interface {
       AddressLike[],
       BigNumberish[],
       BytesLike[],
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "executeBatchWithCustomAuthorization",
+    values: [
+      AddressLike[],
       BigNumberish[],
-      BigNumberish[],
-      BytesLike[]
+      BytesLike[],
+      BigNumberish,
+      BigNumberish,
+      BytesLike,
+      BytesLike
     ]
   ): string;
   encodeFunctionData(
@@ -93,6 +115,10 @@ export interface SimpleAccountInterface extends Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maskedChainId",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
@@ -129,10 +155,18 @@ export interface SimpleAccountInterface extends Interface {
     functionFragment: "upgradeToAndCall",
     values: [AddressLike, BytesLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "usedNonces",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "version", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "UPGRADE_INTERFACE_VERSION",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "customEip712Domain",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -149,10 +183,18 @@ export interface SimpleAccountInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "executeBatchWithCustomAuthorization",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "executeWithAuthorization",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "maskedChainId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "onERC1155BatchReceived",
     data: BytesLike
@@ -182,6 +224,7 @@ export interface SimpleAccountInterface extends Interface {
     functionFragment: "upgradeToAndCall",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "usedNonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
 }
 
@@ -200,6 +243,19 @@ export namespace InitializedEvent {
   export type OutputTuple = [version: bigint];
   export interface OutputObject {
     version: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -276,6 +332,22 @@ export interface SimpleAccount extends BaseContract {
 
   UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
 
+  customEip712Domain: TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        customDomainVersion: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
+
   eip712Domain: TypedContractMethod<
     [],
     [
@@ -309,9 +381,24 @@ export interface SimpleAccount extends BaseContract {
       to: AddressLike[],
       value: BigNumberish[],
       data: BytesLike[],
-      validAfter: BigNumberish[],
-      validBefore: BigNumberish[],
-      signatures: BytesLike[]
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
+    ],
+    [void],
+    "payable"
+  >;
+
+  executeBatchWithCustomAuthorization: TypedContractMethod<
+    [
+      to: AddressLike[],
+      value: BigNumberish[],
+      data: BytesLike[],
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
     ],
     [void],
     "payable"
@@ -331,6 +418,8 @@ export interface SimpleAccount extends BaseContract {
   >;
 
   initialize: TypedContractMethod<[anOwner: AddressLike], [void], "nonpayable">;
+
+  maskedChainId: TypedContractMethod<[], [bigint], "view">;
 
   onERC1155BatchReceived: TypedContractMethod<
     [
@@ -384,7 +473,9 @@ export interface SimpleAccount extends BaseContract {
     "payable"
   >;
 
-  version: TypedContractMethod<[], [string], "view">;
+  usedNonces: TypedContractMethod<[arg0: BytesLike], [boolean], "view">;
+
+  version: TypedContractMethod<[], [bigint], "view">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -393,6 +484,23 @@ export interface SimpleAccount extends BaseContract {
   getFunction(
     nameOrSignature: "UPGRADE_INTERFACE_VERSION"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "customEip712Domain"
+  ): TypedContractMethod<
+    [],
+    [
+      [string, string, string, bigint, string, string, bigint[]] & {
+        fields: string;
+        name: string;
+        customDomainVersion: string;
+        chainId: bigint;
+        verifyingContract: string;
+        salt: string;
+        extensions: bigint[];
+      }
+    ],
+    "view"
+  >;
   getFunction(
     nameOrSignature: "eip712Domain"
   ): TypedContractMethod<
@@ -431,9 +539,25 @@ export interface SimpleAccount extends BaseContract {
       to: AddressLike[],
       value: BigNumberish[],
       data: BytesLike[],
-      validAfter: BigNumberish[],
-      validBefore: BigNumberish[],
-      signatures: BytesLike[]
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
+    ],
+    [void],
+    "payable"
+  >;
+  getFunction(
+    nameOrSignature: "executeBatchWithCustomAuthorization"
+  ): TypedContractMethod<
+    [
+      to: AddressLike[],
+      value: BigNumberish[],
+      data: BytesLike[],
+      validAfter: BigNumberish,
+      validBefore: BigNumberish,
+      nonce: BytesLike,
+      signature: BytesLike
     ],
     [void],
     "payable"
@@ -455,6 +579,9 @@ export interface SimpleAccount extends BaseContract {
   getFunction(
     nameOrSignature: "initialize"
   ): TypedContractMethod<[anOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "maskedChainId"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "onERC1155BatchReceived"
   ): TypedContractMethod<
@@ -508,8 +635,11 @@ export interface SimpleAccount extends BaseContract {
     "payable"
   >;
   getFunction(
+    nameOrSignature: "usedNonces"
+  ): TypedContractMethod<[arg0: BytesLike], [boolean], "view">;
+  getFunction(
     nameOrSignature: "version"
-  ): TypedContractMethod<[], [string], "view">;
+  ): TypedContractMethod<[], [bigint], "view">;
 
   getEvent(
     key: "EIP712DomainChanged"
@@ -524,6 +654,13 @@ export interface SimpleAccount extends BaseContract {
     InitializedEvent.InputTuple,
     InitializedEvent.OutputTuple,
     InitializedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "SimpleAccountInitialized"
@@ -561,6 +698,17 @@ export interface SimpleAccount extends BaseContract {
       InitializedEvent.InputTuple,
       InitializedEvent.OutputTuple,
       InitializedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "SimpleAccountInitialized(address)": TypedContractEvent<

@@ -1,10 +1,10 @@
+#### An all-in-one library for building VeChain applications.
+
 <div align="center">
-    <h1><code>vechain-kit</code></h1>
-    <p>
-        <strong>An all-in-one library for building VeChain applications</strong>
-    </p>
     <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
 </div>
+
+## Introduction
 
 VeChain Kit is a comprehensive library designed to make building VeChain applications fast and straightforward.
 
@@ -320,7 +320,6 @@ export function TransactionExamples() {
         resetStatus,
         isTransactionPending,
         error,
-        progress,
     } = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
     });
@@ -337,6 +336,11 @@ export function TransactionExamples() {
         await sendTransaction(clauses);
     }, [sendTransaction, clauses, openTransactionModal]);
 
+    const handleTryAgain = useCallback(async () => {
+        resetStatus();
+        await sendTransaction(clauses);
+    }, [sendTransaction, clauses, resetStatus]);
+
     return (
         <>
             <button
@@ -351,13 +355,18 @@ export function TransactionExamples() {
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
                 status={status}
-                progress={progress}
-                txId={txReceipt?.meta.txID}
-                errorDescription={error?.reason ?? 'Unknown error'}
-                showSocialButtons={true}
-                showExplorerButton={true}
-                onTryAgain={handleTransactionWithModal}
-                showTryAgainButton={true}
+                txReceipt={txReceipt}
+                txError={error}
+                onTryAgain={handleTryAgain}
+                uiConfig={{
+                    title: 'Test Transaction',
+                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
+                        account?.address
+                    }`,
+                    showShareOnSocials: true,
+                    showExplorerButton: true,
+                    isClosable: true,
+                }}
             />
         </>
     );

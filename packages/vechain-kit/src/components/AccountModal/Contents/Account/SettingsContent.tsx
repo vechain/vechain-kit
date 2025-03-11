@@ -14,7 +14,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
-import { ActionButton, ProfileCard } from '@/components';
+import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
@@ -26,6 +26,7 @@ import { BiBell } from 'react-icons/bi';
 import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { FaRegAddressCard } from 'react-icons/fa';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -41,9 +42,9 @@ export const SettingsContent = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
 
-    const { connection, account, disconnect } = useWallet();
+    const { connection, disconnect, account } = useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -63,14 +64,7 @@ export const SettingsContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Settings')}
-                </ModalHeader>
+                <ModalHeader>{t('Settings')}</ModalHeader>
 
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -78,29 +72,6 @@ export const SettingsContent = ({
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} spacing={0}>
-                    <ProfileCard
-                        showDescription={false}
-                        showLinks={false}
-                        showDisplayName={false}
-                        onEditClick={() =>
-                            setCurrentContent('account-customization')
-                        }
-                        address={account?.address ?? ''}
-                        onLogout={() => {
-                            setCurrentContent?.({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: () => {
-                                        disconnect();
-                                        onLogoutSuccess?.();
-                                    },
-                                    onBack: () =>
-                                        setCurrentContent?.('settings'),
-                                },
-                            });
-                        }}
-                    />
-
                     <ActionButton
                         style={{
                             marginTop: '10px',
@@ -108,14 +79,31 @@ export const SettingsContent = ({
                                 ? '0px'
                                 : '12px',
                         }}
-                        title={t('Connection details')}
-                        description={t(
-                            'View the details of your connection to this app.',
-                        )}
+                        title={t('Choose account name')}
+                        description={t('Choose a name for your account.')}
                         onClick={() => {
-                            setCurrentContent('connection-details');
+                            if (account?.domain) {
+                                setCurrentContent({
+                                    type: 'choose-name-search',
+                                    props: {
+                                        name: '',
+                                        setCurrentContent,
+                                        initialContentSource: 'settings',
+                                    },
+                                });
+                            } else {
+                                setCurrentContent({
+                                    type: 'choose-name',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContentSource: 'settings',
+                                        onBack: () =>
+                                            setCurrentContent('settings'),
+                                    },
+                                });
+                            }
                         }}
-                        leftIcon={VscDebugDisconnect}
+                        leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
                     />
 
@@ -139,6 +127,21 @@ export const SettingsContent = ({
                     <ActionButton
                         style={{
                             marginTop: '10px',
+                            borderBottomRadius: '0px',
+                        }}
+                        title={t('Connection details')}
+                        description={t(
+                            'View the details of your connection to this app.',
+                        )}
+                        onClick={() => {
+                            setCurrentContent('connection-details');
+                        }}
+                        leftIcon={VscDebugDisconnect}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+                    <ActionButton
+                        style={{
+                            borderTopRadius: '0px',
                             borderBottomRadius: '0px',
                         }}
                         title={t('Notifications')}
@@ -182,7 +185,15 @@ export const SettingsContent = ({
                                       '',
                             },
                         )}
-                        onClick={() => setCurrentContent('faq')}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'faq',
+                                props: {
+                                    onGoBack: () =>
+                                        setCurrentContent('settings'),
+                                },
+                            })
+                        }
                         leftIcon={BsQuestionCircle}
                         rightIcon={MdOutlineNavigateNext}
                         style={{
@@ -192,26 +203,31 @@ export const SettingsContent = ({
                 </VStack>
             </ModalBody>
             <ModalFooter>
-                <Button
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'disconnect-confirm',
-                            props: {
-                                onDisconnect: () => {
-                                    disconnect();
-                                    onLogoutSuccess();
+                <VStack w={'full'} spacing={4}>
+                    <Button
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: () => {
+                                        disconnect();
+                                        onLogoutSuccess();
+                                    },
+                                    onBack: () => setCurrentContent('settings'),
                                 },
-                                onBack: () => setCurrentContent('settings'),
-                            },
-                        })
-                    }
-                    variant="vechainKitSecondary"
-                    leftIcon={
-                        <RiLogoutBoxLine color="#888888" fontSize={'16px'} />
-                    }
-                >
-                    {t('Logout')}
-                </Button>
+                            })
+                        }
+                        variant="vechainKitSecondary"
+                        leftIcon={
+                            <RiLogoutBoxLine
+                                color="#888888"
+                                fontSize={'16px'}
+                            />
+                        }
+                    >
+                        {t('Logout')}
+                    </Button>
+                </VStack>
             </ModalFooter>
         </Box>
     );

@@ -59,7 +59,7 @@ export type VechainKitProviderProps = {
         clientId: string;
         appearance: {
             walletList?: WalletListEntry[];
-            accentColor: `#${string}`;
+            // accentColor: `#${string}`;
             loginMessage: string;
             logo: string;
         };
@@ -289,7 +289,7 @@ export const VeChainKitProvider = (
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',
-                                accentColor: privy?.appearance.accentColor,
+                                accentColor: darkMode ? '#3182CE' : '#2B6CB0',
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
@@ -316,6 +316,7 @@ export const VeChainKitProvider = (
                             modalParent={dappKit.modalParent}
                             onSourceClick={dappKit.onSourceClick}
                             usePersistence={dappKit.usePersistence ?? true}
+                            allowedWallets={dappKit.allowedWallets}
                             walletConnectOptions={dappKit.walletConnectOptions}
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={{

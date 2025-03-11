@@ -193,17 +193,21 @@ export const ProfileCard = ({
                 <CardFooter pt={0} justify="space-between">
                     <VStack w="full" justify="space-between" spacing={4}>
                         <Divider />
-                        <HStack w="full" justify="space-around">
+                        <HStack w="full" justify="space-between">
                             <Button
-                                size="sm"
+                                size="md"
+                                width="full"
+                                height="40px"
                                 variant="ghost"
                                 leftIcon={<Icon as={FaEdit} />}
                                 onClick={onEditClick ?? (() => {})}
                             >
-                                {t('Edit')}
+                                {t('Customize')}
                             </Button>
                             <Button
-                                size="sm"
+                                size="md"
+                                width="full"
+                                height="40px"
                                 variant="ghost"
                                 leftIcon={<Icon as={RiLogoutBoxLine} />}
                                 colorScheme="red"

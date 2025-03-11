@@ -4,10 +4,6 @@ import {
     VStack,
     ModalFooter,
     ModalHeader,
-    Text,
-    HStack,
-    Image,
-    Divider,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -15,18 +11,13 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import {
-    useCrossAppConnectionCache,
-    useFetchAppInfo,
-    useWallet,
-} from '@/hooks';
+import { useCrossAppConnectionCache, useWallet } from '@/hooks';
 import {
     CrossAppConnectionCard,
     DappKitConnectionCard,
     PrivyConnectionCard,
     WalletSecuredBy,
 } from './Components';
-import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     onGoBack: () => void;
@@ -36,24 +27,14 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const { t } = useTranslation();
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
-
-    const { data: appInfo } = useFetchAppInfo(privy?.appId ?? '');
 
     const connectionCache = getConnectionCache();
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Connection Details')}
-                </ModalHeader>
+                <ModalHeader>{t('Connection Details')}</ModalHeader>
 
                 <ModalBackButton
                     onClick={() => {
@@ -78,64 +59,9 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                     </VStack>
                 )}
 
-                {(connection.isConnectedWithSocialLogin ||
-                    connection.isConnectedWithCrossApp) && (
-                    <VStack spacing={4} mt={5}>
-                        <Divider />
-                        <VStack
-                            spacing={4}
-                            p={4}
-                            borderRadius="lg"
-                            bg={isDark ? 'whiteAlpha.100' : 'blackAlpha.50'}
-                        >
-                            <Text
-                                fontSize="xs"
-                                fontWeight="normal"
-                                textAlign={'center'}
-                            >
-                                {t(
-                                    'To use this identity on other applications always choose this option as login method:',
-                                )}
-                            </Text>
-
-                            <HStack
-                                p={3}
-                                borderRadius="lg"
-                                bg={isDark ? 'whiteAlpha.200' : 'white'}
-                                shadow="sm"
-                                spacing={4}
-                            >
-                                <Image
-                                    src={
-                                        connection.isConnectedWithCrossApp
-                                            ? connectionCache?.ecosystemApp
-                                                  ?.logoUrl
-                                            : Object.values(appInfo ?? {})[0]
-                                                  ?.logo_url ?? ''
-                                    }
-                                    alt="App Logo"
-                                    boxSize="24px"
-                                    borderRadius="md"
-                                />
-                                <Text fontSize="sm" fontWeight="500">
-                                    {t('Login with {{appName}}', {
-                                        appName:
-                                            connection.isConnectedWithCrossApp
-                                                ? connectionCache?.ecosystemApp
-                                                      ?.name
-                                                : Object.values(
-                                                      appInfo ?? {},
-                                                  )[0]?.name ?? '',
-                                    })}
-                                </Text>
-                            </HStack>
-                        </VStack>
-                    </VStack>
-                )}
-
                 {connection.isConnectedWithPrivy && <WalletSecuredBy />}
             </ModalBody>
-            <ModalFooter></ModalFooter>
+            <ModalFooter pt={0} />
         </ScrollToTopWrapper>
     );
 };

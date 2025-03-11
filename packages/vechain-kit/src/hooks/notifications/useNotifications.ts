@@ -1,26 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useWallet } from '@/hooks';
-
-export type Notification = {
-    id: string;
-    title: string;
-    description: string;
-    timestamp: number;
-    status: 'info' | 'warning' | 'success' | 'error';
-    isRead: boolean;
-};
-
-const DEFAULT_NOTIFICATIONS = [
-    {
-        id: 'welcome',
-        title: 'Welcome to the VeChain',
-        description:
-            'Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.',
-        timestamp: Date.now(),
-        status: 'success' as const,
-        isRead: false,
-    },
-];
+import { Notification } from './types';
+import { DEFAULT_NOTIFICATIONS } from './useNotificationAlerts';
 
 export const useNotifications = () => {
     const { account } = useWallet();
@@ -102,6 +83,23 @@ export const useNotifications = () => {
         [account?.address, getNotifications, getStorageKeys],
     );
 
+    const deleteNotification = useCallback(
+        (notificationId: string) => {
+            if (!account?.address) return;
+
+            const keys = getStorageKeys(account.address);
+            const notifications = getNotifications();
+            const updatedNotifications = notifications.filter(
+                (n) => n.id !== notificationId,
+            );
+            localStorage.setItem(
+                keys.notifications,
+                JSON.stringify(updatedNotifications),
+            );
+        },
+        [account?.address, getNotifications, getStorageKeys],
+    );
+
     const clearAllNotifications = useCallback(() => {
         if (!account?.address) return;
 
@@ -169,5 +167,6 @@ export const useNotifications = () => {
         addNotification,
         clearAllNotifications,
         markAsRead,
+        deleteNotification,
     };
 };

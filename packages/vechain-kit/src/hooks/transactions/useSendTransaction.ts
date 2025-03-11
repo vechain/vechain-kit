@@ -8,7 +8,6 @@ import {
     EnhancedClause,
     TransactionStatus,
     TransactionStatusErrorType,
-    TransactionProgress,
 } from '@/types';
 import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
 
@@ -101,7 +100,6 @@ export type UseSendTransactionReturnValue = {
     status: TransactionStatus;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
-    progress?: TransactionProgress;
 };
 
 /**
@@ -110,6 +108,24 @@ export type UseSendTransactionReturnValue = {
  *
  * It returns a function to send the transaction and a status to indicate the state
  * of the transaction (together with the transaction id).
+ *
+ * * ⚠️ IMPORTANT: When using this hook with Privy cross-app connections, ensure all
+ * data fetching is done before triggering the transaction. Fetching data after
+ * the transaction is triggered may cause browser popup blocking. Pre-fetch any
+ * required data and pass it to your transaction building logic.
+ *
+ * @example
+ * ```typescript
+ * // ❌ Bad: Fetching during transaction
+ * const sendTx = async () => {
+ *   const data = await fetchSomeData(); // May cause popup blocking
+ *   return sendTransaction(data);
+ * };
+ *
+ * // ✅ Good: Pre-fetch data
+ * const { data } = useQuery(['someData'], fetchSomeData);
+ * const sendTx = () => sendTransaction(data); // No async operations
+ * ```
  *
  * @param signerAccount the signer account to use
  * @param clauses clauses to send in the transaction
@@ -172,7 +188,6 @@ export const useSendTransaction = ({
                 title?: string;
                 description?: string;
                 buttonText?: string;
-                onProgress?: (progress: TransactionProgress) => void;
             },
         ) => {
             if (connection.isConnectedWithPrivy) {
@@ -180,6 +195,7 @@ export const useSendTransaction = ({
                     txClauses: clauses,
                     ...privyUIOptions,
                     ...options,
+                    suggestedMaxGas,
                 });
             }
 
@@ -238,9 +254,6 @@ export const useSendTransaction = ({
         string | null
     >(null);
 
-    // Add progress state
-    const [progress, setProgress] = useState<TransactionProgress>();
-
     const sendTransactionAdapter = useCallback(
         async (_clauses?: EnhancedClause[]): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
@@ -253,7 +266,6 @@ export const useSendTransaction = ({
                     await convertClauses(_clauses ?? []),
                     {
                         ...privyUIOptions,
-                        onProgress: setProgress,
                     },
                 );
                 // If we send the transaction with the smart account, we get the txid as a string
@@ -271,7 +283,6 @@ export const useSendTransaction = ({
                 onTxFailedOrCancelled?.();
             } finally {
                 setSendTransactionPending(false);
-                setProgress(undefined);
             }
         },
         [sendTransaction, clauses, convertClauses, privyUIOptions],
@@ -364,11 +375,21 @@ export const useSendTransaction = ({
             if (txReceipt?.reverted && !error?.type) {
                 (async () => {
                     const revertReason = await explainTxRevertReason(txReceipt);
+
+                    const message = revertReason
+                        ?.filter((clause) => {
+                            return clause.reverted && clause.revertReason;
+                        })
+                        .map((clause) => {
+                            return clause.revertReason;
+                        })
+                        .join(', ');
+
                     setError({
                         type: 'RevertReasonError',
-                        reason:
-                            revertReason?.[0]?.revertReason ??
-                            'Transaction reverted',
+                        reason: message
+                            ? 'Transaction reverted with: ' + message
+                            : 'Transaction reverted',
                     });
                 })();
                 return;
@@ -420,6 +441,5 @@ export const useSendTransaction = ({
         status,
         resetStatus,
         error,
-        progress,
     };
 };
