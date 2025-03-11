@@ -23,7 +23,7 @@ export type Token = {
     symbol: string;
     balance: string;
     address: string;
-    numericBalance: number;
+    numericBalance: string;
     price: number;
 };
 
@@ -41,7 +41,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { account } = useWallet();
     const { tokens } = useBalances({ address: account?.address ?? '' });
     const [searchQuery, setSearchQuery] = useState('');
-
+    console.log(tokens);
     // Convert tokens object to array and add custom tokens
     const allTokens: Token[] = [
         ...Object.entries(tokens).map(([symbol, data]) => ({
@@ -59,10 +59,13 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            if (a.numericBalance > 0 !== b.numericBalance > 0) {
-                return b.numericBalance > 0 ? 1 : -1;
+            if (Number(a.numericBalance) > 0 !== Number(b.numericBalance) > 0) {
+                return Number(b.numericBalance) > 0 ? 1 : -1;
             }
-            return b.numericBalance * b.price - a.numericBalance * a.price;
+            return (
+                Number(b.numericBalance) * b.price -
+                Number(a.numericBalance) * a.price
+            );
         });
 
     return (
@@ -116,15 +119,16 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                     ) : (
                         <VStack spacing={2} align="stretch">
                             {filteredTokens.map((token) => {
-                                const hasBalance = token.numericBalance > 0;
+                                const hasBalance =
+                                    Number(token.numericBalance) > 0;
                                 const usdValue =
-                                    token.numericBalance * token.price;
+                                    Number(token.numericBalance) * token.price;
 
                                 return (
                                     <AssetButton
                                         key={token.address}
                                         symbol={token.symbol}
-                                        amount={token.numericBalance}
+                                        amount={Number(token.numericBalance)}
                                         usdValue={usdValue}
                                         onClick={() => onSelectToken(token)}
                                         isDisabled={!hasBalance}

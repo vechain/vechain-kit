@@ -5,6 +5,8 @@ import { IERC20__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
+import { formatEther } from 'ethers';
+import { humanNumber } from '@/utils';
 
 const ERC20Interface = IERC20__factory.createInterface();
 
@@ -12,7 +14,7 @@ export const getVeDelegateBalance = async (
     thor: Connex.Thor,
     network: NETWORK_TYPE,
     address?: string,
-): Promise<string> => {
+): Promise<{ original: string; scaled: string; formatted: string }> => {
     const functionFragment =
         ERC20Interface.getFunction('balanceOf').format('json');
 
@@ -23,7 +25,15 @@ export const getVeDelegateBalance = async (
 
     if (res.reverted) throw new Error('Reverted');
 
-    return res.decoded[0];
+    const original = res.decoded[0];
+    const scaled = formatEther(original);
+    const formatted = scaled === '0' ? '0' : humanNumber(scaled);
+
+    return {
+        original,
+        scaled,
+        formatted,
+    };
 };
 
 export const getVeDelegateBalanceQueryKey = (address?: string) => [

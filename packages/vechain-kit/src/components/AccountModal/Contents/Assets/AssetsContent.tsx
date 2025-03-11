@@ -41,7 +41,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const handleTokenSelect = (token: {
         symbol: string;
         address: string;
-        value: number;
+        value: string;
         price: number;
     }) => {
         setCurrentContent({
@@ -71,7 +71,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 value: tokens[token.symbol]?.value ?? 0,
                 price: tokens[token.symbol]?.price ?? 0,
             })),
-    ].sort((a, b) => b.value * b.price - a.value * a.price);
+    ].sort((a, b) => Number(b.value) * b.price - Number(a.value) * a.price);
 
     // Filter and sort tokens
     const filteredTokens = allTokens
@@ -79,10 +79,10 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            if (a.value > 0 !== b.value > 0) {
-                return b.value > 0 ? 1 : -1;
+            if (Number(a.value) > 0 !== Number(b.value) > 0) {
+                return Number(b.value) > 0 ? 1 : -1;
             }
-            return b.value * b.price - a.value * a.price;
+            return Number(b.value) * b.price - Number(a.value) * a.price;
         });
 
     return (
@@ -116,9 +116,9 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                         <AssetButton
                             key={token.address}
                             symbol={token.symbol}
-                            amount={token.value}
-                            usdValue={token.value * token.price}
-                            isDisabled={token.value === 0}
+                            amount={Number(token.value)}
+                            usdValue={Number(token.value) * token.price}
+                            isDisabled={Number(token.value) === 0}
                             onClick={() => handleTokenSelect(token)}
                         />
                     ))}
