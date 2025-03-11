@@ -17,7 +17,7 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
     useCurrentAllocationsRoundId,
     useEcosystemShortcuts,
@@ -27,6 +27,8 @@ import {
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
+import { VeBetterLogo } from '@/assets';
+import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -42,6 +44,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         external_url: 'https://governance.vebetterdao.org/',
         logo: 'https://i.ibb.co/cgJBj83/vbd.png',
         banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+        logoComponent: <VeBetterLogo w="150px" h="auto" />,
         screenshots: [],
         social_urls: [],
         app_urls: [],
@@ -57,6 +60,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         external_url: 'https://vet.domains',
         logo: 'https://vet.domains/assets/walletconnect.png',
         banner: 'https://vet.domains/assets/walletconnect.png',
+        logoComponent: <VETLogo w="80px" h="auto" />,
         screenshots: [],
         social_urls: [],
         app_urls: [],
@@ -100,7 +104,18 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
 
     const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
         dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    ).map((dapp) => {
+        // If the dapp has a logo component, we need to clone it and pass the isDark prop
+        if (dapp.logoComponent) {
+            return {
+                ...dapp,
+                logoComponent: React.cloneElement(dapp.logoComponent, {
+                    isDark,
+                }),
+            };
+        }
+        return dapp;
+    });
 
     const { shortcuts } = useEcosystemShortcuts();
 
@@ -158,6 +173,9 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                                     url={dapp.external_url}
                                     setCurrentContent={setCurrentContent}
                                     description={dapp.description}
+                                    {...(dapp.logoComponent && {
+                                        logoComponent: dapp.logoComponent,
+                                    })}
                                 />
                             </GridItem>
                         ))}

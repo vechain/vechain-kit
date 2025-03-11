@@ -25,6 +25,7 @@ type Props = {
     image: string;
     url: string;
     description?: string;
+    logoComponent?: JSX.Element;
 };
 
 export const AppOverviewContent = ({
@@ -33,6 +34,7 @@ export const AppOverviewContent = ({
     image,
     url,
     description,
+    logoComponent,
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -56,15 +58,18 @@ export const AppOverviewContent = ({
 
             <ModalBody>
                 <VStack spacing={6} align="center" w="full">
-                    <Image
-                        src={image}
-                        alt={name}
-                        w={'200px'}
-                        h={'200px'}
-                        objectFit="contain"
-                        borderRadius={'xl'}
-                    />
-
+                    {logoComponent ? (
+                        logoComponent
+                    ) : (
+                        <Image
+                            src={image}
+                            alt={name}
+                            w={'200px'}
+                            h={'200px'}
+                            objectFit="contain"
+                            borderRadius={'xl'}
+                        />
+                    )}
                     <Text fontSize="sm" textAlign="center">
                         {description}
                     </Text>

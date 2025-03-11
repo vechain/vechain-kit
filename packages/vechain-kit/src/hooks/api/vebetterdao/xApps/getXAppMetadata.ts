@@ -18,6 +18,7 @@ export type XAppMetadata = {
     external_url: string;
     logo: string;
     banner: string;
+    logoComponent?: JSX.Element;
     screenshots: string[];
     social_urls: {
         name: string;

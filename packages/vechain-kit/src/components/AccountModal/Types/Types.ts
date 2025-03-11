@@ -50,6 +50,7 @@ export type AccountModalContentTypes =
               image: string;
               url: string;
               description?: string;
+              logoComponent?: JSX.Element;
           };
       }
     | { type: 'send-token'; props: SendTokenContentProps }
