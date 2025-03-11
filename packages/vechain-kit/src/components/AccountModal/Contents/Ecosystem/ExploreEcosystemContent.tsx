@@ -27,7 +27,6 @@ import {
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
-import { VeBetterLogo } from '@/assets';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -43,7 +42,6 @@ const DEFAULT_APPS: XAppMetadata[] = [
         external_url: 'https://governance.vebetterdao.org/',
         logo: 'https://i.ibb.co/cgJBj83/vbd.png',
         banner: 'https://i.ibb.co/cgJBj83/vbd.png',
-        logoComponent: <VeBetterLogo w="150px" h="auto" />,
         screenshots: [],
         social_urls: [],
         app_urls: [],
