@@ -7,7 +7,7 @@ import {
     VStack,
     ButtonProps,
 } from '@chakra-ui/react';
-import { TOKEN_LOGOS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_SYMBOL_COMPONENTS } from '@/utils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -46,26 +46,30 @@ export const AssetButton = ({
         {...buttonProps}
     >
         <HStack>
-            <Image
-                src={TOKEN_LOGOS[symbol]}
-                alt={`${symbol} logo`}
-                boxSize="24px"
-                borderRadius="full"
-                fallback={
-                    <Box
-                        boxSize="24px"
-                        borderRadius="full"
-                        bg="whiteAlpha.200"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <Text fontSize="10px" fontWeight="bold">
-                            {symbol.slice(0, 3)}
-                        </Text>
-                    </Box>
-                }
-            />
+            {TOKEN_SYMBOL_COMPONENTS[symbol] ? (
+                TOKEN_SYMBOL_COMPONENTS[symbol]
+            ) : (
+                <Image
+                    src={TOKEN_LOGOS[symbol]}
+                    alt={`${symbol} logo`}
+                    boxSize="24px"
+                    borderRadius="full"
+                    fallback={
+                        <Box
+                            boxSize="24px"
+                            borderRadius="full"
+                            bg="whiteAlpha.200"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Text fontSize="10px" fontWeight="bold">
+                                {symbol.slice(0, 3)}
+                            </Text>
+                        </Box>
+                    }
+                />
+            )}
             <Text>{symbol}</Text>
         </HStack>
         <VStack align="flex-end" spacing={0}>
