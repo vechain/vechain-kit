@@ -6,6 +6,7 @@ import {
     Text,
     Button,
     Icon,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -17,10 +18,14 @@ export type ChooseNameContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    onBack?: () => void;
+    initialContentSource?: AccountModalContentTypes;
 };
 
 export const ChooseNameContent = ({
     setCurrentContent,
+    onBack = () => setCurrentContent('settings'),
+    initialContentSource = 'settings',
 }: ChooseNameContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -28,17 +33,8 @@ export const ChooseNameContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Choose your account name')}
-                </ModalHeader>
-                <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
-                />
+                <ModalHeader>{t('Choose your account name')}</ModalHeader>
+                <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -65,23 +61,25 @@ export const ChooseNameContent = ({
                             )}
                         </Text>
                     </VStack>
-
-                    <Button
-                        variant="vechainKitPrimary"
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'choose-name-search',
-                                props: {
-                                    name: '',
-                                    setCurrentContent: setCurrentContent,
-                                },
-                            })
-                        }
-                    >
-                        {t('Choose name')}
-                    </Button>
                 </VStack>
             </ModalBody>
+            <ModalFooter>
+                <Button
+                    variant="vechainKitPrimary"
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'choose-name-search',
+                            props: {
+                                name: '',
+                                setCurrentContent: setCurrentContent,
+                                initialContentSource,
+                            },
+                        })
+                    }
+                >
+                    {t('Choose name')}
+                </Button>
+            </ModalFooter>
         </>
     );
 };

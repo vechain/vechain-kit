@@ -23,6 +23,7 @@ type BaseModalProps = {
     initialFocusRef?: React.RefObject<HTMLElement>;
     allowExternalFocus?: boolean;
     backdropFilter?: string;
+    isCloseable?: boolean;
 };
 
 export const BaseModal = ({
@@ -36,6 +37,7 @@ export const BaseModal = ({
     blockScrollOnMount = false,
     allowExternalFocus = false,
     backdropFilter,
+    isCloseable = true,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
     const { darkMode } = useVeChainKitConfig();
@@ -64,7 +66,7 @@ export const BaseModal = ({
                 // scrollBehavior="inside"
                 returnFocusOnClose={false}
                 blockScrollOnMount={blockScrollOnMount}
-                closeOnOverlayClick={closeOnOverlayClick}
+                closeOnOverlayClick={closeOnOverlayClick && isCloseable}
                 preserveScrollBarGap={true}
                 portalProps={{ containerRef: undefined }}
                 trapFocus={!allowExternalFocus}

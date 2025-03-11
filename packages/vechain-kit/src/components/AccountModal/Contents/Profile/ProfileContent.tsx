@@ -3,11 +3,11 @@ import {
     ModalCloseButton,
     ModalHeader,
     Box,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { ProfileCard } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 
@@ -24,21 +24,12 @@ export const ProfileContent = ({
 }: ProfileContentProps) => {
     const { t } = useTranslation();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
-
     const { account, disconnect } = useWallet();
 
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Profile')}
-                </ModalHeader>
+                <ModalHeader>{t('Profile')}</ModalHeader>
 
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />
@@ -58,12 +49,13 @@ export const ProfileContent = ({
                                     disconnect();
                                     onLogoutSuccess?.();
                                 },
-                                onBack: () => setCurrentContent?.('settings'),
+                                onBack: () => setCurrentContent?.('profile'),
                             },
                         });
                     }}
                 />
             </ModalBody>
+            <ModalFooter pt={0} />
         </Box>
     );
 };

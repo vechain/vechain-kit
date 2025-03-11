@@ -27,7 +27,14 @@ export const FeatureAnnouncementCard = ({
     const titleColor = useColorModeValue('gray.800', 'whiteAlpha.900');
 
     const handleOnClick = () => {
-        setCurrentContent('choose-name');
+        setCurrentContent({
+            type: 'choose-name',
+            props: {
+                setCurrentContent,
+                onBack: () => setCurrentContent('main'),
+                initialContentSource: 'main',
+            },
+        });
         closeAnnouncement();
     };
 

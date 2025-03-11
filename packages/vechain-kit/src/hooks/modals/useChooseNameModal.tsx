@@ -10,7 +10,14 @@ export const useChooseNameModal = () => {
     } = useModal();
 
     const open = () => {
-        setAccountModalContent('choose-name');
+        setAccountModalContent({
+            type: 'choose-name',
+            props: {
+                setCurrentContent: setAccountModalContent,
+                onBack: () => setAccountModalContent('main'),
+                initialContentSource: 'main',
+            },
+        });
         openAccountModal();
     };
 

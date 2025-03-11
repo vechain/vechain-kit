@@ -96,7 +96,7 @@ type PrivyLinkedAccountsProps = {
 
 export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, privy, dappKit } = useVeChainKitConfig();
+    const { privy, dappKit } = useVeChainKitConfig();
     const [unlinkingAccount, setUnlinkingAccount] = useState<any>(null);
     const [showLinkOptions, setShowLinkOptions] = useState(false);
     const [showFullText, setShowFullText] = useState(false);
@@ -326,14 +326,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         return (
             <ScrollToTopWrapper>
                 <StickyHeaderContainer>
-                    <ModalHeader
-                        fontSize={'md'}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                        color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                    >
-                        {t('Add Login Method')}
-                    </ModalHeader>
+                    <ModalHeader>{t('Add Login Method')}</ModalHeader>
                     <ModalBackButton
                         onClick={() => setShowLinkOptions(false)}
                     />
@@ -341,6 +334,15 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                 </StickyHeaderContainer>
                 <ModalBody w="full">
                     <VStack spacing={3} align="stretch" w="full">
+                        <ActionButton
+                            title={t('Set up Passkey')}
+                            description={t(
+                                'Set up a passkey for easier access',
+                            )}
+                            onClick={() => linkPasskey()}
+                            leftIcon={IoIosFingerPrint}
+                        />
+
                         {canLinkGoogle && (
                             <ActionButton
                                 title={t('Link Google Account')}
@@ -507,7 +509,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                             )}
                     </VStack>
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter pt={0} />
             </ScrollToTopWrapper>
         );
     }
@@ -516,14 +518,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         return (
             <ScrollToTopWrapper>
                 <StickyHeaderContainer>
-                    <ModalHeader
-                        fontSize={'md'}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                        color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                    >
-                        {t('Remove Login Method')}
-                    </ModalHeader>
+                    <ModalHeader>{t('Remove Login Method')}</ModalHeader>
                     <ModalBackButton
                         onClick={() => setUnlinkingAccount(null)}
                     />
@@ -540,7 +535,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         onCancel={() => setUnlinkingAccount(null)}
                     />
                 </ModalBody>
-                <ModalFooter></ModalFooter>
+                <ModalFooter pt={0} />
             </ScrollToTopWrapper>
         );
     }
@@ -548,14 +543,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Login methods')}
-                </ModalHeader>
+                <ModalHeader>{t('Login methods')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -679,34 +667,33 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 </Button>
                             </Flex>
                         ))}
-
-                    <Button
-                        mt={2}
-                        w="full"
-                        variant="vechainKitSecondary"
-                        onClick={() => setShowLinkOptions(true)}
-                        leftIcon={<Icon as={FaPlus} />}
-                        isDisabled={
-                            !canLinkGoogle &&
-                            !canLinkEmail &&
-                            !canLinkTwitter &&
-                            !canLinkSms &&
-                            !canLinkSpotify &&
-                            !canLinkApple &&
-                            !canLinkInstagram &&
-                            !canLinkTiktok &&
-                            !canLinkGithub &&
-                            !canLinkLinkedin &&
-                            !canLinkTelegram &&
-                            !canLinkFarcaster &&
-                            !canLinkDiscord
-                        }
-                    >
-                        {t('Add Login Method')}
-                    </Button>
                 </VStack>
             </ModalBody>
-            <ModalFooter></ModalFooter>
+            <ModalFooter>
+                <Button
+                    w="full"
+                    variant="vechainKitSecondary"
+                    onClick={() => setShowLinkOptions(true)}
+                    leftIcon={<Icon as={FaPlus} />}
+                    isDisabled={
+                        !canLinkGoogle &&
+                        !canLinkEmail &&
+                        !canLinkTwitter &&
+                        !canLinkSms &&
+                        !canLinkSpotify &&
+                        !canLinkApple &&
+                        !canLinkInstagram &&
+                        !canLinkTiktok &&
+                        !canLinkGithub &&
+                        !canLinkLinkedin &&
+                        !canLinkTelegram &&
+                        !canLinkFarcaster &&
+                        !canLinkDiscord
+                    }
+                >
+                    {t('Add Login Method')}
+                </Button>
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

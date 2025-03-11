@@ -15,7 +15,7 @@ import { IconType } from 'react-icons';
 
 type ActionButtonProps = {
     title: string;
-    description: string;
+    description?: string;
     onClick: () => void;
     leftIcon?: IconType;
     rightIcon?: IconType;

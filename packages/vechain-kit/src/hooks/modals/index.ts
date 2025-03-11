@@ -12,3 +12,4 @@ export * from './useFAQModal';
 export * from './useAccountCustomizationModal';
 export * from './useReceiveModal';
 export * from './useLoginModalContent';
+export * from './useUpgradeSmartAccountModal';

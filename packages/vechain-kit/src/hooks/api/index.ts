@@ -8,3 +8,4 @@ export * from './utility';
 export * from './ipfs';
 export * from './blockchain';
 export * from './nfts';
+export * from './smartAccount';

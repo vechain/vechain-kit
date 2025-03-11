@@ -40,6 +40,7 @@ export function CollapsibleCard({
                 <HStack
                     justify="space-between"
                     align="center"
+                    cursor={'pointer'}
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <HStack spacing={2}>

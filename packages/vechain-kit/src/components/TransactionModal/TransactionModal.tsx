@@ -1,116 +1,53 @@
-import { ReactNode, useMemo } from 'react';
-import {
-    ConfirmationModalContent,
-    ErrorModalContent,
-    LoadingModalContent,
-    SuccessModalContent,
-} from './Contents';
+import { ReactNode } from 'react';
 import { BaseModal } from '../common/BaseModal';
-import { TransactionProgress } from '@/types';
+import { TransactionModalContent } from './TransactionModalContent';
+import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    status: string;
-    pendingTitle?: ReactNode;
-    confirmationTitle?: ReactNode;
-    errorTitle?: ReactNode;
-    errorDescription?: string;
-    successTitle?: ReactNode;
-    showSocialButtons?: boolean;
-    socialDescriptionEncoded?: string;
-    showTryAgainButton?: boolean;
-    onTryAgain?: () => void;
-    showExplorerButton?: boolean;
-    txId?: string;
-    progress?: TransactionProgress;
+    onTryAgain: () => void;
+    status: TransactionStatus;
+    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txError?: Error | TransactionStatusErrorType;
+    uiConfig?: {
+        isClosable?: boolean;
+        showShareOnSocials?: boolean;
+        showExplorerButton?: boolean;
+        loadingIcon?: ReactNode;
+        successIcon?: ReactNode;
+        errorIcon?: ReactNode;
+        title?: ReactNode;
+        description?: string;
+        showSocialButtons?: boolean;
+    };
 };
 
 export const TransactionModal = ({
     isOpen,
     onClose,
     status,
-    pendingTitle,
-    confirmationTitle,
-    errorTitle,
-    errorDescription,
-    successTitle,
-    showSocialButtons = false,
-    socialDescriptionEncoded,
-    showTryAgainButton,
+    uiConfig,
+    txReceipt,
+    txError,
     onTryAgain,
-    showExplorerButton,
-    txId,
-    progress,
 }: TransactionModalProps) => {
-    const modalContent = useMemo(() => {
-        if (status === 'pending')
-            return (
-                <ConfirmationModalContent
-                    title={confirmationTitle}
-                    progress={progress}
-                    onTryAgain={onTryAgain}
-                />
-            );
-        if (status === 'waitingConfirmation')
-            return (
-                <LoadingModalContent
-                    title={pendingTitle}
-                    showExplorerButton={showExplorerButton}
-                    txId={txId}
-                    onTryAgain={onTryAgain}
-                />
-            );
-        if (status === 'error')
-            return (
-                <ErrorModalContent
-                    title={errorTitle}
-                    description={errorDescription}
-                    showTryAgainButton={showTryAgainButton}
-                    onTryAgain={onTryAgain}
-                    showExplorerButton={showExplorerButton}
-                    txId={txId}
-                    onClose={onClose}
-                />
-            );
-        if (status === 'success')
-            return (
-                <SuccessModalContent
-                    title={successTitle}
-                    showSocialButtons={showSocialButtons}
-                    socialDescriptionEncoded={socialDescriptionEncoded}
-                    showExplorerButton={showExplorerButton}
-                    txId={txId}
-                    onClose={onClose}
-                />
-            );
-        return null;
-    }, [
-        status,
-        confirmationTitle,
-        pendingTitle,
-        showExplorerButton,
-        txId,
-        errorTitle,
-        errorDescription,
-        showTryAgainButton,
-        onTryAgain,
-        successTitle,
-        showSocialButtons,
-        socialDescriptionEncoded,
-        progress,
-    ]);
-
-    if (!modalContent) return null;
-
     return (
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
-            trapFocus={false}
-            closeOnOverlayClick={status !== 'pending'}
+            allowExternalFocus={true}
+            blockScrollOnMount={true}
+            closeOnOverlayClick={status !== 'pending' && uiConfig?.isClosable}
         >
-            {modalContent}
+            <TransactionModalContent
+                status={status}
+                onTryAgain={onTryAgain}
+                uiConfig={uiConfig}
+                txReceipt={txReceipt}
+                onClose={onClose}
+                txError={txError}
+            />
         </BaseModal>
     );
 };

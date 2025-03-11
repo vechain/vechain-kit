@@ -1,10 +1,9 @@
 'use client';
 
-import { ChakraProvider, useColorMode } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { darkTheme } from './theme';
-import { useEffect, useState } from 'react';
 
 const VechainKitProviderWrapper = dynamic(
     async () =>
@@ -16,24 +15,7 @@ const VechainKitProviderWrapper = dynamic(
 );
 
 function AppContent({ children }: { children: React.ReactNode }) {
-    const { colorMode } = useColorMode();
-    const [bgColor, setBgColor] = useState('#0E0E0E');
-
-    useEffect(() => {
-        setBgColor(colorMode === 'dark' ? '#0E0E0E' : '#FFFFFF');
-    }, [colorMode]);
-
-    return (
-        <div
-            style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: bgColor,
-            }}
-        >
-            <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>
-        </div>
-    );
+    return <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>;
 }
 
 export default function RootLayout({

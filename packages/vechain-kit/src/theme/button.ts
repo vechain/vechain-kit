@@ -61,8 +61,7 @@ const variants = {
         transition: 'all 0.2s',
     })),
     vechainKitPrimary: defineStyle(() => ({
-        fontSize: 'sm',
-        fontWeight: '400',
+        fontSize: 'md',
         px: 4,
         width: 'full',
         height: '60px',
@@ -84,8 +83,7 @@ const variants = {
         transition: 'all 0.2s',
     })),
     vechainKitSecondary: defineStyle(() => ({
-        fontSize: 'sm',
-        fontWeight: '400',
+        fontSize: 'md',
         px: 4,
         width: 'full',
         height: '60px',
@@ -108,6 +106,18 @@ const variants = {
             },
         },
         transition: 'all 0.2s',
+    })),
+    mainContentButton: defineStyle(({ colorMode }) => ({
+        width: '100%',
+        backgroundColor:
+            colorMode === 'dark' ? 'whiteAlpha.200' : 'blackAlpha.50',
+        borderRadius: 'xl',
+        p: 3,
+        cursor: 'pointer',
+        _hover: {
+            backgroundColor:
+                colorMode === 'dark' ? 'whiteAlpha.300' : 'blackAlpha.200',
+        },
     })),
 };
 

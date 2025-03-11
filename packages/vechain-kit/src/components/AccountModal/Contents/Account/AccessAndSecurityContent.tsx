@@ -6,8 +6,14 @@ import {
     ModalHeader,
     Text,
     Icon,
+    Button,
 } from '@chakra-ui/react';
-import { usePrivy, useWallet, useMfaEnrollment } from '@/hooks';
+import {
+    usePrivy,
+    useWallet,
+    useMfaEnrollment,
+    useUpgradeRequired,
+} from '@/hooks';
 import React from 'react';
 import {
     ModalBackButton,
@@ -16,14 +22,13 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
-import { IoIosFingerPrint } from 'react-icons/io';
 import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -34,23 +39,21 @@ type Props = {
 export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
 
-    const { linkPasskey, exportWallet, user } = usePrivy();
-    const {showMfaEnrollmentModal} = useMfaEnrollment();
+    const { exportWallet } = usePrivy();
+    const { showMfaEnrollmentModal } = useMfaEnrollment();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
-    const { connection } = useWallet();
+    const { connection, smartAccount, connectedWallet } = useWallet();
+
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader
-                    fontSize={'md'}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                    color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                >
-                    {t('Access and security')}
-                </ModalHeader>
+                <ModalHeader>{t('Access and security')}</ModalHeader>
 
                 <ModalBackButton
                     onClick={() => setCurrentContent('settings')}
@@ -77,14 +80,32 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             textAlign={'center'}
                         >
                             {t(
-                                'Manage your embedded wallet security settings or back it up to a new device.',
+                                'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
                             )}
                         </Text>
                     </VStack>
 
                     {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
+                    <ActionButton
+                        title={t('Your embedded wallet')}
+                        onClick={() => {
+                            setCurrentContent('embedded-wallet');
+                        }}
+                        leftIcon={HiOutlineWallet}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
                     <ActionButton
+                        title={t('Login methods and Passkeys')}
+                        onClick={() => {
+                            setCurrentContent('privy-linked-accounts');
+                        }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                        leftIcon={GrUserAdmin}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    {/* <ActionButton
                         title={t('Passkey')}
                         description={t(
                             'Enable one click login by adding a passkey to your account.',
@@ -94,31 +115,11 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         }}
                         leftIcon={IoIosFingerPrint}
                         rightIcon={undefined}
-                        isDisabled={!connection.isConnectedWithPrivy}
-                    />
-
-                    <ActionButton
-                        title={t('Login methods')}
-                        description={t(
-                            connection.isConnectedWithSocialLogin
-                                ? 'View and manage the login methods linked to your wallet.'
-                                : 'Login methods can be managed only in the app securing your wallet.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('privy-linked-accounts');
-                        }}
                         isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={GrUserAdmin}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
+                    /> */}
 
                     <ActionButton
                         title={t('Backup your wallet')}
-                        description={t(
-                            connection.isConnectedWithSocialLogin
-                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
-                                : 'Backup can be done only in the app securing your wallet.',
-                        )}
                         onClick={() => {
                             exportWallet();
                         }}
@@ -128,35 +129,51 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     />
 
                     <ActionButton
-                        title={t('Embedded wallet')}
-                        description={t(
-                            connection.isConnectedWithSocialLogin
-                                ? 'Store your Recovery Phrase or Private Key in a secure location, avoid losing access to your assets.'
-                                : 'Backup can be done only in the app securing your wallet.',
-                        )}
-                        onClick={() => {
-                            setCurrentContent('embedded-wallet');
-                        }}
-                        leftIcon={HiOutlineWallet}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-
-                    <ActionButton
                         title={t('Manage MFA')}
-                        description={t(
-                            user?.mfaMethods
-                                ? 'MFA is enabled. Click to manage your MFA settings.'
-                                : 'Enable MFA to add an extra layer of security to your wallet.'
-                        )}
                         onClick={() => {
                             showMfaEnrollmentModal();
                         }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={HiOutlineShieldCheck}
-                        rightIcon={MdOutlineNavigateNext}
                     />
+
+                    {upgradeRequired && (
+                        <ActionButton
+                            title={t('Upgrade Smart Account to V3')}
+                            description={t(
+                                'A new version is available for your account',
+                            )}
+                            onClick={() => {
+                                setCurrentContent({
+                                    type: 'upgrade-smart-account',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContent: 'access-and-security',
+                                    },
+                                });
+                            }}
+                            leftIcon={HiOutlineShieldCheck}
+                        />
+                    )}
                 </VStack>
             </ModalBody>
-            <ModalFooter w={'full'}></ModalFooter>
+            <ModalFooter w={'full'}>
+                {connection.isConnectedWithVeChain &&
+                    connection.isConnectedWithCrossApp && (
+                        <Button
+                            variant="vechainKitSecondary"
+                            onClick={() => {
+                                window.open(
+                                    'https://governance.vebetterdao.org/',
+                                    '_blank',
+                                );
+                            }}
+                        >
+                            {t('Manage on VeBetterDAO')}
+                            <Icon as={FaExternalLinkAlt} ml={2} />
+                        </Button>
+                    )}
+            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

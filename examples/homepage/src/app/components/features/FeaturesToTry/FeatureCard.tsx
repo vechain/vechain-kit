@@ -10,6 +10,7 @@ interface FeatureCardProps {
     link: string;
     highlight?: boolean;
     content: () => void;
+    disabled?: boolean;
 }
 
 export function FeatureCard({
@@ -19,6 +20,7 @@ export function FeatureCard({
     link,
     highlight,
     content,
+    disabled = false,
 }: FeatureCardProps) {
     const { colorMode } = useColorMode();
 
@@ -28,7 +30,10 @@ export function FeatureCard({
             isExternal={link.startsWith('http')}
             _hover={{ textDecoration: 'none' }}
             onClick={(e) => {
-                e.preventDefault();
+                if (disabled) {
+                    e.preventDefault();
+                    return;
+                }
                 content();
             }}
         >
@@ -40,11 +45,11 @@ export function FeatureCard({
                 borderColor={highlight ? 'blue.500' : 'transparent'}
                 bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
                 _hover={{
-                    transform: 'translateY(-2px)',
+                    transform: disabled ? 'translateY(0)' : 'translateY(-2px)',
                     transition: 'transform 0.2s',
                     bg: colorMode === 'light' ? 'gray.100' : 'whiteAlpha.100',
                 }}
-                cursor="pointer"
+                cursor={disabled ? 'default' : 'pointer'}
                 height="full"
             >
                 <VStack spacing={3} align="start">
@@ -60,6 +65,11 @@ export function FeatureCard({
                     >
                         {description}
                     </Text>
+                    {disabled && (
+                        <Text fontSize="xs" color="gray.500">
+                            Only available for social login users.
+                        </Text>
+                    )}
                 </VStack>
             </Box>
         </Link>

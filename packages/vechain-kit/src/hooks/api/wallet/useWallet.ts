@@ -1,10 +1,15 @@
 'use client';
 
-import { useLoginWithOAuth, usePrivy, User } from '@privy-io/react-auth';
+import {
+    Wallet as PrivyWallet,
+    useLoginWithOAuth,
+    usePrivy,
+    User,
+} from '@privy-io/react-auth';
 import {
     useGetChainId,
     useGetNodeUrl,
-    useContractVersion,
+    useSmartAccountVersion,
     useGetAvatar,
     useGetTextRecords,
     useVechainDomain,
@@ -17,7 +22,7 @@ import {
     VECHAIN_PRIVY_APP_ID,
 } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
-import { useSmartAccount } from '.';
+import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
@@ -143,14 +148,18 @@ export const useWallet = (): UseWalletReturnType => {
     ]);
 
     // Get embedded wallet
-    const privyEmbeddedWallet = user?.wallet?.address;
+    const privyEmbeddedWallet = user?.linkedAccounts?.find(
+        (account) =>
+            account.type === 'wallet' && account.connectorType === 'embedded',
+    ) as PrivyWallet;
+    const privyEmbeddedWalletAddress = privyEmbeddedWallet?.address;
 
     // Get connected and selected accounts
     const connectedWalletAddress = isConnectedWithDappKit
         ? dappKitAccount
         : isConnectedWithCrossApp
         ? crossAppAddress
-        : privyEmbeddedWallet;
+        : privyEmbeddedWalletAddress;
 
     // Get smart account
     const { data: smartAccount } = useSmartAccount(connectedWalletAddress);
@@ -202,7 +211,7 @@ export const useWallet = (): UseWalletReturnType => {
         : null;
 
     // Get smart account version
-    const { data: smartAccountVersion } = useContractVersion(
+    const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
     );
 
@@ -230,6 +239,7 @@ export const useWallet = (): UseWalletReturnType => {
             window.dispatchEvent(new Event('wallet_disconnected'));
         } catch (error) {
             console.error('Error during disconnect:', error);
+        } finally {
         }
     }, [
         isConnectedWithDappKit,

@@ -2,13 +2,13 @@ import {
     Alert,
     AlertIcon,
     Box,
-    Text,
     AlertDescription,
     IconButton,
+    AlertTitle,
 } from '@chakra-ui/react';
 import { IoCloseCircle } from 'react-icons/io5';
-import { Notification } from '../types';
 import { useTranslation } from 'react-i18next';
+import { Notification } from '@/hooks/notifications/types';
 
 type Props = {
     notification: Notification;
@@ -39,10 +39,10 @@ export const NotificationItem = ({
         >
             <AlertIcon boxSize={'16px'} />
             <Box>
-                <Text fontSize="sm" fontWeight="500">
+                <AlertTitle fontSize={'sm'}>
                     {/* @ts-ignore */}
                     {t(notification.title)}
-                </Text>
+                </AlertTitle>
                 <AlertDescription fontSize={'xs'} lineHeight={'1.2'}>
                     {/* @ts-ignore */}
                     {t(notification.description)}
