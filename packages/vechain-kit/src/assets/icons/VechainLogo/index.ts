@@ -13,3 +13,6 @@ export * from './VeBetterLogoDark';
 export * from './VeBetterIcon';
 export * from './VeBetterIconLight';
 export * from './VeBetterIconDark';
+
+export * from './VETLogo';
+export * from './VTHOLogo';
