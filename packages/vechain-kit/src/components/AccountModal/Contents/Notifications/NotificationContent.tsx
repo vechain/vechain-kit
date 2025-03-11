@@ -96,8 +96,8 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'} h={['auto', '540px']}>
-                <ModalBody w={'full'}>
+            <Container h={['540px', 'auto']} p={0}>
+                <ModalBody>
                     <VStack spacing={4} align="stretch" w="full">
                         <HStack justify="space-between">
                             <Button

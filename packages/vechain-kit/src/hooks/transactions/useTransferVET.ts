@@ -64,7 +64,7 @@ export const useTransferVET = ({
             buttonText: 'Sign to continue',
         },
         onTxConfirmed: async () => {
-            await refresh();
+            refresh();
             onSuccess?.();
         },
         onTxFailedOrCancelled: async () => {

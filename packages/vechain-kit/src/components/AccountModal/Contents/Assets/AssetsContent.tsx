@@ -1,5 +1,6 @@
 import {
     Button,
+    Container,
     Icon,
     Input,
     InputGroup,
@@ -93,48 +94,52 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody>
-                <InputGroup size="lg">
-                    <Input
-                        placeholder="Search token"
-                        bg={darkMode ? '#00000038' : 'gray.50'}
-                        borderRadius="xl"
-                        height="56px"
-                        pl={12}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <InputLeftElement h="56px" w="56px" pl={4}>
-                        <CiSearch
-                            color={darkMode ? 'whiteAlpha.400' : 'gray.400'}
+            <Container h={['540px', 'auto']} p={0}>
+                <ModalBody>
+                    <InputGroup size="lg">
+                        <Input
+                            placeholder="Search token"
+                            bg={darkMode ? '#00000038' : 'gray.50'}
+                            borderRadius="xl"
+                            height="56px"
+                            pl={12}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                    </InputLeftElement>
-                </InputGroup>
+                        <InputLeftElement h="56px" w="56px" pl={4}>
+                            <CiSearch
+                                color={darkMode ? 'whiteAlpha.400' : 'gray.400'}
+                            />
+                        </InputLeftElement>
+                    </InputGroup>
 
-                <VStack spacing={2} align="stretch" mt={2}>
-                    {filteredTokens.map((token) => (
-                        <AssetButton
-                            key={token.address}
-                            symbol={token.symbol}
-                            amount={Number(token.value)}
-                            usdValue={Number(token.value) * token.price}
-                            isDisabled={Number(token.value) === 0}
-                            onClick={() => handleTokenSelect(token)}
-                        />
-                    ))}
-                </VStack>
-            </ModalBody>
-            <ModalFooter>
-                {allowCustomTokens && (
-                    <Button
-                        variant="vechainKitSecondary"
-                        leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
-                        onClick={() => setCurrentContent('add-custom-token')}
-                    >
-                        {t('Manage Custom Tokens')}
-                    </Button>
-                )}
-            </ModalFooter>
+                    <VStack spacing={2} align="stretch" mt={2}>
+                        {filteredTokens.map((token) => (
+                            <AssetButton
+                                key={token.address}
+                                symbol={token.symbol}
+                                amount={Number(token.value)}
+                                usdValue={Number(token.value) * token.price}
+                                isDisabled={Number(token.value) === 0}
+                                onClick={() => handleTokenSelect(token)}
+                            />
+                        ))}
+                    </VStack>
+                </ModalBody>
+                <ModalFooter>
+                    {allowCustomTokens && (
+                        <Button
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
+                            onClick={() =>
+                                setCurrentContent('add-custom-token')
+                            }
+                        >
+                            {t('Manage Custom Tokens')}
+                        </Button>
+                    )}
+                </ModalFooter>
+            </Container>
         </>
     );
 };
