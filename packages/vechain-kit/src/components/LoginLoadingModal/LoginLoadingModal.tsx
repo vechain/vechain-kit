@@ -170,7 +170,7 @@ const ErrorContent = ({
                     >
                         <Icon
                             as={MdOutlineErrorOutline}
-                            color={'red'}
+                            color={'#ef4444'}
                             fontSize={'60px'}
                             opacity={0.5}
                         />

@@ -90,7 +90,7 @@ export const EmailCodeVerificationModal = ({
                                 otp
                                 size="lg"
                                 isInvalid={!!error}
-                                errorBorderColor="red.500"
+                                errorBorderColor="#ef4444"
                             >
                                 <PinInputField
                                     borderRadius="12px"
@@ -215,7 +215,7 @@ export const EmailCodeVerificationModal = ({
                             </PinInput>
                         </HStack>
                         {error && (
-                            <Text color="red.500" fontSize="xs">
+                            <Text color="#ef4444" fontSize="xs">
                                 {error}
                             </Text>
                         )}

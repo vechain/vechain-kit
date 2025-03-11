@@ -185,7 +185,7 @@ export default function Home(): ReactElement {
                             size={20}
                             color={
                                 colorMode === 'light'
-                                    ? 'gray.500'
+                                    ? 'blackAlpha.400'
                                     : 'whiteAlpha.600'
                             }
                         />

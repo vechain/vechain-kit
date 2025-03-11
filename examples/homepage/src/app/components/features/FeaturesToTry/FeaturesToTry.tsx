@@ -105,7 +105,7 @@ export function FeaturesToTry() {
             <Text fontSize="xl" fontWeight="bold">
                 Features
             </Text>
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="sm" opacity={0.5}>
                 The following features are available for your users and for you
                 both accessible by using the VeChain Kit main modal or by adding
                 custom call to action buttons to your app and opening the

@@ -1,7 +1,6 @@
 import {
     ModalBody,
     ModalCloseButton,
-    VStack,
     ModalFooter,
     ModalHeader,
 } from '@chakra-ui/react';
@@ -53,11 +52,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                     <PrivyConnectionCard />
                 )}
 
-                {connection.isConnectedWithDappKit && (
-                    <VStack align="stretch" textAlign={'center'} mt={5}>
-                        <DappKitConnectionCard />
-                    </VStack>
-                )}
+                {connection.isConnectedWithDappKit && <DappKitConnectionCard />}
 
                 {connection.isConnectedWithPrivy && <WalletSecuredBy />}
             </ModalBody>

@@ -76,7 +76,7 @@ export const TransactionModalContent = ({
                     icon: uiConfig?.errorIcon ?? (
                         <Icon
                             as={MdOutlineErrorOutline}
-                            color="red"
+                            color="#ef4444"
                             fontSize="100px"
                         />
                     ),

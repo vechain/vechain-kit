@@ -59,7 +59,7 @@ export function FeatureCard({
                     {description}
                 </Text>
                 {disabled && (
-                    <Text fontSize="xs" color="gray.500">
+                    <Text fontSize="xs" opacity={0.5}>
                         Only available for social login users.
                     </Text>
                 )}
