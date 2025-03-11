@@ -22,7 +22,6 @@ export const ConnectionButton = ({
     style,
     variant = 'loginIn',
 }: ConnectionButtonProps) => {
-    console.log('🚀 ~ text:', text);
     // If text not provided we just show a button with an icon
     if (!text) {
         return (

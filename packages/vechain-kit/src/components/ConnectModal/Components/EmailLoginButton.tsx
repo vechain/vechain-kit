@@ -23,7 +23,6 @@ export const EmailLoginButton = () => {
 
     // Email login
     const [email, setEmail] = useState('');
-    console.log('🚀 ~ EmailLoginButton ~ email:', email);
 
     const { sendCode, state: emailState } = useLoginWithEmail({});
 
