@@ -59,7 +59,7 @@ export type VechainKitProviderProps = {
         clientId: string;
         appearance: {
             walletList?: WalletListEntry[];
-            // accentColor: `#${string}`;
+            accentColor?: `#${string}`;
             loginMessage: string;
             logo: string;
         };
@@ -289,7 +289,9 @@ export const VeChainKitProvider = (
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',
-                                accentColor: darkMode ? '#3182CE' : '#2B6CB0',
+                                accentColor:
+                                    privy?.appearance.accentColor ??
+                                    (darkMode ? '#3182CE' : '#2B6CB0'),
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
