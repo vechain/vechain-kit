@@ -4,7 +4,6 @@ title: "🐛 [BUG] - <title>"
 labels: [
 "bug"
 ]
-projects: ["VeChain-Kit"]
 body:
 - type: textarea
   id: description
@@ -35,3 +34,11 @@ body:
     placeholder: "1.3.0"
   validations:
     required: true
+- type: textarea
+  id: connection-details
+  attributes:
+    label: "Connection Details Screenshot"
+    description: "If applicable, please add a screenshot of the Connection Details section from your wallet"
+    placeholder: "Drag and drop your screenshot here"
+  validations:
+    required: false
