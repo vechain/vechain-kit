@@ -1,14 +1,16 @@
 import { VeLoginMethod, VePrivySocialLoginMethod } from '@/types';
 import mixpanel from 'mixpanel-browser';
 
-const MIXPANEL_PROJECT_TOKEN: string =
-    process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || '';
+// Hardcoded Mixpanel project token to prevent overrides from the app using the kit.
+// Since Mixpanel tokens are public identifiers, this is safe.
+// Fetching from a server is an option but would be unnecessary complexity.
+const MIXPANEL_PROJECT_TOKEN: string = '1ee28a0fa050400217dfa7f6fd630d0b';
+
 const APP_SOURCE: string = document.title || '';
 
 // Ensure Mixpanel is initialized only once
 if (MIXPANEL_PROJECT_TOKEN) {
     mixpanel.init(MIXPANEL_PROJECT_TOKEN, { debug: true });
-    // console.log('Mixpanel initialised');
 }
 
 // Define interfaces for event properties
@@ -124,8 +126,7 @@ const resetUser = (): void => {
     mixpanel.reset();
 };
 
-// **Exporting All Tracking Methods**
-export default {
+export {
     trackEvent,
     setUserProperties,
     identifyUser,

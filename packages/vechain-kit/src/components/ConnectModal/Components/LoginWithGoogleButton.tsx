@@ -4,7 +4,7 @@ import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
 import { VeLoginMethod } from '@/types';
-import mixpanel from '@/utils/mixpanelClientInstance';
+import { AuthTracking } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     isDark: boolean;
@@ -20,9 +20,7 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={() => {
-                    mixpanel.AuthTracking.preferredLoginMethod(
-                        VeLoginMethod.GOOGLE,
-                    );
+                    AuthTracking.preferredLoginMethod(VeLoginMethod.GOOGLE);
                     initOAuth({
                         provider: 'google',
                     });

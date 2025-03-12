@@ -3,7 +3,7 @@ import { useCrossAppConnectionCache } from '@/hooks/cache/useCrossAppConnectionC
 import { useFetchAppInfo, usePrivy } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
-import mixpanel from '@/utils/mixpanelClientInstance';
+import { AuthTracking } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod } from '@/types';
 
 export const useLoginWithVeChain = () => {
@@ -21,14 +21,14 @@ export const useLoginWithVeChain = () => {
                 appId: VECHAIN_PRIVY_APP_ID,
             });
 
-            mixpanel.AuthTracking.loginSuccess({
+            AuthTracking.loginSuccess({
                 userId: user?.id || '',
                 loginMethod: VeLoginMethod.VECHAIN,
                 // the exact social platform is not returned by the Privy SDK
                 // platform: VePrivySocialLoginMethod.GOOGLE,
             });
         } catch (error) {
-            mixpanel.AuthTracking.loginFailed(VeLoginMethod.VECHAIN);
+            AuthTracking.loginFailed(VeLoginMethod.VECHAIN);
             throw handlePopupError({
                 error,
                 mobileBrowserPopupMessage:
