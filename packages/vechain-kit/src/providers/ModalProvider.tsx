@@ -19,7 +19,7 @@ type ModalContextType = {
     closeConnectModal: () => void;
     isConnectModalOpen: boolean;
     // Account Modal
-    openAccountModal: () => void;
+    openAccountModal: (content?: AccountModalContentTypes) => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
     // Account Modal Content State
@@ -69,10 +69,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    const openAccountModal = useCallback(() => {
-        setAccountModalContent('main');
-        setIsAccountModalOpen(true);
-    }, []);
+    const openAccountModal = useCallback(
+        (content?: AccountModalContentTypes) => {
+            setAccountModalContent(content ?? 'main');
+            setIsAccountModalOpen(true);
+        },
+        [],
+    );
     const closeAccountModal = useCallback(
         () => setIsAccountModalOpen(false),
         [],
