@@ -297,7 +297,6 @@ export const VeChainKitProvider = (
                                 createOnLogin:
                                     privy?.embeddedWallets?.createOnLogin ??
                                     'all-users',
-                                showWalletUIs: true,
                             },
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,
