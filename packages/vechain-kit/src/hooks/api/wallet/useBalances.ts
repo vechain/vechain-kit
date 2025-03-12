@@ -115,8 +115,9 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         ];
 
         // Compute total balance
-        const totalBalance = balances.reduce((acc, { address, value }) => {
-            const price = prices.find((p) => p.address === address)?.price || 0;
+        const totalBalance = balances.reduce((acc, { priceAddress, value }) => {
+            const price =
+                prices.find((p) => p.address === priceAddress)?.price || 0;
             return acc + Number(value) * price;
         }, 0);
 
