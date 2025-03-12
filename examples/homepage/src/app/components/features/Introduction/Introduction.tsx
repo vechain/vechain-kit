@@ -13,17 +13,11 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import {
-    FaGithub,
-    FaGoogle,
-    FaTwitter,
-    FaDiscord,
-    FaApple,
-} from 'react-icons/fa';
+import { FaGithub, FaDiscord, FaApple } from 'react-icons/fa';
 import { IoDocumentText, IoWalletOutline } from 'react-icons/io5';
 import { MdBrush, MdCode, MdEmail } from 'react-icons/md';
 import { CiLogin } from 'react-icons/ci';
-import { SiNpm, SiFarcaster, SiApple } from 'react-icons/si';
+import { SiNpm, SiFarcaster } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { FaSquareXTwitter } from 'react-icons/fa6';
 
@@ -218,9 +212,7 @@ export function Introduction() {
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
                             <Icon as={MdCode} boxSize={6} color="green.400" />
-                            <Text fontWeight="bold">
-                                Speed up your development
-                            </Text>
+                            <Text fontWeight="bold">Boosted development</Text>
                             <Text>
                                 Use our hooks and components to speed up your
                                 development. No need to worry about the
@@ -233,9 +225,7 @@ export function Introduction() {
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
                             <Icon as={MdBrush} boxSize={6} color="purple.400" />
-                            <Text fontWeight="bold">
-                                Customize the kit with your needs
-                            </Text>
+                            <Text fontWeight="bold">Style customization</Text>
                             <Text>
                                 The kit is designed to be customizable to your
                                 needs. Decide what features you want to use and
