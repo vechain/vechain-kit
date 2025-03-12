@@ -17,6 +17,7 @@ import { useVeChainKitConfig } from '@/providers';
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
 });
 
