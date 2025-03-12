@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -18,9 +19,14 @@ import { useState } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
-import { SelectTokenContent } from './SelectTokenContent';
-import { ZeroAddress } from 'ethers';
-import { compareAddresses, isValidAddress, TOKEN_LOGOS } from '@/utils';
+import { SelectTokenContent, Token } from './SelectTokenContent';
+import { parseEther, ZeroAddress } from 'ethers';
+import {
+    compareAddresses,
+    isValidAddress,
+    TOKEN_LOGOS,
+    TOKEN_LOGO_COMPONENTS,
+} from '@/utils';
 import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -31,14 +37,6 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     compactDisplay: 'short',
     maximumFractionDigits: 2,
 });
-
-type Token = {
-    symbol: string;
-    balance: string;
-    address: string;
-    numericBalance: number;
-    price: number;
-};
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
@@ -99,7 +97,7 @@ export const SendTokenContent = ({
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            setValue('amount', selectedToken.numericBalance.toString());
+            setValue('amount', selectedToken.numericBalance);
         }
     };
 
@@ -120,8 +118,8 @@ export const SendTokenContent = ({
 
         // Validate amount
         if (selectedToken) {
-            const numericAmount = parseFloat(data.amount);
-            if (numericAmount > selectedToken.numericBalance) {
+            const numericAmount = parseEther(data.amount);
+            if (numericAmount > parseEther(selectedToken.numericBalance)) {
                 setError('amount', {
                     type: 'manual',
                     message: t(`Insufficient {{symbol}} balance`, {
@@ -178,7 +176,7 @@ export const SendTokenContent = ({
                     <Box
                         p={6}
                         borderRadius="xl"
-                        bg={isDark ? '#1a1a1a' : 'gray.50'}
+                        bg={isDark ? '#00000038' : 'gray.50'}
                     >
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.amount}>
@@ -242,36 +240,52 @@ export const SendTokenContent = ({
                                                 setIsSelectingToken(true)
                                             }
                                             leftIcon={
-                                                <Image
-                                                    src={
-                                                        TOKEN_LOGOS[
+                                                TOKEN_LOGO_COMPONENTS[
+                                                    selectedToken.symbol
+                                                ] ? (
+                                                    React.cloneElement(
+                                                        TOKEN_LOGO_COMPONENTS[
                                                             selectedToken.symbol
-                                                        ]
-                                                    }
-                                                    alt={`${selectedToken.symbol} logo`}
-                                                    boxSize="20px"
-                                                    borderRadius="full"
-                                                    fallback={
-                                                        <Box
-                                                            boxSize="20px"
-                                                            borderRadius="full"
-                                                            bg="whiteAlpha.200"
-                                                            display="flex"
-                                                            alignItems="center"
-                                                            justifyContent="center"
-                                                        >
-                                                            <Text
-                                                                fontSize="8px"
-                                                                fontWeight="bold"
+                                                        ],
+                                                        {
+                                                            boxSize: '20px',
+                                                            borderRadius:
+                                                                'full',
+                                                        },
+                                                    )
+                                                ) : (
+                                                    <Image
+                                                        src={
+                                                            TOKEN_LOGOS[
+                                                                selectedToken
+                                                                    .symbol
+                                                            ]
+                                                        }
+                                                        alt={`${selectedToken.symbol} logo`}
+                                                        boxSize="20px"
+                                                        borderRadius="full"
+                                                        fallback={
+                                                            <Box
+                                                                boxSize="20px"
+                                                                borderRadius="full"
+                                                                bg="whiteAlpha.200"
+                                                                display="flex"
+                                                                alignItems="center"
+                                                                justifyContent="center"
                                                             >
-                                                                {selectedToken.symbol.slice(
-                                                                    0,
-                                                                    3,
-                                                                )}
-                                                            </Text>
-                                                        </Box>
-                                                    }
-                                                />
+                                                                <Text
+                                                                    fontSize="8px"
+                                                                    fontWeight="bold"
+                                                                >
+                                                                    {selectedToken.symbol.slice(
+                                                                        0,
+                                                                        3,
+                                                                    )}
+                                                                </Text>
+                                                            </Box>
+                                                        }
+                                                    />
+                                                )
                                             }
                                         >
                                             {selectedToken.symbol}
@@ -309,7 +323,7 @@ export const SendTokenContent = ({
                                     )}
                                 </HStack>
                                 {errors.amount && (
-                                    <Text color="red.500" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm">
                                         {errors.amount.message}
                                     </Text>
                                 )}
@@ -340,7 +354,9 @@ export const SendTokenContent = ({
                                         textOverflow="ellipsis"
                                     >
                                         {compactFormatter.format(
-                                            selectedToken.numericBalance,
+                                            Number(
+                                                selectedToken.numericBalance,
+                                            ),
                                         )}
                                     </Text>
                                 </HStack>
@@ -354,7 +370,7 @@ export const SendTokenContent = ({
                         marginTop="-20px"
                         marginBottom="-20px"
                         marginX="auto"
-                        bg={isDark ? '#262626' : 'gray.100'}
+                        bg={isDark ? '#151515' : 'gray.100'}
                         borderRadius="xl"
                         w="40px"
                         h="40px"
@@ -368,7 +384,10 @@ export const SendTokenContent = ({
                         />
                     </Center>
 
-                    <Box borderRadius="xl" bg={isDark ? '#1a1a1a' : 'gray.50'}>
+                    <Box
+                        borderRadius="xl"
+                        bg={isDark ? '#00000038' : 'gray.50'}
+                    >
                         <VStack align="stretch" spacing={2} p={6} width="100%">
                             <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
@@ -394,7 +413,7 @@ export const SendTokenContent = ({
                                     variant="unstyled"
                                 />
                                 {errors.toAddressOrDomain && (
-                                    <Text color="red.500" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm">
                                         {errors.toAddressOrDomain.message}
                                     </Text>
                                 )}

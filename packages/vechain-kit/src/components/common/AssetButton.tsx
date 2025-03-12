@@ -7,7 +7,9 @@ import {
     VStack,
     ButtonProps,
 } from '@chakra-ui/react';
-import { TOKEN_LOGOS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import React from 'react';
+import { useVeChainKitConfig } from '@/providers';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -30,49 +32,62 @@ export const AssetButton = ({
     isDisabled,
     onClick,
     ...buttonProps
-}: AssetButtonProps) => (
-    <Button
-        height="72px"
-        variant="ghost"
-        justifyContent="space-between"
-        isDisabled={isDisabled}
-        p={4}
-        w="100%"
-        _disabled={{
-            cursor: 'not-allowed',
-            opacity: 0.5,
-        }}
-        onClick={onClick}
-        {...buttonProps}
-    >
-        <HStack>
-            <Image
-                src={TOKEN_LOGOS[symbol]}
-                alt={`${symbol} logo`}
-                boxSize="24px"
-                borderRadius="full"
-                fallback={
-                    <Box
+}: AssetButtonProps) => {
+    const { darkMode: isDark } = useVeChainKitConfig();
+    return (
+        <Button
+            height="72px"
+            variant="ghost"
+            justifyContent="space-between"
+            isDisabled={isDisabled}
+            p={4}
+            w="100%"
+            _disabled={{
+                cursor: 'not-allowed',
+                opacity: 0.5,
+            }}
+            onClick={onClick}
+            {...buttonProps}
+        >
+            <HStack>
+                {TOKEN_LOGO_COMPONENTS[symbol] ? (
+                    React.cloneElement(TOKEN_LOGO_COMPONENTS[symbol], {
+                        boxSize: '24px',
+                        borderRadius: 'full',
+                    })
+                ) : (
+                    <Image
+                        src={TOKEN_LOGOS[symbol]}
+                        alt={`${symbol} logo`}
                         boxSize="24px"
                         borderRadius="full"
-                        bg="whiteAlpha.200"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <Text fontSize="10px" fontWeight="bold">
-                            {symbol.slice(0, 3)}
-                        </Text>
-                    </Box>
-                }
-            />
-            <Text>{symbol}</Text>
-        </HStack>
-        <VStack align="flex-end" spacing={0}>
-            <Text>${compactFormatter.format(usdValue)}</Text>
-            <Text fontSize="sm" color="gray.500">
-                {compactFormatter.format(amount)}
-            </Text>
-        </VStack>
-    </Button>
-);
+                        fallback={
+                            <Box
+                                boxSize="24px"
+                                borderRadius="full"
+                                bg="whiteAlpha.200"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <Text fontSize="10px" fontWeight="bold">
+                                    {symbol.slice(0, 3)}
+                                </Text>
+                            </Box>
+                        }
+                    />
+                )}
+                <Text>{symbol}</Text>
+            </HStack>
+            <VStack align="flex-end" spacing={0}>
+                <Text>${compactFormatter.format(usdValue)}</Text>
+                <Text
+                    fontSize="sm"
+                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                >
+                    {compactFormatter.format(amount)}
+                </Text>
+            </VStack>
+        </Button>
+    );
+};

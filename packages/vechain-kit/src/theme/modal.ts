@@ -17,14 +17,14 @@ const variants = {
                 maxHeight: '550px',
                 borderRadius: '24px',
                 backgroundColor:
-                    props.colorMode === 'dark' ? '#1f1f1e' : 'white',
+                    props.colorMode === 'dark' ? '#18181b' : 'white',
             },
             closeButton: {
                 borderRadius: '50%',
             },
             header: {
                 w: 'full',
-                color: props.colorMode === 'dark' ? '#dfdfdd' : '#4d4d4d',
+                color: props.colorMode === 'dark' ? '#dfdfdd' : '#2e2e2e',
                 fontSize: 'md',
                 fontWeight: '700',
                 textAlign: 'center',
@@ -45,7 +45,7 @@ const variants = {
                 boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.1)',
                 py: '10px',
                 backgroundColor:
-                    props.colorMode === 'dark' ? '#1f1f1e' : 'white',
+                    props.colorMode === 'dark' ? '#18181b' : 'white',
             },
             closeButton: {
                 borderRadius: '50%',

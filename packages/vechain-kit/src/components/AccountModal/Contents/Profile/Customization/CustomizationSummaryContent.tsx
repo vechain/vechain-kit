@@ -142,7 +142,7 @@ export const CustomizationSummaryContent = ({
             <VStack align="flex-start" w="full" spacing={1}>
                 <Text
                     fontSize="sm"
-                    color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                 >
                     {label}
                 </Text>
@@ -174,7 +174,9 @@ export const CustomizationSummaryContent = ({
                         <VStack align="flex-start" w="full" spacing={1}>
                             <Text
                                 fontSize="sm"
-                                color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                                color={
+                                    isDark ? 'whiteAlpha.600' : 'blackAlpha.600'
+                                }
                             >
                                 {t('Profile Image')}
                             </Text>

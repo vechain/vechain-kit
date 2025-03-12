@@ -110,7 +110,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 <Link
                                     href="https://www.veworld.net/"
                                     isExternal
-                                    color="gray.500"
+                                    color="blackAlpha.600"
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >
@@ -125,7 +125,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 <Link
                                     href="https://docs.vechainkit.vechain.org/vechain-kit/embedded-wallets"
                                     isExternal
-                                    color="gray.500"
+                                    color="blackAlpha.600"
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >

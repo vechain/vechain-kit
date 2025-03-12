@@ -40,8 +40,8 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
                         <Image
                             src={
                                 isDark
-                                    ? 'https://app.vechain.energy/assets/logo-dark.svg'
-                                    : 'https://app.vechain.energy/assets/logo-light.svg'
+                                    ? 'https://static.vechain.energy/logo-dark.svg'
+                                    : 'https://static.vechain.energy/logo-light.svg'
                             }
                             alt="bridge token"
                             w={'200px'}

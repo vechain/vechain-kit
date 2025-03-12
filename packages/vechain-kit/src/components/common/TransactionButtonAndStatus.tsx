@@ -70,7 +70,7 @@ export const TransactionButtonAndStatus = ({
                 <Link
                     isExternal
                     fontSize="sm"
-                    color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                     textAlign="center"
                     width="full"
                     href={`${getConfig(network.type).explorerUrl}/${

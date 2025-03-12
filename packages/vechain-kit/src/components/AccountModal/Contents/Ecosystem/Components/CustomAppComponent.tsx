@@ -6,6 +6,7 @@ type Props = {
     image: string;
     url: string;
     description: string;
+    logoComponent?: JSX.Element;
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -16,6 +17,7 @@ export const CustomAppComponent = ({
     image,
     url,
     description,
+    logoComponent,
     setCurrentContent,
 }: Props) => {
     return (
@@ -31,9 +33,11 @@ export const CustomAppComponent = ({
                         image,
                         url,
                         description,
+                        logoComponent,
                     },
                 })
             }
+            {...(logoComponent && { logoComponent })}
         />
     );
 };

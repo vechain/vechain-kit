@@ -86,7 +86,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                 <ConnectionOptionsStack />
             </ModalBody>
 
-            <ModalFooter>
+            <ModalFooter pt={0} pb={'5px'}>
                 <VersionFooter />
             </ModalFooter>
         </>

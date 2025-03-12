@@ -10,6 +10,7 @@ import {
     useColorMode,
     IconButton,
     useMediaQuery,
+    Flex,
 } from '@chakra-ui/react';
 import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
@@ -20,7 +21,7 @@ import { IoMdMoon } from 'react-icons/io';
 import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
-import { VechainLogoHorizontal } from '@vechain/vechain-kit/assets';
+import { VechainLogo } from '@vechain/vechain-kit/assets';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
 
@@ -184,7 +185,7 @@ export default function Home(): ReactElement {
                             size={20}
                             color={
                                 colorMode === 'light'
-                                    ? 'gray.500'
+                                    ? 'blackAlpha.400'
                                     : 'whiteAlpha.600'
                             }
                         />
@@ -240,15 +241,25 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <VStack spacing={0}>
-                <Text fontSize={'md'} fontWeight={'bold'}>
+            <Flex
+                direction={{ base: 'column', md: 'row' }}
+                align="center"
+                wrap="wrap"
+                justify="center"
+                gap={2}
+            >
+                <Text fontSize="md" fontWeight="bold">
                     Made by
                 </Text>
-                <VechainLogoHorizontal
-                    maxW={200}
+                <VechainLogo
+                    maxW="200px"
                     isDark={colorMode === 'dark'}
+                    w="200px"
+                    h="auto"
+                    ml={{ base: 0, sm: -6 }}
+                    mt={{ base: -6, md: 0 }}
                 />
-            </VStack>
+            </Flex>
         </HStack>
     );
 };

@@ -29,6 +29,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
 import { useMemo, useEffect } from 'react';
 import { convertUriToUrl } from '@/utils';
+import { Token } from './SelectTokenContent';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -50,13 +51,7 @@ export type SendTokenSummaryContentProps = {
     resolvedDomain?: string;
     resolvedAddress?: string;
     amount: string;
-    selectedToken: {
-        symbol: string;
-        balance: string;
-        address: string;
-        numericBalance: number;
-        price: number;
-    };
+    selectedToken: Token;
 };
 
 export const SendTokenSummaryContent = ({
@@ -207,7 +202,7 @@ export const SendTokenSummaryContent = ({
                             domain={account?.domain}
                             imageSrc={account?.image ?? ''}
                             imageAlt="From account"
-                            balance={selectedToken.numericBalance}
+                            balance={Number(selectedToken.numericBalance)}
                             tokenAddress={selectedToken.address}
                         />
 

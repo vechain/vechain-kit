@@ -17,6 +17,7 @@ import { useVeChainKitConfig } from '@/providers';
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
 });
 
@@ -93,7 +94,7 @@ export const BalanceSection = ({
                     onClick={onAssetsClick}
                     maxIcons={10}
                     iconSize={26}
-                    iconsGap={2}
+                    iconsGap={3}
                     address={account?.address ?? ''}
                     showNoAssetsWarning={true}
                     rightIcon={
@@ -107,15 +108,13 @@ export const BalanceSection = ({
                     style={{
                         width: '100%',
                         mt: 2,
-                        backgroundColor: isDark
-                            ? 'whiteAlpha.200'
-                            : 'blackAlpha.50',
+                        backgroundColor: isDark ? '#ffffff0a' : 'blackAlpha.50',
                         borderRadius: 'xl',
                         p: 3,
                         cursor: 'pointer',
                         _hover: {
                             backgroundColor: isDark
-                                ? 'whiteAlpha.300'
+                                ? '#ffffff12'
                                 : 'blackAlpha.200',
                         },
                         justifyContent: 'space-between',

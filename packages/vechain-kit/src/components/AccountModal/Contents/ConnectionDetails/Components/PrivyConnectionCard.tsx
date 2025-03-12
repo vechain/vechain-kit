@@ -21,7 +21,7 @@ export const PrivyConnectionCard = () => {
             {appInfo && (
                 <VStack
                     p={4}
-                    bg={isDark ? '#1a1a1a' : '#f5f5f5'}
+                    bg={isDark ? '#00000038' : '#f5f5f5'}
                     borderRadius={'xl'}
                     spacing={4}
                     w="full"

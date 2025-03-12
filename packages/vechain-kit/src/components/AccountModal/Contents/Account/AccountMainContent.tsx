@@ -5,6 +5,7 @@ import {
     VStack,
     Tag,
     ModalFooter,
+    HStack,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -35,7 +36,7 @@ type Props = {
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-    const { connection, account } = useWallet();
+    const { account } = useWallet();
 
     return (
         <ScrollToTopWrapper>
@@ -50,11 +51,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         })
                     }
                 />
-                <ModalHeader>
-                    {connection.isConnectedWithPrivy
-                        ? t('Account')
-                        : t('Wallet')}
-                </ModalHeader>
+                <ModalHeader>{t('Wallet')}</ModalHeader>
 
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -81,15 +78,22 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     />
 
                     {network?.type !== 'main' && (
-                        <Tag
-                            size="xl"
-                            colorScheme="orange"
-                            fontSize={'xs'}
-                            p={2}
-                            textTransform={'capitalize'}
+                        <HStack
+                            w={'full'}
+                            justifyContent={'flex-start'}
+                            mt={'-10px'}
+                            mb={'-10px'}
                         >
-                            {`${network?.type} network`}
-                        </Tag>
+                            <Tag
+                                size="xl"
+                                colorScheme="orange"
+                                fontSize={'xs'}
+                                p={2}
+                                textTransform={'capitalize'}
+                            >
+                                {`${network?.type} network`}
+                            </Tag>
+                        </HStack>
                     )}
 
                     <BalanceSection

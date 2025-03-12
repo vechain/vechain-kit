@@ -143,7 +143,7 @@ export const ExistingDomainsList = ({
                                                             color={
                                                                 isDark
                                                                     ? 'whiteAlpha.600'
-                                                                    : 'gray.500'
+                                                                    : 'blackAlpha.600'
                                                             }
                                                         >
                                                             {t(
@@ -158,13 +158,13 @@ export const ExistingDomainsList = ({
                                                         size="sm"
                                                         bg={
                                                             isDark
-                                                                ? 'whiteAlpha.200'
-                                                                : 'gray.100'
+                                                                ? '#ffffff0a'
+                                                                : 'whiteAlpha.100'
                                                         }
                                                         color={
                                                             isDark
-                                                                ? 'whiteAlpha.800'
-                                                                : 'gray.600'
+                                                                ? 'whiteAlpha.900'
+                                                                : 'blackAlpha.600'
                                                         }
                                                         px={3}
                                                         py={1}

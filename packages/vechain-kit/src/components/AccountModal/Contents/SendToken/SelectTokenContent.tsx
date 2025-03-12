@@ -23,7 +23,7 @@ export type Token = {
     symbol: string;
     balance: string;
     address: string;
-    numericBalance: number;
+    numericBalance: string;
     price: number;
 };
 
@@ -59,10 +59,13 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            if (a.numericBalance > 0 !== b.numericBalance > 0) {
-                return b.numericBalance > 0 ? 1 : -1;
+            if (Number(a.numericBalance) > 0 !== Number(b.numericBalance) > 0) {
+                return Number(b.numericBalance) > 0 ? 1 : -1;
             }
-            return b.numericBalance * b.price - a.numericBalance * a.price;
+            return (
+                Number(b.numericBalance) * b.price -
+                Number(a.numericBalance) * a.price
+            );
         });
 
     return (
@@ -78,7 +81,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                     <InputGroup size="lg">
                         <Input
                             placeholder="Search token"
-                            bg={isDark ? '#1a1a1a' : 'gray.50'}
+                            bg={isDark ? '#00000038' : 'gray.50'}
                             borderRadius="xl"
                             height="56px"
                             pl={12}
@@ -105,7 +108,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                         <VStack
                             spacing={2}
                             py={8}
-                            color={isDark ? 'whiteAlpha.600' : 'gray.500'}
+                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                         >
                             <Icon as={FiSlash} boxSize={12} opacity={0.5} />
                             <Text fontSize="lg">{t('No tokens found')}</Text>
@@ -116,15 +119,16 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                     ) : (
                         <VStack spacing={2} align="stretch">
                             {filteredTokens.map((token) => {
-                                const hasBalance = token.numericBalance > 0;
+                                const hasBalance =
+                                    Number(token.numericBalance) > 0;
                                 const usdValue =
-                                    token.numericBalance * token.price;
+                                    Number(token.numericBalance) * token.price;
 
                                 return (
                                     <AssetButton
                                         key={token.address}
                                         symbol={token.symbol}
-                                        amount={token.numericBalance}
+                                        amount={Number(token.numericBalance)}
                                         usdValue={usdValue}
                                         onClick={() => onSelectToken(token)}
                                         isDisabled={!hasBalance}

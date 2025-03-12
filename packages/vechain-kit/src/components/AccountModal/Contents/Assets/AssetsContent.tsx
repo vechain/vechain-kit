@@ -1,5 +1,6 @@
 import {
     Button,
+    Container,
     Icon,
     Input,
     InputGroup,
@@ -41,7 +42,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const handleTokenSelect = (token: {
         symbol: string;
         address: string;
-        value: number;
+        value: string;
         price: number;
     }) => {
         setCurrentContent({
@@ -71,7 +72,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 value: tokens[token.symbol]?.value ?? 0,
                 price: tokens[token.symbol]?.price ?? 0,
             })),
-    ].sort((a, b) => b.value * b.price - a.value * a.price);
+    ].sort((a, b) => Number(b.value) * b.price - Number(a.value) * a.price);
 
     // Filter and sort tokens
     const filteredTokens = allTokens
@@ -79,10 +80,10 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            if (a.value > 0 !== b.value > 0) {
-                return b.value > 0 ? 1 : -1;
+            if (Number(a.value) > 0 !== Number(b.value) > 0) {
+                return Number(b.value) > 0 ? 1 : -1;
             }
-            return b.value * b.price - a.value * a.price;
+            return Number(b.value) * b.price - Number(a.value) * a.price;
         });
 
     return (
@@ -93,48 +94,52 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody>
-                <InputGroup size="lg">
-                    <Input
-                        placeholder="Search token"
-                        bg={darkMode ? '#1a1a1a' : 'gray.50'}
-                        borderRadius="xl"
-                        height="56px"
-                        pl={12}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <InputLeftElement h="56px" w="56px" pl={4}>
-                        <CiSearch
-                            color={darkMode ? 'whiteAlpha.400' : 'gray.400'}
+            <Container h={['540px', 'auto']} p={0}>
+                <ModalBody>
+                    <InputGroup size="lg">
+                        <Input
+                            placeholder="Search token"
+                            bg={darkMode ? '#00000038' : 'gray.50'}
+                            borderRadius="xl"
+                            height="56px"
+                            pl={12}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
-                    </InputLeftElement>
-                </InputGroup>
+                        <InputLeftElement h="56px" w="56px" pl={4}>
+                            <CiSearch
+                                color={darkMode ? 'whiteAlpha.400' : 'gray.400'}
+                            />
+                        </InputLeftElement>
+                    </InputGroup>
 
-                <VStack spacing={2} align="stretch" mt={2}>
-                    {filteredTokens.map((token) => (
-                        <AssetButton
-                            key={token.address}
-                            symbol={token.symbol}
-                            amount={token.value}
-                            usdValue={token.value * token.price}
-                            isDisabled={token.value === 0}
-                            onClick={() => handleTokenSelect(token)}
-                        />
-                    ))}
-                </VStack>
-            </ModalBody>
-            <ModalFooter>
-                {allowCustomTokens && (
-                    <Button
-                        variant="vechainKitSecondary"
-                        leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
-                        onClick={() => setCurrentContent('add-custom-token')}
-                    >
-                        {t('Manage Custom Tokens')}
-                    </Button>
-                )}
-            </ModalFooter>
+                    <VStack spacing={2} align="stretch" mt={2}>
+                        {filteredTokens.map((token) => (
+                            <AssetButton
+                                key={token.address}
+                                symbol={token.symbol}
+                                amount={Number(token.value)}
+                                usdValue={Number(token.value) * token.price}
+                                isDisabled={Number(token.value) === 0}
+                                onClick={() => handleTokenSelect(token)}
+                            />
+                        ))}
+                    </VStack>
+                </ModalBody>
+                <ModalFooter>
+                    {allowCustomTokens && (
+                        <Button
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
+                            onClick={() =>
+                                setCurrentContent('add-custom-token')
+                            }
+                        >
+                            {t('Manage Custom Tokens')}
+                        </Button>
+                    )}
+                </ModalFooter>
+            </Container>
         </>
     );
 };
