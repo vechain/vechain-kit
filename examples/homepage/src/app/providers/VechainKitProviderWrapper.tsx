@@ -89,7 +89,8 @@ export function VechainKitProviderWrapper({ children }: Props) {
             darkMode={isDarkMode}
             language={i18n.language}
             network={{
-                type: process.env.NEXT_PUBLIC_NETWORK_TYPE as NETWORK_TYPE,
+                // type: process.env.NEXT_PUBLIC_NETWORK_TYPE as NETWORK_TYPE,
+                type: 'test',
             }}
             allowCustomTokens={true}
         >

@@ -4,9 +4,10 @@ import {
     ModalHeader,
     Box,
     ModalFooter,
+    VStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
-import { ProfileCard } from '@/components';
+import { FeatureAnnouncementCard, ProfileCard } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
@@ -36,25 +37,34 @@ export const ProfileContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <ProfileCard
-                    onEditClick={() =>
-                        setCurrentContent('account-customization')
-                    }
-                    address={account?.address ?? ''}
-                    showHeader={false}
-                    onLogout={() => {
-                        setCurrentContent?.({
-                            type: 'disconnect-confirm',
-                            props: {
-                                onDisconnect: () => {
-                                    disconnect();
-                                    onLogoutSuccess?.();
+                <VStack w={'full'} spacing={2}>
+                    {!account?.domain && (
+                        <FeatureAnnouncementCard
+                            setCurrentContent={setCurrentContent}
+                        />
+                    )}
+
+                    <ProfileCard
+                        onEditClick={() =>
+                            setCurrentContent('account-customization')
+                        }
+                        address={account?.address ?? ''}
+                        showHeader={false}
+                        onLogout={() => {
+                            setCurrentContent?.({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: () => {
+                                        disconnect();
+                                        onLogoutSuccess?.();
+                                    },
+                                    onBack: () =>
+                                        setCurrentContent?.('profile'),
                                 },
-                                onBack: () => setCurrentContent?.('profile'),
-                            },
-                        });
-                    }}
-                />
+                            });
+                        }}
+                    />
+                </VStack>
             </ModalBody>
             <ModalFooter pt={0} />
         </Box>
