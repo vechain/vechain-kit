@@ -36,7 +36,7 @@ type Props = {
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-    const { connection, account } = useWallet();
+    const { account } = useWallet();
 
     return (
         <ScrollToTopWrapper>
@@ -51,11 +51,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         })
                     }
                 />
-                <ModalHeader>
-                    {connection.isConnectedWithPrivy
-                        ? t('Account')
-                        : t('Wallet')}
-                </ModalHeader>
+                <ModalHeader>{t('Wallet')}</ModalHeader>
 
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -82,7 +78,12 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     />
 
                     {network?.type !== 'main' && (
-                        <HStack w={'full'} justifyContent={'flex-start'}>
+                        <HStack
+                            w={'full'}
+                            justifyContent={'flex-start'}
+                            mt={'-10px'}
+                            mb={'-10px'}
+                        >
                             <Tag
                                 size="xl"
                                 colorScheme="orange"
