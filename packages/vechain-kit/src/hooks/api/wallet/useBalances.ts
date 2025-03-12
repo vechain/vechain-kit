@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { formatEther } from 'viem';
 import {
     useAccountBalance,
     useGetB3trBalance,
@@ -66,32 +65,33 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         const balances = [
             {
                 address: contractAddresses.vet,
-                value: Number(vetData?.balance || 0),
+                value: vetData?.balance || '0',
                 symbol: 'VET',
+                priceAddress: contractAddresses.vet,
             },
             {
                 address: contractAddresses.vtho,
-                value: Number(vetData?.energy || 0),
+                value: vetData?.energy || '0',
                 symbol: 'VTHO',
+                priceAddress: contractAddresses.vtho,
             },
             {
                 address: contractAddresses.b3tr,
-                value: Number(
-                    formatEther(BigInt(b3trBalance?.original || '0')),
-                ),
+                value: b3trBalance?.scaled ?? '0',
                 symbol: 'B3TR',
+                priceAddress: contractAddresses.b3tr,
             },
             {
                 address: contractAddresses.vot3,
-                value: Number(
-                    formatEther(BigInt(vot3Balance?.original || '0')),
-                ),
+                value: vot3Balance?.scaled ?? '0',
                 symbol: 'VOT3',
+                priceAddress: contractAddresses.b3tr, // using b3tr price for vot3
             },
             {
                 address: contractAddresses.veDelegate,
-                value: Number(formatEther(BigInt(veDelegateBalance || '0'))),
+                value: veDelegateBalance?.scaled ?? '0',
                 symbol: 'veDelegate',
+                priceAddress: contractAddresses.b3tr, // using b3tr price for veDelegate
             },
         ];
 
@@ -100,8 +100,9 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             if (token) {
                 balances.push({
                     address: token.address,
-                    value: Number(formatEther(BigInt(token.original))),
+                    value: token.scaled,
                     symbol: token.symbol,
+                    priceAddress: token.address,
                 });
             }
         });
@@ -116,7 +117,7 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         // Compute total balance
         const totalBalance = balances.reduce((acc, { address, value }) => {
             const price = prices.find((p) => p.address === address)?.price || 0;
-            return acc + value * price;
+            return acc + Number(value) * price;
         }, 0);
 
         // Create tokens mapping
@@ -124,12 +125,13 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             (acc, balance) => {
                 acc[balance.symbol] = {
                     ...balance,
+                    value: balance.value,
                     price:
-                        prices.find((p) => p.address === balance.address)
+                        prices.find((p) => p.address === balance.priceAddress)
                             ?.price || 0,
                     usdValue:
-                        (prices.find((p) => p.address === balance.address)
-                            ?.price || 0) * balance.value,
+                        (prices.find((p) => p.address === balance.priceAddress)
+                            ?.price || 0) * Number(balance.value),
                 };
                 return acc;
             },
@@ -137,7 +139,7 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
                 string,
                 {
                     address: string;
-                    value: number;
+                    value: string;
                     symbol: string;
                     price: number;
                     usdValue: number;

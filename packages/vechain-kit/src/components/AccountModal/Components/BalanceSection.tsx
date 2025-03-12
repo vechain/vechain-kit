@@ -17,6 +17,7 @@ import { useVeChainKitConfig } from '@/providers';
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
 });
 
@@ -107,13 +108,13 @@ export const BalanceSection = ({
                     style={{
                         width: '100%',
                         mt: 2,
-                        backgroundColor: isDark ? '#ffffff05' : 'blackAlpha.50',
+                        backgroundColor: isDark ? '#ffffff0a' : 'blackAlpha.50',
                         borderRadius: 'xl',
                         p: 3,
                         cursor: 'pointer',
                         _hover: {
                             backgroundColor: isDark
-                                ? '#ffffff0d'
+                                ? '#ffffff12'
                                 : 'blackAlpha.200',
                         },
                         justifyContent: 'space-between',

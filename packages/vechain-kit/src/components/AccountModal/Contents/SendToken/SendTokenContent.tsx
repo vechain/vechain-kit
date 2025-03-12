@@ -19,8 +19,8 @@ import { useState } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
-import { SelectTokenContent } from './SelectTokenContent';
-import { ZeroAddress } from 'ethers';
+import { SelectTokenContent, Token } from './SelectTokenContent';
+import { parseEther, ZeroAddress } from 'ethers';
 import {
     compareAddresses,
     isValidAddress,
@@ -37,14 +37,6 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
     compactDisplay: 'short',
     maximumFractionDigits: 2,
 });
-
-type Token = {
-    symbol: string;
-    balance: string;
-    address: string;
-    numericBalance: number;
-    price: number;
-};
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
@@ -105,7 +97,7 @@ export const SendTokenContent = ({
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            setValue('amount', selectedToken.numericBalance.toString());
+            setValue('amount', selectedToken.numericBalance);
         }
     };
 
@@ -126,8 +118,8 @@ export const SendTokenContent = ({
 
         // Validate amount
         if (selectedToken) {
-            const numericAmount = parseFloat(data.amount);
-            if (numericAmount > selectedToken.numericBalance) {
+            const numericAmount = parseEther(data.amount);
+            if (numericAmount > parseEther(selectedToken.numericBalance)) {
                 setError('amount', {
                     type: 'manual',
                     message: t(`Insufficient {{symbol}} balance`, {
@@ -362,7 +354,9 @@ export const SendTokenContent = ({
                                         textOverflow="ellipsis"
                                     >
                                         {compactFormatter.format(
-                                            selectedToken.numericBalance,
+                                            Number(
+                                                selectedToken.numericBalance,
+                                            ),
                                         )}
                                     </Text>
                                 </HStack>

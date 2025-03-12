@@ -97,7 +97,7 @@ export const AddressDisplayCard = ({
                     </Text>
                     <Skeleton isLoaded={!isLoading}>
                         <Text fontSize="xs" opacity={0.5}>
-                            {compactFormatter.format(displayBalance)}
+                            {compactFormatter.format(Number(displayBalance))}
                             {displaySymbol && ` ${displaySymbol}`}
                         </Text>
                     </Skeleton>

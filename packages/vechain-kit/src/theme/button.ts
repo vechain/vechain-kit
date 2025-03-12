@@ -109,13 +109,13 @@ const variants = {
     })),
     mainContentButton: defineStyle(({ colorMode }) => ({
         width: '100%',
-        backgroundColor: colorMode === 'dark' ? '#ffffff05' : 'blackAlpha.50',
+        backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
         borderRadius: 'xl',
         p: 3,
         cursor: 'pointer',
         _hover: {
             backgroundColor:
-                colorMode === 'dark' ? '#ffffff0d' : 'blackAlpha.200',
+                colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
         },
     })),
 };

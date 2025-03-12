@@ -60,7 +60,7 @@ export const useTransferERC20 = ({
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        await refresh();
+        refresh();
         onSuccess?.();
     }, [onSuccess, fromAddress, queryClient]);
 

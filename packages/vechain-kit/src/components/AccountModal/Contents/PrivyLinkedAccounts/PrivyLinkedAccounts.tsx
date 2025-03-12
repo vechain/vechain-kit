@@ -326,7 +326,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
         return (
             <ScrollToTopWrapper>
                 <StickyHeaderContainer>
-                    <ModalHeader>{t('Add Login Method')}</ModalHeader>
+                    <ModalHeader>
+                        {t('Select Additional Login Method')}
+                    </ModalHeader>
                     <ModalBackButton
                         onClick={() => setShowLinkOptions(false)}
                     />
@@ -669,7 +671,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         ))}
                 </VStack>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter w={'full'}>
                 <Button
                     w="full"
                     variant="vechainKitSecondary"

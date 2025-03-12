@@ -41,6 +41,7 @@ export const ProfileContent = ({
                         setCurrentContent('account-customization')
                     }
                     address={account?.address ?? ''}
+                    showHeader={false}
                     onLogout={() => {
                         setCurrentContent?.({
                             type: 'disconnect-confirm',

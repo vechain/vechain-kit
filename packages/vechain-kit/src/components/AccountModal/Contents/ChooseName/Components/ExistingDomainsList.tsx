@@ -158,7 +158,7 @@ export const ExistingDomainsList = ({
                                                         size="sm"
                                                         bg={
                                                             isDark
-                                                                ? '#ffffff05'
+                                                                ? '#ffffff0a'
                                                                 : 'whiteAlpha.100'
                                                         }
                                                         color={
