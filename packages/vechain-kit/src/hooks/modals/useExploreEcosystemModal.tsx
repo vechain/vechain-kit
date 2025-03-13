@@ -2,16 +2,11 @@ import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useExploreEcosystemModal = () => {
-    const {
-        openAccountModal,
-        closeAccountModal,
-        isAccountModalOpen,
-        setAccountModalContent,
-    } = useModal();
+    const { openAccountModal, closeAccountModal, isAccountModalOpen } =
+        useModal();
 
     const open = () => {
-        setAccountModalContent('ecosystem');
-        openAccountModal();
+        openAccountModal('ecosystem');
     };
 
     const close = () => {

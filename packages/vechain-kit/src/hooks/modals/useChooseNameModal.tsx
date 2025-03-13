@@ -10,7 +10,7 @@ export const useChooseNameModal = () => {
     } = useModal();
 
     const open = () => {
-        setAccountModalContent({
+        openAccountModal({
             type: 'choose-name',
             props: {
                 setCurrentContent: setAccountModalContent,
@@ -18,7 +18,6 @@ export const useChooseNameModal = () => {
                 initialContentSource: 'main',
             },
         });
-        openAccountModal();
     };
 
     const close = () => {

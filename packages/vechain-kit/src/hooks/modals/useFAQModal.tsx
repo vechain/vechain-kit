@@ -10,11 +10,10 @@ export const useFAQModal = () => {
     } = useModal();
 
     const open = () => {
-        setAccountModalContent({
+        openAccountModal({
             type: 'faq',
             props: { onGoBack: () => setAccountModalContent('main') },
         });
-        openAccountModal();
     };
 
     const close = () => {
