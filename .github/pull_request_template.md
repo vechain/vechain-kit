@@ -6,6 +6,6 @@ Closes #(issue)
 
 ### Updated packages (if any):
 
--   [] next-template
--   [] homepage
--   [] vechain-kit
+-  [ ] next-template
+-  [ ] homepage
+-  [ ] vechain-kit
