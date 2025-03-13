@@ -37,6 +37,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
                 loginMethods: [
                     'google',
+                    'apple',
                     'twitter',
                     'farcaster',
                     'email',

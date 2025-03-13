@@ -2,7 +2,6 @@
 
 import {
     Container,
-    Image,
     Spinner,
     Text,
     useColorMode,
@@ -19,26 +18,6 @@ export function WelcomeSection() {
     return (
         <Container alignItems={'center'} justifyContent={'center'}>
             <VStack spacing={10}>
-                <Image
-                    src={
-                        'https://i.ibb.co/ncysMF9/vechain-kit-logo-transparent.png'
-                    }
-                    maxW={'350px'}
-                    maxH={'175px'}
-                    alt="logo"
-                    animation="bounce 3s infinite"
-                    transform="rotate(-10deg)"
-                    sx={{
-                        '@keyframes bounce': {
-                            '0%, 100%': {
-                                transform: 'rotate(0deg) translateX(0)',
-                            },
-                            '50%': {
-                                transform: 'rotate(0deg) translateY(5px)',
-                            },
-                        },
-                    }}
-                />
                 <Text
                     textAlign={'center'}
                     fontSize="xl"

@@ -10,26 +10,36 @@ import {
     AlertDescription,
     Box,
     ModalCloseButton,
+    HStack,
+    Circle,
+    Image,
+    Heading,
+    Icon,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoWarningOutline } from 'react-icons/io5';
 import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
-import { UpgradeSmartAccountModalContentsTypes } from '../UpgradeSmartAccountModal';
+import {
+    UpgradeSmartAccountModalContentsTypes,
+    UpgradeSmartAccountModalStyle,
+} from '../UpgradeSmartAccountModal';
+import { FaArrowRight } from 'react-icons/fa';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<UpgradeSmartAccountModalContentsTypes>
     >;
     handleClose: () => void;
+    style?: UpgradeSmartAccountModalStyle;
 };
 
 export const UpgradeSmartAccountContent = ({
     setCurrentContent,
     handleClose,
+    style,
 }: Props) => {
     const { t } = useTranslation();
     const { smartAccount, connectedWallet } = useWallet();
@@ -88,12 +98,65 @@ export const UpgradeSmartAccountContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={6} align="stretch">
+                <VStack spacing={10} align="stretch" justifyContent="center">
                     <Text fontSize="sm" textAlign="center">
                         {t(
                             'To continue interacting with VeChain blockchain and complete your operation, your smart account needs to be upgraded to the latest version (v3).',
                         )}
                     </Text>
+
+                    <HStack
+                        align="center"
+                        justifyContent="space-evenly"
+                        rounded="md"
+                    >
+                        <Box position="relative" display="inline-block">
+                            <Circle size="60px" bg="gray.200">
+                                <Image
+                                    src={smartAccount?.image}
+                                    alt={t('Profile Picture')}
+                                    w="100%"
+                                    h="100%"
+                                    borderRadius="full"
+                                    objectFit="cover"
+                                />
+                            </Circle>
+
+                            <Heading
+                                position="absolute"
+                                top="-5"
+                                right="-5"
+                                color="#D23F63"
+                                fontSize="28px"
+                            >
+                                {`v1`}
+                            </Heading>
+                        </Box>
+
+                        <Icon as={FaArrowRight} color="#3DBA67" />
+
+                        <Box position="relative" display="inline-block">
+                            <Circle size="60px" bg="gray.200">
+                                <Image
+                                    src={smartAccount?.image}
+                                    alt={t('Profile Picture')}
+                                    w="100%"
+                                    h="100%"
+                                    borderRadius="full"
+                                    objectFit="cover"
+                                />
+                            </Circle>
+                            <Heading
+                                position="absolute"
+                                top="-5"
+                                right="-5"
+                                color="#3DBA67"
+                                fontSize="28px"
+                            >
+                                {`v3`}
+                            </Heading>
+                        </Box>
+                    </HStack>
 
                     <Alert status="info" borderRadius="md">
                         <AlertIcon />
@@ -121,30 +184,13 @@ export const UpgradeSmartAccountContent = ({
                             </AlertDescription>
                         </Box>
                     </Alert>
-
-                    <Alert status="warning" borderRadius="md">
-                        <AlertIcon as={IoWarningOutline} />
-                        <Box>
-                            <AlertTitle fontSize="sm">
-                                {t('Important')}
-                            </AlertTitle>
-                            <AlertDescription
-                                fontSize="xs"
-                                lineHeight="17px"
-                                display="block"
-                            >
-                                {t(
-                                    'This upgrade is necessary to continue interacting with VeChain blockchain. Please complete it now.',
-                                )}
-                            </AlertDescription>
-                        </Box>
-                    </Alert>
                 </VStack>
             </ModalBody>
 
             <ModalFooter justifyContent="center">
                 <VStack spacing={3} w="full">
                     <TransactionButtonAndStatus
+                        style={style}
                         buttonText={
                             upgradeRequired
                                 ? t('Upgrade account')

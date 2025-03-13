@@ -7,10 +7,17 @@ import {
     SuccessfulOperationContentProps,
 } from './Contents/SuccessfulOperationContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccountContent';
+import { ThemeTypings } from '@chakra-ui/react';
+
+export type UpgradeSmartAccountModalStyle = {
+    accentColor?: string;
+    modalSize?: ThemeTypings['components']['Modal']['sizes'];
+};
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
+    style?: UpgradeSmartAccountModalStyle;
 };
 
 export type UpgradeSmartAccountModalContentsTypes =
@@ -20,7 +27,7 @@ export type UpgradeSmartAccountModalContentsTypes =
           props: SuccessfulOperationContentProps;
       };
 
-export const UpgradeSmartAccountModal = ({ isOpen, onClose }: Props) => {
+export const UpgradeSmartAccountModal = ({ isOpen, onClose, style }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<UpgradeSmartAccountModalContentsTypes>(
             'upgrade-smart-account',
@@ -45,6 +52,7 @@ export const UpgradeSmartAccountModal = ({ isOpen, onClose }: Props) => {
                 <UpgradeSmartAccountContent
                     setCurrentContent={setCurrentContent}
                     handleClose={onClose}
+                    style={style}
                 />
             );
         }
@@ -56,6 +64,7 @@ export const UpgradeSmartAccountModal = ({ isOpen, onClose }: Props) => {
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
+            size={style?.modalSize}
         >
             {renderContent()}
         </BaseModal>

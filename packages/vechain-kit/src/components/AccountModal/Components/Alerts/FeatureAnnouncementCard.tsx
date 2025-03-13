@@ -24,7 +24,11 @@ export const FeatureAnnouncementCard = ({
     const { t } = useTranslation();
     const { isVisible, closeAnnouncement } = useFeatureAnnouncement();
 
-    const titleColor = useColorModeValue('gray.800', 'whiteAlpha.900');
+    const titleColor = useColorModeValue('blackAlpha.800', 'whiteAlpha.800');
+    const descriptionColor = useColorModeValue(
+        'blackAlpha.700',
+        'whiteAlpha.700',
+    );
 
     const handleOnClick = () => {
         setCurrentContent({
@@ -45,7 +49,6 @@ export const FeatureAnnouncementCard = ({
             w="full"
             variant={'featureAnnouncement'}
             overflow="hidden"
-            mb={4}
             onClick={handleOnClick}
             cursor="pointer"
             _hover={{ opacity: 0.8 }}
@@ -65,7 +68,7 @@ export const FeatureAnnouncementCard = ({
                                 {t('New')}
                             </Tag>
                         </HStack>
-                        <Text fontSize="xs" opacity={0.5}>
+                        <Text fontSize="xs" color={descriptionColor}>
                             {t(
                                 'Say goodbye to 0x addresses, claim your .veworld.vet subdomain now for free!',
                             )}
