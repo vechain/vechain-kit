@@ -13,6 +13,7 @@ import {
     useWallet,
     useMfaEnrollment,
     useUpgradeRequired,
+    useSetWalletRecovery,
 } from '@/hooks';
 import React from 'react';
 import {
@@ -29,6 +30,7 @@ import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { RiDeviceRecoverLine } from "react-icons/ri";
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -41,7 +43,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
 
     const { exportWallet } = usePrivy();
     const { showMfaEnrollmentModal } = useMfaEnrollment();
-
+    const { setWalletRecovery } = useSetWalletRecovery();
     const { connection, smartAccount, connectedWallet } = useWallet();
 
     const { data: upgradeRequired } = useUpgradeRequired(
@@ -135,6 +137,15 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         }}
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={HiOutlineShieldCheck}
+                    />
+
+                    <ActionButton
+                        title={t('Manage Recovery')}
+                        onClick={() => {
+                            setWalletRecovery();
+                        }}
+                        isDisabled={!connection.isConnectedWithSocialLogin}
+                        leftIcon={RiDeviceRecoverLine}
                     />
 
                     {upgradeRequired && (
