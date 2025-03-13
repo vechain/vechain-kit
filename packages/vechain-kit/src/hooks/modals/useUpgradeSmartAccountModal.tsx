@@ -1,13 +1,16 @@
+import { UpgradeSmartAccountModalStyle } from '@/components';
 import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
-export const useUpgradeSmartAccountModal = () => {
+export const useUpgradeSmartAccountModal = (
+    style?: UpgradeSmartAccountModalStyle,
+) => {
     const {
         openUpgradeSmartAccountModal: open,
         closeUpgradeSmartAccountModal: close,
         isUpgradeSmartAccountModalOpen: isOpen,
     } = useModal();
-    return { open, close, isOpen };
+    return { open: () => open(style), close, isOpen };
 };
 
 export const UpgradeSmartAccountModalProvider = ({

@@ -9,7 +9,7 @@ import {
 } from 'react-icons/ri';
 import { IoMdNotifications } from 'react-icons/io';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useWallet } from '@vechain/vechain-kit';
+import { useUpgradeSmartAccountModal, useWallet } from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
     useSendTokenModal,
@@ -26,6 +26,7 @@ import { LanguageCard } from './LanguageCard';
 import { ThemeCard } from './ThemeCard';
 import { CgProfile } from 'react-icons/cg';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
+import { MdOutlineBrowserUpdated } from 'react-icons/md';
 
 export function FeaturesToTry() {
     const { account, connection } = useWallet();
@@ -40,6 +41,8 @@ export function FeaturesToTry() {
     const { open: openNotificationsModal } = useNotificationsModal();
     const { open: openFAQModal } = useFAQModal();
     const { open: openReceiveModal } = useReceiveModal();
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
 
     const features = [
         {
@@ -97,6 +100,12 @@ export function FeaturesToTry() {
             description: 'Find answers to common questions about VeChain',
             icon: BsQuestionCircle,
             content: openFAQModal,
+        },
+        {
+            title: 'Upgrade Smart Account',
+            description: 'Upgrade your smart account to the latest version',
+            icon: MdOutlineBrowserUpdated,
+            content: openUpgradeSmartAccountModal,
         },
     ];
 

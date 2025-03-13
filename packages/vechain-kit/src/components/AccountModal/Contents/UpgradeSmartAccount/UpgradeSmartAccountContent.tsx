@@ -11,9 +11,13 @@ import {
     Box,
     ModalCloseButton,
     Button,
+    HStack,
+    Circle,
+    Image,
+    Heading,
+    Icon,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoWarningOutline } from 'react-icons/io5';
 import {
     ModalBackButton,
     StickyHeaderContainer,
@@ -21,6 +25,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
+import { FaArrowRight } from 'react-icons/fa';
 
 export type UpgradeSmartAccountContentProps = {
     setCurrentContent: React.Dispatch<
@@ -101,7 +106,7 @@ export const UpgradeSmartAccountContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={6} align="stretch">
+                <VStack spacing={10} align="stretch">
                     <Text fontSize="sm" textAlign="center">
                         {upgradeRequired
                             ? t(
@@ -111,6 +116,57 @@ export const UpgradeSmartAccountContent = ({
                                   'Your smart account is already upgraded to this version.',
                               )}
                     </Text>
+
+                    <HStack
+                        align="center"
+                        justifyContent="space-evenly"
+                        rounded="md"
+                    >
+                        <Box position="relative" display="inline-block">
+                            <Circle size="60px" bg="gray.200">
+                                <Image
+                                    src={smartAccount?.image}
+                                    alt={t('Profile Picture')}
+                                    w="100%"
+                                    h="100%"
+                                    objectFit="cover"
+                                />
+                            </Circle>
+
+                            <Heading
+                                position="absolute"
+                                top="-5"
+                                right="-5"
+                                color="#D23F63"
+                                fontSize="28px"
+                            >
+                                {`v1`}
+                            </Heading>
+                        </Box>
+
+                        <Icon as={FaArrowRight} color="#3DBA67" />
+
+                        <Box position="relative" display="inline-block">
+                            <Circle size="60px" bg="gray.200">
+                                <Image
+                                    src={smartAccount?.image}
+                                    alt={t('Profile Picture')}
+                                    w="100%"
+                                    h="100%"
+                                    objectFit="cover"
+                                />
+                            </Circle>
+                            <Heading
+                                position="absolute"
+                                top="-5"
+                                right="-5"
+                                color="#3DBA67"
+                                fontSize="28px"
+                            >
+                                {`v3`}
+                            </Heading>
+                        </Box>
+                    </HStack>
 
                     <Alert status="info" borderRadius="md">
                         <AlertIcon />
@@ -135,24 +191,6 @@ export const UpgradeSmartAccountContent = ({
                                         {t('Reduced gas costs for operations')}
                                     </Text>
                                 </VStack>
-                            </AlertDescription>
-                        </Box>
-                    </Alert>
-
-                    <Alert status="warning" borderRadius="md">
-                        <AlertIcon as={IoWarningOutline} />
-                        <Box>
-                            <AlertTitle fontSize="sm">
-                                {t('Important')}
-                            </AlertTitle>
-                            <AlertDescription
-                                fontSize="xs"
-                                lineHeight="17px"
-                                display="block"
-                            >
-                                {t(
-                                    'This upgrade is necessary to continue interacting with VeChain blockchain. Please complete it now.',
-                                )}
                             </AlertDescription>
                         </Box>
                     </Alert>
