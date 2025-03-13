@@ -53,6 +53,20 @@ jobs:
               with:
                   path: './examples/homepage/dist'
 
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
+                  aws-region: eu-west-1
+
+            - name: Deploy to S3
+              run: |
+                  aws s3 sync ./examples/homepage/dist s3://${{ secrets.AWS_BUCKET_NAME }} --delete
+
+            - name: Cloudfront Invalidation
+              run: |
+                  AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
+
     deploy:
         needs: build
         permissions:
