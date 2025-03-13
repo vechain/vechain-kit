@@ -125,6 +125,7 @@ export const UpgradeSmartAccountContent = ({
                         <Box position="relative" display="inline-block">
                             <Circle size="60px" bg="gray.200">
                                 <Image
+                                    borderRadius="full"
                                     src={smartAccount?.image}
                                     alt={t('Profile Picture')}
                                     w="100%"
@@ -149,6 +150,7 @@ export const UpgradeSmartAccountContent = ({
                         <Box position="relative" display="inline-block">
                             <Circle size="60px" bg="gray.200">
                                 <Image
+                                    borderRadius="full"
                                     src={smartAccount?.image}
                                     alt={t('Profile Picture')}
                                     w="100%"

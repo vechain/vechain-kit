@@ -117,6 +117,7 @@ export const UpgradeSmartAccountContent = ({
                                     alt={t('Profile Picture')}
                                     w="100%"
                                     h="100%"
+                                    borderRadius="full"
                                     objectFit="cover"
                                 />
                             </Circle>
@@ -141,6 +142,7 @@ export const UpgradeSmartAccountContent = ({
                                     alt={t('Profile Picture')}
                                     w="100%"
                                     h="100%"
+                                    borderRadius="full"
                                     objectFit="cover"
                                 />
                             </Circle>
