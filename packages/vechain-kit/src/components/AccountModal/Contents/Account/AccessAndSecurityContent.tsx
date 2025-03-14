@@ -30,7 +30,7 @@ import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { RiDeviceRecoverLine } from "react-icons/ri";
+import { MdOutlineSettingsBackupRestore } from "react-icons/md";
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -145,7 +145,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             setWalletRecovery();
                         }}
                         isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={RiDeviceRecoverLine}
+                        leftIcon={MdOutlineSettingsBackupRestore}
                     />
 
                     {upgradeRequired && (
