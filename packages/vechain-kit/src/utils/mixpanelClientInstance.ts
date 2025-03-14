@@ -147,9 +147,7 @@ const resetUser = (): void => {
     }
 };
 
-// Extended Analytics object with additional methods
 const Analytics = {
-    // Authentication domain
     auth: {
         flowStarted: () => trackEvent('Auth Flow Started'),
 
@@ -189,7 +187,6 @@ const Analytics = {
             stage: 'wallet-connect' | 'email-verification' | 'social-callback',
         ) => trackEvent('Login Drop-off', { stage }),
 
-        // New methods from tracking plan
         connectionListViewed: (totalConnections?: number) =>
             trackEvent('Connection List Viewed', { totalConnections }),
 
