@@ -74,9 +74,9 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                             size="sm"
                             width="auto"
                             value={i18n.language}
-                            onChange={(e) =>
-                                i18n.changeLanguage(e.target.value)
-                            }
+                            onChange={(e) => {
+                                i18n.changeLanguage(e.target.value);
+                            }}
                             bg={isDark ? 'whiteAlpha.200' : 'gray.100'}
                             borderColor={isDark ? 'whiteAlpha.300' : 'gray.200'}
                             _hover={{

@@ -4,6 +4,8 @@ import { IoIosFingerPrint } from 'react-icons/io';
 import { LoginLoadingModal, ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithPasskey } from '@/hooks';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -17,6 +19,7 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithPasskey = async () => {
+        Analytics.auth.methodSelected(VeLoginMethod.PASSKEY);
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);

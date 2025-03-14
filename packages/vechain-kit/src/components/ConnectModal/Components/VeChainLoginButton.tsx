@@ -6,8 +6,8 @@ import { useLoginWithVeChain } from '@/hooks';
 import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
-import { AuthTracking } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types';
+import { VeLoginMethod } from '@/types/mixPanel';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     isDark: boolean;
@@ -21,7 +21,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithVeChain = async () => {
-        AuthTracking.loginMethodSelected(VeLoginMethod.VECHAIN);
+        Analytics.auth.methodSelected(VeLoginMethod.VECHAIN);
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);

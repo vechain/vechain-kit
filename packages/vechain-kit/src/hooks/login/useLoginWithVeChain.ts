@@ -4,7 +4,7 @@ import { useFetchAppInfo, usePrivy } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { AuthTracking } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
