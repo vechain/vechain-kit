@@ -16,7 +16,7 @@ import {
     useAccessAndSecurityModal,
     useExploreEcosystemModal,
     useNotificationsModal,
-    useAccountCustomizationModal,
+    useProfileModal,
     useFAQModal,
     useReceiveModal,
 } from '@vechain/vechain-kit';
@@ -33,8 +33,7 @@ export function FeaturesToTry() {
 
     // Use the modal hooks
     const { open: openChooseNameModal } = useChooseNameModal();
-    const { open: openAccountCustomizationModal } =
-        useAccountCustomizationModal();
+    const { open: openProfileModal } = useProfileModal();
     const { open: openSendTokenModal } = useSendTokenModal();
     const { open: openAccessAndSecurityModal } = useAccessAndSecurityModal();
     const { open: openExploreEcosystemModal } = useExploreEcosystemModal();
@@ -56,9 +55,9 @@ export function FeaturesToTry() {
         {
             title: 'Customize Profile',
             description:
-                'Customize your account with a profile image, display name, bio and more to enhance your identity across VeChain applications.',
+                'Show the user his profile and allow them to customize it with a profile image, display name, bio and more to enhance their identity across VeChain applications.',
             icon: CgProfile,
-            content: openAccountCustomizationModal,
+            content: openProfileModal,
         },
         {
             title: 'Transfer Assets',
@@ -76,7 +75,7 @@ export function FeaturesToTry() {
         {
             title: 'Access & Security',
             description:
-                'Secure your embedded wallet with proper backup procedures and update your login methods.',
+                'Allow the user to secure his embedded wallet with proper backup procedures, update his login methods, add MFA and more.',
             icon: RiShieldKeyholeLine,
             content: openAccessAndSecurityModal,
             disabled: !connection.isConnectedWithPrivy,
