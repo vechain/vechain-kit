@@ -29,7 +29,7 @@ export const EmailLoginButton = () => {
     const emailCodeVerificationModal = useDisclosure();
 
     const handleSendCode = async () => {
-        AuthTracking.preferredLoginMethod(VeLoginMethod.EMAIL);
+        AuthTracking.loginMethodSelected(VeLoginMethod.EMAIL);
         await sendCode({ email });
         // onClose();
         emailCodeVerificationModal.onOpen();

@@ -21,7 +21,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithVeChain = async () => {
-        AuthTracking.preferredLoginMethod(VeLoginMethod.VECHAIN);
+        AuthTracking.loginMethodSelected(VeLoginMethod.VECHAIN);
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);

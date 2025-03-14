@@ -79,6 +79,11 @@ const AuthTracking = {
         trackEvent('Login Drop-off');
     },
 
+    // login method selection
+    loginMethodSelected: (method: VeLoginMethod): void => {
+        trackEvent('Login Method Selected', { method });
+    },
+
     preferredLoginMethod: (method: VeLoginMethod): void => {
         setUserProperties({ preferred_login_method: method });
     },
