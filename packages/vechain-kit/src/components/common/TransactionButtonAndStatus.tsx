@@ -15,6 +15,9 @@ export type TransactionButtonAndStatusProps = {
     isSubmitForm?: boolean;
     buttonText: string;
     isDisabled?: boolean;
+    style?: {
+        accentColor?: string;
+    };
 };
 
 export const TransactionButtonAndStatus = ({
@@ -27,6 +30,7 @@ export const TransactionButtonAndStatus = ({
     isSubmitForm = false,
     buttonText,
     isDisabled = false,
+    style,
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -40,6 +44,11 @@ export const TransactionButtonAndStatus = ({
         );
     }, [transactionError, t]);
 
+    const buttonBg = useMemo(() => {
+        if (style?.accentColor) return `${style.accentColor} !important`;
+        return undefined;
+    }, [style?.accentColor]);
+
     return (
         <VStack width="full" spacing={4}>
             {errorMessage && (
@@ -50,6 +59,7 @@ export const TransactionButtonAndStatus = ({
             <Button
                 px={4}
                 variant="vechainKitPrimary"
+                bg={buttonBg}
                 onClick={onConfirm}
                 type={isSubmitForm ? 'submit' : 'button'}
                 isLoading={isSubmitting}

@@ -97,7 +97,7 @@ export const ActionButton = ({
                     justifyContent={'flex-start'}
                     alignItems={'flex-start'}
                 >
-                    <HStack justify={'flex-start'}>
+                    <HStack justify={'flex-start'} alignItems={'baseline'}>
                         <Text fontSize={'sm'} fontWeight={'400'}>
                             {title}
                         </Text>

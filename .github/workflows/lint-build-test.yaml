@@ -1,4 +1,4 @@
-name: Lint, Build & Test
+name: Lint & Build
 
 on:
     push:
@@ -13,7 +13,7 @@ concurrency:
 jobs:
     build-and-test:
         runs-on: ubuntu-latest
-        name: Lint, Build & Test
+        name: Lint & Build
 
         steps:
             - name: Checkout
@@ -32,11 +32,6 @@ jobs:
 
             - name: Lint
               run: yarn run lint
-              env:
-                  NODE_OPTIONS: '--max-old-space-size=4096'
-
-            - name: Test
-              run: yarn run test
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
 

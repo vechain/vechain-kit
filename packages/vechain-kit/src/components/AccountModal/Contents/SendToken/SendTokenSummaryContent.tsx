@@ -27,7 +27,7 @@ import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { convertUriToUrl } from '@/utils';
 import { Token } from './SelectTokenContent';
 
@@ -147,6 +147,11 @@ export const SendTokenSummaryContent = ({
     };
 
     const handleSend = async () => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+            return;
+        }
+
         try {
             if (selectedToken.symbol === 'VET') {
                 await transferVET();
@@ -163,12 +168,6 @@ export const SendTokenSummaryContent = ({
         transferVETWaitingForWalletConfirmation;
     const isSubmitting =
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
-
-    useEffect(() => {
-        if (upgradeRequired) {
-            openUpgradeSmartAccountModal();
-        }
-    }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
     return (
         <>
@@ -264,7 +263,7 @@ export const SendTokenSummaryContent = ({
                     transactionPendingText={t('Sending...')}
                     txReceipt={getTxReceipt()}
                     buttonText={t('Confirm')}
-                    isDisabled={isSubmitting || upgradeRequired}
+                    isDisabled={isSubmitting}
                 />
             </ModalFooter>
         </>

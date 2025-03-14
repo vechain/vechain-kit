@@ -7,6 +7,7 @@ import {
     Text,
     Icon,
     Button,
+    Box,
 } from '@chakra-ui/react';
 import {
     usePrivy,
@@ -27,7 +28,7 @@ import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
 import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
-import { IoShieldOutline } from 'react-icons/io5';
+import { IoCogSharp, IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { MdOutlineSettingsBackupRestore } from "react-icons/md";
@@ -87,7 +88,37 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         </Text>
                     </VStack>
 
-                    {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
+                    {upgradeRequired && (
+                        <ActionButton
+                            title={t('Upgrade Smart Account to V3')}
+                            description={t(
+                                'A new version is available for your account',
+                            )}
+                            onClick={() => {
+                                setCurrentContent({
+                                    type: 'upgrade-smart-account',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContent: 'access-and-security',
+                                    },
+                                });
+                            }}
+                            leftIcon={IoCogSharp}
+                            extraContent={
+                                <Box
+                                    minWidth="8px"
+                                    height="8px"
+                                    bg="red.500"
+                                    borderRadius="full"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    ml={2}
+                                />
+                            }
+                        />
+                    )}
+
                     <ActionButton
                         title={t('Your embedded wallet')}
                         onClick={() => {
@@ -147,25 +178,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         isDisabled={!connection.isConnectedWithSocialLogin}
                         leftIcon={MdOutlineSettingsBackupRestore}
                     />
-
-                    {upgradeRequired && (
-                        <ActionButton
-                            title={t('Upgrade Smart Account to V3')}
-                            description={t(
-                                'A new version is available for your account',
-                            )}
-                            onClick={() => {
-                                setCurrentContent({
-                                    type: 'upgrade-smart-account',
-                                    props: {
-                                        setCurrentContent,
-                                        initialContent: 'access-and-security',
-                                    },
-                                });
-                            }}
-                            leftIcon={HiOutlineShieldCheck}
-                        />
-                    )}
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>

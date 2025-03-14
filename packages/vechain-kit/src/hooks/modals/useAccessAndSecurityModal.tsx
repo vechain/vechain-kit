@@ -2,16 +2,11 @@ import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useAccessAndSecurityModal = () => {
-    const {
-        openAccountModal,
-        closeAccountModal,
-        isAccountModalOpen,
-        setAccountModalContent,
-    } = useModal();
+    const { openAccountModal, closeAccountModal, isAccountModalOpen } =
+        useModal();
 
     const open = () => {
-        setAccountModalContent('access-and-security');
-        openAccountModal();
+        openAccountModal('access-and-security');
     };
 
     const close = () => {

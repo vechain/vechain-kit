@@ -6,6 +6,7 @@ import {
     Tag,
     ModalFooter,
     HStack,
+    Text,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -21,8 +22,6 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useWallet } from '@/hooks';
-import { FeatureAnnouncementCard } from '../../Components/Alerts';
 import React from 'react';
 
 type Props = {
@@ -36,7 +35,6 @@ type Props = {
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-    const { account } = useWallet();
 
     return (
         <ScrollToTopWrapper>
@@ -51,7 +49,29 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         })
                     }
                 />
-                <ModalHeader>{t('Wallet')}</ModalHeader>
+                <ModalHeader>
+                    <HStack
+                        w={'full'}
+                        justifyContent={'center'}
+                        p={0}
+                        spacing={2}
+                    >
+                        <Text fontSize={'md'} fontWeight={'bold'}>
+                            {t('Wallet')}
+                        </Text>
+                        {network?.type !== 'main' && (
+                            <Tag
+                                size="xs"
+                                colorScheme="orange"
+                                fontSize={'2xs'}
+                                p={1}
+                                textTransform={'uppercase'}
+                            >
+                                {`${network?.type}`}
+                            </Tag>
+                        )}
+                    </HStack>
+                </ModalHeader>
 
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -63,12 +83,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     justifyContent={'flex-start'}
                     spacing={6}
                 >
-                    {!account?.domain && (
-                        <FeatureAnnouncementCard
-                            setCurrentContent={setCurrentContent}
-                        />
-                    )}
-
                     <AccountSelector
                         style={{ justifyContent: 'flex-start' }}
                         onClick={() => {
@@ -76,25 +90,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         }}
                         wallet={wallet}
                     />
-
-                    {network?.type !== 'main' && (
-                        <HStack
-                            w={'full'}
-                            justifyContent={'flex-start'}
-                            mt={'-10px'}
-                            mb={'-10px'}
-                        >
-                            <Tag
-                                size="xl"
-                                colorScheme="orange"
-                                fontSize={'xs'}
-                                p={2}
-                                textTransform={'capitalize'}
-                            >
-                                {`${network?.type} network`}
-                            </Tag>
-                        </HStack>
-                    )}
 
                     <BalanceSection
                         onAssetsClick={() => {

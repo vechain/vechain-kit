@@ -72,7 +72,7 @@ export const TransactionModalContent = ({
                 };
             case 'error':
                 return {
-                    title: uiConfig?.title ?? t('Something went wrong'),
+                    title: t('Something went wrong'),
                     icon: uiConfig?.errorIcon ?? (
                         <Icon
                             as={MdOutlineErrorOutline}
@@ -85,7 +85,7 @@ export const TransactionModalContent = ({
                 };
             case 'success':
                 return {
-                    title: uiConfig?.title ?? t('Transaction completed!'),
+                    title: t('Transaction successful!'),
                     icon: uiConfig?.successIcon ?? (
                         <Icon
                             as={IoIosCheckmarkCircleOutline}

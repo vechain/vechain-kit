@@ -56,7 +56,7 @@ export type UseWalletReturnType = {
         source: ConnectionSource;
         isInAppBrowser: boolean;
         nodeUrl: string;
-        delegatorUrl: string;
+        delegatorUrl?: string;
         chainId?: string;
         network: NETWORK_TYPE;
     };
@@ -277,7 +277,7 @@ export const useWallet = (): UseWalletReturnType => {
             isInAppBrowser:
                 (window.vechain && window.vechain.isInAppBrowser) ?? false,
             nodeUrl,
-            delegatorUrl: feeDelegation.delegatorUrl,
+            delegatorUrl: feeDelegation?.delegatorUrl,
             chainId: chainId,
             network: network.type,
         },

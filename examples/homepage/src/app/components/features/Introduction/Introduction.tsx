@@ -13,11 +13,13 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaDiscord, FaApple } from 'react-icons/fa';
 import { IoDocumentText, IoWalletOutline } from 'react-icons/io5';
-import { MdBrush, MdCode } from 'react-icons/md';
+import { MdBrush, MdCode, MdEmail } from 'react-icons/md';
 import { CiLogin } from 'react-icons/ci';
-import { SiNpm } from 'react-icons/si';
+import { SiNpm, SiFarcaster } from 'react-icons/si';
+import { FcGoogle } from 'react-icons/fc';
+import { FaSquareXTwitter } from 'react-icons/fa6';
 
 export function Introduction() {
     const { connection } = useWallet();
@@ -125,14 +127,66 @@ export function Introduction() {
                         <VStack align="start" spacing={3}>
                             <Icon as={CiLogin} boxSize={6} color="blue.400" />
                             <Text fontWeight="bold">
-                                VeChain Wallet Connection
+                                Wallet Connection Integration
                             </Text>
                             <Text>
                                 Easily connect your users to your dApp with out
                                 of the box wallet connection options. Choose
-                                between: VeWorld, Sync2, Wallet Connect, VeChain
-                                social login, Privy social login, and more.
+                                between:
                             </Text>
+                            <HStack spacing={3} wrap="wrap">
+                                <Icon as={FcGoogle} boxSize={6} />
+                                <Icon as={FaSquareXTwitter} boxSize={6} />
+                                <Icon as={MdEmail} boxSize={6} />
+                                <Icon as={FaDiscord} boxSize={6} />
+                                <Icon as={SiFarcaster} boxSize={6} />
+                                <Icon as={FaApple} boxSize={6} />
+                                <Image
+                                    src="/images/veworld-logo.png"
+                                    alt="VeWorld"
+                                    height={6}
+                                    width="auto"
+                                    borderRadius="md"
+                                />
+                                <Image
+                                    src="/images/wallet-connect-logo.png"
+                                    alt="WalletConnect"
+                                    height={6}
+                                    width="auto"
+                                    borderRadius="md"
+                                />
+                                <Image
+                                    src="/images/rabby-logo.png"
+                                    alt="Rabby Wallet"
+                                    height={6}
+                                    width="auto"
+                                    borderRadius="md"
+                                />
+                                <Image
+                                    src="/images/metamask-logo.png"
+                                    alt="MetaMask"
+                                    height={6}
+                                    width="auto"
+                                    borderRadius="md"
+                                />
+                                <Image
+                                    src="/images/coinbase-wallet-logo.webp"
+                                    alt="Coinbase Wallet"
+                                    height={6}
+                                    width="auto"
+                                    borderRadius="md"
+                                />
+                                <Image
+                                    src="/images/rainbow-logo.webp"
+                                    alt="Rainbow"
+                                    height={6}
+                                    width="auto"
+                                    borderRadius="md"
+                                />
+                                <Text fontSize="sm" color="gray.400">
+                                    and more...
+                                </Text>
+                            </HStack>
                         </VStack>
                     </Box>
 
@@ -144,13 +198,13 @@ export function Introduction() {
                                 color="blue.400"
                             />
                             <Text fontWeight="bold">
-                                Make your dApp a super dApp
+                                Assets, Profile, and Wallet Management
                             </Text>
                             <Text>
-                                By using VeChain Kit, your users will have asset
-                                management, profile management, transaction
-                                signing, and more. All of this is handled for
-                                you, so you can focus on building your dApp.
+                                Use VeChain Kit to allow your users to have
+                                asset management, profile management, social
+                                login, wallet backup, mfa, and more. All out of
+                                the box, so you can focus on building your dApp.
                             </Text>
                         </VStack>
                     </Box>
@@ -158,9 +212,7 @@ export function Introduction() {
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
                             <Icon as={MdCode} boxSize={6} color="green.400" />
-                            <Text fontWeight="bold">
-                                Speed up your development
-                            </Text>
+                            <Text fontWeight="bold">Boosted development</Text>
                             <Text>
                                 Use our hooks and components to speed up your
                                 development. No need to worry about the
@@ -173,9 +225,7 @@ export function Introduction() {
                     <Box p={4} borderRadius="md" borderWidth="1px">
                         <VStack align="start" spacing={3}>
                             <Icon as={MdBrush} boxSize={6} color="purple.400" />
-                            <Text fontWeight="bold">
-                                Customize the kit with your needs
-                            </Text>
+                            <Text fontWeight="bold">Style customization</Text>
                             <Text>
                                 The kit is designed to be customizable to your
                                 needs. Decide what features you want to use and

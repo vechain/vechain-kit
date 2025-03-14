@@ -159,7 +159,7 @@ export const PrivyWalletProvider = ({
                 value: valueArray,
                 data: dataArray,
                 validAfter: 0,
-                validBefore: Math.floor(Date.now() / 1000) + 60, // e.g. 1 minute from now
+                validBefore: Math.floor(Date.now() / 1000) + 300, // e.g. 5 minutes from now
                 nonce: ethers.hexlify(ethers.randomBytes(32)),
             },
         };
