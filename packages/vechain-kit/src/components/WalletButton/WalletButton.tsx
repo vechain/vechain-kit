@@ -11,6 +11,7 @@ import { WalletDisplayVariant } from './types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { ConnectPopover } from '../ConnectModal';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type WalletButtonProps = {
     mobileVariant?: WalletDisplayVariant;
@@ -37,6 +38,7 @@ export const WalletButton = ({
     const accountModal = useDisclosure();
 
     const handleConnect = () => {
+        Analytics.auth.flowStarted();
         if (connection.isInAppBrowser) {
             setSource('veworld');
             connect();

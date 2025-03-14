@@ -18,6 +18,7 @@ import React, { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -33,6 +34,11 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { connection } = useWallet();
     const { loginModalUI } = useVeChainKitConfig();
 
+    const handleFAQClick = () => {
+        Analytics.help.faqViewed();
+        setCurrentContent('faq');
+    };
+
     useEffect(() => {
         if (connection.isConnected) {
             onClose();
@@ -42,7 +48,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     return (
         <>
             <StickyHeaderContainer>
-                <ModalFAQButton onClick={() => setCurrentContent('faq')} />
+                <ModalFAQButton onClick={handleFAQClick} />
                 <ModalHeader>{t('Log in or sign up')}</ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
