@@ -1,4 +1,4 @@
-export { usePrivy, useMfaEnrollment } from '@privy-io/react-auth';
+export { usePrivy, useMfaEnrollment, useSetWalletRecovery } from '@privy-io/react-auth';
 export {
     useConnex,
     useWallet as useDAppKitWallet,
