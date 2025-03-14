@@ -19,7 +19,6 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
 } from '@/hooks';
-import { useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -76,18 +75,17 @@ export const ChooseNameSummaryContent = ({
     });
 
     const handleConfirm = async () => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+            return;
+        }
+
         try {
             await sendTransaction();
         } catch (error) {
             console.error('Transaction failed:', error);
         }
     };
-
-    useEffect(() => {
-        if (upgradeRequired) {
-            openUpgradeSmartAccountModal();
-        }
-    }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
     return (
         <>
@@ -129,7 +127,7 @@ export const ChooseNameSummaryContent = ({
                     transactionPendingText={t('Claiming name...')}
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
-                    isDisabled={isTransactionPending || upgradeRequired}
+                    isDisabled={isTransactionPending}
                 />
             </ModalFooter>
         </>
