@@ -15,7 +15,7 @@ import {
     Image,
     FormControl,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -31,6 +31,7 @@ import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -70,6 +71,13 @@ export const SendTokenContent = ({
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
 
+    useEffect(() => {
+        Analytics.wallet.sendTokenInitiated(
+            selectedToken?.symbol ?? '',
+            'address',
+        );
+    }, [selectedToken]);
+
     // Form setup with validation rules
     const {
         register,
@@ -98,6 +106,7 @@ export const SendTokenContent = ({
     const handleSetMaxAmount = () => {
         if (selectedToken) {
             setValue('amount', selectedToken.numericBalance);
+            Analytics.wallet.maxTokenSelected(selectedToken.symbol);
         }
     };
 

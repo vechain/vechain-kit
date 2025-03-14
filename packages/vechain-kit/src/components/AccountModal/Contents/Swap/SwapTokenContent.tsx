@@ -14,6 +14,8 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useEffect } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -22,7 +24,16 @@ type Props = {
 };
 
 export const SwapTokenContent = ({ setCurrentContent }: Props) => {
+    useEffect(() => {
+        Analytics.swap.pageOpened();
+    }, []);
+
     const { t } = useTranslation();
+
+    const handleLaunchBetterSwap = () => {
+        Analytics.swap.launchBetterSwap();
+        window.open('https://swap.tbc.vet/', '_blank');
+    };
 
     return (
         <>
@@ -55,9 +66,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
             <ModalFooter>
                 <Button
                     variant="vechainKitSecondary"
-                    onClick={() => {
-                        window.open('https://swap.tbc.vet/', '_blank');
-                    }}
+                    onClick={handleLaunchBetterSwap}
                 >
                     {t('Launch BetterSwap')}
                     <Icon as={FaExternalLinkAlt} ml={2} />

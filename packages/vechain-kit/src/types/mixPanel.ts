@@ -164,6 +164,20 @@ export type LanguageProperties = {
     previousLanguage: string;
 };
 
+export type TokenSentProperties = {
+    tokenSymbol: string;
+    amount: string;
+    txHash: string;
+    transactionType: 'erc20' | 'vet';
+};
+
+export type TransactionFailedProperties = {
+    dappName: string;
+    transactionType: string;
+    reason: string;
+    tokenType?: 'erc20' | 'vet';
+};
+
 // Update EventPropertiesMap with new property types
 export type EventPropertiesMap = {
     'User Logged In': LoginEventProperties;
@@ -209,16 +223,12 @@ export type EventPropertiesMap = {
     'Wallet Opened': object;
     'QR Code Scanned': object;
     'Tokens Received': { token: string; amount: string };
-    'Tokens Sent': { token: string; amount: string; destination: string };
+    'Tokens Sent': TokenSentProperties;
     'Balance Viewed': { tokens: string[] };
     'DApp Connected': { dappName: string; walletAddress: string };
     'DApp Disconnected': { dappName: string };
     'Transaction Requested': { dappName: string; transactionType: string };
     'Transaction Completed': { dappName: string; transactionType: string };
-    'Transaction Failed': {
-        dappName: string;
-        transactionType: string;
-        reason: string;
-    };
+    'Transaction Failed': TransactionFailedProperties;
     [key: string]: Record<string, any>;
 };

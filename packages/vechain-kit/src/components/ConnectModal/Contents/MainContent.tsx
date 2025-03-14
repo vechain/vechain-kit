@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
-import { trackEvent } from '@/utils/mixpanelClientInstance';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,7 +35,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { loginModalUI } = useVeChainKitConfig();
 
     const handleFAQClick = () => {
-        trackEvent('FAQ Clicked');
+        Analytics.help.faqViewed();
         setCurrentContent('faq');
     };
 

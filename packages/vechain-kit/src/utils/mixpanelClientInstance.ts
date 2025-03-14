@@ -204,7 +204,6 @@ const Analytics = {
             trackEvent('Chain Selected', { chainName, fromScreen }),
     },
 
-    // User domain
     user: {
         profile: {
             updated: (fields: string[]) =>
@@ -234,7 +233,6 @@ const Analytics = {
             updated: (preference: string, value: any) =>
                 trackEvent('Preference Updated', { preference, value }),
 
-            // New methods from tracking plan
             accountNameChanged: (newName: string) =>
                 trackEvent('Account Name Changed', { newName }),
         },
@@ -287,9 +285,10 @@ const Analytics = {
 
         sent: (token: string, amount: string, destination: string) =>
             trackEvent('Tokens Sent', {
-                token,
+                tokenSymbol: token,
                 amount,
-                destination: sanitizeProperties({ destination }).destination,
+                txHash: destination,
+                transactionType: 'erc20',
             }),
 
         balanceViewed: (tokens: string[]) =>
@@ -313,8 +312,18 @@ const Analytics = {
         maxTokenSelected: (tokenSymbol: string) =>
             trackEvent('Max Token Selected', { tokenSymbol }),
 
-        tokenSent: (tokenSymbol: string, amount: string, txHash: string) =>
-            trackEvent('Token Sent', { tokenSymbol, amount, txHash }),
+        tokenSent: (
+            tokenSymbol: string,
+            amount: string,
+            txHash: string,
+            transactionType: 'erc20' | 'vet',
+        ) =>
+            trackEvent('Token Sent', {
+                tokenSymbol,
+                amount,
+                txHash,
+                transactionType,
+            }),
 
         receiveQRGenerated: (tokenSymbol: string) =>
             trackEvent('Receive QR Generated', { tokenSymbol }),
@@ -347,11 +356,13 @@ const Analytics = {
             dappName: string,
             transactionType: string,
             reason: string,
+            tokenType?: 'erc20' | 'vet',
         ) =>
             trackEvent('Transaction Failed', {
                 dappName,
                 transactionType,
                 reason,
+                tokenType,
             }),
     },
 
@@ -379,7 +390,6 @@ const Analytics = {
             trackEvent('Add Ecosystem App To Shortcuts', { appName }),
     },
 
-    // Settings domain (new from tracking plan)
     settings: {
         opened: (section: string) => trackEvent('Settings Opened', { section }),
 
@@ -395,14 +405,12 @@ const Analytics = {
         connectionDetailsViewed: () => trackEvent('Connection Details Viewed'),
     },
 
-    // Notifications domain (new from tracking plan)
     notifications: {
         cleared: () => trackEvent('Notifications Cleared'),
 
         archived: () => trackEvent('Notifications Archived'),
     },
 
-    // Help domain (new from tracking plan)
     help: {
         pageViewed: () => trackEvent('Help Page Viewed'),
 
@@ -410,7 +418,6 @@ const Analytics = {
             trackEvent('FAQ Viewed', { faqId, faqTitle }),
     },
 
-    // Search domain (new from tracking plan)
     search: {
         queryPerformed: (
             query: string,
@@ -424,7 +431,6 @@ const Analytics = {
             }),
     },
 
-    // Language domain (new from tracking plan)
     language: {
         changed: (language: string, previousLanguage: string) =>
             trackEvent('Language Changed', { language, previousLanguage }),
@@ -439,6 +445,8 @@ export {
     hasAnalyticsConsent,
     resetUser,
     incrementUserProperty,
+    setUserProperties,
+    identifyUser,
 };
 
 // Sanitize functions (placeholder - to be implemented)

@@ -32,6 +32,7 @@ import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/Succe
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     isOpen: boolean;
@@ -55,6 +56,7 @@ export const AccountModal = ({
     useEffect(() => {
         if (isOpen && initialContent) {
             setCurrentContent(initialContent);
+            Analytics.wallet.opened();
         }
     }, [isOpen, initialContent, setCurrentContent]);
 

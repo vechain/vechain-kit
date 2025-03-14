@@ -30,6 +30,7 @@ import { useGetAvatar } from '@/hooks/api/vetDomains';
 import { useMemo, useEffect } from 'react';
 import { convertUriToUrl } from '@/utils';
 import { Token } from './SelectTokenContent';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -96,6 +97,12 @@ export const SendTokenSummaryContent = ({
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
         onSuccess: () => {
+            Analytics.wallet.tokenSent(
+                selectedToken.symbol,
+                amount,
+                transferERC20Receipt?.meta.txID ?? '',
+                'erc20',
+            );
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -108,6 +115,14 @@ export const SendTokenSummaryContent = ({
                     showSocialButtons: true,
                 },
             });
+        },
+        onError: () => {
+            Analytics.dapp.transactionFailed(
+                'Send Token',
+                'token_transfer',
+                String(transferERC20Error) ?? 'Unknown error',
+                'erc20',
+            );
         },
     });
 
@@ -122,6 +137,12 @@ export const SendTokenSummaryContent = ({
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         onSuccess: () => {
+            Analytics.wallet.tokenSent(
+                selectedToken.symbol,
+                amount,
+                transferVETReceipt?.meta.txID ?? '',
+                'vet',
+            );
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -136,7 +157,12 @@ export const SendTokenSummaryContent = ({
             });
         },
         onError: () => {
-            // Handle error internally
+            Analytics.dapp.transactionFailed(
+                'Send Token',
+                'token_transfer',
+                String(transferVETError) ?? 'Unknown error',
+                'vet',
+            );
         },
     });
 

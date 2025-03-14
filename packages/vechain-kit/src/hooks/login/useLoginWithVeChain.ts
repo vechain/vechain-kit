@@ -3,8 +3,8 @@ import { useCrossAppConnectionCache } from '@/hooks/cache/useCrossAppConnectionC
 import { useFetchAppInfo, usePrivy } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
-import { AuthTracking } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod } from '@/types/mixPanel';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
@@ -14,6 +14,7 @@ export const useLoginWithVeChain = () => {
 
     const login = async () => {
         try {
+            Analytics.auth.methodSelected(VeLoginMethod.VECHAIN);
             await loginWithVeChain(VECHAIN_PRIVY_APP_ID);
             setConnectionCache({
                 name: 'VeChain',
@@ -21,14 +22,17 @@ export const useLoginWithVeChain = () => {
                 appId: VECHAIN_PRIVY_APP_ID,
             });
 
-            AuthTracking.loginSuccess({
+            Analytics.auth.completed({
                 userId: user?.id || '',
                 loginMethod: VeLoginMethod.VECHAIN,
                 // the exact social platform is not returned by the Privy SDK
                 // platform: VePrivySocialLoginMethod.GOOGLE,
             });
         } catch (error) {
-            AuthTracking.loginFailed(VeLoginMethod.VECHAIN);
+            Analytics.auth.failed(
+                VeLoginMethod.VECHAIN,
+                error instanceof Error ? error.message : 'Unknown error',
+            );
             throw handlePopupError({
                 error,
                 mobileBrowserPopupMessage:
