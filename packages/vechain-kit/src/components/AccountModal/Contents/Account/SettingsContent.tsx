@@ -5,12 +5,12 @@ import {
     ModalFooter,
     ModalHeader,
     Box,
-    Text,
     Button,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
     useFetchAppInfo,
+    useUpgradeRequired,
     useWallet,
 } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
@@ -44,7 +44,8 @@ export const SettingsContent = ({
 
     const { privy } = useVeChainKitConfig();
 
-    const { connection, disconnect, account } = useWallet();
+    const { connection, disconnect, account, smartAccount, connectedWallet } =
+        useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -54,6 +55,12 @@ export const SettingsContent = ({
     const { getNotifications } = useNotifications();
     const notifications = getNotifications();
     const hasUnreadNotifications = notifications.some((n) => !n.isRead);
+
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
 
     useEffect(() => {
         if (contentRef.current) {
@@ -121,6 +128,19 @@ export const SettingsContent = ({
                             }}
                             leftIcon={IoShieldOutline}
                             rightIcon={MdOutlineNavigateNext}
+                            extraContent={
+                                upgradeRequired && (
+                                    <Box
+                                        minWidth="8px"
+                                        height="8px"
+                                        bg="red.500"
+                                        borderRadius="full"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                    />
+                                )
+                            }
                         />
                     )}
 
@@ -154,23 +174,14 @@ export const SettingsContent = ({
                         extraContent={
                             hasUnreadNotifications && (
                                 <Box
-                                    minWidth="16px"
-                                    height="16px"
+                                    minWidth="8px"
+                                    height="8px"
                                     bg="red.500"
                                     borderRadius="full"
                                     display="flex"
                                     alignItems="center"
                                     justifyContent="center"
-                                    ml={2}
-                                >
-                                    <Text fontSize="xs" color="white">
-                                        {
-                                            notifications.filter(
-                                                (n) => !n.isRead,
-                                            ).length
-                                        }
-                                    </Text>
-                                </Box>
+                                />
                             )
                         }
                     />
