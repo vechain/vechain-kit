@@ -97,7 +97,7 @@ export const CustomizationSummaryContent = ({
                         'Your changes have been saved successfully.',
                     ),
                     onDone: () => {
-                        setCurrentContent('settings');
+                        setCurrentContent('profile');
                     },
                 },
             });
