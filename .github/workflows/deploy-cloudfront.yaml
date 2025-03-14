@@ -1,5 +1,5 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy to GitHub Pages
+# Simple workflow for deploying static content to Cloudfront
+name: Deploy to Cloudfront
 
 on:
     # Runs on pushes targeting the default branch
@@ -9,20 +9,18 @@ on:
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Sets permissions of the GITHUB_TOKEN to allow deployment to Cloudfront
 permissions:
     contents: read
-    pages: write
     id-token: write
-    packages: write
 
 # Allow one concurrent deployment
 concurrency:
-    group: 'pages'
+    group: 'cloudfront-deploy'
     cancel-in-progress: true
 
 jobs:
-    build:
+    build-and-deploy:
         runs-on: ubuntu-latest
         env:
             BASE_PATH: ''
@@ -48,11 +46,6 @@ jobs:
                     echo "::warning title=Invalid file permissions automatically fixed::$line"
                   done
 
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                  path: './examples/homepage/dist'
-
             - name: Configure AWS credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
@@ -66,17 +59,3 @@ jobs:
             - name: Cloudfront Invalidation
               run: |
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
-
-    deploy:
-        needs: build
-        permissions:
-            pages: write
-            id-token: write
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ubuntu-latest
-        steps:
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
