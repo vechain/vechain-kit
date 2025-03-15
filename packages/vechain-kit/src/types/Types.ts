@@ -139,6 +139,7 @@ export type PrivyAppInfo = {
     google_oauth: boolean;
     twitter_oauth: boolean;
     url: string;
+    website?: string;
 };
 
 export type PrivyLoginMethod = LoginMethodOrderOption;
@@ -149,6 +150,7 @@ export interface CrossAppConnectionCache {
         name: string;
         logoUrl?: string;
         appId: string;
+        website?: string;
     };
 }
 

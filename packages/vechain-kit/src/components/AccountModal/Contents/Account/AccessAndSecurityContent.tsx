@@ -30,7 +30,7 @@ import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoCogSharp, IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
-import { VeBetterDAOSecurityCard } from '../../Components/VeBetterDAOSecurityCard';
+import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -163,7 +163,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             />
                         </>
                     ) : (
-                        <VeBetterDAOSecurityCard />
+                        <CrossAppConnectionSecurityCard />
                     )}
                 </VStack>
             </ModalBody>

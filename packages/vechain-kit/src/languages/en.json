@@ -481,5 +481,6 @@
     "Backup your wallet, configure MFA and set recovery options": "Backup your wallet, configure MFA and set recovery options",
     "Security settings": "Security settings",
     "For security reasons, you can manage your embedded wallet settings only on the {{appName}} platform.": "For security reasons, you can manage your embedded wallet settings only on the {{appName}} platform.",
-    "Security preferences": "Security preferences"
+    "Security preferences": "Security preferences",
+    "Manage on {{appName}}": "Manage on {{appName}}"
 }

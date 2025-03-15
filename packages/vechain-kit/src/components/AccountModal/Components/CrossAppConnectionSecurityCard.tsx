@@ -15,9 +15,14 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { GrUserAdmin } from 'react-icons/gr';
 import { HiOutlineShieldCheck } from 'react-icons/hi2';
 import { useTranslation } from 'react-i18next';
+import { useCrossAppConnectionCache } from '@/hooks';
 
-export const VeBetterDAOSecurityCard = () => {
+export const CrossAppConnectionSecurityCard = () => {
     const { t } = useTranslation();
+
+    const { getConnectionCache } = useCrossAppConnectionCache();
+
+    const connectionCache = getConnectionCache();
 
     return (
         <Card variant="vechainKitBase" w="full">
@@ -29,7 +34,11 @@ export const VeBetterDAOSecurityCard = () => {
                 <Text fontSize="xs" mt={1} opacity={0.7}>
                     {t(
                         'For security reasons, you can manage your embedded wallet settings only on the {{appName}} platform.',
-                        { appName: 'VeBetterDAO' },
+                        {
+                            appName:
+                                connectionCache?.ecosystemApp.name ??
+                                'origin app',
+                        },
                     )}
                 </Text>
             </CardHeader>
@@ -106,12 +115,16 @@ export const VeBetterDAOSecurityCard = () => {
                     w="full"
                     onClick={() => {
                         window.open(
-                            'https://governance.vebetterdao.org/',
+                            connectionCache?.ecosystemApp.website ??
+                                'https://governance.vebetterdao.org/',
                             '_blank',
                         );
                     }}
                 >
-                    {t('Manage on VeBetterDAO')}
+                    {t('Manage on {{appName}}', {
+                        appName:
+                            connectionCache?.ecosystemApp.name ?? 'origin app',
+                    })}
                     <Icon as={FaExternalLinkAlt} ml={2} />
                 </Button>
             </CardFooter>
