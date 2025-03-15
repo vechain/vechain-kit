@@ -50,6 +50,15 @@ export const ProfileContent = ({
                         }
                         address={account?.address ?? ''}
                         showHeader={false}
+                        style={{
+                            card: {
+                                bg: 'transparent',
+                                px: 0,
+                            },
+                            footer: {
+                                px: 0,
+                            },
+                        }}
                         onLogout={() => {
                             setCurrentContent?.({
                                 type: 'disconnect-confirm',
@@ -66,7 +75,7 @@ export const ProfileContent = ({
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter pt={0} />
+            <ModalFooter p={0} />
         </Box>
     );
 };

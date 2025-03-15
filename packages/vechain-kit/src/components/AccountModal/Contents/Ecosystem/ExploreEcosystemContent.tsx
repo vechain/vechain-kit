@@ -180,7 +180,7 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                 </VStack>
             </ModalBody>
 
-            <ModalFooter pt={0} />
+            <ModalFooter p={0} />
         </Box>
     );
 };

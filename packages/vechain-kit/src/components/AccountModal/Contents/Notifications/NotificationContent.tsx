@@ -139,7 +139,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                         )}
                     </VStack>
                 </ModalBody>
-                <ModalFooter pt={0} />
+                <ModalFooter p={0} />
             </Container>
         </ScrollToTopWrapper>
     );

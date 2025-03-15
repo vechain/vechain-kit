@@ -511,7 +511,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                             )}
                     </VStack>
                 </ModalBody>
-                <ModalFooter pt={0} />
+                <ModalFooter p={0} />
             </ScrollToTopWrapper>
         );
     }
@@ -537,7 +537,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         onCancel={() => setUnlinkingAccount(null)}
                     />
                 </ModalBody>
-                <ModalFooter pt={0} />
+                <ModalFooter p={0} />
             </ScrollToTopWrapper>
         );
     }

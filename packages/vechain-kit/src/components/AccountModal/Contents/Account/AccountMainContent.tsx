@@ -102,7 +102,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter pt={0}></ModalFooter>
+            <ModalFooter p={0}></ModalFooter>
         </ScrollToTopWrapper>
     );
 };
