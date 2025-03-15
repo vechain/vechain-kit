@@ -13,7 +13,7 @@ const variants = {
             container: {
                 backgroundColor:
                     props.colorMode === 'dark' ? '#1c1c1b' : '#f5f5f5',
-                borderRadius: 'xl',
+                borderRadius: '14px',
                 width: 'full',
                 border: 'none',
             },
@@ -24,10 +24,11 @@ const variants = {
             header: {
                 p: 5,
                 width: 'full',
+                borderRadius: '14px 14px 0 0',
             },
             footer: {
-                p: 5,
                 width: 'full',
+                borderRadius: '0 0 14px 14px',
             },
         }),
 
