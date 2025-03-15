@@ -81,7 +81,7 @@ export const AccountDetailsButton = ({
                         w={'full'}
                     >
                         {wallet?.domain
-                            ? humanDomain(wallet?.domain, 4, 11)
+                            ? humanDomain(wallet?.domain ?? '', 18, 0)
                             : humanAddress(wallet?.address ?? '', 6, 4)}
                     </Text>
                 </VStack>

@@ -1,6 +1,6 @@
 import { Spinner, Text, VStack, HStack } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
-import { humanAddress } from '@/utils';
+import { humanAddress, humanDomain } from '@/utils';
 import { AssetIcons } from './AssetIcons';
 import { WalletDisplayVariant } from './types';
 
@@ -19,7 +19,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
 
     if (variant === 'iconAndDomain') {
         return account.domain ? (
-            <Text fontSize="sm">{account.domain}</Text>
+            <Text fontSize="sm">{humanDomain(account.domain, 18, 0)}</Text>
         ) : (
             <Text fontSize="sm">
                 {humanAddress(account.address ?? '', 4, 4)}
@@ -33,7 +33,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
                 <VStack spacing={0} alignItems="flex-start">
                     {account.domain && (
                         <Text fontSize="sm" fontWeight="bold">
-                            {account.domain}
+                            {humanDomain(account.domain, 18, 0)}
                         </Text>
                     )}
                     <Text
@@ -56,7 +56,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
         <VStack spacing={0} alignItems="flex-start">
             {account.domain && (
                 <Text fontSize="sm" fontWeight="bold">
-                    {account.domain}
+                    {humanDomain(account.domain, 18, 0)}
                 </Text>
             )}
             <Text
