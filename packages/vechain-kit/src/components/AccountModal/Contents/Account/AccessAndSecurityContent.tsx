@@ -5,7 +5,6 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
-    Icon,
     Box,
 } from '@chakra-ui/react';
 import {
@@ -27,7 +26,7 @@ import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
 import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
-import { IoCogSharp, IoShieldOutline } from 'react-icons/io5';
+import { IoCogSharp } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
@@ -71,11 +70,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     w={'full'}
                 >
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
-                        <Icon
-                            opacity={0.5}
-                            as={IoShieldOutline}
-                            fontSize={'50px'}
-                        />
                         <Text
                             fontSize={'sm'}
                             opacity={0.5}
