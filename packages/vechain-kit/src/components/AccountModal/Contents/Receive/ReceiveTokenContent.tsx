@@ -60,7 +60,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                         </Text>
                     </VStack>
                 </ModalBody>
-                <ModalFooter p={0} />
+                <ModalFooter pt={0} />
             </Container>
         </>
     );

@@ -151,7 +151,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                     </VStack>
                 </ModalBody>
             </Container>
-            <ModalFooter p={0} />
+            <ModalFooter pt={0} />
         </>
     );
 };

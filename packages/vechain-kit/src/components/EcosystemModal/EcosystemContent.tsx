@@ -184,7 +184,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                         </Text>
                     )}
                 </ModalBody>
-                <ModalFooter p={0} />
+                <ModalFooter pt={0} />
             </>
 
             <LoginLoadingModal

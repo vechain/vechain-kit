@@ -56,7 +56,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
 
                 {connection.isConnectedWithPrivy && <WalletSecuredBy />}
             </ModalBody>
-            <ModalFooter p={0} />
+            <ModalFooter pt={0} />
         </ScrollToTopWrapper>
     );
 };

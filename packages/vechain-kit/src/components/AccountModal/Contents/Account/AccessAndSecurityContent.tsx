@@ -167,7 +167,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     )}
                 </VStack>
             </ModalBody>
-            <ModalFooter p={0} />
+            <ModalFooter pt={0} />
         </ScrollToTopWrapper>
     );
 };
