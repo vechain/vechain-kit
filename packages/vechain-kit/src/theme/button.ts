@@ -82,29 +82,23 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
-    vechainKitSecondary: defineStyle(() => ({
+    vechainKitSecondary: defineStyle(({ colorMode }) => ({
         fontSize: 'md',
         px: 4,
         width: 'full',
         height: '60px',
         borderRadius: 'xl',
-        bg: '##f5f5f5',
+        backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
+        _hover: {
+            backgroundColor:
+                colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
+        },
         border: '1px solid',
         borderColor: 'gray.200',
         color: 'blackAlpha.900',
-        _hover: {
-            bg: '#ebebeb',
-            _disabled: {
-                bg: 'transparent',
-            },
-        },
         _dark: {
             borderColor: 'whiteAlpha.200',
             color: 'whiteAlpha.900',
-            bg: 'blackAlpha.50',
-            _hover: {
-                bg: 'blackAlpha.200',
-            },
         },
         transition: 'all 0.2s',
     })),

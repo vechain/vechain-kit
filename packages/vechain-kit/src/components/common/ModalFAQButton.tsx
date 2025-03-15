@@ -12,6 +12,8 @@ export const ModalFAQButton = ({ onClick, ...props }: FAQButtonProps) => {
             icon={<Icon as={BsQuestionCircle} fontSize={'17px'} />}
             size="sm"
             variant="ghost"
+            _hover={{ bg: 'blackAlpha.100' }}
+            _dark={{ _hover: { bg: 'whiteAlpha.100' } }}
             position="absolute"
             borderRadius={'50%'}
             left="10px"
