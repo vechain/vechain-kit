@@ -10,6 +10,7 @@ import {
     AccountModalContentTypes,
     ConnectModal,
     UpgradeSmartAccountModal,
+    UpgradeSmartAccountModalStyle,
 } from '../components';
 import { useDAppKitWallet } from '@/hooks';
 
@@ -19,7 +20,7 @@ type ModalContextType = {
     closeConnectModal: () => void;
     isConnectModalOpen: boolean;
     // Account Modal
-    openAccountModal: () => void;
+    openAccountModal: (content?: AccountModalContentTypes) => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
     // Account Modal Content State
@@ -36,7 +37,9 @@ type ModalContextType = {
     closeTransactionToast: () => void;
     isTransactionToastOpen: boolean;
     // Upgrade Smart Account Modal
-    openUpgradeSmartAccountModal: () => void;
+    openUpgradeSmartAccountModal: (
+        style?: UpgradeSmartAccountModalStyle,
+    ) => void;
     closeUpgradeSmartAccountModal: () => void;
     isUpgradeSmartAccountModalOpen: boolean;
 };
@@ -69,10 +72,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-    const openAccountModal = useCallback(() => {
-        setAccountModalContent('main');
-        setIsAccountModalOpen(true);
-    }, []);
+    const openAccountModal = useCallback(
+        (content?: AccountModalContentTypes) => {
+            setAccountModalContent(content ?? 'main');
+            setIsAccountModalOpen(true);
+        },
+        [],
+    );
     const closeAccountModal = useCallback(
         () => setIsAccountModalOpen(false),
         [],
@@ -100,8 +106,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
     const [isUpgradeSmartAccountModalOpen, setIsUpgradeSmartAccountModalOpen] =
         useState(false);
+    const [upgradeSmartAccountModalStyle, setUpgradeSmartAccountModalStyle] =
+        useState<UpgradeSmartAccountModalStyle | undefined>(undefined);
     const openUpgradeSmartAccountModal = useCallback(
-        () => setIsUpgradeSmartAccountModalOpen(true),
+        (style?: UpgradeSmartAccountModalStyle) => {
+            setUpgradeSmartAccountModalStyle(style);
+            setIsUpgradeSmartAccountModalOpen(true);
+        },
         [],
     );
     const closeUpgradeSmartAccountModal = useCallback(
@@ -146,6 +157,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             <UpgradeSmartAccountModal
                 isOpen={isUpgradeSmartAccountModalOpen}
                 onClose={closeUpgradeSmartAccountModal}
+                style={upgradeSmartAccountModalStyle}
             />
         </ModalContext.Provider>
     );

@@ -59,7 +59,7 @@ export type VechainKitProviderProps = {
         clientId: string;
         appearance: {
             walletList?: WalletListEntry[];
-            // accentColor: `#${string}`;
+            accentColor?: `#${string}`;
             loginMessage: string;
             logo: string;
         };
@@ -68,7 +68,7 @@ export type VechainKitProviderProps = {
         };
         loginMethods: PrivyLoginMethod[];
     };
-    feeDelegation: {
+    feeDelegation?: {
         delegatorUrl: string;
         delegateAllTransactions: boolean;
     };
@@ -105,7 +105,7 @@ export type VechainKitProviderProps = {
 type VeChainKitConfig = {
     privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
-    feeDelegation: VechainKitProviderProps['feeDelegation'];
+    feeDelegation?: VechainKitProviderProps['feeDelegation'];
     dappKit: VechainKitProviderProps['dappKit'];
     loginModalUI?: VechainKitProviderProps['loginModalUI'];
     loginMethods?: VechainKitProviderProps['loginMethods'];
@@ -137,12 +137,26 @@ const validateConfig = (
 ) => {
     const errors: string[] = [];
 
+    // Check if fee delegation is required based on conditions
+    const requiresFeeDelegation =
+        props.privy !== undefined ||
+        props.loginMethods?.some(
+            (method) =>
+                method.method === 'vechain' || method.method === 'ecosystem',
+        );
+
     // Validate fee delegation
-    if (!props.feeDelegation) {
-        errors.push('feeDelegation configuration is required');
-    } else {
-        if (!props.feeDelegation.delegatorUrl) {
-            errors.push('feeDelegation.delegatorUrl is required');
+    if (requiresFeeDelegation) {
+        if (!props.feeDelegation) {
+            errors.push(
+                'feeDelegation configuration is required when using Privy or vechain login method',
+            );
+        } else {
+            if (!props.feeDelegation || !props.feeDelegation.delegatorUrl) {
+                errors.push(
+                    'feeDelegation.delegatorUrl is required when using Privy or vechain login method',
+                );
+            }
         }
     }
 
@@ -289,7 +303,9 @@ export const VeChainKitProvider = (
                             },
                             appearance: {
                                 theme: darkMode ? 'dark' : 'light',
-                                accentColor: darkMode ? '#3182CE' : '#2B6CB0',
+                                accentColor:
+                                    privy?.appearance.accentColor ??
+                                    (darkMode ? '#3182CE' : '#2B6CB0'),
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
@@ -297,7 +313,6 @@ export const VeChainKitProvider = (
                                 createOnLogin:
                                     privy?.embeddedWallets?.createOnLogin ??
                                     'all-users',
-                                showWalletUIs: true,
                             },
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,
@@ -352,9 +367,10 @@ export const VeChainKitProvider = (
                                     network.nodeUrl ??
                                     getConfig(network.type).nodeUrl
                                 }
-                                delegatorUrl={feeDelegation.delegatorUrl}
+                                delegatorUrl={feeDelegation?.delegatorUrl ?? ''}
                                 delegateAllTransactions={
-                                    feeDelegation.delegateAllTransactions
+                                    feeDelegation?.delegateAllTransactions ??
+                                    false
                                 }
                             >
                                 <ModalProvider>{children}</ModalProvider>

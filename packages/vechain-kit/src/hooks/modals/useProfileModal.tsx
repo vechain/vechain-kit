@@ -1,12 +1,12 @@
 import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
-export const useExploreEcosystemModal = () => {
+export const useProfileModal = () => {
     const { openAccountModal, closeAccountModal, isAccountModalOpen } =
         useModal();
 
     const open = () => {
-        openAccountModal('ecosystem');
+        openAccountModal('profile');
     };
 
     const close = () => {
@@ -20,8 +20,6 @@ export const useExploreEcosystemModal = () => {
     };
 };
 
-export const ExploreEcosystemModalProvider = ({
-    children,
-}: {
-    children: ReactNode;
-}) => <>{children}</>;
+export const ProfileModalProvider = ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+);

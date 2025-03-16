@@ -2,9 +2,8 @@ name: "💡 Feature Request"
 description: Create a new ticket for a new feature request.
 title: "💡 [REQUEST] - <title>"
 labels: [
-"feature"
+"enhancement"
 ]
-projects: ["VeChain-Kit"]
 body:
 - type: textarea
   id: summary
@@ -21,4 +20,4 @@ body:
     description: Indicate here some basic examples of your feature.
     placeholder: A few specific words about your feature request.
   validations:
-    required: true
+    required: false

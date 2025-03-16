@@ -5,11 +5,18 @@ import {
     VStack,
     Text,
     Heading,
+    HStack,
+    Box,
 } from '@chakra-ui/react';
 import { MdSwapHoriz } from 'react-icons/md';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
-import { useBalances, useWallet } from '@/hooks';
+import {
+    useBalances,
+    useNotifications,
+    useUpgradeRequired,
+    useWallet,
+} from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import { LuArrowDownToLine } from 'react-icons/lu';
@@ -75,11 +82,13 @@ const QuickActionButton = ({
     label,
     onClick,
     isDisabled,
+    showRedDot,
 }: {
     icon: React.ElementType;
     label: string;
     onClick: () => void;
     isDisabled?: boolean;
+    showRedDot?: boolean;
 }) => {
     const { t } = useTranslation();
 
@@ -93,9 +102,23 @@ const QuickActionButton = ({
             icon={
                 <VStack spacing={4}>
                     <Icon as={icon} boxSize={5} opacity={0.9} />
-                    <Text fontSize="sm" fontWeight="600">
-                        {t(label, label)}
-                    </Text>
+
+                    <HStack p={0} alignItems={'baseline'} spacing={1}>
+                        <Text fontSize="sm" fontWeight="600">
+                            {t(label, label)}
+                        </Text>
+                        {showRedDot && (
+                            <Box
+                                minWidth="8px"
+                                height="8px"
+                                bg="red.500"
+                                borderRadius="full"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                            />
+                        )}
+                    </HStack>
                 </VStack>
             }
             onClick={onClick}
@@ -104,11 +127,23 @@ const QuickActionButton = ({
 };
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
-    const { account } = useWallet();
+    const { account, smartAccount, connectedWallet } = useWallet();
     const { totalBalance } = useBalances({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
+
+    const { data: upgradeRequired } = useUpgradeRequired(
+        smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+        3,
+    );
+
+    const { getNotifications } = useNotifications();
+    const notifications = getNotifications();
+    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
+
+    const showRedDot = upgradeRequired || hasUnreadNotifications;
 
     return (
         <VStack w={'full'} mt={mt} spacing={4}>
@@ -123,6 +158,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         label={action.label}
                         onClick={() => action.onClick(setCurrentContent)}
                         isDisabled={action.isDisabled?.(totalBalance)}
+                        showRedDot={showRedDot && action.label === 'Settings'}
                     />
                 ))}
             </Grid>

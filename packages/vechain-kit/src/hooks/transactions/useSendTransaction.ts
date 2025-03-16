@@ -201,7 +201,7 @@ export const useSendTransaction = ({
 
             let transaction = vendor.sign('tx', clauses);
 
-            if (feeDelegation.delegateAllTransactions) {
+            if (feeDelegation?.delegateAllTransactions) {
                 transaction = transaction.delegate(feeDelegation.delegatorUrl);
             }
 

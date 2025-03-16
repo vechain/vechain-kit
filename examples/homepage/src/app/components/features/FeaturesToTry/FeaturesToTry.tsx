@@ -9,14 +9,14 @@ import {
 } from 'react-icons/ri';
 import { IoMdNotifications } from 'react-icons/io';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useWallet } from '@vechain/vechain-kit';
+import { useUpgradeSmartAccountModal, useWallet } from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
     useSendTokenModal,
     useAccessAndSecurityModal,
     useExploreEcosystemModal,
     useNotificationsModal,
-    useAccountCustomizationModal,
+    useProfileModal,
     useFAQModal,
     useReceiveModal,
 } from '@vechain/vechain-kit';
@@ -26,20 +26,22 @@ import { LanguageCard } from './LanguageCard';
 import { ThemeCard } from './ThemeCard';
 import { CgProfile } from 'react-icons/cg';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
+import { MdOutlineBrowserUpdated } from 'react-icons/md';
 
 export function FeaturesToTry() {
     const { account, connection } = useWallet();
 
     // Use the modal hooks
     const { open: openChooseNameModal } = useChooseNameModal();
-    const { open: openAccountCustomizationModal } =
-        useAccountCustomizationModal();
+    const { open: openProfileModal } = useProfileModal();
     const { open: openSendTokenModal } = useSendTokenModal();
     const { open: openAccessAndSecurityModal } = useAccessAndSecurityModal();
     const { open: openExploreEcosystemModal } = useExploreEcosystemModal();
     const { open: openNotificationsModal } = useNotificationsModal();
     const { open: openFAQModal } = useFAQModal();
     const { open: openReceiveModal } = useReceiveModal();
+    const { open: openUpgradeSmartAccountModal } =
+        useUpgradeSmartAccountModal();
 
     const features = [
         {
@@ -53,9 +55,9 @@ export function FeaturesToTry() {
         {
             title: 'Customize Profile',
             description:
-                'Customize your account with a profile image, display name, bio and more to enhance your identity across VeChain applications.',
+                'Show the user his profile and allow them to customize it with a profile image, display name, bio and more to enhance their identity across VeChain applications.',
             icon: CgProfile,
-            content: openAccountCustomizationModal,
+            content: openProfileModal,
         },
         {
             title: 'Transfer Assets',
@@ -73,7 +75,7 @@ export function FeaturesToTry() {
         {
             title: 'Access & Security',
             description:
-                'Secure your embedded wallet with proper backup procedures and update your login methods.',
+                'Allow the user to secure his embedded wallet with proper backup procedures, update his login methods, add MFA and more.',
             icon: RiShieldKeyholeLine,
             content: openAccessAndSecurityModal,
             disabled: !connection.isConnectedWithPrivy,
@@ -97,6 +99,12 @@ export function FeaturesToTry() {
             description: 'Find answers to common questions about VeChain',
             icon: BsQuestionCircle,
             content: openFAQModal,
+        },
+        {
+            title: 'Upgrade Smart Account',
+            description: 'Upgrade your smart account to the latest version',
+            icon: MdOutlineBrowserUpdated,
+            content: openUpgradeSmartAccountModal,
         },
     ];
 

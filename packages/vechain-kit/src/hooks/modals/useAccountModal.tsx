@@ -7,7 +7,7 @@ export const useAccountModal = () => {
         closeAccountModal: close,
         isAccountModalOpen: isOpen,
     } = useModal();
-    return { open, close, isOpen };
+    return { open: () => open(), close, isOpen };
 };
 
 export const AccountModalProvider = ({ children }: { children: ReactNode }) => (

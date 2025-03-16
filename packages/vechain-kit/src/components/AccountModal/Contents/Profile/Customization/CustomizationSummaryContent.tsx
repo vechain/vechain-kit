@@ -23,7 +23,6 @@ import {
 } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 
 export type CustomizationSummaryContentProps = {
@@ -98,7 +97,7 @@ export const CustomizationSummaryContent = ({
                         'Your changes have been saved successfully.',
                     ),
                     onDone: () => {
-                        setCurrentContent('settings');
+                        setCurrentContent('profile');
                     },
                 },
             });
@@ -106,6 +105,11 @@ export const CustomizationSummaryContent = ({
     });
 
     const onSubmit = async (data: FormValues) => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+            return;
+        }
+
         try {
             const domain = account?.domain ?? '';
             const CHANGES_TO_TEXT_RECORDS = {
@@ -150,12 +154,6 @@ export const CustomizationSummaryContent = ({
             </VStack>
         );
     };
-
-    useEffect(() => {
-        if (upgradeRequired) {
-            openUpgradeSmartAccountModal();
-        }
-    }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
     return (
         <Box as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -205,7 +203,7 @@ export const CustomizationSummaryContent = ({
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
-                    isDisabled={isTransactionPending || upgradeRequired}
+                    isDisabled={isTransactionPending}
                 />
             </ModalFooter>
         </Box>

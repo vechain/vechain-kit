@@ -27,7 +27,7 @@ import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { convertUriToUrl } from '@/utils';
 import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
@@ -84,6 +84,11 @@ export const SendTokenSummaryContent = ({
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
 
     const handleSend = async () => {
+        if (upgradeRequired) {
+            openUpgradeSmartAccountModal();
+            return;
+        }
+
         try {
             Analytics.wallet.trackSendFlow('review', {
                 tokenSymbol: selectedToken.symbol,
@@ -197,12 +202,6 @@ export const SendTokenSummaryContent = ({
         transferVETWaitingForWalletConfirmation;
     const isSubmitting =
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
-
-    useEffect(() => {
-        if (upgradeRequired) {
-            openUpgradeSmartAccountModal();
-        }
-    }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
     const handleBack = () => {
         Analytics.wallet.trackSendFlow('review', {
@@ -320,7 +319,7 @@ export const SendTokenSummaryContent = ({
                     transactionPendingText={t('Sending...')}
                     txReceipt={getTxReceipt()}
                     buttonText={t('Confirm')}
-                    isDisabled={isSubmitting || upgradeRequired}
+                    isDisabled={isSubmitting}
                 />
             </ModalFooter>
         </>

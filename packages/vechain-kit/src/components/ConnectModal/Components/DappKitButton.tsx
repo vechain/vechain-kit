@@ -27,7 +27,7 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
                 isDark={isDark}
                 onClick={handleDappKitClick}
                 icon={IoWalletOutline}
-                text={gridColumn >= 2 ? t('Connect Wallet') : undefined}
+                text={gridColumn >= 2 ? t('Connect wallet') : undefined}
                 rightIcon={<Icon as={IoIosArrowForward} />}
             />
         </GridItem>

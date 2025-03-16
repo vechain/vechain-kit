@@ -39,7 +39,7 @@ export const SuccessfulOperationContent = ({
     showSocialButtons = false,
 }: SuccessfulOperationContentProps) => {
     const { t } = useTranslation();
-    const { network } = useVeChainKitConfig();
+    const { network, darkMode } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const socialDescription = `${explorerUrl}/${txId}`;
 
@@ -55,7 +55,7 @@ export const SuccessfulOperationContent = ({
                     <Icon
                         as={IoIosCheckmarkCircleOutline}
                         fontSize={'100px'}
-                        color={'#22c55e'}
+                        color={darkMode ? '#00ff45de' : '#10ba3e'}
                     />
 
                     {description && (

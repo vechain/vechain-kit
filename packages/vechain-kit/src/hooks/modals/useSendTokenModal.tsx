@@ -10,13 +10,12 @@ export const useSendTokenModal = () => {
     } = useModal();
 
     const open = () => {
-        setAccountModalContent({
+        openAccountModal({
             type: 'send-token',
             props: {
                 setCurrentContent: setAccountModalContent,
             },
         });
-        openAccountModal();
     };
 
     const close = () => {
