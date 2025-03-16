@@ -16,6 +16,8 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useEffect } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -24,6 +26,10 @@ type Props = {
 };
 
 export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
+    useEffect(() => {
+        Analytics.wallet.receiveQRGenerated();
+    }, []);
+
     const { t } = useTranslation();
     const { account } = useWallet();
 

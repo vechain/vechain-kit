@@ -14,7 +14,7 @@ import {
     useMfaEnrollment,
     useUpgradeRequired,
 } from '@/hooks';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     ModalBackButton,
     ScrollToTopWrapper,
@@ -25,10 +25,11 @@ import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
-import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
+import { HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoShieldOutline } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -49,6 +50,19 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
         connectedWallet?.address ?? '',
         3,
     );
+
+    useEffect(() => {
+        Analytics.settings.accessAndSecurityViewed();
+    }, []);
+
+    const handleEmbeddedWalletClick = () => {
+        Analytics.settings.embeddedWalletViewed();
+        setCurrentContent('embedded-wallet');
+    };
+
+    const handleVeBetterDAOClick = () => {
+        Analytics.settings.manageVeBetterDAO();
+    };
 
     return (
         <ScrollToTopWrapper>
@@ -85,13 +99,30 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         </Text>
                     </VStack>
 
-                    {/* TODO: Go to {{element}} website to manage your login methods and security settings. */}
                     <ActionButton
-                        title={t('Your embedded wallet')}
-                        onClick={() => {
-                            setCurrentContent('embedded-wallet');
+                        style={{
+                            marginTop: '10px',
+                            borderBottomRadius: '0px',
                         }}
-                        leftIcon={HiOutlineWallet}
+                        title={t('Embedded wallet')}
+                        description={t(
+                            'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
+                        )}
+                        onClick={handleEmbeddedWalletClick}
+                        leftIcon={IoShieldOutline}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
+                        style={{
+                            borderTopRadius: '0px',
+                        }}
+                        title={t('Manage on VeBetterDAO')}
+                        description={t(
+                            'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
+                        )}
+                        onClick={handleVeBetterDAOClick}
+                        leftIcon={IoShieldOutline}
                         rightIcon={MdOutlineNavigateNext}
                     />
 

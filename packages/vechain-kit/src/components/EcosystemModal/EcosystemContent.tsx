@@ -19,6 +19,8 @@ import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     onClose: () => void;
@@ -47,14 +49,17 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         try {
             setLoginError(undefined);
             setSelectedApp(appName);
-
             try {
                 await loginWithCrossApp(appId);
+                Analytics.auth.connectionListViewed(appsInfo.length);
                 loginLoadingModal.onClose();
                 setConnectionCache({
                     name: appName,
                     logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
                     appId: appId,
+                });
+                Analytics.auth.completed({
+                    loginMethod: VeLoginMethod.ECOSYSTEM,
                 });
                 onClose();
             } catch (error) {
@@ -65,6 +70,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     errorMsg?.includes('rejected') ||
                     errorMsg?.includes('closed')
                 ) {
+                    Analytics.auth.dropOff('social-callback');
                     return new Error('Login request was cancelled.');
                 }
 

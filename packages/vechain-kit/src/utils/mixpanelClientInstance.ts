@@ -4,6 +4,14 @@ import {
     UserProperties,
     VeLoginMethod,
     VePrivySocialLoginMethod,
+    NotificationAction,
+    NotificationProperties,
+    AuthAction,
+    AuthProperties,
+    FAQAction,
+    FAQProperties,
+    AccountAction,
+    AccountProperties,
 } from '@/types/mixPanel';
 import mixpanel from 'mixpanel-browser';
 
@@ -149,65 +157,112 @@ const resetUser = (): void => {
 
 const Analytics = {
     auth: {
-        flowStarted: () => trackEvent('Auth Flow Started'),
+        trackAuth: (
+            action: AuthAction,
+            properties?: Omit<AuthProperties, 'action'>,
+        ) => {
+            trackEvent('Auth Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
 
-        methodSelected: (method: VeLoginMethod) =>
-            trackEvent('Login Method Selected', { loginMethod: method }),
+        flowStarted: () => {
+            Analytics.auth.trackAuth('start');
+        },
+
+        methodSelected: (method: VeLoginMethod) => {
+            Analytics.auth.trackAuth('method_selected', {
+                loginMethod: method,
+            });
+        },
 
         completed: ({
             userId,
             loginMethod,
             platform,
         }: {
-            userId: string;
+            userId?: string;
             loginMethod: VeLoginMethod;
             platform?: VePrivySocialLoginMethod;
         }) => {
-            identifyUser(userId);
-            setUserProperties(
-                {
-                    last_login_date: new Date().toISOString(),
-                    preferred_login_method: loginMethod,
-                },
-                userId,
-            );
-            incrementUserProperty('total_logins');
-            trackEvent('User Logged In', { loginMethod, platform });
-
-            // Check if this is first login
-            if (isFirstLogin(userId)) {
-                Analytics.user.profile.markFirstLogin(userId);
+            if (userId) {
+                identifyUser(userId);
+                setUserProperties(
+                    {
+                        last_login_date: new Date().toISOString(),
+                        preferred_login_method: loginMethod,
+                    },
+                    userId,
+                );
+                if (isFirstLogin(userId)) {
+                    Analytics.user.profile.markFirstLogin(userId);
+                }
             }
+            incrementUserProperty('total_logins');
+            Analytics.auth.trackAuth('connect_success', {
+                loginMethod,
+                platform,
+            });
         },
 
-        failed: (loginMethod: VeLoginMethod, reason?: string) =>
-            trackEvent('Login Failed', { loginMethod, reason }),
+        failed: (loginMethod: VeLoginMethod, reason?: string) => {
+            Analytics.auth.trackAuth('connect_failed', {
+                loginMethod,
+                error: reason,
+            });
+        },
 
         dropOff: (
             stage: 'wallet-connect' | 'email-verification' | 'social-callback',
-        ) => trackEvent('Login Drop-off', { stage }),
+        ) => {
+            Analytics.auth.trackAuth('drop_off', { dropOffStage: stage });
+        },
 
-        connectionListViewed: (totalConnections?: number) =>
-            trackEvent('Connection List Viewed', { totalConnections }),
+        connectionListViewed: (totalConnections?: number) => {
+            Analytics.auth.trackAuth('start', { totalConnections });
+        },
 
-        walletConnectInitiated: (walletType: VeLoginMethod) =>
-            trackEvent('Wallet Connect Initiated', { walletType }),
+        walletConnectInitiated: (walletType: VeLoginMethod) => {
+            Analytics.auth.trackAuth('connect_initiated', {
+                loginMethod: walletType,
+            });
+        },
 
-        walletDisconnected: (walletType: VeLoginMethod) =>
-            trackEvent('Wallet Disconnected', { walletType }),
+        walletDisconnected: (walletType: VeLoginMethod) => {
+            Analytics.auth.trackAuth('logout', { loginMethod: walletType });
+        },
 
-        logoutCompleted: () => trackEvent('Logout Completed'),
+        logoutCompleted: () => {
+            Analytics.auth.trackAuth('logout');
+        },
 
-        closeConnecting: () => trackEvent('Close Connecting'),
-
-        chainSelected: (chainName: string, fromScreen: string) =>
-            trackEvent('Chain Selected', { chainName, fromScreen }),
+        chainSelected: (chainName: string, fromScreen: string) => {
+            Analytics.auth.trackAuth('chain_selected', {
+                chainName,
+                fromScreen,
+            });
+        },
     },
 
     user: {
         profile: {
+            trackAccount: (
+                action: AccountAction,
+                properties?: Omit<AccountProperties, 'action'>,
+            ) => {
+                trackEvent('Account Flow', {
+                    action,
+                    ...properties,
+                    isError: !!properties?.error,
+                });
+            },
+
             updated: (fields: string[]) =>
-                trackEvent('Profile Updated', { fields }),
+                Analytics.user.profile.trackAccount('settings_updated', {
+                    fields,
+                }),
 
             markFirstLogin: (userId: string) => {
                 const firstLoginDate = new Date().toISOString();
@@ -220,54 +275,31 @@ const Analytics = {
                 setUserProperties({ last_active: activeDate }, userId);
             },
 
-            // New methods from tracking plan
-            viewed: () => trackEvent('Profile Page Viewed'),
+            viewed: () => Analytics.user.profile.trackAccount('view'),
 
             addressCopied: (fromScreen: string) =>
-                trackEvent('Address Copied', { fromScreen }),
+                Analytics.user.profile.trackAccount('address_copied', {
+                    fromScreen,
+                }),
 
-            customiseOpened: () => trackEvent('Customise Page Opened'),
+            customiseOpened: () =>
+                Analytics.user.profile.trackAccount('customise_opened'),
         },
 
         preferences: {
-            updated: (preference: string, value: any) =>
-                trackEvent('Preference Updated', { preference, value }),
+            updated: (preference: string) =>
+                Analytics.user.profile.trackAccount('settings_updated', {
+                    fields: [preference],
+                }),
 
             accountNameChanged: (newName: string) =>
-                trackEvent('Account Name Changed', { newName }),
+                Analytics.user.profile.trackAccount('name_changed', {
+                    newName,
+                }),
         },
     },
 
     swap: {
-        flowStarted: (fromToken: string) =>
-            trackEvent('Swap Flow Started', { fromToken }),
-
-        tokenSelected: (position: 'from' | 'to', token: string) =>
-            trackEvent('Swap Token Selected', { position, token }),
-
-        amountEntered: (amount: string, token: string) =>
-            trackEvent('Swap Amount Entered', { amount, token }),
-
-        quoteReceived: (quote: {
-            fromToken: string;
-            toToken: string;
-            rate: number;
-            provider: string;
-        }) => trackEvent('Swap Quote Received', quote),
-
-        executed: (
-            txHash: string,
-            fromToken: string,
-            toToken: string,
-            amount: string,
-        ) =>
-            trackEvent('Swap Executed', { txHash, fromToken, toToken, amount }),
-
-        completed: (txHash: string) => trackEvent('Swap Completed', { txHash }),
-
-        failed: (reason: string, stage: 'quote' | 'approval' | 'execution') =>
-            trackEvent('Swap Failed', { reason, stage }),
-
         buttonClicked: () => trackEvent('Swap Button Clicked'),
 
         pageOpened: () => trackEvent('Swap Page Opened'),
@@ -291,9 +323,6 @@ const Analytics = {
                 transactionType: 'erc20',
             }),
 
-        balanceViewed: (tokens: string[]) =>
-            trackEvent('Balance Viewed', { tokens }),
-
         balanceRefreshed: () => trackEvent('Balance Refreshed'),
 
         assetsViewed: () => trackEvent('Assets Viewed'),
@@ -308,6 +337,28 @@ const Analytics = {
             tokenSymbol: string,
             recipientType: 'address' | 'domain' | 'contact',
         ) => trackEvent('Send Token Initiated', { tokenSymbol, recipientType }),
+
+        trackSendFlow: (
+            stage:
+                | 'token-select'
+                | 'amount'
+                | 'recipient'
+                | 'review'
+                | 'confirmation',
+            properties: {
+                tokenSymbol: string;
+                amount?: string;
+                recipientAddress?: string;
+                recipientType?: 'address' | 'domain' | 'contact';
+                error?: string;
+            },
+        ) => {
+            trackEvent('Send Flow', {
+                stage,
+                ...properties,
+                isError: !!properties.error,
+            });
+        },
 
         maxTokenSelected: (tokenSymbol: string) =>
             trackEvent('Max Token Selected', { tokenSymbol }),
@@ -325,45 +376,10 @@ const Analytics = {
                 transactionType,
             }),
 
-        receiveQRGenerated: (tokenSymbol: string) =>
-            trackEvent('Receive QR Generated', { tokenSymbol }),
+        receiveQRGenerated: () => trackEvent('Receive QR Generated'),
 
         addressCopied: (context: string) =>
             trackEvent('Address Copied', { context: context }),
-    },
-
-    dapp: {
-        opened: (dappName: 'VeBetterDAO' | 'vet.domains' | 'VeChain Kit') =>
-            trackEvent('DApp Opened', { dappName }),
-
-        connected: (dappName: string, walletAddress: string) =>
-            trackEvent('DApp Connected', {
-                dappName,
-                walletAddress: sanitizeProperties({ walletAddress })
-                    .walletAddress,
-            }),
-
-        disconnected: (dappName: string) =>
-            trackEvent('DApp Disconnected', { dappName }),
-
-        transactionRequested: (dappName: string, transactionType: string) =>
-            trackEvent('Transaction Requested', { dappName, transactionType }),
-
-        transactionCompleted: (dappName: string, transactionType: string) =>
-            trackEvent('Transaction Completed', { dappName, transactionType }),
-
-        transactionFailed: (
-            dappName: string,
-            transactionType: string,
-            reason: string,
-            tokenType?: 'erc20' | 'vet',
-        ) =>
-            trackEvent('Transaction Failed', {
-                dappName,
-                transactionType,
-                reason,
-                tokenType,
-            }),
     },
 
     bridge: {
@@ -375,6 +391,7 @@ const Analytics = {
     },
 
     ecosystem: {
+        pageOpened: () => trackEvent('Ecosystem Page Opened'),
         buttonClicked: () => trackEvent('Ecosystem Button Clicked'),
 
         searchPerformed: (query: string, resultsCount: number) =>
@@ -406,16 +423,91 @@ const Analytics = {
     },
 
     notifications: {
-        cleared: () => trackEvent('Notifications Cleared'),
+        trackNotification: (
+            action: NotificationAction,
+            properties?: Omit<NotificationProperties, 'action'>,
+        ) => {
+            trackEvent('Notification Flow', {
+                action,
+                ...properties,
+            });
+        },
 
-        archived: () => trackEvent('Notifications Archived'),
+        viewed: (
+            notificationType?: string,
+            totalCount?: number,
+            unreadCount?: number,
+        ) => {
+            Analytics.notifications.trackNotification('view', {
+                notificationType:
+                    notificationType as NotificationProperties['notificationType'],
+                totalCount,
+                unreadCount,
+                viewType: 'current',
+            });
+        },
+
+        cleared: (notificationType?: string, count?: number) => {
+            Analytics.notifications.trackNotification('clear', {
+                notificationType:
+                    notificationType as NotificationProperties['notificationType'],
+                totalCount: count,
+            });
+        },
+
+        archived: (notificationType?: string) => {
+            Analytics.notifications.trackNotification('archive', {
+                notificationType:
+                    notificationType as NotificationProperties['notificationType'],
+            });
+        },
+
+        toggleView: (viewType: 'current' | 'archived') => {
+            Analytics.notifications.trackNotification('toggle_view', {
+                viewType,
+            });
+        },
+
+        clicked: (notificationType?: string) => {
+            Analytics.notifications.trackNotification('click', {
+                notificationType:
+                    notificationType as NotificationProperties['notificationType'],
+            });
+        },
+
+        dismissed: (notificationType?: string) => {
+            Analytics.notifications.trackNotification('dismiss', {
+                notificationType:
+                    notificationType as NotificationProperties['notificationType'],
+            });
+        },
     },
 
     help: {
-        pageViewed: () => trackEvent('Help Page Viewed'),
+        trackFAQ: (
+            action: FAQAction,
+            properties?: Omit<FAQProperties, 'action'>,
+        ) => {
+            trackEvent('FAQ Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
+
+        pageViewed: () => Analytics.help.trackFAQ('view'),
 
         faqViewed: (faqId?: string, faqTitle?: string) =>
-            trackEvent('FAQ Viewed', { faqId, faqTitle }),
+            Analytics.help.trackFAQ('faq_opened', { faqId, faqTitle }),
+
+        categorySelected: (category: string) =>
+            Analytics.help.trackFAQ('category_selected', { category }),
+
+        questionExpanded: (faqId: string, faqTitle: string) =>
+            Analytics.help.trackFAQ('question_expanded', { faqId, faqTitle }),
+
+        searchPerformed: (searchQuery: string, resultsCount: number) =>
+            Analytics.help.trackFAQ('search', { searchQuery, resultsCount }),
     },
 
     search: {
@@ -450,11 +542,11 @@ export {
 };
 
 // Sanitize functions (placeholder - to be implemented)
-const sanitizeProperties = <T extends Record<string, any>>(props: T): T => {
-    // TODO: Implement property sanitization
-    // This would remove PII, truncate long values, etc.
-    return props;
-};
+// const sanitizeProperties = <T extends Record<string, any>>(props: T): T => {
+//     // TODO: Implement property sanitization
+//     // This would remove PII, truncate long values, etc.
+//     return props;
+// };
 
 // Mock consent functions (to be implemented)
 const updateConsent = (settings: Record<string, boolean>): void => {

@@ -58,7 +58,7 @@ export const SendTokenContent = ({
     setCurrentContent,
     isNavigatingFromMain = false,
     preselectedToken,
-    onBack = () => setCurrentContent('main'),
+    onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -72,10 +72,15 @@ export const SendTokenContent = ({
         useState(isNavigatingFromMain);
 
     useEffect(() => {
-        Analytics.wallet.sendTokenInitiated(
-            selectedToken?.symbol ?? '',
-            'address',
-        );
+        if (selectedToken) {
+            Analytics.wallet.sendTokenInitiated(
+                selectedToken.symbol,
+                'address',
+            );
+            Analytics.wallet.trackSendFlow('token-select', {
+                tokenSymbol: selectedToken.symbol,
+            });
+        }
     }, [selectedToken]);
 
     // Form setup with validation rules
@@ -95,7 +100,28 @@ export const SendTokenContent = ({
     });
 
     // Watch form values
-    const { toAddressOrDomain } = watch();
+    const { toAddressOrDomain, amount } = watch();
+
+    useEffect(() => {
+        if (selectedToken && amount) {
+            Analytics.wallet.trackSendFlow('amount', {
+                tokenSymbol: selectedToken.symbol,
+                amount,
+            });
+        }
+    }, [amount, selectedToken]);
+
+    useEffect(() => {
+        if (selectedToken && toAddressOrDomain) {
+            Analytics.wallet.trackSendFlow('recipient', {
+                tokenSymbol: selectedToken.symbol,
+                recipientAddress: toAddressOrDomain,
+                recipientType: toAddressOrDomain.includes('.')
+                    ? 'domain'
+                    : 'address',
+            });
+        }
+    }, [toAddressOrDomain, selectedToken]);
 
     const {
         domain: resolvedDomain,
@@ -107,6 +133,33 @@ export const SendTokenContent = ({
         if (selectedToken) {
             setValue('amount', selectedToken.numericBalance);
             Analytics.wallet.maxTokenSelected(selectedToken.symbol);
+            Analytics.wallet.trackSendFlow('amount', {
+                tokenSymbol: selectedToken.symbol,
+                amount: selectedToken.numericBalance,
+            });
+        }
+    };
+
+    const handleBack = () => {
+        if (selectedToken) {
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount: amount || undefined,
+                recipientAddress: toAddressOrDomain || undefined,
+                error: 'User cancelled - back button',
+            });
+        }
+        parentOnBack();
+    };
+
+    const handleClose = () => {
+        if (selectedToken) {
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount: amount || undefined,
+                recipientAddress: toAddressOrDomain || undefined,
+                error: 'User cancelled - close modal',
+            });
         }
     };
 
@@ -122,6 +175,10 @@ export const SendTokenContent = ({
                 type: 'manual',
                 message: t('Invalid address or domain'),
             });
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                error: 'Invalid address or domain',
+            });
             return;
         }
 
@@ -135,9 +192,20 @@ export const SendTokenContent = ({
                         symbol: selectedToken.symbol,
                     }),
                 });
+                Analytics.wallet.trackSendFlow('review', {
+                    tokenSymbol: selectedToken.symbol,
+                    error: 'Insufficient balance',
+                });
                 return;
             }
         }
+
+        Analytics.wallet.trackSendFlow('review', {
+            tokenSymbol: selectedToken.symbol,
+            amount: data.amount,
+            recipientAddress: resolvedAddress || data.toAddressOrDomain,
+            recipientType: resolvedDomain ? 'domain' : 'address',
+        });
 
         setCurrentContent({
             type: 'send-token-summary',
@@ -163,8 +231,20 @@ export const SendTokenContent = ({
                 }}
                 onBack={() => {
                     if (isInitialTokenSelection) {
+                        if (selectedToken) {
+                            Analytics.wallet.trackSendFlow('token-select', {
+                                tokenSymbol: selectedToken.symbol,
+                                error: 'User cancelled - back to main',
+                            });
+                        }
                         setCurrentContent('main');
                     } else {
+                        if (selectedToken) {
+                            Analytics.wallet.trackSendFlow('token-select', {
+                                tokenSymbol: selectedToken.symbol,
+                                error: 'User cancelled - back to form',
+                            });
+                        }
                         setIsSelectingToken(false);
                     }
                 }}
@@ -176,8 +256,8 @@ export const SendTokenContent = ({
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Send')}</ModalHeader>
-                <ModalBackButton onClick={onBack} />
-                <ModalCloseButton />
+                <ModalBackButton onClick={handleBack} />
+                <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
 
             <ModalBody>

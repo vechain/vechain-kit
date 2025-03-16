@@ -20,6 +20,66 @@ export type LoginEventProperties = {
     platform?: VePrivySocialLoginMethod;
 };
 
+export type AuthAction =
+    | 'start'
+    | 'method_selected'
+    | 'connect_initiated'
+    | 'connect_success'
+    | 'connect_failed'
+    | 'drop_off'
+    | 'logout'
+    | 'chain_selected';
+
+export type AuthProperties = {
+    action: AuthAction;
+    loginMethod?: VeLoginMethod;
+    platform?: VePrivySocialLoginMethod;
+    chainName?: string;
+    fromScreen?: string;
+    error?: string;
+    isError?: boolean;
+    dropOffStage?: 'wallet-connect' | 'email-verification' | 'social-callback';
+    totalConnections?: number;
+};
+export type AccountAction =
+    | 'view'
+    | 'settings_updated'
+    | 'name_changed'
+    | 'security_viewed'
+    | 'embedded_wallet_viewed'
+    | 'manage_dao'
+    | 'connections_viewed'
+    | 'address_copied'
+    | 'customise_opened';
+
+export type AccountProperties = {
+    action: AccountAction;
+    section?: string;
+    newName?: string;
+    fromScreen?: string;
+    fields?: string[];
+    error?: string;
+    isError?: boolean;
+};
+
+export type FAQAction =
+    | 'view'
+    | 'faq_opened'
+    | 'search'
+    | 'category_selected'
+    | 'question_expanded';
+
+export type FAQProperties = {
+    action: FAQAction;
+    faqId?: string;
+    faqTitle?: string;
+    category?: string;
+    searchQuery?: string;
+    resultsCount?: number;
+    error?: string;
+    isError?: boolean;
+};
+
 export type DAppOpenedProperties = {
     dappName: 'VeBetterDAO' | 'vet.domains' | 'VeChain Kit';
 };
@@ -32,6 +92,24 @@ export type UserProperties = {
     last_active?: string;
     claimed_vet_domain?: boolean;
     [key: string]: any;
+};
+
+export type NotificationAction =
+    | 'view'
+    | 'clear'
+    | 'archive'
+    | 'toggle_view'
+    | 'click'
+    | 'dismiss';
+
+export type NotificationProperties = {
+    action: NotificationAction;
+    notificationType?: 'transaction' | 'system' | 'marketing' | 'security';
+    totalCount?: number;
+    unreadCount?: number;
+    isError?: boolean;
+    error?: string;
+    viewType?: 'current' | 'archived';
 };
 
 export type EventName =
@@ -86,13 +164,6 @@ export type EventName =
     | 'FAQ Viewed'
     | 'Search Query Performed'
     | 'Language Changed'
-    | 'Swap Flow Started'
-    | 'Swap Token Selected'
-    | 'Swap Amount Entered'
-    | 'Swap Quote Received'
-    | 'Swap Executed'
-    | 'Swap Completed'
-    | 'Swap Failed'
     | 'Wallet Opened'
     | 'QR Code Scanned'
     | 'Tokens Received'
@@ -102,9 +173,14 @@ export type EventName =
     | 'DApp Disconnected'
     | 'Transaction Requested'
     | 'Transaction Completed'
-    | 'Transaction Failed';
+    | 'Transaction Failed'
+    | 'Ecosystem Page Opened'
+    | 'Auth Flow'
+    | 'Send Flow'
+    | 'Notification Flow'
+    | 'Account Flow'
+    | 'FAQ Flow';
 
-// Extended property types for new events
 export type ConnectionListProperties = {
     totalConnections?: number;
 };
@@ -178,7 +254,16 @@ export type TransactionFailedProperties = {
     tokenType?: 'erc20' | 'vet';
 };
 
-// Update EventPropertiesMap with new property types
+export type SendFlowProperties = {
+    stage: 'token-select' | 'amount' | 'recipient' | 'review' | 'confirmation';
+    tokenSymbol: string;
+    amount?: string;
+    recipientAddress?: string;
+    recipientType?: 'address' | 'domain' | 'contact';
+    error?: string;
+    isError: boolean;
+};
+
 export type EventPropertiesMap = {
     'User Logged In': LoginEventProperties;
     'DApp Opened': DAppOpenedProperties;
@@ -200,26 +285,6 @@ export type EventPropertiesMap = {
     'Settings Opened': SettingsProperties;
     'Search Query Performed': SearchQueryProperties;
     'Language Changed': LanguageProperties;
-    'Swap Flow Started': { fromToken: string };
-    'Swap Token Selected': { position: 'from' | 'to'; token: string };
-    'Swap Amount Entered': { amount: string; token: string };
-    'Swap Quote Received': {
-        fromToken: string;
-        toToken: string;
-        rate: number;
-        provider: string;
-    };
-    'Swap Executed': {
-        txHash: string;
-        fromToken: string;
-        toToken: string;
-        amount: string;
-    };
-    'Swap Completed': { txHash: string };
-    'Swap Failed': {
-        reason: string;
-        stage: 'quote' | 'approval' | 'execution';
-    };
     'Wallet Opened': object;
     'QR Code Scanned': object;
     'Tokens Received': { token: string; amount: string };
@@ -230,5 +295,25 @@ export type EventPropertiesMap = {
     'Transaction Requested': { dappName: string; transactionType: string };
     'Transaction Completed': { dappName: string; transactionType: string };
     'Transaction Failed': TransactionFailedProperties;
+    'Account Connected': AccountConnectedProperties;
+    'Account Disconnected': AccountDisconnectedProperties;
+    'Send Flow': SendFlowProperties;
+    'Send Recipient Entered': SendFlowProperties;
+    'Send Review Started': SendFlowProperties;
+    'Send Completed': SendFlowProperties;
+    'Notification Flow': NotificationProperties;
+    'Auth Flow': AuthProperties;
+    'Account Flow': AccountProperties;
+    'FAQ Flow': FAQProperties;
     [key: string]: Record<string, any>;
+};
+
+export type AccountConnectedProperties = {
+    address: string;
+    walletType: string;
+};
+
+export type AccountDisconnectedProperties = {
+    address: string;
+    walletType: string;
 };

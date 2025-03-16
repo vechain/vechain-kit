@@ -1,5 +1,6 @@
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { SharedAppCard } from './SharedAppCard';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     name: string;
@@ -20,23 +21,27 @@ export const CustomAppComponent = ({
     logoComponent,
     setCurrentContent,
 }: Props) => {
+    const handleAppClick = () => {
+        Analytics.ecosystem.appSelected(name);
+        setCurrentContent({
+            type: 'app-overview',
+            props: {
+                name,
+                image,
+                url,
+                description,
+                logoComponent,
+                setCurrentContent,
+            },
+        });
+    };
+
     return (
         <SharedAppCard
             name={name}
             imageUrl={image}
             linkUrl={url}
-            onClick={() =>
-                setCurrentContent({
-                    type: 'app-overview',
-                    props: {
-                        name,
-                        image,
-                        url,
-                        description,
-                        logoComponent,
-                    },
-                })
-            }
+            onClick={handleAppClick}
             {...(logoComponent && { logoComponent })}
         />
     );

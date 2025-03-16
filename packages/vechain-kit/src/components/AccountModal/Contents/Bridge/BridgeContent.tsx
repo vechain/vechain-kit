@@ -15,6 +15,8 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useEffect } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -25,6 +27,15 @@ type Props = {
 export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+
+    useEffect(() => {
+        Analytics.bridge.pageOpened();
+    }, []);
+
+    const handleLaunchVeChainEnergy = () => {
+        Analytics.bridge.launchVeChainEnergy();
+        window.open('https://swap.vechain.energy/', '_blank');
+    };
 
     return (
         <>
@@ -61,9 +72,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
             <ModalFooter>
                 <Button
                     variant="vechainKitSecondary"
-                    onClick={() => {
-                        window.open('https://swap.vechain.energy/', '_blank');
-                    }}
+                    onClick={handleLaunchVeChainEnergy}
                 >
                     {t('Launch vechain.energy')}
                     <Icon as={FaExternalLinkAlt} ml={2} />

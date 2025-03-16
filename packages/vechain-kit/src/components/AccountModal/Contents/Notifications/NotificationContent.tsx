@@ -18,9 +18,10 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '@/hooks/notifications';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
 import { NotificationItem } from './Components/NotificationItem';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -42,13 +43,26 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
         getArchivedNotifications(),
     );
 
+    useEffect(() => {
+        Analytics.notifications.viewed(
+            undefined,
+            notifications.length,
+            notifications.filter((n) => !n.isRead).length,
+        );
+    }, [notifications]);
+
     const handleClearAll = () => {
+        Analytics.notifications.cleared(undefined, notifications.length);
         clearAllNotifications();
         setArchivedNotifications([...archivedNotifications, ...notifications]);
         setNotifications([]);
     };
 
     const handleMarkAsRead = (id: string) => {
+        const notification = notifications.find((n) => n.id === id);
+        if (notification) {
+            Analytics.notifications.archived(notification.status);
+        }
         markAsRead(id);
         const notificationToArchive = notifications.find((n) => n.id === id);
         setNotifications(notifications.filter((n) => n.id !== id));
@@ -58,6 +72,13 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 ...archivedNotifications,
             ]);
         }
+    };
+
+    const handleToggleView = () => {
+        Analytics.notifications.toggleView(
+            isArchiveView ? 'current' : 'archived',
+        );
+        setIsArchiveView(!isArchiveView);
     };
 
     const currentNotifications = isArchiveView
@@ -108,7 +129,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                                     />
                                 }
                                 size="sm"
-                                onClick={() => setIsArchiveView(!isArchiveView)}
+                                onClick={handleToggleView}
                             >
                                 {isArchiveView ? t('Current') : t('Archived')}
                             </Button>

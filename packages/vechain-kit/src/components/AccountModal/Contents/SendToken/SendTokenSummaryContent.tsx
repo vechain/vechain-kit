@@ -83,6 +83,58 @@ export const SendTokenSummaryContent = ({
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
 
+    const handleSend = async () => {
+        try {
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount,
+                recipientAddress: resolvedAddress || toAddressOrDomain,
+                recipientType: resolvedDomain ? 'domain' : 'address',
+            });
+
+            if (selectedToken.symbol === 'VET') {
+                await transferVET();
+            } else {
+                await transferERC20();
+            }
+        } catch (error) {
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                error: error instanceof Error ? error.message : 'Unknown error',
+            });
+            console.error(t('Transaction failed:'), error);
+        }
+    };
+
+    const handleSuccess = (txId: string) => {
+        Analytics.wallet.trackSendFlow('confirmation', {
+            tokenSymbol: selectedToken.symbol,
+            amount,
+            recipientAddress: resolvedAddress || toAddressOrDomain,
+            recipientType: resolvedDomain ? 'domain' : 'address',
+        });
+
+        Analytics.wallet.tokenSent(
+            selectedToken.symbol,
+            amount,
+            txId,
+            selectedToken.symbol === 'VET' ? 'vet' : 'erc20',
+        );
+
+        setCurrentContent({
+            type: 'successful-operation',
+            props: {
+                setCurrentContent,
+                txId,
+                title: t('Transaction successful'),
+                onDone: () => {
+                    setCurrentContent('main');
+                },
+                showSocialButtons: true,
+            },
+        });
+    };
+
     const {
         sendTransaction: transferERC20,
         txReceipt: transferERC20Receipt,
@@ -97,32 +149,16 @@ export const SendTokenSummaryContent = ({
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
         onSuccess: () => {
-            Analytics.wallet.tokenSent(
-                selectedToken.symbol,
-                amount,
-                transferERC20Receipt?.meta.txID ?? '',
-                'erc20',
-            );
-            setCurrentContent({
-                type: 'successful-operation',
-                props: {
-                    setCurrentContent,
-                    txId: transferERC20Receipt?.meta.txID,
-                    title: t('Transaction successful'),
-                    onDone: () => {
-                        setCurrentContent('main');
-                    },
-                    showSocialButtons: true,
-                },
-            });
+            handleSuccess(transferERC20Receipt?.meta.txID ?? '');
         },
         onError: () => {
-            Analytics.dapp.transactionFailed(
-                'Send Token',
-                'token_transfer',
-                String(transferERC20Error) ?? 'Unknown error',
-                'erc20',
-            );
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                error:
+                    transferERC20Error instanceof Error
+                        ? transferERC20Error.message
+                        : 'Unknown error',
+            });
         },
     });
 
@@ -137,32 +173,16 @@ export const SendTokenSummaryContent = ({
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
         onSuccess: () => {
-            Analytics.wallet.tokenSent(
-                selectedToken.symbol,
-                amount,
-                transferVETReceipt?.meta.txID ?? '',
-                'vet',
-            );
-            setCurrentContent({
-                type: 'successful-operation',
-                props: {
-                    setCurrentContent,
-                    txId: transferVETReceipt?.meta.txID,
-                    title: t('Transaction successful'),
-                    onDone: () => {
-                        setCurrentContent('main');
-                    },
-                    showSocialButtons: true,
-                },
-            });
+            handleSuccess(transferVETReceipt?.meta.txID ?? '');
         },
         onError: () => {
-            Analytics.dapp.transactionFailed(
-                'Send Token',
-                'token_transfer',
-                String(transferVETError) ?? 'Unknown error',
-                'vet',
-            );
+            Analytics.wallet.trackSendFlow('review', {
+                tokenSymbol: selectedToken.symbol,
+                error:
+                    transferVETError instanceof Error
+                        ? transferVETError.message
+                        : 'Unknown error',
+            });
         },
     });
 
@@ -170,18 +190,6 @@ export const SendTokenSummaryContent = ({
         return selectedToken.symbol === 'VET'
             ? transferVETReceipt
             : transferERC20Receipt;
-    };
-
-    const handleSend = async () => {
-        try {
-            if (selectedToken.symbol === 'VET') {
-                await transferVET();
-            } else {
-                await transferERC20();
-            }
-        } catch (error) {
-            console.error(t('Transaction failed:'), error);
-        }
     };
 
     const isTxWaitingConfirmation =
@@ -196,22 +204,44 @@ export const SendTokenSummaryContent = ({
         }
     }, [upgradeRequired, openUpgradeSmartAccountModal]);
 
+    const handleBack = () => {
+        Analytics.wallet.trackSendFlow('review', {
+            tokenSymbol: selectedToken.symbol,
+            amount,
+            recipientAddress: resolvedAddress || toAddressOrDomain,
+            recipientType: resolvedDomain ? 'domain' : 'address',
+            error: 'User cancelled - back from summary',
+        });
+        setCurrentContent({
+            type: 'send-token',
+            props: {
+                setCurrentContent,
+            },
+        });
+    };
+
+    const handleClose = () => {
+        Analytics.wallet.trackSendFlow('review', {
+            tokenSymbol: selectedToken.symbol,
+            amount,
+            recipientAddress: resolvedAddress || toAddressOrDomain,
+            recipientType: resolvedDomain ? 'domain' : 'address',
+            error: 'User cancelled - close from summary',
+        });
+    };
+
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>Send</ModalHeader>
                 <ModalBackButton
                     isDisabled={isSubmitting}
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'send-token',
-                            props: {
-                                setCurrentContent,
-                            },
-                        })
-                    }
+                    onClick={handleBack}
                 />
-                <ModalCloseButton isDisabled={isSubmitting} />
+                <ModalCloseButton
+                    isDisabled={isSubmitting}
+                    onClick={handleClose}
+                />
             </StickyHeaderContainer>
 
             <ModalBody>

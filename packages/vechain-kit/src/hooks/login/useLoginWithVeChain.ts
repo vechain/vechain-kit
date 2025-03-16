@@ -14,8 +14,11 @@ export const useLoginWithVeChain = () => {
 
     const login = async () => {
         try {
+            Analytics.auth.flowStarted();
             Analytics.auth.methodSelected(VeLoginMethod.VECHAIN);
+
             await loginWithVeChain(VECHAIN_PRIVY_APP_ID);
+
             setConnectionCache({
                 name: 'VeChain',
                 logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
@@ -23,16 +26,22 @@ export const useLoginWithVeChain = () => {
             });
 
             Analytics.auth.completed({
-                userId: user?.id || '',
+                userId: user?.id,
                 loginMethod: VeLoginMethod.VECHAIN,
-                // the exact social platform is not returned by the Privy SDK
-                // platform: VePrivySocialLoginMethod.GOOGLE,
             });
         } catch (error) {
-            Analytics.auth.failed(
-                VeLoginMethod.VECHAIN,
-                error instanceof Error ? error.message : 'Unknown error',
-            );
+            const errorMsg =
+                error instanceof Error ? error.message : 'Unknown error';
+
+            if (
+                errorMsg.toLowerCase().includes('rejected') ||
+                errorMsg.toLowerCase().includes('closed')
+            ) {
+                Analytics.auth.dropOff('wallet-connect');
+            } else {
+                Analytics.auth.failed(VeLoginMethod.VECHAIN, errorMsg);
+            }
+
             throw handlePopupError({
                 error,
                 mobileBrowserPopupMessage:

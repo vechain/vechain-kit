@@ -9,6 +9,7 @@ import {
 import { IoCloseCircle } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { Notification } from '@/hooks/notifications/types';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     notification: Notification;
@@ -23,6 +24,15 @@ export const NotificationItem = ({
 }: Props) => {
     const { t } = useTranslation();
 
+    const handleClick = () => {
+        Analytics.notifications.clicked(notification.status);
+    };
+
+    const handleDismiss = () => {
+        Analytics.notifications.dismissed(notification.status);
+        onMarkAsRead(notification.id);
+    };
+
     if (notification.isRead && !isArchiveView) {
         return null;
     }
@@ -36,6 +46,9 @@ export const NotificationItem = ({
             pr={8}
             position="relative"
             opacity={notification.isRead ? 0.7 : 1}
+            onClick={handleClick}
+            cursor="pointer"
+            _hover={{ opacity: 0.8 }}
         >
             <AlertIcon boxSize={'16px'} />
             <Box>
@@ -56,7 +69,10 @@ export const NotificationItem = ({
                     size="sm"
                     variant="ghost"
                     icon={<IoCloseCircle />}
-                    onClick={() => onMarkAsRead(notification.id)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleDismiss();
+                    }}
                     aria-label="Mark as read and archive"
                 />
             )}
