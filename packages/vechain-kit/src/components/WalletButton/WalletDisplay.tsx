@@ -1,6 +1,8 @@
-import { Spinner, Text, VStack, HStack } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { humanAddress, humanDomain } from '@/utils';
+import { HStack, Spinner, Text, useMediaQuery, VStack } from '@chakra-ui/react';
+import { useMemo } from 'react';
+
 import { AssetIcons } from './AssetIcons';
 import { WalletDisplayVariant } from './types';
 
@@ -10,30 +12,37 @@ type WalletDisplayProps = {
 
 export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
     const { account } = useWallet();
-
+    const [isSmallMobile] = useMediaQuery('(max-width: 480px)');
     if (!account) return <Spinner />;
 
     if (variant === 'icon') {
         return null;
     }
 
+    const isLongDomain = account?.domain && account?.domain?.length > 18;
+    const accountDomain = useMemo(() => {
+        return isSmallMobile && isLongDomain
+            ? humanDomain(account?.domain ?? '', 18, 0)
+            : account?.domain;
+    }, [isSmallMobile, account.domain]);
+
     if (variant === 'iconAndDomain') {
         return account.domain ? (
-            <Text fontSize="sm">{humanDomain(account.domain, 18, 0)}</Text>
+            <Text fontSize="sm">{accountDomain}</Text>
         ) : (
             <Text fontSize="sm">
-                {humanAddress(account.address ?? '', 4, 4)}
+                {humanAddress(account.address ?? '', 6, 4)}
             </Text>
         );
     }
 
     if (variant === 'iconDomainAndAssets') {
         return (
-            <HStack spacing={2}>
+            <HStack spacing={4}>
                 <VStack spacing={0} alignItems="flex-start">
                     {account.domain && (
                         <Text fontSize="sm" fontWeight="bold">
-                            {humanDomain(account.domain, 18, 0)}
+                            {accountDomain}
                         </Text>
                     )}
                     <Text
@@ -43,11 +52,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
                         {humanAddress(account.address ?? '', 4, 4)}
                     </Text>
                 </VStack>
-                <AssetIcons
-                    ml={2}
-                    address={account.address ?? ''}
-                    maxIcons={3}
-                />
+                <AssetIcons address={account.address ?? ''} maxIcons={3} />
             </HStack>
         );
     }
@@ -56,7 +61,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
         <VStack spacing={0} alignItems="flex-start">
             {account.domain && (
                 <Text fontSize="sm" fontWeight="bold">
-                    {humanDomain(account.domain, 18, 0)}
+                    {accountDomain}
                 </Text>
             )}
             <Text
