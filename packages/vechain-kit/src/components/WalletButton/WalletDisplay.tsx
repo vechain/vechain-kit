@@ -38,7 +38,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
 
     if (variant === 'iconDomainAndAssets') {
         return (
-            <HStack spacing={2}>
+            <HStack spacing={4}>
                 <VStack spacing={0} alignItems="flex-start">
                     {account.domain && (
                         <Text fontSize="sm" fontWeight="bold">

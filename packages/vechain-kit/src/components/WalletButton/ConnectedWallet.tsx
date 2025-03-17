@@ -26,7 +26,7 @@ export const ConnectedWallet = ({
             minH={'45px'}
             maxW="fit-content"
         >
-            <HStack w="full" px={2} minW="fit-content">
+            <HStack w="full" minW="fit-content">
                 <AccountAvatar
                     wallet={account}
                     props={{
@@ -36,8 +36,10 @@ export const ConnectedWallet = ({
                         minHeight: 30,
                     }}
                 />
-                {!isDesktop && <WalletDisplay variant={mobileVariant} />}
-                {isDesktop && <WalletDisplay variant={desktopVariant} />}
+
+                <WalletDisplay
+                    variant={isDesktop ? desktopVariant : mobileVariant}
+                />
             </HStack>
         </Button>
     );
