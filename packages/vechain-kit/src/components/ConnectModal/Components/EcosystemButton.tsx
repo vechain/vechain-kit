@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { AiOutlineUser } from 'react-icons/ai';
 import { IoIosArrowForward } from 'react-icons/io';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -21,12 +23,18 @@ export const EcosystemButton = ({
     const { t } = useTranslation();
     const ecosystemModal = useDisclosure();
 
+    const handleEcosystemClick = () => {
+        Analytics.auth.flowStarted();
+        Analytics.auth.methodSelected(VeLoginMethod.ECOSYSTEM);
+        ecosystemModal.onOpen();
+    };
+
     return (
         <>
             <GridItem colSpan={gridColumn} w={'full'}>
                 <ConnectionButton
                     isDark={isDark}
-                    onClick={ecosystemModal.onOpen}
+                    onClick={handleEcosystemClick}
                     icon={AiOutlineUser}
                     text={
                         gridColumn && gridColumn >= 2

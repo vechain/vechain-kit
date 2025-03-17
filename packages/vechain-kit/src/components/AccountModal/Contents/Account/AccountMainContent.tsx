@@ -22,8 +22,6 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useEffect } from 'react';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -36,10 +34,6 @@ type Props = {
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-
-    useEffect(() => {
-        Analytics.user.profile.viewed();
-    }, []);
 
     return (
         <ScrollToTopWrapper>

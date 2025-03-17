@@ -60,6 +60,10 @@ export const AccountModal = ({
         }
     }, [isOpen, initialContent, setCurrentContent]);
 
+    useEffect(() => {
+        Analytics.user.profile.viewed();
+    }, []);
+
     const renderContent = () => {
         if (typeof currentContent === 'object') {
             switch (currentContent.type) {

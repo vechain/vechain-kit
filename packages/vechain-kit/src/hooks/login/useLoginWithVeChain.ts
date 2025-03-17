@@ -14,7 +14,6 @@ export const useLoginWithVeChain = () => {
 
     const login = async () => {
         try {
-            Analytics.auth.flowStarted();
             Analytics.auth.methodSelected(VeLoginMethod.VECHAIN);
 
             await loginWithVeChain(VECHAIN_PRIVY_APP_ID);

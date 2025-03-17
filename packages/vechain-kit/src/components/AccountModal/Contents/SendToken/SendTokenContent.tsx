@@ -71,18 +71,6 @@ export const SendTokenContent = ({
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
 
-    useEffect(() => {
-        if (selectedToken) {
-            Analytics.wallet.sendTokenInitiated(
-                selectedToken.symbol,
-                'address',
-            );
-            Analytics.wallet.trackSendFlow('token-select', {
-                tokenSymbol: selectedToken.symbol,
-            });
-        }
-    }, [selectedToken]);
-
     // Form setup with validation rules
     const {
         register,
@@ -104,7 +92,7 @@ export const SendTokenContent = ({
 
     useEffect(() => {
         if (selectedToken && amount) {
-            Analytics.wallet.trackSendFlow('amount', {
+            Analytics.send.flow('amount', {
                 tokenSymbol: selectedToken.symbol,
                 amount,
             });
@@ -113,7 +101,7 @@ export const SendTokenContent = ({
 
     useEffect(() => {
         if (selectedToken && toAddressOrDomain) {
-            Analytics.wallet.trackSendFlow('recipient', {
+            Analytics.send.flow('recipient', {
                 tokenSymbol: selectedToken.symbol,
                 recipientAddress: toAddressOrDomain,
                 recipientType: toAddressOrDomain.includes('.')
@@ -132,8 +120,7 @@ export const SendTokenContent = ({
     const handleSetMaxAmount = () => {
         if (selectedToken) {
             setValue('amount', selectedToken.numericBalance);
-            Analytics.wallet.maxTokenSelected(selectedToken.symbol);
-            Analytics.wallet.trackSendFlow('amount', {
+            Analytics.send.flow('amount', {
                 tokenSymbol: selectedToken.symbol,
                 amount: selectedToken.numericBalance,
             });
@@ -142,7 +129,7 @@ export const SendTokenContent = ({
 
     const handleBack = () => {
         if (selectedToken) {
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 amount: amount || undefined,
                 recipientAddress: toAddressOrDomain || undefined,
@@ -154,7 +141,7 @@ export const SendTokenContent = ({
 
     const handleClose = () => {
         if (selectedToken) {
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 amount: amount || undefined,
                 recipientAddress: toAddressOrDomain || undefined,
@@ -175,7 +162,7 @@ export const SendTokenContent = ({
                 type: 'manual',
                 message: t('Invalid address or domain'),
             });
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 error: 'Invalid address or domain',
             });
@@ -192,7 +179,7 @@ export const SendTokenContent = ({
                         symbol: selectedToken.symbol,
                     }),
                 });
-                Analytics.wallet.trackSendFlow('review', {
+                Analytics.send.flow('review', {
                     tokenSymbol: selectedToken.symbol,
                     error: 'Insufficient balance',
                 });
@@ -200,7 +187,7 @@ export const SendTokenContent = ({
             }
         }
 
-        Analytics.wallet.trackSendFlow('review', {
+        Analytics.send.flow('review', {
             tokenSymbol: selectedToken.symbol,
             amount: data.amount,
             recipientAddress: resolvedAddress || data.toAddressOrDomain,
@@ -232,7 +219,7 @@ export const SendTokenContent = ({
                 onBack={() => {
                     if (isInitialTokenSelection) {
                         if (selectedToken) {
-                            Analytics.wallet.trackSendFlow('token-select', {
+                            Analytics.send.flow('token_select', {
                                 tokenSymbol: selectedToken.symbol,
                                 error: 'User cancelled - back to main',
                             });
@@ -240,7 +227,7 @@ export const SendTokenContent = ({
                         setCurrentContent('main');
                     } else {
                         if (selectedToken) {
-                            Analytics.wallet.trackSendFlow('token-select', {
+                            Analytics.send.flow('token_select', {
                                 tokenSymbol: selectedToken.symbol,
                                 error: 'User cancelled - back to form',
                             });

@@ -55,16 +55,16 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     );
 
     useEffect(() => {
-        Analytics.settings.accessAndSecurityViewed();
+        Analytics.settings.trackSettings('security_view');
     }, []);
 
     const handleEmbeddedWalletClick = () => {
-        Analytics.settings.embeddedWalletViewed();
+        Analytics.settings.trackSettings('embedded_wallet_view');
         setCurrentContent('embedded-wallet');
     };
 
     const handleVeBetterDAOClick = () => {
-        Analytics.settings.manageVeBetterDAO();
+        Analytics.settings.trackSettings('vebetterdao_manage');
     };
 
     return (

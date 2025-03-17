@@ -90,7 +90,7 @@ export const SendTokenSummaryContent = ({
         }
 
         try {
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 amount,
                 recipientAddress: resolvedAddress || toAddressOrDomain,
@@ -103,7 +103,7 @@ export const SendTokenSummaryContent = ({
                 await transferERC20();
             }
         } catch (error) {
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 error: error instanceof Error ? error.message : 'Unknown error',
             });
@@ -112,14 +112,14 @@ export const SendTokenSummaryContent = ({
     };
 
     const handleSuccess = (txId: string) => {
-        Analytics.wallet.trackSendFlow('confirmation', {
+        Analytics.send.flow('confirmation', {
             tokenSymbol: selectedToken.symbol,
             amount,
             recipientAddress: resolvedAddress || toAddressOrDomain,
             recipientType: resolvedDomain ? 'domain' : 'address',
         });
 
-        Analytics.wallet.tokenSent(
+        Analytics.send.completed(
             selectedToken.symbol,
             amount,
             txId,
@@ -157,7 +157,7 @@ export const SendTokenSummaryContent = ({
             handleSuccess(transferERC20Receipt?.meta.txID ?? '');
         },
         onError: () => {
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 error:
                     transferERC20Error instanceof Error
@@ -181,7 +181,7 @@ export const SendTokenSummaryContent = ({
             handleSuccess(transferVETReceipt?.meta.txID ?? '');
         },
         onError: () => {
-            Analytics.wallet.trackSendFlow('review', {
+            Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 error:
                     transferVETError instanceof Error
@@ -204,7 +204,7 @@ export const SendTokenSummaryContent = ({
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
 
     const handleBack = () => {
-        Analytics.wallet.trackSendFlow('review', {
+        Analytics.send.flow('review', {
             tokenSymbol: selectedToken.symbol,
             amount,
             recipientAddress: resolvedAddress || toAddressOrDomain,
@@ -220,7 +220,7 @@ export const SendTokenSummaryContent = ({
     };
 
     const handleClose = () => {
-        Analytics.wallet.trackSendFlow('review', {
+        Analytics.send.flow('review', {
             tokenSymbol: selectedToken.symbol,
             amount,
             recipientAddress: resolvedAddress || toAddressOrDomain,

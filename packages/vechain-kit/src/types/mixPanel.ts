@@ -137,37 +137,7 @@ export type EventName =
     | 'Assets Viewed'
     | 'Token Search Performed'
     | 'Token Page Viewed'
-    | 'Send Token Initiated'
-    | 'Max Token Selected'
-    | 'Token Sent'
     | 'Profile Updated'
-    | 'Swap Button Clicked'
-    | 'Swap Page Opened'
-    | 'Bridge Button Clicked'
-    | 'Bridge Page Opened'
-    | 'Launch VeChain Energy'
-    | 'Ecosystem Button Clicked'
-    | 'App Search Performed'
-    | 'Ecosystem App Selected'
-    | 'Launch Ecosystem App'
-    | 'Add Ecosystem App To Shortcuts'
-    | 'Settings Opened'
-    | 'Account Name Changed'
-    | 'Access And Security Viewed'
-    | 'Preference Updated'
-    | 'Embedded Wallet Viewed'
-    | 'Manage VeBetterDAO'
-    | 'Connection Details Viewed'
-    | 'Notifications Cleared'
-    | 'Notifications Archived'
-    | 'Help Page Viewed'
-    | 'FAQ Viewed'
-    | 'Search Query Performed'
-    | 'Language Changed'
-    | 'Wallet Opened'
-    | 'QR Code Scanned'
-    | 'Tokens Received'
-    | 'Tokens Sent'
     | 'Balance Viewed'
     | 'DApp Connected'
     | 'DApp Disconnected'
@@ -179,7 +149,12 @@ export type EventName =
     | 'Send Flow'
     | 'Notification Flow'
     | 'Account Flow'
-    | 'FAQ Flow';
+    | 'FAQ Flow'
+    | 'Settings Flow'
+    | 'Wallet Flow'
+    | 'Ecosystem Flow'
+    | 'Swap Flow'
+    | 'Bridge Flow';
 
 export type ConnectionListProperties = {
     totalConnections?: number;
@@ -199,34 +174,40 @@ export type AddressCopiedProperties = {
     context?: string;
 };
 
-export type TokenSearchProperties = {
-    query: string;
-    resultsCount: number;
-};
-
-export type TokenPageProperties = {
-    tokenSymbol: string;
-    tokenAddress?: string;
-};
-
-export type SendTokenProperties = {
-    tokenSymbol: string;
-    recipientType: 'address' | 'domain' | 'contact';
-};
-
-export type BridgeProperties = {
-    fromChain: string;
-    toChain?: string;
-};
+export type EcosystemAction =
+    | 'view'
+    | 'button_click'
+    | 'search'
+    | 'app_select'
+    | 'app_launch'
+    | 'add_shortcut';
 
 export type EcosystemProperties = {
+    action: EcosystemAction;
     appName?: string;
-    searchQuery?: string;
+    query?: string;
+    resultsCount?: number;
+    error?: string;
+    isError?: boolean;
 };
 
+export type SettingsAction =
+    | 'view'
+    | 'name_changed'
+    | 'security_view'
+    | 'embedded_wallet_view'
+    | 'vebetterdao_manage'
+    | 'connection_view'
+    | 'language_changed';
+
 export type SettingsProperties = {
-    section: string;
-    action?: string;
+    action: SettingsAction;
+    section?: string;
+    newName?: string;
+    language?: string;
+    previousLanguage?: string;
+    error?: string;
+    isError?: boolean;
 };
 
 export type SearchQueryProperties = {
@@ -255,11 +236,13 @@ export type TransactionFailedProperties = {
 };
 
 export type SendFlowProperties = {
-    stage: 'token-select' | 'amount' | 'recipient' | 'review' | 'confirmation';
+    action: SendAction;
     tokenSymbol: string;
     amount?: string;
     recipientAddress?: string;
     recipientType?: 'address' | 'domain' | 'contact';
+    txHash?: string;
+    transactionType?: 'erc20' | 'vet';
     error?: string;
     isError: boolean;
 };
@@ -271,24 +254,6 @@ export type EventPropertiesMap = {
     'Wallet Connect Initiated': WalletConnectProperties;
     'Chain Selected': ChainSelectedProperties;
     'Address Copied': AddressCopiedProperties;
-    'Token Search Performed': TokenSearchProperties;
-    'Token Page Viewed': TokenPageProperties;
-    'Send Token Initiated': SendTokenProperties;
-    'Bridge Button Clicked': BridgeProperties;
-    'Bridge Page Opened': BridgeProperties;
-    'Launch VeChain Energy': object;
-    'Ecosystem Button Clicked': object;
-    'App Search Performed': { query: string; resultsCount: number };
-    'Ecosystem App Selected': { appName: string };
-    'Launch Ecosystem App': { appName: string };
-    'Add Ecosystem App To Shortcuts': { appName: string };
-    'Settings Opened': SettingsProperties;
-    'Search Query Performed': SearchQueryProperties;
-    'Language Changed': LanguageProperties;
-    'Wallet Opened': object;
-    'QR Code Scanned': object;
-    'Tokens Received': { token: string; amount: string };
-    'Tokens Sent': TokenSentProperties;
     'Balance Viewed': { tokens: string[] };
     'DApp Connected': { dappName: string; walletAddress: string };
     'DApp Disconnected': { dappName: string };
@@ -297,14 +262,15 @@ export type EventPropertiesMap = {
     'Transaction Failed': TransactionFailedProperties;
     'Account Connected': AccountConnectedProperties;
     'Account Disconnected': AccountDisconnectedProperties;
-    'Send Flow': SendFlowProperties;
-    'Send Recipient Entered': SendFlowProperties;
-    'Send Review Started': SendFlowProperties;
-    'Send Completed': SendFlowProperties;
     'Notification Flow': NotificationProperties;
     'Auth Flow': AuthProperties;
     'Account Flow': AccountProperties;
     'FAQ Flow': FAQProperties;
+    'Settings Flow': SettingsProperties;
+    'Wallet Flow': WalletProperties;
+    'Ecosystem Flow': EcosystemProperties;
+    'Swap Flow': SwapProperties;
+    'Bridge Flow': object;
     [key: string]: Record<string, any>;
 };
 
@@ -316,4 +282,65 @@ export type AccountConnectedProperties = {
 export type AccountDisconnectedProperties = {
     address: string;
     walletType: string;
+};
+
+export type WalletAction =
+    | 'view'
+    | 'balance_refresh'
+    | 'assets_view'
+    | 'token_search'
+    | 'token_page_view'
+    | 'max_token_selected'
+    | 'receive_qr_generated'
+    | 'address_copied';
+
+export type WalletProperties = {
+    action: WalletAction;
+    tokenSymbol?: string;
+    tokenAddress?: string;
+    query?: string;
+    resultsCount?: number;
+    context?: string;
+    error?: string;
+    isError?: boolean;
+};
+
+export type SendAction =
+    | 'initiated'
+    | 'token_select'
+    | 'token_search'
+    | 'token_page_view'
+    | 'amount'
+    | 'recipient'
+    | 'review'
+    | 'confirmation'
+    | 'completed';
+
+export type SendProperties = {
+    action: SendAction;
+    tokenSymbol?: string;
+    amount?: string;
+    recipientAddress?: string;
+    recipientType?: 'address' | 'domain' | 'contact';
+    txHash?: string;
+    transactionType?: 'erc20' | 'vet';
+    query?: string;
+    error?: string;
+    isError?: boolean;
+};
+
+export type SwapAction = 'view' | 'button_click' | 'launch_better_swap';
+
+export type SwapProperties = {
+    action: SwapAction;
+    error?: string;
+    isError?: boolean;
+};
+
+export type BridgeAction = 'view' | 'button_click' | 'launch_vechain_energy';
+
+export type BridgeProperties = {
+    action: BridgeAction;
+    error?: string;
+    isError?: boolean;
 };

@@ -71,15 +71,12 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
 
     useEffect(() => {
         if (searchQuery) {
-            Analytics.wallet.tokenSearchPerformed(
-                searchQuery,
-                filteredTokens.length,
-            );
+            Analytics.send.tokenSearchPerformed(searchQuery);
         }
     }, [searchQuery, filteredTokens.length]);
 
     const handleTokenSelect = (token: Token) => {
-        Analytics.wallet.tokenPageViewed(token.symbol, token.address);
+        Analytics.send.tokenPageViewed(token.symbol);
         onSelectToken(token);
     };
 

@@ -33,7 +33,6 @@ export const useLoginWithOAuth = () => {
         const socialMethod = providerToSocialMethod[provider];
 
         try {
-            Analytics.auth.flowStarted();
             Analytics.auth.methodSelected(loginMethod);
 
             await privyInitOAuth({ provider });

@@ -67,11 +67,11 @@ export const SettingsContent = ({
         if (contentRef.current) {
             contentRef.current.scrollTop = 0;
         }
-        Analytics.settings.opened('general');
+        Analytics.settings.trackSettings('view', { section: 'general' });
     }, []);
 
     const handleNameChange = () => {
-        Analytics.settings.accountNameChanged('');
+        Analytics.settings.trackSettings('name_changed', { newName: '' });
         if (account?.domain) {
             setCurrentContent({
                 type: 'choose-name-search',
@@ -94,12 +94,12 @@ export const SettingsContent = ({
     };
 
     const handleAccessAndSecurity = () => {
-        Analytics.settings.accessAndSecurityViewed();
+        Analytics.settings.trackSettings('security_view');
         setCurrentContent('access-and-security');
     };
 
     const handleConnectionDetails = () => {
-        Analytics.settings.connectionDetailsViewed();
+        Analytics.settings.trackSettings('connection_view');
         setCurrentContent('connection-details');
     };
 

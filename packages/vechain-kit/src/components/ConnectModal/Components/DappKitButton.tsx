@@ -17,6 +17,7 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
     const { open: openDappKitModal } = useDAppKitWalletModal();
 
     const handleDappKitClick = () => {
+        Analytics.auth.flowStarted();
         Analytics.auth.methodSelected(VeLoginMethod.DAPPKIT);
         openDappKitModal();
     };

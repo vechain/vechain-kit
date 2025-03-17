@@ -12,6 +12,18 @@ import {
     FAQProperties,
     AccountAction,
     AccountProperties,
+    SettingsAction,
+    SettingsProperties,
+    WalletAction,
+    WalletProperties,
+    SendAction,
+    SendProperties,
+    EcosystemAction,
+    EcosystemProperties,
+    SwapAction,
+    SwapProperties,
+    BridgeAction,
+    BridgeProperties,
 } from '@/types/mixPanel';
 import mixpanel from 'mixpanel-browser';
 
@@ -96,7 +108,7 @@ const trackEvent = <E extends EventName>(
 ): void => {
     try {
         if (!MIXPANEL_PROJECT_TOKEN) {
-            console.warn('Analytics tracking disabled: No project token found');
+            console.warn('No project token found');
             return;
         }
 
@@ -300,126 +312,193 @@ const Analytics = {
     },
 
     swap: {
-        buttonClicked: () => trackEvent('Swap Button Clicked'),
-
-        pageOpened: () => trackEvent('Swap Page Opened'),
-
-        launchBetterSwap: () => trackEvent('Launch BetterSwap'),
-    },
-
-    wallet: {
-        opened: () => trackEvent('Wallet Opened'),
-
-        scanned: () => trackEvent('QR Code Scanned'),
-
-        received: (token: string, amount: string) =>
-            trackEvent('Tokens Received', { token, amount }),
-
-        sent: (token: string, amount: string, destination: string) =>
-            trackEvent('Tokens Sent', {
-                tokenSymbol: token,
-                amount,
-                txHash: destination,
-                transactionType: 'erc20',
-            }),
-
-        balanceRefreshed: () => trackEvent('Balance Refreshed'),
-
-        assetsViewed: () => trackEvent('Assets Viewed'),
-
-        tokenSearchPerformed: (query: string, resultsCount: number) =>
-            trackEvent('Token Search Performed', { query, resultsCount }),
-
-        tokenPageViewed: (tokenSymbol: string, tokenAddress?: string) =>
-            trackEvent('Token Page Viewed', { tokenSymbol, tokenAddress }),
-
-        sendTokenInitiated: (
-            tokenSymbol: string,
-            recipientType: 'address' | 'domain' | 'contact',
-        ) => trackEvent('Send Token Initiated', { tokenSymbol, recipientType }),
-
-        trackSendFlow: (
-            stage:
-                | 'token-select'
-                | 'amount'
-                | 'recipient'
-                | 'review'
-                | 'confirmation',
-            properties: {
-                tokenSymbol: string;
-                amount?: string;
-                recipientAddress?: string;
-                recipientType?: 'address' | 'domain' | 'contact';
-                error?: string;
-            },
+        trackSwap: (
+            action: SwapAction,
+            properties?: Omit<SwapProperties, 'action'>,
         ) => {
-            trackEvent('Send Flow', {
-                stage,
+            trackEvent('Swap Flow', {
+                action,
                 ...properties,
-                isError: !!properties.error,
+                isError: !!properties?.error,
             });
         },
 
-        maxTokenSelected: (tokenSymbol: string) =>
-            trackEvent('Max Token Selected', { tokenSymbol }),
+        opened: () => Analytics.swap.trackSwap('view'),
 
-        tokenSent: (
+        buttonClicked: () => Analytics.swap.trackSwap('button_click'),
+
+        launchBetterSwap: () => Analytics.swap.trackSwap('launch_better_swap'),
+    },
+
+    wallet: {
+        trackWallet: (
+            action: WalletAction,
+            properties?: Omit<WalletProperties, 'action'>,
+        ) => {
+            trackEvent('Wallet Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
+
+        opened: () => Analytics.wallet.trackWallet('view'),
+
+        balanceRefreshed: () => Analytics.wallet.trackWallet('balance_refresh'),
+
+        assetsViewed: () => Analytics.wallet.trackWallet('assets_view'),
+
+        maxTokenSelected: (tokenSymbol: string) =>
+            Analytics.wallet.trackWallet('max_token_selected', { tokenSymbol }),
+
+        receiveQRGenerated: () =>
+            Analytics.wallet.trackWallet('receive_qr_generated'),
+
+        addressCopied: (context: string) =>
+            Analytics.wallet.trackWallet('address_copied', { context }),
+    },
+
+    send: {
+        trackSend: (
+            action: SendAction,
+            properties: Omit<SendProperties, 'action'> & {},
+        ) => {
+            trackEvent('Send Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
+
+        initiated: (
+            tokenSymbol: string,
+            recipientType: 'address' | 'domain' | 'contact',
+        ) =>
+            Analytics.send.trackSend('initiated', {
+                tokenSymbol,
+                recipientType,
+            }),
+
+        completed: (
             tokenSymbol: string,
             amount: string,
             txHash: string,
             transactionType: 'erc20' | 'vet',
         ) =>
-            trackEvent('Token Sent', {
+            Analytics.send.trackSend('completed', {
                 tokenSymbol,
                 amount,
                 txHash,
                 transactionType,
             }),
 
-        receiveQRGenerated: () => trackEvent('Receive QR Generated'),
+        flow: (
+            action: Exclude<SendAction, 'initiated' | 'completed'>,
+            properties: Omit<SendProperties, 'action'>,
+        ) => {
+            Analytics.send.trackSend(action, properties);
+        },
 
-        addressCopied: (context: string) =>
-            trackEvent('Address Copied', { context: context }),
+        tokenSearchPerformed: (query: string) =>
+            Analytics.send.trackSend('token_search', {
+                query,
+            }),
+
+        tokenPageViewed: (tokenSymbol: string) =>
+            Analytics.send.trackSend('token_page_view', {
+                tokenSymbol,
+            }),
     },
 
     bridge: {
-        buttonClicked: () => trackEvent('Bridge Button Clicked'),
+        trackBridge: (
+            action: BridgeAction,
+            properties?: Omit<BridgeProperties, 'action'>,
+        ) => {
+            trackEvent('Bridge Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
 
-        pageOpened: () => trackEvent('Bridge Page Opened'),
+        opened: () => Analytics.bridge.trackBridge('view'),
 
-        launchVeChainEnergy: () => trackEvent('Launch VeChain Energy'),
+        buttonClicked: () => Analytics.bridge.trackBridge('button_click'),
+
+        launchVeChainEnergy: () =>
+            Analytics.bridge.trackBridge('launch_vechain_energy'),
     },
 
     ecosystem: {
-        pageOpened: () => trackEvent('Ecosystem Page Opened'),
-        buttonClicked: () => trackEvent('Ecosystem Button Clicked'),
+        trackEcosystem: (
+            action: EcosystemAction,
+            properties?: Omit<EcosystemProperties, 'action'>,
+        ) => {
+            trackEvent('Ecosystem Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
+
+        opened: () => Analytics.ecosystem.trackEcosystem('view'),
+
+        buttonClicked: () => Analytics.ecosystem.trackEcosystem('button_click'),
 
         searchPerformed: (query: string, resultsCount: number) =>
-            trackEvent('App Search Performed', { query, resultsCount }),
+            Analytics.ecosystem.trackEcosystem('search', {
+                query,
+                resultsCount,
+            }),
 
         appSelected: (appName: string) =>
-            trackEvent('Ecosystem App Selected', { appName }),
+            Analytics.ecosystem.trackEcosystem('app_select', { appName }),
 
         launchApp: (appName: string) =>
-            trackEvent('Launch Ecosystem App', { appName }),
+            Analytics.ecosystem.trackEcosystem('app_launch', { appName }),
 
         addAppToShortcuts: (appName: string) =>
-            trackEvent('Add Ecosystem App To Shortcuts', { appName }),
+            Analytics.ecosystem.trackEcosystem('add_shortcut', { appName }),
     },
 
     settings: {
-        opened: (section: string) => trackEvent('Settings Opened', { section }),
+        trackSettings: (
+            action: SettingsAction,
+            properties?: Omit<SettingsProperties, 'action'>,
+        ) => {
+            trackEvent('Settings Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
+
+        opened: (section: string) =>
+            Analytics.settings.trackSettings('view', { section }),
 
         accountNameChanged: (newName: string) =>
-            trackEvent('Account Name Changed', { newName }),
+            Analytics.settings.trackSettings('name_changed', { newName }),
 
-        accessAndSecurityViewed: () => trackEvent('Access And Security Viewed'),
+        accessAndSecurityViewed: () =>
+            Analytics.settings.trackSettings('security_view'),
 
-        embeddedWalletViewed: () => trackEvent('Embedded Wallet Viewed'),
+        embeddedWalletViewed: () =>
+            Analytics.settings.trackSettings('embedded_wallet_view'),
 
-        manageVeBetterDAO: () => trackEvent('Manage VeBetterDAO'),
+        manageVeBetterDAO: () =>
+            Analytics.settings.trackSettings('vebetterdao_manage'),
 
-        connectionDetailsViewed: () => trackEvent('Connection Details Viewed'),
+        connectionDetailsViewed: () =>
+            Analytics.settings.trackSettings('connection_view'),
+
+        language: {
+            changed: (language: string, previousLanguage: string) =>
+                Analytics.settings.trackSettings('language_changed', {
+                    language,
+                    previousLanguage,
+                }),
+        },
     },
 
     notifications: {
@@ -508,24 +587,6 @@ const Analytics = {
 
         searchPerformed: (searchQuery: string, resultsCount: number) =>
             Analytics.help.trackFAQ('search', { searchQuery, resultsCount }),
-    },
-
-    search: {
-        queryPerformed: (
-            query: string,
-            section: string,
-            resultsCount: number,
-        ) =>
-            trackEvent('Search Query Performed', {
-                query,
-                section,
-                resultsCount,
-            }),
-    },
-
-    language: {
-        changed: (language: string, previousLanguage: string) =>
-            trackEvent('Language Changed', { language, previousLanguage }),
     },
 };
 

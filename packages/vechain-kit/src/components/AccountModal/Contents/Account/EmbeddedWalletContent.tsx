@@ -37,7 +37,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const connectionCache = getConnectionCache();
 
     useEffect(() => {
-        Analytics.settings.embeddedWalletViewed();
+        Analytics.settings.trackSettings('embedded_wallet_view');
     }, []);
 
     return (
