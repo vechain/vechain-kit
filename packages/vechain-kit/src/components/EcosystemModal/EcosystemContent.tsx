@@ -12,7 +12,7 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
-import { useCrossAppConnectionCache } from '@/hooks';
+import { useCrossAppConnectionCache, usePrivy } from '@/hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
@@ -35,6 +35,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     const [loginError, setLoginError] = useState<string>();
     const [selectedApp, setSelectedApp] = useState<string>();
     const loginLoadingModal = useDisclosure();
+    const { user } = usePrivy();
 
     const { setConnectionCache } = useCrossAppConnectionCache();
 
@@ -51,7 +52,9 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             setSelectedApp(appName);
             try {
                 await loginWithCrossApp(appId);
-                Analytics.auth.connectionListViewed(appsInfo.length);
+                Analytics.auth.trackAuth('connect_initiated', {
+                    totalConnections: appsInfo.length,
+                });
                 loginLoadingModal.onClose();
                 setConnectionCache({
                     name: appName,
@@ -59,6 +62,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     appId: appId,
                 });
                 Analytics.auth.completed({
+                    userId: user?.id,
                     loginMethod: VeLoginMethod.ECOSYSTEM,
                 });
                 onClose();
@@ -70,7 +74,10 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     errorMsg?.includes('rejected') ||
                     errorMsg?.includes('closed')
                 ) {
-                    Analytics.auth.dropOff('social-callback');
+                    Analytics.auth.trackAuth('drop_off', {
+                        dropOffStage: 'ecosystem-app-connect',
+                        appName,
+                    });
                     return new Error('Login request was cancelled.');
                 }
 
@@ -104,13 +111,22 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         }
     };
 
+    const handleClose = () => {
+        if (!selectedApp) {
+            Analytics.auth.trackAuth('drop_off', {
+                dropOffStage: 'ecosystem-view',
+            });
+        }
+        onClose();
+    };
+
     return (
         <Box>
             <>
                 <StickyHeaderContainer>
                     <ModalHeader>
                         {t('Already have an app account?')}
-                        <ModalCloseButton />
+                        <ModalCloseButton onClick={handleClose} />
                     </ModalHeader>
                 </StickyHeaderContainer>
 

@@ -27,8 +27,27 @@ export type AuthAction =
     | 'connect_success'
     | 'connect_failed'
     | 'drop_off'
-    | 'logout'
-    | 'chain_selected';
+    | 'logout';
+
+export type DropOffStage =
+    | 'social-login'
+    | 'oauth'
+    | 'social-callback'
+    | 'email-verification'
+    | 'email-code-entry'
+    | 'vechain-connect'
+    | 'vechain-approval'
+    | 'dappkit-view'
+    | 'dappkit-app-selection'
+    | 'dappkit-wallet-connect'
+    | 'dappkit-veworld'
+    | 'dappkit-sync2'
+    | 'ecosystem-view'
+    | 'ecosystem-app-selection'
+    | 'ecosystem-app-connect'
+    | 'passkey-prompt'
+    | 'passkey-creation'
+    | 'passkey-authentication';
 
 export type AuthProperties = {
     action: AuthAction;
@@ -38,9 +57,11 @@ export type AuthProperties = {
     fromScreen?: string;
     error?: string;
     isError?: boolean;
-    dropOffStage?: 'wallet-connect' | 'email-verification' | 'social-callback';
+    dropOffStage?: DropOffStage;
     totalConnections?: number;
+    appName?: string;
 };
+
 export type AccountAction =
     | 'view'
     | 'settings_updated'
@@ -164,11 +185,6 @@ export type WalletConnectProperties = {
     walletType: VeLoginMethod;
 };
 
-export type ChainSelectedProperties = {
-    chainName: string;
-    fromScreen: string;
-};
-
 export type AddressCopiedProperties = {
     fromScreen?: string;
     context?: string;
@@ -252,7 +268,6 @@ export type EventPropertiesMap = {
     'DApp Opened': DAppOpenedProperties;
     'Connection List Viewed': ConnectionListProperties;
     'Wallet Connect Initiated': WalletConnectProperties;
-    'Chain Selected': ChainSelectedProperties;
     'Address Copied': AddressCopiedProperties;
     'Balance Viewed': { tokens: string[] };
     'DApp Connected': { dappName: string; walletAddress: string };

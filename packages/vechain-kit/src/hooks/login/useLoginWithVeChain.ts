@@ -36,7 +36,7 @@ export const useLoginWithVeChain = () => {
                 errorMsg.toLowerCase().includes('rejected') ||
                 errorMsg.toLowerCase().includes('closed')
             ) {
-                Analytics.auth.dropOff('wallet-connect');
+                Analytics.auth.dropOff('vechain-approval');
             } else {
                 Analytics.auth.failed(VeLoginMethod.VECHAIN, errorMsg);
             }

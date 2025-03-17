@@ -25,7 +25,7 @@ type Props = {
 
 export const SwapTokenContent = ({ setCurrentContent }: Props) => {
     useEffect(() => {
-        Analytics.swap.pageOpened();
+        Analytics.swap.opened();
     }, []);
 
     const { t } = useTranslation();

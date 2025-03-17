@@ -24,20 +24,19 @@ import {
     SwapProperties,
     BridgeAction,
     BridgeProperties,
+    DropOffStage,
 } from '@/types/mixPanel';
 import mixpanel from 'mixpanel-browser';
 
 // App source for tracking origin
 const APP_SOURCE: string = document.title || '';
 
-// Environment detection
 const ENV = {
     isDevelopment: process.env.NODE_ENV === 'development',
     isTest: process.env.NODE_ENV === 'test',
     isProduction: process.env.NODE_ENV === 'production',
 };
 
-// Different project tokens for different environments
 const PROJECT_TOKENS = {
     development: '1ee28a0fa050400217dfa7f6fd630d0b',
     test: '1ee28a0fa050400217dfa7f6fd630d0b', // Could be different token
@@ -50,7 +49,6 @@ const MIXPANEL_PROJECT_TOKEN = ENV.isProduction
     ? PROJECT_TOKENS.test
     : PROJECT_TOKENS.development;
 
-// Initialize Mixpanel only in browser environment
 if (typeof window !== 'undefined' && MIXPANEL_PROJECT_TOKEN) {
     mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
         debug: !ENV.isProduction,
@@ -226,10 +224,11 @@ const Analytics = {
             });
         },
 
-        dropOff: (
-            stage: 'wallet-connect' | 'email-verification' | 'social-callback',
-        ) => {
-            Analytics.auth.trackAuth('drop_off', { dropOffStage: stage });
+        dropOff: (stage: DropOffStage, properties?: { [key: string]: any }) => {
+            Analytics.auth.trackAuth('drop_off', {
+                dropOffStage: stage,
+                ...properties,
+            });
         },
 
         connectionListViewed: (totalConnections?: number) => {
@@ -248,13 +247,6 @@ const Analytics = {
 
         logoutCompleted: () => {
             Analytics.auth.trackAuth('logout');
-        },
-
-        chainSelected: (chainName: string, fromScreen: string) => {
-            Analytics.auth.trackAuth('chain_selected', {
-                chainName,
-                fromScreen,
-            });
         },
     },
 
@@ -289,7 +281,7 @@ const Analytics = {
 
             viewed: () => Analytics.user.profile.trackAccount('view'),
 
-            addressCopied: (fromScreen: string) =>
+            addressCopied: (fromScreen?: string) =>
                 Analytics.user.profile.trackAccount('address_copied', {
                     fromScreen,
                 }),

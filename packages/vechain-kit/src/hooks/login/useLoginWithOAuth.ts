@@ -50,7 +50,7 @@ export const useLoginWithOAuth = () => {
                 errorMsg.toLowerCase().includes('rejected') ||
                 errorMsg.toLowerCase().includes('closed')
             ) {
-                Analytics.auth.dropOff('social-callback');
+                Analytics.auth.dropOff('oauth');
             } else {
                 Analytics.auth.failed(loginMethod, errorMsg);
             }

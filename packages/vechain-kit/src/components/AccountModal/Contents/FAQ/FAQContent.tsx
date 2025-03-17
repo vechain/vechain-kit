@@ -39,6 +39,11 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
         Analytics.help.pageViewed();
     }, []);
 
+    const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        Analytics.settings.language.changed(e.target.value, i18n.language);
+        i18n.changeLanguage(e.target.value);
+    };
+
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
@@ -80,9 +85,7 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                             size="sm"
                             width="auto"
                             value={i18n.language}
-                            onChange={(e) => {
-                                i18n.changeLanguage(e.target.value);
-                            }}
+                            onChange={handleLanguageChange}
                             bg={isDark ? 'whiteAlpha.200' : 'gray.100'}
                             borderColor={isDark ? 'whiteAlpha.300' : 'gray.200'}
                             _hover={{

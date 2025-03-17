@@ -27,6 +27,21 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
             await loginWithPasskey();
             loginLoadingModal.onClose();
         } catch (error) {
+            const errorMsg =
+                error instanceof Error ? error.message.toLowerCase() : '';
+
+            if (errorMsg.includes('not found')) {
+                Analytics.auth.trackAuth('drop_off', {
+                    dropOffStage: 'passkey-prompt',
+                });
+            } else if (errorMsg.includes('abort')) {
+                Analytics.auth.trackAuth('drop_off', {
+                    dropOffStage: 'passkey-authentication',
+                });
+            } else {
+                Analytics.auth.failed(VeLoginMethod.PASSKEY, errorMsg);
+            }
+
             console.error(error);
             setLoginError(
                 error instanceof Error

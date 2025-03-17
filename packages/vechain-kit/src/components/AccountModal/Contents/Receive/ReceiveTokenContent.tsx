@@ -55,7 +55,11 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                             }}
                         />
 
-                        <AddressDisplay wallet={account} style={{ w: '85%' }} />
+                        <AddressDisplay
+                            wallet={account}
+                            style={{ w: '85%' }}
+                            fromScreen="receive"
+                        />
 
                         <Text fontSize="sm" textAlign="center">
                             {t('Copy your address or scan this QR code')}
