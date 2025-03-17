@@ -32,12 +32,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
 import { initializeI18n } from '@/utils/i18n';
 import { ModalProvider } from './ModalProvider';
-
-const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
-    'clz41gcg00e4ay75dmq3uzzgr', //cleanify
-    'cm153hrup0817axti38avlfyg', //greencart
-    'clv9sfos20j6x1431ga80d95f', //mughsot
-];
+import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/Constants';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -229,7 +224,8 @@ export const VeChainKitProvider = (
             (method) => method.method === 'ecosystem',
         );
         return (
-            userEcosystemMethods?.allowedApps ?? DEFAULT_PRIVY_ECOSYSTEM_APP_IDS
+            userEcosystemMethods?.allowedApps ??
+            DEFAULT_PRIVY_ECOSYSTEM_APPS.map((app) => app.id)
         );
     }, [validatedLoginMethods]);
 
@@ -339,7 +335,7 @@ export const VeChainKitProvider = (
                                 '--vdk-modal-width': '22rem',
                                 '--vdk-modal-backdrop-filter': 'blur(3px)',
                                 '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
-                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
+                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'} !important`,
 
                                 // Dark mode colors
                                 '--vdk-color-dark-primary': 'transparent',

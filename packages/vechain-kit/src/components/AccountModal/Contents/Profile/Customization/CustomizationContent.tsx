@@ -56,7 +56,7 @@ export const CustomizationContent = ({
     >;
 }) => {
     const { t } = useTranslation();
-    const { network, darkMode: isDark } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const { account } = useWallet();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
@@ -204,9 +204,7 @@ export const CustomizationContent = ({
 
             <ModalBody>
                 <Card
-                    bg={isDark ? '#1e1e21' : '#00000005'}
-                    borderRadius="xl"
-                    width="full"
+                    variant="vechainKitBase"
                     position="relative"
                     overflow="visible"
                 >

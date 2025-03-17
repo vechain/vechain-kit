@@ -5,7 +5,7 @@ export const humanAddress = (
     address: string,
     charAtStart = 6,
     charAtEnd = 4,
-): string => `${address.slice(0, charAtStart)}••••${address.slice(-charAtEnd)}`;
+): string => `${address.slice(0, charAtStart)}•••${address.slice(-charAtEnd)}`;
 
 export const humanDomain = (
     domain: string,
@@ -17,7 +17,7 @@ export const humanDomain = (
 
     const before = domain.substring(0, lengthBefore);
     const after = domain.substring(domain.length - lengthAfter);
-    return `${before}••••${after}`;
+    return `${before}•••${after}`;
 };
 
 export const humanNumber = (

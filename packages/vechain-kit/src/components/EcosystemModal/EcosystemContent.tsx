@@ -55,6 +55,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     name: appName,
                     logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
                     appId: appId,
+                    website: appsInfo.find((app) => app.id === appId)?.website,
                 });
                 onClose();
             } catch (error) {

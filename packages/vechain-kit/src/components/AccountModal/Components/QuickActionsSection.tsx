@@ -127,7 +127,7 @@ const QuickActionButton = ({
 };
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
-    const { account, smartAccount, connectedWallet } = useWallet();
+    const { account, smartAccount, connectedWallet, connection } = useWallet();
     const { totalBalance } = useBalances({
         address: account?.address ?? '',
     });
@@ -143,7 +143,9 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const notifications = getNotifications();
     const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
-    const showRedDot = upgradeRequired || hasUnreadNotifications;
+    const showRedDot =
+        (connection.isConnectedWithPrivy && upgradeRequired) ||
+        hasUnreadNotifications;
 
     return (
         <VStack w={'full'} mt={mt} spacing={4}>

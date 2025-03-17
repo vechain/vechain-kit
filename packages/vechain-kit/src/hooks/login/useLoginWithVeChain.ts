@@ -16,6 +16,7 @@ export const useLoginWithVeChain = () => {
                 name: 'VeChain',
                 logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
                 appId: VECHAIN_PRIVY_APP_ID,
+                website: 'https://governance.vebetterdao.org',
             });
         } catch (error) {
             throw handlePopupError({

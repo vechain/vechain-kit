@@ -425,7 +425,7 @@ export const SendTokenContent = ({
 
             <ModalFooter>
                 <Button
-                    variant="vechainKitSecondary"
+                    variant="vechainKitPrimary"
                     isDisabled={!selectedToken || !isValid || isLoadingDomain}
                     onClick={handleSubmit(onSubmit)}
                 >

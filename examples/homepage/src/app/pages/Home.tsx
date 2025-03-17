@@ -96,6 +96,7 @@ export default function Home(): ReactElement {
                                 colorMode === 'light' ? <IoMdMoon /> : <FaSun />
                             }
                             aria-label="Toggle color mode"
+                            borderRadius="xl"
                         />
                     </HStack>
 
@@ -128,6 +129,7 @@ export default function Home(): ReactElement {
                         onClick={toggleColorMode}
                         icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}
                         aria-label="Toggle color mode"
+                        borderRadius="xl"
                     />
                 </HStack>
 

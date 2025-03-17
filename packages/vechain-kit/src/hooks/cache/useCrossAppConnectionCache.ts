@@ -5,7 +5,12 @@ export const useCrossAppConnectionCache = () => {
     const CACHE_KEY = 'vechain_kit_cross_app_connection';
 
     const setConnectionCache = useCallback(
-        (ecosystemApp: { name: string; logoUrl?: string; appId: string }) => {
+        (ecosystemApp: {
+            name: string;
+            logoUrl?: string;
+            appId: string;
+            website?: string;
+        }) => {
             const cacheData: CrossAppConnectionCache = {
                 timestamp: Date.now(),
                 ecosystemApp,

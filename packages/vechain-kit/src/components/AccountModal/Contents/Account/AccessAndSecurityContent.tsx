@@ -5,8 +5,6 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
-    Icon,
-    Button,
     Box,
 } from '@chakra-ui/react';
 import {
@@ -28,10 +26,10 @@ import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
 import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
-import { IoCogSharp, IoShieldOutline } from 'react-icons/io5';
+import { IoCogSharp } from 'react-icons/io5';
 import { GiHouseKeys } from 'react-icons/gi';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { MdOutlineSettingsBackupRestore } from "react-icons/md";
+import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
+import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -72,11 +70,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     w={'full'}
                 >
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
-                        <Icon
-                            opacity={0.5}
-                            as={IoShieldOutline}
-                            fontSize={'50px'}
-                        />
                         <Text
                             fontSize={'sm'}
                             opacity={0.5}
@@ -128,75 +121,47 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         rightIcon={MdOutlineNavigateNext}
                     />
 
-                    <ActionButton
-                        title={t('Login methods and Passkeys')}
-                        onClick={() => {
-                            setCurrentContent('privy-linked-accounts');
-                        }}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={GrUserAdmin}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
+                    {connection.isConnectedWithSocialLogin ? (
+                        <>
+                            <ActionButton
+                                title={t('Login methods and Passkeys')}
+                                onClick={() => {
+                                    setCurrentContent('privy-linked-accounts');
+                                }}
+                                leftIcon={GrUserAdmin}
+                                rightIcon={MdOutlineNavigateNext}
+                            />
 
-                    {/* <ActionButton
-                        title={t('Passkey')}
-                        description={t(
-                            'Enable one click login by adding a passkey to your account.',
-                        )}
-                        onClick={() => {
-                            linkPasskey();
-                        }}
-                        leftIcon={IoIosFingerPrint}
-                        rightIcon={undefined}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                    /> */}
+                            <ActionButton
+                                title={t('Backup your wallet')}
+                                onClick={() => {
+                                    exportWallet();
+                                }}
+                                leftIcon={GiHouseKeys}
+                            />
 
-                    <ActionButton
-                        title={t('Backup your wallet')}
-                        onClick={() => {
-                            exportWallet();
-                        }}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={GiHouseKeys}
-                        // rightIcon={MdOutlineNavigateNext}
-                    />
+                            <ActionButton
+                                title={t('Manage MFA')}
+                                onClick={() => {
+                                    showMfaEnrollmentModal();
+                                }}
+                                leftIcon={HiOutlineShieldCheck}
+                            />
 
-                    <ActionButton
-                        title={t('Manage MFA')}
-                        onClick={() => {
-                            showMfaEnrollmentModal();
-                        }}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={HiOutlineShieldCheck}
-                    />
-
-                    <ActionButton
-                        title={t('Manage Recovery')}
-                        onClick={() => {
-                            setWalletRecovery();
-                        }}
-                        isDisabled={!connection.isConnectedWithSocialLogin}
-                        leftIcon={MdOutlineSettingsBackupRestore}
-                    />
+                            <ActionButton
+                                title={t('Manage Recovery')}
+                                onClick={() => {
+                                    setWalletRecovery();
+                                }}
+                                leftIcon={MdOutlineSettingsBackupRestore}
+                            />
+                        </>
+                    ) : (
+                        <CrossAppConnectionSecurityCard />
+                    )}
                 </VStack>
             </ModalBody>
-            <ModalFooter w={'full'}>
-                {connection.isConnectedWithVeChain &&
-                    connection.isConnectedWithCrossApp && (
-                        <Button
-                            variant="vechainKitSecondary"
-                            onClick={() => {
-                                window.open(
-                                    'https://governance.vebetterdao.org/',
-                                    '_blank',
-                                );
-                            }}
-                        >
-                            {t('Manage on VeBetterDAO')}
-                            <Icon as={FaExternalLinkAlt} ml={2} />
-                        </Button>
-                    )}
-            </ModalFooter>
+            <ModalFooter pt={0} />
         </ScrollToTopWrapper>
     );
 };

@@ -7,7 +7,6 @@ import {
     Icon,
     Image,
     Tag,
-    useColorMode,
     ButtonProps,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -51,27 +50,17 @@ export const ActionButton = ({
     extraContent,
 }: ActionButtonProps) => {
     const { t } = useTranslation();
-    const { colorMode } = useColorMode();
-    const baseBackgroundColor =
-        backgroundColor ?? colorMode === 'dark' ? '#ffffff0a' : '#00000005';
     return (
         <Button
-            w={'full'}
-            minH={'70px'}
-            h={'fit-content'}
+            variant="actionButton"
             py={stacked ? 0 : 4}
             onClick={onClick}
             display={hide ? 'none' : 'flex'}
             isDisabled={showComingSoon || isDisabled}
             isLoading={isLoading}
             loadingText={loadingText}
-            bgColor={baseBackgroundColor}
-            _hover={
-                _hover ?? {
-                    backgroundColor:
-                        colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
-                }
-            }
+            bgColor={backgroundColor}
+            _hover={_hover}
             {...style}
         >
             <HStack w={'full'} justify={'space-between'}>
