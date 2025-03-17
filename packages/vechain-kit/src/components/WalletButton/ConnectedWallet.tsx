@@ -22,7 +22,12 @@ export const ConnectedWallet = ({
             <HStack>
                 <AccountAvatar
                     wallet={account}
-                    props={{ width: 30, height: 30 }}
+                    props={{
+                        width: 30,
+                        height: 30,
+                        minWidth: 30,
+                        minHeight: 30,
+                    }}
                 />
                 {!isDesktop && <WalletDisplay variant={mobileVariant} />}
                 {isDesktop && <WalletDisplay variant={desktopVariant} />}
