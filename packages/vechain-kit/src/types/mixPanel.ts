@@ -212,7 +212,6 @@ export type SettingsAction =
     | 'name_changed'
     | 'security_view'
     | 'embedded_wallet_view'
-    | 'vebetterdao_manage'
     | 'connection_view'
     | 'language_changed';
 

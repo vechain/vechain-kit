@@ -63,10 +63,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
         setCurrentContent('embedded-wallet');
     };
 
-    const handleVeBetterDAOClick = () => {
-        Analytics.settings.trackSettings('vebetterdao_manage');
-    };
-
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
@@ -143,19 +139,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
                         )}
                         onClick={handleEmbeddedWalletClick}
-                        leftIcon={IoShieldOutline}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-
-                    <ActionButton
-                        style={{
-                            borderTopRadius: '0px',
-                        }}
-                        title={t('Manage on VeBetterDAO')}
-                        description={t(
-                            'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
-                        )}
-                        onClick={handleVeBetterDAOClick}
                         leftIcon={IoShieldOutline}
                         rightIcon={MdOutlineNavigateNext}
                     />

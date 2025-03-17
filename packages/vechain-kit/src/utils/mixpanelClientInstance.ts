@@ -478,9 +478,6 @@ const Analytics = {
         embeddedWalletViewed: () =>
             Analytics.settings.trackSettings('embedded_wallet_view'),
 
-        manageVeBetterDAO: () =>
-            Analytics.settings.trackSettings('vebetterdao_manage'),
-
         connectionDetailsViewed: () =>
             Analytics.settings.trackSettings('connection_view'),
 
