@@ -161,11 +161,15 @@ export default function Home(): ReactElement {
                             </Text>
                         </HStack>
                     </HStack>
-                    <IconButton
-                        onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}
-                        aria-label="Toggle color mode"
-                    />
+                    {isDesktop ? (
+                        <IconButton
+                            onClick={toggleColorMode}
+                            icon={
+                                colorMode === 'light' ? <IoMdMoon /> : <FaSun />
+                            }
+                            aria-label="Toggle color mode"
+                        />
+                    ) : null}
                 </HStack>
 
                 {account && !hasScrolled && !isDesktop && (
