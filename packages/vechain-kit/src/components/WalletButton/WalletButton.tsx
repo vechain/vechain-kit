@@ -1,25 +1,24 @@
+import { AccountModal, ConnectModal } from '@/components';
+import { useDAppKitWallet, useWallet } from '@/hooks';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import {
     Button,
     ButtonProps,
-    TooltipProps,
     useDisclosure,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { useWallet, useDAppKitWallet } from '@/hooks';
-import { ConnectModal, AccountModal } from '@/components';
-import { ConnectedWallet } from './ConnectedWallet';
-import { WalletDisplayVariant } from './types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
+
 import { ConnectPopover } from '../ConnectModal';
+import { ConnectedWallet } from './ConnectedWallet';
+import { WalletButtonTooltipProps, WalletDisplayVariant } from './types';
 
 export type WalletButtonProps = {
     mobileVariant?: WalletDisplayVariant;
     desktopVariant?: WalletDisplayVariant;
     buttonStyle?: ButtonProps;
     connectionVariant?: 'modal' | 'popover';
-    showTooltip?: boolean;
-    tooltipPlacement?: TooltipProps['placement'];
+    tooltipProps?: WalletButtonTooltipProps;
 };
 
 export const WalletButton = ({
@@ -27,8 +26,7 @@ export const WalletButton = ({
     desktopVariant = 'iconDomainAndAddress',
     buttonStyle,
     connectionVariant = 'modal',
-    showTooltip = false,
-    tooltipPlacement = 'bottom-end',
+    tooltipProps,
 }: WalletButtonProps) => {
     const { t } = useTranslation();
     const { darkMode } = useVeChainKitConfig();
@@ -63,8 +61,7 @@ export const WalletButton = ({
                 <ConnectPopover
                     isLoading={connection.isLoading}
                     buttonStyle={buttonStyle}
-                    showTooltip={showTooltip}
-                    tooltipPlacement={tooltipPlacement}
+                    tooltipProps={tooltipProps}
                 />
             ) : (
                 <Button

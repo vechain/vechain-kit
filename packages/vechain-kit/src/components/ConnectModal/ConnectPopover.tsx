@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     ButtonProps,
     Icon,
@@ -6,25 +7,24 @@ import {
     PopoverBody,
     PopoverContent,
     PopoverTrigger,
-    Box,
-    TooltipProps,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
+
+import { WalletButtonTooltipProps } from '../WalletButton/types';
 import { ConnectionOptionsStack } from './Components/ConnectionOptionsStack';
 import { HighlightLoginTooltip } from './Components/HighlightLoginTooltip';
+
 type ConnectPopoverProps = {
     isLoading: boolean;
     buttonStyle?: ButtonProps;
-    showTooltip?: boolean;
-    tooltipPlacement?: TooltipProps['placement'];
+    tooltipProps?: WalletButtonTooltipProps;
 };
 
 export const ConnectPopover = ({
     isLoading,
     buttonStyle,
-    showTooltip = false,
-    tooltipPlacement = 'bottom-end',
+    tooltipProps,
 }: ConnectPopoverProps) => {
     const { t } = useTranslation();
     return (
@@ -38,8 +38,8 @@ export const ConnectPopover = ({
                 <>
                     <Box position="relative">
                         <HighlightLoginTooltip
-                            isOpen={!isPopoverOpen && showTooltip}
-                            tooltipPlacement={tooltipPlacement}
+                            isOpen={!isPopoverOpen}
+                            {...tooltipProps}
                         >
                             <Box display="inline-block">
                                 <PopoverTrigger>

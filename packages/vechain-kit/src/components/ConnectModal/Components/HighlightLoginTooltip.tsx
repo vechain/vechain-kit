@@ -1,19 +1,22 @@
-import { HStack, VStack, Text, Tooltip, TooltipProps } from '@chakra-ui/react';
+import { HStack, Text, Tooltip, VStack } from '@chakra-ui/react';
+import { t } from 'i18next';
 
-import { useTranslation } from 'react-i18next';
+import { WalletButtonTooltipProps } from '../../WalletButton/types';
 
-type HighlightLoginTooltipProps = {
+type HighlightLoginTooltipProps = WalletButtonTooltipProps & {
     children: React.ReactNode;
     isOpen: boolean;
-    tooltipPlacement?: TooltipProps['placement'];
 };
 
 export const HighlightLoginTooltip = ({
     children,
     isOpen,
-    tooltipPlacement = 'bottom-end',
+    title = t('NEW LOG IN IS OUT!'),
+    description = t('Log in with your social media and start earning rewards!'),
+    placement = 'right',
+    showTooltip = false,
 }: HighlightLoginTooltipProps) => {
-    const { t } = useTranslation();
+    if (!showTooltip) return children;
     return (
         <Tooltip
             isOpen={isOpen}
@@ -21,7 +24,7 @@ export const HighlightLoginTooltip = ({
                 <HStack spacing={3}>
                     <VStack spacing={1} flex="1">
                         <Text alignSelf={'start'} fontSize="xs" color="#365217">
-                            {t('NEW LOG IN IS OUT!')}
+                            {title}
                         </Text>
                         <Text
                             fontSize="sm"
@@ -29,14 +32,12 @@ export const HighlightLoginTooltip = ({
                             color="#365217"
                             lineHeight={1.2}
                         >
-                            {t(
-                                'Log in with your social media and start earning rewards!',
-                            )}
+                            {description}
                         </Text>
                     </VStack>
                 </HStack>
             }
-            placement={tooltipPlacement}
+            placement={placement}
             bg="#B1F16C"
             color="#365217"
             borderRadius={14}
