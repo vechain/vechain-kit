@@ -81,7 +81,7 @@ export const TransactionToastContent = ({
                     icon: (
                         <Icon
                             as={MdOutlineErrorOutline}
-                            color={'red'}
+                            color={'red.500'}
                             fontSize={'40px'}
                         />
                     ),
