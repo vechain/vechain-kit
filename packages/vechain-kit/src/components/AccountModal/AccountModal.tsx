@@ -126,14 +126,20 @@ export const AccountModal = ({
                 return (
                     <SettingsContent
                         setCurrentContent={setCurrentContent}
-                        onLogoutSuccess={onClose}
+                        onLogoutSuccess={() => {
+                            Analytics.auth.logoutCompleted();
+                            onClose();
+                        }}
                     />
                 );
             case 'profile':
                 return (
                     <ProfileContent
                         setCurrentContent={setCurrentContent}
-                        onLogoutSuccess={onClose}
+                        onLogoutSuccess={() => {
+                            Analytics.auth.logoutCompleted();
+                            onClose();
+                        }}
                     />
                 );
             case 'assets':

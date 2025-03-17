@@ -71,7 +71,6 @@ export const SettingsContent = ({
     }, []);
 
     const handleNameChange = () => {
-        Analytics.settings.trackSettings('name_changed', { newName: '' });
         if (account?.domain) {
             setCurrentContent({
                 type: 'choose-name-search',
@@ -106,7 +105,6 @@ export const SettingsContent = ({
     const handleLogout = () => {
         disconnect();
         onLogoutSuccess();
-        Analytics.auth.logoutCompleted();
     };
 
     return (

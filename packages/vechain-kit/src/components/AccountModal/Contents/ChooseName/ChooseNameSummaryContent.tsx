@@ -19,6 +19,7 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
 } from '@/hooks';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -56,6 +57,7 @@ export const ChooseNameSummaryContent = ({
         domain: 'veworld.vet',
         alreadyOwned: isOwnDomain,
         onSuccess: () => {
+            Analytics.settings.trackSettings('name_changed', { newName: name });
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
