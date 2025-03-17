@@ -6,7 +6,6 @@ import {
     VStack,
     Text,
     ModalFooter,
-    Image,
     Button,
     Icon,
 } from '@chakra-ui/react';
@@ -15,6 +14,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { VechainEnergy } from '@/assets';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -37,17 +37,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
             <Container maxW={'container.lg'}>
                 <ModalBody>
                     <VStack spacing={6} align="center" w="full">
-                        <Image
-                            src={
-                                isDark
-                                    ? 'https://static.vechain.energy/logo-dark.svg'
-                                    : 'https://static.vechain.energy/logo-light.svg'
-                            }
-                            alt="bridge token"
-                            w={'200px'}
-                            h={'200px'}
-                            borderRadius={'xl'}
-                        />
+                        <VechainEnergy isDark={isDark} borderRadius={'xl'} />
 
                         <Text fontSize="sm" textAlign="center">
                             {t(
