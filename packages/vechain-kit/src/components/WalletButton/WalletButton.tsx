@@ -1,6 +1,7 @@
 import {
     Button,
     ButtonProps,
+    TooltipProps,
     useDisclosure,
     useMediaQuery,
 } from '@chakra-ui/react';
@@ -17,6 +18,8 @@ export type WalletButtonProps = {
     desktopVariant?: WalletDisplayVariant;
     buttonStyle?: ButtonProps;
     connectionVariant?: 'modal' | 'popover';
+    showTooltip?: boolean;
+    tooltipPlacement?: TooltipProps['placement'];
 };
 
 export const WalletButton = ({
@@ -24,6 +27,8 @@ export const WalletButton = ({
     desktopVariant = 'iconDomainAndAddress',
     buttonStyle,
     connectionVariant = 'modal',
+    showTooltip = false,
+    tooltipPlacement = 'bottom-end',
 }: WalletButtonProps) => {
     const { t } = useTranslation();
     const { darkMode } = useVeChainKitConfig();
@@ -58,6 +63,8 @@ export const WalletButton = ({
                 <ConnectPopover
                     isLoading={connection.isLoading}
                     buttonStyle={buttonStyle}
+                    showTooltip={showTooltip}
+                    tooltipPlacement={tooltipPlacement}
                 />
             ) : (
                 <Button
