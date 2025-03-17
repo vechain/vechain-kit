@@ -29,7 +29,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
 
     useEffect(() => {
-        Analytics.bridge.pageOpened();
+        Analytics.bridge.opened();
     }, []);
 
     const handleLaunchVeChainEnergy = () => {
