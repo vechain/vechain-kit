@@ -14,9 +14,7 @@ export const HighlightLoginTooltip = ({
     title = t('NEW LOG IN IS OUT!'),
     description = t('Log in with your social media and start earning rewards!'),
     placement = 'right',
-    showTooltip = false,
 }: HighlightLoginTooltipProps) => {
-    if (!showTooltip) return children;
     return (
         <Tooltip
             isOpen={isOpen}

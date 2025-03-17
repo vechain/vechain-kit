@@ -157,7 +157,7 @@ export const LoginUIControl = () => {
                                     <WalletButton
                                         connectionVariant="popover"
                                         tooltipProps={{
-                                            showTooltip: true,
+                                            isVisible: true,
                                             placement: 'left',
                                         }}
                                     />
@@ -172,7 +172,7 @@ export const LoginUIControl = () => {
                                     borderRadius="full"
                                 >
                                     variant: "popover" (desktop only) &
-                                    tooltipProps.showTooltip: true,
+                                    tooltipProps.isVisible: true,
                                     tooltipProps.placement: 'left'
                                 </Text>
                             </VStack>

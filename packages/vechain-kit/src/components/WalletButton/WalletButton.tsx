@@ -18,7 +18,7 @@ export type WalletButtonProps = {
     desktopVariant?: WalletDisplayVariant;
     buttonStyle?: ButtonProps;
     connectionVariant?: 'modal' | 'popover';
-    tooltipProps?: WalletButtonTooltipProps;
+    highlightLoginTooltip?: WalletButtonTooltipProps;
 };
 
 export const WalletButton = ({
@@ -26,7 +26,7 @@ export const WalletButton = ({
     desktopVariant = 'iconDomainAndAddress',
     buttonStyle,
     connectionVariant = 'modal',
-    tooltipProps,
+    highlightLoginTooltip,
 }: WalletButtonProps) => {
     const { t } = useTranslation();
     const { darkMode } = useVeChainKitConfig();
@@ -61,7 +61,7 @@ export const WalletButton = ({
                 <ConnectPopover
                     isLoading={connection.isLoading}
                     buttonStyle={buttonStyle}
-                    tooltipProps={tooltipProps}
+                    highlightLoginTooltip={highlightLoginTooltip}
                 />
             ) : (
                 <Button

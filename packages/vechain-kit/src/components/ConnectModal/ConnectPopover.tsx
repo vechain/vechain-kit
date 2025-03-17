@@ -18,13 +18,13 @@ import { HighlightLoginTooltip } from './Components/HighlightLoginTooltip';
 type ConnectPopoverProps = {
     isLoading: boolean;
     buttonStyle?: ButtonProps;
-    tooltipProps?: WalletButtonTooltipProps;
+    highlightLoginTooltip?: WalletButtonTooltipProps;
 };
 
 export const ConnectPopover = ({
     isLoading,
     buttonStyle,
-    tooltipProps,
+    highlightLoginTooltip,
 }: ConnectPopoverProps) => {
     const { t } = useTranslation();
     return (
@@ -38,8 +38,8 @@ export const ConnectPopover = ({
                 <>
                     <Box position="relative">
                         <HighlightLoginTooltip
-                            isOpen={!isPopoverOpen}
-                            {...tooltipProps}
+                            isOpen={!isPopoverOpen && !!highlightLoginTooltip}
+                            {...highlightLoginTooltip}
                         >
                             <Box display="inline-block">
                                 <PopoverTrigger>

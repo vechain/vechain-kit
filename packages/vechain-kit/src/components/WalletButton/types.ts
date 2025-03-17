@@ -7,7 +7,7 @@ export type WalletDisplayVariant =
     | 'iconDomainAndAssets';
 
 export type WalletButtonTooltipProps = {
-    showTooltip?: boolean;
+    isVisible?: boolean;
     title?: string;
     description?: string;
     placement?: TooltipProps['placement'];
