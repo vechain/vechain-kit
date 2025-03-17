@@ -152,6 +152,27 @@ export const LoginUIControl = () => {
                                     aka: dapp-kit connect modal
                                 </Text>
                             </VStack>
+                            <VStack alignItems="flex-start" spacing={2}>
+                                <Box w={'fit-content'}>
+                                    <WalletButton
+                                        connectionVariant="popover"
+                                        showTooltip={true}
+                                        tooltipPlacement="left"
+                                    />
+                                </Box>
+                                <Text
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color="blue.300"
+                                    bg="whiteAlpha.100"
+                                    px={3}
+                                    py={1}
+                                    borderRadius="full"
+                                >
+                                    variant: "popover" (desktop only) &
+                                    showTooltip: true & tooltipPlacement: "left"
+                                </Text>
+                            </VStack>
                         </VStack>
                     </Grid>
 
