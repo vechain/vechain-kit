@@ -156,7 +156,7 @@ export const LoginUIControl = () => {
                                 <Box w={'fit-content'}>
                                     <WalletButton
                                         connectionVariant="popover"
-                                        tooltipProps={{
+                                        highlightLoginTooltip={{
                                             isVisible: true,
                                             placement: 'left',
                                         }}
@@ -172,8 +172,8 @@ export const LoginUIControl = () => {
                                     borderRadius="full"
                                 >
                                     variant: "popover" (desktop only) &
-                                    tooltipProps.isVisible: true,
-                                    tooltipProps.placement: 'left'
+                                    highlightLoginTooltip.isVisible: true,
+                                    highlightLoginTooltip.placement: 'left'
                                 </Text>
                             </VStack>
                         </VStack>
