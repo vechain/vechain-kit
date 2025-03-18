@@ -89,11 +89,8 @@ export const SendTokenContent = ({
     // Watch form values
     const { toAddressOrDomain } = watch();
 
-    const {
-        domain: resolvedDomain,
-        address: resolvedAddress,
-        isLoading: isLoadingDomain,
-    } = useVechainDomain({ addressOrDomain: toAddressOrDomain });
+    const { domain: resolvedDomain, address: resolvedAddress } =
+        useVechainDomain({ addressOrDomain: toAddressOrDomain });
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
@@ -426,7 +423,7 @@ export const SendTokenContent = ({
             <ModalFooter>
                 <Button
                     variant="vechainKitPrimary"
-                    isDisabled={!selectedToken || !isValid || isLoadingDomain}
+                    isDisabled={!selectedToken || !isValid}
                     onClick={handleSubmit(onSubmit)}
                 >
                     {selectedToken ? t('Send') : t('Select Token')}
