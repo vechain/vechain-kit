@@ -26,10 +26,10 @@ import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { IoCogSharp, IoShieldOutline } from 'react-icons/io5';
-import { GiHouseKeys } from 'react-icons/gi';
+import { IoCogSharp } from 'react-icons/io5';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
-import { HiOutlineShieldCheck } from 'react-icons/hi2';
+import { HiOutlineShieldCheck, HiOutlineWallet } from 'react-icons/hi2';
+import { GiHouseKeys } from 'react-icons/gi';
 import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
 
 type Props = {
@@ -56,9 +56,14 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
         Analytics.settings.trackSettings('security_view');
     }, []);
 
-    const handleEmbeddedWalletClick = () => {
-        Analytics.settings.trackSettings('embedded_wallet_view');
-        setCurrentContent('embedded-wallet');
+    const handleUpgradeSmartAccountClick = () => {
+        setCurrentContent({
+            type: 'upgrade-smart-account',
+            props: {
+                setCurrentContent,
+                initialContent: 'access-and-security',
+            },
+        });
     };
 
     return (
@@ -97,15 +102,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             description={t(
                                 'A new version is available for your account',
                             )}
-                            onClick={() => {
-                                setCurrentContent({
-                                    type: 'upgrade-smart-account',
-                                    props: {
-                                        setCurrentContent,
-                                        initialContent: 'access-and-security',
-                                    },
-                                });
-                            }}
+                            onClick={handleUpgradeSmartAccountClick}
                             leftIcon={IoCogSharp}
                             extraContent={
                                 <Box
@@ -123,16 +120,11 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     )}
 
                     <ActionButton
-                        style={{
-                            marginTop: '10px',
-                            borderBottomRadius: '0px',
+                        title={t('Your embedded wallet')}
+                        onClick={() => {
+                            setCurrentContent('embedded-wallet');
                         }}
-                        title={t('Embedded wallet')}
-                        description={t(
-                            'Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.',
-                        )}
-                        onClick={handleEmbeddedWalletClick}
-                        leftIcon={IoShieldOutline}
+                        leftIcon={HiOutlineWallet}
                         rightIcon={MdOutlineNavigateNext}
                     />
 

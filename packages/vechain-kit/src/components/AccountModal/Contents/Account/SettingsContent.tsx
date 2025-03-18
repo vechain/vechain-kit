@@ -67,7 +67,6 @@ export const SettingsContent = ({
         if (contentRef.current) {
             contentRef.current.scrollTop = 0;
         }
-        Analytics.settings.trackSettings('view', { section: 'general' });
     }, []);
 
     const handleNameChange = () => {
@@ -93,16 +92,15 @@ export const SettingsContent = ({
     };
 
     const handleAccessAndSecurity = () => {
-        Analytics.settings.trackSettings('security_view');
         setCurrentContent('access-and-security');
     };
 
     const handleConnectionDetails = () => {
-        Analytics.settings.trackSettings('connection_view');
         setCurrentContent('connection-details');
     };
 
     const handleLogout = () => {
+        Analytics.auth.trackAuth('disconnect_initiated');
         disconnect();
         onLogoutSuccess();
     };

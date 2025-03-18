@@ -246,8 +246,8 @@ const Analytics = {
             });
         },
 
-        walletDisconnected: (walletType: VeLoginMethod) => {
-            Analytics.auth.trackAuth('logout', { loginMethod: walletType });
+        walletDisconnectInitiated: () => {
+            Analytics.auth.trackAuth('disconnect_initiated');
         },
 
         logoutCompleted: () => {

@@ -33,7 +33,8 @@ export type AuthAction =
     | 'connect_success'
     | 'connect_failed'
     | 'drop_off'
-    | 'logout';
+    | 'logout'
+    | 'disconnect_initiated';
 
 export type DropOffStage =
     | 'social-login'
@@ -217,6 +218,7 @@ export type SettingsAction =
     | 'view'
     | 'name_changed'
     | 'security_view'
+    | 'upgrade_smart_account'
     | 'embedded_wallet_view'
     | 'connection_view'
     | 'language_changed';
