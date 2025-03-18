@@ -31,13 +31,9 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
                 error instanceof Error ? error.message.toLowerCase() : '';
 
             if (errorMsg.includes('not found')) {
-                Analytics.auth.trackAuth('drop_off', {
-                    dropOffStage: 'passkey-prompt',
-                });
+                Analytics.auth.dropOff('passkey-prompt');
             } else if (errorMsg.includes('abort')) {
-                Analytics.auth.trackAuth('drop_off', {
-                    dropOffStage: 'passkey-authentication',
-                });
+                Analytics.auth.dropOff('passkey-authentication');
             } else {
                 Analytics.auth.failed(VeLoginMethod.PASSKEY, errorMsg);
             }
@@ -49,6 +45,11 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
                     : t('Failed to connect with Passkey'),
             );
         }
+    };
+
+    const handleTryAgain = () => {
+        Analytics.auth.tryAgain(VeLoginMethod.PASSKEY);
+        handleLoginWithPasskey();
     };
 
     return (
@@ -72,7 +73,7 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
                 error={loginError}
                 title={t('Connecting with Passkey')}
                 loadingText={t('Please complete the passkey authentication...')}
-                onTryAgain={handleLoginWithPasskey}
+                onTryAgain={handleTryAgain}
             />
         </>
     );

@@ -75,10 +75,10 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     errorMsg?.includes('rejected') ||
                     errorMsg?.includes('closed')
                 ) {
-                    Analytics.auth.trackAuth('drop_off', {
-                        dropOffStage: 'ecosystem-app-connect',
-                        appName,
+                    Analytics.auth.dropOff('ecosystem-app-connect', {
+                        ...(appName && { appName }),
                     });
+
                     return new Error('Login request was cancelled.');
                 }
 
@@ -102,9 +102,9 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         }
     };
 
-    // Add onTryAgain handler for the LoginLoadingModal
     const handleTryAgain = () => {
         if (selectedApp) {
+            Analytics.auth.tryAgain(VeLoginMethod.ECOSYSTEM, selectedApp);
             const app = appsInfo.find((app) => app.name === selectedApp);
             if (app) {
                 connectWithVebetterDaoApps(app.id, app.name);
@@ -113,11 +113,9 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     };
 
     const handleClose = () => {
-        if (!selectedApp) {
-            Analytics.auth.trackAuth('drop_off', {
-                dropOffStage: 'ecosystem-view',
-            });
-        }
+        Analytics.auth.dropOff('ecosystem-view', {
+            ...(selectedApp && { appName: selectedApp }),
+        });
         onClose();
     };
 

@@ -31,29 +31,34 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
                 if (error?.message) {
                     const errorMsg = error.message.toLowerCase();
                     if (errorMsg.includes('veworld')) {
-                        Analytics.auth.trackAuth('drop_off', {
-                            dropOffStage: 'dappkit-veworld',
+                        return Analytics.auth.dropOff('dappkit-veworld', {
+                            ...(source && { source }),
                         });
-                        return;
                     }
                     if (errorMsg.includes('sync2')) {
-                        Analytics.auth.trackAuth('drop_off', {
-                            dropOffStage: 'dappkit-sync2',
+                        return Analytics.auth.dropOff('dappkit-sync2', {
+                            ...(source && { source }),
                         });
-                        return;
+                    }
+                    if (errorMsg.includes('wallet-connect')) {
+                        return Analytics.auth.dropOff(
+                            'dappkit-wallet-connect',
+                            {
+                                ...(source && { source }),
+                            },
+                        );
                     }
                     if (
                         errorMsg.includes('rejected') ||
                         errorMsg.includes('denied')
                     ) {
-                        Analytics.auth.trackAuth('drop_off', {
-                            dropOffStage: 'dappkit-wallet-connect',
+                        return Analytics.auth.dropOff('dappkit-view', {
+                            ...(source && { source }),
                         });
-                        return;
                     }
                 }
-                Analytics.auth.trackAuth('drop_off', {
-                    dropOffStage: 'dappkit-view',
+                return Analytics.auth.dropOff('dappkit-view', {
+                    ...(source && { source }),
                 });
             } else {
                 Analytics.auth.completed({
@@ -69,11 +74,13 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
         Analytics.auth.flowStarted();
         Analytics.auth.methodSelected(VeLoginMethod.DAPPKIT);
         openDappKitModal();
-        Analytics.auth.completed({
-            userId: user?.id,
-            loginMethod: VeLoginMethod.DAPPKIT,
-            platform: source as DappKitSource,
-        });
+        if (source) {
+            Analytics.auth.completed({
+                userId: user?.id,
+                loginMethod: VeLoginMethod.DAPPKIT,
+                platform: source as DappKitSource,
+            });
+        }
     };
 
     return (

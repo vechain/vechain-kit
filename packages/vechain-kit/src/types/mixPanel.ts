@@ -23,12 +23,13 @@ export enum DappKitSource {
 
 export type LoginEventProperties = {
     loginMethod: VeLoginMethod;
-    platform?: VePrivySocialLoginMethod | DappKitSource;
+    platform?: VePrivySocialLoginMethod | DappKitSource | string;
 };
 
 export type AuthAction =
     | 'start'
     | 'method_selected'
+    | 'try_again'
     | 'connect_initiated'
     | 'connect_success'
     | 'connect_failed'
@@ -59,7 +60,7 @@ export type DropOffStage =
 export type AuthProperties = {
     action: AuthAction;
     loginMethod?: VeLoginMethod;
-    platform?: VePrivySocialLoginMethod | DappKitSource;
+    platform?: VePrivySocialLoginMethod | DappKitSource | string;
     chainName?: string;
     fromScreen?: string;
     error?: string;

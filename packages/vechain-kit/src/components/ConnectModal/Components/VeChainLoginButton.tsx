@@ -40,6 +40,11 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
         }
     };
 
+    const tryAgain = () => {
+        Analytics.auth.tryAgain(VeLoginMethod.VECHAIN);
+        handleLoginWithVeChain();
+    };
+
     return (
         <>
             <GridItem colSpan={gridColumn ? gridColumn : 4} w={'full'}>
@@ -62,7 +67,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                 onClose={() => {
                     loginLoadingModal.onClose();
                 }}
-                onTryAgain={handleLoginWithVeChain}
+                onTryAgain={tryAgain}
                 error={loginError}
                 title={t('Connecting to VeChain')}
                 loadingText={t(
