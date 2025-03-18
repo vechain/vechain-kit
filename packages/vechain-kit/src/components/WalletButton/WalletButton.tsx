@@ -11,6 +11,8 @@ import { WalletDisplayVariant } from './types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { ConnectPopover } from '../ConnectModal';
+import { useEffect } from 'react';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type WalletButtonProps = {
     mobileVariant?: WalletDisplayVariant;
@@ -44,6 +46,14 @@ export const WalletButton = ({
             connectModal.onOpen();
         }
     };
+
+    useEffect(() => {
+        if (accountModal.isOpen) {
+            Analytics.wallet.opened(connection.isConnected);
+        } else {
+            Analytics.wallet.closed(connection.isConnected);
+        }
+    }, [accountModal.isOpen, connection.isConnected]);
 
     return (
         <VechainKitThemeProvider darkMode={darkMode}>

@@ -27,35 +27,16 @@ import {
     DropOffStage,
     DappKitSource,
 } from '@/types/mixPanel';
-import mixpanel from 'mixpanel-browser';
-import {
-    VECHAIN_KIT_STORAGE_KEYS,
-    VECHAIN_KIT_MIXPANEL_TOKENS,
-    VECHAIN_KIT_MIXPANEL_PROJECT_NAME,
-} from './Constants';
+import VeChainKitMixpanel from 'mixpanel-browser';
+import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
 
 const APP_SOURCE: string = document.title || '';
 const PAGE_SOURCE: string = window?.location?.origin || '';
 
-const ENV = {
-    isDevelopment:
-        localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'test',
-    isProduction:
-        localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'main',
-};
-
-const MIXPANEL_PROJECT_TOKEN = ENV.isProduction
-    ? VECHAIN_KIT_MIXPANEL_TOKENS.production
-    : VECHAIN_KIT_MIXPANEL_TOKENS.development;
-
-if (typeof window !== 'undefined' && MIXPANEL_PROJECT_TOKEN) {
-    mixpanel.init(
-        MIXPANEL_PROJECT_TOKEN,
-        {
-            debug: !ENV.isProduction,
-        },
-        VECHAIN_KIT_MIXPANEL_PROJECT_NAME,
-    );
+if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
+    VeChainKitMixpanel.init(VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN, {
+        debug: !ENV.isProduction,
+    });
 
     // Development-only warning
     if (ENV.isDevelopment) {
@@ -102,7 +83,7 @@ const trackEvent = <E extends EventName>(
     properties: EventPropertiesMap[E] = {} as EventPropertiesMap[E],
 ): void => {
     try {
-        if (!MIXPANEL_PROJECT_TOKEN) {
+        if (!VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
             console.warn('No project token found');
             return;
         }
@@ -112,7 +93,7 @@ const trackEvent = <E extends EventName>(
             return;
         }
 
-        mixpanel.track(event, {
+        VeChainKitMixpanel.track(event, {
             ...properties,
             source: APP_SOURCE,
             page: PAGE_SOURCE,
@@ -127,7 +108,7 @@ const setUserProperties = (
     userId?: string,
 ): void => {
     try {
-        mixpanel.people.set({
+        VeChainKitMixpanel.people.set({
             ...properties,
             source: APP_SOURCE,
             page: PAGE_SOURCE,
@@ -148,7 +129,7 @@ const identifyUser = (userId: string): void => {
             return;
         }
 
-        mixpanel.identify(userId);
+        VeChainKitMixpanel.identify(userId);
     } catch (error) {
         console.error('Error identifying user:', error);
     }
@@ -156,7 +137,7 @@ const identifyUser = (userId: string): void => {
 
 const incrementUserProperty = (property: string, value: number = 1): void => {
     try {
-        mixpanel.people.increment(property, value);
+        VeChainKitMixpanel.people.increment(property, value);
     } catch (error) {
         console.error(`Error incrementing property ${property}:`, error);
     }
@@ -164,7 +145,7 @@ const incrementUserProperty = (property: string, value: number = 1): void => {
 
 const resetUser = (): void => {
     try {
-        mixpanel.reset();
+        VeChainKitMixpanel.reset();
     } catch (error) {
         console.error('Error resetting user:', error);
     }
@@ -183,8 +164,10 @@ const Analytics = {
             });
         },
 
-        flowStarted: () => {
-            Analytics.auth.trackAuth('start');
+        flowStarted: (loginMethod: VeLoginMethod) => {
+            Analytics.auth.trackAuth('start', {
+                loginMethod,
+            });
         },
 
         tryAgain: (
@@ -349,10 +332,10 @@ const Analytics = {
             });
         },
 
-        opened: ({ connected }: { connected: boolean }) =>
+        opened: (connected: boolean) =>
             Analytics.wallet.trackWallet('view', { connected }),
 
-        closed: ({ connected }: { connected: boolean }) =>
+        closed: (connected: boolean) =>
             Analytics.wallet.trackWallet('close', { connected }),
 
         balanceRefreshed: () => Analytics.wallet.trackWallet('balance_refresh'),

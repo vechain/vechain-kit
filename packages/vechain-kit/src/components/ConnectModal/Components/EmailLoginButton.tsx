@@ -29,7 +29,7 @@ export const EmailLoginButton = () => {
     const emailCodeVerificationModal = useDisclosure();
 
     const handleSendCode = async () => {
-        Analytics.auth.flowStarted();
+        Analytics.auth.flowStarted(VeLoginMethod.EMAIL);
         Analytics.auth.methodSelected(VeLoginMethod.EMAIL);
         await sendCode({ email });
         // onClose();

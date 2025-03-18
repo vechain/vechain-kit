@@ -21,8 +21,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithVeChain = async () => {
-        Analytics.auth.flowStarted();
-        Analytics.auth.methodSelected(VeLoginMethod.VECHAIN);
+        Analytics.auth.flowStarted(VeLoginMethod.VECHAIN);
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);

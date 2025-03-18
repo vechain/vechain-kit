@@ -24,7 +24,7 @@ export const EcosystemButton = ({
     const ecosystemModal = useDisclosure();
 
     const handleEcosystemClick = () => {
-        Analytics.auth.flowStarted();
+        Analytics.auth.flowStarted(VeLoginMethod.ECOSYSTEM);
         Analytics.auth.methodSelected(VeLoginMethod.ECOSYSTEM);
         ecosystemModal.onOpen();
     };

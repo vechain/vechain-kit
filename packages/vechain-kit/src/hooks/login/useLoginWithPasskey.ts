@@ -10,6 +10,7 @@ export const useLoginWithPasskey = () => {
 
     const loginWithPasskey = async () => {
         try {
+            Analytics.auth.flowStarted(VeLoginMethod.PASSKEY);
             Analytics.auth.methodSelected(VeLoginMethod.PASSKEY);
             await privyLoginWithPasskey();
             Analytics.auth.completed({

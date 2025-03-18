@@ -71,7 +71,7 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
     }, [onConnectionStatusChange]);
 
     const handleDappKitClick = () => {
-        Analytics.auth.flowStarted();
+        Analytics.auth.flowStarted(VeLoginMethod.DAPPKIT);
         Analytics.auth.methodSelected(VeLoginMethod.DAPPKIT);
         openDappKitModal();
         if (source) {

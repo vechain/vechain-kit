@@ -19,7 +19,7 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithPasskey = async () => {
-        Analytics.auth.flowStarted();
+        Analytics.auth.flowStarted(VeLoginMethod.PASSKEY);
         Analytics.auth.methodSelected(VeLoginMethod.PASSKEY);
         loginLoadingModal.onOpen();
         try {
