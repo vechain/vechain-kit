@@ -35,7 +35,7 @@ import {
 } from './Constants';
 
 const APP_SOURCE: string = document.title || '';
-const PAGE_SOURCE: string = window.location.pathname || '';
+const PAGE_SOURCE: string = window?.location?.origin || '';
 
 const ENV = {
     isDevelopment:

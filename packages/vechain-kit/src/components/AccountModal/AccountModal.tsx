@@ -56,7 +56,9 @@ export const AccountModal = ({
     useEffect(() => {
         if (isOpen && initialContent) {
             setCurrentContent(initialContent);
-            Analytics.wallet.opened();
+            Analytics.wallet.opened({
+                connected: !!account,
+            });
         }
     }, [isOpen, initialContent, setCurrentContent]);
 
