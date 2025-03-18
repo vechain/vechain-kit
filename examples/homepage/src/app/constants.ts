@@ -24,3 +24,5 @@ export const b3trAbi = [
         type: 'function',
     },
 ] as const;
+
+export const VECHAIN_KIT_MIXPANEL_PROJECT_NAME = 'homepage';
