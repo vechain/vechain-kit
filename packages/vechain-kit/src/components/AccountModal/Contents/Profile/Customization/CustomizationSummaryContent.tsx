@@ -86,6 +86,7 @@ export const CustomizationSummaryContent = ({
         isTransactionPending,
     } = useUpdateTextRecord({
         resolverAddress, // Pass the pre-fetched resolver address
+        signerAccountAddress: account?.address ?? '',
         onSuccess: async () => {
             refreshMetadata();
             setCurrentContent({
