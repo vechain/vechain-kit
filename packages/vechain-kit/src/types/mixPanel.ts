@@ -308,6 +308,7 @@ export type AccountDisconnectedProperties = {
 
 export type WalletAction =
     | 'view'
+    | 'close'
     | 'balance_refresh'
     | 'assets_view'
     | 'token_search'
@@ -320,6 +321,7 @@ export type WalletProperties = {
     action: WalletAction;
     tokenSymbol?: string;
     tokenAddress?: string;
+    connected?: boolean;
     query?: string;
     resultsCount?: number;
     context?: string;

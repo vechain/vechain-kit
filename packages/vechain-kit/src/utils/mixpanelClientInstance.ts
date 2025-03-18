@@ -339,7 +339,11 @@ const Analytics = {
             });
         },
 
-        opened: () => Analytics.wallet.trackWallet('view'),
+        opened: ({ connected }: { connected: boolean }) =>
+            Analytics.wallet.trackWallet('view', { connected }),
+
+        closed: ({ connected }: { connected: boolean }) =>
+            Analytics.wallet.trackWallet('close', { connected }),
 
         balanceRefreshed: () => Analytics.wallet.trackWallet('balance_refresh'),
 

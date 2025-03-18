@@ -41,7 +41,14 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
 
     useEffect(() => {
         if (connection.isConnected) {
+            Analytics.wallet.opened({
+                connected: !!connection.isConnected,
+            });
             onClose();
+        } else {
+            Analytics.wallet.closed({
+                connected: !!connection.isConnected,
+            });
         }
     }, [connection.isConnected, onClose]);
 
