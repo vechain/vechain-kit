@@ -20,13 +20,13 @@ import { CiLogin } from 'react-icons/ci';
 import { SiNpm, SiFarcaster } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { FaSquareXTwitter } from 'react-icons/fa6';
-import mixpanelClient from '@/app/lib/mixpanelClient';
+import { trackEvent } from '@/app/lib/mixpanelClient';
 
 export function Introduction() {
     const { connection } = useWallet();
 
     const trackExternalLink = (destination: string) => {
-        mixpanelClient.trackEvent('External Link Click', {
+        trackEvent('External Link Click', {
             destination,
             isConnected: connection.isConnected,
             source: 'Introduction',

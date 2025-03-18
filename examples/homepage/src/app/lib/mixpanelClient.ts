@@ -35,7 +35,4 @@ const resetUser = () => {
     homepageInstance?.reset();
 };
 
-export default {
-    trackEvent,
-    resetUser,
-};
+export { trackEvent, resetUser };
