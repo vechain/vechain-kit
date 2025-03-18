@@ -20,7 +20,7 @@ export const useGetAvatarOfAddress = (address?: string) => {
     // First, get all domains for this address
     const domainsQuery = useVechainDomain(address);
 
-    // Then, get the avatar for the first domain
+    // Then, get the avatar for the first domain, but only if we have one
     const primaryDomain = domainsQuery.data?.domain;
     const avatarQuery = useGetAvatar(primaryDomain ?? '');
 
@@ -33,11 +33,16 @@ export const useGetAvatarOfAddress = (address?: string) => {
             const domains = await domainsQuery.refetch();
             if (!domains.data?.domain) return getPicassoImage(address);
 
-            if (avatarQuery.data) return avatarQuery.data;
+            // Only try to get the avatar if we have a valid domain
+            if (domains.data.domain && avatarQuery.data)
+                return avatarQuery.data;
 
             return getPicassoImage(address);
         },
-        enabled: !!address && domainsQuery.isSuccess && avatarQuery.isSuccess,
+        enabled:
+            !!address &&
+            domainsQuery.isSuccess &&
+            (primaryDomain ? avatarQuery.isSuccess : true),
         // Use the same caching strategy as the avatar query
         staleTime: 5 * 60 * 1000, // 5 minutes
     });

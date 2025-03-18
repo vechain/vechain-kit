@@ -33,7 +33,6 @@ import { uploadBlobToIPFS } from '@/utils/ipfs';
 import { FaRegAddressCard, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { AccountAvatar } from '@/components/common';
 import { DomainRequiredAlert } from '../../../Components/Alerts';
-import { convertUriToUrl } from '@/utils/uri';
 import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -58,6 +57,7 @@ export const CustomizationContent = ({
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { account } = useWallet();
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -105,13 +105,12 @@ export const CustomizationContent = ({
             setInitialEmail(metadata.email || '');
             setInitialWebsite(metadata.url || '');
             setInitialAvatarHash(
-                metadata.avatar ? metadata.avatar.replace('ipfs://', '') : null,
+                account.image ? account.image.replace('ipfs://', '') : null,
             );
-            setPreviewImageUrl(
-                convertUriToUrl(metadata.avatar ?? '', network.type),
-            );
+            // Only set the preview URL if it hasn't been set yet
+            setPreviewImageUrl((prev) => prev ?? account.image ?? null);
         }
-    }, [account?.metadata, network.type]);
+    }, [account, network.type]);
 
     // Watch all form values for changes
     const formValues = watch();
@@ -125,8 +124,15 @@ export const CustomizationContent = ({
         try {
             setIsUploading(true);
 
+            // Clear the previous preview URL first
+            if (previewImageUrl) {
+                URL.revokeObjectURL(previewImageUrl);
+            }
+
             // Create temporary preview URL
-            setPreviewImageUrl(URL.createObjectURL(file));
+            // Create temporary preview URL
+            const newPreviewUrl = URL.createObjectURL(file);
+            setPreviewImageUrl(newPreviewUrl);
 
             const uploadedImage = await onUpload(file);
             if (!uploadedImage) throw new Error('Failed to compress image');
@@ -145,6 +151,12 @@ export const CustomizationContent = ({
         }
     };
 
+    // This cleanup effect is important for memory management in the browser. Here's why:
+    // When you create a URL using URL.createObjectURL() (which happens in the handleImageUpload function),
+    // the browser creates a unique URL that points to the file/blob in memory.
+    // This URL remains valid and the object remains in memory until explicitly revoked.
+    // If you don't revoke these URLs, you can create memory leaks,
+    // especially if users upload multiple images or the component remounts frequently.
     useEffect(() => {
         return () => {
             if (previewImageUrl) {
@@ -249,7 +261,7 @@ export const CustomizationContent = ({
                                 width: '100px',
                                 height: '100px',
                                 boxShadow: '0px 0px 3px 2px #00000024',
-                                src: previewImageUrl || undefined,
+                                src: previewImageUrl ?? undefined,
                             }}
                         />
                         {hasDomain && (

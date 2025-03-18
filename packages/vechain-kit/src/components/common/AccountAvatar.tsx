@@ -13,8 +13,8 @@ export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
 
     return (
         <Image
-            src={props?.src ?? wallet?.image}
-            alt={props?.alt ?? wallet?.domain}
+            src={props?.src || wallet?.image}
+            alt={props?.alt || wallet?.domain}
             objectFit="cover"
             rounded="full"
             {...props}

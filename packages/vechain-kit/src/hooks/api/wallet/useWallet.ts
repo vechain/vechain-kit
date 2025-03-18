@@ -15,11 +15,7 @@ import {
     useDAppKitWallet,
     useGetAvatarOfAddress,
 } from '@/hooks';
-import {
-    compareAddresses,
-    getPicassoImage,
-    VECHAIN_PRIVY_APP_ID,
-} from '@/utils';
+import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
