@@ -187,6 +187,16 @@ const Analytics = {
             Analytics.auth.trackAuth('start');
         },
 
+        tryAgain: (
+            method: VeLoginMethod,
+            platform?: VePrivySocialLoginMethod | DappKitSource | string,
+        ) => {
+            Analytics.auth.trackAuth('try_again', {
+                loginMethod: method,
+                platform,
+            });
+        },
+
         methodSelected: (method: VeLoginMethod) => {
             Analytics.auth.trackAuth('method_selected', {
                 loginMethod: method,
