@@ -19,12 +19,12 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
         return null;
     }
 
-    const isLongDomain = account?.domain && account?.domain?.length > 18;
     const accountDomain = useMemo(() => {
+        const isLongDomain = account?.domain && account.domain.length > 18;
         return isSmallMobile && isLongDomain
             ? humanDomain(account?.domain ?? '', 18, 0)
             : account?.domain;
-    }, [isSmallMobile, account.domain]);
+    }, [isSmallMobile, account?.domain]);
 
     if (variant === 'iconAndDomain') {
         return account.domain ? (
