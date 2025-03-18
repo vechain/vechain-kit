@@ -68,7 +68,7 @@ export const AccountSelector = ({
                             props={{ width: 7, height: 7 }}
                         />
                         <Text fontSize={size} fontWeight="500">
-                            {humanDomain(wallet?.domain ?? '', 18, 0) ||
+                            {humanDomain(wallet?.domain ?? '', 22, 0) ||
                                 humanAddress(wallet?.address ?? '', 6, 4)}
                         </Text>
                     </HStack>

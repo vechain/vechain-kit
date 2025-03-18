@@ -212,6 +212,7 @@ export const SendTokenContent = ({
             <SelectTokenContent
                 setCurrentContent={setCurrentContent}
                 onSelectToken={(token) => {
+                    Analytics.send.tokenPageViewed(token.symbol);
                     setSelectedToken(token);
                     setIsSelectingToken(false);
                     setIsInitialTokenSelection(false);
@@ -501,7 +502,7 @@ export const SendTokenContent = ({
 
             <ModalFooter>
                 <Button
-                    variant="vechainKitSecondary"
+                    variant="vechainKitPrimary"
                     isDisabled={!selectedToken || !isValid || isLoadingDomain}
                     onClick={handleSubmit(onSubmit)}
                 >

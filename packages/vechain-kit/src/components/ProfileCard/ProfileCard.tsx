@@ -3,7 +3,10 @@ import {
     Button,
     Card,
     CardBody,
+    CardBodyProps,
     CardFooter,
+    CardFooterProps,
+    CardProps,
     Divider,
     HStack,
     Icon,
@@ -34,6 +37,11 @@ export type ProfileCardProps = {
     showDescription?: boolean;
     showDisplayName?: boolean;
     showEdit?: boolean;
+    style?: {
+        card?: CardProps;
+        body?: CardBodyProps;
+        footer?: CardFooterProps;
+    };
 };
 
 export const ProfileCard = ({
@@ -45,10 +53,11 @@ export const ProfileCard = ({
     showDescription = true,
     showDisplayName = true,
     showEdit = true,
+    style,
 }: ProfileCardProps) => {
     const { t } = useTranslation();
 
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const { account } = useWallet();
 
     const activeAccountDomain = useVechainDomain(address);
@@ -56,7 +65,6 @@ export const ProfileCard = ({
     const activeAccountTextRecords = useGetTextRecords(
         activeAccountDomain?.data?.domain,
     );
-    const baseBackgroundColor = isDark ? '#1e1e21' : '#00000005';
     const headerImageSvg = getPicassoImage(address);
 
     const isConnectedAccount = address === account?.address;
@@ -67,13 +75,7 @@ export const ProfileCard = ({
         activeAccountTextRecords?.data?.email;
 
     return (
-        <Card
-            bg={baseBackgroundColor}
-            borderRadius="xl"
-            width="full"
-            position="relative"
-            overflow="visible"
-        >
+        <Card variant="vechainKitBase" {...style?.card}>
             <Box
                 p={0}
                 backgroundSize="100% !important"
@@ -110,11 +112,16 @@ export const ProfileCard = ({
                     props={{
                         width: '100px',
                         height: '100px',
-                        boxShadow: '0px 0px 3px 2px #00000024',
+                        // boxShadow: '0px 0px 3px 2px #00000024',
                     }}
                 />
             </Box>
-            <CardBody mt={10} backgroundColor={'none'} border={'none'}>
+            <CardBody
+                mt={10}
+                backgroundColor={'none'}
+                border={'none'}
+                {...style?.body}
+            >
                 <VStack w={'full'} spacing={2}>
                     {showDisplayName &&
                         activeAccountTextRecords?.data?.display && (
@@ -191,7 +198,7 @@ export const ProfileCard = ({
                 </VStack>
             </CardBody>
             {isConnectedAccount && showEdit && (
-                <CardFooter justify="space-between">
+                <CardFooter justify="space-between" {...style?.footer}>
                     <VStack w="full" justify="space-between" spacing={4}>
                         <Divider />
                         <HStack w="full" justify="space-between">

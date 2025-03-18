@@ -1,5 +1,6 @@
 import { PrivyAppInfo } from '@/types';
 import { useQuery } from '@tanstack/react-query';
+import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/Constants';
 
 export const fetchPrivyAppInfo = async (
     appId: string,
@@ -33,7 +34,19 @@ export const useFetchAppInfo = (appIds: string | string[]) => {
             );
 
             return Object.fromEntries(
-                results.map((result, index) => [normalizedIds[index], result]),
+                results.map((result, index) => {
+                    const id = normalizedIds[index];
+                    const defaultApp = DEFAULT_PRIVY_ECOSYSTEM_APPS.find(
+                        (app) => app.id === id,
+                    );
+                    return [
+                        id,
+                        {
+                            ...result,
+                            website: defaultApp?.website,
+                        },
+                    ];
+                }),
             );
         },
         enabled: normalizedIds.length > 0,

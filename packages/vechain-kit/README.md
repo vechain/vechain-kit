@@ -1,7 +1,7 @@
 #### An all-in-one library for building VeChain applications.
 
 <div align="center">
-    <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
+    <img src="https://i.ibb.co/NgDN6XD3/kit-preview.png" alt="VeChain Kit Banner">
 </div>
 
 ## Introduction
@@ -41,14 +41,36 @@ yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp
 'use client';
 
 import VeChainKitProvider from '@vechain/vechain-kit';
+
 export function VeChainKitProviderWrapper({ children }: Props) {
     return (
         <VechainKitProvider
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
+                // set to false if you want to delegate ONLY social login transactions
+                delegateAllTransactions: true,
             }}
+            loginMethods={[
+                { method: 'vechain', gridColumn: 4 },
+                { method: 'dappkit', gridColumn: 4 },
+            ]}
             dappKit={{
-                allowedWallets: ['veworld', 'sync2'],
+                allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
+                walletConnectOptions: {
+                    projectId:
+                        // Get this on https://cloud.reown.com/sign-in
+                        process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
+                    metadata: {
+                        name: 'Your App Name',
+                        description:
+                            'This is the description of your app visible in VeWorld upon connection request.',
+                        url:
+                            typeof window !== 'undefined'
+                                ? window.location.origin
+                                : '',
+                        icons: ['https://path-to-logo.png'],
+                    },
+                },
             }}
             darkMode={true}
             language="en"
@@ -66,7 +88,7 @@ On Next.js you will need to dynamically load the import
 
 ```typescript
 import dynamic from 'next/dynamic';
-const VeChainKitProviderWrapper = dynamic(
+const VeChainKitProvider = dynamic(
     async () => (await import('@vechain/vechain-kit')).VeChainKitProvider,
     {
         ssr: false,
@@ -77,18 +99,7 @@ interface Props {
 }
 ```
 
-### Available Login Methods
-
-The modal supports several authentication methods:
-
--   Social Login - Email and Google authentication through Privy (only available for self hosted Privy)
--   VeChain Login - Direct VeChain wallet authentication
--   Passkey - Biometric/device-based authentication (only available for self hosted Privy)
--   DappKit - Connection through VeWorld or other VeChain wallets
--   Ecosystem - Cross-app authentication within the VeChain ecosystem
--   More Options - Additional Privy-supported login methods (only available for self hosted Privy)
-
-#### Configuration
+### Login Methods
 
 The modal implements a dynamic grid layout system that can be customized through the `loginMethods` configuration.
 
@@ -102,96 +113,28 @@ The modal can be configured through the `VeChainKitProvider` props.
     }}
     loginMethods={[
         { method: 'vechain', gridColumn: 4 },
-        { method: 'email', gridColumn: 2 },
-        { method: 'passkey', gridColumn: 2 },
+        { method: 'dappkit', gridColumn: 4 }, // VeChain wallets, always available
+        { method: 'ecosystem', gridColumn: 4 }, // Mugshot, Cleanify, Greencart, ...
+        { method: 'email', gridColumn: 2 }, // only available with your own Privy
+        { method: 'passkey', gridColumn: 2 }, // only available with your own Privy
+        { method: 'google', gridColumn: 4 }, // only available with your own Privy
+        { method: 'more', gridColumn: 2 }, // will open your own Privy login, only available with your own Privy
     ]}
+    allowCustomTokens={false} // allow the user to manage custom tokens
 >
     {children}
 </VeChainKitProvider>
 ```
 
-#### Ecosystem button
+### Setup Fee Delegation (mandatory if allowing social login)
 
-The ways to show the ecosystem login button are:
-
-1. You define "ecosystem" in the loginMethods in the config
-2. You do not define the loginMethods in the config, so we default to showing the ecosystem login button
-
-To not show the ecosystem login button, you must explicitly define the loginMethods array in the config and not include ecosystem in the options.
-
-By default we have a list of default apps that will be shown as ecosystem login options. If you want to customize this list you can pass the `allowedApps` array prop. You can find the app ids in the [Ecosystem](https://dashboard.privy.io/) tab in the Privy dashboard.
-
-### Setup Fee Delegation (mandatory)
-
-Fee delegation is mandatory in order to use this kit. Learn how to setup fee delegation in the following guide:
+Fee delegation is mandatory if you want to use this kit with social login. Learn how to setup fee delegation in the following guide:
 
 [Fee Delegation](https://docs.vechainkit.vechain.org/vechain-kit/fee-delegation)
 
-### Setup Privy (optional)
+### Show the login button
 
-If you already use Privy you can pass an additional prop with you settings and you will be able to access Privy SDK, customizing the login modal based on your needs.
-
-Pros of self hosting Privy:
-
--   No UI confirmations on users transactions
--   Allow your users to backup their keys and update security settings directly in your app
--   Targetted social login methods
-
-Cons:
-
--   Price
--   Responsibilities to correctly secure your Privy account, since it contains access to user's wallet settings
--   Your users will need to login into other apps through ecosystem mode
-
-To setup Privy you need to add the following parameters:
-
-```typescript
-import { VechainKitProvider } from '@vechain/vechain-kit';
-
-export default function App({ Component, pageProps }: AppProps) {
-    return (
-        <VechainKitProvider
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: ['google', 'twitter', 'sms', 'email', 'metamask'],
-                appearance: {
-                    accentColor: '#696FFD',
-                    loginMessage: 'Select a social media profile',
-                    logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
-            ...
-            //other props
-        >
-            {children}
-        </VechainKitProvider>
-    );
-}
-```
-
-Go to privy.io and create an app. You will find the APP ID and the CLIENT ID in the App Settings tab.
-For further information on how to implement Privy SDK please refer to their [docs](https://docs.privy.io/)
-
-This project uses:
-
--   `@privy-io/react-auth` for Privy connection type
--   `@privy-io/cross-app-connect` for ecosystem cross app connection
-
-You can import privy from the kit as
-
-```typescript
-import { usePrivy } from '@vechain/vechain-kit';
-
-const { user } = usePrivy();
-```
-
-### Use the kit
-
-Once you setup the kit provider and created your fee delegation service you are good to go and you can allow your users to login.
+Once you set up the kit provider, you are good to go, and you can allow your users to login, customizing the login experience based on your needs.
 
 #### Wallet Button
 
@@ -243,12 +186,17 @@ export function Page() {
 }
 ```
 
-# Usage Guide
+# Hooks
 
-## Wallet Information
+The kit provides hooks for developers to interact with smart contracts like VeBetterDAO, VePassport, veDelegate, and price oracles.
 
-The `useWallet` hook provides a unified interface for managing wallet connections in a VeChain application, supporting multiple connection methods including social logins (via Privy), direct wallet connections (via DappKit), and cross-application connections.
-This will be the hook you will use more frequently and it provides quite a few useful informations.
+The hooks in this package provide a standardized way to interact with various blockchain and web services. All hooks are built using TanStack Query (formerly React Query), which provides powerful data-fetching and caching capabilities.
+
+## Main Hooks
+
+### useWallet
+
+The `useWallet` hook will be the one you will use more frequently and it provides quite a few useful informations like the connected account, the connected wallet, the smart account, the dappkit wallet, the embedded wallet, the cross app wallet, the privy user and the connection status.
 
 ```typescript
 import { useWallet } from "@vechain/vechain-kit";
@@ -258,10 +206,6 @@ function MyComponent = () => {
         account,
         connectedWallet,
         smartAccount,
-        dappKitWallet,
-        embeddedWallet,
-        crossAppWallet,
-        privyUser,
         connection,
         disconnect
     } = useWallet();
@@ -270,9 +214,7 @@ function MyComponent = () => {
 }
 ```
 
-## Transaction Management
-
-You need to use the `useSendTransaction` hook to send transactions to the blockchain, all you will need is to build the clause and pass it to the hook.
+### useSendTransaction
 
 This hook will take care of checking your connection type and handle the transaction submission between privy, cross-app and wallet connections.
 When implementing VeChain Kit it is mandatory to use this hook to send transaction.
@@ -283,8 +225,6 @@ When implementing VeChain Kit it is mandatory to use this hook to send transacti
 import {
     useWallet,
     useSendTransaction,
-    useTransactionModal,
-    TransactionModal,
     getConfig
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
@@ -324,22 +264,11 @@ export function TransactionExamples() {
         signerAccountAddress: account?.address ?? '',
     });
 
-    const {
-        open: openTransactionModal,
-        close: closeTransactionModal,
-        isOpen: isTransactionModalOpen,
-    } = useTransactionModal();
-
     // This is the function triggering the transaction and opening the modal
     const handleTransaction = useCallback(async () => {
         openTransactionModal();
         await sendTransaction(clauses);
     }, [sendTransaction, clauses, openTransactionModal]);
-
-    const handleTryAgain = useCallback(async () => {
-        resetStatus();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, resetStatus]);
 
     return (
         <>
@@ -350,30 +279,10 @@ export function TransactionExamples() {
             >
                 Send B3TR
             </button>
-
-            <TransactionModal
-                isOpen={isTransactionModalOpen}
-                onClose={closeTransactionModal}
-                status={status}
-                txReceipt={txReceipt}
-                txError={error}
-                onTryAgain={handleTryAgain}
-                uiConfig={{
-                    title: 'Test Transaction',
-                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                        account?.address
-                    }`,
-                    showShareOnSocials: true,
-                    showExplorerButton: true,
-                    isClosable: true,
-                }}
-            />
         </>
     );
 }
 ```
-
-You can also use `useSignMessage` and `useSignTypedData` hooks to sign messages and typed data.
 
 ## Blockchain Data Reading
 
@@ -388,3 +297,15 @@ const { data: balance, isLoading, isError } = useGetB3trBalance('0x.....');
 
 console.log(balance.formatted, balance.original, balance.scaled);
 ```
+
+# Resources
+
+Read the complete documentation on [VeChain Kit Docs](https://docs.vechainkit.vechain.org/)
+
+Are you having issues using the kit? Join our discord server to receive support from our devs or open an issue on our Github!
+
+Check our [Troubleshooting](https://docs.vechainkit.vechain.org/vechain-kit/troubleshooting) section.
+
+Contact us on [Discord](https://discord.gg/wGkQnPpRVq)
+
+Open an issue on [Github](https://github.com/vechain/vechain-kit/issues)

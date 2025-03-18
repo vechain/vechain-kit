@@ -1,6 +1,14 @@
 'use client';
 
-import { VStack, Text, Button, Box, HStack, Grid } from '@chakra-ui/react';
+import {
+    VStack,
+    Text,
+    Button,
+    Box,
+    HStack,
+    Grid,
+    useColorMode,
+} from '@chakra-ui/react';
 import {
     WalletButton,
     useAccountModal,
@@ -13,6 +21,7 @@ import { CollapsibleCard } from '../../ui/CollapsibleCard';
 export function UIControls() {
     const { open } = useAccountModal();
     const { account } = useWallet();
+    const { colorMode } = useColorMode();
 
     return (
         <CollapsibleCard
@@ -221,6 +230,14 @@ export function UIControls() {
                         <ProfileCard
                             address={account?.address ?? ''}
                             showEdit={false}
+                            style={{
+                                card: {
+                                    backgroundColor:
+                                        colorMode === 'dark'
+                                            ? '#1c1c1b'
+                                            : '#f5f5f5',
+                                },
+                            }}
                         />
                     </VStack>
                 </VStack>

@@ -1,7 +1,7 @@
 #### An all-in-one library for building VeChain applications.
 
 <div align="center">
-    <img src="https://i.ibb.co/k539SN7/kit-banner.png" alt="VeChain Kit Banner">
+    <img src="https://i.ibb.co/NgDN6XD3/kit-preview.png" alt="VeChain Kit Banner">
 </div>
 
 ## Introduction
@@ -39,7 +39,7 @@ It offers:
 
 ### Prerequisites
 
--   Node.js >= 18.17
+-   Node.js >= 20.10.0
 -   Yarn >= 1.22.10
 
 You will need to have 3 terminals open:

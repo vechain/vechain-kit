@@ -151,7 +151,7 @@ export const TransactionModalContent = ({
                         <Text
                             fontSize={status === 'ready' ? 'md' : 'sm'}
                             textAlign="center"
-                            color={status === 'error' ? 'red' : 'inherit'}
+                            color={status === 'error' ? 'red.500' : 'inherit'}
                             mt={5}
                             style={{
                                 lineBreak: 'anywhere',

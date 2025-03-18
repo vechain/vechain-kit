@@ -82,28 +82,23 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
-    vechainKitSecondary: defineStyle(() => ({
+    vechainKitSecondary: defineStyle(({ colorMode }) => ({
         fontSize: 'md',
         px: 4,
         width: 'full',
         height: '60px',
         borderRadius: 'xl',
-        bg: 'transparent',
+        backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
+        _hover: {
+            backgroundColor:
+                colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
+        },
         border: '1px solid',
         borderColor: 'gray.200',
-        color: 'gray.700',
-        _hover: {
-            bg: 'gray.50',
-            _disabled: {
-                bg: 'transparent',
-            },
-        },
+        color: 'blackAlpha.900',
         _dark: {
             borderColor: 'whiteAlpha.200',
             color: 'whiteAlpha.900',
-            _hover: {
-                bg: 'whiteAlpha.50',
-            },
         },
         transition: 'all 0.2s',
     })),
@@ -117,6 +112,18 @@ const variants = {
             backgroundColor:
                 colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
         },
+    })),
+    actionButton: defineStyle(({ colorMode }) => ({
+        width: 'full',
+        minHeight: '70px',
+        height: 'fit-content',
+        backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
+        borderRadius: 'xl',
+        _hover: {
+            backgroundColor:
+                colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
+        },
+        transition: 'all 0.2s',
     })),
 };
 

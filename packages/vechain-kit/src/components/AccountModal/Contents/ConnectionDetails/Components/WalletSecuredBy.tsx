@@ -21,7 +21,7 @@ export const WalletSecuredBy = () => {
             mt={5}
             p={3}
             borderRadius="lg"
-            bg={isDark ? 'whiteAlpha.100' : 'blackAlpha.50'}
+            bg={isDark ? '#00000038' : '#f5f5f5'}
             shadow="sm"
         >
             <Text fontSize={'xs'} fontWeight={'800'}>

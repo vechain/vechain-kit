@@ -15,7 +15,6 @@ import {
     CrossAppConnectionCard,
     DappKitConnectionCard,
     PrivyConnectionCard,
-    WalletSecuredBy,
 } from './Components';
 
 type Props = {
@@ -53,8 +52,6 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
                 )}
 
                 {connection.isConnectedWithDappKit && <DappKitConnectionCard />}
-
-                {connection.isConnectedWithPrivy && <WalletSecuredBy />}
             </ModalBody>
             <ModalFooter pt={0} />
         </ScrollToTopWrapper>

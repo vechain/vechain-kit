@@ -1,27 +1,34 @@
-import { modalAnatomy as parts } from '@chakra-ui/anatomy';
+import { cardAnatomy } from '@chakra-ui/anatomy';
 import {
     StyleFunctionProps,
     createMultiStyleConfigHelpers,
 } from '@chakra-ui/react';
 
 const { definePartsStyle, defineMultiStyleConfig } =
-    createMultiStyleConfigHelpers(parts.keys);
+    createMultiStyleConfigHelpers(cardAnatomy.keys);
 
 const variants = {
     vechainKitBase: (props: StyleFunctionProps) =>
         definePartsStyle({
-            body: {
-                borderRadius: '12px',
+            container: {
                 backgroundColor:
-                    props.colorMode === 'dark' ? '#1f1f1e' : 'white',
-                border:
-                    props.colorMode === 'dark'
-                        ? '1px solid #2d2d2d'
-                        : '1px solid #eaeaea',
+                    props.colorMode === 'dark' ? '#1c1c1b' : '#f5f5f5',
+                borderRadius: '14px',
+                width: 'full',
+                border: 'none',
+            },
+            body: {
                 p: 5,
+                width: 'full',
+            },
+            header: {
+                p: 5,
+                width: 'full',
+                borderRadius: '14px 14px 0 0',
             },
             footer: {
-                p: 5,
+                width: 'full',
+                borderRadius: '0 0 14px 14px',
             },
         }),
 

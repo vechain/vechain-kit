@@ -41,3 +41,26 @@ export const VECHAIN_KIT_MIXPANEL_TOKENS = {
 };
 
 export const VECHAIN_KIT_MIXPANEL_PROJECT_NAME = 'vechain-kit';
+export type PrivyEcosystemApp = {
+    id: string;
+    name: string;
+    website: string;
+};
+
+export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
+    {
+        id: 'clz41gcg00e4ay75dmq3uzzgr',
+        name: 'Cleanify',
+        website: 'https://app.cleanify.vet',
+    },
+    {
+        id: 'cm153hrup0817axti38avlfyg',
+        name: 'GreenCart',
+        website: 'https://greencart.ai',
+    },
+    {
+        id: 'clv9sfos20j6x1431ga80d95f',
+        name: 'Mughsot',
+        website: 'https://mugshot.vet/',
+    },
+];

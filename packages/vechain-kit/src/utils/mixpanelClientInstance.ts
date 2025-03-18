@@ -405,6 +405,11 @@ const Analytics = {
             Analytics.send.trackSend('token_page_view', {
                 tokenSymbol,
             }),
+
+        tokenSelected: (tokenSymbol: string) =>
+            Analytics.send.trackSend('token_selected', {
+                tokenSymbol,
+            }),
     },
 
     bridge: {

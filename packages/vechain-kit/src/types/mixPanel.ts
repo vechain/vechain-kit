@@ -330,6 +330,7 @@ export type SendAction =
     | 'token_select'
     | 'token_search'
     | 'token_page_view'
+    | 'token_selected'
     | 'amount'
     | 'recipient'
     | 'review'

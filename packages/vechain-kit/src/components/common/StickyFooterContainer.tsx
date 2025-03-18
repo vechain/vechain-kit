@@ -14,7 +14,7 @@ export const StickyFooterContainer = ({ children }: Props) => {
             bottom="0"
             left="0"
             right="0"
-            bg={isDark ? '#18181b' : 'white'}
+            bg={isDark ? '#1f1f1e' : 'white'}
             zIndex="1000"
             p={4}
             boxShadow={'0px -1px 6px -3px rgb(0 0 0 / 56%)'}
