@@ -28,7 +28,6 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatar } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
-import { convertUriToUrl } from '@/utils';
 import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 
@@ -65,7 +64,7 @@ export const SendTokenSummaryContent = ({
 }: SendTokenSummaryContentProps) => {
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
-    const { data: avatar } = useGetAvatar(resolvedDomain);
+    const { data: avatar } = useGetAvatar(resolvedDomain ?? '');
     const { network } = useVeChainKitConfig();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -78,7 +77,7 @@ export const SendTokenSummaryContent = ({
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
-            return convertUriToUrl(avatar, network.type);
+            return avatar;
         }
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);

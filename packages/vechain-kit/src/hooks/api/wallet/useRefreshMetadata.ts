@@ -1,8 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { getAvatarQueryKey, getTextRecordsQueryKey } from '../vetDomains';
+import {
+    getAvatarOfAddressQueryKey,
+    getAvatarQueryKey,
+    getTextRecordsQueryKey,
+} from '../vetDomains';
 import { useVeChainKitConfig } from '@/providers';
 
-export const useRefreshMetadata = (domain: string) => {
+export const useRefreshMetadata = (domain: string, address: string) => {
     const queryClient = useQueryClient();
     const { network } = useVeChainKitConfig();
 
@@ -21,6 +25,14 @@ export const useRefreshMetadata = (domain: string) => {
 
         await queryClient.refetchQueries({
             queryKey: getTextRecordsQueryKey(domain, network.type),
+        });
+
+        await queryClient.invalidateQueries({
+            queryKey: getAvatarOfAddressQueryKey(address),
+        });
+
+        await queryClient.refetchQueries({
+            queryKey: getAvatarOfAddressQueryKey(address),
         });
     };
 

@@ -24,6 +24,7 @@ import { IoOpenOutline } from 'react-icons/io5';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useEffect } from 'react';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -35,6 +36,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     useEffect(() => {
         Analytics.settings.trackSettings('embedded_wallet_view');
@@ -117,7 +119,11 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 <Link
                                     href="https://www.veworld.net/"
                                     isExternal
-                                    color="blackAlpha.600"
+                                    color={
+                                        isDark
+                                            ? 'whiteAlpha.600'
+                                            : 'blackAlpha.600'
+                                    }
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >
@@ -132,7 +138,11 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 <Link
                                     href="https://docs.vechainkit.vechain.org/vechain-kit/embedded-wallets"
                                     isExternal
-                                    color="blackAlpha.600"
+                                    color={
+                                        isDark
+                                            ? 'whiteAlpha.600'
+                                            : 'blackAlpha.600'
+                                    }
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >
