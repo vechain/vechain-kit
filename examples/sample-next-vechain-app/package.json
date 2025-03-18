@@ -9,6 +9,8 @@
     },
     "dependencies": {
         "@chakra-ui/react": "2.8.2",
+        "@fontsource-variable/instrument-sans": "^5.0.4",
+        "@fontsource-variable/inter": "^5.0.17",
         "@emotion/react": "^11.13.5",
         "@emotion/styled": "^11.13.5",
         "@vechain/vechain-kit": "*",

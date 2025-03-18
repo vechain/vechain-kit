@@ -1,0 +1,14 @@
+/* yourStyles.css */
+.slide {
+  opacity: 0.8; /* Slightly faded by default */
+  transition: opacity 0.5s ease; /* Smooth transition for the opacity */
+}
+
+.swiper-slide-active {
+  opacity: 1; /* Fully visible for the active slide */
+}
+
+.swiper-slide-prev,
+.swiper-slide-next {
+  opacity: 0.5; /* Faded for the next/prev slides */
+}

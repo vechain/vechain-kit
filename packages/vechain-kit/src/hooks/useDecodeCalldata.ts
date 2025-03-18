@@ -1,0 +1,265 @@
+import { useQuery } from '@tanstack/react-query';
+import { abi } from 'thor-devkit';
+
+type B32SignatureData = Omit<abi.Function.Definition, 'stateMutability'>;
+
+/**
+ * Interface representing the decoded calldata.
+ */
+export interface DecodedCalldata {
+    /** The function definition without state mutability. */
+    definition: B32SignatureData;
+    /** A human-readable name of the function with parameter values. */
+    humanName: string;
+    /** An array of decoded parameters with their names, types, and values. */
+    decodedParams: { name: string; type: string; value: unknown }[];
+}
+
+/**
+ * Interface representing the signature data from Vechain Energy.
+ */
+interface VechainEnergySignatureData {
+    /** The text representation of the signature. */
+    text: string;
+    /** The ABI details of the function. */
+    abi: {
+        name: string;
+        constant: boolean;
+        inputs: { internalType: string; name: string; type: string }[];
+        outputs: { internalType: string; name: string; type: string }[];
+        type: string;
+        payable: boolean;
+    };
+    /** The source of the signature data. */
+    source: string;
+}
+
+/**
+ * Interface representing the signature data from OpenChain.
+ */
+interface OpenChainSignatureData {
+    ok: boolean;
+    result: {
+        event: Record<string, unknown>;
+        function: Record<string, Array<{ name: string; filtered: boolean }>>;
+    };
+}
+
+/**
+ * Parses a function signature from OpenChain format to ABI definition.
+ * @param signature - The function signature (e.g. "claimReward(uint256)").
+ * @returns A partial ABI function definition.
+ */
+const parseSignatureToAbi = (signature: string): Partial<B32SignatureData> => {
+    // Extract function name and parameters
+    const match = signature.match(/^([^(]+)\(([^)]*)\)$/);
+    if (!match) return { name: signature, inputs: [] };
+
+    const [, name, paramsStr] = match;
+
+    // Parse parameters
+    const inputs = paramsStr
+        ? paramsStr.split(',').map((param, index) => ({
+              name: `param${index}`,
+              type: param.trim(),
+          }))
+        : [];
+
+    return {
+        name,
+        inputs,
+    };
+};
+
+/**
+ * Fetches the function signature data from external sources based on the calldata.
+ * @param calldata - The calldata string to extract the signature from.
+ * @returns A promise that resolves to the function signature data.
+ * @throws An error if the signature cannot be fetched.
+ */
+
+const fetchSignature = async (calldata: string): Promise<B32SignatureData> => {
+    // First 10 bytes of the calldata is the signature
+    const signature = calldata.slice(0, 10);
+    const urls = [
+        `https://b32.vecha.in/q/${signature}.json`,
+        `https://sig.api.vechain.energy/${signature}`,
+        `https://api.openchain.xyz/signature-database/v1/lookup?function=${signature}`,
+    ];
+
+    for (const url of urls) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            console.error(
+                `Failed to fetch from ${url}: ${response.statusText}`,
+            );
+            continue;
+        }
+
+        if (url.includes('b32.vecha.in')) {
+            const data: B32SignatureData[] = await response.json();
+            if (data?.length > 0) {
+                return data[0];
+            }
+        } else if (url.includes('sig.api.vechain.energy')) {
+            const data: VechainEnergySignatureData = await response.json();
+            if (data?.abi) {
+                return data.abi as abi.Function.Definition;
+            }
+        } else if (url.includes('openchain.xyz')) {
+            const data: OpenChainSignatureData = await response.json();
+            if (data?.ok && data.result?.function?.[signature]?.length > 0) {
+                const funcName = data.result.function[signature][0].name;
+                const parsedAbi = parseSignatureToAbi(funcName);
+                // Add required properties to make it compatible with B32SignatureData
+                return {
+                    ...parsedAbi,
+                    name: parsedAbi.name || 'unknown',
+                    inputs: parsedAbi.inputs || [],
+                    outputs: [],
+                    type: 'function',
+                    payable: false,
+                    constant: false,
+                } as B32SignatureData;
+            }
+        }
+    }
+
+    // If we can't find the signature, return a placeholder
+    return {
+        name: 'unknown',
+        inputs: [],
+        outputs: [],
+        type: 'function',
+        payable: false,
+        constant: false,
+    };
+};
+
+/**
+ * Decodes the parameters from the calldata using the ABI definition.
+ * @param calldata - The calldata string to decode.
+ * @param abiDefinition - The ABI function definition to use for decoding.
+ * @returns An array of decoded parameters with their names, types, and values.
+ */
+const decodeParams = (
+    calldata: string,
+    abiDefinition: abi.Function.Definition,
+): DecodedCalldata['decodedParams'] => {
+    try {
+        if (
+            !abiDefinition ||
+            !abiDefinition.inputs ||
+            abiDefinition.inputs.length === 0
+        ) {
+            return [];
+        }
+
+        const paramData =
+            calldata.length > 10 ? `0x${calldata.slice(10)}` : '0x';
+        const decoded = abi.decodeParameters(abiDefinition.inputs, paramData);
+
+        return abiDefinition.inputs.map((param) => ({
+            name: param.name || 'unnamed',
+            type: param.type,
+            value: decoded ? decoded[param.name] : 'Unknown',
+        }));
+    } catch (e) {
+        console.error('Error decoding call data', e);
+        return abiDefinition.inputs.map((param) => ({
+            name: param.name || 'unnamed',
+            type: param.type,
+            value: 'Error decoding',
+        }));
+    }
+};
+
+/**
+ * Decodes calldata without using react-query, suitable for JavaScript projects.
+ * @param calldata - The calldata string to decode (e.g., "0xa9059cbb000000000000000000000000...").
+ * @returns A Promise that resolves to the decoded calldata.
+ * @example
+ * // Decode a token transfer calldata
+ * const result = await decodeCalldata("0xa9059cbb000000000000000000000000ab5801a7d398351b8be11c439e05c5b3259aec9b0000000000000000000000000000000000000000000000000de0b6b3a7640000");
+ * // Result: { definition: {...}, humanName: "transfer(to: 0xab5801a7d398351b8be11c439e05c5b3259aec9b, value: 1000000000000000000)", decodedParams: [...] }
+ */
+export const decodeCalldata = async (
+    calldata: string,
+): Promise<DecodedCalldata> => {
+    // Handle empty calldata
+    if (!calldata || calldata === '0x') {
+        return {
+            definition: {
+                name: 'empty',
+                inputs: [],
+                outputs: [],
+                type: 'function',
+                payable: false,
+                constant: false,
+            },
+            humanName: 'empty()',
+            decodedParams: [],
+        };
+    }
+
+    // Fetch the function signature
+    const decodedSignature = await fetchSignature(calldata);
+
+    // Create ABI definition
+    const abiDefinition = new abi.Function(
+        decodedSignature as abi.Function.Definition,
+    );
+
+    // Decode the parameters
+    const decodedParams = decodeParams(calldata, abiDefinition.definition);
+
+    // Format human-readable method name with parameters
+    const humanName = `${decodedSignature.name}(${decodedParams
+        .map((param) => `${param.name}: ${String(param.value)}`)
+        .join(', ')})`;
+
+    return {
+        definition: abiDefinition.definition,
+        humanName,
+        decodedParams,
+    };
+};
+
+/**
+ * Generates a query key for decoding calldata.
+ * @param calldata - The calldata string to generate the key for.
+ * @returns An array representing the query key.
+ */
+const getDecodeCalldataQueryKey = (calldata: string) => [
+    'decodeCalldata',
+    calldata,
+];
+
+/**
+ * Custom hook to decode calldata using react-query.
+ * @param calldata - The calldata string to decode.
+ * @returns The query result containing the decoded calldata.
+ *
+ * @example
+ * ```tsx
+ * const { data, isLoading } = useDecodeCalldata("0x23b872dd000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+ *
+ * if (isLoading) return <div>Loading...</div>;
+ *
+ * return (
+ *   <div>
+ *     <h2>{data?.humanName}</h2>
+ *     <pre>{JSON.stringify(data?.decodedParams, null, 2)}</pre>
+ *   </div>
+ * );
+ * ```
+ */
+export const useDecodeCalldata = (calldata: string) => {
+    return useQuery<DecodedCalldata>({
+        queryKey: getDecodeCalldataQueryKey(calldata),
+        queryFn: async () => await decodeCalldata(calldata),
+        enabled: !!calldata,
+        staleTime: 1000 * 60 * 5, // Cache results for 5 minutes
+        retry: 2, // Retry failed queries twice
+    });
+};

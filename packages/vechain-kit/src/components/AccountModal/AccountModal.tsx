@@ -20,6 +20,7 @@ import {
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
 import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
+import { ChakraProvider } from '@chakra-ui/react';
 
 type Props = {
     isOpen: boolean;

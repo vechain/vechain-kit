@@ -24,22 +24,22 @@ export function VechainKitProvider({ children }: Props) {
 
     return (
         <VeChainKit
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: ['google', 'twitter', 'sms', 'email'],
-                appearance: {
-                    walletList: ['metamask', 'rainbow'],
-                    accentColor: '#696FFD',
-                    loginMessage: 'Select a social media profile',
-                    logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
+            // privy={{
+            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+            //     loginMethods: ['google', 'twitter', 'sms', 'email'],
+            //     appearance: {
+            //         walletList: ['metamask', 'rainbow'],
+            //         accentColor: '#696FFD',
+            //         loginMessage: 'Select a social media profile',
+            //         logo: 'https://i.ibb.co/ZHGmq3y/image-21.png',
+            //     },
+            //     embeddedWallets: {
+            //         createOnLogin: 'all-users',
+            //     },
 
-                allowPasskeyLinking: true,
-            }}
+            //     allowPasskeyLinking: true,
+            // }}
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: true,
