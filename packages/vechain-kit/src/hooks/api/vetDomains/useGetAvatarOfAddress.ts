@@ -33,13 +33,11 @@ export const useGetAvatarOfAddress = (address?: string) => {
             const domains = await domainsQuery.refetch();
             if (!domains.data?.domain) return getPicassoImage(address);
 
-            return avatarQuery.data;
+            if (avatarQuery.data) return avatarQuery.data;
+
+            return getPicassoImage(address);
         },
-        enabled:
-            !!address &&
-            domainsQuery.isSuccess &&
-            !!primaryDomain &&
-            avatarQuery.isSuccess,
+        enabled: !!address && domainsQuery.isSuccess && avatarQuery.isSuccess,
         // Use the same caching strategy as the avatar query
         staleTime: 5 * 60 * 1000, // 5 minutes
     });

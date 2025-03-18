@@ -15,7 +15,11 @@ import {
     useDAppKitWallet,
     useGetAvatarOfAddress,
 } from '@/hooks';
-import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
+import {
+    compareAddresses,
+    getPicassoImage,
+    VECHAIN_PRIVY_APP_ID,
+} from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
@@ -184,7 +188,7 @@ export const useWallet = (): UseWalletReturnType => {
         ? {
               address: activeAddress,
               domain: activeAccountDomain?.data?.domain,
-              image: activeAccountAvatar.data ?? undefined,
+              image: activeAccountAvatar.data,
               isLoadingMetadata:
                   activeAccountAvatar?.isLoading ||
                   activeAccountDomain?.isLoading ||
@@ -197,7 +201,7 @@ export const useWallet = (): UseWalletReturnType => {
         ? {
               address: connectedWalletAddress,
               domain: connectedMetadata.domain,
-              image: connectedMetadata.image ?? undefined,
+              image: connectedMetadata.image,
               isLoadingMetadata: connectedMetadata.isLoading,
               metadata: connectedMetadata.records,
           }
@@ -249,7 +253,7 @@ export const useWallet = (): UseWalletReturnType => {
         smartAccount: {
             address: smartAccount?.address ?? '',
             domain: smartAccountMetadata.domain,
-            image: smartAccountMetadata.image ?? undefined,
+            image: smartAccountMetadata.image,
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
             version: smartAccountVersion ?? null,

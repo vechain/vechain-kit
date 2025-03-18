@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import {
-    useGetAvatar,
+    useGetAvatarOfAddress,
     useGetTextRecords,
     useVechainDomain,
     useWallet,
@@ -58,9 +58,7 @@ export const ProfileCard = ({
     const { account } = useWallet();
 
     const activeAccountDomain = useVechainDomain(address);
-    const activeAccountAvatar = useGetAvatar(
-        activeAccountDomain?.data?.domain ?? '',
-    );
+    const activeAccountAvatar = useGetAvatarOfAddress(address);
     const activeAccountTextRecords = useGetTextRecords(
         activeAccountDomain?.data?.domain,
     );
@@ -97,9 +95,7 @@ export const ProfileCard = ({
                     wallet={{
                         address,
                         domain: activeAccountDomain?.data?.domain,
-                        image:
-                            activeAccountAvatar?.data ??
-                            getPicassoImage(address),
+                        image: activeAccountAvatar.data,
                         isLoadingMetadata:
                             activeAccountAvatar?.isLoading ||
                             activeAccountDomain?.isLoading ||
@@ -178,9 +174,7 @@ export const ProfileCard = ({
                         wallet={{
                             address,
                             domain: activeAccountDomain?.data?.domain,
-                            image:
-                                activeAccountAvatar?.data ??
-                                getPicassoImage(address),
+                            image: activeAccountAvatar.data,
                             isLoadingMetadata:
                                 activeAccountAvatar?.isLoading ||
                                 activeAccountDomain?.isLoading ||

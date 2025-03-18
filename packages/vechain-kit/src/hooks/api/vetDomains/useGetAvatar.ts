@@ -235,8 +235,7 @@ export const useGetAvatar = (name: string) => {
             return parseAvatarRecord(avatarRecord, network.type, nodeUrl);
         },
         enabled: !!name && !!nodeUrl && !!network.type,
-        retry: 3,
-        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+        // Use the same caching strategy as the avatar query
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
