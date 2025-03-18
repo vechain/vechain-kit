@@ -26,6 +26,7 @@ import {
     BridgeProperties,
     DropOffStage,
     DappKitSource,
+    NameSelectionDropOffStage,
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
@@ -286,18 +287,42 @@ const Analytics = {
 
             customiseOpened: () =>
                 Analytics.user.profile.trackAccount('customise_opened'),
-        },
 
-        preferences: {
-            updated: (preference: string) =>
-                Analytics.user.profile.trackAccount('settings_updated', {
-                    fields: [preference],
-                }),
+            customization: {
+                started: () => {
+                    Analytics.user.profile.trackAccount(
+                        'customization_started',
+                    );
+                },
 
-            accountNameChanged: (newName: string) =>
-                Analytics.user.profile.trackAccount('name_changed', {
-                    newName,
-                }),
+                completed: (changes: {
+                    hasAvatar?: boolean;
+                    hasDisplayName?: boolean;
+                    hasDescription?: boolean;
+                    hasSocials?: boolean;
+                }) => {
+                    Analytics.user.profile.trackAccount(
+                        'customization_completed',
+                        changes,
+                    );
+                },
+
+                dropOff: (stage: 'avatar' | 'form' | 'confirmation') => {
+                    Analytics.user.profile.trackAccount(
+                        'customization_drop_off',
+                        {
+                            stage,
+                        },
+                    );
+                },
+
+                imageUploaded: (success: boolean, error?: string) => {
+                    Analytics.user.profile.trackAccount('image_upload', {
+                        success,
+                        error,
+                    });
+                },
+            },
         },
     },
 
@@ -476,9 +501,6 @@ const Analytics = {
         opened: (section: string) =>
             Analytics.settings.trackSettings('view', { section }),
 
-        accountNameChanged: (newName: string) =>
-            Analytics.settings.trackSettings('name_changed', { newName }),
-
         accessAndSecurityViewed: () =>
             Analytics.settings.trackSettings('security_view'),
 
@@ -497,6 +519,48 @@ const Analytics = {
                     language,
                     previousLanguage,
                 }),
+        },
+
+        nameSelection: {
+            started: () => {
+                Analytics.settings.trackSettings('name_selection_started');
+            },
+
+            searched: (
+                name: string,
+                _isAvailable: boolean,
+                _isOwnDomain: boolean,
+            ) => {
+                Analytics.settings.trackSettings('name_selection_searched', {
+                    newName: name,
+                    section: 'name-search',
+                });
+            },
+
+            completed: (name: string, _isOwnDomain: boolean) => {
+                Analytics.settings.trackSettings('name_selection_completed', {
+                    newName: name,
+                });
+            },
+
+            dropOff: (
+                stage: NameSelectionDropOffStage,
+                isError?: boolean,
+                error?: string,
+            ) => {
+                Analytics.settings.trackSettings('name_selection_drop_off', {
+                    stage,
+                    isError,
+                    error,
+                });
+            },
+
+            failed: (stage: NameSelectionDropOffStage, error: string) => {
+                Analytics.settings.trackSettings('name_selection_failed', {
+                    stage,
+                    error,
+                });
+            },
         },
     },
 

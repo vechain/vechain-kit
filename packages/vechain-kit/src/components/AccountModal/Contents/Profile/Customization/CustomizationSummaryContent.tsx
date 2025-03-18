@@ -24,6 +24,8 @@ import {
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
+import { useEffect } from 'react';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -136,11 +138,27 @@ export const CustomizationSummaryContent = ({
 
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
+
+                Analytics.user.profile.customization.completed({
+                    hasAvatar: !!data.avatarIpfsHash,
+                    hasDisplayName: !!data.displayName,
+                    hasDescription: !!data.description,
+                    hasSocials: !!(data.twitter || data.website || data.email),
+                });
             }
         } catch (error) {
             console.error('Error saving changes:', error);
+            Analytics.user.profile.customization.dropOff('confirmation');
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (!txReceipt && !isTransactionPending) {
+                Analytics.user.profile.customization.dropOff('confirmation');
+            }
+        };
+    }, [txReceipt, isTransactionPending]);
 
     const renderField = (label: string, value: string) => {
         if (!value?.trim()) return null;

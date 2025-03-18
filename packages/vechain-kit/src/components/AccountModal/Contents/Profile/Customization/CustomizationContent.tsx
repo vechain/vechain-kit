@@ -37,6 +37,7 @@ import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '@/utils';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 // Update FormValues type to include validation
 type FormValues = {
@@ -130,7 +131,6 @@ export const CustomizationContent = ({
             }
 
             // Create temporary preview URL
-            // Create temporary preview URL
             const newPreviewUrl = URL.createObjectURL(file);
             setPreviewImageUrl(newPreviewUrl);
 
@@ -143,9 +143,14 @@ export const CustomizationContent = ({
                 network.type,
             );
             setAvatarIpfsHash(ipfsHash);
+            Analytics.user.profile.customization.imageUploaded(true);
         } catch (error) {
             console.error('Error uploading image:', error);
             setPreviewImageUrl(null);
+            Analytics.user.profile.customization.imageUploaded(
+                false,
+                error instanceof Error ? error.message : 'Unknown error',
+            );
         } finally {
             setIsUploading(false);
         }
@@ -205,6 +210,14 @@ export const CustomizationContent = ({
             },
         });
     };
+
+    useEffect(() => {
+        return () => {
+            if (hasChanges && !isUploading) {
+                Analytics.user.profile.customization.dropOff('form');
+            }
+        };
+    }, [hasChanges, isUploading]);
 
     return (
         <Box>

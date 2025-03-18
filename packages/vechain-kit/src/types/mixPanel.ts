@@ -79,7 +79,11 @@ export type AccountAction =
     | 'manage_dao'
     | 'connections_viewed'
     | 'address_copied'
-    | 'customise_opened';
+    | 'customise_opened'
+    | 'customization_started'
+    | 'customization_completed'
+    | 'customization_drop_off'
+    | 'image_upload';
 
 export type AccountProperties = {
     action: AccountAction;
@@ -89,6 +93,12 @@ export type AccountProperties = {
     fields?: string[];
     error?: string;
     isError?: boolean;
+    stage?: 'avatar' | 'form' | 'confirmation';
+    success?: boolean;
+    hasAvatar?: boolean;
+    hasDisplayName?: boolean;
+    hasDescription?: boolean;
+    hasSocials?: boolean;
 };
 
 export type FAQAction =
@@ -215,19 +225,30 @@ export type EcosystemProperties = {
     isError?: boolean;
 };
 
+export type NameSelectionDropOffStage =
+    | 'search'
+    | 'avatar'
+    | 'form'
+    | 'confirmation';
+
 export type SettingsAction =
     | 'view'
-    | 'name_changed'
     | 'security_view'
     | 'manage_security_settings'
     | 'upgrade_smart_account'
     | 'embedded_wallet_view'
     | 'connection_view'
-    | 'language_changed';
+    | 'language_changed'
+    | 'name_selection_started'
+    | 'name_selection_searched'
+    | 'name_selection_completed'
+    | 'name_selection_drop_off'
+    | 'name_selection_failed';
 
 export type SettingsProperties = {
     action: SettingsAction;
     section?: string;
+    stage?: NameSelectionDropOffStage;
     newName?: string;
     language?: string;
     previousLanguage?: string;

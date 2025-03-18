@@ -70,6 +70,7 @@ export const SettingsContent = ({
     }, []);
 
     const handleNameChange = () => {
+        Analytics.settings.nameSelection.started();
         if (account?.domain) {
             setCurrentContent({
                 type: 'choose-name-search',
@@ -127,9 +128,7 @@ export const SettingsContent = ({
                         }}
                         title={t('Choose account name')}
                         description={t('Choose a name for your account.')}
-                        onClick={() => {
-                            handleNameChange();
-                        }}
+                        onClick={handleNameChange}
                         leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
                     />

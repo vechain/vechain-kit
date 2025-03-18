@@ -20,6 +20,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -57,7 +58,7 @@ export const ChooseNameSummaryContent = ({
         domain: 'veworld.vet',
         alreadyOwned: isOwnDomain,
         onSuccess: () => {
-            Analytics.settings.accountNameChanged(name);
+            Analytics.settings.nameSelection.completed(name, isOwnDomain);
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -84,10 +85,24 @@ export const ChooseNameSummaryContent = ({
 
         try {
             await sendTransaction();
+            Analytics.settings.nameSelection.completed(name, isOwnDomain);
         } catch (error) {
             console.error('Transaction failed:', error);
+            Analytics.settings.nameSelection.dropOff(
+                'confirmation',
+                true,
+                error instanceof Error ? error.message : 'Unknown error',
+            );
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (!txReceipt && !isTransactionPending) {
+                Analytics.settings.nameSelection.dropOff('confirmation');
+            }
+        };
+    }, [txReceipt, isTransactionPending, name]);
 
     return (
         <>
