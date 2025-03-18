@@ -184,7 +184,7 @@ const decodeParams = (
  * const result = await decodeFunction("0xa9059cbb000000000000000000000000ab5801a7d398351b8be11c439e05c5b3259aec9b0000000000000000000000000000000000000000000000000de0b6b3a7640000");
  * // Result: { definition: {...}, humanName: "transfer(to: 0xab5801a7d398351b8be11c439e05c5b3259aec9b, value: 1000000000000000000)", decodedParams: [...] }
  */
-export const decodeFunction = async (
+export const decodeFunctionSignature = async (
     input: string,
 ): Promise<DecodedFunction> => {
     // Handle empty input
@@ -240,7 +240,10 @@ export const decodeFunction = async (
  * @param input - The function signature or calldata string to generate the key for.
  * @returns An array representing the query key.
  */
-const getDecodeFunctionQueryKey = (input: string) => ['decodeFunction', input];
+const getDecodeFunctionSignatureQueryKey = (input: string) => [
+    'decodeFunctionSignature',
+    input,
+];
 
 /**
  * Custom hook to decode function signatures and calldata using react-query.
@@ -267,14 +270,10 @@ const getDecodeFunctionQueryKey = (input: string) => ['decodeFunction', input];
  */
 export const useDecodeFunctionSignature = (input: string) => {
     return useQuery<DecodedFunction>({
-        queryKey: getDecodeFunctionQueryKey(input),
-        queryFn: async () => await decodeFunction(input),
+        queryKey: getDecodeFunctionSignatureQueryKey(input),
+        queryFn: async () => await decodeFunctionSignature(input),
         enabled: !!input,
         staleTime: 1000 * 60 * 5, // Cache results for 5 minutes
         retry: 2, // Retry failed queries twice
     });
 };
-
-// For backward compatibility
-export const useDecodeCalldata = useDecodeFunctionSignature;
-export const decodeCalldata = decodeFunction;
