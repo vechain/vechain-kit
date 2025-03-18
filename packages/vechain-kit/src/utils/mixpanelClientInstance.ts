@@ -35,6 +35,7 @@ import {
 } from './Constants';
 
 const APP_SOURCE: string = document.title || '';
+const PAGE_SOURCE: string = window.location.pathname || '';
 
 const ENV = {
     isDevelopment:
@@ -111,7 +112,11 @@ const trackEvent = <E extends EventName>(
             return;
         }
 
-        mixpanel.track(event, { ...properties, source: APP_SOURCE });
+        mixpanel.track(event, {
+            ...properties,
+            source: APP_SOURCE,
+            page: PAGE_SOURCE,
+        });
     } catch (error) {
         console.error(`Analytics error when tracking "${event}":`, error);
     }
@@ -122,7 +127,11 @@ const setUserProperties = (
     userId?: string,
 ): void => {
     try {
-        mixpanel.people.set({ ...properties, source: APP_SOURCE });
+        mixpanel.people.set({
+            ...properties,
+            source: APP_SOURCE,
+            page: PAGE_SOURCE,
+        });
 
         // Store in localStorage if userId is provided
         if (userId) {
