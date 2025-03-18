@@ -25,40 +25,36 @@ import {
     BridgeAction,
     BridgeProperties,
     DropOffStage,
+    DappKitSource,
 } from '@/types/mixPanel';
 import mixpanel from 'mixpanel-browser';
+import {
+    VECHAIN_KIT_STORAGE_KEYS,
+    VECHAIN_KIT_MIXPANEL_TOKENS,
+    VECHAIN_KIT_MIXPANEL_PROJECT_NAME,
+} from './Constants';
 
-// App source for tracking origin
 const APP_SOURCE: string = document.title || '';
 
 const ENV = {
-    isDevelopment: process.env.NODE_ENV === 'development',
-    isTest: process.env.NODE_ENV === 'test',
-    isProduction: process.env.NODE_ENV === 'production',
-};
-
-const PROJECT_TOKENS = {
-    development: '1ee28a0fa050400217dfa7f6fd630d0b',
-    test: '1ee28a0fa050400217dfa7f6fd630d0b', // Could be different token
-    production: '1ee28a0fa050400217dfa7f6fd630d0b', // Should be different token
+    isDevelopment:
+        localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'test',
+    isProduction:
+        localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'main',
 };
 
 const MIXPANEL_PROJECT_TOKEN = ENV.isProduction
-    ? PROJECT_TOKENS.production
-    : ENV.isTest
-    ? PROJECT_TOKENS.test
-    : PROJECT_TOKENS.development;
+    ? VECHAIN_KIT_MIXPANEL_TOKENS.production
+    : VECHAIN_KIT_MIXPANEL_TOKENS.development;
 
 if (typeof window !== 'undefined' && MIXPANEL_PROJECT_TOKEN) {
-    mixpanel.init(MIXPANEL_PROJECT_TOKEN, {
-        debug: !ENV.isProduction,
-        // api_host: ENV.isProduction
-        //     ? 'https://api.mixpanel.com'
-        //     : 'https://api-eu.mixpanel.com',
-        // disable_persistence: ENV.isTest,
-        // ip: false, // Don't capture IP addresses for better privacy
-        // property_blacklist: ['$current_url', '$initial_referrer'], // Blacklist sensitive properties
-    });
+    mixpanel.init(
+        MIXPANEL_PROJECT_TOKEN,
+        {
+            debug: !ENV.isProduction,
+        },
+        VECHAIN_KIT_MIXPANEL_PROJECT_NAME,
+    );
 
     // Development-only warning
     if (ENV.isDevelopment) {
@@ -195,7 +191,7 @@ const Analytics = {
         }: {
             userId?: string;
             loginMethod: VeLoginMethod;
-            platform?: VePrivySocialLoginMethod;
+            platform?: VePrivySocialLoginMethod | DappKitSource;
         }) => {
             if (userId) {
                 identifyUser(userId);
@@ -581,40 +577,8 @@ const Analytics = {
 
 export {
     Analytics,
-    updateConsent,
-    getConsentSettings,
-    saveConsentSettings,
-    hasAnalyticsConsent,
     resetUser,
     incrementUserProperty,
     setUserProperties,
     identifyUser,
-};
-
-// Sanitize functions (placeholder - to be implemented)
-// const sanitizeProperties = <T extends Record<string, any>>(props: T): T => {
-//     // TODO: Implement property sanitization
-//     // This would remove PII, truncate long values, etc.
-//     return props;
-// };
-
-// Mock consent functions (to be implemented)
-const updateConsent = (settings: Record<string, boolean>): void => {
-    // TODO: Implement consent management
-    console.log('Consent settings updated', settings);
-};
-
-const getConsentSettings = (): Record<string, boolean> => {
-    // TODO: Implement consent management
-    return { analytics: true };
-};
-
-const saveConsentSettings = (settings: Record<string, boolean>): void => {
-    // TODO: Implement consent management
-    console.log('Consent settings saved', settings);
-};
-
-const hasAnalyticsConsent = (): boolean => {
-    // TODO: Implement consent management
-    return true;
 };

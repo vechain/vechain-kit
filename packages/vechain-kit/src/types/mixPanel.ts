@@ -15,9 +15,15 @@ export enum VePrivySocialLoginMethod {
     VECHAIN = 'VeChain',
 }
 
+export enum DappKitSource {
+    VEWORLD = 'veworld',
+    SYNC2 = 'sync2',
+    WALLET_CONNECT = 'wallet-connect',
+}
+
 export type LoginEventProperties = {
     loginMethod: VeLoginMethod;
-    platform?: VePrivySocialLoginMethod;
+    platform?: VePrivySocialLoginMethod | DappKitSource;
 };
 
 export type AuthAction =
@@ -52,7 +58,7 @@ export type DropOffStage =
 export type AuthProperties = {
     action: AuthAction;
     loginMethod?: VeLoginMethod;
-    platform?: VePrivySocialLoginMethod;
+    platform?: VePrivySocialLoginMethod | DappKitSource;
     chainName?: string;
     fromScreen?: string;
     error?: string;

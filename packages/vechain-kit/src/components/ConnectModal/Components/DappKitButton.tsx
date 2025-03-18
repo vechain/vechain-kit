@@ -1,12 +1,13 @@
 import { GridItem, Icon } from '@chakra-ui/react';
-import { useDAppKitWalletModal } from '@/hooks';
+import { useDAppKitWalletModal, usePrivy } from '@/hooks';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoWalletOutline } from 'react-icons/io5';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types/mixPanel';
+import { VeLoginMethod, DappKitSource } from '@/types/mixPanel';
 import { useEffect } from 'react';
+import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 type Props = {
     isDark: boolean;
@@ -17,6 +18,9 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
     const { t } = useTranslation();
     const { open: openDappKitModal, onConnectionStatusChange } =
         useDAppKitWalletModal();
+    const { source } = useDappKitWallet();
+
+    const { user } = usePrivy();
 
     useEffect(() => {
         const handleConnectionChange = (
@@ -65,6 +69,11 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
         Analytics.auth.flowStarted();
         Analytics.auth.methodSelected(VeLoginMethod.DAPPKIT);
         openDappKitModal();
+        Analytics.auth.completed({
+            userId: user?.id,
+            loginMethod: VeLoginMethod.DAPPKIT,
+            platform: source as DappKitSource,
+        });
     };
 
     return (

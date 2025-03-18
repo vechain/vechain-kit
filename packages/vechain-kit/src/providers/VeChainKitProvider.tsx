@@ -32,6 +32,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
 import { initializeI18n } from '@/utils/i18n';
 import { ModalProvider } from './ModalProvider';
+import { VECHAIN_KIT_STORAGE_KEYS } from '@/utils/Constants';
 
 const DEFAULT_PRIVY_ECOSYSTEM_APP_IDS = [
     'clz41gcg00e4ay75dmq3uzzgr', //cleanify
@@ -265,6 +266,10 @@ export const VeChainKitProvider = (
             });
         }
     }, [language, i18nConfig]);
+
+    useEffect(() => {
+        localStorage.setItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
+    }, [network]);
 
     return (
         <EnsureQueryClient>

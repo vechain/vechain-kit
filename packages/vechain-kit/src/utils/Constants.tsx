@@ -30,3 +30,14 @@ export enum TogglePassportCheck {
     ParticipationScoreCheck = 4,
     GmOwnershipCheck = 5,
 }
+
+export const VECHAIN_KIT_STORAGE_KEYS = {
+    NETWORK: 'vechain-kit:network',
+};
+
+export const VECHAIN_KIT_MIXPANEL_TOKENS = {
+    development: 'e9627dff3f9ac07c28c28615fa86b181',
+    production: '2c9e0d4c8a37e9f31e3d59361f48b0dc',
+};
+
+export const VECHAIN_KIT_MIXPANEL_PROJECT_NAME = 'vechain-kit';
