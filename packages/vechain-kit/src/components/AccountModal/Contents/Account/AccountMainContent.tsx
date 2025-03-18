@@ -22,8 +22,7 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect } from 'react';
+
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -35,10 +34,6 @@ type Props = {
 export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-
-    useEffect(() => {
-        Analytics.settings.trackSettings('view', { section: 'general' });
-    }, []);
 
     return (
         <ScrollToTopWrapper>

@@ -93,10 +93,12 @@ export const SettingsContent = ({
 
     const handleAccessAndSecurity = () => {
         setCurrentContent('access-and-security');
+        Analytics.settings.accessAndSecurityViewed();
     };
 
     const handleConnectionDetails = () => {
         setCurrentContent('connection-details');
+        Analytics.settings.connectionDetailsViewed();
     };
 
     const handleLogout = () => {
@@ -181,6 +183,7 @@ export const SettingsContent = ({
                         title={t('Notifications')}
                         description={t('View your notifications and updates.')}
                         onClick={() => {
+                            Analytics.notifications.viewed();
                             setCurrentContent('notifications');
                         }}
                         leftIcon={BiBell}

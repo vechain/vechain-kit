@@ -15,7 +15,6 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect } from 'react';
 import { VechainEnergy } from '@/assets';
 
 type Props = {
@@ -27,10 +26,6 @@ type Props = {
 export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-
-    useEffect(() => {
-        Analytics.bridge.opened();
-    }, []);
 
     const handleLaunchVeChainEnergy = () => {
         Analytics.bridge.launchVeChainEnergy();

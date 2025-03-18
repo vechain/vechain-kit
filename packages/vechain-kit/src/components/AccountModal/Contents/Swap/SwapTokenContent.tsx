@@ -15,7 +15,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -24,10 +23,6 @@ type Props = {
 };
 
 export const SwapTokenContent = ({ setCurrentContent }: Props) => {
-    useEffect(() => {
-        Analytics.swap.opened();
-    }, []);
-
     const { t } = useTranslation();
 
     const handleLaunchBetterSwap = () => {

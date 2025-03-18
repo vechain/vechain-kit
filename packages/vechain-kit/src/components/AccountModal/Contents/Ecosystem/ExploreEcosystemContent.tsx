@@ -17,7 +17,7 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     useCurrentAllocationsRoundId,
     useEcosystemShortcuts,
@@ -90,10 +90,6 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
     const { data: vbdApps } = useMostVotedAppsInRound(
         currentRoundId ? (parseInt(currentRoundId) - 1).toString() : '1',
     );
-
-    useEffect(() => {
-        Analytics.ecosystem.buttonClicked();
-    }, []);
 
     // Only show VBD apps if we're on mainnet
     const isMainnet = network.type === 'main';

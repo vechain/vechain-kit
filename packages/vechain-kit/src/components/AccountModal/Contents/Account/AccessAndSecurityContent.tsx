@@ -14,7 +14,6 @@ import {
     useUpgradeRequired,
     useSetWalletRecovery,
 } from '@/hooks';
-import React, { useEffect } from 'react';
 import {
     ModalBackButton,
     ScrollToTopWrapper,
@@ -25,12 +24,12 @@ import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { IoCogSharp } from 'react-icons/io5';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import { HiOutlineShieldCheck, HiOutlineWallet } from 'react-icons/hi2';
 import { GiHouseKeys } from 'react-icons/gi';
 import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -51,10 +50,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
         connectedWallet?.address ?? '',
         3,
     );
-
-    useEffect(() => {
-        Analytics.settings.trackSettings('security_view');
-    }, []);
 
     const handleUpgradeSmartAccountClick = () => {
         setCurrentContent({
@@ -122,6 +117,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     <ActionButton
                         title={t('Your embedded wallet')}
                         onClick={() => {
+                            Analytics.settings.embeddedWalletViewed();
                             setCurrentContent('embedded-wallet');
                         }}
                         leftIcon={HiOutlineWallet}

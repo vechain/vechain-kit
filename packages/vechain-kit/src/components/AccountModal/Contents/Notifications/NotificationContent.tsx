@@ -18,7 +18,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useNotifications } from '@/hooks/notifications';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
 import { NotificationItem } from './Components/NotificationItem';
 import { Analytics } from '@/utils/mixpanelClientInstance';
@@ -42,14 +42,6 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
     const [archivedNotifications, setArchivedNotifications] = useState(
         getArchivedNotifications(),
     );
-
-    useEffect(() => {
-        Analytics.notifications.viewed(
-            undefined,
-            notifications.length,
-            notifications.filter((n) => !n.isRead).length,
-        );
-    }, [notifications]);
 
     const handleClearAll = () => {
         Analytics.notifications.cleared(undefined, notifications.length);

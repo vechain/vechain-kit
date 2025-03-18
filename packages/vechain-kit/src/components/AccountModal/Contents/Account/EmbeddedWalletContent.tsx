@@ -22,8 +22,6 @@ import { useTranslation } from 'react-i18next';
 import { AccountModalContentTypes } from '../../Types';
 import { IoOpenOutline } from 'react-icons/io5';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect } from 'react';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -35,10 +33,6 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
-
-    useEffect(() => {
-        Analytics.settings.trackSettings('embedded_wallet_view');
-    }, []);
 
     return (
         <ScrollToTopWrapper>

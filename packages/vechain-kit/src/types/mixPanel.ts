@@ -219,6 +219,7 @@ export type SettingsAction =
     | 'view'
     | 'name_changed'
     | 'security_view'
+    | 'manage_security_settings'
     | 'upgrade_smart_account'
     | 'embedded_wallet_view'
     | 'connection_view'

@@ -25,7 +25,6 @@ import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect } from 'react';
 
 export type FAQContentProps = {
     onGoBack: () => void;
@@ -34,10 +33,6 @@ export type FAQContentProps = {
 export const FAQContent = ({ onGoBack }: FAQContentProps) => {
     const { network, darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
-
-    useEffect(() => {
-        Analytics.help.pageViewed();
-    }, []);
 
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         Analytics.settings.language.changed(e.target.value, i18n.language);

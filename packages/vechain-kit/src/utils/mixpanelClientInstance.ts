@@ -488,6 +488,9 @@ const Analytics = {
         connectionDetailsViewed: () =>
             Analytics.settings.trackSettings('connection_view'),
 
+        manageSecuritySettings: () =>
+            Analytics.settings.trackSettings('manage_security_settings'),
+
         language: {
             changed: (language: string, previousLanguage: string) =>
                 Analytics.settings.trackSettings('language_changed', {
@@ -508,18 +511,8 @@ const Analytics = {
             });
         },
 
-        viewed: (
-            notificationType?: string,
-            totalCount?: number,
-            unreadCount?: number,
-        ) => {
-            Analytics.notifications.trackNotification('view', {
-                notificationType:
-                    notificationType as NotificationProperties['notificationType'],
-                totalCount,
-                unreadCount,
-                viewType: 'current',
-            });
+        viewed: () => {
+            Analytics.notifications.trackNotification('view');
         },
 
         cleared: (notificationType?: string, count?: number) => {
@@ -540,13 +533,6 @@ const Analytics = {
         toggleView: (viewType: 'current' | 'archived') => {
             Analytics.notifications.trackNotification('toggle_view', {
                 viewType,
-            });
-        },
-
-        clicked: (notificationType?: string) => {
-            Analytics.notifications.trackNotification('click', {
-                notificationType:
-                    notificationType as NotificationProperties['notificationType'],
             });
         },
 

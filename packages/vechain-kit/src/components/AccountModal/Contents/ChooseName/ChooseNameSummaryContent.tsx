@@ -57,7 +57,7 @@ export const ChooseNameSummaryContent = ({
         domain: 'veworld.vet',
         alreadyOwned: isOwnDomain,
         onSuccess: () => {
-            Analytics.settings.trackSettings('name_changed', { newName: name });
+            Analytics.settings.accountNameChanged(name);
             setCurrentContent({
                 type: 'successful-operation',
                 props: {

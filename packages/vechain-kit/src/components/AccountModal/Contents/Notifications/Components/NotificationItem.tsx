@@ -24,10 +24,6 @@ export const NotificationItem = ({
 }: Props) => {
     const { t } = useTranslation();
 
-    const handleClick = () => {
-        Analytics.notifications.clicked(notification.status);
-    };
-
     const handleDismiss = () => {
         Analytics.notifications.dismissed(notification.status);
         onMarkAsRead(notification.id);
@@ -46,7 +42,6 @@ export const NotificationItem = ({
             pr={8}
             position="relative"
             opacity={notification.isRead ? 0.7 : 1}
-            onClick={handleClick}
             cursor="pointer"
             _hover={{ opacity: 0.8 }}
         >
