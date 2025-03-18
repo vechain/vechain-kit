@@ -13,11 +13,6 @@ type WalletDisplayProps = {
 export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
     const { account } = useWallet();
     const [isSmallMobile] = useMediaQuery('(max-width: 480px)');
-    if (!account) return <Spinner />;
-
-    if (variant === 'icon') {
-        return null;
-    }
 
     const accountDomain = useMemo(() => {
         const isLongDomain = account?.domain && account.domain.length > 18;
@@ -25,6 +20,12 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
             ? humanDomain(account?.domain ?? '', 18, 0)
             : account?.domain;
     }, [isSmallMobile, account?.domain]);
+
+    if (!account) return <Spinner />;
+
+    if (variant === 'icon') {
+        return null;
+    }
 
     if (variant === 'iconAndDomain') {
         return account.domain ? (
