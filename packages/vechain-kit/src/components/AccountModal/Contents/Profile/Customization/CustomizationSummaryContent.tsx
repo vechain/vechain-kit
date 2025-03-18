@@ -57,6 +57,7 @@ export const CustomizationSummaryContent = ({
     const { account, connectedWallet } = useWallet();
     const { refresh: refreshMetadata } = useRefreshMetadata(
         account?.domain ?? '',
+        account?.address ?? '',
     );
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',

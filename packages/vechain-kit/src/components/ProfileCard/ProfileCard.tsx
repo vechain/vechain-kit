@@ -21,12 +21,11 @@ import {
     useVechainDomain,
     useWallet,
 } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
 import { FaEdit, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaXTwitter } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
-import { convertUriToUrl, getPicassoImage } from '@/utils';
+import { getPicassoImage } from '@/utils';
 
 export type ProfileCardProps = {
     address: string;
@@ -56,12 +55,12 @@ export const ProfileCard = ({
     style,
 }: ProfileCardProps) => {
     const { t } = useTranslation();
-
-    const { network } = useVeChainKitConfig();
     const { account } = useWallet();
 
     const activeAccountDomain = useVechainDomain(address);
-    const activeAccountAvatar = useGetAvatar(activeAccountDomain?.data?.domain);
+    const activeAccountAvatar = useGetAvatar(
+        activeAccountDomain?.data?.domain ?? '',
+    );
     const activeAccountTextRecords = useGetTextRecords(
         activeAccountDomain?.data?.domain,
     );
@@ -99,10 +98,8 @@ export const ProfileCard = ({
                         address,
                         domain: activeAccountDomain?.data?.domain,
                         image:
-                            convertUriToUrl(
-                                activeAccountAvatar?.data ?? '',
-                                network.type,
-                            ) ?? getPicassoImage(address),
+                            activeAccountAvatar?.data ??
+                            getPicassoImage(address),
                         isLoadingMetadata:
                             activeAccountAvatar?.isLoading ||
                             activeAccountDomain?.isLoading ||
@@ -182,10 +179,8 @@ export const ProfileCard = ({
                             address,
                             domain: activeAccountDomain?.data?.domain,
                             image:
-                                convertUriToUrl(
-                                    activeAccountAvatar?.data ?? '',
-                                    network.type,
-                                ) ?? getPicassoImage(address),
+                                activeAccountAvatar?.data ??
+                                getPicassoImage(address),
                             isLoadingMetadata:
                                 activeAccountAvatar?.isLoading ||
                                 activeAccountDomain?.isLoading ||

@@ -7,3 +7,4 @@ export * from './useGetAvatar';
 export * from './useGetTextRecords';
 export * from './useUpdateTextRecord';
 export * from './useGetResolverAddress';
+export * from './useGetAvatarOfAddress';

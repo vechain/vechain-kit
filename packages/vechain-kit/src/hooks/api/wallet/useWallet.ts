@@ -10,17 +10,12 @@ import {
     useGetChainId,
     useGetNodeUrl,
     useSmartAccountVersion,
-    useGetAvatar,
     useGetTextRecords,
     useVechainDomain,
     useDAppKitWallet,
+    useGetAvatarOfAddress,
 } from '@/hooks';
-import {
-    compareAddresses,
-    convertUriToUrl,
-    getPicassoImage,
-    VECHAIN_PRIVY_APP_ID,
-} from '@/utils';
+import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
@@ -170,7 +165,7 @@ export const useWallet = (): UseWalletReturnType => {
         : smartAccount?.address;
 
     const activeAccountDomain = useVechainDomain(activeAddress ?? '');
-    const activeAccountAvatar = useGetAvatar(activeAccountDomain?.data?.domain);
+    const activeAccountAvatar = useGetAvatarOfAddress(activeAddress ?? '');
     const activeAccountTextRecords = useGetTextRecords(
         activeAccountDomain?.data?.domain,
     );
@@ -189,9 +184,7 @@ export const useWallet = (): UseWalletReturnType => {
         ? {
               address: activeAddress,
               domain: activeAccountDomain?.data?.domain,
-              image: activeAccountAvatar.data
-                  ? convertUriToUrl(activeAccountAvatar.data, network.type)
-                  : getPicassoImage(activeAddress ?? ''),
+              image: activeAccountAvatar.data ?? undefined,
               isLoadingMetadata:
                   activeAccountAvatar?.isLoading ||
                   activeAccountDomain?.isLoading ||
@@ -204,7 +197,7 @@ export const useWallet = (): UseWalletReturnType => {
         ? {
               address: connectedWalletAddress,
               domain: connectedMetadata.domain,
-              image: connectedMetadata.image,
+              image: connectedMetadata.image ?? undefined,
               isLoadingMetadata: connectedMetadata.isLoading,
               metadata: connectedMetadata.records,
           }
@@ -256,7 +249,7 @@ export const useWallet = (): UseWalletReturnType => {
         smartAccount: {
             address: smartAccount?.address ?? '',
             domain: smartAccountMetadata.domain,
-            image: smartAccountMetadata.image,
+            image: smartAccountMetadata.image ?? undefined,
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
             version: smartAccountVersion ?? null,

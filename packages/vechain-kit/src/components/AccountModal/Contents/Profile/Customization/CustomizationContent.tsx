@@ -108,7 +108,7 @@ export const CustomizationContent = ({
                 metadata.avatar ? metadata.avatar.replace('ipfs://', '') : null,
             );
             setPreviewImageUrl(
-                convertUriToUrl(metadata.avatar ?? '', network.type) || null,
+                convertUriToUrl(metadata.avatar ?? '', network.type),
             );
         }
     }, [account?.metadata, network.type]);
