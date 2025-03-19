@@ -82,6 +82,7 @@ export type AccountAction =
     | 'customise_opened'
     | 'customization_started'
     | 'customization_completed'
+    | 'customization_failed'
     | 'customization_drop_off'
     | 'image_upload';
 
@@ -193,7 +194,9 @@ export type EventName =
     | 'Wallet Flow'
     | 'Ecosystem Flow'
     | 'Swap Flow'
-    | 'Bridge Flow';
+    | 'Bridge Flow'
+    | 'Name Selection Flow'
+    | 'Customization Flow';
 
 export type ConnectionListProperties = {
     totalConnections?: number;
@@ -231,6 +234,27 @@ export type NameSelectionDropOffStage =
     | 'form'
     | 'confirmation';
 
+export type NameSelectionAction =
+    | 'name_selection_started'
+    | 'name_selection_searched'
+    | 'name_selection_completed'
+    | 'name_selection_drop_off'
+    | 'name_selection_failed'
+    | 'name_selection_retry';
+
+export type NameSelectionProperties = {
+    action: NameSelectionAction;
+    stage?: NameSelectionDropOffStage;
+    newName?: string;
+    language?: string;
+    previousLanguage?: string;
+    isOwnDomain?: boolean;
+    isAvailable?: boolean;
+    error?: string;
+    source?: string;
+    isError?: boolean;
+};
+
 export type SettingsAction =
     | 'view'
     | 'security_view'
@@ -238,18 +262,12 @@ export type SettingsAction =
     | 'upgrade_smart_account'
     | 'embedded_wallet_view'
     | 'connection_view'
-    | 'language_changed'
-    | 'name_selection_started'
-    | 'name_selection_searched'
-    | 'name_selection_completed'
-    | 'name_selection_drop_off'
-    | 'name_selection_failed';
+    | 'language_changed';
 
 export type SettingsProperties = {
     action: SettingsAction;
     section?: string;
     stage?: NameSelectionDropOffStage;
-    newName?: string;
     language?: string;
     previousLanguage?: string;
     error?: string;
@@ -316,6 +334,8 @@ export type EventPropertiesMap = {
     'Ecosystem Flow': EcosystemProperties;
     'Swap Flow': SwapProperties;
     'Bridge Flow': object;
+    'Name Selection Flow': NameSelectionProperties;
+    'Customization Flow': CustomizationProperties;
     [key: string]: Record<string, any>;
 };
 
@@ -391,4 +411,23 @@ export type BridgeProperties = {
     action: BridgeAction;
     error?: string;
     isError?: boolean;
+};
+
+export type CustomizationAction =
+    | 'started'
+    | 'completed'
+    | 'drop_off'
+    | 'failed'
+    | 'image_upload';
+
+export type CustomizationProperties = {
+    action: CustomizationAction;
+    stage?: 'avatar' | 'form' | 'confirmation';
+    error?: string;
+    isError?: boolean;
+    success?: boolean;
+    hasAvatar?: boolean;
+    hasDisplayName?: boolean;
+    hasDescription?: boolean;
+    hasSocials?: boolean;
 };

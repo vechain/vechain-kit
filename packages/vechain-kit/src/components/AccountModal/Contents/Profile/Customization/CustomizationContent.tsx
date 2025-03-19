@@ -143,11 +143,11 @@ export const CustomizationContent = ({
                 network.type,
             );
             setAvatarIpfsHash(ipfsHash);
-            Analytics.user.profile.customization.imageUploaded(true);
+            Analytics.customization.imageUploaded(true);
         } catch (error) {
             console.error('Error uploading image:', error);
             setPreviewImageUrl(null);
-            Analytics.user.profile.customization.imageUploaded(
+            Analytics.customization.imageUploaded(
                 false,
                 error instanceof Error ? error.message : 'Unknown error',
             );
@@ -214,7 +214,7 @@ export const CustomizationContent = ({
     useEffect(() => {
         return () => {
             if (hasChanges && !isUploading) {
-                Analytics.user.profile.customization.dropOff('form');
+                Analytics.customization.dropOff('form');
             }
         };
     }, [hasChanges, isUploading]);
@@ -330,6 +330,9 @@ export const CustomizationContent = ({
                                     'Choose a unique .vet domain name for your account.',
                                 )}
                                 onClick={() => {
+                                    Analytics.nameSelection.started(
+                                        'account-customization',
+                                    );
                                     if (account?.domain) {
                                         setCurrentContent({
                                             type: 'choose-name-search',

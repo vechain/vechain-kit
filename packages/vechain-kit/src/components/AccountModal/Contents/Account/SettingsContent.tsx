@@ -70,7 +70,7 @@ export const SettingsContent = ({
     }, []);
 
     const handleNameChange = () => {
-        Analytics.settings.nameSelection.started();
+        Analytics.nameSelection.started('settings');
         if (account?.domain) {
             setCurrentContent({
                 type: 'choose-name-search',

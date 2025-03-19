@@ -20,7 +20,6 @@ import {
     useWallet,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect } from 'react';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -47,6 +46,24 @@ export const ChooseNameSummaryContent = ({
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
 
+    const handleError = (error: string) => {
+        if (
+            error.toLowerCase().includes('rejected') ||
+            error.toLowerCase().includes('cancelled') ||
+            error.toLowerCase().includes('user denied')
+        ) {
+            Analytics.nameSelection.dropOff('confirmation', {
+                name,
+                error,
+            });
+        } else {
+            Analytics.nameSelection.failed('confirmation', {
+                error,
+                name,
+            });
+        }
+    };
+
     const {
         sendTransaction,
         txReceipt,
@@ -58,7 +75,7 @@ export const ChooseNameSummaryContent = ({
         domain: 'veworld.vet',
         alreadyOwned: isOwnDomain,
         onSuccess: () => {
-            Analytics.settings.nameSelection.completed(name, isOwnDomain);
+            Analytics.nameSelection.completed(name, isOwnDomain);
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -75,6 +92,7 @@ export const ChooseNameSummaryContent = ({
                 },
             });
         },
+        onError: () => {},
     });
 
     const handleConfirm = async () => {
@@ -85,24 +103,15 @@ export const ChooseNameSummaryContent = ({
 
         try {
             await sendTransaction();
-            Analytics.settings.nameSelection.completed(name, isOwnDomain);
         } catch (error) {
             console.error('Transaction failed:', error);
-            Analytics.settings.nameSelection.dropOff(
-                'confirmation',
-                true,
-                error instanceof Error ? error.message : 'Unknown error',
-            );
         }
     };
 
-    useEffect(() => {
-        return () => {
-            if (!txReceipt && !isTransactionPending) {
-                Analytics.settings.nameSelection.dropOff('confirmation');
-            }
-        };
-    }, [txReceipt, isTransactionPending, name]);
+    const handleRetry = () => {
+        Analytics.nameSelection.retry('confirmation');
+        handleConfirm();
+    };
 
     return (
         <>
@@ -141,10 +150,12 @@ export const ChooseNameSummaryContent = ({
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     onConfirm={handleConfirm}
+                    onRetry={handleRetry}
                     transactionPendingText={t('Claiming name...')}
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
                     isDisabled={isTransactionPending}
+                    onError={handleError}
                 />
             </ModalFooter>
         </>

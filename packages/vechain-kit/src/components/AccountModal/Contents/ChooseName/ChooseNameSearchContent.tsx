@@ -107,6 +107,10 @@ export const ChooseNameSearchContent = ({
             setIsAvailable(true);
             setIsOwnDomain(false);
         }
+
+        if (name.length >= 3 && !isFetchingDomainInfo) {
+            Analytics.nameSelection.searched(name, isAvailable);
+        }
     }, [
         name,
         hasInteracted,
@@ -115,25 +119,9 @@ export const ChooseNameSearchContent = ({
         domainInfo,
         account?.address,
         isProtected,
+        isAvailable,
+        isFetchingDomainInfo,
     ]);
-
-    useEffect(() => {
-        if (hasInteracted && name.length >= 3) {
-            Analytics.settings.nameSelection.searched(
-                name,
-                isAvailable,
-                isOwnDomain,
-            );
-        }
-    }, [name, isAvailable, isOwnDomain, hasInteracted]);
-
-    useEffect(() => {
-        return () => {
-            if (hasInteracted && name.length >= 3 && !isAvailable) {
-                Analytics.settings.nameSelection.dropOff('search');
-            }
-        };
-    }, [hasInteracted, name, isAvailable]);
 
     const handleContinue = () => {
         if (isAvailable && !error) {

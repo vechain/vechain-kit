@@ -47,7 +47,7 @@ export const ProfileContent = ({
 
                     <ProfileCard
                         onEditClick={() => {
-                            Analytics.user.profile.customization.started();
+                            Analytics.customization.started();
                             setCurrentContent('account-customization');
                         }}
                         address={account?.address ?? ''}

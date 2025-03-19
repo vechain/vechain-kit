@@ -139,7 +139,7 @@ export const CustomizationSummaryContent = ({
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
 
-                Analytics.user.profile.customization.completed({
+                Analytics.customization.completed({
                     hasAvatar: !!data.avatarIpfsHash,
                     hasDisplayName: !!data.displayName,
                     hasDescription: !!data.description,
@@ -148,14 +148,14 @@ export const CustomizationSummaryContent = ({
             }
         } catch (error) {
             console.error('Error saving changes:', error);
-            Analytics.user.profile.customization.dropOff('confirmation');
+            Analytics.customization.dropOff('confirmation');
         }
     };
 
     useEffect(() => {
         return () => {
             if (!txReceipt && !isTransactionPending) {
-                Analytics.user.profile.customization.dropOff('confirmation');
+                Analytics.customization.dropOff('confirmation');
             }
         };
     }, [txReceipt, isTransactionPending]);
@@ -173,6 +173,14 @@ export const CustomizationSummaryContent = ({
                 <Text fontSize="md">{value}</Text>
             </VStack>
         );
+    };
+
+    const handleRetry = () => {
+        Analytics.customization.failed(
+            'confirmation',
+            txError instanceof Error ? txError.message : 'Unknown error',
+        );
+        handleSubmit(onSubmit)();
     };
 
     return (
@@ -220,6 +228,7 @@ export const CustomizationSummaryContent = ({
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     onConfirm={handleSubmit(onSubmit)}
+                    onRetry={handleRetry}
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}

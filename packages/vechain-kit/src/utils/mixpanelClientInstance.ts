@@ -27,6 +27,10 @@ import {
     DropOffStage,
     DappKitSource,
     NameSelectionDropOffStage,
+    NameSelectionAction,
+    NameSelectionProperties,
+    CustomizationAction,
+    CustomizationProperties,
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
@@ -262,11 +266,6 @@ const Analytics = {
                 });
             },
 
-            updated: (fields: string[]) =>
-                Analytics.user.profile.trackAccount('settings_updated', {
-                    fields,
-                }),
-
             markFirstLogin: (userId: string) => {
                 const firstLoginDate = new Date().toISOString();
                 setUserProperties({ first_login_date: firstLoginDate }, userId);
@@ -287,42 +286,52 @@ const Analytics = {
 
             customiseOpened: () =>
                 Analytics.user.profile.trackAccount('customise_opened'),
+        },
+    },
 
-            customization: {
-                started: () => {
-                    Analytics.user.profile.trackAccount(
-                        'customization_started',
-                    );
-                },
+    customization: {
+        trackCustomization: (
+            action: CustomizationAction,
+            properties?: Omit<CustomizationProperties, 'action'>,
+        ) => {
+            trackEvent('Customization Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
 
-                completed: (changes: {
-                    hasAvatar?: boolean;
-                    hasDisplayName?: boolean;
-                    hasDescription?: boolean;
-                    hasSocials?: boolean;
-                }) => {
-                    Analytics.user.profile.trackAccount(
-                        'customization_completed',
-                        changes,
-                    );
-                },
+        started: () => {
+            Analytics.customization.trackCustomization('started');
+        },
 
-                dropOff: (stage: 'avatar' | 'form' | 'confirmation') => {
-                    Analytics.user.profile.trackAccount(
-                        'customization_drop_off',
-                        {
-                            stage,
-                        },
-                    );
-                },
+        completed: (changes: {
+            hasAvatar?: boolean;
+            hasDisplayName?: boolean;
+            hasDescription?: boolean;
+            hasSocials?: boolean;
+        }) => {
+            Analytics.customization.trackCustomization('completed', changes);
+        },
 
-                imageUploaded: (success: boolean, error?: string) => {
-                    Analytics.user.profile.trackAccount('image_upload', {
-                        success,
-                        error,
-                    });
-                },
-            },
+        dropOff: (stage: 'avatar' | 'form' | 'confirmation') => {
+            Analytics.customization.trackCustomization('drop_off', {
+                stage,
+            });
+        },
+
+        imageUploaded: (success: boolean, error?: string) => {
+            Analytics.customization.trackCustomization('image_upload', {
+                success,
+                error,
+            });
+        },
+
+        failed: (stage: 'avatar' | 'form' | 'confirmation', error: string) => {
+            Analytics.customization.trackCustomization('failed', {
+                stage,
+                error,
+            });
         },
     },
 
@@ -520,47 +529,85 @@ const Analytics = {
                     previousLanguage,
                 }),
         },
+    },
+    nameSelection: {
+        trackNameSelection: (
+            action: NameSelectionAction,
+            properties?: Omit<NameSelectionProperties, 'action'>,
+        ) => {
+            trackEvent('Name Selection Flow', {
+                action,
+                ...properties,
+                isError: !!properties?.error,
+            });
+        },
 
-        nameSelection: {
-            started: () => {
-                Analytics.settings.trackSettings('name_selection_started');
-            },
+        started: (source: string) => {
+            Analytics.nameSelection.trackNameSelection(
+                'name_selection_started',
+                {
+                    source,
+                },
+            );
+        },
 
-            searched: (
-                name: string,
-                _isAvailable: boolean,
-                _isOwnDomain: boolean,
-            ) => {
-                Analytics.settings.trackSettings('name_selection_searched', {
+        completed: (name: string, isOwnDomain: boolean) => {
+            Analytics.nameSelection.trackNameSelection(
+                'name_selection_completed',
+                {
                     newName: name,
-                    section: 'name-search',
-                });
-            },
+                    isOwnDomain,
+                },
+            );
+        },
 
-            completed: (name: string, _isOwnDomain: boolean) => {
-                Analytics.settings.trackSettings('name_selection_completed', {
+        dropOff: (
+            stage: NameSelectionDropOffStage,
+            properties?: {
+                isError?: boolean;
+                error?: string;
+                name?: string;
+            },
+        ) => {
+            Analytics.nameSelection.trackNameSelection(
+                'name_selection_drop_off',
+                {
+                    stage,
+                    ...properties,
+                },
+            );
+        },
+
+        failed: (
+            stage: NameSelectionDropOffStage,
+            properties: {
+                error: string;
+                name?: string;
+            },
+        ) => {
+            Analytics.nameSelection.trackNameSelection(
+                'name_selection_failed',
+                {
+                    stage,
+                    ...properties,
+                },
+            );
+        },
+
+        retry: (stage: NameSelectionDropOffStage) => {
+            Analytics.nameSelection.trackNameSelection('name_selection_retry', {
+                stage,
+            });
+        },
+
+        searched: (name: string, isAvailable: boolean) => {
+            Analytics.nameSelection.trackNameSelection(
+                'name_selection_searched',
+                {
                     newName: name,
-                });
-            },
-
-            dropOff: (
-                stage: NameSelectionDropOffStage,
-                isError?: boolean,
-                error?: string,
-            ) => {
-                Analytics.settings.trackSettings('name_selection_drop_off', {
-                    stage,
-                    isError,
-                    error,
-                });
-            },
-
-            failed: (stage: NameSelectionDropOffStage, error: string) => {
-                Analytics.settings.trackSettings('name_selection_failed', {
-                    stage,
-                    error,
-                });
-            },
+                    isAvailable,
+                },
+            );
         },
     },
 
