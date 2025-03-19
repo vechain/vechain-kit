@@ -1,120 +1,120 @@
 {
-    "name": "@vechain/vechain-kit",
-    "version": "1.5.10",
-    "private": false,
-    "homepage": "https://github.com/vechain/vechain-kit",
-    "repository": "github:vechain/vechain-kit",
-    "license": "MIT",
-    "sideEffects": false,
-    "type": "module",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "files": [
-        "dist",
-        "package.json",
-        "README.md",
-        "LICENSE"
-    ],
-    "scripts": {
-        "build": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
-        "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup --watch",
-        "clean": "rm -rf dist .turbo",
-        "lint": "eslint",
-        "purge": "yarn clean && rm -rf node_modules",
-        "translate": "dotenv -e .env -- translo-cli"
+  "name": "@vechain/vechain-kit",
+  "version": "1.5.11",
+  "private": false,
+  "homepage": "https://github.com/vechain/vechain-kit",
+  "repository": "github:vechain/vechain-kit",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
+    "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup --watch",
+    "clean": "rm -rf dist .turbo",
+    "lint": "eslint",
+    "purge": "yarn clean && rm -rf node_modules",
+    "translate": "dotenv -e .env -- translo-cli"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@choc-ui/chakra-autocomplete": "^5.3.0",
+    "@privy-io/cross-app-connect": "0.1.8-beta-20250228192559",
+    "@privy-io/react-auth": "2.4.5",
+    "@rainbow-me/rainbowkit": "^2.1.5",
+    "@tanstack/react-query": "^5.64.2",
+    "@tanstack/react-query-devtools": "^5.64.1",
+    "@vechain/dapp-kit-react": "1.5.0",
+    "@vechain/picasso": "^2.1.1",
+    "@vechain/sdk-core": "^1.0.0-rc.5",
+    "@vechain/sdk-network": "^1.0.0-rc.5",
+    "@vechain/vebetterdao-contracts": "^4.1.0",
+    "@wagmi/core": "^2.13.4",
+    "bignumber.js": "^9.1.2",
+    "browser-image-compression": "^2.0.2",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "framer-motion": "^11.15.0",
+    "https-browserify": "^1.0.0",
+    "i18next": "^24.2.1",
+    "i18next-browser-languagedetector": "^8.0.2",
+    "net": "^1.0.2",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
+    "react-hook-form": "^7.54.2",
+    "react-i18next": "^15.4.0",
+    "react-icons": "^5.4.0",
+    "react-qrcode-logo": "^3.0.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "translo-cli": "^1.0.6",
+    "viem": "^2.21.9",
+    "wagmi": "^2.13.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.28",
+    "@types/react-dom": "^18.2.13",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^9.12.0",
+    "eslint-plugin-i18next": "^6.1.1",
+    "tsup": "*",
+    "typescript": "*",
+    "vite": "^4.5.5",
+    "vitest": "^0.34.6"
+  },
+  "peerDependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@tanstack/react-query": "^5.64.2",
+    "@vechain/dapp-kit-react": "1.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@vechain/dapp-kit-react": {
+      "optional": true
     },
-    "dependencies": {
-        "@chakra-ui/react": "^2.8.2",
-        "@choc-ui/chakra-autocomplete": "^5.3.0",
-        "@privy-io/cross-app-connect": "0.1.8-beta-20250228192559",
-        "@privy-io/react-auth": "2.4.5",
-        "@rainbow-me/rainbowkit": "^2.1.5",
-        "@tanstack/react-query": "^5.64.2",
-        "@tanstack/react-query-devtools": "^5.64.1",
-        "@vechain/dapp-kit-react": "1.5.0",
-        "@vechain/picasso": "^2.1.1",
-        "@vechain/sdk-core": "^1.0.0-rc.5",
-        "@vechain/sdk-network": "^1.0.0-rc.5",
-        "@vechain/vebetterdao-contracts": "^4.1.0",
-        "@wagmi/core": "^2.13.4",
-        "bignumber.js": "^9.1.2",
-        "browser-image-compression": "^2.0.2",
-        "buffer": "^6.0.3",
-        "crypto-browserify": "^3.12.0",
-        "dotenv": "^16.4.7",
-        "ethers": "^6.13.5",
-        "framer-motion": "^11.15.0",
-        "https-browserify": "^1.0.0",
-        "i18next": "^24.2.1",
-        "i18next-browser-languagedetector": "^8.0.2",
-        "net": "^1.0.2",
-        "process": "^0.11.10",
-        "react": "^18.2.0",
-        "react-device-detect": "^2.2.3",
-        "react-hook-form": "^7.54.2",
-        "react-i18next": "^15.4.0",
-        "react-icons": "^5.4.0",
-        "react-qrcode-logo": "^3.0.0",
-        "stream-browserify": "^3.0.0",
-        "stream-http": "^3.2.0",
-        "translo-cli": "^1.0.6",
-        "viem": "^2.21.9",
-        "wagmi": "^2.13.4"
+    "@tanstack/react-query": {
+      "optional": true
     },
-    "devDependencies": {
-        "@types/react": "^18.2.28",
-        "@types/react-dom": "^18.2.13",
-        "cross-env": "^7.0.3",
-        "dotenv-cli": "^8.0.0",
-        "eslint": "^9.12.0",
-        "eslint-plugin-i18next": "^6.1.1",
-        "tsup": "*",
-        "typescript": "*",
-        "vite": "^4.5.5",
-        "vitest": "^0.34.6"
-    },
-    "peerDependencies": {
-        "@chakra-ui/react": "^2.8.2",
-        "@tanstack/react-query": "^5.64.2",
-        "@vechain/dapp-kit-react": "1.5.0"
-    },
-    "peerDependenciesMeta": {
-        "@vechain/dapp-kit-react": {
-            "optional": true
-        },
-        "@tanstack/react-query": {
-            "optional": true
-        },
-        "@chakra-ui/react": {
-            "optional": true
-        }
-    },
-    "resolutions": {
-        "@vechain/sdk-core": "^1.0.0-rc.5",
-        "@vechain/sdk-network": "^1.0.0-rc.5",
-        "@vechain/dapp-kit-ui": "1.5.0",
-        "@vechain/dapp-kit": "1.5.0"
-    },
-    "overrides": {
-        "@vechain/sdk-core": "^1.0.0-rc.5",
-        "@vechain/sdk-network": "^1.0.0-rc.5"
-    },
-    "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
-        },
-        "./contracts": {
-            "types": "./dist/contracts/index.d.ts",
-            "default": "./dist/contracts/index.js"
-        },
-        "./utils": {
-            "types": "./dist/utils/index.d.ts",
-            "default": "./dist/utils/index.js"
-        },
-        "./assets": {
-            "types": "./dist/assets/index.d.ts",
-            "default": "./dist/assets/index.js"
-        }
+    "@chakra-ui/react": {
+      "optional": true
     }
+  },
+  "resolutions": {
+    "@vechain/sdk-core": "^1.0.0-rc.5",
+    "@vechain/sdk-network": "^1.0.0-rc.5",
+    "@vechain/dapp-kit-ui": "1.5.0",
+    "@vechain/dapp-kit": "1.5.0"
+  },
+  "overrides": {
+    "@vechain/sdk-core": "^1.0.0-rc.5",
+    "@vechain/sdk-network": "^1.0.0-rc.5"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "default": "./dist/contracts/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
+    },
+    "./assets": {
+      "types": "./dist/assets/index.d.ts",
+      "default": "./dist/assets/index.js"
+    }
+  }
 }
