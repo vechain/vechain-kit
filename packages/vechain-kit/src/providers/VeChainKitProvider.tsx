@@ -335,7 +335,7 @@ export const VeChainKitProvider = (
                                 '--vdk-modal-width': '22rem',
                                 '--vdk-modal-backdrop-filter': 'blur(3px)',
                                 '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
-                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'} !important`,
+                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
 
                                 // Dark mode colors
                                 '--vdk-color-dark-primary': 'transparent',
