@@ -35,8 +35,8 @@ export const AssetIcons = ({
 
     // Create array of tokens with balances and their values
     const tokensList = Object.values(tokens)
-        .filter((token) => token.value > 0)
-        .sort((a, b) => b.usdValue - a.usdValue);
+        .filter((token) => Number(token.value) > 0)
+        .sort((a, b) => Number(b.usdValue) - Number(a.usdValue));
 
     const tokensToShow = tokensList.slice(0, maxIcons);
     const remainingTokens = tokensList.length - maxIcons;
