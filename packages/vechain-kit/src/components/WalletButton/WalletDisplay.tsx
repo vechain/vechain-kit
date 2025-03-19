@@ -1,7 +1,6 @@
 import { useWallet } from '@/hooks';
 import { humanAddress, humanDomain } from '@/utils';
-import { HStack, Spinner, Text, useMediaQuery, VStack } from '@chakra-ui/react';
-import { useMemo } from 'react';
+import { HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 
 import { AssetIcons } from './AssetIcons';
 import { WalletDisplayVariant } from './types';
@@ -12,14 +11,6 @@ type WalletDisplayProps = {
 
 export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
     const { account } = useWallet();
-    const [isSmallMobile] = useMediaQuery('(max-width: 480px)');
-
-    const accountDomain = useMemo(() => {
-        const isLongDomain = account?.domain && account.domain.length > 18;
-        return isSmallMobile && isLongDomain
-            ? humanDomain(account?.domain ?? '', 18, 0)
-            : account?.domain;
-    }, [isSmallMobile, account?.domain]);
 
     if (!account) return <Spinner />;
 
@@ -29,7 +20,9 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
 
     if (variant === 'iconAndDomain') {
         return account.domain ? (
-            <Text fontSize="sm">{accountDomain}</Text>
+            <Text fontSize="sm">
+                {humanDomain(account?.domain ?? '', 16, 0)}
+            </Text>
         ) : (
             <Text fontSize="sm">
                 {humanAddress(account.address ?? '', 6, 4)}
@@ -43,7 +36,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
                 <VStack spacing={0} alignItems="flex-start">
                     {account.domain && (
                         <Text fontSize="sm" fontWeight="bold">
-                            {accountDomain}
+                            {humanDomain(account?.domain ?? '', 16, 0)}
                         </Text>
                     )}
                     <Text
@@ -62,7 +55,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
         <VStack spacing={0} alignItems="flex-start">
             {account.domain && (
                 <Text fontSize="sm" fontWeight="bold">
-                    {accountDomain}
+                    {humanDomain(account?.domain ?? '', 16, 0)}
                 </Text>
             )}
             <Text
