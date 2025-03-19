@@ -76,9 +76,7 @@
     "peerDependencies": {
         "@chakra-ui/react": "^2.8.2",
         "@tanstack/react-query": "^5.64.2",
-        "@vechain/dapp-kit-react": "1.5.0",
-        "@vechain/dapp-kit-ui": "1.5.0",
-        "@vechain/dapp-kit": "1.5.0"
+        "@vechain/dapp-kit-react": "1.5.0"
     },
     "peerDependenciesMeta": {
         "@vechain/dapp-kit-react": {
@@ -93,7 +91,9 @@
     },
     "resolutions": {
         "@vechain/sdk-core": "^1.0.0-rc.5",
-        "@vechain/sdk-network": "^1.0.0-rc.5"
+        "@vechain/sdk-network": "^1.0.0-rc.5",
+        "@vechain/dapp-kit-ui": "1.5.0",
+        "@vechain/dapp-kit": "1.5.0"
     },
     "overrides": {
         "@vechain/sdk-core": "^1.0.0-rc.5",
