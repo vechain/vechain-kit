@@ -15,7 +15,7 @@ import {
     Image,
     FormControl,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -31,6 +31,7 @@ import { useVechainDomain } from '@vechain/dapp-kit-react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -57,7 +58,7 @@ export const SendTokenContent = ({
     setCurrentContent,
     isNavigatingFromMain = false,
     preselectedToken,
-    onBack = () => setCurrentContent('main'),
+    onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -87,7 +88,28 @@ export const SendTokenContent = ({
     });
 
     // Watch form values
-    const { toAddressOrDomain } = watch();
+    const { toAddressOrDomain, amount } = watch();
+
+    useEffect(() => {
+        if (selectedToken && amount) {
+            Analytics.send.flow('amount', {
+                tokenSymbol: selectedToken.symbol,
+                amount,
+            });
+        }
+    }, [amount, selectedToken]);
+
+    useEffect(() => {
+        if (selectedToken && toAddressOrDomain) {
+            Analytics.send.flow('recipient', {
+                tokenSymbol: selectedToken.symbol,
+                recipientAddress: toAddressOrDomain,
+                recipientType: toAddressOrDomain.includes('.')
+                    ? 'domain'
+                    : 'address',
+            });
+        }
+    }, [toAddressOrDomain, selectedToken]);
 
     const { domain: resolvedDomain, address: resolvedAddress } =
         useVechainDomain({ addressOrDomain: toAddressOrDomain });
@@ -95,6 +117,33 @@ export const SendTokenContent = ({
     const handleSetMaxAmount = () => {
         if (selectedToken) {
             setValue('amount', selectedToken.numericBalance);
+            Analytics.send.flow('amount', {
+                tokenSymbol: selectedToken.symbol,
+                amount: selectedToken.numericBalance,
+            });
+        }
+    };
+
+    const handleBack = () => {
+        if (selectedToken) {
+            Analytics.send.flow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount: amount || undefined,
+                recipientAddress: toAddressOrDomain || undefined,
+                error: 'User cancelled - back button',
+            });
+        }
+        parentOnBack();
+    };
+
+    const handleClose = () => {
+        if (selectedToken) {
+            Analytics.send.flow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount: amount || undefined,
+                recipientAddress: toAddressOrDomain || undefined,
+                error: 'User cancelled - close modal',
+            });
         }
     };
 
@@ -110,6 +159,10 @@ export const SendTokenContent = ({
                 type: 'manual',
                 message: t('Invalid address or domain'),
             });
+            Analytics.send.flow('review', {
+                tokenSymbol: selectedToken.symbol,
+                error: 'Invalid address or domain',
+            });
             return;
         }
 
@@ -123,9 +176,20 @@ export const SendTokenContent = ({
                         symbol: selectedToken.symbol,
                     }),
                 });
+                Analytics.send.flow('review', {
+                    tokenSymbol: selectedToken.symbol,
+                    error: 'Insufficient balance',
+                });
                 return;
             }
         }
+
+        Analytics.send.flow('review', {
+            tokenSymbol: selectedToken.symbol,
+            amount: data.amount,
+            recipientAddress: resolvedAddress || data.toAddressOrDomain,
+            recipientType: resolvedDomain ? 'domain' : 'address',
+        });
 
         setCurrentContent({
             type: 'send-token-summary',
@@ -145,14 +209,27 @@ export const SendTokenContent = ({
             <SelectTokenContent
                 setCurrentContent={setCurrentContent}
                 onSelectToken={(token) => {
+                    Analytics.send.tokenPageViewed(token.symbol);
                     setSelectedToken(token);
                     setIsSelectingToken(false);
                     setIsInitialTokenSelection(false);
                 }}
                 onBack={() => {
                     if (isInitialTokenSelection) {
+                        if (selectedToken) {
+                            Analytics.send.flow('token_select', {
+                                tokenSymbol: selectedToken.symbol,
+                                error: 'User cancelled - back to main',
+                            });
+                        }
                         setCurrentContent('main');
                     } else {
+                        if (selectedToken) {
+                            Analytics.send.flow('token_select', {
+                                tokenSymbol: selectedToken.symbol,
+                                error: 'User cancelled - back to form',
+                            });
+                        }
                         setIsSelectingToken(false);
                     }
                 }}
@@ -164,8 +241,8 @@ export const SendTokenContent = ({
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Send')}</ModalHeader>
-                <ModalBackButton onClick={onBack} />
-                <ModalCloseButton />
+                <ModalBackButton onClick={handleBack} />
+                <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
 
             <ModalBody>

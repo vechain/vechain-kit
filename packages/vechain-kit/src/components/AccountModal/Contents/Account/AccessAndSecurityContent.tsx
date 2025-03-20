@@ -14,7 +14,6 @@ import {
     useUpgradeRequired,
     useSetWalletRecovery,
 } from '@/hooks';
-import React from 'react';
 import {
     ModalBackButton,
     ScrollToTopWrapper,
@@ -25,11 +24,12 @@ import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrUserAdmin } from 'react-icons/gr';
-import { HiOutlineWallet, HiOutlineShieldCheck } from 'react-icons/hi2';
 import { IoCogSharp } from 'react-icons/io5';
-import { GiHouseKeys } from 'react-icons/gi';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
+import { HiOutlineShieldCheck, HiOutlineWallet } from 'react-icons/hi2';
+import { GiHouseKeys } from 'react-icons/gi';
 import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -50,6 +50,16 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
         connectedWallet?.address ?? '',
         3,
     );
+
+    const handleUpgradeSmartAccountClick = () => {
+        setCurrentContent({
+            type: 'upgrade-smart-account',
+            props: {
+                setCurrentContent,
+                initialContent: 'access-and-security',
+            },
+        });
+    };
 
     return (
         <ScrollToTopWrapper>
@@ -87,15 +97,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                             description={t(
                                 'A new version is available for your account',
                             )}
-                            onClick={() => {
-                                setCurrentContent({
-                                    type: 'upgrade-smart-account',
-                                    props: {
-                                        setCurrentContent,
-                                        initialContent: 'access-and-security',
-                                    },
-                                });
-                            }}
+                            onClick={handleUpgradeSmartAccountClick}
                             leftIcon={IoCogSharp}
                             extraContent={
                                 <Box
@@ -115,6 +117,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     <ActionButton
                         title={t('Your embedded wallet')}
                         onClick={() => {
+                            Analytics.settings.embeddedWalletViewed();
                             setCurrentContent('embedded-wallet');
                         }}
                         leftIcon={HiOutlineWallet}

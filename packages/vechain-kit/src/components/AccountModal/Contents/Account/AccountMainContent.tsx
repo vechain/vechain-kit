@@ -22,7 +22,6 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import React from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<

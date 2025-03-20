@@ -16,9 +16,10 @@ import { FiSlash } from 'react-icons/fi';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useBalances, useWallet } from '@/hooks';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type Token = {
     symbol: string;
@@ -68,6 +69,12 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                 Number(a.numericBalance) * a.price
             );
         });
+
+    useEffect(() => {
+        if (searchQuery) {
+            Analytics.send.tokenSearchPerformed(searchQuery);
+        }
+    }, [searchQuery, filteredTokens.length]);
 
     return (
         <>

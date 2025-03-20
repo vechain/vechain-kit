@@ -15,7 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
-
+import { Analytics } from '@/utils/mixpanelClientInstance';
 type useClaimVeWorldSubdomainProps = {
     subdomain: string;
     domain: string;
@@ -152,6 +152,7 @@ export const useClaimVeWorldSubdomain = ({
             });
         }, 2000);
 
+        Analytics.nameSelection.completed(subdomain, alreadyOwned);
         onSuccess?.();
     }, [onSuccess, subdomain, domain, queryClient, account?.address]);
 
@@ -163,7 +164,9 @@ export const useClaimVeWorldSubdomain = ({
             buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
-        onTxFailedOrCancelled: onError,
+        onTxFailedOrCancelled: () => {
+            onError?.();
+        },
     });
 
     return {

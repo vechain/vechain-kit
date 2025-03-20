@@ -182,6 +182,7 @@ export const ProfileCard = ({
                             metadata: activeAccountTextRecords?.data,
                         }}
                         style={{ mt: 4 }}
+                        fromScreen="profile"
                     />
                 </VStack>
             </CardBody>

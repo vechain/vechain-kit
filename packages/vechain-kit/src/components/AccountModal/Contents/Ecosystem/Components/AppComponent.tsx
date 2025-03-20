@@ -2,6 +2,7 @@ import { useIpfsImage, useXAppMetadata, XApp } from '@/hooks';
 import { SharedAppCard } from './SharedAppCard';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { Skeleton } from '@chakra-ui/react';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     xApp: XApp;
@@ -17,6 +18,22 @@ export const AppComponent = ({ xApp, setCurrentContent }: Props) => {
         appMetadata?.logo,
     );
 
+    const handleAppClick = () => {
+        if (appMetadata?.name) {
+            Analytics.ecosystem.appSelected(appMetadata.name);
+            setCurrentContent({
+                type: 'app-overview',
+                props: {
+                    name: appMetadata.name,
+                    image: logo?.image ?? '',
+                    url: appMetadata?.external_url ?? '',
+                    description: appMetadata?.description ?? '',
+                    setCurrentContent,
+                },
+            });
+        }
+    };
+
     return (
         <Skeleton
             isLoaded={!appMetadataLoading && !isLogoLoading}
@@ -27,18 +44,7 @@ export const AppComponent = ({ xApp, setCurrentContent }: Props) => {
                 name={appMetadata?.name ?? ''}
                 imageUrl={logo?.image ?? ''}
                 linkUrl={appMetadata?.external_url ?? ''}
-                onClick={() => {
-                    setCurrentContent({
-                        type: 'app-overview',
-                        props: {
-                            name: appMetadata?.name ?? '',
-                            image: logo?.image ?? '',
-                            url: appMetadata?.external_url ?? '',
-                            description: appMetadata?.description ?? '',
-                            setCurrentContent,
-                        },
-                    });
-                }}
+                onClick={handleAppClick}
             />
         </Skeleton>
     );

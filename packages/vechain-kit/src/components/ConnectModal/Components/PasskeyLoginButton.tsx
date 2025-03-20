@@ -4,6 +4,8 @@ import { IoIosFingerPrint } from 'react-icons/io';
 import { LoginLoadingModal, ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithPasskey } from '@/hooks';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -17,12 +19,25 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithPasskey = async () => {
+        Analytics.auth.flowStarted(VeLoginMethod.PASSKEY);
+        Analytics.auth.methodSelected(VeLoginMethod.PASSKEY);
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);
             await loginWithPasskey();
             loginLoadingModal.onClose();
         } catch (error) {
+            const errorMsg =
+                error instanceof Error ? error.message.toLowerCase() : '';
+
+            if (errorMsg.includes('not found')) {
+                Analytics.auth.dropOff('passkey-prompt');
+            } else if (errorMsg.includes('abort')) {
+                Analytics.auth.dropOff('passkey-authentication');
+            } else {
+                Analytics.auth.failed(VeLoginMethod.PASSKEY, errorMsg);
+            }
+
             console.error(error);
             setLoginError(
                 error instanceof Error
@@ -30,6 +45,11 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
                     : t('Failed to connect with Passkey'),
             );
         }
+    };
+
+    const handleTryAgain = () => {
+        Analytics.auth.tryAgain(VeLoginMethod.PASSKEY);
+        handleLoginWithPasskey();
     };
 
     return (
@@ -53,7 +73,7 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
                 error={loginError}
                 title={t('Connecting with Passkey')}
                 loadingText={t('Please complete the passkey authentication...')}
-                onTryAgain={handleLoginWithPasskey}
+                onTryAgain={handleTryAgain}
             />
         </>
     );

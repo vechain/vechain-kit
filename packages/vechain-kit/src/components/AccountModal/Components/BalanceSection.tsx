@@ -13,6 +13,7 @@ import { VscRefresh } from 'react-icons/vsc';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -41,6 +42,7 @@ export const BalanceSection = ({
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const handleRefresh = async () => {
+        Analytics.wallet.balanceRefreshed();
         setIsRefreshing(true);
         await refresh();
         setTimeout(() => {
