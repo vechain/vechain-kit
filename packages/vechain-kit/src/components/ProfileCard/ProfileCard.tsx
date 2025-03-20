@@ -94,14 +94,14 @@ export const ProfileCard = ({
                         metadata: metadata?.records,
                     }}
                     props={{
-                        width: '100px',
-                        height: '100px',
+                        width: '120px',
+                        height: '120px',
                         // boxShadow: '0px 0px 3px 2px #00000024',
                     }}
                 />
             </Box>
             <CardBody
-                mt={10}
+                mt={'60px'}
                 backgroundColor={'none'}
                 border={'none'}
                 {...style?.body}
@@ -120,7 +120,12 @@ export const ProfileCard = ({
                     )}
 
                     {showDescription && metadata?.records?.description && (
-                        <Text fontSize="sm" opacity={0.7}>
+                        <Text
+                            fontSize="sm"
+                            opacity={0.7}
+                            w="full"
+                            textAlign="center"
+                        >
                             {metadata?.records?.description}
                         </Text>
                     )}
