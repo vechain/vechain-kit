@@ -6,7 +6,10 @@ import { usePrivyWalletProvider } from '@/providers';
 import { useWallet, useDAppKitWallet } from '@/hooks';
 
 type UseSignTypedDataReturnValue = {
-    signTypedData: (data: SignTypedDataParams) => Promise<string>;
+    signTypedData: (
+        data: SignTypedDataParams,
+        options?: { signer?: string },
+    ) => Promise<string>;
     isSigningPending: boolean;
     signature: string | null;
     error: Error | null;
@@ -29,7 +32,10 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
 
     const { signTypedData: signTypedDataDappKit } = useDAppKitWallet();
     const signTypedData = useCallback(
-        async (data: SignTypedDataParams): Promise<string> => {
+        async (
+            data: SignTypedDataParams,
+            options?: { signer?: string },
+        ): Promise<string> => {
             setIsSigningPending(true);
             setError(null);
             setSignature(null);
@@ -51,6 +57,7 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                             Array<{ name: string; type: string }>
                         >,
                         data.message as Record<string, any>,
+                        options,
                     );
                 } else {
                     sig = await privyWalletProvider.signTypedData(data);
@@ -59,8 +66,29 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                 setSignature(sig);
                 return sig;
             } catch (err) {
+                // Handle user rejection specifically
+                if (
+                    err &&
+                    typeof err === 'object' &&
+                    'statusCode' in err &&
+                    (err as any).statusCode === 4001
+                ) {
+                    const userRejectionError = new Error(
+                        'User denied signature request',
+                    );
+                    setError(userRejectionError);
+                    throw userRejectionError;
+                }
+
+                // Handle other errors
                 const error =
-                    err instanceof Error ? err : new Error(String(err));
+                    err instanceof Error
+                        ? err
+                        : new Error(
+                              typeof err === 'object'
+                                  ? JSON.stringify(err)
+                                  : String(err),
+                          );
                 setError(error);
                 throw error;
             } finally {

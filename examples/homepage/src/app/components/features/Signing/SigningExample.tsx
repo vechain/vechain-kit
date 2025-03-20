@@ -41,7 +41,7 @@ const exampleTypedData = {
 };
 
 export function SigningExample(): ReactElement {
-    const { connection } = useWallet();
+    const { connection, account } = useWallet();
     const toast = useToast();
 
     const {
@@ -80,7 +80,9 @@ export function SigningExample(): ReactElement {
 
     const handleSignTypedData = useCallback(async () => {
         try {
-            const signature = await signTypedData(exampleTypedData);
+            const signature = await signTypedData(exampleTypedData, {
+                signer: account?.address,
+            });
             toast({
                 title: 'Typed data signed!',
                 description: `Signature: ${signature.slice(0, 20)}...`,
@@ -98,7 +100,7 @@ export function SigningExample(): ReactElement {
                 isClosable: true,
             });
         }
-    }, [signTypedData, toast]);
+    }, [signTypedData, toast, account]);
 
     if (!connection.isConnected) {
         return (
