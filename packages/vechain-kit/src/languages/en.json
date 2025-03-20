@@ -483,5 +483,6 @@
     "your@email.com": "your@email.com",
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
-    "Your {{name}}.{{domainType}} name has been claimed successfully.": "Your {{name}}.{{domainType}} name has been claimed successfully."
+    "Your {{name}}.{{domainType}} name has been claimed successfully.": "Your {{name}}.{{domainType}} name has been claimed successfully.",
+    "Tools": "Tools"
 }
