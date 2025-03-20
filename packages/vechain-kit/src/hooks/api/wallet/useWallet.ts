@@ -170,7 +170,6 @@ export const useWallet = (): UseWalletReturnType => {
         activeAccountDomain?.data?.domain,
     );
 
-    // const activeMetadata = useWalletMetadata(activeAddress ?? '', network.type);
     const connectedMetadata = useWalletMetadata(
         connectedWalletAddress ?? '',
         network.type,

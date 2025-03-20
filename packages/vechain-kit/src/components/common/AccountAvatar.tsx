@@ -1,4 +1,5 @@
 import { Wallet } from '@/types';
+import { getPicassoImage } from '@/utils';
 import { Image, ImageProps, Spinner } from '@chakra-ui/react';
 
 type AccountAvatarProps = {
@@ -17,6 +18,7 @@ export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
             alt={props?.alt || wallet?.domain}
             objectFit="cover"
             rounded="full"
+            fallbackSrc={getPicassoImage(wallet?.address ?? '')}
             {...props}
         />
     );
