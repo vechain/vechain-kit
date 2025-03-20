@@ -1,9 +1,9 @@
 import {
     UseSendTransactionReturnValue,
     getAvatarOfAddressQueryKey,
-    getAvatarQueryKey,
     getDomainsOfAddressQueryKey,
     getEnsRecordExistsQueryKey,
+    getTextRecordsQueryKey,
     getVechainDomainQueryKey,
     useSendTransaction,
     useWallet,
@@ -17,6 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
+import { ethers } from 'ethers';
 
 type useClaimVeWorldSubdomainProps = {
     subdomain: string;
@@ -49,7 +50,9 @@ export const useClaimVeWorldSubdomain = ({
         if (!subdomain) throw new Error('Invalid subdomain');
 
         const clausesArray: any[] = [];
+        const fullDomain = `${subdomain}.${domain}`;
 
+        // Always unset current nickname first
         clausesArray.push({
             to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
             value: '0x0',
@@ -62,36 +65,83 @@ export const useClaimVeWorldSubdomain = ({
             abi: ReverseRegistrarInterface.getFunction('setName'),
         });
 
-        if (!alreadyOwned) {
+        if (alreadyOwned) {
+            // For already owned domains, set the name in the reverse registrar
             clausesArray.push({
-                to: getConfig(network.type)
-                    .veWorldSubdomainClaimerContractAddress,
+                to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
                 value: '0x0',
-                data: SubdomainClaimerInterface.encodeFunctionData('claim', [
-                    subdomain,
-                    getConfig(network.type).vetDomainsPublicResolverAddress,
+                data: ReverseRegistrarInterface.encodeFunctionData('setName', [
+                    fullDomain,
                 ]),
-                comment: `Claim VeChain subdomain: ${subdomain}.${domain}`,
-                abi: SubdomainClaimerInterface.getFunction('claim'),
+                comment: `Setting your VeChain nickname to ${fullDomain}`,
+                abi: ReverseRegistrarInterface.getFunction('setName'),
             });
+
+            // Also set the address in the public resolver
+            const PublicResolverInterface = new ethers.Interface([
+                'function setAddr(bytes32 node, address addr)',
+            ]);
+
+            // Calculate the namehash for the domain
+            const domainNode = ethers.namehash(fullDomain);
+
+            clausesArray.push({
+                to: getConfig(network.type).vetDomainsPublicResolverAddress,
+                value: '0x0',
+                data: PublicResolverInterface.encodeFunctionData('setAddr', [
+                    domainNode,
+                    account?.address || '',
+                ]),
+                comment: `Setting the address for ${fullDomain} to ${humanAddress(
+                    account?.address ?? '',
+                    4,
+                    4,
+                )}`,
+                abi: PublicResolverInterface.getFunction('setAddr'),
+            });
+        } else {
+            if (isVeWorldDomain(domain)) {
+                // For new domains, claim the subdomain
+                clausesArray.push({
+                    to: getConfig(network.type)
+                        .veWorldSubdomainClaimerContractAddress,
+                    value: '0x0',
+                    data: SubdomainClaimerInterface.encodeFunctionData(
+                        'claim',
+                        [
+                            subdomain,
+                            getConfig(network.type)
+                                .vetDomainsPublicResolverAddress,
+                        ],
+                    ),
+                    comment: `Claim VeChain subdomain: ${subdomain}.${domain}`,
+                    abi: SubdomainClaimerInterface.getFunction('claim'),
+                });
+
+                clausesArray.push({
+                    to: getConfig(network.type)
+                        .vetDomainsReverseRegistrarAddress,
+                    value: '0x0',
+                    data: ReverseRegistrarInterface.encodeFunctionData(
+                        'setName',
+                        [subdomain + '.' + domain],
+                    ),
+                    comment: `Set ${subdomain}.${domain} as the VeChain nickname of the account ${humanAddress(
+                        account?.address ?? '',
+                        4,
+                        4,
+                    )}`,
+                    abi: ReverseRegistrarInterface.getFunction('setName'),
+                });
+            } else {
+                throw new Error(
+                    'primary .vet domains buying is not supported yet',
+                );
+            }
         }
 
-        clausesArray.push({
-            to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
-            value: '0x0',
-            data: ReverseRegistrarInterface.encodeFunctionData('setName', [
-                subdomain + '.' + domain,
-            ]),
-            comment: `Set ${subdomain}.${domain} as the VeChain nickname of the account ${humanAddress(
-                account?.address ?? '',
-                4,
-                4,
-            )}`,
-            abi: ReverseRegistrarInterface.getFunction('setName'),
-        });
-
         return clausesArray;
-    }, [subdomain, domain, account?.address, alreadyOwned]);
+    }, [subdomain, domain, alreadyOwned, account?.address, network.type]);
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
@@ -114,13 +164,15 @@ export const useClaimVeWorldSubdomain = ({
         queryClient.cancelQueries({
             queryKey: getDomainsOfAddressQueryKey(
                 account?.address ?? '',
-                domain,
+                '.veworld.vet',
             ),
             refetchType: 'none',
         });
-
         queryClient.cancelQueries({
-            queryKey: getAvatarQueryKey(subdomain + '.' + domain),
+            queryKey: getDomainsOfAddressQueryKey(
+                account?.address ?? '',
+                '.vet',
+            ),
             refetchType: 'none',
         });
 
@@ -129,59 +181,63 @@ export const useClaimVeWorldSubdomain = ({
             refetchType: 'none',
         });
 
-        // Refetch after 3 seconds
-        setTimeout(() => {
-            queryClient.invalidateQueries({
-                queryKey: getVechainDomainQueryKey(account?.address ?? ''),
-                refetchType: 'none',
-            });
+        queryClient.invalidateQueries({
+            queryKey: getVechainDomainQueryKey(account?.address ?? ''),
+            refetchType: 'none',
+        });
 
-            queryClient.invalidateQueries({
-                queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
-                refetchType: 'none',
-            });
+        queryClient.invalidateQueries({
+            queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
+            refetchType: 'none',
+        });
 
-            queryClient.refetchQueries({
-                queryKey: getVechainDomainQueryKey(account?.address ?? ''),
-            });
-            queryClient.refetchQueries({
-                queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
-            });
+        queryClient.refetchQueries({
+            queryKey: getVechainDomainQueryKey(account?.address ?? ''),
+        });
+        queryClient.refetchQueries({
+            queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
+        });
 
-            queryClient.invalidateQueries({
-                queryKey: getEnsRecordExistsQueryKey(subdomain),
-            });
+        queryClient.invalidateQueries({
+            queryKey: getEnsRecordExistsQueryKey(subdomain),
+        });
 
-            queryClient.refetchQueries({
-                queryKey: getEnsRecordExistsQueryKey(subdomain),
-            });
+        queryClient.refetchQueries({
+            queryKey: getEnsRecordExistsQueryKey(subdomain),
+        });
 
-            queryClient.refetchQueries({
-                queryKey: getDomainsOfAddressQueryKey(
-                    account?.address ?? '',
-                    domain,
-                ),
-            });
+        queryClient.refetchQueries({
+            queryKey: getDomainsOfAddressQueryKey(
+                account?.address ?? '',
+                '.vet',
+            ),
+        });
 
-            queryClient.invalidateQueries({
-                queryKey: getAvatarQueryKey(subdomain + '.' + domain),
-            });
+        queryClient.refetchQueries({
+            queryKey: getDomainsOfAddressQueryKey(
+                account?.address ?? '',
+                '.veworld.vet',
+            ),
+        });
 
-            queryClient.refetchQueries({
-                queryKey: getAvatarQueryKey(subdomain + '.' + domain),
-            });
+        queryClient.invalidateQueries({
+            queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
+        });
 
-            queryClient.invalidateQueries({
-                queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
-            });
+        queryClient.refetchQueries({
+            queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
+        });
 
-            queryClient.refetchQueries({
-                queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
-            });
-        }, 2000);
+        queryClient.invalidateQueries({
+            queryKey: getTextRecordsQueryKey(subdomain + '.' + domain),
+        });
+
+        queryClient.refetchQueries({
+            queryKey: getTextRecordsQueryKey(subdomain + '.' + domain),
+        });
 
         onSuccess?.();
-    }, [onSuccess, subdomain, domain, queryClient, account?.address]);
+    }, [onSuccess, subdomain, domain, queryClient, account]);
 
     const result = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
@@ -200,4 +256,8 @@ export const useClaimVeWorldSubdomain = ({
             return result.sendTransaction(await buildClauses());
         },
     };
+};
+
+const isVeWorldDomain = (domain: string) => {
+    return domain.endsWith('veworld.vet');
 };

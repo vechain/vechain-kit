@@ -114,7 +114,5 @@ export const useVechainDomain = (addressOrDomain?: string | null) => {
         queryKey: getVechainDomainQueryKey(addressOrDomain),
         queryFn: () => fetchVechainDomain(thor, network.type, addressOrDomain),
         enabled: !!thor && !!addressOrDomain,
-        staleTime: 24 * 60 * 60 * 1000, // 24 hours
-        gcTime: 24 * 60 * 60 * 1000, // 24 hours
     });
 };

@@ -25,6 +25,7 @@ export type ChooseNameSummaryContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     name: string;
+    domainType?: string;
     isOwnDomain: boolean;
     initialContentSource?: AccountModalContentTypes;
 };
@@ -32,6 +33,7 @@ export type ChooseNameSummaryContentProps = {
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
+    domainType = 'veworld.vet',
     isOwnDomain,
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
@@ -53,7 +55,7 @@ export const ChooseNameSummaryContent = ({
         isTransactionPending,
     } = useClaimVeWorldSubdomain({
         subdomain: name,
-        domain: 'veworld.vet',
+        domain: domainType,
         alreadyOwned: isOwnDomain,
         onSuccess: () => {
             setCurrentContent({
@@ -63,8 +65,8 @@ export const ChooseNameSummaryContent = ({
                     txId: txReceipt?.meta.txID,
                     title: t('Name claimed'),
                     description: t(
-                        `Your {{name}}.veworld.vet name has been claimed successfully.`,
-                        { name },
+                        `Your {{name}}.{{domainType}} name has been claimed successfully.`,
+                        { name, domainType },
                     ),
                     onDone: () => {
                         setCurrentContent(initialContentSource);
@@ -113,7 +115,7 @@ export const ChooseNameSummaryContent = ({
                         {t('Are you sure you want to set your domain name to')}
                     </Text>
                     <Text fontSize="xl" fontWeight="bold" color="blue.500">
-                        {`${name}.veworld.vet`}
+                        {`${name}.${domainType}`}
                     </Text>
                 </VStack>
             </ModalBody>

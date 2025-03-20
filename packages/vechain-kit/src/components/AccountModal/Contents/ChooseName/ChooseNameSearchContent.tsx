@@ -131,12 +131,16 @@ export const ChooseNameSearchContent = ({
     };
 
     const handleDomainSelect = (selectedDomain: string) => {
-        // Remove the .veworld.vet or .vet suffix
-        const baseName = selectedDomain.split('.')[0];
+        // Extract the domain type and base name
+        const parts = selectedDomain.split('.');
+        const baseName = parts[0];
+        const domainType = parts.length > 2 ? `${parts[1]}.${parts[2]}` : 'vet';
+
         setCurrentContent({
             type: 'choose-name-summary',
             props: {
                 name: baseName,
+                domainType: domainType,
                 isOwnDomain: true,
                 setCurrentContent,
                 initialContentSource,
