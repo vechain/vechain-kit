@@ -1,5 +1,7 @@
 import {
     UseSendTransactionReturnValue,
+    getAvatarOfAddressQueryKey,
+    getAvatarQueryKey,
     getDomainsOfAddressQueryKey,
     getEnsRecordExistsQueryKey,
     getVechainDomainQueryKey,
@@ -117,6 +119,16 @@ export const useClaimVeWorldSubdomain = ({
             refetchType: 'none',
         });
 
+        queryClient.cancelQueries({
+            queryKey: getAvatarQueryKey(subdomain + '.' + domain),
+            refetchType: 'none',
+        });
+
+        queryClient.cancelQueries({
+            queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
+            refetchType: 'none',
+        });
+
         // Refetch after 3 seconds
         setTimeout(() => {
             queryClient.invalidateQueries({
@@ -149,6 +161,22 @@ export const useClaimVeWorldSubdomain = ({
                     account?.address ?? '',
                     domain,
                 ),
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: getAvatarQueryKey(subdomain + '.' + domain),
+            });
+
+            queryClient.refetchQueries({
+                queryKey: getAvatarQueryKey(subdomain + '.' + domain),
+            });
+
+            queryClient.invalidateQueries({
+                queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
+            });
+
+            queryClient.refetchQueries({
+                queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
             });
         }, 2000);
 
