@@ -27,6 +27,7 @@ export type ChooseNameSummaryContentProps = {
     name: string;
     domainType?: string;
     isOwnDomain: boolean;
+    isUnsetting?: boolean;
     initialContentSource?: AccountModalContentTypes;
 };
 
@@ -35,6 +36,7 @@ export const ChooseNameSummaryContent = ({
     name,
     domainType = 'veworld.vet',
     isOwnDomain,
+    isUnsetting = false,
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
@@ -57,17 +59,20 @@ export const ChooseNameSummaryContent = ({
         subdomain: name,
         domain: domainType,
         alreadyOwned: isOwnDomain,
+        isUnsetting: isUnsetting,
         onSuccess: () => {
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
                     setCurrentContent,
                     txId: txReceipt?.meta.txID,
-                    title: t('Name claimed'),
-                    description: t(
-                        `Your {{name}}.{{domainType}} name has been claimed successfully.`,
-                        { name, domainType },
-                    ),
+                    title: isUnsetting ? t('Domain unset') : t('Domain set'),
+                    description: isUnsetting
+                        ? t('Your domain has been unset successfully.')
+                        : t(
+                              `Your address has been successfully set to {{name}}.{{domainType}}.`,
+                              { name, domainType },
+                          ),
                     onDone: () => {
                         setCurrentContent(initialContentSource);
                     },
@@ -92,7 +97,11 @@ export const ChooseNameSummaryContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Confirm Name')}</ModalHeader>
+                <ModalHeader>
+                    {isUnsetting
+                        ? t('Confirm Unset Domain')
+                        : t('Confirm Name')}
+                </ModalHeader>
                 <ModalBackButton
                     onClick={() =>
                         setCurrentContent({
@@ -112,11 +121,19 @@ export const ChooseNameSummaryContent = ({
             <ModalBody>
                 <VStack spacing={4} w="full" textAlign="center">
                     <Text fontSize="lg">
-                        {t('Are you sure you want to set your domain name to')}
+                        {isUnsetting
+                            ? t(
+                                  'Are you sure you want to unset your current domain?',
+                              )
+                            : t(
+                                  'Are you sure you want to set your domain name to',
+                              )}
                     </Text>
-                    <Text fontSize="xl" fontWeight="bold" color="blue.500">
-                        {`${name}.${domainType}`}
-                    </Text>
+                    {!isUnsetting && (
+                        <Text fontSize="xl" fontWeight="bold" color="blue.500">
+                            {`${name}.${domainType}`}
+                        </Text>
+                    )}
                 </VStack>
             </ModalBody>
 
@@ -126,7 +143,11 @@ export const ChooseNameSummaryContent = ({
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     onConfirm={handleConfirm}
-                    transactionPendingText={t('Claiming name...')}
+                    transactionPendingText={
+                        isUnsetting
+                            ? t('Unsetting current domain...')
+                            : t('Claiming name...')
+                    }
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
                     isDisabled={isTransactionPending}

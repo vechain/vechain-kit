@@ -484,5 +484,17 @@
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
     "Your {{name}}.{{domainType}} name has been claimed successfully.": "Your {{name}}.{{domainType}} name has been claimed successfully.",
-    "Tools": "Tools"
+    "Tools": "Tools",
+    "Unset current domain": "Unset current domain",
+    "Unsetting current domain": "Unsetting current domain",
+    "Unsetting your current domain": "Unsetting your current domain",
+    "Unsetting your current VeChain nickname": "Unsetting your current VeChain nickname",
+    "Are you sure you want to unset your current domain?": "Are you sure you want to unset your current domain?",
+    "Domain unset": "Domain unset",
+    "Your domain has been unset successfully.": "Your domain has been unset successfully.",
+    "Confirm Unset Domain": "Confirm Unset Domain",
+    "Unsetting current domain...": "Unsetting current domain...",
+    "Remove your current domain name": "Remove your current domain name",
+    "Your address has been successfully set to {{name}}.{{domainType}}.": "Your address has been successfully set to {{name}}.{{domainType}}.",
+    "Domain set": "Domain set"
 }

@@ -26,6 +26,7 @@ type useClaimVeWorldSubdomainProps = {
     onError?: () => void;
     onSuccessMessageTitle?: number;
     alreadyOwned?: boolean;
+    isUnsetting?: boolean;
 };
 
 type useClaimVeWorldSubdomainReturnValue = {
@@ -41,15 +42,36 @@ export const useClaimVeWorldSubdomain = ({
     onSuccess,
     onError,
     alreadyOwned = false,
+    isUnsetting = false,
 }: useClaimVeWorldSubdomainProps): useClaimVeWorldSubdomainReturnValue => {
     const queryClient = useQueryClient();
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
 
     const buildClauses = useCallback(async () => {
+        const clausesArray: any[] = [];
+
+        // When unsetting domain, we only need to call setName with an empty string
+        if (isUnsetting) {
+            clausesArray.push({
+                to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
+                value: '0x0',
+                data: ReverseRegistrarInterface.encodeFunctionData('setName', [
+                    '',
+                ]),
+                comment: `Unsetting your current VeChain nickname of the account ${humanAddress(
+                    account?.address ?? '',
+                    4,
+                    4,
+                )}`,
+                abi: ReverseRegistrarInterface.getFunction('setName'),
+            });
+
+            return clausesArray;
+        }
+
         if (!subdomain) throw new Error('Invalid subdomain');
 
-        const clausesArray: any[] = [];
         const fullDomain = `${subdomain}.${domain}`;
 
         // Always unset current nickname first
@@ -141,7 +163,14 @@ export const useClaimVeWorldSubdomain = ({
         }
 
         return clausesArray;
-    }, [subdomain, domain, alreadyOwned, account?.address, network.type]);
+    }, [
+        subdomain,
+        domain,
+        alreadyOwned,
+        isUnsetting,
+        account?.address,
+        network.type,
+    ]);
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {

@@ -148,6 +148,20 @@ export const ChooseNameSearchContent = ({
         });
     };
 
+    const handleUnsetDomain = () => {
+        setCurrentContent({
+            type: 'choose-name-summary',
+            props: {
+                name: '',
+                domainType: '',
+                isOwnDomain: false,
+                isUnsetting: true,
+                setCurrentContent,
+                initialContentSource,
+            },
+        });
+    };
+
     return (
         <>
             <StickyHeaderContainer>
@@ -163,6 +177,7 @@ export const ChooseNameSearchContent = ({
                     <ExistingDomainsList
                         domains={allUserDomains}
                         onDomainSelect={handleDomainSelect}
+                        onUnsetDomain={handleUnsetDomain}
                         isLoading={isLoadingOwnedDomains}
                     />
 
