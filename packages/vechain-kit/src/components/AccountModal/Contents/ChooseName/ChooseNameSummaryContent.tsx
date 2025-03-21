@@ -13,6 +13,8 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
+import { useClaimVetDomain } from '@/hooks/api/vetDomains/useClaimVetDomain';
+import { useUnsetDomain } from '@/hooks/api/vetDomains/useUnsetDomain';
 import { useTranslation } from 'react-i18next';
 import {
     useUpgradeRequired,
@@ -49,37 +51,60 @@ export const ChooseNameSummaryContent = ({
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
 
+    // Use the unset domain hook if we're unsetting
+    const unsetDomainHook = useUnsetDomain({
+        onSuccess: () => handleSuccess(),
+    });
+
+    // If not unsetting, determine if this is a .veworld.vet subdomain or a primary .vet domain
+    const isVeWorldSubdomain = domainType.endsWith('veworld.vet');
+
+    // Use the appropriate claim hook based on domain type (only when not unsetting)
+    const veWorldSubdomainHook = useClaimVeWorldSubdomain({
+        subdomain: name,
+        domain: domainType,
+        alreadyOwned: isOwnDomain,
+        onSuccess: () => handleSuccess(),
+    });
+
+    const vetDomainHook = useClaimVetDomain({
+        domain: name,
+        alreadyOwned: isOwnDomain,
+        onSuccess: () => handleSuccess(),
+    });
+
+    // Use the appropriate hook based on action and domain type
     const {
         sendTransaction,
         txReceipt,
         error: txError,
         isWaitingForWalletConfirmation,
         isTransactionPending,
-    } = useClaimVeWorldSubdomain({
-        subdomain: name,
-        domain: domainType,
-        alreadyOwned: isOwnDomain,
-        isUnsetting: isUnsetting,
-        onSuccess: () => {
-            setCurrentContent({
-                type: 'successful-operation',
-                props: {
-                    setCurrentContent,
-                    txId: txReceipt?.meta.txID,
-                    title: isUnsetting ? t('Domain unset') : t('Domain set'),
-                    description: isUnsetting
-                        ? t('Your domain has been unset successfully.')
-                        : t(
-                              `Your address has been successfully set to {{name}}.{{domainType}}.`,
-                              { name, domainType },
-                          ),
-                    onDone: () => {
-                        setCurrentContent(initialContentSource);
-                    },
+    } = isUnsetting
+        ? unsetDomainHook
+        : isVeWorldSubdomain
+        ? veWorldSubdomainHook
+        : vetDomainHook;
+
+    const handleSuccess = () => {
+        setCurrentContent({
+            type: 'successful-operation',
+            props: {
+                setCurrentContent,
+                txId: txReceipt?.meta.txID,
+                title: isUnsetting ? t('Domain unset') : t('Domain set'),
+                description: isUnsetting
+                    ? t('Your domain has been unset successfully.')
+                    : t(
+                          `Your address has been successfully set to {{name}}.{{domainType}}.`,
+                          { name, domainType },
+                      ),
+                onDone: () => {
+                    setCurrentContent(initialContentSource);
                 },
-            });
-        },
-    });
+            },
+        });
+    };
 
     const handleConfirm = async () => {
         if (upgradeRequired) {
