@@ -161,37 +161,35 @@ export const useWallet = (): UseWalletReturnType => {
         ? dappKitAccount
         : smartAccount?.address;
 
-    const activeAccountMetadata = useWalletMetadata(
-        activeAddress ?? '',
-        network.type,
-    );
+    const {
+        data: activeAccountMetadata,
+        isLoading: isLoadingActiveAccountMetadata,
+    } = useWalletMetadata(activeAddress ?? '', network.type);
 
-    const connectedMetadata = useWalletMetadata(
-        connectedWalletAddress ?? '',
-        network.type,
-    );
-    const smartAccountMetadata = useWalletMetadata(
-        smartAccount?.address ?? '',
-        network.type,
-    );
+    const { data: connectedMetadata, isLoading: isLoadingConnectedMetadata } =
+        useWalletMetadata(connectedWalletAddress ?? '', network.type);
+    const {
+        data: smartAccountMetadata,
+        isLoading: isLoadingSmartAccountMetadata,
+    } = useWalletMetadata(smartAccount?.address ?? '', network.type);
 
     const account = activeAddress
         ? {
               address: activeAddress,
-              domain: activeAccountMetadata.domain,
-              image: activeAccountMetadata.image,
-              isLoadingMetadata: activeAccountMetadata.isLoading,
-              metadata: activeAccountMetadata.records,
+              domain: activeAccountMetadata?.domain,
+              image: activeAccountMetadata?.image,
+              isLoadingMetadata: isLoadingActiveAccountMetadata,
+              metadata: activeAccountMetadata?.records,
           }
         : null;
 
     const connectedWallet = connectedWalletAddress
         ? {
               address: connectedWalletAddress,
-              domain: connectedMetadata.domain,
-              image: connectedMetadata.image,
-              isLoadingMetadata: connectedMetadata.isLoading,
-              metadata: connectedMetadata.records,
+              domain: connectedMetadata?.domain,
+              image: connectedMetadata?.image,
+              isLoadingMetadata: isLoadingConnectedMetadata,
+              metadata: connectedMetadata?.records,
           }
         : null;
 
@@ -240,13 +238,13 @@ export const useWallet = (): UseWalletReturnType => {
         account,
         smartAccount: {
             address: smartAccount?.address ?? '',
-            domain: smartAccountMetadata.domain,
-            image: smartAccountMetadata.image,
+            domain: smartAccountMetadata?.domain,
+            image: smartAccountMetadata?.image,
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
             version: smartAccountVersion ?? null,
-            isLoadingMetadata: smartAccountMetadata.isLoading,
-            metadata: smartAccountMetadata.records,
+            isLoadingMetadata: isLoadingSmartAccountMetadata,
+            metadata: smartAccountMetadata?.records,
         },
         connectedWallet,
         privyUser: user,

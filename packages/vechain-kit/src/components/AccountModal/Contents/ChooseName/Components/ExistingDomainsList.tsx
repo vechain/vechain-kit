@@ -39,7 +39,10 @@ const DomainListItem = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
     const { t } = useTranslation();
-    const metadata = useWalletMetadata(domain.name, connection.network);
+    const { data: metadata } = useWalletMetadata(
+        domain.name,
+        connection.network,
+    );
 
     return (
         <ListItem
@@ -68,7 +71,7 @@ const DomainListItem = ({
                     props={{
                         width: '40px',
                         height: '40px',
-                        src: metadata.image ?? getPicassoImage(domain.name),
+                        src: metadata?.image ?? getPicassoImage(domain.name),
                         alt: domain.name,
                     }}
                 />
