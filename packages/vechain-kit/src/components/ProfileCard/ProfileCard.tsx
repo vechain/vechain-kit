@@ -54,10 +54,7 @@ export const ProfileCard = ({
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
 
-    const { data: metadata, isLoading: isLoadingMetadata } = useWalletMetadata(
-        address,
-        network.type,
-    );
+    const metadata = useWalletMetadata(address, network.type);
 
     const headerImageSvg = getPicassoImage(address);
 
@@ -93,7 +90,7 @@ export const ProfileCard = ({
                         address,
                         domain: metadata?.domain,
                         image: metadata?.image,
-                        isLoadingMetadata: isLoadingMetadata,
+                        isLoadingMetadata: metadata?.isLoading,
                         metadata: metadata?.records,
                     }}
                     props={{
@@ -172,7 +169,7 @@ export const ProfileCard = ({
                             address,
                             domain: metadata?.domain,
                             image: metadata?.image,
-                            isLoadingMetadata: isLoadingMetadata,
+                            isLoadingMetadata: metadata?.isLoading,
                             metadata: metadata?.records,
                         }}
                         style={{ mt: 4 }}

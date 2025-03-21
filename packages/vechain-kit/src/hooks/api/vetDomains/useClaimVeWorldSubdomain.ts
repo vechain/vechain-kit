@@ -5,7 +5,7 @@ import {
     getEnsRecordExistsQueryKey,
     getTextRecordsQueryKey,
     getVechainDomainQueryKey,
-    getWalletMetadataQueryKey,
+    getAvatarQueryKey,
     useSendTransaction,
     useWallet,
 } from '@/hooks';
@@ -19,6 +19,7 @@ import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { ethers } from 'ethers';
+import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 
 type useClaimVeWorldSubdomainProps = {
     subdomain: string;
@@ -48,6 +49,10 @@ export const useClaimVeWorldSubdomain = ({
     const queryClient = useQueryClient();
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
+    const { refresh: refreshMetadata } = useRefreshMetadata(
+        subdomain + '.' + domain,
+        account?.address ?? '',
+    );
 
     const buildClauses = useCallback(async () => {
         const clausesArray: any[] = [];
@@ -175,121 +180,72 @@ export const useClaimVeWorldSubdomain = ({
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        // Invalidate immediately without refetching
-        queryClient.cancelQueries({
-            queryKey: getVechainDomainQueryKey(account?.address ?? ''),
-            refetchType: 'none',
-        });
+        const fullDomain = `${subdomain}.${domain}`;
+        const address = account?.address ?? '';
 
-        queryClient.cancelQueries({
-            queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
-            refetchType: 'none',
-        });
+        // First invalidate all related queries
+        await Promise.all([
+            queryClient.invalidateQueries({
+                queryKey: getVechainDomainQueryKey(address),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getVechainDomainQueryKey(fullDomain),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getEnsRecordExistsQueryKey(subdomain),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getDomainsOfAddressQueryKey(address, '.vet'),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getDomainsOfAddressQueryKey(address, '.veworld.vet'),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getTextRecordsQueryKey(fullDomain),
+            }),
+        ]);
 
-        queryClient.cancelQueries({
-            queryKey: getEnsRecordExistsQueryKey(subdomain),
-            refetchType: 'none',
-        });
+        // Use the dedicated metadata refresh utility which properly handles avatar queries
+        await refreshMetadata();
 
-        queryClient.cancelQueries({
-            queryKey: getDomainsOfAddressQueryKey(
-                account?.address ?? '',
-                '.veworld.vet',
-            ),
-            refetchType: 'none',
-        });
-        queryClient.cancelQueries({
-            queryKey: getDomainsOfAddressQueryKey(
-                account?.address ?? '',
-                '.vet',
-            ),
-            refetchType: 'none',
-        });
-
-        queryClient.cancelQueries({
-            queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
-            refetchType: 'none',
-        });
-
-        queryClient.cancelQueries({
-            queryKey: getWalletMetadataQueryKey(
-                account?.address ?? '',
-                network.type,
-            ),
-            refetchType: 'none',
-        });
-
-        queryClient.invalidateQueries({
-            queryKey: getVechainDomainQueryKey(account?.address ?? ''),
-            refetchType: 'none',
-        });
-
-        queryClient.invalidateQueries({
-            queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
-            refetchType: 'none',
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getVechainDomainQueryKey(account?.address ?? ''),
-        });
-        queryClient.refetchQueries({
-            queryKey: getVechainDomainQueryKey(subdomain + '.' + domain),
-        });
-
-        queryClient.invalidateQueries({
-            queryKey: getEnsRecordExistsQueryKey(subdomain),
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getEnsRecordExistsQueryKey(subdomain),
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getDomainsOfAddressQueryKey(
-                account?.address ?? '',
-                '.vet',
-            ),
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getDomainsOfAddressQueryKey(
-                account?.address ?? '',
-                '.veworld.vet',
-            ),
-        });
-
-        queryClient.invalidateQueries({
-            queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getAvatarOfAddressQueryKey(account?.address ?? ''),
-        });
-
-        queryClient.invalidateQueries({
-            queryKey: getTextRecordsQueryKey(subdomain + '.' + domain),
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getTextRecordsQueryKey(subdomain + '.' + domain),
-        });
-
-        queryClient.invalidateQueries({
-            queryKey: getWalletMetadataQueryKey(
-                account?.address ?? '',
-                network.type,
-            ),
-        });
-
-        queryClient.refetchQueries({
-            queryKey: getWalletMetadataQueryKey(
-                account?.address ?? '',
-                network.type,
-            ),
-        });
+        // Also ensure domains are properly refetched
+        await Promise.all([
+            queryClient.refetchQueries({
+                queryKey: getVechainDomainQueryKey(address),
+            }),
+            queryClient.refetchQueries({
+                queryKey: getDomainsOfAddressQueryKey(address, '.vet'),
+            }),
+            queryClient.refetchQueries({
+                queryKey: getDomainsOfAddressQueryKey(address, '.veworld.vet'),
+            }),
+            queryClient.refetchQueries({
+                queryKey: getAvatarQueryKey(
+                    subdomain + '.' + domain,
+                    network.type,
+                ),
+            }),
+            queryClient.refetchQueries({
+                queryKey: getTextRecordsQueryKey(fullDomain),
+            }),
+            queryClient.refetchQueries({
+                queryKey: getEnsRecordExistsQueryKey(subdomain),
+            }),
+            queryClient.refetchQueries({
+                queryKey: getAvatarOfAddressQueryKey(address),
+            }),
+        ]);
 
         onSuccess?.();
-    }, [onSuccess, subdomain, domain, queryClient, account]);
+    }, [
+        onSuccess,
+        subdomain,
+        domain,
+        queryClient,
+        account,
+        network.type,
+        refreshMetadata,
+    ]);
 
     const result = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
