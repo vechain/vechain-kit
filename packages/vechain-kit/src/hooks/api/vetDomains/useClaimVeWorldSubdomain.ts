@@ -214,6 +214,9 @@ export const useClaimVeWorldSubdomain = ({
                 queryKey: getVechainDomainQueryKey(address),
             }),
             queryClient.refetchQueries({
+                queryKey: getVechainDomainQueryKey(fullDomain),
+            }),
+            queryClient.refetchQueries({
                 queryKey: getDomainsOfAddressQueryKey(address, '.vet'),
             }),
             queryClient.refetchQueries({
