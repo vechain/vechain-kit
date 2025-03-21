@@ -13,6 +13,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 
+export const getWalletMetadataQueryKey = (
+    address: string,
+    networkType: NETWORK_TYPE,
+) => ['VECHAIN_KIT', 'WALLET_METADATA', address, networkType];
+
 export const useWalletMetadata = (
     address: string,
     networkType: NETWORK_TYPE,
@@ -22,7 +27,7 @@ export const useWalletMetadata = (
 
     // Replace multiple useQueries with a single coordinated query
     return useQuery({
-        queryKey: ['VECHAIN_KIT', 'WALLET_METADATA', address, networkType],
+        queryKey: getWalletMetadataQueryKey(address, networkType),
         queryFn: async () => {
             // First ensure we have the domain data
             const domain = await queryClient.ensureQueryData({

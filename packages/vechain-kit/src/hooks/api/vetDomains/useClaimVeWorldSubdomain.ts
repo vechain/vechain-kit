@@ -5,6 +5,7 @@ import {
     getEnsRecordExistsQueryKey,
     getTextRecordsQueryKey,
     getVechainDomainQueryKey,
+    getWalletMetadataQueryKey,
     useSendTransaction,
     useWallet,
 } from '@/hooks';
@@ -210,6 +211,14 @@ export const useClaimVeWorldSubdomain = ({
             refetchType: 'none',
         });
 
+        queryClient.cancelQueries({
+            queryKey: getWalletMetadataQueryKey(
+                account?.address ?? '',
+                network.type,
+            ),
+            refetchType: 'none',
+        });
+
         queryClient.invalidateQueries({
             queryKey: getVechainDomainQueryKey(account?.address ?? ''),
             refetchType: 'none',
@@ -263,6 +272,20 @@ export const useClaimVeWorldSubdomain = ({
 
         queryClient.refetchQueries({
             queryKey: getTextRecordsQueryKey(subdomain + '.' + domain),
+        });
+
+        queryClient.invalidateQueries({
+            queryKey: getWalletMetadataQueryKey(
+                account?.address ?? '',
+                network.type,
+            ),
+        });
+
+        queryClient.refetchQueries({
+            queryKey: getWalletMetadataQueryKey(
+                account?.address ?? '',
+                network.type,
+            ),
         });
 
         onSuccess?.();
