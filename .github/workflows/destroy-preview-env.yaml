@@ -25,8 +25,7 @@ jobs:
       - name: Process Branch Name
         id: process-branch-name
         run: |
-          # Convert to lowercase, remove special characters, and truncate to 20 characters
-          sanitized_branch_name=$(echo "${{ github.event.pull_request.head.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]//g' | cut -c1-20)
+          sanitized_branch_name=$(echo "${{ github.event.pull_request.head.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
           echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
 
       - name: Remove Preview Environment from S3
