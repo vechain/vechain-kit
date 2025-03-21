@@ -25,7 +25,13 @@ export const getAvatar = async (
         }
 
         const blob = await response.blob();
-        return URL.createObjectURL(blob);
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+                resolve(reader.result as string);
+            };
+        });
     } catch (error) {
         console.error('Error fetching avatar:', error);
         return null;
