@@ -1,0 +1,72 @@
+name: Deploy Preview Environment
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      BASE_PATH: '/${{ github.event.pull_request.head.ref }}'
+      NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
+      NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
+      NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
+      NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
+      NEXT_PUBLIC_NETWORK_TYPE: 'main'
+      AWS_REGION: eu-west-1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Build App
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+        run: |
+          yarn install:all
+          yarn build
+
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "./examples/homepage/dist" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Process Branch Name
+        id: process-branch-name
+        run: |
+          # Convert to lowercase, remove special characters, and truncate to 20 characters
+          sanitized_branch_name=$(echo "${{ github.event.pull_request.head.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]//g' | cut -c1-20)
+          echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync ./examples/homepage/dist s3://${{ secrets.AWS_PREVIEW_BUCKET_NAME }}/${{ steps.process-branch-name.outputs.processedBranchName }} --delete
+
+      - name: Cloudfront Invalidation
+        run: |
+          AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
+
+  
+      - name: Create Deployment Comment
+        if: github.event.action == 'opened'
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            # 🚀 Preview environment deployed!
+            Preview URL: https://preview.vechainkit.vechain.org/${{ steps.process-branch-name.outputs.processedBranchName }}
+          edit-mode: replace

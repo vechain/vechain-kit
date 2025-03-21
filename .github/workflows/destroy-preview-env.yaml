@@ -1,0 +1,47 @@
+name: Destroy Preview Environment
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
+    types: [closed]
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
+          aws-region: eu-west-1
+
+      - name: Process Branch Name
+        id: process-branch-name
+        run: |
+          # Convert to lowercase, remove special characters, and truncate to 20 characters
+          sanitized_branch_name=$(echo "${{ github.event.pull_request.head.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]//g' | cut -c1-20)
+          echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
+
+      - name: Remove Preview Environment from S3
+        run: |
+          aws s3 rm s3://${{ secrets.AWS_PREVIEW_BUCKET_NAME }}/${{ steps.process-branch-name.outputs.processedBranchName }} --recursive
+      
+      - name: Find Previous Deployment Comment
+        uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3.1.0
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '🚀 Preview environment deployed!'
+
+      - name: Remove Deployment PR Comment
+        run: gh api --method DELETE /repos/${{ github.repository }}/issues/comments/${{ steps.find-comment.outputs.comment-id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
