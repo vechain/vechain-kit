@@ -95,7 +95,7 @@ export const CustomizationContent = ({
         mode: 'onChange',
     });
 
-    // Set initial values for comparison
+    // Update effect to reset image when domain changes
     useEffect(() => {
         if (account?.metadata) {
             const metadata = account.metadata;
@@ -107,6 +107,7 @@ export const CustomizationContent = ({
             setInitialAvatarHash(
                 account.image ? account.image.replace('ipfs://', '') : null,
             );
+
             // Only set the preview URL if it hasn't been set yet
             setPreviewImageUrl((prev) => prev ?? account.image ?? null);
         }

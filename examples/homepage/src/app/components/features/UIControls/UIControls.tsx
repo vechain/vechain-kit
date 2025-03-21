@@ -226,7 +226,11 @@ export function UIControls() {
                         specific sections. (Customize your profile to see how
                         this card changes)
                     </Text>
-                    <VStack w={'fit-content'}>
+                    <Grid
+                        templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
+                        gap={4}
+                        w="full"
+                    >
                         <ProfileCard
                             address={account?.address ?? ''}
                             showEdit={false}
@@ -239,7 +243,15 @@ export function UIControls() {
                                 },
                             }}
                         />
-                    </VStack>
+
+                        <ProfileCard
+                            address={
+                                '0x73D1d7e67B9696Be68F53fb80C7e6e50b314a62f'
+                            }
+                            showEdit={false}
+                            showHeader={false}
+                        />
+                    </Grid>
                 </VStack>
             </VStack>
         </CollapsibleCard>

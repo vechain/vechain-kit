@@ -150,7 +150,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     return (
         <VStack w={'full'} mt={mt} spacing={4}>
             <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.5}>
-                {t('Activities')}
+                {t('Tools')}
             </Heading>
             <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
                 {QUICK_ACTIONS.map((action) => (

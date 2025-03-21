@@ -1,6 +1,7 @@
 export * from './useVechainDomain';
 export * from './useEnsRecordExists';
 export * from './useClaimVeWorldSubdomain';
+export * from './useClaimVetDomain';
 export * from './useIsDomainProtected';
 export * from './useGetDomainsOfAddress';
 export * from './useGetAvatar';
@@ -8,3 +9,5 @@ export * from './useGetTextRecords';
 export * from './useUpdateTextRecord';
 export * from './useGetResolverAddress';
 export * from './useGetAvatarOfAddress';
+export * from './useGetAvatarLegacy';
+export * from './useUnsetDomain';

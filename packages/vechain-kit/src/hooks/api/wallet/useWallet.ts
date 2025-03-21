@@ -10,10 +10,7 @@ import {
     useGetChainId,
     useGetNodeUrl,
     useSmartAccountVersion,
-    useGetTextRecords,
-    useVechainDomain,
     useDAppKitWallet,
-    useGetAvatarOfAddress,
 } from '@/hooks';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
@@ -164,13 +161,11 @@ export const useWallet = (): UseWalletReturnType => {
         ? dappKitAccount
         : smartAccount?.address;
 
-    const activeAccountDomain = useVechainDomain(activeAddress ?? '');
-    const activeAccountAvatar = useGetAvatarOfAddress(activeAddress ?? '');
-    const activeAccountTextRecords = useGetTextRecords(
-        activeAccountDomain?.data?.domain,
+    const activeAccountMetadata = useWalletMetadata(
+        activeAddress ?? '',
+        network.type,
     );
 
-    // const activeMetadata = useWalletMetadata(activeAddress ?? '', network.type);
     const connectedMetadata = useWalletMetadata(
         connectedWalletAddress ?? '',
         network.type,
@@ -183,13 +178,10 @@ export const useWallet = (): UseWalletReturnType => {
     const account = activeAddress
         ? {
               address: activeAddress,
-              domain: activeAccountDomain?.data?.domain,
-              image: activeAccountAvatar.data,
-              isLoadingMetadata:
-                  activeAccountAvatar?.isLoading ||
-                  activeAccountDomain?.isLoading ||
-                  activeAccountTextRecords?.isLoading,
-              metadata: activeAccountTextRecords?.data,
+              domain: activeAccountMetadata.domain,
+              image: activeAccountMetadata.image,
+              isLoadingMetadata: activeAccountMetadata.isLoading,
+              metadata: activeAccountMetadata.records,
           }
         : null;
 
