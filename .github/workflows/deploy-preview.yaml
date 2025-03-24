@@ -30,7 +30,7 @@ jobs:
         run: |
           sanitized_branch_name=$(echo "${{ github.event.pull_request.head.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
           echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
-          echo "BASE_PATH=/$sanitized_branch_name" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_BASE_PATH=/$sanitized_branch_name" >> $GITHUB_ENV
       
       - name: Build App
         env:
@@ -60,7 +60,7 @@ jobs:
           AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
 
       - name: Create Deployment Comment
-        if: github.event.action == 'opened'
+        if: github.event.action == 'opened' || github.event.action == 'reopened'
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         with:
           issue-number: ${{ github.event.pull_request.number }}
