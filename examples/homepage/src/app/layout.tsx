@@ -23,6 +23,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const basePath = process.env.basePath ?? '';
     return (
         <html
             lang="en"
@@ -41,15 +42,15 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                 />
-                <link rel="icon" href="/images/logo.png" type="image/png" />
+                <link rel="icon" href={`${basePath}/images/logo.png`} type="image/png" />
                 <link
                     rel="apple-touch-icon"
                     sizes="57x57"
-                    href="/images/favicon/apple-touch-icon.png"
+                    href={`${basePath}/images/favicon/apple-touch-icon.png`}
                 />
                 <meta
                     name="msapplication-TileImage"
-                    content="/images/favicon/apple-touch-icon.png"
+                    content={`${basePath}/images/favicon/apple-touch-icon.png`}
                 />
 
                 {/* Open Graph Metadata */}
@@ -66,7 +67,7 @@ export default function RootLayout({
                 <meta property="og:site_name" content="VeChain Kit" />
                 <meta
                     property="og:image"
-                    content="/images/vechain-kit-long.png"
+                    content={`${basePath}/images/vechain-kit-long.png`}
                 />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
@@ -82,7 +83,7 @@ export default function RootLayout({
                 />
                 <meta
                     name="twitter:image"
-                    content="/images/vechain-kit-long.png"
+                    content={`${basePath}/images/vechain-kit-long.png`}
                 />
                 <meta name="twitter:image:alt" content="VeChain Kit" />
             </head>
