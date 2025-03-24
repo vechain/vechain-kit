@@ -125,7 +125,7 @@ export const getAvatarLegacy = async (
             return null;
         }
     } catch (error) {
-        console.error('Error fetching avatar:', error);
+        console.error('Error fetching avatar using legacy API:', error);
         throw error;
     }
 };
