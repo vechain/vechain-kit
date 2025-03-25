@@ -20,9 +20,19 @@ import { CiLogin } from 'react-icons/ci';
 import { SiNpm, SiFarcaster } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { FaSquareXTwitter } from 'react-icons/fa6';
+import { trackEvent } from '@/app/lib/mixpanelClient';
 
 export function Introduction() {
     const { connection } = useWallet();
+
+    const trackExternalLink = (destination: string) => {
+        trackEvent('External Link Click', {
+            destination,
+            isConnected: connection.isConnected,
+            source: 'Introduction',
+        });
+    };
+
     const basePath = process.env.basePath ?? '';
     return (
         <Box
@@ -68,6 +78,9 @@ export function Introduction() {
                                 colorScheme="gray"
                                 size="lg"
                                 width="100%"
+                                onClick={() =>
+                                    trackExternalLink('documentation')
+                                }
                             >
                                 Get Started with our Docs
                             </Button>
@@ -85,6 +98,7 @@ export function Introduction() {
                                 rel="noopener noreferrer"
                                 colorScheme="red"
                                 width="100%"
+                                onClick={() => trackExternalLink('npm')}
                             >
                                 View Package on NPM
                             </Button>
@@ -96,6 +110,7 @@ export function Introduction() {
                                 rel="noopener noreferrer"
                                 colorScheme="gray"
                                 width="100%"
+                                onClick={() => trackExternalLink('github')}
                             >
                                 View GitHub Repository
                             </Button>
@@ -114,6 +129,9 @@ export function Introduction() {
                                 rel="noopener noreferrer"
                                 variant="outline"
                                 width="100%"
+                                onClick={() =>
+                                    trackExternalLink('smart-accounts')
+                                }
                             >
                                 Learn about Smart Accounts
                             </Button>
@@ -273,6 +291,11 @@ export function Introduction() {
                             as={Link}
                             href={app.href}
                             isExternal
+                            onClick={() =>
+                                trackExternalLink(
+                                    `example-app-${app.name.toLowerCase()}`,
+                                )
+                            }
                         >
                             <HStack
                                 align="start"

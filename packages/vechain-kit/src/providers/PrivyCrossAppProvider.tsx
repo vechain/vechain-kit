@@ -121,6 +121,7 @@ export const usePrivyCrossAppSdk = () => {
                 }
 
                 const result = await connectAsync({ connector });
+
                 return result;
             } catch (error) {
                 setConnectionError(error as Error);

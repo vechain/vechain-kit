@@ -15,6 +15,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { ShortcutButton } from './Components/ShortcutButton';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type AppOverviewContentProps = {
     setCurrentContent: React.Dispatch<
@@ -36,6 +37,11 @@ export const AppOverviewContent = ({
     logoComponent,
 }: AppOverviewContentProps) => {
     const { t } = useTranslation();
+
+    const handleLaunchApp = () => {
+        Analytics.ecosystem.launchApp(name);
+        window.open(url, '_blank');
+    };
 
     return (
         <Box>
@@ -78,9 +84,7 @@ export const AppOverviewContent = ({
                 <VStack w="full" spacing={4}>
                     <Button
                         variant="vechainKitSecondary"
-                        onClick={() => {
-                            window.open(url, '_blank');
-                        }}
+                        onClick={handleLaunchApp}
                     >
                         {t('Launch {{name}}', { name })}
                         <Icon as={FaExternalLinkAlt} ml={2} />

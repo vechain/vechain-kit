@@ -1,7 +1,7 @@
 import { useVeChainKitConfig } from '@/providers';
 import { Button, Link, Text, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { TransactionStatusErrorType } from '@/types';
 import { getConfig } from '@/config';
 
@@ -9,6 +9,7 @@ export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;
     isTxWaitingConfirmation: boolean;
     onConfirm: () => void;
+    onRetry?: () => void;
     transactionPendingText: string;
     txReceipt: Connex.Thor.Transaction.Receipt | null;
     transactionError?: Error | TransactionStatusErrorType | null;
@@ -18,6 +19,7 @@ export type TransactionButtonAndStatusProps = {
     style?: {
         accentColor?: string;
     };
+    onError?: (error: string) => void;
 };
 
 export const TransactionButtonAndStatus = ({
@@ -25,12 +27,14 @@ export const TransactionButtonAndStatus = ({
     isSubmitting,
     isTxWaitingConfirmation,
     onConfirm,
+    onRetry,
     transactionPendingText,
     txReceipt,
     isSubmitForm = false,
     buttonText,
     isDisabled = false,
     style,
+    onError,
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -43,6 +47,12 @@ export const TransactionButtonAndStatus = ({
             t('Something went wrong. Please try again.')
         );
     }, [transactionError, t]);
+
+    useEffect(() => {
+        if (errorMessage) {
+            onError?.(errorMessage);
+        }
+    }, [errorMessage, onError]);
 
     const buttonBg = useMemo(() => {
         if (style?.accentColor) return `${style.accentColor} !important`;
@@ -60,7 +70,9 @@ export const TransactionButtonAndStatus = ({
                 px={4}
                 variant="vechainKitPrimary"
                 bg={buttonBg}
-                onClick={onConfirm}
+                onClick={() =>
+                    errorMessage && onRetry ? onRetry() : onConfirm()
+                }
                 type={isSubmitForm ? 'submit' : 'button'}
                 isLoading={isSubmitting}
                 isDisabled={isDisabled}

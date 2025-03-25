@@ -24,6 +24,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { ExistingDomainsList } from './Components/ExistingDomainsList';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -106,6 +107,10 @@ export const ChooseNameSearchContent = ({
             setIsAvailable(true);
             setIsOwnDomain(false);
         }
+
+        if (name.length >= 3 && !isFetchingDomainInfo) {
+            Analytics.nameSelection.searched(name, isAvailable);
+        }
     }, [
         name,
         hasInteracted,
@@ -114,6 +119,8 @@ export const ChooseNameSearchContent = ({
         domainInfo,
         account?.address,
         isProtected,
+        isAvailable,
+        isFetchingDomainInfo,
     ]);
 
     const handleContinue = () => {

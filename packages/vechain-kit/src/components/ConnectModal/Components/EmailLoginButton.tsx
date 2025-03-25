@@ -14,6 +14,8 @@ import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 export const EmailLoginButton = () => {
     const { t } = useTranslation();
@@ -27,6 +29,8 @@ export const EmailLoginButton = () => {
     const emailCodeVerificationModal = useDisclosure();
 
     const handleSendCode = async () => {
+        Analytics.auth.flowStarted(VeLoginMethod.EMAIL);
+        Analytics.auth.methodSelected(VeLoginMethod.EMAIL);
         await sendCode({ email });
         // onClose();
         emailCodeVerificationModal.onOpen();

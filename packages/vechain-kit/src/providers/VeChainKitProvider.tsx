@@ -32,7 +32,10 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import i18n from '../../i18n';
 import { initializeI18n } from '@/utils/i18n';
 import { ModalProvider } from './ModalProvider';
-import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/Constants';
+import {
+    VECHAIN_KIT_STORAGE_KEYS,
+    DEFAULT_PRIVY_ECOSYSTEM_APPS,
+} from '@/utils/Constants';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -261,6 +264,10 @@ export const VeChainKitProvider = (
             });
         }
     }, [language, i18nConfig]);
+
+    useEffect(() => {
+        localStorage.setItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
+    }, [network]);
 
     return (
         <EnsureQueryClient>

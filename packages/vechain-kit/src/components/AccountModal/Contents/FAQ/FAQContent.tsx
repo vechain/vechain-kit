@@ -24,6 +24,7 @@ import { VechainLogo } from '@/assets';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type FAQContentProps = {
     onGoBack: () => void;
@@ -32,6 +33,11 @@ export type FAQContentProps = {
 export const FAQContent = ({ onGoBack }: FAQContentProps) => {
     const { network, darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
+
+    const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        Analytics.settings.language.changed(e.target.value, i18n.language);
+        i18n.changeLanguage(e.target.value);
+    };
 
     return (
         <ScrollToTopWrapper>
@@ -74,9 +80,7 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                             size="sm"
                             width="auto"
                             value={i18n.language}
-                            onChange={(e) =>
-                                i18n.changeLanguage(e.target.value)
-                            }
+                            onChange={handleLanguageChange}
                             bg={isDark ? 'whiteAlpha.200' : 'gray.100'}
                             borderColor={isDark ? 'whiteAlpha.300' : 'gray.200'}
                             _hover={{

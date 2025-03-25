@@ -24,6 +24,8 @@ import {
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
+import { useEffect } from 'react';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -136,11 +138,27 @@ export const CustomizationSummaryContent = ({
 
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
+
+                Analytics.customization.completed({
+                    hasAvatar: !!data.avatarIpfsHash,
+                    hasDisplayName: !!data.displayName,
+                    hasDescription: !!data.description,
+                    hasSocials: !!(data.twitter || data.website || data.email),
+                });
             }
         } catch (error) {
             console.error('Error saving changes:', error);
+            Analytics.customization.dropOff('confirmation');
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (!txReceipt && !isTransactionPending) {
+                Analytics.customization.dropOff('confirmation');
+            }
+        };
+    }, [txReceipt, isTransactionPending]);
 
     const renderField = (label: string, value: string) => {
         if (!value?.trim()) return null;
@@ -155,6 +173,14 @@ export const CustomizationSummaryContent = ({
                 <Text fontSize="md">{value}</Text>
             </VStack>
         );
+    };
+
+    const handleRetry = () => {
+        Analytics.customization.failed(
+            'confirmation',
+            txError instanceof Error ? txError.message : 'Unknown error',
+        );
+        handleSubmit(onSubmit)();
     };
 
     return (
@@ -202,6 +228,7 @@ export const CustomizationSummaryContent = ({
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     onConfirm={handleSubmit(onSubmit)}
+                    onRetry={handleRetry}
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}

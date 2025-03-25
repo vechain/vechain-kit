@@ -6,6 +6,8 @@ import { useLoginWithVeChain } from '@/hooks';
 import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
+import { Analytics } from '@/utils/mixpanelClientInstance';
+import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -19,6 +21,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
     const loginLoadingModal = useDisclosure();
 
     const handleLoginWithVeChain = async () => {
+        Analytics.auth.flowStarted(VeLoginMethod.VECHAIN);
         loginLoadingModal.onOpen();
         try {
             setLoginError(undefined);
@@ -34,6 +37,11 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                     : t('Failed to connect with VeChain'),
             );
         }
+    };
+
+    const tryAgain = () => {
+        Analytics.auth.tryAgain(VeLoginMethod.VECHAIN);
+        handleLoginWithVeChain();
     };
 
     return (
@@ -58,7 +66,7 @@ export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
                 onClose={() => {
                     loginLoadingModal.onClose();
                 }}
-                onTryAgain={handleLoginWithVeChain}
+                onTryAgain={tryAgain}
                 error={loginError}
                 title={t('Connecting to VeChain')}
                 loadingText={t(
