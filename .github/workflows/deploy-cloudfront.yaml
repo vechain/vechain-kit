@@ -29,6 +29,7 @@ jobs:
             NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
             NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
+            NEXT_PUBLIC_MIXPANEL_TOKEN: ${{ secrets.NEXT_PUBLIC_MIXPANEL_TOKEN }}
             AWS_REGION: eu-west-1
         steps:
             - name: Checkout
