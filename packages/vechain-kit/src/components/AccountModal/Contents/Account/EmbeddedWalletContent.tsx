@@ -64,6 +64,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                             wallet={connectedWallet}
                             style={{ mt: 2 }}
                             showHumanAddress={false}
+                            fromScreen="account"
                         />
                     </VStack>
 

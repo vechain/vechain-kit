@@ -11,6 +11,7 @@ import { LanguageSelector } from '@/app/components/features/LanguageSelector';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/SigningExample/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
+import mixpanelClient from '@/lib/mixpanelClient';
 
 export default function Home(): ReactElement {
     const { account, connection } = useWallet();
@@ -26,6 +27,8 @@ export default function Home(): ReactElement {
             </VStack>
         );
     }
+
+    mixpanelClient.trackEvent('Home Page Viewed');
 
     return (
         <Container

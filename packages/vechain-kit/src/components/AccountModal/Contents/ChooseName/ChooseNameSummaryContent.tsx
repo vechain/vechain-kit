@@ -21,6 +21,7 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
 } from '@/hooks';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -50,6 +51,24 @@ export const ChooseNameSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+
+    const handleError = (error: string) => {
+        if (
+            error.toLowerCase().includes('rejected') ||
+            error.toLowerCase().includes('cancelled') ||
+            error.toLowerCase().includes('user denied')
+        ) {
+            Analytics.nameSelection.dropOff('confirmation', {
+                name,
+                error,
+            });
+        } else {
+            Analytics.nameSelection.failed('confirmation', {
+                error,
+                name,
+            });
+        }
+    };
 
     // Use the unset domain hook if we're unsetting
     const unsetDomainHook = useUnsetDomain({
@@ -100,6 +119,7 @@ export const ChooseNameSummaryContent = ({
                           { name, domainType },
                       ),
                 onDone: () => {
+                    Analytics.nameSelection.completed(name, isOwnDomain);
                     setCurrentContent(initialContentSource);
                 },
             },
@@ -117,6 +137,11 @@ export const ChooseNameSummaryContent = ({
         } catch (error) {
             console.error('Transaction failed:', error);
         }
+    };
+
+    const handleRetry = () => {
+        Analytics.nameSelection.retry('confirmation');
+        handleConfirm();
     };
 
     return (
@@ -168,6 +193,7 @@ export const ChooseNameSummaryContent = ({
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     onConfirm={handleConfirm}
+                    onRetry={handleRetry}
                     transactionPendingText={
                         isUnsetting
                             ? t('Unsetting current domain...')
@@ -176,6 +202,7 @@ export const ChooseNameSummaryContent = ({
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
                     isDisabled={isTransactionPending}
+                    onError={handleError}
                 />
             </ModalFooter>
         </>

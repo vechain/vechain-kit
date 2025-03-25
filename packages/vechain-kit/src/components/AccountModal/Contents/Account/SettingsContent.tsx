@@ -27,6 +27,7 @@ import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -68,6 +69,45 @@ export const SettingsContent = ({
         }
     }, []);
 
+    const handleNameChange = () => {
+        Analytics.nameSelection.started('settings');
+        if (account?.domain) {
+            setCurrentContent({
+                type: 'choose-name-search',
+                props: {
+                    name: '',
+                    setCurrentContent,
+                    initialContentSource: 'settings',
+                },
+            });
+        } else {
+            setCurrentContent({
+                type: 'choose-name',
+                props: {
+                    setCurrentContent,
+                    initialContentSource: 'settings',
+                    onBack: () => setCurrentContent('settings'),
+                },
+            });
+        }
+    };
+
+    const handleAccessAndSecurity = () => {
+        setCurrentContent('access-and-security');
+        Analytics.settings.accessAndSecurityViewed();
+    };
+
+    const handleConnectionDetails = () => {
+        setCurrentContent('connection-details');
+        Analytics.settings.connectionDetailsViewed();
+    };
+
+    const handleLogout = () => {
+        Analytics.auth.trackAuth('disconnect_initiated');
+        disconnect();
+        onLogoutSuccess();
+    };
+
     return (
         <Box>
             <StickyHeaderContainer>
@@ -88,28 +128,7 @@ export const SettingsContent = ({
                         }}
                         title={t('Choose account name')}
                         description={t('Choose a name for your account.')}
-                        onClick={() => {
-                            if (account?.domain) {
-                                setCurrentContent({
-                                    type: 'choose-name-search',
-                                    props: {
-                                        name: '',
-                                        setCurrentContent,
-                                        initialContentSource: 'settings',
-                                    },
-                                });
-                            } else {
-                                setCurrentContent({
-                                    type: 'choose-name',
-                                    props: {
-                                        setCurrentContent,
-                                        initialContentSource: 'settings',
-                                        onBack: () =>
-                                            setCurrentContent('settings'),
-                                    },
-                                });
-                            }
-                        }}
+                        onClick={handleNameChange}
                         leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
                     />
@@ -123,9 +142,7 @@ export const SettingsContent = ({
                             description={t(
                                 'Manage your embedded wallet security settings or back it up to a new device.',
                             )}
-                            onClick={() => {
-                                setCurrentContent('access-and-security');
-                            }}
+                            onClick={handleAccessAndSecurity}
                             leftIcon={IoShieldOutline}
                             rightIcon={MdOutlineNavigateNext}
                             extraContent={
@@ -153,9 +170,7 @@ export const SettingsContent = ({
                         description={t(
                             'View the details of your connection to this app.',
                         )}
-                        onClick={() => {
-                            setCurrentContent('connection-details');
-                        }}
+                        onClick={handleConnectionDetails}
                         leftIcon={VscDebugDisconnect}
                         rightIcon={MdOutlineNavigateNext}
                     />
@@ -167,6 +182,7 @@ export const SettingsContent = ({
                         title={t('Notifications')}
                         description={t('View your notifications and updates.')}
                         onClick={() => {
+                            Analytics.notifications.viewed();
                             setCurrentContent('notifications');
                         }}
                         leftIcon={BiBell}
@@ -220,10 +236,7 @@ export const SettingsContent = ({
                             setCurrentContent({
                                 type: 'disconnect-confirm',
                                 props: {
-                                    onDisconnect: () => {
-                                        disconnect();
-                                        onLogoutSuccess();
-                                    },
+                                    onDisconnect: handleLogout,
                                     onBack: () => setCurrentContent('settings'),
                                 },
                             })
