@@ -23,12 +23,13 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         env:
-            BASE_PATH: ''
+            NEXT_PUBLIC_BASE_PATH: ''
             NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
             NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
             NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
+            AWS_REGION: eu-west-1
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -50,7 +51,7 @@ jobs:
               uses: aws-actions/configure-aws-credentials@v4
               with:
                   role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
-                  aws-region: eu-west-1
+                  aws-region: ${{ env.AWS_REGION }}
 
             - name: Deploy to S3
               run: |

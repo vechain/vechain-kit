@@ -9,6 +9,7 @@ export const TOKEN_LOGOS: Record<string, string> = {
     VOT3: 'https://vechain.github.io/token-registry/assets/17ff70aa1d898bc97ad690dbfad1a3b5643f7e0b.png',
     veDelegate:
         'https://vechain.github.io/token-registry/assets/1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
+    USDGLO: 'https://raw.githubusercontent.com/vechain/app-hub/439fba60c80ba2521d435981102d88c4aec050d6/apps/org.glodollar.app/logo.png',
 };
 
 export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {

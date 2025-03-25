@@ -33,6 +33,7 @@ export function Introduction() {
         });
     };
 
+    const basePath = process.env.basePath ?? '';
     return (
         <Box
             p={8}
@@ -160,42 +161,42 @@ export function Introduction() {
                                 <Icon as={SiFarcaster} boxSize={6} />
                                 <Icon as={FaApple} boxSize={6} />
                                 <Image
-                                    src="/images/veworld-logo.png"
+                                    src={`${basePath}/images/veworld-logo.png`}
                                     alt="VeWorld"
                                     height={6}
                                     width="auto"
                                     borderRadius="md"
                                 />
                                 <Image
-                                    src="/images/wallet-connect-logo.png"
+                                    src={`${basePath}/images/wallet-connect-logo.png`}
                                     alt="WalletConnect"
                                     height={6}
                                     width="auto"
                                     borderRadius="md"
                                 />
                                 <Image
-                                    src="/images/rabby-logo.png"
+                                    src={`${basePath}/images/rabby-logo.png`}
                                     alt="Rabby Wallet"
                                     height={6}
                                     width="auto"
                                     borderRadius="md"
                                 />
                                 <Image
-                                    src="/images/metamask-logo.png"
+                                    src={`${basePath}/images/metamask-logo.png`}
                                     alt="MetaMask"
                                     height={6}
                                     width="auto"
                                     borderRadius="md"
                                 />
                                 <Image
-                                    src="/images/coinbase-wallet-logo.webp"
+                                    src={`${basePath}/images/coinbase-wallet-logo.webp`}
                                     alt="Coinbase Wallet"
                                     height={6}
                                     width="auto"
                                     borderRadius="md"
                                 />
                                 <Image
-                                    src="/images/rainbow-logo.webp"
+                                    src={`${basePath}/images/rainbow-logo.webp`}
                                     alt="Rainbow"
                                     height={6}
                                     width="auto"

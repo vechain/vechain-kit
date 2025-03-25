@@ -2,9 +2,9 @@ import { NETWORK_TYPE } from '@/config/network';
 import {
     useVechainDomain,
     useGetTextRecords,
-    useGetAvatarOfAddress,
+    useGetAvatar,
 } from '../vetDomains';
-import { convertUriToUrl } from '@/utils';
+import { convertUriToUrl, getPicassoImage } from '@/utils';
 import { ENSRecords } from '@/types';
 
 export const useWalletMetadata = (
@@ -13,8 +13,9 @@ export const useWalletMetadata = (
 ) => {
     const { data: domain, isLoading: isLoadingVechainDomain } =
         useVechainDomain(address ?? '');
-    const { data: avatar, isLoading: isLoadingMetadata } =
-        useGetAvatarOfAddress(address ?? '');
+    const { data: avatar, isLoading: isLoadingMetadata } = useGetAvatar(
+        domain?.domain ?? '',
+    );
     const { data: textRecords, isLoading: isLoadingRecords } =
         useGetTextRecords(domain?.domain ?? '');
     const headerUrl = textRecords?.header
@@ -23,7 +24,7 @@ export const useWalletMetadata = (
 
     return {
         domain: domain?.domain,
-        image: avatar,
+        image: avatar ?? getPicassoImage(address ?? ''),
         records: {
             ...textRecords,
             header: headerUrl,

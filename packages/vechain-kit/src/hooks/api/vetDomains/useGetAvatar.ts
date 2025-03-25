@@ -1,219 +1,80 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '@/providers';
-import {
-    Interface,
-    namehash,
-    toUtf8String,
-    zeroPadValue,
-    toBeHex,
-} from 'ethers';
-import { NETWORK_TYPE } from '@/config/network';
+import { useVeChainKitConfig, VechainKitProviderProps } from '@/providers';
 import { getConfig } from '@/config';
-import { convertUriToUrl } from '@/utils/uri';
-
-const nameInterface = new Interface([
-    'function resolver(bytes32 node) returns (address resolverAddress)',
-    'function text(bytes32 node, string key) returns (string avatar)',
-]);
-
-const erc721Interface = new Interface([
-    'function tokenURI(uint256 tokenId) view returns (string)',
-    'function uri(uint256 id) view returns (string)',
-]);
+import { NETWORK_TYPE } from '@/config/network';
+import { getAvatarLegacy } from './useGetAvatarLegacy';
 
 /**
- * Fetches the avatar for a given VET domain name
- * @param networkType - The network type ('main' or 'test')
- * @param nodeUrl - The node URL
+ * API function to fetch avatar for a VET domain using the vet.domains API
  * @param name - The VET domain name
- * @returns The avatar URL from the response
+ * @param networkType - The network type
+ * @returns The avatar URL from the API
  */
 export const getAvatar = async (
-    networkType: NETWORK_TYPE,
-    nodeUrl: string,
     name: string,
+    network: VechainKitProviderProps['network'],
 ): Promise<string | null> => {
     if (!name) throw new Error('Name is required');
 
-    const node = namehash(name);
+    const result =
+        (await fetchAvatar(name, network)) ||
+        (await fetchAvatarDirectly(name, network));
+    if (!result) return null;
 
-    try {
-        // Get resolver address
-        const resolverResponse = await fetch(`${nodeUrl}/accounts/*`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                clauses: [
-                    {
-                        to: getConfig(networkType).vetDomainsContractAddress,
-                        data: nameInterface.encodeFunctionData('resolver', [
-                            node,
-                        ]),
-                    },
-                ],
-            }),
+    if (result instanceof Blob) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(result);
+            reader.onloadend = () => {
+                resolve(reader.result as string);
+            };
         });
+    }
 
-        const [{ data: resolverData, reverted: noResolver }] =
-            await resolverResponse.json();
+    // If the result is not a Blob, it's already a string
+    return result;
+};
 
-        if (noResolver) {
-            return null;
-        }
-
-        const { resolverAddress } = nameInterface.decodeFunctionResult(
-            'resolver',
-            resolverData,
+// Fetch the avatar from the vet.domains API
+const fetchAvatar = async (
+    name: string,
+    network: VechainKitProviderProps['network'],
+): Promise<Blob | null> => {
+    try {
+        const response = await fetch(
+            `${getConfig(network.type).vetDomainAvatarUrl}/${name}`,
         );
 
-        // Get avatar
-        const avatarResponse = await fetch(`${nodeUrl}/accounts/*`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                clauses: [
-                    {
-                        to: resolverAddress,
-                        data: nameInterface.encodeFunctionData('text', [
-                            node,
-                            'avatar',
-                        ]),
-                    },
-                ],
-            }),
-        });
-
-        const [{ data: lookupData, reverted: noLookup }] =
-            await avatarResponse.json();
-
-        if (noLookup || lookupData === '0x') {
-            return null;
-        }
-
-        try {
-            const { avatar } = nameInterface.decodeFunctionResult(
-                'text',
-                lookupData,
-            );
-            return avatar === '' ? null : avatar;
-        } catch (decodeError) {
-            console.error('Failed to decode avatar data:', decodeError);
-            return null;
+        if (response.ok) {
+            return response.blob();
         }
     } catch (error) {
         console.error('Error fetching avatar:', error);
-        throw error;
     }
+    return null;
 };
 
-export const getAvatarQueryKey = (name: string) => [
+// Fetch the avatar from the legacy API, in case the vet.domains API fails
+const fetchAvatarDirectly = async (
+    name: string,
+    network: VechainKitProviderProps['network'],
+): Promise<string | null> => {
+    const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
+    if (!nodeUrl) return null;
+
+    const avatar = await getAvatarLegacy(network.type, nodeUrl, name);
+    if (!avatar) return null;
+
+    return avatar;
+};
+
+export const getAvatarQueryKey = (name: string, networkType: NETWORK_TYPE) => [
     'VECHAIN_KIT',
     'VET_DOMAINS',
     'AVATAR',
     name,
+    networkType,
 ];
-
-async function parseAvatarRecord(
-    record: string,
-    networkType: NETWORK_TYPE,
-    nodeUrl: string,
-): Promise<string | null> {
-    try {
-        // Use the existing URI converter for direct URL handling
-        if (
-            record.startsWith('http') ||
-            record.startsWith('ipfs://') ||
-            record.startsWith('ar://')
-        ) {
-            return convertUriToUrl(record, networkType) || null;
-        }
-
-        // Handle NFT avatar (ENS-12)
-        const match = record.match(
-            /eip155:(\d+)\/(?:erc721|erc1155):([^/]+)\/(\d+)/,
-        );
-        if (match) {
-            const [, chainId, contractAddress, tokenId] = match;
-            const isErc1155 = record.includes('erc1155');
-
-            if (!chainId || !contractAddress || tokenId === undefined) {
-                return null;
-            }
-
-            // ... rest of NFT handling logic ...
-            const clauses = [
-                {
-                    to: contractAddress,
-                    data: erc721Interface.encodeFunctionData(
-                        isErc1155 ? 'uri' : 'tokenURI',
-                        [BigInt(tokenId)],
-                    ),
-                },
-            ];
-
-            const [{ data, reverted }] = await fetch(`${nodeUrl}/accounts/*`, {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify({ clauses }),
-            }).then((res) => res.json());
-
-            if (reverted) {
-                console.error('Failed to fetch tokenURI');
-                return null;
-            }
-
-            let tokenUri = '';
-            try {
-                tokenUri = erc721Interface.decodeFunctionResult(
-                    isErc1155 ? 'uri' : 'tokenURI',
-                    data,
-                )[0];
-            } catch (e) {
-                console.error('Failed to decode avatar data:', e);
-                tokenUri = toUtf8String(data);
-            }
-
-            // Use the existing URI converter
-            tokenUri = convertUriToUrl(tokenUri, networkType) || tokenUri;
-
-            if (isErc1155) {
-                tokenUri = tokenUri.replace(
-                    '{id}',
-                    zeroPadValue(toBeHex(BigInt(tokenId)), 32).slice(2),
-                );
-            }
-
-            const metadataResponse = await fetch(tokenUri);
-            if (!metadataResponse.ok) {
-                console.error('Failed to fetch metadata');
-                return null;
-            }
-
-            const metadata = await metadataResponse.json();
-            const imageUrl =
-                metadata.image || metadata.image_url || metadata.image_data;
-
-            if (!imageUrl) {
-                console.error('No image URL in metadata');
-                return null;
-            }
-
-            // Use the existing URI converter for the final image URL
-            return convertUriToUrl(imageUrl, networkType) || imageUrl;
-        }
-
-        return null;
-    } catch (error) {
-        console.error('Error parsing avatar record:', error);
-        return null;
-    }
-}
 
 /**
  * Hook to fetch the avatar URL for a VET domain name
@@ -222,21 +83,15 @@ async function parseAvatarRecord(
  */
 export const useGetAvatar = (name: string) => {
     const { network } = useVeChainKitConfig();
-    const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
 
     const avatarQuery = useQuery({
-        queryKey: getAvatarQueryKey(name ?? ''),
+        queryKey: getAvatarQueryKey(name ?? '', network.type),
         queryFn: async () => {
             if (!name) return null;
 
-            const avatarRecord = await getAvatar(network.type, nodeUrl, name);
-            if (!avatarRecord) return null;
-
-            return parseAvatarRecord(avatarRecord, network.type, nodeUrl);
+            return getAvatar(name, network);
         },
-        enabled: !!name && !!nodeUrl && !!network.type,
-        // Use the same caching strategy as the avatar query
-        staleTime: 5 * 60 * 1000, // 5 minutes
+        enabled: !!name && !!network.type,
     });
 
     return avatarQuery;

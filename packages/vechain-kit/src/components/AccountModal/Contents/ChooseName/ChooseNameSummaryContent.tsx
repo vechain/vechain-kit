@@ -13,6 +13,8 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
+import { useClaimVetDomain } from '@/hooks/api/vetDomains/useClaimVetDomain';
+import { useUnsetDomain } from '@/hooks/api/vetDomains/useUnsetDomain';
 import { useTranslation } from 'react-i18next';
 import {
     useUpgradeRequired,
@@ -26,14 +28,18 @@ export type ChooseNameSummaryContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     name: string;
+    domainType?: string;
     isOwnDomain: boolean;
+    isUnsetting?: boolean;
     initialContentSource?: AccountModalContentTypes;
 };
 
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
     name,
+    domainType = 'veworld.vet',
     isOwnDomain,
+    isUnsetting = false,
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
@@ -64,36 +70,61 @@ export const ChooseNameSummaryContent = ({
         }
     };
 
+    // Use the unset domain hook if we're unsetting
+    const unsetDomainHook = useUnsetDomain({
+        onSuccess: () => handleSuccess(),
+    });
+
+    // If not unsetting, determine if this is a .veworld.vet subdomain or a primary .vet domain
+    const isVeWorldSubdomain = domainType.endsWith('veworld.vet');
+
+    // Use the appropriate claim hook based on domain type (only when not unsetting)
+    const veWorldSubdomainHook = useClaimVeWorldSubdomain({
+        subdomain: name,
+        domain: domainType,
+        alreadyOwned: isOwnDomain,
+        onSuccess: () => handleSuccess(),
+    });
+
+    const vetDomainHook = useClaimVetDomain({
+        domain: name,
+        alreadyOwned: isOwnDomain,
+        onSuccess: () => handleSuccess(),
+    });
+
+    // Use the appropriate hook based on action and domain type
     const {
         sendTransaction,
         txReceipt,
         error: txError,
         isWaitingForWalletConfirmation,
         isTransactionPending,
-    } = useClaimVeWorldSubdomain({
-        subdomain: name,
-        domain: 'veworld.vet',
-        alreadyOwned: isOwnDomain,
-        onSuccess: () => {
-            Analytics.nameSelection.completed(name, isOwnDomain);
-            setCurrentContent({
-                type: 'successful-operation',
-                props: {
-                    setCurrentContent,
-                    txId: txReceipt?.meta.txID,
-                    title: t('Name claimed'),
-                    description: t(
-                        `Your {{name}}.veworld.vet name has been claimed successfully.`,
-                        { name },
-                    ),
-                    onDone: () => {
-                        setCurrentContent(initialContentSource);
-                    },
+    } = isUnsetting
+        ? unsetDomainHook
+        : isVeWorldSubdomain
+        ? veWorldSubdomainHook
+        : vetDomainHook;
+
+    const handleSuccess = () => {
+        setCurrentContent({
+            type: 'successful-operation',
+            props: {
+                setCurrentContent,
+                txId: txReceipt?.meta.txID,
+                title: isUnsetting ? t('Domain unset') : t('Domain set'),
+                description: isUnsetting
+                    ? t('Your domain has been unset successfully.')
+                    : t(
+                          `Your address has been successfully set to {{name}}.{{domainType}}.`,
+                          { name, domainType },
+                      ),
+                onDone: () => {
+                    Analytics.nameSelection.completed(name, isOwnDomain);
+                    setCurrentContent(initialContentSource);
                 },
-            });
-        },
-        onError: () => {},
-    });
+            },
+        });
+    };
 
     const handleConfirm = async () => {
         if (upgradeRequired) {
@@ -116,7 +147,11 @@ export const ChooseNameSummaryContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Confirm Name')}</ModalHeader>
+                <ModalHeader>
+                    {isUnsetting
+                        ? t('Confirm Unset Domain')
+                        : t('Confirm Name')}
+                </ModalHeader>
                 <ModalBackButton
                     onClick={() =>
                         setCurrentContent({
@@ -136,11 +171,19 @@ export const ChooseNameSummaryContent = ({
             <ModalBody>
                 <VStack spacing={4} w="full" textAlign="center">
                     <Text fontSize="lg">
-                        {t('Are you sure you want to set your domain name to')}
+                        {isUnsetting
+                            ? t(
+                                  'Are you sure you want to unset your current domain?',
+                              )
+                            : t(
+                                  'Are you sure you want to set your domain name to',
+                              )}
                     </Text>
-                    <Text fontSize="xl" fontWeight="bold" color="blue.500">
-                        {`${name}.veworld.vet`}
-                    </Text>
+                    {!isUnsetting && (
+                        <Text fontSize="xl" fontWeight="bold" color="blue.500">
+                            {`${name}.${domainType}`}
+                        </Text>
+                    )}
                 </VStack>
             </ModalBody>
 
@@ -151,7 +194,11 @@ export const ChooseNameSummaryContent = ({
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                     onConfirm={handleConfirm}
                     onRetry={handleRetry}
-                    transactionPendingText={t('Claiming name...')}
+                    transactionPendingText={
+                        isUnsetting
+                            ? t('Unsetting current domain...')
+                            : t('Claiming name...')
+                    }
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
                     isDisabled={isTransactionPending}

@@ -12,11 +12,11 @@ export const useRefreshMetadata = (domain: string, address: string) => {
 
     const refresh = async () => {
         await queryClient.invalidateQueries({
-            queryKey: getAvatarQueryKey(domain ?? ''),
+            queryKey: getAvatarQueryKey(domain ?? '', network.type),
         });
 
         await queryClient.refetchQueries({
-            queryKey: getAvatarQueryKey(domain ?? ''),
+            queryKey: getAvatarQueryKey(domain ?? '', network.type),
         });
 
         await queryClient.invalidateQueries({

@@ -13,7 +13,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
+import { IoChevronDown, IoChevronUp, IoTrashOutline } from 'react-icons/io5';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
@@ -23,6 +23,7 @@ import { getPicassoImage } from '@/utils';
 type ExistingDomainsListProps = {
     domains: { name: string }[];
     onDomainSelect: (domain: string) => void;
+    onUnsetDomain: () => void;
     isLoading?: boolean;
 };
 
@@ -107,9 +108,69 @@ const DomainListItem = ({
     );
 };
 
+const UnsetDomainListItem = ({ onUnset }: { onUnset: () => void }) => {
+    const { darkMode: isDark } = useVeChainKitConfig();
+    const { t } = useTranslation();
+
+    return (
+        <ListItem
+            key={'unset-domain-list-item'}
+            p={4}
+            bg={isDark ? '#1f1f1e' : 'white'}
+            borderRadius="xl"
+            cursor={'pointer'}
+            opacity={1}
+            border={`1px solid ${isDark ? '#2d2d2d' : '#eaeaea'}`}
+            _hover={{
+                bg: isDark ? '#252525' : 'gray.50',
+                borderColor: isDark ? '#3d3d3d' : '#dedede',
+                color: 'red.400',
+            }}
+            onClick={onUnset}
+            transition="all 0.2s"
+            role="button"
+            aria-label={t('Unset current domain')}
+        >
+            <HStack spacing={3} align="center">
+                <Box
+                    width="40px"
+                    height="40px"
+                    borderRadius="full"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    bg={isDark ? 'whiteAlpha.100' : 'gray.100'}
+                >
+                    <Icon
+                        as={IoTrashOutline}
+                        fontSize="18px"
+                        color={isDark ? 'red.300' : 'red.500'}
+                    />
+                </Box>
+                <VStack align="start" spacing={0} flex={1}>
+                    <Text
+                        color={isDark ? 'whiteAlpha.900' : 'gray.700'}
+                        fontSize="md"
+                        fontWeight="500"
+                    >
+                        {t('Unset current domain')}
+                    </Text>
+                    <Text
+                        fontSize="sm"
+                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    >
+                        {t('Remove your current domain name')}
+                    </Text>
+                </VStack>
+            </HStack>
+        </ListItem>
+    );
+};
+
 export const ExistingDomainsList = ({
     domains,
     onDomainSelect,
+    onUnsetDomain,
     isLoading,
 }: ExistingDomainsListProps) => {
     const { t } = useTranslation();
@@ -163,6 +224,11 @@ export const ExistingDomainsList = ({
                                         onSelect={onDomainSelect}
                                     />
                                 ))}
+                                {account?.domain && (
+                                    <UnsetDomainListItem
+                                        onUnset={onUnsetDomain}
+                                    />
+                                )}
                             </List>
                         </AccordionPanel>
                     </>

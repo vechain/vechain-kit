@@ -26,7 +26,7 @@ import {
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useGetAvatar } from '@/hooks/api/vetDomains';
+import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
@@ -64,7 +64,7 @@ export const SendTokenSummaryContent = ({
 }: SendTokenSummaryContentProps) => {
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
-    const { data: avatar } = useGetAvatar(resolvedDomain ?? '');
+    const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
     const { network } = useVeChainKitConfig();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',

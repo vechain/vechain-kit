@@ -4,21 +4,16 @@ import {
     useWallet,
 } from '@/hooks';
 import { useCallback } from 'react';
-import {
-    IReverseRegistrar__factory,
-    SubdomainClaimer__factory,
-} from '@/contracts/typechain-types';
+import { IReverseRegistrar__factory } from '@/contracts/typechain-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
-import { humanAddress } from '@/utils';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
+import { humanAddress } from '@/utils';
 
-type useClaimVeWorldSubdomainProps = {
-    subdomain: string;
+type useClaimVetDomainProps = {
     domain: string;
     onSuccess?: () => void;
     onError?: () => void;
@@ -26,52 +21,37 @@ type useClaimVeWorldSubdomainProps = {
     alreadyOwned?: boolean;
 };
 
-type useClaimVeWorldSubdomainReturnValue = {
+type useClaimVetDomainReturnValue = {
     sendTransaction: () => Promise<void>;
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
-const SubdomainClaimerInterface = SubdomainClaimer__factory.createInterface();
 const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
 
 /**
- * Hook for claiming a .veworld.vet subdomain
+ * Hook for claiming a .vet domain
  *
- * This hook specializes in handling subdomains in the .veworld.vet domain
+ * This hook specializes in handling primary .vet domains
  */
-export const useClaimVeWorldSubdomain = ({
-    subdomain,
+export const useClaimVetDomain = ({
     domain,
     onSuccess,
     onError,
     alreadyOwned = false,
-}: useClaimVeWorldSubdomainProps): useClaimVeWorldSubdomainReturnValue => {
+}: useClaimVetDomainProps): useClaimVetDomainReturnValue => {
     const queryClient = useQueryClient();
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
     const { refresh: refreshMetadata } = useRefreshMetadata(
-        subdomain + '.' + domain,
+        domain,
         account?.address ?? '',
     );
 
     const buildClauses = useCallback(async () => {
         const clausesArray: any[] = [];
 
-        if (!subdomain) throw new Error('Invalid subdomain');
+        if (!domain) throw new Error('Invalid domain');
 
-        const fullDomain = `${subdomain}.${domain}`;
-
-        // Always unset current nickname first
-        clausesArray.push({
-            to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
-            value: '0x0',
-            data: ReverseRegistrarInterface.encodeFunctionData('setName', ['']),
-            comment: `Unsetting your current VeChain nickname of the account ${humanAddress(
-                account?.address ?? '',
-                4,
-                4,
-            )}`,
-            abi: ReverseRegistrarInterface.getFunction('setName'),
-        });
+        const fullDomain = `${domain}.vet`;
 
         if (alreadyOwned) {
             // For already owned domains, set the name in the reverse registrar
@@ -108,71 +88,71 @@ export const useClaimVeWorldSubdomain = ({
                 abi: PublicResolverInterface.getFunction('setAddr'),
             });
         } else {
-            if (isVeWorldDomain(domain)) {
-                // For new domains, claim the subdomain
-                clausesArray.push({
-                    to: getConfig(network.type)
-                        .veWorldSubdomainClaimerContractAddress,
-                    value: '0x0',
-                    data: SubdomainClaimerInterface.encodeFunctionData(
-                        'claim',
-                        [
-                            subdomain,
-                            getConfig(network.type)
-                                .vetDomainsPublicResolverAddress,
-                        ],
-                    ),
-                    comment: `Claim VeChain subdomain: ${subdomain}.${domain}`,
-                    abi: SubdomainClaimerInterface.getFunction('claim'),
-                });
+            throw new Error('Primary .vet domains are not supported yet');
+            // // For domains that need to be claimed
+            // const ETHRegistrarControllerInterface = new ethers.Interface([
+            //     'function registerWithConfig(string name, address owner, uint32 duration, bytes32 secret, address resolver, address addr)',
+            // ]);
 
-                clausesArray.push({
-                    to: getConfig(network.type)
-                        .vetDomainsReverseRegistrarAddress,
-                    value: '0x0',
-                    data: ReverseRegistrarInterface.encodeFunctionData(
-                        'setName',
-                        [subdomain + '.' + domain],
-                    ),
-                    comment: `Set ${subdomain}.${domain} as the VeChain nickname of the account ${humanAddress(
-                        account?.address ?? '',
-                        4,
-                        4,
-                    )}`,
-                    abi: ReverseRegistrarInterface.getFunction('setName'),
-                });
-            } else {
-                throw new Error(
-                    'This hook only supports .veworld.vet subdomains',
-                );
-            }
+            // // For new domains, claim the domain
+            // clausesArray.push({
+            //     to: getConfig(network.type).vetDomainsContractAddress,
+            //     value: '0x0',
+            //     data: ETHRegistrarControllerInterface.encodeFunctionData(
+            //         'registerWithConfig',
+            //         [
+            //             // Strip .vet if present
+            //             domain.replace('.vet', ''),
+            //             account?.address || '',
+            //             365 * 24 * 60 * 60, // 1 year in seconds
+            //             ethers.zeroPadValue('0x', 32), // empty secret
+            //             getConfig(network.type).vetDomainsPublicResolverAddress,
+            //             account?.address || '',
+            //         ],
+            //     ),
+            //     comment: `Claiming the VeChain domain: ${domain}`,
+            //     abi: ETHRegistrarControllerInterface.getFunction(
+            //         'registerWithConfig',
+            //     ),
+            // });
+
+            // clausesArray.push({
+            //     to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
+            //     value: '0x0',
+            //     data: ReverseRegistrarInterface.encodeFunctionData('setName', [
+            //         domain,
+            //     ]),
+            //     comment: `Setting ${domain} as the VeChain nickname of the account ${humanAddress(
+            //         account?.address ?? '',
+            //         4,
+            //         4,
+            //     )}`,
+            //     abi: ReverseRegistrarInterface.getFunction('setName'),
+            // });
         }
 
         return clausesArray;
-    }, [subdomain, domain, alreadyOwned, account?.address, network.type]);
+    }, [domain, alreadyOwned, account?.address, network.type]);
 
-    //Refetch queries to update ui after the tx is confirmed
+    // Refetch queries to update UI after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        const fullDomain = `${subdomain}.${domain}`;
         const address = account?.address ?? '';
 
         await invalidateAndRefetchDomainQueries(
             queryClient,
             address,
-            fullDomain,
-            subdomain,
             domain,
+            '', // No subdomain for primary domains
+            domain.endsWith('.vet') ? domain : `${domain}.vet`,
             network.type,
         );
 
         // Use the dedicated metadata refresh utility
         refreshMetadata();
 
-        Analytics.nameSelection.completed(subdomain, alreadyOwned);
         onSuccess?.();
     }, [
         onSuccess,
-        subdomain,
         domain,
         queryClient,
         account,
@@ -184,13 +164,11 @@ export const useClaimVeWorldSubdomain = ({
         signerAccountAddress: account?.address ?? '',
         privyUIOptions: {
             title: 'Sign to claim your VeChain nickname',
-            description: `Claim ${subdomain}.${domain} as your VeChain nickname`,
+            description: `Claim ${domain} as your VeChain nickname`,
             buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
-        onTxFailedOrCancelled: () => {
-            onError?.();
-        },
+        onTxFailedOrCancelled: onError,
     });
 
     return {
@@ -199,8 +177,4 @@ export const useClaimVeWorldSubdomain = ({
             return result.sendTransaction(await buildClauses());
         },
     };
-};
-
-const isVeWorldDomain = (domain: string) => {
-    return domain.endsWith('veworld.vet');
 };

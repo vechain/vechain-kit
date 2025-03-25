@@ -20,18 +20,14 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
 import { SelectTokenContent, Token } from './SelectTokenContent';
-import { parseEther, ZeroAddress } from 'ethers';
-import {
-    compareAddresses,
-    isValidAddress,
-    TOKEN_LOGOS,
-    TOKEN_LOGO_COMPONENTS,
-} from '@/utils';
-import { useVechainDomain } from '@vechain/dapp-kit-react';
+import { parseEther } from 'ethers';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+
+import { useVechainDomain } from '@/hooks';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -111,8 +107,7 @@ export const SendTokenContent = ({
         }
     }, [toAddressOrDomain, selectedToken]);
 
-    const { domain: resolvedDomain, address: resolvedAddress } =
-        useVechainDomain({ addressOrDomain: toAddressOrDomain });
+    const { data: resolvedDomainData } = useVechainDomain(toAddressOrDomain);
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
@@ -150,9 +145,14 @@ export const SendTokenContent = ({
     const onSubmit = async (data: FormValues) => {
         if (!selectedToken) return;
 
+        // Validation:
+        // - Address is valid
+        // - There is no domain attached to the address or (if it is attached) the returned domain is the primary domain
         const isValidReceiver =
-            !compareAddresses(resolvedAddress ?? ZeroAddress, ZeroAddress) ||
-            isValidAddress(data.toAddressOrDomain);
+            resolvedDomainData?.isValidAddressOrDomain &&
+            (!resolvedDomainData?.domain ||
+                (resolvedDomainData?.domain &&
+                    resolvedDomainData?.isPrimaryDomain));
 
         if (!isValidReceiver) {
             setError('toAddressOrDomain', {
@@ -187,16 +187,17 @@ export const SendTokenContent = ({
         Analytics.send.flow('review', {
             tokenSymbol: selectedToken.symbol,
             amount: data.amount,
-            recipientAddress: resolvedAddress || data.toAddressOrDomain,
-            recipientType: resolvedDomain ? 'domain' : 'address',
+            recipientAddress:
+                resolvedDomainData?.address || data.toAddressOrDomain,
+            recipientType: resolvedDomainData?.domain ? 'domain' : 'address',
         });
 
         setCurrentContent({
             type: 'send-token-summary',
             props: {
                 toAddressOrDomain: data.toAddressOrDomain,
-                resolvedDomain,
-                resolvedAddress,
+                resolvedDomain: resolvedDomainData?.domain,
+                resolvedAddress: resolvedDomainData?.address,
                 amount: data.amount,
                 selectedToken,
                 setCurrentContent,

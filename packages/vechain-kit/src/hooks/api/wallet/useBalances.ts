@@ -6,6 +6,7 @@ import {
     useGetVeDelegateBalance,
     useGetTokenUsdPrice,
     useGetCustomTokenBalances,
+    useGetErc20Balance,
 } from '..';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
@@ -16,6 +17,7 @@ type UseBalancesProps = {
 
 export const useBalances = ({ address = '' }: UseBalancesProps) => {
     const { network } = useVeChainKitConfig();
+    const config = getConfig(network.type);
 
     // Base token balances
     const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);
@@ -31,6 +33,8 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         useGetVot3Balance(address);
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
         useGetVeDelegateBalance(address);
+    const { data: gloDollarBalance, isLoading: gloDollarLoading } =
+        useGetErc20Balance(config.gloDollarContractAddress, address);
 
     // Custom token balances
     const customTokenBalancesQueries = useGetCustomTokenBalances(address);
@@ -50,15 +54,17 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             b3trUsdPriceLoading ||
             veDelegateLoading ||
             vthoUsdPriceLoading ||
-            customTokensLoading;
+            customTokensLoading ||
+            gloDollarLoading;
 
         // Get contract addresses from config
         const contractAddresses = {
             vet: '0x',
-            vtho: getConfig(network.type).vthoContractAddress,
-            b3tr: getConfig(network.type).b3trContractAddress,
-            vot3: getConfig(network.type).vot3ContractAddress,
-            veDelegate: getConfig(network.type).veDelegate,
+            vtho: config.vthoContractAddress,
+            b3tr: config.b3trContractAddress,
+            vot3: config.vot3ContractAddress,
+            veDelegate: config.veDelegate,
+            USDGLO: config.gloDollarContractAddress,
         };
 
         // Base balances using contract addresses
@@ -93,6 +99,12 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
                 symbol: 'veDelegate',
                 priceAddress: contractAddresses.b3tr, // using b3tr price for veDelegate
             },
+            {
+                address: contractAddresses.USDGLO,
+                value: gloDollarBalance?.scaled ?? '0',
+                symbol: 'USDGLO',
+                priceAddress: contractAddresses.USDGLO,
+            },
         ];
 
         // Add custom token balances
@@ -112,6 +124,7 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             { address: contractAddresses.vet, price: vetUsdPrice || 0 },
             { address: contractAddresses.vtho, price: vthoUsdPrice || 0 },
             { address: contractAddresses.b3tr, price: b3trUsdPrice || 0 },
+            { address: contractAddresses.USDGLO, price: 1 }, // gloDollar is pegged to 1 USD
         ];
 
         // Compute total balance

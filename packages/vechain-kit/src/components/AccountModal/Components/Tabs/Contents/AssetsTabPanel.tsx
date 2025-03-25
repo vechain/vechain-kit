@@ -23,7 +23,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
     const handleTokenSelect = (token: {
         symbol: string;
         address: string;
-        value: number;
+        value: string;
         price: number;
     }) => {
         setCurrentContent({
@@ -52,7 +52,7 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                 value: tokens[token.symbol]?.value ?? 0,
                 price: tokens[token.symbol]?.price ?? 0,
             })),
-    ].sort((a, b) => b.value * b.price - a.value * a.price);
+    ].sort((a, b) => Number(b.value) * b.price - Number(a.value) * a.price);
 
     return (
         <VStack spacing={2} align="stretch" mt={2}>
@@ -60,9 +60,9 @@ export const AssetsTabPanel = ({ setCurrentContent }: AssetsTabPanelProps) => {
                 <AssetButton
                     key={token.address}
                     symbol={token.symbol}
-                    amount={token.value}
-                    usdValue={token.value * token.price}
-                    isDisabled={token.value === 0}
+                    amount={Number(token.value)}
+                    usdValue={Number(token.value) * token.price}
+                    isDisabled={Number(token.value) === 0}
                     onClick={() => handleTokenSelect(token)}
                 />
             ))}
