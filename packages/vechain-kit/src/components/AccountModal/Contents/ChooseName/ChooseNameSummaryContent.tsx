@@ -119,7 +119,6 @@ export const ChooseNameSummaryContent = ({
                           { name, domainType },
                       ),
                 onDone: () => {
-                    Analytics.nameSelection.completed(name, isOwnDomain);
                     setCurrentContent(initialContentSource);
                 },
             },
