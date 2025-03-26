@@ -25,6 +25,7 @@ import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { isRejectionError } from '@/utils/StringUtils';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -106,15 +107,11 @@ export const CustomizationSummaryContent = ({
             });
         },
         onError: (error) => {
-            if (
-                error?.message?.toLowerCase().includes('user denied') ||
-                error?.message?.toLowerCase().includes('rejected') ||
-                error?.message?.toLowerCase().includes('cancelled')
-            ) {
+            if (error && isRejectionError(error?.message ?? '')) {
                 Analytics.customization.dropOff({
                     stage: 'confirmation',
                     reason: 'wallet_rejected',
-                    error: error.message,
+                    error: error?.message,
                 });
             } else {
                 Analytics.customization.failed(

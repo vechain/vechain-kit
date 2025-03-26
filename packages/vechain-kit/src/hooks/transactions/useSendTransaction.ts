@@ -73,7 +73,7 @@ type UseSendTransactionProps = {
         | (() => EnhancedClause[])
         | (() => Promise<EnhancedClause[]>);
     onTxConfirmed?: () => void | Promise<void>;
-    onTxFailedOrCancelled?: (error?: Error) => void | Promise<void>;
+    onTxFailedOrCancelled?: (error?: Error | string) => void | Promise<void>;
     suggestedMaxGas?: number;
     privyUIOptions?: {
         title?: string;
@@ -280,7 +280,9 @@ export const useSendTransaction = ({
                 setSendTransactionError(
                     error instanceof Error ? error.message : String(error),
                 );
-                onTxFailedOrCancelled?.(error as Error);
+                onTxFailedOrCancelled?.(
+                    error instanceof Error ? error : new Error(String(error)),
+                );
             } finally {
                 setSendTransactionPending(false);
             }

@@ -1,4 +1,5 @@
 import { isMobile } from 'react-device-detect';
+import { isRejectionError } from './StringUtils';
 
 type PopupErrorOptions = {
     error: unknown;
@@ -16,12 +17,12 @@ export const handlePopupError = ({
     const errorMsg = (error as { message?: string })?.message;
 
     // If it's mobile browser and not a user rejection, it might be due to popup blocking
-    if (isMobile && !errorMsg?.includes('rejected')) {
+    if (isMobile && errorMsg && !isRejectionError(errorMsg)) {
         return new Error(mobileBrowserPopupMessage);
     }
 
     // Handle user rejection or other errors
-    if (errorMsg?.includes('rejected') || errorMsg?.includes('closed')) {
+    if (errorMsg && isRejectionError(errorMsg)) {
         return new Error(rejectedMessage);
     }
 

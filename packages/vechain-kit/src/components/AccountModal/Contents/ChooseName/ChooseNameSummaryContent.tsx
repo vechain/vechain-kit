@@ -22,7 +22,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
+import { isRejectionError } from '@/utils/StringUtils';
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -53,11 +53,7 @@ export const ChooseNameSummaryContent = ({
         useUpgradeSmartAccountModal();
 
     const handleError = (error: string) => {
-        if (
-            error.toLowerCase().includes('rejected') ||
-            error.toLowerCase().includes('cancelled') ||
-            error.toLowerCase().includes('user denied')
-        ) {
+        if (isRejectionError(error)) {
             Analytics.nameSelection.dropOff('confirmation', {
                 isError: true,
                 name,

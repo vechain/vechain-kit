@@ -5,6 +5,7 @@ import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { VeLoginMethod } from '@/types/mixPanel';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { isRejectionError } from '@/utils/StringUtils';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
@@ -33,10 +34,7 @@ export const useLoginWithVeChain = () => {
             const errorMsg =
                 error instanceof Error ? error.message : 'Unknown error';
 
-            if (
-                errorMsg.toLowerCase().includes('rejected') ||
-                errorMsg.toLowerCase().includes('closed')
-            ) {
+            if (isRejectionError(errorMsg)) {
                 Analytics.auth.dropOff('vechain-approval');
             } else {
                 Analytics.auth.failed(VeLoginMethod.VECHAIN, errorMsg);
