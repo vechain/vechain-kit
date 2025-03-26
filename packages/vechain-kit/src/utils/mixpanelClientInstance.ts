@@ -338,7 +338,7 @@ const Analytics = {
         },
 
         failed: (stage: 'avatar' | 'form' | 'confirmation', error: string) => {
-            Analytics.customization.trackCustomization('failed', {
+            Analytics.customization.trackCustomization('customization_failed', {
                 stage,
                 error,
             });
@@ -540,6 +540,7 @@ const Analytics = {
                 }),
         },
     },
+
     nameSelection: {
         trackNameSelection: (
             action: NameSelectionAction,
@@ -577,6 +578,7 @@ const Analytics = {
                 isError?: boolean;
                 error?: string;
                 name?: string;
+                reason?: string;
             },
         ) => {
             Analytics.nameSelection.trackNameSelection(

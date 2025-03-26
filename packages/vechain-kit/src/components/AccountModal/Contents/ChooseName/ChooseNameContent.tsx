@@ -35,6 +35,7 @@ export const ChooseNameContent = ({
         Analytics.nameSelection.dropOff('search', {
             isError: false,
             name: '',
+            reason: 'modal_closed',
         });
     };
 
@@ -42,6 +43,7 @@ export const ChooseNameContent = ({
         Analytics.nameSelection.dropOff('search', {
             isError: false,
             name: '',
+            reason: 'back_button',
         });
         onBack();
     };

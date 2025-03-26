@@ -106,21 +106,21 @@ export const CustomizationSummaryContent = ({
             });
         },
         onError: (error) => {
-            if (error?.message?.toLowerCase().includes('user denied')) {
+            if (
+                error?.message?.toLowerCase().includes('user denied') ||
+                error?.message?.toLowerCase().includes('rejected') ||
+                error?.message?.toLowerCase().includes('cancelled')
+            ) {
                 Analytics.customization.dropOff({
                     stage: 'confirmation',
                     reason: 'wallet_rejected',
                     error: error.message,
                 });
             } else {
-                Analytics.customization.dropOff({
-                    stage: 'confirmation',
-                    reason: 'transaction_error',
-                    error:
-                        error instanceof Error
-                            ? error.message
-                            : 'Unknown error',
-                });
+                Analytics.customization.failed(
+                    'confirmation',
+                    error instanceof Error ? error.message : 'Unknown error',
+                );
             }
         },
     });

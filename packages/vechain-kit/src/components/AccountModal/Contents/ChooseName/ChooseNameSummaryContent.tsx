@@ -59,8 +59,10 @@ export const ChooseNameSummaryContent = ({
             error.toLowerCase().includes('user denied')
         ) {
             Analytics.nameSelection.dropOff('confirmation', {
+                isError: true,
                 name,
                 error,
+                reason: 'wallet_rejected',
             });
         } else {
             Analytics.nameSelection.failed('confirmation', {
@@ -147,6 +149,7 @@ export const ChooseNameSummaryContent = ({
         Analytics.nameSelection.dropOff('confirmation', {
             isError: false,
             name: isUnsetting ? '' : name,
+            error: 'modal_closed',
         });
     };
 
@@ -154,6 +157,7 @@ export const ChooseNameSummaryContent = ({
         Analytics.nameSelection.dropOff('confirmation', {
             isError: false,
             name: isUnsetting ? '' : name,
+            error: 'back_button',
         });
         setCurrentContent({
             type: 'choose-name-search',
