@@ -17,6 +17,7 @@ import { UIControls } from '@/app/components/features/UIControls';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { Introduction } from '../components/features/Introduction';
+import { FAQSection } from '../components/features/FAQSection';
 import { IoMdMoon } from 'react-icons/io';
 import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
@@ -106,7 +107,10 @@ export default function Home(): ReactElement {
                     </HStack>
 
                     <Introduction />
+
                     <LoginUIControl />
+
+                    <FAQSection />
 
                     <LoginToContinueBox />
 
@@ -163,6 +167,7 @@ export default function Home(): ReactElement {
                 )}
 
                 <Introduction />
+                <LoginUIControl />
 
                 <div ref={featuresRef}>
                     <FeaturesToTry />
@@ -174,6 +179,7 @@ export default function Home(): ReactElement {
                 <TransactionExamples />
                 <SigningExample />
                 <DataReadingExample />
+                <FAQSection />
                 <Text
                     fontSize="sm"
                     color="gray.600"
