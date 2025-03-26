@@ -212,14 +212,6 @@ export const CustomizationContent = ({
         });
     };
 
-    useEffect(() => {
-        return () => {
-            if (hasChanges && !isUploading) {
-                Analytics.customization.dropOff('form');
-            }
-        };
-    }, [hasChanges, isUploading]);
-
     return (
         <Box>
             <StickyHeaderContainer>

@@ -314,9 +314,19 @@ const Analytics = {
             Analytics.customization.trackCustomization('completed', changes);
         },
 
-        dropOff: (stage: 'avatar' | 'form' | 'confirmation') => {
+        dropOff: ({
+            stage,
+            reason,
+            error,
+        }: {
+            stage: 'avatar' | 'form' | 'confirmation';
+            reason?: string;
+            error?: string;
+        }) => {
             Analytics.customization.trackCustomization('drop_off', {
                 stage,
+                reason,
+                error,
             });
         },
 

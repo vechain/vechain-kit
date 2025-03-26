@@ -24,7 +24,6 @@ import {
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
-import { useEffect } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type CustomizationSummaryContentProps = {
@@ -106,6 +105,24 @@ export const CustomizationSummaryContent = ({
                 },
             });
         },
+        onError: (error) => {
+            if (error?.message?.toLowerCase().includes('user denied')) {
+                Analytics.customization.dropOff({
+                    stage: 'confirmation',
+                    reason: 'wallet_rejected',
+                    error: error.message,
+                });
+            } else {
+                Analytics.customization.dropOff({
+                    stage: 'confirmation',
+                    reason: 'transaction_error',
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : 'Unknown error',
+                });
+            }
+        },
     });
 
     const onSubmit = async (data: FormValues) => {
@@ -148,17 +165,13 @@ export const CustomizationSummaryContent = ({
             }
         } catch (error) {
             console.error('Error saving changes:', error);
-            Analytics.customization.dropOff('confirmation');
+            Analytics.customization.dropOff({
+                stage: 'confirmation',
+                reason: 'transaction_error',
+                error: error instanceof Error ? error.message : 'Unknown error',
+            });
         }
     };
-
-    useEffect(() => {
-        return () => {
-            if (!txReceipt && !isTransactionPending) {
-                Analytics.customization.dropOff('confirmation');
-            }
-        };
-    }, [txReceipt, isTransactionPending]);
 
     const renderField = (label: string, value: string) => {
         if (!value?.trim()) return null;
@@ -183,15 +196,33 @@ export const CustomizationSummaryContent = ({
         handleSubmit(onSubmit)();
     };
 
+    const handleClose = () => {
+        Analytics.customization.dropOff({
+            stage: 'confirmation',
+            reason: 'modal_closed',
+        });
+    };
+
+    const handleBack = () => {
+        Analytics.customization.dropOff({
+            stage: 'confirmation',
+            reason: 'back_button',
+        });
+        setCurrentContent('account-customization');
+    };
+
     return (
         <Box as="form" onSubmit={handleSubmit(onSubmit)}>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Confirm Changes')}</ModalHeader>
                 <ModalBackButton
                     isDisabled={isTransactionPending}
-                    onClick={() => setCurrentContent('account-customization')}
+                    onClick={handleBack}
                 />
-                <ModalCloseButton isDisabled={isTransactionPending} />
+                <ModalCloseButton
+                    isDisabled={isTransactionPending}
+                    onClick={handleClose}
+                />
             </StickyHeaderContainer>
 
             <ModalBody>

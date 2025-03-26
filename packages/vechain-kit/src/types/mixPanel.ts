@@ -423,6 +423,7 @@ export type CustomizationAction =
 export type CustomizationProperties = {
     action: CustomizationAction;
     stage?: 'avatar' | 'form' | 'confirmation';
+    reason?: string;
     error?: string;
     isError?: boolean;
     success?: boolean;
