@@ -143,6 +143,28 @@ export const ChooseNameSummaryContent = ({
         handleConfirm();
     };
 
+    const handleClose = () => {
+        Analytics.nameSelection.dropOff('confirmation', {
+            isError: false,
+            name: isUnsetting ? '' : name,
+        });
+    };
+
+    const handleBack = () => {
+        Analytics.nameSelection.dropOff('confirmation', {
+            isError: false,
+            name: isUnsetting ? '' : name,
+        });
+        setCurrentContent({
+            type: 'choose-name-search',
+            props: {
+                setCurrentContent,
+                name,
+                initialContentSource,
+            },
+        });
+    };
+
     return (
         <>
             <StickyHeaderContainer>
@@ -152,19 +174,13 @@ export const ChooseNameSummaryContent = ({
                         : t('Confirm Name')}
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'choose-name-search',
-                            props: {
-                                setCurrentContent,
-                                name,
-                                initialContentSource,
-                            },
-                        })
-                    }
+                    onClick={handleBack}
                     isDisabled={isTransactionPending}
                 />
-                <ModalCloseButton isDisabled={isTransactionPending} />
+                <ModalCloseButton
+                    isDisabled={isTransactionPending}
+                    onClick={handleClose}
+                />
             </StickyHeaderContainer>
 
             <ModalBody>

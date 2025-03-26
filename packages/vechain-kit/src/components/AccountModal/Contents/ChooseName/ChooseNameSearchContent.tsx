@@ -169,14 +169,27 @@ export const ChooseNameSearchContent = ({
         });
     };
 
+    const handleClose = () => {
+        Analytics.nameSelection.dropOff('search', {
+            isError: false,
+            name,
+        });
+    };
+
+    const handleBack = () => {
+        Analytics.nameSelection.dropOff('search', {
+            isError: false,
+            name,
+        });
+        setCurrentContent(initialContentSource);
+    };
+
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Choose Name')}</ModalHeader>
-                <ModalBackButton
-                    onClick={() => setCurrentContent(initialContentSource)}
-                />
-                <ModalCloseButton />
+                <ModalBackButton onClick={handleBack} />
+                <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
 
             <ModalBody>
