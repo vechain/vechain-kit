@@ -125,7 +125,8 @@ export const SendTokenContent = ({
                 tokenSymbol: selectedToken.symbol,
                 amount: amount || undefined,
                 recipientAddress: toAddressOrDomain || undefined,
-                error: 'User cancelled - back button',
+                error: 'back_button',
+                isError: false,
             });
         }
         parentOnBack();
@@ -137,7 +138,8 @@ export const SendTokenContent = ({
                 tokenSymbol: selectedToken.symbol,
                 amount: amount || undefined,
                 recipientAddress: toAddressOrDomain || undefined,
-                error: 'User cancelled - close modal',
+                error: 'modal_closed',
+                isError: false,
             });
         }
     };
