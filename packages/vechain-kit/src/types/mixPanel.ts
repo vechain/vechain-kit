@@ -253,6 +253,8 @@ export type NameSelectionProperties = {
     error?: string;
     source?: string;
     isError?: boolean;
+    reason?: string;
+    success?: boolean;
 };
 
 export type SettingsAction =
@@ -417,12 +419,13 @@ export type CustomizationAction =
     | 'started'
     | 'completed'
     | 'drop_off'
-    | 'failed'
+    | 'customization_failed'
     | 'image_upload';
 
 export type CustomizationProperties = {
     action: CustomizationAction;
     stage?: 'avatar' | 'form' | 'confirmation';
+    reason?: string;
     error?: string;
     isError?: boolean;
     success?: boolean;

@@ -212,20 +212,41 @@ export const CustomizationContent = ({
         });
     };
 
-    useEffect(() => {
-        return () => {
-            if (hasChanges && !isUploading) {
-                Analytics.customization.dropOff('form');
-            }
-        };
-    }, [hasChanges, isUploading]);
+    const handleClose = () => {
+        if (isUploading) {
+            Analytics.customization.dropOff({
+                stage: 'avatar',
+                reason: 'modal_closed_during_upload',
+            });
+        } else {
+            Analytics.customization.dropOff({
+                stage: 'form',
+                reason: 'modal_closed',
+            });
+        }
+    };
+
+    const handleBack = () => {
+        if (isUploading) {
+            Analytics.customization.dropOff({
+                stage: 'avatar',
+                reason: 'back_button_during_upload',
+            });
+        } else {
+            Analytics.customization.dropOff({
+                stage: 'form',
+                reason: 'back_button',
+            });
+        }
+        setCurrentContent('profile');
+    };
 
     return (
         <Box>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Customization')}</ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('profile')} />
-                <ModalCloseButton />
+                <ModalBackButton onClick={handleBack} />
+                <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
 
             <ModalBody>

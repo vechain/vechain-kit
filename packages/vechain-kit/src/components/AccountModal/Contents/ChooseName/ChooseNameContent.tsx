@@ -13,6 +13,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type ChooseNameContentProps = {
     setCurrentContent: React.Dispatch<
@@ -30,12 +31,29 @@ export const ChooseNameContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
+    const handleClose = () => {
+        Analytics.nameSelection.dropOff('search', {
+            isError: false,
+            name: '',
+            reason: 'modal_closed',
+        });
+    };
+
+    const handleBack = () => {
+        Analytics.nameSelection.dropOff('search', {
+            isError: false,
+            name: '',
+            reason: 'back_button',
+        });
+        onBack();
+    };
+
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Choose your account name')}</ModalHeader>
-                <ModalBackButton onClick={onBack} />
-                <ModalCloseButton />
+                <ModalBackButton onClick={handleBack} />
+                <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
 
             <ModalBody>

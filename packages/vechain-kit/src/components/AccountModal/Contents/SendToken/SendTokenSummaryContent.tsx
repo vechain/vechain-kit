@@ -30,6 +30,7 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { isRejectionError } from '@/utils/StringUtils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -155,14 +156,8 @@ export const SendTokenSummaryContent = ({
         onSuccess: () => {
             handleSuccess(transferERC20Receipt?.meta.txID ?? '');
         },
-        onError: () => {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                error:
-                    transferERC20Error instanceof Error
-                        ? transferERC20Error.message
-                        : 'Unknown error',
-            });
+        onError: (error) => {
+            handleError(error ?? '');
         },
     });
 
@@ -179,14 +174,8 @@ export const SendTokenSummaryContent = ({
         onSuccess: () => {
             handleSuccess(transferVETReceipt?.meta.txID ?? '');
         },
-        onError: () => {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                error:
-                    transferVETError instanceof Error
-                        ? transferVETError.message
-                        : 'Unknown error',
-            });
+        onError: (error) => {
+            handleError(error ?? '');
         },
     });
 
@@ -208,12 +197,14 @@ export const SendTokenSummaryContent = ({
             amount,
             recipientAddress: resolvedAddress || toAddressOrDomain,
             recipientType: resolvedDomain ? 'domain' : 'address',
-            error: 'User cancelled - back from summary',
+            error: 'back_button',
+            isError: false,
         });
         setCurrentContent({
             type: 'send-token',
             props: {
                 setCurrentContent,
+                preselectedToken: selectedToken,
             },
         });
     };
@@ -224,8 +215,31 @@ export const SendTokenSummaryContent = ({
             amount,
             recipientAddress: resolvedAddress || toAddressOrDomain,
             recipientType: resolvedDomain ? 'domain' : 'address',
-            error: 'User cancelled - close from summary',
+            error: 'modal_closed',
+            isError: false,
         });
+    };
+
+    const handleError = (error: string) => {
+        if (error && isRejectionError(error)) {
+            Analytics.send.flow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount,
+                recipientAddress: resolvedAddress || toAddressOrDomain,
+                recipientType: resolvedDomain ? 'domain' : 'address',
+                error: 'wallet_rejected',
+                isError: true,
+            });
+        } else {
+            Analytics.send.flow('review', {
+                tokenSymbol: selectedToken.symbol,
+                amount,
+                recipientAddress: resolvedAddress || toAddressOrDomain,
+                recipientType: resolvedDomain ? 'domain' : 'address',
+                error,
+                isError: true,
+            });
+        }
     };
 
     return (

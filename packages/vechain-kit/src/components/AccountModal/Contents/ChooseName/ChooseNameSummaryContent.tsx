@@ -22,7 +22,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
+import { isRejectionError } from '@/utils/StringUtils';
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -53,14 +53,12 @@ export const ChooseNameSummaryContent = ({
         useUpgradeSmartAccountModal();
 
     const handleError = (error: string) => {
-        if (
-            error.toLowerCase().includes('rejected') ||
-            error.toLowerCase().includes('cancelled') ||
-            error.toLowerCase().includes('user denied')
-        ) {
+        if (isRejectionError(error)) {
             Analytics.nameSelection.dropOff('confirmation', {
+                isError: true,
                 name,
                 error,
+                reason: 'wallet_rejected',
             });
         } else {
             Analytics.nameSelection.failed('confirmation', {
@@ -143,6 +141,30 @@ export const ChooseNameSummaryContent = ({
         handleConfirm();
     };
 
+    const handleClose = () => {
+        Analytics.nameSelection.dropOff('confirmation', {
+            isError: false,
+            name: isUnsetting ? '' : name,
+            error: 'modal_closed',
+        });
+    };
+
+    const handleBack = () => {
+        Analytics.nameSelection.dropOff('confirmation', {
+            isError: false,
+            name: isUnsetting ? '' : name,
+            error: 'back_button',
+        });
+        setCurrentContent({
+            type: 'choose-name-search',
+            props: {
+                setCurrentContent,
+                name,
+                initialContentSource,
+            },
+        });
+    };
+
     return (
         <>
             <StickyHeaderContainer>
@@ -152,19 +174,13 @@ export const ChooseNameSummaryContent = ({
                         : t('Confirm Name')}
                 </ModalHeader>
                 <ModalBackButton
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'choose-name-search',
-                            props: {
-                                setCurrentContent,
-                                name,
-                                initialContentSource,
-                            },
-                        })
-                    }
+                    onClick={handleBack}
                     isDisabled={isTransactionPending}
                 />
-                <ModalCloseButton isDisabled={isTransactionPending} />
+                <ModalCloseButton
+                    isDisabled={isTransactionPending}
+                    onClick={handleClose}
+                />
             </StickyHeaderContainer>
 
             <ModalBody>

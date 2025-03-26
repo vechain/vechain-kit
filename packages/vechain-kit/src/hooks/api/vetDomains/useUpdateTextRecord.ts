@@ -18,7 +18,7 @@ type UpdateTextRecordVariables = {
 
 type UseUpdateTextRecordProps = {
     onSuccess?: () => void | Promise<void>;
-    onError?: () => void | Promise<void>;
+    onError?: (error?: Error) => void | Promise<void>;
     signerAccountAddress?: string;
     resolverAddress?: string;
 };

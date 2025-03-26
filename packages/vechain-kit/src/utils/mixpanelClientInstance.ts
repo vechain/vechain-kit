@@ -314,9 +314,19 @@ const Analytics = {
             Analytics.customization.trackCustomization('completed', changes);
         },
 
-        dropOff: (stage: 'avatar' | 'form' | 'confirmation') => {
+        dropOff: ({
+            stage,
+            reason,
+            error,
+        }: {
+            stage: 'avatar' | 'form' | 'confirmation';
+            reason?: string;
+            error?: string;
+        }) => {
             Analytics.customization.trackCustomization('drop_off', {
                 stage,
+                reason,
+                error,
             });
         },
 
@@ -328,7 +338,7 @@ const Analytics = {
         },
 
         failed: (stage: 'avatar' | 'form' | 'confirmation', error: string) => {
-            Analytics.customization.trackCustomization('failed', {
+            Analytics.customization.trackCustomization('customization_failed', {
                 stage,
                 error,
             });
@@ -530,6 +540,7 @@ const Analytics = {
                 }),
         },
     },
+
     nameSelection: {
         trackNameSelection: (
             action: NameSelectionAction,
@@ -567,6 +578,7 @@ const Analytics = {
                 isError?: boolean;
                 error?: string;
                 name?: string;
+                reason?: string;
             },
         ) => {
             Analytics.nameSelection.trackNameSelection(

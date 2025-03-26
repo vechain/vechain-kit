@@ -21,7 +21,7 @@ import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod } from '@/types/mixPanel';
-
+import { isRejectionError } from '@/utils/StringUtils';
 type Props = {
     onClose: () => void;
     appsInfo: PrivyAppInfo[];
@@ -71,10 +71,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                 const errorMsg = (error as { message?: string })?.message;
 
                 // Handle user rejection or other errors
-                if (
-                    errorMsg?.includes('rejected') ||
-                    errorMsg?.includes('closed')
-                ) {
+                if (errorMsg && isRejectionError(errorMsg)) {
                     Analytics.auth.dropOff('ecosystem-app-connect', {
                         ...(appName && { appName }),
                     });
