@@ -2,6 +2,7 @@ import { useLoginWithOAuth as usePrivyLoginWithOAuth } from '@privy-io/react-aut
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod, VePrivySocialLoginMethod } from '@/types/mixPanel';
 import { usePrivy } from '@privy-io/react-auth';
+import { isRejectionError } from '@/utils/StringUtils';
 
 type OAuthProvider = 'google' | 'twitter' | 'apple' | 'discord';
 
@@ -47,10 +48,7 @@ export const useLoginWithOAuth = () => {
             const errorMsg =
                 error instanceof Error ? error.message : 'Unknown error';
 
-            if (
-                errorMsg.toLowerCase().includes('rejected') ||
-                errorMsg.toLowerCase().includes('closed')
-            ) {
+            if (isRejectionError(errorMsg)) {
                 Analytics.auth.dropOff('oauth', {
                     ...(provider && { provider }),
                 });

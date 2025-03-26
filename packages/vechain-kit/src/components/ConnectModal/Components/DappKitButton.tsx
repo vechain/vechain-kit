@@ -8,6 +8,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod, DappKitSource } from '@/types/mixPanel';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
+import { isRejectionError } from '@/utils/StringUtils';
 
 type Props = {
     isDark: boolean;
@@ -48,10 +49,7 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
                             },
                         );
                     }
-                    if (
-                        errorMsg.includes('rejected') ||
-                        errorMsg.includes('denied')
-                    ) {
+                    if (errorMsg && isRejectionError(errorMsg)) {
                         return Analytics.auth.dropOff('dappkit-view', {
                             ...(source && { source }),
                         });

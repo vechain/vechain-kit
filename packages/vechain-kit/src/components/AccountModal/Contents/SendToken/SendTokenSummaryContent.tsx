@@ -30,6 +30,7 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { isRejectionError } from '@/utils/StringUtils';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -220,11 +221,7 @@ export const SendTokenSummaryContent = ({
     };
 
     const handleError = (error: string) => {
-        if (
-            error.toLowerCase().includes('rejected') ||
-            error.toLowerCase().includes('cancelled') ||
-            error.toLowerCase().includes('user denied')
-        ) {
+        if (error && isRejectionError(error)) {
             Analytics.send.flow('review', {
                 tokenSymbol: selectedToken.symbol,
                 amount,

@@ -17,7 +17,7 @@ type useTransferERC20Props = {
     tokenName: string;
     onSuccess?: () => void;
     onSuccessMessageTitle?: number;
-    onError?: () => void;
+    onError?: (error?: string) => void;
 };
 
 type useTransferERC20ReturnValue = {
@@ -74,8 +74,8 @@ export const useTransferERC20 = ({
             buttonText: 'Sign to continue',
         },
         onTxConfirmed: handleOnSuccess,
-        onTxFailedOrCancelled: async () => {
-            onError?.();
+        onTxFailedOrCancelled: async (error) => {
+            onError?.(error instanceof Error ? error.message : String(error));
         },
     });
 
