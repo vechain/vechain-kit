@@ -12,7 +12,7 @@ type useTransferVETProps = {
     receiverAddress: string;
     amount: string;
     onSuccess?: () => void;
-    onError?: () => void;
+    onError?: (error?: string) => void;
 };
 
 type useTransferVETReturnValue = {
@@ -67,8 +67,8 @@ export const useTransferVET = ({
             refresh();
             onSuccess?.();
         },
-        onTxFailedOrCancelled: async () => {
-            onError?.();
+        onTxFailedOrCancelled: async (error) => {
+            onError?.(error instanceof Error ? error.message : String(error));
         },
     });
 
