@@ -43,3 +43,6 @@ veworld-dist
 
 packages/vechain-kit/.env
 .env
+
+.aws-sam
+.env.json

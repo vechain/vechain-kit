@@ -1,0 +1,25 @@
+{
+  "name": "get-privy-social-identifiers",
+  "version": "1.0.0",
+  "description": "Get Privy Social Identifiers",
+  "main": "index.js",
+  "repository": "https://github.com/vechain/vechain-kit",
+  "author": "VeChain Kit",
+  "license": "MIT",
+  "dependencies": {
+    "@privy-io/server-auth": "^1.19.1",
+    "esbuild": "^0.14.14",
+    "viem": "^2.7.9",
+    "ethers": "^6.11.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.92",
+    "@types/node": "^20.5.7",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "@typescript-eslint/parser": "^5.10.2",
+    "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "typescript": "^5.0.4"
+  }
+}
