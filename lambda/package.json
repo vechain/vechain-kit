@@ -6,13 +6,6 @@
   "repository": "https://github.com/vechain/vechain-kit",
   "author": "VeChain Kit",
   "license": "MIT",
-  "scripts": {
-    "unit": "jest",
-    "lint": "eslint '*.ts' --quiet --fix",
-    "compile": "tsc",
-    "build": "esbuild app.ts --bundle --platform=node --target=node20 --outfile=app.js --external:aws-sdk --external:@aws-sdk/*",
-    "test": "npm run compile && npm run unit"
-  },
   "dependencies": {
     "@privy-io/server-auth": "^1.19.1",
     "esbuild": "^0.14.14",
@@ -20,19 +13,13 @@
     "ethers": "^6.11.0"
   },
   "devDependencies": {
-    "@jest/globals": "^29.2.0",
     "@types/aws-lambda": "^8.10.92",
-    "@types/jest": "^29.2.0",
     "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^29.2.1",
-    "prettier": "^2.5.1",
-    "ts-jest": "^29.0.5",
-    "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   }
 }

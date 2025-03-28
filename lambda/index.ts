@@ -85,9 +85,9 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         
         if (!walletAddress) {
             return {
-                statusCode: 400,
+                statusCode: 422,
                 body: JSON.stringify({
-                    message: 'Wallet address is required',
+                    message: 'Unprocessable Entity',
                 }),
             };
         }
