@@ -49,14 +49,20 @@
         "@commitlint/config-conventional": "^18.0.0",
         "commitlint": "^18.0.0",
         "eslint": "^9.12.0",
-        "typescript-eslint": "^8.11.0",
         "eslint-plugin-prefer-arrow": "1.2.3",
         "husky": "^8.0.0",
         "lint-staged": "^15.0.2",
         "prettier": "^2.5.1",
         "punycode": "^1.4.1",
         "turbo": "latest",
-        "typescript": "4.9.5"
+        "typescript": "4.9.5",
+        "typescript-eslint": "^8.11.0"
     },
-    "packageManager": "yarn@1.22.19"
+    "packageManager": "yarn@1.22.19",
+    "dependencies": {
+        "@chakra-ui/react": "^2.10.7",
+        "@tanstack/react-query": "^5.69.3",
+        "@vechain/dapp-kit-react": "^1.4.1",
+        "@vechain/vechain-kit": "^1.5.13"
+    }
 }

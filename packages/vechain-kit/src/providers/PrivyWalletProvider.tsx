@@ -3,7 +3,9 @@
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
 import { encodeFunctionData } from 'viem';
-import { ABIContract, Address, Clause } from '@vechain/sdk-core';
+import { Hex, ABIContract, Address, Clause , Secp256k1, HexUInt , networkInfo, TransactionBody, Transaction } from '@vechain/sdk-core';
+import * as nc_utils from '@noble/curves/abstract/utils';
+
 import {
     ThorClient,
     VeChainProvider,
@@ -256,14 +258,26 @@ export const PrivyWalletProvider = ({
 
         // Clauses for the transaction
         const clauses = [];
+        
+        const rawUnsignedTx = getRawUnsignedTx(txClauses, options);
+        const newTx = await callDelegate (rawUnsignedTx, Address.of(smartAccount.address).toString(), options.token.symbol);
+        if (!newTx) {
+            throw new Error('Failed to retrieve new transaction.');
+        }
+        console.log("THIS IS A NEW CHANGE!");
+        const newTxDecoded = decodeRawTx(newTx.raw);
+        const tx_Clauses = newTxDecoded.body.clauses;
+            
+        
 
         // If the smart account was never deployed or the version is >= 3 and we have multiple clauses, we can batch them
         if (
             !hasV1SmartAccount ||
             (smartAccountVersion && smartAccountVersion >= 3)
         ) {
+        
             const typedData = buildBatchAuthorizationTypedData({
-                clauses: txClauses,
+                clauses: tx_Clauses,
                 chainId: chainId as unknown as number,
                 verifyingContract: smartAccount.address,
             });
@@ -298,6 +312,7 @@ export const PrivyWalletProvider = ({
                     ),
                 );
             }
+            // TODO: handle this
 
             // Now the single batch execution call
             clauses.push(
@@ -319,6 +334,7 @@ export const PrivyWalletProvider = ({
             );
         } else {
             // Else, if it is a v1 smart account, we need to sign each clause individually
+                        
             const dataToSign: ExecuteWithAuthorizationSignData[] =
                 txClauses.map((txData) =>
                     buildSingleAuthorizationTypedData({
@@ -442,7 +458,7 @@ export const PrivyWalletProvider = ({
         );
 
         // sign the transaction and request the fee delegator to pay the gas fees in the process
-        const wallet = new ProviderInternalBaseWallet(
+        /*const wallet = new ProviderInternalBaseWallet(
             [
                 {
                     privateKey: Buffer.from(
@@ -467,19 +483,34 @@ export const PrivyWalletProvider = ({
             randomTransactionUser.address,
         );
         const rawDelegateSigned = await signer!.signTransaction(txInput);
+        */
+       
+        const gasPayerResponse = await callDelegateAuthorized(txBody, randomTransactionUser.address);
 
-        // publish the hexlified signed transaction directly on the node api
-        const { id } = (await fetch(`${nodeUrl}/transactions`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                raw: rawDelegateSigned,
-            }),
-        }).then((res) => res.json())) as { id: string };
+        if (gasPayerResponse) {
+            // Use the raw value for the next step - TODO take the raw body that was originally sent instead ( to avoid changes in the payload by the gd)
+            const tx_body = decodeRawTx(gasPayerResponse.raw);
+            
+            const validTx = signFinalTransaction(tx_body, randomTransactionUser.privateKey, gasPayerResponse.signature);
+            
+            // publish the hexlified signed transaction directly on the node api
+            const { id } = (await fetch(`${nodeUrl}/transactions`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    raw: validTx,
+                }),
+            }).then((res) => res.json())) as { id: string };
 
-        return id;
+            console.log("Transaction ID:", id);  
+            return id;  
+        } else {
+            console.error("No raw field found in response");
+            return  "";
+        }
+        
     };
 
     /**
@@ -548,3 +579,148 @@ export const usePrivyWalletProvider = () => {
     }
     return context;
 };
+
+function signFinalTransaction(decodedTx: Transaction, privateKey: string | Uint8Array<ArrayBufferLike>, signature: string) {
+    const txHash = Transaction.of(decodedTx.body).getTransactionHash();
+    return Transaction.of( 
+        decodedTx.body, 
+        nc_utils.concatBytes(
+            Secp256k1.sign(
+                txHash.bytes,
+                typeof privateKey === 'string'
+                    ? Uint8Array.from(Buffer.from(privateKey, 'hex'))
+                    : privateKey
+            ),
+            HexUInt.of(signature.slice(2)).bytes
+        )
+    )
+}
+
+/**
+ * Decodes a raw transaction in the format returned by the generic delegator.
+ * @param raw Raw transaction returned by the generic delegator.
+ * @returns Decoded transaction.
+ */
+function decodeRawTx(raw: string) {
+    console.log(raw);
+    return Transaction.decode(
+        HexUInt.of(raw.slice(2)).bytes,
+        false
+    );
+}
+
+const options = {
+    maxGasPriceCoef : 0.3,
+    expiration : 0,
+    dependsOn : null,
+    network : "testnet",
+    token : {
+        symbol : "B3TR",
+        address : {
+            mainnet: "0x5ef79995FE8a89e0812330E4378eB2660ceDe699",
+            testnet: "0xbf64cf86894Ee0877C4e7d03936e35Ee8D8b864F",
+            solo: null
+        }
+    },
+    genericDelegatorBaseUrl : "http://localhost:3000/"
+    //genericDelegatorBaseUrl : "https://genericdelegator.test.evearn.io/"
+};
+
+
+function getRawUnsignedTx(clauses: Connex.VM.Clause[],options: { maxGasPriceCoef?: number; expiration: any; dependsOn: any; network: any; token?: { symbol: string; address: { mainnet: string; testnet: string; solo: null; }; }; genericDelegatorBaseUrl?: string; }) {
+    const body = {
+        chainTag: networkInfo[options.network as keyof typeof networkInfo].chainTag,
+        blockRef: '0x0000000000000000',
+        expiration: options.expiration, 
+        clauses,
+        gasPriceCoef: 0, // won't be used
+        gas: 1, // won't be used
+        dependsOn: options.dependsOn,
+        nonce: 12345678, // won't be used
+        reserved: {
+            features: 1 // set the transaction to be delegated
+        }
+    };
+
+    //  Create the unsigned transaction
+    // Ensure all clauses have a valid 'data' property
+    const sanitizedClauses = clauses.map((clause) => ({
+        ...clause,
+        data: clause.data || '0x', // Default to '0x' if data is undefined
+    }));
+
+    const unsignedTx = Transaction.of({ ...body, clauses: sanitizedClauses });
+    return Hex.of(unsignedTx.encoded).toString() ;    
+}
+
+
+// Request the generic delegator to pay that with B3TR
+    /**
+     * Send a request to the generic delegator to sponsor the gas cost of a transaction in exchange
+     * of a token payment.
+     * @param rawUnsignedTx The raw transaction to delegate.
+     * @param senderAddress The address of the origin/sender of the transaction.
+     * @param tokenSymbol The symbol of the token to use to pay for the gas.
+     * @returns The response from the generic delegator (raw, signature, address).
+     */
+interface DelegateRequestBody {
+    raw: string;
+    origin: string;
+}
+
+interface DelegateResponse {
+    raw: string;
+    signature: string;
+    address: string;
+}
+
+async function callDelegate(
+    rawUnsignedTx: string,
+    senderAddress: string,
+    tokenSymbol: string
+): Promise<DelegateResponse | undefined> {
+    const requestBody: DelegateRequestBody = {
+        raw: rawUnsignedTx,
+        origin: senderAddress,
+    };
+
+    const requestOptions: RequestInit = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+        redirect: 'follow' as RequestRedirect,
+    };
+
+    try {
+        const response = await fetch(
+            `${options.genericDelegatorBaseUrl}delegator/delegate/${tokenSymbol}`,
+            requestOptions
+        );
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
+
+// Request the generic delegator to pay that with B3TR
+async function callDelegateAuthorized (rawUnsignedTx: TransactionBody, _senderAddress: string) {
+
+    const requestBody = {
+        raw: rawUnsignedTx ,
+        origin: _senderAddress
+    }
+
+    const requestOptions = {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(requestBody),
+        redirect: 'follow' as RequestRedirect
+    };
+    
+    try {
+        const response = await fetch(options.genericDelegatorBaseUrl + "delegator/delegateAuthorized/" , requestOptions);
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
