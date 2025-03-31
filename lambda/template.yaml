@@ -50,15 +50,28 @@ Resources:
       Enabled: true
       StageKeys:
         - RestApiId: !Ref ServerlessRestApi
-          StageName: Prod
-      UsagePlan:
-        CreateUsagePlan: PER_REQUEST
-        Quota:
-          Limit: 5000
-          Period: MONTH
-        Throttle:
-          BurstLimit: 200
-          RateLimit: 100
+          StageName: !Ref ServerlessRestApiProdStage
+
+  UsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: !Sub ${AWS::StackName}-UsagePlan
+      ApiStages:
+        - ApiId: !Ref ServerlessRestApi
+          Stage: !Ref ServerlessRestApiProdStage
+      Quota:
+        Limit: 5000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 200
+        RateLimit: 100
+
+  UsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref UsagePlan
 
 Parameters:
   PrivyAppId:
@@ -77,12 +90,3 @@ Outputs:
   GetEmbeddedWalletDetailsApi:
     Description: API Gateway endpoint URL for Prod stage for Get Embedded Wallet Details
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/embedded_wallet/{walletAddress}/details"
-  GetEmbeddedWalletDetailsFunction:
-    Description: Get Embedded Wallet Details Lambda Function ARN
-    Value: !GetAtt GetEmbeddedWalletDetailsFunction.Arn
-  GetEmbeddedWalletDetailsFunctionIamRole:
-    Description: Implicit IAM Role created for Get Embedded Wallet Details
-    Value: !GetAtt GetEmbeddedWalletDetailsFunctionRole.Arn
-  ApiKey:
-    Description: API Key for accessing the API
-    Value: !Ref ApiKey
