@@ -81,7 +81,7 @@ function getUserIdentifiers(user: User): UserIdentifiers {
 export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
         // Get wallet address from query parameters
-        const walletAddress = event.queryStringParameters?.walletAddress;
+        const walletAddress = event.pathParameters?.walletAddress;
         
         if (!walletAddress) {
             return {

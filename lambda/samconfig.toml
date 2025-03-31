@@ -3,7 +3,7 @@
 version = 0.1
 
 [default.global.parameters]
-stack_name = "get-social-identifiers"
+stack_name = "get-embedded-wallet-details"
 
 [default.build.parameters]
 cached = true

@@ -1,4 +1,4 @@
-name: Deploy Get Social Identifiers Lambda
+name: Deploy Get Embedded Wallet Details Lambda
 
 on:
     push:
@@ -31,12 +31,12 @@ jobs:
               use-installer: true
               token: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Build and deploy Get Social Identifiers Lambda
+        - name: Build and deploy Get Embedded Wallet Details Lambda
           run: |
             cd lambda
             sam build
             sam deploy \
-                --stack-name GetSocialIdentifiersLambda \
+                --stack-name GetEmbeddedWalletDetailsLambda \
                 --region ${{ env.AWS_REGION }} \
                 --capabilities CAPABILITY_IAM \
                 --parameter-overrides "PrivyAppId=${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }} PrivyAppSecret=${{ secrets.NEXT_PUBLIC_PRIVY_APP_SECRET }}"
