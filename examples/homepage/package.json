@@ -30,5 +30,5 @@
         "eslint-config-next": "14.1.4",
         "typescript": "5.3.3"
     },
-    "homepage": "https://vechain.github.io/vechain-kit"
+    "homepage": "${workspaceFolder}"
 }

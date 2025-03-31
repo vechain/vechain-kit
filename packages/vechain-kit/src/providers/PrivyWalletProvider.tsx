@@ -264,7 +264,7 @@ export const PrivyWalletProvider = ({
         if (!newTx) {
             throw new Error('Failed to retrieve new transaction.');
         }
-        console.log("THIS IS A NEW CHANGE!");
+        
         const newTxDecoded = decodeRawTx(newTx.raw);
         const tx_Clauses = newTxDecoded.body.clauses;
             
@@ -441,7 +441,7 @@ export const PrivyWalletProvider = ({
             clauses,
             connectedWallet.address ?? '',
             {
-                gasPadding: 1,
+                gasPadding: 1.3, // call generic delegator estimate endpoint and add the delegator fee as padding (e.g. with fee 0.1, gasPadding = 1.1)
             },
         );
 
@@ -484,25 +484,32 @@ export const PrivyWalletProvider = ({
         );
         const rawDelegateSigned = await signer!.signTransaction(txInput);
         */
-       
-        const gasPayerResponse = await callDelegateAuthorized(txBody, randomTransactionUser.address);
+        const unsignedTx = Transaction.of(txBody);
+        const gasPayerResponse = await callDelegateAuthorized(Hex.of(unsignedTx.encoded).toString(), randomTransactionUser.address);
 
         if (gasPayerResponse) {
             // Use the raw value for the next step - TODO take the raw body that was originally sent instead ( to avoid changes in the payload by the gd)
             const tx_body = decodeRawTx(gasPayerResponse.raw);
             
-            const validTx = signFinalTransaction(tx_body, randomTransactionUser.privateKey, gasPayerResponse.signature);
+            const validTx = signFinalTransaction(
+                tx_body, 
+                Buffer.from(
+                    randomTransactionUser.privateKey.slice(2),
+                    'hex',
+                ), 
+                gasPayerResponse.signature
+            );
             
-            // publish the hexlified signed transaction directly on the node api
-            const { id } = (await fetch(`${nodeUrl}/transactions`, {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify({
-                    raw: validTx,
-                }),
-            }).then((res) => res.json())) as { id: string };
+            // send the signed transaction using the SDK
+            const id = await (async () => {
+                try {
+                    const result = await thor.transactions.sendTransaction(validTx);
+                    return result; // Assuming `sendTransaction` returns an object with `id`
+                } catch (error) {
+                    console.error("Error sending the transaction:", error);
+                    throw error;
+                }
+            })();
 
             console.log("Transaction ID:", id);  
             return id;  
@@ -653,7 +660,6 @@ function getRawUnsignedTx(clauses: Connex.VM.Clause[],options: { maxGasPriceCoef
     return Hex.of(unsignedTx.encoded).toString() ;    
 }
 
-
 // Request the generic delegator to pay that with B3TR
     /**
      * Send a request to the generic delegator to sponsor the gas cost of a transaction in exchange
@@ -703,7 +709,7 @@ async function callDelegate(
 }
 
 // Request the generic delegator to pay that with B3TR
-async function callDelegateAuthorized (rawUnsignedTx: TransactionBody, _senderAddress: string) {
+async function callDelegateAuthorized (rawUnsignedTx: string, _senderAddress: string) {
 
     const requestBody = {
         raw: rawUnsignedTx ,
@@ -718,7 +724,7 @@ async function callDelegateAuthorized (rawUnsignedTx: TransactionBody, _senderAd
     };
     
     try {
-        const response = await fetch(options.genericDelegatorBaseUrl + "delegator/delegateAuthorized/" , requestOptions);
+        const response = await fetch(options.genericDelegatorBaseUrl + "delegator/delegate-authorized/" + options.token.symbol , requestOptions);
         return await response.json();
     } catch (error) {
         console.error("Fetch error:", error);

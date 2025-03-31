@@ -39,7 +39,7 @@ It offers:
 
 ### Prerequisites
 
--   Node.js >= 20.10.0
+-   Node.js >= 18.18.0
 -   Yarn >= 1.22.10
 
 You will need to have 3 terminals open:
@@ -56,7 +56,7 @@ yarn install:all
 yarn watch
 ```
 
-3. In terminal 3, enter in 'examples/sample-next-privy-app' and run the command to start the NextJS app.
+3. In terminal 3, enter in 'examples/next-template' and run the command to start the NextJS app.
 
 ```bash
 yarn dev
