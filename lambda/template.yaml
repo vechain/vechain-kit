@@ -29,7 +29,7 @@ Resources:
         GetEmbeddedWalletDetails:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /embedded_wallet/{walletAddress}/details
+            Path: /v1/embedded_wallet/{walletAddress}/details
             Method: get
             Auth:
               ApiKeyRequired: true
@@ -89,4 +89,4 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   GetEmbeddedWalletDetailsApi:
     Description: API Gateway endpoint URL for Prod stage for Get Embedded Wallet Details
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/embedded_wallet/{walletAddress}/details"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/v1/embedded_wallet/{walletAddress}/details"
