@@ -1,4 +1,4 @@
-name: Deploy Get Embedded Wallet Details Lambda
+name: Deploy Embedded Wallet Details Stack
 
 on:
     pull_request:
