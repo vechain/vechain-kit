@@ -1,8 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { PrivyClient, User } from '@privy-io/server-auth';
 
-// Define types for social media usernames
-type SocialUsernames = {
+// Define types for all identifiers
+type UserIdentifiers = {
+    email?: string;
     google?: string;
     apple?: string;
     twitter?: string;
@@ -13,14 +14,9 @@ type SocialUsernames = {
     linkedin?: string;
 };
   
-// Define the user identifiers interface
-interface UserIdentifiers {
-    email?: string;
-    usernames: SocialUsernames;
-}
-
 // Define social account types for type safety
-type SocialAccountType = 
+type SocialAccountType =
+    | 'email'
     | 'google_oauth'
     | 'apple_oauth'
     | 'twitter_oauth'
@@ -30,49 +26,38 @@ type SocialAccountType =
     | 'instagram_oauth'
     | 'linkedin_oauth';
 
-// Map social account types to their username field names
-const SOCIAL_ACCOUNT_MAPPINGS: Record<SocialAccountType, keyof SocialUsernames> = {
-    'google_oauth': 'google',
-    'apple_oauth': 'apple',
-    'twitter_oauth': 'twitter',
-    'discord_oauth': 'discord',
-    'github_oauth': 'github',
-    'telegram': 'telegram',
-    'instagram_oauth': 'instagram',
-    'linkedin_oauth': 'linkedin'
-};
-
 /**
  * Extracts user identifiers (email and social media usernames) from a Privy user
  * @param user - The Privy user object
- * @returns UserIdentifiers object containing email and social media usernames
+ * @returns UserIdentifiers object containing all identifiers
 */
 function getUserIdentifiers(user: User): UserIdentifiers {
-    const identifiers: UserIdentifiers = {
-        usernames: {}
-    };
-  
+    const identifiers: UserIdentifiers = {};
+
     // Get email if available
     if (user.email?.address) {
-      identifiers.email = user.email.address;
+        identifiers.email = user.email.address;
     }
-  
+
     // Get usernames from linked accounts
     user.linkedAccounts.forEach(account => {
         const accountType = account.type as SocialAccountType;
-        const usernameField = SOCIAL_ACCOUNT_MAPPINGS[accountType];
+        // Remove '_oauth' suffix to get the field name
+        const field = accountType.replace('_oauth', '') as keyof UserIdentifiers;
         
-        if (usernameField) {
-            // Handle email-based accounts (google, apple)
-            if (accountType === 'google_oauth' || accountType === 'apple_oauth' || accountType === 'linkedin_oauth') {
-                const emailAccount = account as { email?: string };
-                identifiers.usernames[usernameField] = emailAccount.email || undefined;
-            } 
-            // Handle username-based accounts
-            else {
-                const usernameAccount = account as { username?: string };
-                identifiers.usernames[usernameField] = usernameAccount.username || undefined;
+        // Handle email-based accounts (email, google, apple, linkedin)
+        if (accountType === 'email' || accountType === 'google_oauth' || accountType === 'apple_oauth' || accountType === 'linkedin_oauth') {
+            const emailAccount = account as { email?: string } | { address?: string };
+            if ('email' in emailAccount) {
+                identifiers[field] = emailAccount.email;
+            } else if ('address' in emailAccount) {
+                identifiers[field] = emailAccount.address;
             }
+        } 
+        // Handle username-based accounts
+        else {
+            const usernameAccount = account as { username?: string };
+            identifiers[field] = usernameAccount.username || undefined;
         }
     });
     return identifiers;
