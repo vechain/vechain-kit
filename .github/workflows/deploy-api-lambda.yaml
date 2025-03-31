@@ -1,0 +1,44 @@
+name: Deploy Get Embedded Wallet Details Lambda
+
+on:
+    push:
+        branches:
+            - main
+        paths: ['lambda/**']
+
+permissions:
+    contents: read
+    id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+        AWS_REGION: eu-west-1
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+              role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
+              aws-region: ${{ env.AWS_REGION }}
+
+        - name: Setup SAM CLI
+          uses: aws-actions/setup-sam@v2
+          with:
+              use-installer: true
+              token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Build and deploy Get Embedded Wallet Details Lambda
+          run: |
+            cd lambda
+            sam build
+            sam deploy \
+                --stack-name GetEmbeddedWalletDetailsLambda \
+                --region ${{ env.AWS_REGION }} \
+                --capabilities CAPABILITY_IAM \
+                --parameter-overrides "PrivyAppId=${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }} PrivyAppSecret=${{ secrets.NEXT_PUBLIC_PRIVY_APP_SECRET }}"
+            
+                  

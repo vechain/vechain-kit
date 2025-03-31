@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Get Privy Embedded Wallet Details
+
+  This lambda function is used to get the embedded wallet details for a given wallet address.
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    LoggingConfig:
+      LogFormat: JSON
+    Environment:
+      Variables:
+        PRIVY_APP_ID: !Ref PrivyAppId
+        PRIVY_APP_SECRET: !Ref PrivyAppSecret
+
+Resources:
+  GetEmbeddedWalletDetailsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+      Handler: index.lambdaHandler
+      Runtime: nodejs20.x
+      Architectures:
+      - arm64
+      Events:
+        GetEmbeddedWalletDetails:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /embedded_wallet/{walletAddress}/details
+            Method: get
+            Auth:
+              ApiKeyRequired: true
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+        - index.ts
+
+  ApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: !Sub ${AWS::StackName}-ApiKey
+      Description: API Key for accessing the API
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref ServerlessRestApi
+          StageName: Prod
+      UsagePlan:
+        CreateUsagePlan: PER_REQUEST
+        Quota:
+          Limit: 5000
+          Period: MONTH
+        Throttle:
+          BurstLimit: 200
+          RateLimit: 100
+
+Parameters:
+  PrivyAppId:
+    Type: String
+    Description: Privy App ID
+    NoEcho: true
+  PrivyAppSecret:
+    Type: String
+    Description: Privy App Secret
+    NoEcho: true
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  GetEmbeddedWalletDetailsApi:
+    Description: API Gateway endpoint URL for Prod stage for Get Embedded Wallet Details
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/embedded_wallet/{walletAddress}/details"
+  GetEmbeddedWalletDetailsFunction:
+    Description: Get Embedded Wallet Details Lambda Function ARN
+    Value: !GetAtt GetEmbeddedWalletDetailsFunction.Arn
+  GetEmbeddedWalletDetailsFunctionIamRole:
+    Description: Implicit IAM Role created for Get Embedded Wallet Details
+    Value: !GetAtt GetEmbeddedWalletDetailsFunctionRole.Arn
+  ApiKey:
+    Description: API Key for accessing the API
+    Value: !Ref ApiKey
