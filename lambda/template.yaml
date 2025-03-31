@@ -29,7 +29,7 @@ Resources:
         GetEmbeddedWalletDetails:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /embedded_wallet/{walletAddress}/details
+            Path: /v1/embedded_wallet/{walletAddress}/details
             Method: get
             Auth:
               ApiKeyRequired: true
@@ -50,15 +50,28 @@ Resources:
       Enabled: true
       StageKeys:
         - RestApiId: !Ref ServerlessRestApi
-          StageName: Prod
-      UsagePlan:
-        CreateUsagePlan: PER_REQUEST
-        Quota:
-          Limit: 5000
-          Period: MONTH
-        Throttle:
-          BurstLimit: 200
-          RateLimit: 100
+          StageName: !Ref ServerlessRestApiProdStage
+
+  UsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: !Sub ${AWS::StackName}-UsagePlan
+      ApiStages:
+        - ApiId: !Ref ServerlessRestApi
+          Stage: !Ref ServerlessRestApiProdStage
+      Quota:
+        Limit: 5000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 200
+        RateLimit: 100
+
+  UsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref UsagePlan
 
 Parameters:
   PrivyAppId:
@@ -76,13 +89,4 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   GetEmbeddedWalletDetailsApi:
     Description: API Gateway endpoint URL for Prod stage for Get Embedded Wallet Details
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/embedded_wallet/{walletAddress}/details"
-  GetEmbeddedWalletDetailsFunction:
-    Description: Get Embedded Wallet Details Lambda Function ARN
-    Value: !GetAtt GetEmbeddedWalletDetailsFunction.Arn
-  GetEmbeddedWalletDetailsFunctionIamRole:
-    Description: Implicit IAM Role created for Get Embedded Wallet Details
-    Value: !GetAtt GetEmbeddedWalletDetailsFunctionRole.Arn
-  ApiKey:
-    Description: API Key for accessing the API
-    Value: !Ref ApiKey
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/v1/embedded_wallet/{walletAddress}/details"

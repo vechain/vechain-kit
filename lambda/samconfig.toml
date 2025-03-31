@@ -3,7 +3,7 @@
 version = 0.1
 
 [default.global.parameters]
-stack_name = "get-embedded-wallet-details"
+stack_name = "EmbeddedWalletStack"
 
 [default.build.parameters]
 cached = true
@@ -14,7 +14,7 @@ lint = true
 
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
-confirm_changeset = true
+confirm_changeset = false
 resolve_s3 = true
 
 [default.package.parameters]

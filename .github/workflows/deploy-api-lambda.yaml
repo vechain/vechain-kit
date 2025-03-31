@@ -1,4 +1,4 @@
-name: Deploy Get Embedded Wallet Details Lambda
+name: Deploy Embedded Wallet Details Stack
 
 on:
     push:
@@ -36,9 +36,8 @@ jobs:
             cd lambda
             sam build
             sam deploy \
-                --stack-name GetEmbeddedWalletDetailsLambda \
+                --stack-name EmbeddedWalletStack \
                 --region ${{ env.AWS_REGION }} \
                 --capabilities CAPABILITY_IAM \
+                --no-fail-on-empty-changeset \
                 --parameter-overrides "PrivyAppId=${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }} PrivyAppSecret=${{ secrets.NEXT_PUBLIC_PRIVY_APP_SECRET }}"
-            
-                  
