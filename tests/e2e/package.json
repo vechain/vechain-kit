@@ -19,7 +19,7 @@
         "@serenity-js/serenity-bdd": "^3.4.1",
         "@types/chrome": "^0.0.262",
         "@types/chromedriver": "^81.0.1",
-        "@types/cucumber": "^7.0.0",
+        "@types/cucumber": "^7.0.3",
         "@types/jest": "^29.5.12",
         "@types/selenium-webdriver": "^4.1.13",
         "async-mutex": "^0.2.6",
