@@ -76,4 +76,9 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
         name: 'Mughsot',
         website: 'https://mugshot.vet/',
     },
+    {
+        id: 'cm4l8tiai070i108zo17oieyc',
+        name: 'EVearn',
+        website: 'https://evearn.io',
+    },
 ];
