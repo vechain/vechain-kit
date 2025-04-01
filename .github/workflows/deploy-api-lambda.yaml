@@ -4,7 +4,7 @@ on:
     push:
         branches:
             - main
-        paths: ['lambda/**']
+        paths: ['lambda/**', '.github/workflows/deploy-api-lambda.yaml']
 
 permissions:
     contents: read
