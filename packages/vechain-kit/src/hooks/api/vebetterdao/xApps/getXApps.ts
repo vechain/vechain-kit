@@ -1,16 +1,7 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
-import { abi } from 'thor-devkit';
-
-const unendorsedAppsFragment = X2EarnApps.createInterface()
-    .getFunction('unendorsedApps')
-    .format('json');
-const unendorsedAppsAbi = new abi.Function(JSON.parse(unendorsedAppsFragment));
-const allAppsFragment = X2EarnApps.createInterface()
-    .getFunction('apps')
-    .format('json');
-const allAppsAbi = new abi.Function(JSON.parse(allAppsFragment));
+import { ContractClause, ThorClient } from '@vechain/sdk-network';
 
 /**
  * xApp type
@@ -33,7 +24,7 @@ export type UnendorsedApp = XApp & {
 };
 
 /**
- * This function is here nad not coupled with the hook as we need it with SSR, and dapp-kit broke the pre-fetching
+ * This function is here and not coupled with the hook as we need it with SSR, and dapp-kit broke the pre-fetching
  * Returns all the available xApps in the B3TR ecosystem
  * @param thor  the thor client
  * @returns  all the available xApps in the ecosystem capped to 256 see {@link XApp}
@@ -46,53 +37,46 @@ type GetAllApps = {
     endorsed: XApp[];
 };
 export const getXApps = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
 ): Promise<GetAllApps> => {
     const x2EarnAppsContract = getConfig(networkType).x2EarnAppsContractAddress;
-    const clauses = [
-        {
-            to: x2EarnAppsContract,
-            value: 0,
-            data: allAppsAbi.encode(),
-        },
-        {
-            to: x2EarnAppsContract,
-            value: 0,
-            data: unendorsedAppsAbi.encode(),
-        },
+    const contract = thor.contracts.load(x2EarnAppsContract, X2EarnApps.abi);
+    const clauses: ContractClause[] = [
+        contract.clause.apps(),
+        contract.clause.unendorsedApps(),
     ];
 
-    const res = await thor.explain(clauses).execute();
+    const res = await thor.contracts.executeMultipleClausesCall(clauses);
 
-    const error = res.find((r) => r.reverted)?.revertReason;
+    const error = res.find((r) => !r.success);
 
-    if (error) throw new Error(error ?? 'Error fetching xApps');
+    if (error) throw new Error('Error fetching xApps');
 
     let apps: XApp[] = [];
     let unendorsedApps: UnendorsedApp[] = [];
 
-    if (res[0]?.data) {
-        const appsDecoded = allAppsAbi.decode(res[0]?.data)[0];
+    if (res[0]?.result.array) {
+        const appsDecoded = res[0].result.array;
         if (appsDecoded.length) {
             apps = appsDecoded.map((app: any) => ({
                 id: app[0],
                 teamWalletAddress: app[1],
                 name: app[2],
                 metadataURI: app[3],
-                createdAtTimestamp: app[4],
+                createdAtTimestamp: app[4].toString(),
             }));
         }
     }
-    if (res[1]?.data && res[1]?.data !== '0x') {
-        const unendorsedAppsDecoded = unendorsedAppsAbi.decode(res[1]?.data)[0];
+    if (res[1]?.result.array) {
+        const unendorsedAppsDecoded = res[1].result.array;
         if (unendorsedAppsDecoded.length) {
             unendorsedApps = unendorsedAppsDecoded.map((app: any) => ({
                 id: app[0],
                 teamWalletAddress: app[1],
                 name: app[2],
                 metadataURI: app[3],
-                createdAtTimestamp: app[4],
+                createdAtTimestamp: app[4].toString(),
                 appAvailableForAllocationVoting: app[5],
             }));
         }
