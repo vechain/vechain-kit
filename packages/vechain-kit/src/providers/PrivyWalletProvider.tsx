@@ -3,7 +3,12 @@
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
 import { encodeFunctionData } from 'viem';
-import { ABIContract, Address, Clause } from '@vechain/sdk-core';
+import {
+    ABIContract,
+    Address,
+    Clause,
+    TransactionClause,
+} from '@vechain/sdk-core';
 import {
     ThorClient,
     VeChainProvider,
@@ -34,7 +39,7 @@ export interface PrivyWalletProviderContextType {
     accountFactory: string;
     delegateAllTransactions: boolean;
     sendTransaction: (tx: {
-        txClauses: Connex.VM.Clause[];
+        txClauses: TransactionClause[];
         title?: string;
         description?: string;
         buttonText?: string;
@@ -112,7 +117,7 @@ export const PrivyWalletProvider = ({
         chainId,
         verifyingContract,
     }: {
-        clauses: Connex.VM.Clause[];
+        clauses: TransactionClause[];
         chainId: number;
         verifyingContract: string;
     }): ExecuteBatchWithAuthorizationSignData {
@@ -177,7 +182,7 @@ export const PrivyWalletProvider = ({
         chainId,
         verifyingContract,
     }: {
-        clause: Connex.VM.Clause;
+        clause: TransactionClause;
         chainId: number;
         verifyingContract: string;
     }): ExecuteWithAuthorizationSignData {
@@ -239,7 +244,7 @@ export const PrivyWalletProvider = ({
         buttonText = 'Sign',
         suggestedMaxGas,
     }: {
-        txClauses: Connex.VM.Clause[];
+        txClauses: TransactionClause[];
         title?: string;
         description?: string;
         buttonText?: string;
@@ -452,7 +457,7 @@ export const PrivyWalletProvider = ({
                     address: randomTransactionUser.address,
                 },
             ],
-            { delegator: { delegatorUrl } },
+            { gasPayer: { gasPayerServiceUrl: delegatorUrl } },
         );
         const providerWithDelegationEnabled = new VeChainProvider(
             thor,

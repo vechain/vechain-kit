@@ -3,9 +3,14 @@ import { NETWORK_TYPE } from '@/config/network';
 import { XAllocationVotingGovernor__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { ThorClient } from '@vechain/sdk-network';
+import { Interface } from 'ethers';
 
 const allocationVotingInterface =
-    XAllocationVotingGovernor__factory.createInterface();
+    XAllocationVotingGovernor__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+allocationVotingInterface.abi = XAllocationVotingGovernor__factory.abi;
 
 /**
  *  Get the number of qf votes for a xApp in an allocation round
@@ -15,24 +20,22 @@ const allocationVotingInterface =
  * @returns  the number of votes for the xApp in the round
  */
 export const getXAppVotesQf = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     roundId: string,
     xAppId: string,
 ): Promise<string> => {
     const ALLOCATION_VOTING_CONTRACT =
         getConfig(networkType).xAllocationVotingContractAddress;
-    const functionFragment = allocationVotingInterface
-        .getFunction('getAppVotesQF')
-        .format('json');
-    const res = await thor
-        .account(ALLOCATION_VOTING_CONTRACT)
-        .method(JSON.parse(functionFragment))
-        .call(roundId, xAppId);
+    const contract = thor.contracts.load(
+        ALLOCATION_VOTING_CONTRACT,
+        XAllocationVotingGovernor__factory.abi,
+    );
+    const res = await contract.read.getAppVotesQF(roundId, xAppId);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject('Error fetching xApp votes');
 
-    return (res.decoded[0] ** 2).toString();
+    return (Number(res[0]) ** 2).toString();
     //   return ethers.parseEther(res.decoded[0]).toString()
 };
 
