@@ -30,7 +30,8 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
-    const { signTypedData: signTypedDataDappKit } = useDAppKitWallet();
+    const { signer } = useDAppKitWallet();
+
     const signTypedData = useCallback(
         async (
             data: SignTypedDataParams,
@@ -50,7 +51,7 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                             : undefined,
                     };
 
-                    sig = await signTypedDataDappKit(
+                    sig = await signer.signTypedData(
                         domain,
                         data.types as Record<
                             string,
