@@ -19,11 +19,5 @@ export default defineConfig({
     target: 'node18',
     skipNodeModulesBundle: true,
     metafile: true, // Generate meta file for better build analysis
-    dts: {
-        resolve: true,
-        compilerOptions: {
-            skipLibCheck: true,
-            types: [], // This will prevent implicit type inclusion
-        },
-    },
+    dts: true,
 });

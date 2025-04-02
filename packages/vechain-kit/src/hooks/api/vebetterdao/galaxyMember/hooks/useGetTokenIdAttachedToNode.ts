@@ -2,8 +2,13 @@ import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractInterface =
+    GalaxyMember__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = GalaxyMember__factory.abi;
 const method = 'getIdAttachedToNode';
 
 export const getGetTokenIdAttachedToNodeQueryKey = (nodeId?: string) =>

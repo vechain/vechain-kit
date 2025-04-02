@@ -3,8 +3,13 @@ import { GalaxyMember__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
+import { Interface } from 'ethers';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractInterface =
+    GalaxyMember__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = GalaxyMember__factory.abi;
 const method = 'getB3TRdonated';
 
 export const getB3trDonatedQueryKey = (tokenId?: string) =>

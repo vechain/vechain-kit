@@ -43,12 +43,6 @@ export const useCall = <T extends Interface>({
 
     const queryFn = useCallback(async () => {
         try {
-            const functionFragment = contractInterface
-                ?.getFunction(method)
-                ?.format('json');
-            if (!functionFragment)
-                throw new Error(`Method ${method} not found`);
-
             const contract = thor.contracts.load(
                 contractAddress,
                 contractInterface.abi,

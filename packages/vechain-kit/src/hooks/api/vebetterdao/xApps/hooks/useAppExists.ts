@@ -3,8 +3,12 @@ import { getConfig } from '@/config';
 import { X2EarnApps__factory } from '@/contracts';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = X2EarnApps__factory.createInterface();
+const contractInterface = X2EarnApps__factory.createInterface() as Interface & {
+    abi: readonly any[];
+};
+contractInterface.abi = X2EarnApps__factory.abi;
 const method = 'appExists';
 
 /**

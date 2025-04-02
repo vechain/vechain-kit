@@ -2,8 +2,13 @@ import { getConfig } from '@/config';
 import { SubdomainClaimer__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = SubdomainClaimer__factory.createInterface();
+const contractInterface =
+    SubdomainClaimer__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = SubdomainClaimer__factory.abi;
 const method = 'isDomainProtected';
 
 export const getIsDomainProtectedQueryKey = (domain?: string) =>

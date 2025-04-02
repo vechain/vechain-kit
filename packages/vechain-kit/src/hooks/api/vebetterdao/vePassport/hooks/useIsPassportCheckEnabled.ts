@@ -3,8 +3,8 @@ import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { getCallKey, useCall } from '@/hooks';
 import { TogglePassportCheck } from '@/utils/Constants';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = VeBetterPassport__factory.createInterface();
 const method = 'isCheckEnabled';
 
 export const getPassportToggleQueryKey = (checkName: TogglePassportCheck) => {
@@ -20,6 +20,12 @@ export const useIsPassportCheckEnabled = (checkName: TogglePassportCheck) => {
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
+
+    const contractInterface =
+        VeBetterPassport__factory.createInterface() as Interface & {
+            abi: readonly any[];
+        };
+    contractInterface.abi = VeBetterPassport__factory.abi;
 
     return useCall({
         contractInterface,

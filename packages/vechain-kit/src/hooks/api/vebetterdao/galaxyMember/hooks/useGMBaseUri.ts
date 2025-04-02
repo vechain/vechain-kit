@@ -3,7 +3,13 @@ import { GalaxyMember__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
-const contractInterface = GalaxyMember__factory.createInterface();
+import { Interface } from 'ethers';
+
+const contractInterface =
+    GalaxyMember__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = GalaxyMember__factory.abi;
 const method = 'baseURI';
 
 /**

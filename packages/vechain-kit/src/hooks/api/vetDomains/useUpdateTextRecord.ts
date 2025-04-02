@@ -1,14 +1,32 @@
-import { Interface, namehash } from 'ethers';
+import { namehash } from '@ethersproject/hash';
 import { useCallback } from 'react';
 import {
     UseSendTransactionReturnValue,
     useSendTransaction,
 } from '@/hooks/transactions/useSendTransaction';
+import { useThor } from '@vechain/dapp-kit-react';
 
-const nameInterface = new Interface([
-    'function resolver(bytes32 node) returns (address resolverAddress)',
-    'function setText(bytes32 node, string key, string value) external',
-]);
+// Define the ABI for the resolver functions
+const resolverABI = [
+    {
+        type: 'function',
+        name: 'resolver',
+        inputs: [{ name: 'node', type: 'bytes32' }],
+        outputs: [{ name: 'resolverAddress', type: 'address' }],
+        stateMutability: 'view',
+    },
+    {
+        type: 'function',
+        name: 'setText',
+        inputs: [
+            { name: 'node', type: 'bytes32' },
+            { name: 'key', type: 'string' },
+            { name: 'value', type: 'string' },
+        ],
+        outputs: [],
+        stateMutability: 'nonpayable',
+    },
+] as const;
 
 type UpdateTextRecordVariables = {
     domain: string;
@@ -33,6 +51,7 @@ export const useUpdateTextRecord = ({
     signerAccountAddress,
     resolverAddress,
 }: UseUpdateTextRecordProps = {}): UseUpdateTextRecordReturnValue => {
+    const thor = useThor();
     const buildClauses = useCallback(
         async (params: UpdateTextRecordVariables[]) => {
             const clauses = [];
@@ -44,20 +63,18 @@ export const useUpdateTextRecord = ({
 
                 const node = namehash(domain);
 
-                clauses.push({
-                    to: resolverAddress,
-                    data: nameInterface.encodeFunctionData('setText', [
-                        node,
-                        key,
-                        value,
-                    ]),
-                    value: '0',
-                    comment: `Update ${key} record`,
-                });
+                const contract = thor.contracts.load(
+                    resolverAddress,
+                    resolverABI,
+                );
+
+                clauses.push(
+                    contract.clause.setText(`0x${node.slice(2)}`, key, value),
+                );
             }
             return clauses;
         },
-        [resolverAddress],
+        [resolverAddress, thor],
     );
 
     const result = useSendTransaction({

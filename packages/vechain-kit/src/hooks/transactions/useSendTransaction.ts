@@ -4,16 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useThor } from '@vechain/dapp-kit-react';
 import { type TransactionReceipt, signerUtils } from '@vechain/sdk-network';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
-import {
-    EnhancedClause,
-    TransactionStatus,
-    TransactionStatusErrorType,
-} from '@/types';
+import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
-import { Clause } from '@vechain/sdk-core';
+import { ContractClause } from '@vechain/sdk-network';
 
 const estimateTxGasWithNext = async (
-    clauses: Clause[],
+    clauses: ContractClause[],
     caller: string,
     buffer = 1.25,
     nodeUrl: string,
@@ -32,9 +28,9 @@ const estimateTxGasWithNext = async (
         method: 'POST',
         body: JSON.stringify({
             clauses: clauses.map((clause) => ({
-                to: clause.to,
-                value: clause.value || '0x0',
-                data: clause.data,
+                to: clause.clause.to,
+                value: clause.clause.value || '0x0',
+                data: clause.clause.data,
             })),
             caller,
         }),
@@ -48,7 +44,7 @@ const estimateTxGasWithNext = async (
 
     // Calculate the intrinsic gas (transaction fee)
     const intrinsicGas = clauses.reduce((sum, clause) => {
-        const data = clause.data || '0x';
+        const data = clause.clause.data || '0x';
         const dataLength = (data.length - 2) / 2; // Remove '0x' prefix and convert to bytes
         return sum + (dataLength === 0 ? 21000 : 21000 + dataLength * 68);
     }, 0);
@@ -72,9 +68,9 @@ const estimateTxGasWithNext = async (
 type UseSendTransactionProps = {
     signerAccountAddress?: string | null;
     clauses?:
-        | EnhancedClause[]
-        | (() => EnhancedClause[])
-        | (() => Promise<EnhancedClause[]>);
+        | ContractClause[]
+        | (() => ContractClause[])
+        | (() => Promise<ContractClause[]>);
     onTxConfirmed?: () => void | Promise<void>;
     onTxFailedOrCancelled?: (error?: Error | string) => void | Promise<void>;
     suggestedMaxGas?: number;
@@ -96,7 +92,7 @@ type UseSendTransactionProps = {
  * @param error error that occurred while sending the transaction
  */
 export type UseSendTransactionReturnValue = {
-    sendTransaction: (clauses?: EnhancedClause[]) => Promise<void>;
+    sendTransaction: (clauses?: ContractClause[]) => Promise<void>;
     isTransactionPending: boolean;
     isWaitingForWalletConfirmation: boolean;
     txReceipt: TransactionReceipt | null;
@@ -163,9 +159,9 @@ export const useSendTransaction = ({
      */
     async function convertClauses(
         clauses:
-            | EnhancedClause[]
-            | (() => EnhancedClause[])
-            | (() => Promise<EnhancedClause[]>),
+            | ContractClause[]
+            | (() => ContractClause[])
+            | (() => Promise<ContractClause[]>),
     ) {
         let parsedClauses;
 
@@ -186,7 +182,7 @@ export const useSendTransaction = ({
      */
     const sendTransaction = useCallback(
         async (
-            clauses: EnhancedClause[],
+            clauses: ContractClause[],
             options?: {
                 title?: string;
                 description?: string;
@@ -221,7 +217,7 @@ export const useSendTransaction = ({
 
             // Build the transaction body with gas limit and delegation
             const txBody = await thor.transactions.buildTransactionBody(
-                clauses,
+                clauses.map((clause) => clause.clause),
                 parsedGasLimit,
                 {
                     isDelegated:
@@ -279,7 +275,7 @@ export const useSendTransaction = ({
     >(null);
 
     const sendTransactionAdapter = useCallback(
-        async (_clauses?: EnhancedClause[]): Promise<void> => {
+        async (_clauses?: ContractClause[]): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
             try {
                 setSendTransactionTx(null);

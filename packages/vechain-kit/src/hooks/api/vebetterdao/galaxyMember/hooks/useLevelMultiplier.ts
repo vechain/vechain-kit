@@ -2,8 +2,13 @@ import { getConfig } from '@/config';
 import { VoterRewards__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = VoterRewards__factory.createInterface();
+const contractInterface =
+    VoterRewards__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = VoterRewards__factory.abi;
 const method = 'levelToMultiplier';
 
 export const getLevelMultiplierQueryKey = (level?: string) =>

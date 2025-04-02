@@ -3,8 +3,7 @@ import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { zeroAddress } from 'viem';
 import { useVeChainKitConfig } from '@/providers';
-
-const vePassportInterface = VeBetterPassport__factory.createInterface();
+import { Interface } from 'ethers';
 
 /**
  * Returns the query key for fetching the delegatee.
@@ -25,8 +24,15 @@ export const useGetDelegatee = (delegator?: string | null) => {
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
+
+    const contractInterface =
+        VeBetterPassport__factory.createInterface() as Interface & {
+            abi: readonly any[];
+        };
+    contractInterface.abi = VeBetterPassport__factory.abi;
+
     return useCall({
-        contractInterface: vePassportInterface,
+        contractInterface,
         contractAddress: veBetterPassportContractAddress,
         method: 'getDelegatee',
         args: [delegator],

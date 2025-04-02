@@ -6,11 +6,12 @@ import { useVeChainKitConfig } from '@/providers';
 import { ThorClient } from '@vechain/sdk-network';
 import { Interface } from 'ethers';
 
-const allocationVotingInterface =
+const contractInterface =
     XAllocationVotingGovernor__factory.createInterface() as Interface & {
         abi: readonly any[];
     };
-allocationVotingInterface.abi = XAllocationVotingGovernor__factory.abi;
+contractInterface.abi = XAllocationVotingGovernor__factory.abi;
+const method = 'getAppVotesQF';
 
 /**
  *  Get the number of qf votes for a xApp in an allocation round
@@ -48,7 +49,7 @@ export const getXAppVotesQfQueryKey = (
     appId?: string,
 ) =>
     getCallKey({
-        method: 'getAppVotesQF',
+        method,
         keyArgs: [roundId, ...(appId ? [appId] : [])],
     });
 
@@ -62,10 +63,10 @@ export const useXAppVotesQf = (roundId?: number | string, appId?: string) => {
     const { network } = useVeChainKitConfig();
 
     return useCall({
-        contractInterface: allocationVotingInterface,
+        contractInterface,
         contractAddress: getConfig(network.type)
             .xAllocationVotingContractAddress,
-        method: 'getAppVotesQF',
+        method,
         args: [roundId, appId],
         enabled: !!roundId && !!appId && !!network.type,
         // mapResponse: res => formatEther(res.decoded[0]),

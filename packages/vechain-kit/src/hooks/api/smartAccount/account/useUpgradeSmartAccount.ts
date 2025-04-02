@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 import { SimpleAccount__factory } from '@/contracts/typechain-types';
-import { useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
+import {
+    useSendTransaction,
+    UseSendTransactionReturnValue,
+    useThor,
+} from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
 import { useAccountImplementationAddress } from '@/hooks';
 import { useRefreshSmartAccountQueries } from './useRefreshSmartAccountQueries';
@@ -17,14 +21,14 @@ type UseUpgradeSmartAccountVersionReturnValue = {
     sendTransaction: () => Promise<void>;
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
-const simpleAccountInterface = SimpleAccount__factory.createInterface();
-
 export const useUpgradeSmartAccount = ({
     smartAccountAddress,
     targetVersion,
     onSuccess,
     onError,
 }: UseUpgradeSmartAccountVersionProps): UseUpgradeSmartAccountVersionReturnValue => {
+    const thor = useThor();
+
     const { refresh: refreshFactoryQueries } = useRefreshFactoryQueries();
     const { refresh: refreshSmartAccountQueries } =
         useRefreshSmartAccountQueries();
@@ -44,19 +48,17 @@ export const useUpgradeSmartAccount = ({
             );
         }
 
+        const contract = thor.contracts.load(
+            smartAccountAddress,
+            SimpleAccount__factory.abi,
+        );
+
         return [
-            {
-                to: smartAccountAddress,
-                value: '0x0',
-                data: simpleAccountInterface.encodeFunctionData(
-                    'upgradeToAndCall',
-                    [newImplementationAddress, '0x'],
-                ),
+            contract.clause.upgradeToAndCall(newImplementationAddress, '0x', {
                 comment: `Upgrade account to version ${targetVersion}`,
-                abi: simpleAccountInterface.getFunction('upgradeToAndCall'),
-            },
+            }),
         ];
-    }, [smartAccountAddress, newImplementationAddress, targetVersion]);
+    }, [smartAccountAddress, newImplementationAddress, targetVersion, thor]);
 
     const handleOnSuccess = async () => {
         // Refresh all relevant queries
