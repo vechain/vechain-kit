@@ -4,11 +4,8 @@ import { XAllocationVotingGovernor__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
-
-const allocationVotingInterface =
-    XAllocationVotingGovernor__factory.createInterface();
-
-const method = 'getAppVotes';
+import { ThorClient } from '@vechain/sdk-network';
+import { Interface } from 'ethers';
 
 /**
  *  Get the number of votes for a xApp in an allocation round
@@ -19,24 +16,22 @@ const method = 'getAppVotes';
  * @returns  the number of votes for the xApp in the round
  */
 export const getXAppVotes = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     roundId: string,
     xAppId: string,
 ): Promise<string> => {
     const ALLOCATION_VOTING_CONTRACT =
         getConfig(networkType).xAllocationVotingContractAddress;
-    const functionFragment = allocationVotingInterface
-        .getFunction(method)
-        .format('json');
-    const res = await thor
-        .account(ALLOCATION_VOTING_CONTRACT)
-        .method(JSON.parse(functionFragment))
-        .call(roundId, xAppId);
+    const contract = thor.contracts.load(
+        ALLOCATION_VOTING_CONTRACT,
+        XAllocationVotingGovernor__factory.abi,
+    );
+    const res = await contract.read.getAppVotes(roundId, xAppId);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject(new Error('Failed to get app votes'));
 
-    return formatEther(res.decoded[0]);
+    return formatEther(res[0] as bigint);
 };
 
 /**
@@ -46,7 +41,11 @@ export const getXAppVotes = async (
 export const getXAppVotesQueryKey = (
     roundId: number | string,
     appId?: string,
-) => getCallKey({ method, keyArgs: [roundId, ...(appId ? [appId] : [])] });
+) =>
+    getCallKey({
+        method: 'getAppVotes',
+        keyArgs: [roundId, ...(appId ? [appId] : [])],
+    });
 
 /**
  *  Hook to get the number of votes for a given app in a roundId
@@ -57,11 +56,17 @@ export const getXAppVotesQueryKey = (
 export const useXAppVotes = (roundId?: number | string, appId?: string) => {
     const { network } = useVeChainKitConfig();
 
+    const contractInterface =
+        XAllocationVotingGovernor__factory.createInterface() as Interface & {
+            abi: readonly any[];
+        };
+    contractInterface.abi = XAllocationVotingGovernor__factory.abi;
+
     return useCall({
-        contractInterface: allocationVotingInterface,
+        contractInterface: contractInterface,
         contractAddress: getConfig(network.type)
             .xAllocationVotingContractAddress,
-        method,
+        method: 'getAppVotes',
         args: [roundId, appId],
         enabled: !!roundId && !!appId && !!network.type,
         // mapResponse: res => formatEther(res.decoded[0]),

@@ -2,8 +2,8 @@ import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = VeBetterPassport__factory.createInterface();
 const method = 'appSecurity';
 
 export const APP_SECURITY_LEVELS = ['NONE', 'LOW', 'MEDIUM', 'HIGH'];
@@ -22,6 +22,13 @@ export const useAppSecurityLevel = (appId: string) => {
     const contractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
+
+    const contractInterface =
+        VeBetterPassport__factory.createInterface() as Interface & {
+            abi: readonly any[];
+        };
+    contractInterface.abi = VeBetterPassport__factory.abi;
+
     return useCall({
         contractInterface,
         contractAddress,

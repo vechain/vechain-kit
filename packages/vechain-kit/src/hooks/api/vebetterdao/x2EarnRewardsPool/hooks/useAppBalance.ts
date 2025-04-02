@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { X2EarnRewardsPool__factory } from '@/contracts';
 import { humanNumber } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { TokenBalance } from '../../useGetB3trBalance';
-import { formatEther } from 'viem';
-
+import { formatEther } from 'ethers';
+import { type ThorClient } from '@vechain/sdk-network';
 /**
  * Get the available balance in the x2Earn rewards pool contract for a specific xApp
  *
@@ -16,21 +16,17 @@ import { formatEther } from 'viem';
  * @returns the available balance in the x2Earn rewards pool contract for a specific xApp
  */
 export const getAppBalance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     xAppId: string,
     x2EarnRewardsPoolContract: string,
 ): Promise<TokenBalance> => {
-    const functionFragment = X2EarnRewardsPool__factory.createInterface()
-        .getFunction('availableFunds')
-        .format('json');
-    const res = await thor
-        .account(x2EarnRewardsPoolContract)
-        .method(JSON.parse(functionFragment))
-        .call(xAppId);
+    const res = await thor.contracts
+        .load(x2EarnRewardsPoolContract, X2EarnRewardsPool__factory.abi)
+        .read.availableFunds(xAppId);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) throw new Error('Reverted');
 
-    const original = res.decoded[0];
+    const original = res[0].toString();
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
@@ -56,7 +52,7 @@ export const getAppBalanceQueryKey = (xAppId: string) => [
  * @returns the balance available in the x2Earn rewards pool contract
  */
 export const useAppBalance = (xAppId: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     const x2EarnRewardsPoolContract = getConfig(
         network.type,

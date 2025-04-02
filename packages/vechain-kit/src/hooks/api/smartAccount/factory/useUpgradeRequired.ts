@@ -1,33 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
+import { useThor } from '@vechain/dapp-kit-react';
+import { SimpleAccountFactory__factory } from '@/contracts';
 
 export const getUpgradeRequired = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     accountAddress: string,
     ownerAddress: string,
     targetVersion: number,
     networkType: NETWORK_TYPE,
 ): Promise<boolean> => {
-    const functionFragment =
-        SimpleAccountFactoryInterface.getFunction('upgradeRequired').format(
-            'json',
-        );
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
+        )
+        .read.upgradeRequired(accountAddress, ownerAddress, targetVersion);
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call(accountAddress, ownerAddress, targetVersion);
+    if (!res) throw new Error('Reverted');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return res.decoded[0];
+    return res[0] === true;
 };
 
 export const getUpgradeRequiredQueryKey = (
@@ -58,7 +53,7 @@ export const useUpgradeRequired = (
     ownerAddress: string,
     targetVersion: number,
 ) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

@@ -3,8 +3,13 @@ import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const contractInterface = NodeManagement__factory.createInterface();
+const contractInterface =
+    NodeManagement__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = NodeManagement__factory.abi;
 const method = 'getNodeManager';
 
 /**

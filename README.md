@@ -71,30 +71,6 @@ Welcome to our project! Here's an overview of our branching strategy.
 -   **main**: The main branch represents the production-ready code. Only stable and tested features should be merged into
     this branch. Once ready for publishing, a new tag should be created from this branch.
 
-## E2E Testing
-
-We utilize Cucumber.js with Selenium for end-to-end (E2E) testing. To conduct these tests, you'll require the ChromeDriver. Here's how to install it:
-
-**On Mac:**
-
-```shell
-brew install chromedriver
-cd "$(dirname "$(which chromedriver)")"
-xattr -d com.apple.quarantine chromedriver
-```
-
-Once installed, you can run tests in the browser using:
-
-```bash
-yarn test:e2e
-```
-
-Alternatively, you can run headless tests directly in the console using:
-
-```bash
-yarn test:e2e:headless
-```
-
 ## Translating
 
 ```bash

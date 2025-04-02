@@ -1,29 +1,34 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { getXAppRoundEarningsQueryKey } from './useXAppRoundEarnings';
 import { getConfig } from '@/config';
-import { XAllocationPool__factory } from '@/contracts';
-import { abi } from 'thor-devkit';
 import { getOrCreateQueryClient } from '@/providers/EnsureQueryClient';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'viem';
+import { useThor } from '@vechain/dapp-kit-react';
+import { XAllocationPool__factory } from '@/contracts';
+import { type ContractClause } from '@vechain/sdk-network';
 
-const roundEarningsFragment = XAllocationPool__factory.createInterface()
-    .getFunction('roundEarnings')
-    .format('json');
-const roundEarningsAbi = new abi.Function(JSON.parse(roundEarningsFragment));
-
+/**
+ * Get the clauses for the total earnings of an xApp in multiple rounds
+ * @param roundIds ids of the rounds
+ * @param app id of the xApp
+ * @param networkType network type
+ * @returns the clauses for the total earnings of an xApp in multiple rounds
+ */
 export const getXAppTotalEarningsClauses = (
     roundIds: number[],
     app: string,
     networkType: NETWORK_TYPE,
-): Connex.VM.Clause[] => {
-    const clauses: Connex.VM.Clause[] = roundIds.map((roundId) => ({
-        to: getConfig(networkType).xAllocationPoolContractAddress,
-        value: 0,
-        data: roundEarningsAbi.encode(roundId, app),
-    }));
+): ContractClause[] => {
+    const thor = useThor();
+    const contract = thor.contracts.load(
+        getConfig(networkType).xAllocationPoolContractAddress,
+        XAllocationPool__factory.abi,
+    );
+    const clauses: ContractClause[] = roundIds.map((roundId) =>
+        contract.clause.roundEarnings(roundId, app),
+    );
 
     return clauses;
 };
@@ -46,7 +51,7 @@ export const getXAppTotalEarningsQueryKey = (
  * @returns the total earnings of the xApp until the last round
  */
 export const useXAppTotalEarnings = (roundIds: number[], appId: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     const queryClient = getOrCreateQueryClient();
     const lastRound = roundIds[roundIds.length - 1] ?? 0;
@@ -58,17 +63,15 @@ export const useXAppTotalEarnings = (roundIds: number[], appId: string) => {
                 appId,
                 network.type,
             );
-            const res = await thor.explain(clauses).execute();
+            const res = await thor.contracts.executeMultipleClausesCall(
+                clauses,
+            );
 
             const decoded = res.map((r, index) => {
-                if (r.reverted)
-                    throw new Error(
-                        `Clause ${index + 1} reverted with reason ${
-                            r.revertReason
-                        }`,
-                    );
-                const decoded = roundEarningsAbi.decode(r.data);
-                const parsedAmount = formatEther(decoded[0]);
+                if (!r.result) throw new Error(`Clause ${index + 1} reverted`);
+                const parsedAmount = formatEther(
+                    BigInt(r.result.array?.[0]?.toString() || '0'),
+                );
                 // Update the cache with the new amount
                 queryClient.setQueryData(
                     getXAppRoundEarningsQueryKey(

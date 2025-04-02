@@ -2,8 +2,13 @@ import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { Interface } from 'ethers';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
+const contractInterface =
+    VeBetterPassport__factory.createInterface() as Interface & {
+        abi: readonly any[];
+    };
+contractInterface.abi = VeBetterPassport__factory.abi;
 const method = 'signaledCounter';
 
 /**
@@ -27,7 +32,7 @@ export const useUserBotSignals = (address?: string) => {
     ).veBetterPassportContractAddress;
 
     return useCall({
-        contractInterface: vePassportInterface,
+        contractInterface: contractInterface,
         contractAddress: veBetterPassportContractAddress,
         method,
         args: [address],

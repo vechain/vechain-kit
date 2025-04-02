@@ -1,7 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
+import {
+    Poll,
+    ThorClient,
+    type TransactionReceipt,
+} from '@vechain/sdk-network';
 
 /**
  * Poll the chain for a transaction receipt until it is found (or timeout after 5 blocks)
@@ -11,31 +16,40 @@ import { useConnex } from '@vechain/dapp-kit-react';
  * @returns Transaction receipt
  */
 export const pollForReceipt = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     id?: string,
     blocksTimeout = 5,
-): Promise<Connex.Thor.Transaction.Receipt> => {
+): Promise<TransactionReceipt> => {
     if (!id) throw new Error('No transaction id provided');
 
-    const transaction = thor.transaction(id);
     let receipt;
 
     // Query the transaction until it has a receipt
     for (let i = 0; i < blocksTimeout; i++) {
-        receipt = await transaction.getReceipt();
+        receipt = await thor.transactions.getTransactionReceipt(id);
         if (receipt) {
             break;
         }
-        await thor.ticker().next();
+
+        // Wait until a new block is created
+        const currentBlock = await thor.blocks.getBestBlockCompressed();
+        await Poll.SyncPoll(
+            // Get the latest block as polling target function
+            async () => await thor.blocks.getBlockCompressed('best'),
+            // Optional: Set polling interval (default is 1000ms)
+            { requestIntervalInMilliseconds: 3000 },
+        ).waitUntil((newBlockData) => {
+            // Stop polling when the new block number is greater than the current block number
+            return (
+                (newBlockData?.number as number) >
+                (currentBlock?.number as number)
+            );
+        });
     }
 
     if (!receipt) {
         throw new Error('Transaction receipt not found');
     }
-
-    const transactionData = await transaction.get();
-
-    if (!transactionData) throw Error('Failed to get TX data');
 
     return receipt;
 };
@@ -47,9 +61,8 @@ export const pollForReceipt = async (
  * @returns The tx receipt
  */
 export const useTxReceipt = (txId?: string, blockTimeout?: number) => {
-    const { thor } = useConnex();
-    const [receipt, setReceipt] =
-        useState<Connex.Thor.Transaction.Receipt | null>();
+    const thor = useThor();
+    const [receipt, setReceipt] = useState<TransactionReceipt | null>();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 

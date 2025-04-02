@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';
 import { TransactionStatusErrorType } from '@/types';
 import { getConfig } from '@/config';
+import { type TransactionReceipt } from '@vechain/sdk-network';
 
 export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;
@@ -11,7 +12,7 @@ export type TransactionButtonAndStatusProps = {
     onConfirm: () => void;
     onRetry?: () => void;
     transactionPendingText: string;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     transactionError?: Error | TransactionStatusErrorType | null;
     isSubmitForm?: boolean;
     buttonText: string;

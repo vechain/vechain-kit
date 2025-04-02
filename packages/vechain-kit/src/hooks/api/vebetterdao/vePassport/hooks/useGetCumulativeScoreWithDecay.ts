@@ -2,8 +2,7 @@ import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
-
-const vePassportInterface = VeBetterPassport__factory.createInterface();
+import { Interface } from 'ethers';
 
 /**
  * Returns the query key for fetching the cumulative score with decay.
@@ -35,8 +34,15 @@ export const useGetCumulativeScoreWithDecay = (
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
+
+    const contractInterface =
+        VeBetterPassport__factory.createInterface() as Interface & {
+            abi: readonly any[];
+        };
+    contractInterface.abi = VeBetterPassport__factory.abi;
+
     return useCall({
-        contractInterface: vePassportInterface,
+        contractInterface,
         contractAddress: veBetterPassportContractAddress,
         method: 'getCumulativeScoreWithDecay',
         args: [user, round],

@@ -13,7 +13,6 @@ import {
 import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
 import { randomTransactionUser } from '../utils';
 import {
-    EnhancedClause,
     ExecuteBatchWithAuthorizationSignData,
     ExecuteWithAuthorizationSignData,
 } from '@/types';
@@ -29,12 +28,13 @@ import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
 import { ethers } from 'ethers';
+import { ContractClause } from '@vechain/sdk-network';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
     delegateAllTransactions: boolean;
     sendTransaction: (tx: {
-        txClauses: Connex.VM.Clause[];
+        txClauses: ContractClause[];
         title?: string;
         description?: string;
         buttonText?: string;
@@ -112,7 +112,7 @@ export const PrivyWalletProvider = ({
         chainId,
         verifyingContract,
     }: {
-        clauses: Connex.VM.Clause[];
+        clauses: ContractClause[];
         chainId: number;
         verifyingContract: string;
     }): ExecuteBatchWithAuthorizationSignData {
@@ -121,12 +121,15 @@ export const PrivyWalletProvider = ({
         const dataArray: string[] = [];
 
         clauses.forEach((clause) => {
-            toArray.push(clause.to ?? '');
-            valueArray.push(String(clause.value));
-            if (typeof clause.data === 'object' && 'abi' in clause.data) {
-                dataArray.push(encodeFunctionData(clause.data));
+            toArray.push(clause.clause.to ?? '');
+            valueArray.push(String(clause.clause.value));
+            if (
+                typeof clause.clause.data === 'object' &&
+                'abi' in clause.clause.data
+            ) {
+                dataArray.push(encodeFunctionData(clause.clause.data));
             } else {
-                dataArray.push(clause.data || '0x');
+                dataArray.push(clause.clause.data || '0x');
             }
         });
 
@@ -177,7 +180,7 @@ export const PrivyWalletProvider = ({
         chainId,
         verifyingContract,
     }: {
-        clause: Connex.VM.Clause;
+        clause: ContractClause;
         chainId: number;
         verifyingContract: string;
     }): ExecuteWithAuthorizationSignData {
@@ -207,12 +210,13 @@ export const PrivyWalletProvider = ({
             message: {
                 validAfter: 0,
                 validBefore: Math.floor(Date.now() / 1000) + 60, // 1 minute
-                to: clause.to,
-                value: String(clause.value),
+                to: clause.clause.to,
+                value: String(clause.clause.value),
                 data:
-                    (typeof clause.data === 'object' && 'abi' in clause.data
-                        ? encodeFunctionData(clause.data)
-                        : clause.data) || '0x',
+                    (typeof clause.clause.data === 'object' &&
+                    'abi' in clause.clause.data
+                        ? encodeFunctionData(clause.clause.data)
+                        : clause.clause.data) || '0x',
             },
         };
     }
@@ -239,7 +243,7 @@ export const PrivyWalletProvider = ({
         buttonText = 'Sign',
         suggestedMaxGas,
     }: {
-        txClauses: Connex.VM.Clause[];
+        txClauses: ContractClause[];
         title?: string;
         description?: string;
         buttonText?: string;
@@ -359,14 +363,15 @@ export const PrivyWalletProvider = ({
                     continue;
                 }
 
-                const funcData = txClause.data;
+                const funcData = txClause.clause.data;
                 const signature = (
                     await signTypedDataPrivy(data, {
                         uiOptions: {
                             title,
                             description:
                                 description ??
-                                ((txClauses[index] as EnhancedClause).comment ||
+                                ((txClauses[index] as ContractClause).clause
+                                    .comment ||
                                     (typeof funcData === 'object' &&
                                     funcData !== null &&
                                     'functionName' in funcData
@@ -452,7 +457,7 @@ export const PrivyWalletProvider = ({
                     address: randomTransactionUser.address,
                 },
             ],
-            { delegator: { delegatorUrl } },
+            { gasPayer: { gasPayerServiceUrl: delegatorUrl } },
         );
         const providerWithDelegationEnabled = new VeChainProvider(
             thor,

@@ -20,7 +20,7 @@ export const useCurrentBlock = () => {
             });
 
             if (!response.ok) throw new Error(response.statusText);
-            return (await response.json()) as Connex.Thor.Block;
+            return await response.json();
         },
         enabled: !!nodeUrl,
         staleTime: 1000 * 60,

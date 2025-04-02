@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory as XAllocationVoting } from '@/contracts';
 import { XApp } from '../getXApps';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
+import { type ThorClient } from '@vechain/sdk-network';
 
 /**
  * Returns all the available xApps (apps that can be voted on for allocation)
@@ -14,7 +15,7 @@ import { useVeChainKitConfig } from '@/providers';
  * @returns  all the available xApps (apps that can be voted on for allocation) capped to 256 see {@link XApp}
  */
 export const getRoundXApps = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     roundId?: string,
 ): Promise<XApp[]> => {
@@ -22,18 +23,13 @@ export const getRoundXApps = async (
 
     const xAllocationVotingContract =
         getConfig(networkType).xAllocationVotingContractAddress;
-    const functionFragment = XAllocationVoting.createInterface()
-        .getFunction('getAppsOfRound')
-        .format('json');
-    const res = await thor
-        .account(xAllocationVotingContract)
-        .method(JSON.parse(functionFragment))
-        .call(roundId);
+    const res = await thor.contracts
+        .load(xAllocationVotingContract, XAllocationVoting.abi)
+        .read.getAppsOfRound(roundId);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject(new Error('Apps not found'));
 
-    const apps = res.decoded[0];
-    return apps.map((app: any) => ({
+    return res.map((app: any) => ({
         id: app[0],
         teamWalletAddress: app[1],
         name: app[2],
@@ -57,7 +53,7 @@ export const getRoundXAppsQueryKey = (roundId?: string) => [
  *  @returns all the available xApps (apps that can be voted on for allocation) capped to 256
  */
 export const useRoundXApps = (roundId?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
 
     const { network } = useVeChainKitConfig();
 

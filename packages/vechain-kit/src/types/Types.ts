@@ -1,5 +1,5 @@
 import { LoginMethodOrderOption } from '@privy-io/react-auth';
-
+import { Clause } from '@vechain/sdk-core';
 export type ENSRecords = {
     display?: string;
     description?: string;
@@ -120,7 +120,7 @@ export type TransactionStatusErrorType = {
  * @param comment a comment to add to the clause
  * @param abi the abi of the contract to call
  */
-export type EnhancedClause = Connex.VM.Clause & {
+export type EnhancedClause = Clause & {
     comment?: string;
     abi?: object;
 };

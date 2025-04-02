@@ -2,13 +2,14 @@ import { ReactNode } from 'react';
 import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
+import { type TransactionReceipt } from '@vechain/sdk-network';
 
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;
     onTryAgain: () => void;
     status: TransactionStatus;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     txError?: Error | TransactionStatusErrorType;
     uiConfig?: {
         isClosable?: boolean;

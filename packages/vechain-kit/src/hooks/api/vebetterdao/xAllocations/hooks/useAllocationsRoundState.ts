@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-
-const xAllocationVotingInterface = XAllocationVoting__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
 
 export const RoundState = {
     0: 'Active',
@@ -21,7 +20,7 @@ export const RoundState = {
  * @returns the state of a given roundId
  */
 export const getAllocationsRoundState = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     roundId?: string,
 ): Promise<keyof typeof RoundState> => {
@@ -29,18 +28,14 @@ export const getAllocationsRoundState = async (
 
     const xAllocationVotingContract =
         getConfig(networkType).xAllocationVotingContractAddress;
-    const functionFragment = xAllocationVotingInterface
-        .getFunction('state')
-        .format('json');
 
-    const res = await thor
-        .account(xAllocationVotingContract)
-        .method(JSON.parse(functionFragment))
-        .call(roundId);
+    const res = await thor.contracts
+        .load(xAllocationVotingContract, XAllocationVoting__factory.abi)
+        .read.state(roundId);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject(new Error('Round not found'));
 
-    return Number(res.decoded[0]) as keyof typeof RoundState;
+    return Number(res) as keyof typeof RoundState;
 };
 
 export const getAllocationsRoundStateQueryKey = (roundId?: string) => [
@@ -55,7 +50,7 @@ export const getAllocationsRoundStateQueryKey = (roundId?: string) => [
  * @returns the state of a given roundId
  */
 export const useAllocationsRoundState = (roundId?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

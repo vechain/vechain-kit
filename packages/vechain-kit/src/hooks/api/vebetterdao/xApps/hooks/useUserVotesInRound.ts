@@ -1,13 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { abi } from 'thor-devkit';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getAllEvents } from '@/hooks/api/blockchain';
 import { XAllocationVoting__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-
-const XAllocationVotingInterface = XAllocationVoting__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
 
 export type AllocationVoteCastEvent = {
     voter: string;
@@ -17,22 +15,19 @@ export type AllocationVoteCastEvent = {
 };
 
 export const getUserVotesInRound = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     roundId?: string,
     address?: string,
 ): Promise<AllocationVoteCastEvent[]> => {
     const xAllocationVotingContract =
         getConfig(network).xAllocationVotingContractAddress;
-    const eventFragment =
-        XAllocationVotingInterface.getEvent('AllocationVoteCast').format(
-            'json',
-        );
-    const allocationVoteCast = new abi.Event(
-        JSON.parse(eventFragment) as abi.Event.Definition,
-    );
 
-    const topics = allocationVoteCast.encode({
+    const allocationVoteCast = thor.contracts
+        .load(xAllocationVotingContract, XAllocationVoting__factory.abi)
+        .getEventAbi('AllocationVoteCast');
+
+    const topics = allocationVoteCast.encodeFilterTopics({
         ...(address ? { voter: address } : {}),
         ...(roundId ? { roundId } : {}),
     });
@@ -40,7 +35,7 @@ export const getUserVotesInRound = async (
      * Filter criteria to get the events from the governor contract that we are interested in
      * This way we can get all of them in one call
      */
-    const filterCriteria: Connex.Thor.Filter.Criteria<'event'>[] = [
+    const filterCriteria = [
         {
             address: xAllocationVotingContract,
             topic0: topics[0] ?? undefined,
@@ -54,7 +49,6 @@ export const getUserVotesInRound = async (
     const events = await getAllEvents({
         thor,
         filterCriteria,
-        nodeUrl: getConfig(network).nodeUrl,
     });
 
     /**
@@ -62,26 +56,17 @@ export const getUserVotesInRound = async (
      */
     const decodedAllocatedVoteEvents: AllocationVoteCastEvent[] = [];
 
-    //   TODO: runtime validation with zod ?
-    events.forEach((event) => {
-        switch (event.topics[0]) {
-            case allocationVoteCast.signature: {
-                const decoded = allocationVoteCast.decode(
-                    event.data,
-                    event.topics,
-                );
-                decodedAllocatedVoteEvents.push({
-                    voter: decoded[0],
-                    roundId: decoded[1],
-                    appsIds: decoded[2],
-                    voteWeights: decoded[3],
-                });
-                break;
-            }
-
-            default: {
-                throw new Error('Unknown event');
-            }
+    events.forEach((event: any) => {
+        if (event.topics[0] === event.signature) {
+            const decoded = event.decodedData || event.decoded;
+            decodedAllocatedVoteEvents.push({
+                voter: decoded[0],
+                roundId: decoded[1],
+                appsIds: decoded[2],
+                voteWeights: decoded[3],
+            });
+        } else {
+            throw new Error('Unknown event');
         }
     });
 
@@ -104,7 +89,7 @@ export const getUserVotesInRoundQueryKey = (
  * @returns the user votes in a given round from the xAllocationVoting contract
  */
 export const useUserVotesInRound = (roundId?: string, address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -120,12 +105,7 @@ export const useUserVotesInRound = (roundId?: string, address?: string) => {
             if (votes.length === 0) throw new Error('No event found');
             return votes[0];
         },
-        enabled:
-            !!thor &&
-            !!thor.status.head.number &&
-            !!roundId &&
-            !!address &&
-            !!network.type,
+        enabled: !!thor && !!roundId && !!address && !!network.type,
     });
 };
 
@@ -141,18 +121,13 @@ export const getVotesInRoundQueryKey = (roundId?: string) => [
  * @returns  the allocation rounds events (i.e the proposals created)
  */
 export const useVotesInRound = (roundId?: string, enabled = true) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     return useQuery({
         queryKey: getVotesInRoundQueryKey(roundId),
         queryFn: async () =>
             await getUserVotesInRound(thor, network.type, roundId),
 
-        enabled:
-            !!thor &&
-            !!thor.status.head.number &&
-            !!roundId &&
-            enabled &&
-            !!network.type,
+        enabled: !!thor && !!roundId && enabled && !!network.type,
     });
 };

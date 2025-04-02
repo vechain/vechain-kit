@@ -1,19 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { useMemo } from 'react';
 import { getRoundRewardQueryKey } from './useVotingRoundReward';
 import { VoterRewards__factory } from '@/contracts';
-import { abi } from 'thor-devkit';
 import { getConfig } from '@/config';
 import { BigNumber } from 'bignumber.js';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
-
-const voterRewardsInterface = VoterRewards__factory.createInterface();
-const voteRewardFragment = voterRewardsInterface
-    .getFunction('getReward')
-    .format('json');
-const getReward = new abi.Function(JSON.parse(voteRewardFragment));
+import { useThor } from '@vechain/dapp-kit-react';
 
 /**
  * useVotingRewards is a custom hook that fetches the voting rewards for a given round and voter.
@@ -24,10 +17,13 @@ const getReward = new abi.Function(JSON.parse(voteRewardFragment));
  * @returns {object} An object containing the status and data of the queries. Refer to the react-query documentation for more details.
  */
 export const useVotingRewards = (currentRoundId?: string, voter?: string) => {
-    const { thor } = useConnex();
-    const queryClient = useQueryClient();
     const { network } = useVeChainKitConfig();
-    const contractAddress = getConfig(network.type).voterRewardsContractAddress;
+    const thor = useThor();
+    const contract = thor.contracts.load(
+        getConfig(network.type).voterRewardsContractAddress,
+        VoterRewards__factory.abi,
+    );
+    const queryClient = useQueryClient();
 
     // Get array from 1 to currentRoundId - 1 (if currentRoundId is still active)
     const rounds = useMemo(() => {
@@ -46,23 +42,18 @@ export const useVotingRewards = (currentRoundId?: string, voter?: string) => {
             !!rounds.length &&
             !!network.type,
         queryFn: async () => {
-            const clauses = rounds.map((roundId) => ({
-                to: contractAddress,
-                value: '0x0',
-                data: getReward.encode(roundId, voter),
-            }));
+            const clauses = rounds.map((roundId) =>
+                contract.clause.getReward(roundId, voter),
+            );
 
-            const res = await thor.explain(clauses).execute();
+            const res = await thor.contracts.executeMultipleClausesCall(
+                clauses,
+            );
 
             let total = new BigNumber(0);
             const roundsRewards = res.map((r, index) => {
-                const decoded = getReward.decode(r.data);
-                if (r.reverted)
-                    throw new Error(
-                        `Clause ${index + 1} reverted with reason ${
-                            r.revertReason
-                        }`,
-                    );
+                const decoded = r.result.array;
+                if (!decoded) throw new Error(`Clause ${index + 1} reverted`);
                 const roundId = rounds[index] as string;
                 const rewards = decoded[0] as string;
                 const formattedRewards = formatEther(BigInt(rewards));

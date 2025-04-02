@@ -1,13 +1,12 @@
 import { useQueries } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { ERC20__factory } from '../../../contracts/typechain-types';
-import { formatEther } from 'viem';
+import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
 import { useCustomTokens } from '../wallet/useCustomTokens';
 import { CustomTokenInfo } from './useGetCustomTokenInfo';
 import { TokenBalance } from '../vebetterdao';
-
-const ERC20Interface = ERC20__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;
 
@@ -19,27 +18,23 @@ export type TokenWithBalance = CustomTokenInfo & TokenBalance;
  * @returns Balance of the token in the form of {@link TokenBalance} (original, scaled down and formatted)
  */
 export const getCustomTokenBalance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     token: CustomTokenInfo,
     address?: string,
 ): Promise<TokenWithBalance> => {
-    const functionFragment =
-        ERC20Interface.getFunction('balanceOf').format('json');
+    const res = await thor.contracts
+        .load(token.address, ERC20__factory.abi)
+        .read.balanceOf(address);
 
-    const res = await thor
-        .account(token.address)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    if (!res) throw new Error('Reverted');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    const original = res.decoded[0];
+    const original = res[0];
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
     return {
         ...token,
-        original,
+        original: original.toString(),
         scaled,
         formatted,
     };
@@ -51,7 +46,7 @@ export const getCustomTokenBalanceQueryKey = (
 ) => ['VECHAIN_KIT_CUSTOM_TOKEN_BALANCE', address, tokenAddress];
 
 export const useGetCustomTokenBalances = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { customTokens } = useCustomTokens();
 
     return useQueries({

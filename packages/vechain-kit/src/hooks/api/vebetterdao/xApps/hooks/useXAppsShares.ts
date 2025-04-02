@@ -1,19 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { XAllocationPool__factory } from '@/contracts';
 import { getConfig } from '@/config';
-import { abi } from 'thor-devkit';
 import { getCallKey } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-
-const allocationPoolInterface = XAllocationPool__factory.createInterface();
-
-const method = 'getAppShares';
-const functionFragment = allocationPoolInterface
-    .getFunction(method)
-    .format('json');
-const functionAbi = new abi.Function(JSON.parse(functionFragment));
+import { type ContractClause } from '@vechain/sdk-network';
 
 /**
  *  Get the clauses to get the votes for the xApps in an allocation round
@@ -27,14 +19,17 @@ export const getAppsShareClauses = (
     networkType: NETWORK_TYPE,
     apps: string[],
     roundId?: string,
-): Connex.VM.Clause[] => {
+): ContractClause[] => {
     const allocationPoolContract =
         getConfig(networkType).xAllocationPoolContractAddress;
-    const clauses: Connex.VM.Clause[] = apps.map((app) => ({
-        to: allocationPoolContract,
-        value: 0,
-        data: functionAbi.encode(roundId, app),
-    }));
+    const thor = useThor();
+    const contract = thor.contracts.load(
+        allocationPoolContract,
+        XAllocationPool__factory.abi,
+    );
+    const clauses: ContractClause[] = apps.map((app) =>
+        contract.clause.getAppShares(app, roundId),
+    );
     return clauses;
 };
 
@@ -43,7 +38,7 @@ export const getAppsShareClauses = (
  * @param roundId  the roundId the get the shares for
  */
 export const getXAppsSharesQueryKey = (roundId?: number | string) =>
-    getCallKey({ method, keyArgs: [roundId, 'ALL'] });
+    getCallKey({ method: 'getAppShares', keyArgs: [roundId, 'ALL'] });
 
 /**
  * Fetch shares of multiple xApps in an allocation round
@@ -53,28 +48,25 @@ export const getXAppsSharesQueryKey = (roundId?: number | string) =>
  *
  */
 export const useXAppsShares = (apps: string[], roundId?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getXAppsSharesQueryKey(roundId),
         queryFn: async () => {
             const clauses = getAppsShareClauses(network.type, apps, roundId);
-            const res = await thor.explain(clauses).execute();
+            const res = await thor.contracts.executeMultipleClausesCall(
+                clauses,
+            );
 
             const votes = res.map((r, index) => {
-                if (r.reverted)
-                    throw new Error(
-                        `Clause ${index + 1} reverted with reason ${
-                            r.revertReason
-                        }`,
-                    );
-                const decoded = functionAbi.decode(r.data);
+                if (!r) throw new Error(`Clause ${index + 1} reverted`);
+                const decoded = r.result.array;
 
                 return {
                     app: apps[index] as string,
-                    share: Number(decoded[0]) / 100,
-                    unallocatedShare: Number(decoded[1]) / 100,
+                    share: Number(decoded?.[0]) / 100,
+                    unallocatedShare: Number(decoded?.[1]) / 100,
                 };
             });
             return votes;

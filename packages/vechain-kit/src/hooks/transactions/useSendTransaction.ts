@@ -1,18 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { Transaction } from 'thor-devkit';
+import { useThor } from '@vechain/dapp-kit-react';
+import { type TransactionReceipt, signerUtils } from '@vechain/sdk-network';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
-import {
-    EnhancedClause,
-    TransactionStatus,
-    TransactionStatusErrorType,
-} from '@/types';
+import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
+import { ContractClause } from '@vechain/sdk-network';
 
 const estimateTxGasWithNext = async (
-    clauses: Connex.VM.Clause[],
+    clauses: ContractClause[],
     caller: string,
     buffer = 1.25,
     nodeUrl: string,
@@ -22,8 +19,8 @@ const estimateTxGasWithNext = async (
         gasUsed: number;
         reverted: boolean;
         vmError: string;
-        events: Connex.VM.Event[];
-        transfers: Connex.VM.Transfer[];
+        events: any[];
+        transfers: any[];
     }[];
 
     // Send tx details to the node to get the gas estimate
@@ -31,9 +28,9 @@ const estimateTxGasWithNext = async (
         method: 'POST',
         body: JSON.stringify({
             clauses: clauses.map((clause) => ({
-                to: clause.to,
-                value: clause.value || '0x0',
-                data: clause.data,
+                to: clause.clause.to,
+                value: clause.clause.value || '0x0',
+                data: clause.clause.data,
             })),
             caller,
         }),
@@ -45,10 +42,12 @@ const estimateTxGasWithNext = async (
 
     const execGas = outputs.reduce((sum, out) => sum + out.gasUsed, 0);
 
-    // Calculate the intrinsic gas (transaction fee) cast is needed as data could be undefined in Connex.Vm.Clause
-    const intrinsicGas = Transaction.intrinsicGas(
-        clauses as Transaction.Clause[],
-    );
+    // Calculate the intrinsic gas (transaction fee)
+    const intrinsicGas = clauses.reduce((sum, clause) => {
+        const data = clause.clause.data || '0x';
+        const dataLength = (data.length - 2) / 2; // Remove '0x' prefix and convert to bytes
+        return sum + (dataLength === 0 ? 21000 : 21000 + dataLength * 68);
+    }, 0);
 
     // 15000 is the fee for invoking the VM
     // Gas estimate is the sum of intrinsic gas and execution gas
@@ -69,9 +68,9 @@ const estimateTxGasWithNext = async (
 type UseSendTransactionProps = {
     signerAccountAddress?: string | null;
     clauses?:
-        | EnhancedClause[]
-        | (() => EnhancedClause[])
-        | (() => Promise<EnhancedClause[]>);
+        | ContractClause[]
+        | (() => ContractClause[])
+        | (() => Promise<ContractClause[]>);
     onTxConfirmed?: () => void | Promise<void>;
     onTxFailedOrCancelled?: (error?: Error | string) => void | Promise<void>;
     suggestedMaxGas?: number;
@@ -93,17 +92,17 @@ type UseSendTransactionProps = {
  * @param error error that occurred while sending the transaction
  */
 export type UseSendTransactionReturnValue = {
-    sendTransaction: (clauses?: EnhancedClause[]) => Promise<void>;
+    sendTransaction: (clauses?: ContractClause[]) => Promise<void>;
     isTransactionPending: boolean;
     isWaitingForWalletConfirmation: boolean;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     status: TransactionStatus;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
 };
 
 /**
- * Generic hook to send a transaction using connex.
+ * Generic hook to send a transaction using the VeChain SDK.
  * This hook supports both Privy and VeChain wallets.
  *
  * It returns a function to send the transaction and a status to indicate the state
@@ -143,7 +142,7 @@ export const useSendTransaction = ({
     suggestedMaxGas,
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
-    const { vendor, thor } = useConnex();
+    const thor = useThor();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
 
@@ -160,9 +159,9 @@ export const useSendTransaction = ({
      */
     async function convertClauses(
         clauses:
-            | EnhancedClause[]
-            | (() => EnhancedClause[])
-            | (() => Promise<EnhancedClause[]>),
+            | ContractClause[]
+            | (() => ContractClause[])
+            | (() => Promise<ContractClause[]>),
     ) {
         let parsedClauses;
 
@@ -183,7 +182,7 @@ export const useSendTransaction = ({
      */
     const sendTransaction = useCallback(
         async (
-            clauses: EnhancedClause[],
+            clauses: ContractClause[],
             options?: {
                 title?: string;
                 description?: string;
@@ -199,46 +198,67 @@ export const useSendTransaction = ({
                 });
             }
 
-            let transaction = vendor.sign('tx', clauses);
-
-            if (feeDelegation?.delegateAllTransactions) {
-                transaction = transaction.delegate(feeDelegation.delegatorUrl);
-            }
-
-            if (signerAccountAddress) {
-                let gasLimitNext;
-                try {
-                    gasLimitNext = await estimateTxGasWithNext(
-                        [...clauses],
-                        signerAccountAddress,
-                        undefined,
-                        nodeUrl,
-                    );
-                } catch (e) {
-                    console.error('Gas estimation failed', e);
-                }
-
-                const parsedGasLimit = Math.max(
-                    gasLimitNext ?? 0,
-                    suggestedMaxGas ?? 0,
+            let gasLimitNext;
+            try {
+                gasLimitNext = await estimateTxGasWithNext(
+                    [...clauses],
+                    signerAccountAddress ?? '',
+                    undefined,
+                    nodeUrl,
                 );
-                // specify gasLimit if we have a suggested or an estimation
-                if (parsedGasLimit > 0)
-                    return transaction
-                        .signer(signerAccountAddress)
-                        .gas(parseInt(parsedGasLimit.toString()))
-                        .request();
-                else return transaction.signer(signerAccountAddress).request();
+            } catch (e) {
+                console.error('Gas estimation failed', e);
             }
-            return transaction.request();
+
+            const parsedGasLimit = Math.max(
+                gasLimitNext ?? 0,
+                suggestedMaxGas ?? 0,
+            );
+
+            // Build the transaction body with gas limit and delegation
+            const txBody = await thor.transactions.buildTransactionBody(
+                clauses.map((clause) => clause.clause),
+                parsedGasLimit,
+                {
+                    isDelegated:
+                        feeDelegation?.delegateAllTransactions ?? false,
+                },
+            );
+
+            // Convert the transaction body to a transaction request input
+            const txInput =
+                signerUtils.transactionBodyToTransactionRequestInput(
+                    txBody,
+                    signerAccountAddress ?? '',
+                );
+
+            // Send the transaction directly to the node API
+            const response = await fetch(`${nodeUrl}/transactions`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    raw: txInput,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send transaction');
+            }
+
+            const { id } = await response.json();
+            return { id };
         },
         [
-            vendor,
+            thor,
             signerAccountAddress,
             suggestedMaxGas,
             nodeUrl,
             privyWalletProvider,
             privyUIOptions,
+            feeDelegation,
+            connection.isConnectedWithPrivy,
         ],
     );
 
@@ -255,7 +275,7 @@ export const useSendTransaction = ({
     >(null);
 
     const sendTransactionAdapter = useCallback(
-        async (_clauses?: EnhancedClause[]): Promise<void> => {
+        async (_clauses?: ContractClause[]): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
             try {
                 setSendTransactionTx(null);
@@ -271,10 +291,9 @@ export const useSendTransaction = ({
                 // If we send the transaction with the smart account, we get the txid as a string
                 if (typeof response === 'string') {
                     setSendTransactionTx(response);
-                } else if (typeof response === 'object') {
-                    // If we send the transaction with the vendor, we get the txid from TxResponse
-                    const responseCopy = response as Connex.Vendor.TxResponse;
-                    setSendTransactionTx(responseCopy?.txid);
+                } else if (typeof response === 'object' && 'id' in response) {
+                    // If we send the transaction with the vendor, we get the txid from the response
+                    setSendTransactionTx(response.id);
                 }
             } catch (error) {
                 setSendTransactionError(
@@ -305,19 +324,30 @@ export const useSendTransaction = ({
      * @returns the revert reason
      */
     const explainTxRevertReason = useCallback(
-        async (txReceipt: Connex.Thor.Transaction.Receipt) => {
+        async (txReceipt: TransactionReceipt) => {
             if (!txReceipt.reverted) return;
-            const transactionData = await thor
-                .transaction(txReceipt.meta.txID)
-                .get();
+            if (!txReceipt.meta.txID) return;
+
+            const transactionData = await thor.transactions.getTransaction(
+                txReceipt.meta.txID,
+            );
             if (!transactionData) return;
 
-            return await thor
-                .explain(transactionData.clauses)
-                .caller(transactionData.origin)
-                .execute();
+            // Use the REST API to get the revert reason since the SDK doesn't support it yet
+            const response = await fetch(`${nodeUrl}/accounts/*`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    clauses: transactionData.clauses,
+                    caller: transactionData.origin,
+                }),
+            });
+
+            if (!response.ok) return;
+
+            const outputs = await response.json();
+            return outputs;
         },
-        [thor],
+        [thor, nodeUrl],
     );
 
     /**
@@ -379,10 +409,15 @@ export const useSendTransaction = ({
                     const revertReason = await explainTxRevertReason(txReceipt);
 
                     const message = revertReason
-                        ?.filter((clause) => {
-                            return clause.reverted && clause.revertReason;
-                        })
-                        .map((clause) => {
+                        ?.filter(
+                            (clause: {
+                                reverted: boolean;
+                                revertReason?: string;
+                            }) => {
+                                return clause.reverted && clause.revertReason;
+                            },
+                        )
+                        .map((clause: { revertReason?: string }) => {
                             return clause.revertReason;
                         })
                         .join(', ');

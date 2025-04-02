@@ -17,10 +17,11 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
+import { type TransactionReceipt } from '@vechain/sdk-network';
 
 type TransactionToastContentProps = {
     status: TransactionStatus;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     onTryAgain: () => void;
     txError?: Error | TransactionStatusErrorType;
     description?: string;

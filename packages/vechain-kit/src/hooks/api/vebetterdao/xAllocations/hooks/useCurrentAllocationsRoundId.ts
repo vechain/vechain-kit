@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-
-const xAllocationVotingInterface = XAllocationVoting__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
 
 /**
  *
@@ -15,20 +14,19 @@ const xAllocationVotingInterface = XAllocationVoting__factory.createInterface();
  * @returns the current roundId of allocations voting
  */
 export const getCurrentAllocationsRoundId = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
 ): Promise<string> => {
-    const currentRoundAbi =
-        xAllocationVotingInterface.getFunction('currentRoundId');
-    if (!currentRoundAbi) throw new Error('currentRoundId function not found');
-    const res = await thor
-        .account(getConfig(networkType).xAllocationVotingContractAddress)
-        .method(currentRoundAbi)
-        .call();
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).xAllocationVotingContractAddress,
+            XAllocationVoting__factory.abi,
+        )
+        .read.currentRoundId();
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject(new Error('Round not found'));
 
-    return res.decoded[0];
+    return res[0].toString();
 };
 
 export const getCurrentAllocationsRoundIdQueryKey = () => [
@@ -41,7 +39,7 @@ export const getCurrentAllocationsRoundIdQueryKey = () => [
  * @returns  the current roundId of allocations voting
  */
 export const useCurrentAllocationsRoundId = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

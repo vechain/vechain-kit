@@ -1,6 +1,11 @@
-export { usePrivy, useMfaEnrollment, useSetWalletRecovery } from '@privy-io/react-auth';
 export {
-    useConnex,
+    usePrivy,
+    useMfaEnrollment,
+    useSetWalletRecovery,
+} from '@privy-io/react-auth';
+export {
+    // useConnex,
+    useThor,
     useWallet as useDAppKitWallet,
     useWalletModal as useDAppKitWalletModal,
 } from '@vechain/dapp-kit-react';
