@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { Interface } from 'ethers';
 import { useCallback, useMemo } from 'react';
 
@@ -10,24 +10,22 @@ type MethodName<T> = T extends (nameOrSignature: infer U) => any ? U : never;
  * Parameters for the useCall hook.
  */
 export type UseCallParams<T extends Interface> = {
-    contractInterface: T; // The contract interface
+    contractInterface: T & { abi: readonly any[] }; // The contract interface with abi
     contractAddress: string; // The contract address
-    method: MethodName<T['getFunction']>; // The mehod name
+    method: MethodName<T['getFunction']>; // The method name
     args?: unknown[]; // Optional arguments for the method
     keyArgs?: unknown[]; // Optional key arguments for the query key
     enabled?: boolean; // Whether the query should be enabled
-    mapResponse?: (
-        _res: Connex.VM.Output & Connex.Thor.Account.WithDecoded,
-    ) => any; // Optional functon to map the response
+    mapResponse?: (res: any) => any; // Optional function to map the response
 };
 
 /**
  * Custom hook for making contract calls.
- * @param contractInterface - The cotract interface.
+ * @param contractInterface - The contract interface.
  * @param contractAddress - The contract address.
  * @param method - The method name.
- * @param rgs - Optional arguments for the method.
- *@param keyArgs - Optional key arguments for the query key.
+ * @param args - Optional arguments for the method.
+ * @param keyArgs - Optional key arguments for the query key.
  * @param enabled - Whether the query should be enabled.
  * @param mapResponse - Optional function to map the response.
  * @returns The query result.
@@ -41,7 +39,7 @@ export const useCall = <T extends Interface>({
     enabled = true,
     mapResponse,
 }: UseCallParams<T>) => {
-    const { thor } = useConnex();
+    const thor = useThor();
 
     const queryFn = useCallback(async () => {
         try {
@@ -51,19 +49,19 @@ export const useCall = <T extends Interface>({
             if (!functionFragment)
                 throw new Error(`Method ${method} not found`);
 
-            const res = await thor
-                .account(contractAddress)
-                .method(JSON.parse(functionFragment))
-                .call(...args);
+            const contract = thor.contracts.load(
+                contractAddress,
+                contractInterface.abi,
+            );
+            const res = await contract.read[
+                method as keyof typeof contract.read
+            ](...args);
 
-            if (res.vmError)
-                return Promise.reject(
-                    new Error(`Method ${method} reverted: ${res.vmError}`),
-                );
+            if (!res) throw new Error(`Method ${method} reverted`);
 
             if (mapResponse) return mapResponse(res);
 
-            return res.decoded[0];
+            return res[0];
         } catch (error) {
             console.error(
                 `Error calling ${method}: ${

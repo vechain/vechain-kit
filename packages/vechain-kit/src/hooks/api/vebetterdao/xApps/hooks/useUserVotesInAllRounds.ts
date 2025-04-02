@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserVotesInRound, getUserVotesInRoundQueryKey } from '.';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 
 /**
@@ -10,7 +10,7 @@ import { useVeChainKitConfig } from '@/providers';
  * @returns An object containing the status and data of the queries for each round.
  */
 export const useUserVotesInAllRounds = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     const queryClient = useQueryClient();
 
@@ -39,7 +39,6 @@ export const useUserVotesInAllRounds = (address?: string) => {
             });
             return votesEvents;
         },
-        enabled:
-            !!thor && !!thor.status.head.number && !!address && !!network.type,
+        enabled: !!thor && !!address && !!network.type,
     });
 };

@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { IERC20__factory } from '../../../contracts/typechain-types';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
+import { useThor } from '@vechain/dapp-kit-react';
+import { type ThorClient } from '@vechain/sdk-network';
+import { IERC20__factory } from '../../../contracts/typechain-types';
 
 export const getErc20Balance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     tokenAddress: string,
     address?: string,
 ): Promise<{ original: string; scaled: string; formatted: string }> => {
@@ -13,23 +14,18 @@ export const getErc20Balance = async (
         throw new Error('Token address and user address are required');
     }
 
-    const functionFragment = IERC20__factory.createInterface()
-        .getFunction('balanceOf')
-        .format('json');
+    const res = await thor.contracts
+        .load(tokenAddress, IERC20__factory.abi)
+        .read.balanceOf(address);
 
-    const res = await thor
-        .account(tokenAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    if (!res) throw new Error('Reverted');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    const original = res.decoded[0];
+    const original = res[0];
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
     return {
-        original,
+        original: original.toString(),
         scaled,
         formatted,
     };
@@ -41,7 +37,7 @@ export const getErc20BalanceQueryKey = (
 ) => ['VECHAIN_KIT_ERC20_BALANCE', tokenAddress, address];
 
 export const useGetErc20Balance = (tokenAddress: string, address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
 
     return useQuery({
         queryKey: getErc20BalanceQueryKey(tokenAddress, address),

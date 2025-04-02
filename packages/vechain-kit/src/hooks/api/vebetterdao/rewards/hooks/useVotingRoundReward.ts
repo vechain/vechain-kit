@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { VoterRewards__factory } from '@/contracts';
 import { RoundReward } from '../utils';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { formatEther } from 'viem';
+import { formatEther } from 'ethers';
+import { type ThorClient } from '@vechain/sdk-network';
 
 /**
  * Fetches the reward for a given round and voter from the VoterRewards contract.
@@ -17,24 +18,19 @@ import { formatEther } from 'viem';
  * @returns {Promise<string>} A promise that resolves to the reward for the given round and voter.
  */
 export const getRoundReward = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     address: string,
     roundId: string,
 ): Promise<RoundReward> => {
-    const functionFragment = VoterRewards__factory.createInterface()
-        .getFunction('getReward')
-        .format('json');
-
     const contractAddress = getConfig(networkType).voterRewardsContractAddress;
-    const res = await thor
-        .account(contractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(roundId, address);
+    const res = await thor.contracts
+        .load(contractAddress, VoterRewards__factory.abi)
+        .read.getReward(roundId, address);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) throw new Error('Reverted');
 
-    const reward = formatEther(res.decoded[0]);
+    const reward = formatEther(res[0].toString());
 
     return {
         roundId,
@@ -65,7 +61,7 @@ export const getRoundRewardQueryKey = (roundId?: string, address?: string) => [
  * @returns {object} An object containing the status and data of the query. Refer to the react-query documentation for more details.
  */
 export const useRoundReward = (address: string, roundId: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

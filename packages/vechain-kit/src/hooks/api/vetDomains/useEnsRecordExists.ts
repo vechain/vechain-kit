@@ -3,13 +3,12 @@ import { NETWORK_TYPE } from '@/config/network';
 import { MockENS__factory } from '@/contracts/typechain-types/factories/contracts/mocks/MockENS__factory';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { concat, keccak256, toBytes } from 'viem';
-
-const MockENSInterface = MockENS__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
 
 const getEnsRecordExists = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     name: string,
 ): Promise<boolean> => {
@@ -24,17 +23,16 @@ const getEnsRecordExists = async (
     // bytes32 subnode = keccak256(abi.encodePacked(node, label));
     const subnode = keccak256(concat([hashedNode, labelHash]));
 
-    const functionFragment =
-        MockENSInterface.getFunction('recordExists').format('json');
+    const res = await thor.contracts
+        .load(
+            getConfig(network).vetDomainsContractAddress,
+            MockENS__factory.abi,
+        )
+        .read.recordExists(subnode);
 
-    const res = await thor
-        .account(getConfig(network).vetDomainsContractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(subnode);
+    if (!res) throw new Error('Reverted');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return res.decoded[0];
+    return res[0].toString() === '1';
 };
 
 export const getEnsRecordExistsQueryKey = (name: string) => [
@@ -45,7 +43,7 @@ export const getEnsRecordExistsQueryKey = (name: string) => [
 export const useEnsRecordExists = (
     name: string,
 ): UseQueryResult<boolean, Error> => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

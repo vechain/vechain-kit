@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { abi } from 'thor-devkit';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getAllEvents } from '@/hooks';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { type ThorClient } from '@vechain/sdk-network';
 
 export type RoundCreated = {
     roundId: string;
@@ -22,17 +22,15 @@ export type RoundCreated = {
  * @returns the allocation rounds events
  */
 export const getAllocationsRoundsEvents = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
 ) => {
     const xAllocationVotingContract =
         getConfig(networkType).xAllocationVotingContractAddress;
-    const allocationCreatedAbi =
-        XAllocationVoting__factory.createInterface().getEvent('RoundCreated');
-    if (!allocationCreatedAbi) throw new Error('RoundCreated event not found');
-    const allocationCreatedEvent = new abi.Event(
-        allocationCreatedAbi as unknown as abi.Event.Definition,
-    );
+
+    const allocationCreatedEvent = thor.contracts
+        .load(xAllocationVotingContract, XAllocationVoting__factory.abi)
+        .getEventAbi('RoundCreated');
 
     /**
      * Filter criteria to get the events from the governor contract that we are interested in
@@ -48,7 +46,6 @@ export const getAllocationsRoundsEvents = async (
     const events = await getAllEvents({
         thor,
         filterCriteria,
-        nodeUrl: getConfig(networkType).nodeUrl,
     });
 
     /**
@@ -56,27 +53,18 @@ export const getAllocationsRoundsEvents = async (
      */
     const decodedCreatedAllocationEvents: RoundCreated[] = [];
 
-    //   TODO: runtime validation with zod ?
     events.forEach((event: any) => {
-        switch (event.topics[0]) {
-            case allocationCreatedEvent.signature: {
-                const decoded = allocationCreatedEvent.decode(
-                    event.data,
-                    event.topics,
-                );
-                decodedCreatedAllocationEvents.push({
-                    roundId: decoded[0],
-                    proposer: decoded[1],
-                    voteStart: decoded[2],
-                    voteEnd: decoded[3],
-                    appsIds: decoded[4],
-                });
-                break;
-            }
-
-            default: {
-                throw new Error('Unknown event');
-            }
+        if (event.topics[0] === event.signature) {
+            const decoded = event.decodedData || event.decoded;
+            decodedCreatedAllocationEvents.push({
+                roundId: decoded[0],
+                proposer: decoded[1],
+                voteStart: decoded[2],
+                voteEnd: decoded[3],
+                appsIds: decoded[4],
+            });
+        } else {
+            throw new Error('Unknown event');
         }
     });
 
@@ -95,7 +83,7 @@ export const getAllocationsRoundsEventsQueryKey = () => [
  * @returns the allocation rounds events
  */
 export const useAllocationsRoundsEvents = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

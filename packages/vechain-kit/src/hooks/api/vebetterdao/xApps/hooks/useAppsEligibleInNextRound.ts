@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { type ThorClient } from '@vechain/sdk-network';
 
 /**
  * Returns all apps that will be eligible in the next allocation round
@@ -12,22 +13,18 @@ import { NETWORK_TYPE } from '@/config/network';
  * @returns the ids of eligible apps
  */
 export const getAppsEligibleInNextRound = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
 ): Promise<string[]> => {
     const X2EARNAPPS_CONTRACT =
         getConfig(networkType).x2EarnAppsContractAddress;
-    const functionFragment = X2EarnApps.createInterface()
-        .getFunction('allEligibleApps')
-        .format('json');
-    const res = await thor
-        .account(X2EARNAPPS_CONTRACT)
-        .method(JSON.parse(functionFragment))
-        .call();
+    const res = await thor.contracts
+        .load(X2EARNAPPS_CONTRACT, X2EarnApps.abi)
+        .read.allEligibleApps();
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject(new Error('Apps not found'));
 
-    return res.decoded[0];
+    return res.map((app: any) => app[0].toString());
 };
 
 export const getAppsEligibleInNextRoundQueryKey = () => [
@@ -40,7 +37,7 @@ export const getAppsEligibleInNextRoundQueryKey = () => [
  * @returns the ids of eligible apps
  */
 export const useAppsEligibleInNextRound = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

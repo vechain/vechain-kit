@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-
-const contractInterface = NodeManagement__factory.createInterface();
-const method = 'isNodeHolder';
+import { type ThorClient } from '@vechain/sdk-network';
 
 /**
  * Get the query key for checking if an address is a node holder.
@@ -27,7 +25,7 @@ export const getIsNodeHolderQueryKey = (address: string) => [
  * @returns Boolean indicating if the address is a node holder
  */
 export const getIsNodeHolder = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     address: string,
 ): Promise<boolean> => {
@@ -35,15 +33,15 @@ export const getIsNodeHolder = async (
 
     const contractAddress =
         getConfig(networkType).nodeManagementContractAddress;
-    const functionAbi = contractInterface.getFunction(method);
-    const res = await thor
-        .account(contractAddress)
-        .method(functionAbi)
-        .call(address);
+    const contract = thor.contracts.load(
+        contractAddress,
+        NodeManagement__factory.abi,
+    );
+    const res = await contract.read.isNodeHolder(address);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) return Promise.reject(new Error('Node not found'));
 
-    return res.decoded[0];
+    return res[0].toString() === '1';
 };
 
 /**
@@ -54,7 +52,7 @@ export const getIsNodeHolder = async (
  */
 export const useIsNodeHolder = (address: string) => {
     const { network } = useVeChainKitConfig();
-    const { thor } = useConnex();
+    const thor = useThor();
 
     return useQuery({
         queryKey: getIsNodeHolderQueryKey(address),

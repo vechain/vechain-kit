@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
+import { useThor } from '@vechain/dapp-kit-react';
 
 type GetAccountVersionReturnValue = {
     version: number;
@@ -14,26 +12,23 @@ type GetAccountVersionReturnValue = {
 };
 
 export const getAccountVersion = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     accountAddress: string,
     ownerAddress: string,
     networkType: NETWORK_TYPE,
 ): Promise<GetAccountVersionReturnValue> => {
-    const functionFragment =
-        SimpleAccountFactoryInterface.getFunction('getAccountVersion').format(
-            'json',
-        );
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
+        )
+        .read.getAccountVersion(accountAddress, ownerAddress);
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call(accountAddress, ownerAddress);
-
-    if (res.reverted) throw new Error('Reverted');
+    if (!res) throw new Error('Reverted');
 
     return {
-        version: res.decoded[0],
-        isDeployed: res.decoded[1],
+        version: parseInt(res[0].toString()),
+        isDeployed: res[1] === true,
     };
 };
 
@@ -61,7 +56,7 @@ export const useGetAccountVersion = (
     accountAddress: string,
     ownerAddress: string,
 ) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

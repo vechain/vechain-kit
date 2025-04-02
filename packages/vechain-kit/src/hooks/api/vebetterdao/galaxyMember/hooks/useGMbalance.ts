@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { GalaxyMember__factory } from '@/contracts';
 import { NETWORK_TYPE } from '@/config/network';
+import { type ThorClient } from '@vechain/sdk-network';
 
 /**
  * Get the number of GM NFTs for an address
@@ -13,7 +14,7 @@ import { NETWORK_TYPE } from '@/config/network';
  * @returns the number of GM NFTs for the address
  */
 export const getBalanceOf = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     address: null | string,
 ) => {
@@ -21,16 +22,12 @@ export const getBalanceOf = async (
 
     const contractAddress = getConfig(network).galaxyMemberContractAddress;
 
-    const functionFragment = GalaxyMember__factory.createInterface()
-        .getFunction('balanceOf')
-        .format('json');
-    const res = await thor
-        .account(contractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    const res = await thor.contracts
+        .load(contractAddress, GalaxyMember__factory.abi)
+        .read.balanceOf(address);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-    return Number(res.decoded[0]);
+    if (!res) throw new Error('Reverted');
+    return Number(res[0]);
 };
 
 export const getGMbalanceQueryKey = (address: null | string) => [
@@ -46,7 +43,7 @@ export const getGMbalanceQueryKey = (address: null | string) => [
  * @returns the number of GM NFTs for the address
  */
 export const useGMbalance = (address: null | string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

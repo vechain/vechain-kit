@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 // import { networkConfig } from "@repo/config";
 import { IVechainEnergyOracleV1__factory } from '../../../contracts/typechain-types';
 import { BigNumber } from 'bignumber.js';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-const OracleInterface = IVechainEnergyOracleV1__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
 
 // Create an enum or object for supported price feed IDs
 export const PRICE_FEED_IDS = {
@@ -19,21 +19,20 @@ export type SupportedToken = keyof typeof PRICE_FEED_IDS;
 
 // Rename and make the function generic
 export const getTokenUsdPrice = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     token: SupportedToken,
     network: NETWORK_TYPE,
 ): Promise<number> => {
-    const functionFragment =
-        OracleInterface.getFunction('getLatestValue').format('json');
+    const res = await thor.contracts
+        .load(
+            getConfig(network).oracleContractAddress,
+            IVechainEnergyOracleV1__factory.abi,
+        )
+        .read.getLatestValue(PRICE_FEED_IDS[token]);
 
-    const res = await thor
-        .account(getConfig(network).oracleContractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(PRICE_FEED_IDS[token]);
+    if (!res) throw new Error('Reverted');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return new BigNumber(res.decoded[0]).div(1e12).toNumber() as number;
+    return new BigNumber(res[0].toString()).div(1e12).toNumber() as number;
 };
 
 export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
@@ -41,7 +40,7 @@ export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
 ];
 
 export const useGetTokenUsdPrice = (token: SupportedToken) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

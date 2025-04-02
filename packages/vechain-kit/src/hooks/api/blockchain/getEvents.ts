@@ -1,100 +1,76 @@
+import { ThorClient, FilterRawEventLogsOptions } from '@vechain/sdk-network';
+
 const MAX_EVENTS_PER_QUERY = 1000;
+
 /**
  * Params for getEvents function
- * @param nodeUrl the node url
- * @param thor the thor client
- * @param auctionId  the auction id to get the events
- * @param order  the order of the events (asc or desc)
- * @param offset  the offset of the events
- * @param limit  the limit of the events (max 256)
- * @param from  the block number to start from
- * @param filterCriteria  the filter criteria for the events
- * @returns  the encoded events
  */
 export type GetEventsProps = {
-    nodeUrl: string;
-    thor: Connex.Thor;
+    thor: ThorClient;
     order?: 'asc' | 'desc';
     offset?: number;
     limit?: number;
     from?: number;
     to?: number;
-    filterCriteria: Connex.Thor.Filter.Criteria<'event'>[];
+    filterCriteria: any[]; // Replace with your specific criteria type
 };
+
 /**
- * Get events from blockchain (auction created, auction successful, auction cancelled)
- * @param order
- * @param offset
- * @param limit
- * @param from block parse start from
+ * Get events from blockchain
  */
 export const getEvents = async ({
-    nodeUrl,
     thor,
     order = 'asc',
     offset = 0,
     limit = MAX_EVENTS_PER_QUERY,
     from = 0,
-    to = thor.status.head.number,
+    to,
     filterCriteria,
-}: GetEventsProps): Promise<Connex.Thor.Filter.Row<'event'>[]> => {
-    // Send tx details to the node to get the gas estimate
-    const response = await fetch(`${nodeUrl}/logs/event`, {
-        method: 'POST',
-        body: JSON.stringify({
-            range: {
-                from,
-                to,
-                unit: 'block',
-            },
-            options: {
-                offset,
-                limit,
-            },
-            criteriaSet: filterCriteria,
-            order,
-        }),
-    });
+}: GetEventsProps) => {
+    // Create filter options with the correct type
+    const filterOptions: FilterRawEventLogsOptions = {
+        range: {
+            unit: 'block',
+            from,
+            to: to || undefined,
+        },
+        options: {
+            offset,
+            limit,
+        },
+        criteriaSet: filterCriteria,
+        order,
+    };
 
-    if (!response.ok) throw new Error('Failed to fetch events');
-
-    const outputs = (await response.json()) as Connex.Thor.Filter.Row<
-        'event',
-        object
-    >[];
-    return outputs;
+    // Use the SDK's logs module to filter event logs
+    return await thor.logs.filterRawEventLogs(filterOptions);
 };
 
 /**
- *  call getEvents iteratively to get all the events
- * @param nodeUrl the node url
- * @param thor the thor client
- * @param order the order of the events (asc or desc)
- * @param from the block number to start from
- * @param filterCriteria the filter criteria for the events
- * @returns all the events from the blockchain
+ * Get all events iteratively
  */
 export const getAllEvents = async ({
-    nodeUrl,
     thor,
     order = 'asc',
     from = 0,
     to,
     filterCriteria,
 }: Omit<GetEventsProps, 'offset' | 'limit'>) => {
-    const allEvents: Connex.Thor.Filter.Row<'event', object>[] = [];
+    const allEvents = [];
     let offset = 0;
 
-    // thor.block("best").get() is not working, have to use the node directly
-    //   const bestBlock = await fetch(`${appConfig.nodeUrl}/blocks/best`)
-    //   const bestBlockJson = (await bestBlock.json()) as Connex.Thor.Block
+    // Get the best block if to is not provided
+    if (!to) {
+        const bestBlock = await thor.blocks.getBestBlockCompressed();
+        if (!bestBlock) {
+            throw new Error('Failed to get best block');
+        }
+        to = bestBlock.number;
+    }
 
-    to = to ?? Number.MAX_SAFE_INTEGER;
-
-    //return from the function only when we get all the events
+    // Fetch all events iteratively
     while (true) {
         const events = await getEvents({
-            nodeUrl,
             thor,
             filterCriteria,
             from,
@@ -103,10 +79,13 @@ export const getAllEvents = async ({
             order,
             offset,
         });
+
         allEvents.push(...events);
+
         if (events.length < MAX_EVENTS_PER_QUERY) {
             return allEvents;
         }
+
         offset += MAX_EVENTS_PER_QUERY;
     }
 };

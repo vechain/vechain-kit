@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-// import { networkConfig } from '@repo/config';
-import { IB3TR__factory } from '../../../contracts/typechain-types';
+import { B3TR__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { formatEther } from 'viem';
+import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
-
-const B3TRInterface = IB3TR__factory.createInterface();
+import { type ThorClient } from '@vechain/sdk-network';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export type TokenBalance = {
     original: string;
@@ -24,21 +22,17 @@ export type TokenBalance = {
  * @returns Balance of the token in the form of {@link TokenBalance} (original, scaled down and formatted)
  */
 export const getB3trBalance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     address?: string,
 ): Promise<TokenBalance> => {
-    const functionFragment =
-        B3TRInterface.getFunction('balanceOf').format('json');
+    const res = await thor.contracts
+        .load(getConfig(network).b3trContractAddress, B3TR__factory.abi)
+        .read.balanceOf(address);
 
-    const res = await thor
-        .account(getConfig(network).b3trContractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    if (!res) throw new Error('Reverted');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    const original = res.decoded[0];
+    const original = res[0].toString();
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
@@ -55,7 +49,7 @@ export const getB3trBalanceQueryKey = (address?: string) => [
 ];
 
 export const useGetB3trBalance = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

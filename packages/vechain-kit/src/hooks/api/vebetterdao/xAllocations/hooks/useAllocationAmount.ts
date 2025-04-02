@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { Emissions__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { formatEther } from 'viem';
+import { formatEther } from 'ethers';
+import { type ThorClient } from '@vechain/sdk-network';
 
 type AllocationAmount = {
     treasury: string;
@@ -21,49 +22,32 @@ type AllocationAmount = {
  * @returns the allocation amount for a given roundId see {@link AllocationAmount}
  */
 export const getAllocationAmount = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     roundId?: string,
 ): Promise<AllocationAmount> => {
     const emissionsContract = getConfig(networkType).emissionsContractAddress;
 
-    const emissionsInterface = Emissions__factory.createInterface();
-    const functionFragmentTreasuryAmount = emissionsInterface
-        .getFunction('getTreasuryAmount')
-        .format('json');
-    const functionFragmentVoteX2EarnAmount = emissionsInterface
-        .getFunction('getVote2EarnAmount')
-        .format('json');
-    const functionFragmentXAllocationsAmount = emissionsInterface
-        .getFunction('getXAllocationAmount')
-        .format('json');
-
     const [resTreasury, resVoteX2Earn, voteXAllocations] = await Promise.all([
-        thor
-            .account(emissionsContract)
-            .method(JSON.parse(functionFragmentTreasuryAmount))
-            .call(roundId),
-        thor
-            .account(emissionsContract)
-            .method(JSON.parse(functionFragmentVoteX2EarnAmount))
-            .call(roundId),
-        thor
-            .account(emissionsContract)
-            .method(JSON.parse(functionFragmentXAllocationsAmount))
-            .call(roundId),
+        thor.contracts
+            .load(emissionsContract, Emissions__factory.abi)
+            .read.getTreasuryAmount(roundId),
+        thor.contracts
+            .load(emissionsContract, Emissions__factory.abi)
+            .read.getVote2EarnAmount(roundId),
+        thor.contracts
+            .load(emissionsContract, Emissions__factory.abi)
+            .read.getXAllocationAmount(roundId),
     ]);
 
-    if (resTreasury.vmError)
-        return Promise.reject(new Error(resTreasury.vmError));
-    if (resVoteX2Earn.vmError)
-        return Promise.reject(new Error(resVoteX2Earn.vmError));
-    if (voteXAllocations.vmError)
-        return Promise.reject(new Error(voteXAllocations.vmError));
+    if (!resTreasury) return Promise.reject(new Error('Reverted'));
+    if (!resVoteX2Earn) return Promise.reject(new Error('Reverted'));
+    if (!voteXAllocations) return Promise.reject(new Error('Reverted'));
 
     return {
-        treasury: formatEther(resTreasury.decoded[0]),
-        voteX2Earn: formatEther(resVoteX2Earn.decoded[0]),
-        voteXAllocations: formatEther(voteXAllocations.decoded[0]),
+        treasury: formatEther(resTreasury[0].toString()),
+        voteX2Earn: formatEther(resVoteX2Earn[0].toString()),
+        voteXAllocations: formatEther(voteXAllocations[0].toString()),
     };
 };
 
@@ -80,7 +64,7 @@ export const getAllocationAmountQueryKey = (roundId?: string) => [
  * @returns the allocation amount for a given roundId see {@link AllocationAmount}
  */
 export const useAllocationAmount = (roundId?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

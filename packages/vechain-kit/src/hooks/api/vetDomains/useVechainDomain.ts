@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { isAddress } from 'ethers';
+import { type ThorClient } from '@vechain/sdk-network';
 
 interface VeChainDomainResult {
     address?: string;
@@ -12,28 +13,34 @@ interface VeChainDomainResult {
     isPrimaryDomain: boolean;
 }
 
-const getAddressesABI = {
-    inputs: [{ internalType: 'string[]', name: 'names', type: 'string[]' }],
-    name: 'getAddresses',
-    outputs: [
-        { internalType: 'address[]', name: 'addresses', type: 'address[]' },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-};
+const getAddressesABI = [
+    {
+        inputs: [{ internalType: 'string[]', name: 'names', type: 'string[]' }],
+        name: 'getAddresses',
+        outputs: [
+            { internalType: 'address[]', name: 'addresses', type: 'address[]' },
+        ],
+        stateMutability: 'view' as const,
+        type: 'function' as const,
+    },
+];
 
-const getNamesABI = {
-    inputs: [
-        { internalType: 'address[]', name: 'addresses', type: 'address[]' },
-    ],
-    name: 'getNames',
-    outputs: [{ internalType: 'string[]', name: 'names', type: 'string[]' }],
-    stateMutability: 'view',
-    type: 'function',
-};
+const resolverABI = [
+    {
+        inputs: [
+            { internalType: 'address[]', name: 'addresses', type: 'address[]' },
+        ],
+        name: 'getNames',
+        outputs: [
+            { internalType: 'string[]', name: 'names', type: 'string[]' },
+        ],
+        stateMutability: 'view' as const,
+        type: 'function' as const,
+    },
+];
 
 export const fetchVechainDomain = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     addressOrDomain?: string | null,
 ): Promise<VeChainDomainResult> => {
@@ -48,12 +55,12 @@ export const fetchVechainDomain = async (
 
     if (isAddress(addressOrDomain)) {
         try {
-            const res = await thor
-                .account(getConfig(networkType).vnsResolverAddress)
-                .method(getNamesABI)
-                .call([addressOrDomain]);
+            // Then load the contract and call the function
+            const res = await thor.contracts
+                .load(getConfig(networkType).vnsResolverAddress, resolverABI)
+                .read.getNames([addressOrDomain]);
 
-            const domainName = res.decoded.names?.[0] as string;
+            const domainName = res[0] as string;
 
             return {
                 address: addressOrDomain,
@@ -74,12 +81,11 @@ export const fetchVechainDomain = async (
 
     // Otherwise, if the addressOrDomain is a domain, we need to get the address
     try {
-        const res = await thor
-            .account(getConfig(networkType).vnsResolverAddress)
-            .method(getAddressesABI)
-            .call([addressOrDomain]);
+        const res = await thor.contracts
+            .load(getConfig(networkType).vnsResolverAddress, getAddressesABI)
+            .read.getAddresses([addressOrDomain]);
 
-        const domainAddress = res.decoded.addresses?.[0] as string;
+        const domainAddress = res[0] as string;
 
         // Domain could exist, but it is not pointing to an address
         if (domainAddress === '0x0000000000000000000000000000000000000000') {
@@ -92,12 +98,11 @@ export const fetchVechainDomain = async (
         }
 
         // Get the primary domain
-        const primaryDomainRes = await thor
-            .account(getConfig(networkType).vnsResolverAddress)
-            .method(getNamesABI)
-            .call([domainAddress]);
+        const primaryDomainRes = await thor.contracts
+            .load(getConfig(networkType).vnsResolverAddress, resolverABI)
+            .read.getNames([domainAddress]);
 
-        const primaryDomain = primaryDomainRes.decoded.names?.[0] as string;
+        const primaryDomain = primaryDomainRes[0] as string;
 
         return {
             address: domainAddress,
@@ -122,7 +127,7 @@ export const getVechainDomainQueryKey = (addressOrDomain?: string | null) => [
 ];
 
 export const useVechainDomain = (addressOrDomain?: string | null) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery<VeChainDomainResult>({

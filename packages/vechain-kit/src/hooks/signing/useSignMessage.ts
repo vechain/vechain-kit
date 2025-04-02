@@ -2,7 +2,8 @@
 
 import { useCallback, useState } from 'react';
 import { usePrivyWalletProvider } from '@/providers';
-import { useConnex, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
+import { Certificate } from '@vechain/sdk-core';
 
 type UseSignMessageReturnValue = {
     signMessage: (message: string) => Promise<string>;
@@ -23,12 +24,12 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
     const [signature, setSignature] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
-    const { connection } = useWallet();
-    const { vendor } = useConnex();
+    const { connection, account } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
     const signMessage = useCallback(
         async (message: string): Promise<string> => {
+            if (!account) throw new Error('Account not found');
             setIsSigningPending(true);
             setError(null);
             setSignature(null);
@@ -37,17 +38,25 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
                 let sig: string;
 
                 if (connection.isConnectedWithDappKit) {
-                    sig = (
-                        await vendor
-                            .sign('cert', {
-                                purpose: 'agreement',
-                                payload: {
-                                    type: 'text',
-                                    content: message,
-                                },
-                            })
-                            .request()
-                    ).signature;
+                    // Create a certificate
+                    const cert = Certificate.of({
+                        purpose: 'agreement',
+                        payload: {
+                            type: 'text',
+                            content: message,
+                        },
+                        domain: '', // Domain is required in SDK
+                        timestamp: Math.floor(Date.now() / 1000), // Current timestamp in seconds
+                        signer: account.address,
+                    });
+
+                    // Sign the certificate using your signer
+                    const signedCert = await cert.sign(
+                        new Uint8Array(Buffer.from(account.address, 'hex')),
+                    );
+
+                    // Get the signature
+                    sig = signedCert.signature || '';
                 } else {
                     sig = await privyWalletProvider.signMessage(message);
                 }
@@ -63,7 +72,7 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
                 setIsSigningPending(false);
             }
         },
-        [connection, privyWalletProvider],
+        [connection, privyWalletProvider, account],
     );
 
     const reset = useCallback(() => {

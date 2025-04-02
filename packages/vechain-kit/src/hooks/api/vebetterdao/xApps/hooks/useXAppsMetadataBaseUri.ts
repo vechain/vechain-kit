@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getXAppsMetadataBaseUri } from '../getXAppsMetadataBaseUri';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -15,7 +15,7 @@ export const getXAppsMetadataBaseUriQueryKey = () => [
  * @returns the baseUri of the xApps metadata
  */
 export const useXAppsMetadataBaseUri = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
