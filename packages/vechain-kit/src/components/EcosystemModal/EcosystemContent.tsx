@@ -121,33 +121,12 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             <>
                 <StickyHeaderContainer>
                     <ModalHeader>
-                        {t('Already have an app account?')}
+                        {t('Already have an x2earn app wallet?')}
                         <ModalCloseButton onClick={handleClose} />
                     </ModalHeader>
                 </StickyHeaderContainer>
 
-                {/* {loginModalUI?.logo && (
-                        <HStack justify={'center'}>
-                            <Image
-                                src={loginModalUI.logo || '/images/favicon.png'}
-                                maxW={'180px'}
-                                maxH={'90px'}
-                                m={10}
-                                alt="logo"
-                            />
-                        </HStack>
-                )} */}
-
                 <ModalBody>
-                    <Text
-                        fontSize={'12px'}
-                        fontWeight={'400'}
-                        opacity={0.5}
-                        mb={4}
-                        textAlign={'center'}
-                    >
-                        {t('Sign in with a wallet from other x2earn apps.')}
-                    </Text>
                     {isLoading && (
                         <VStack
                             minH={'200px'}
