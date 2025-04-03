@@ -1,6 +1,5 @@
 import { Wallet } from '@/types';
-import { getPicassoImage } from '@/utils';
-import { Image, ImageProps, Spinner } from '@chakra-ui/react';
+import { Image, ImageProps, Skeleton } from '@chakra-ui/react';
 import { useRef, useEffect } from 'react';
 
 type AccountAvatarProps = {
@@ -19,17 +18,25 @@ export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
         }
     }, [wallet?.image, wallet?.isLoadingMetadata]);
 
-    if (wallet?.isLoadingMetadata && !previousImageRef.current) {
-        return <Spinner size="sm" />;
+    if (
+        (!props?.src && !wallet?.image && !previousImageRef.current) ||
+        wallet?.isLoadingMetadata
+    ) {
+        return (
+            <Skeleton
+                rounded="full"
+                width={props?.width}
+                height={props?.height}
+            />
+        );
     }
-
     return (
         <Image
             src={props?.src || wallet?.image || previousImageRef.current}
             alt={props?.alt || wallet?.domain}
             objectFit="cover"
             rounded="full"
-            fallbackSrc={getPicassoImage(wallet?.address ?? '')}
+            // fallbackSrc={getPicassoImage(wallet?.address ?? '')}
             {...props}
         />
     );

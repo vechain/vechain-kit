@@ -90,7 +90,18 @@ export const CustomizationSummaryContent = ({
         resolverAddress, // Pass the pre-fetched resolver address
         signerAccountAddress: account?.address ?? '',
         onSuccess: async () => {
-            refreshMetadata();
+            Analytics.customization.completed({
+                hasAvatar: !!changes.avatarIpfsHash,
+                hasDisplayName: !!changes.displayName,
+                hasDescription: !!changes.description,
+                hasSocials: !!(
+                    changes.twitter ||
+                    changes.website ||
+                    changes.email
+                ),
+            });
+
+            // Set success content first
             setCurrentContent({
                 type: 'successful-operation',
                 props: {
@@ -105,6 +116,12 @@ export const CustomizationSummaryContent = ({
                     },
                 },
             });
+
+            try {
+                await refreshMetadata();
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+            }
         },
         onError: (error) => {
             if (error && isRejectionError(error?.message ?? '')) {
@@ -152,13 +169,6 @@ export const CustomizationSummaryContent = ({
 
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
-
-                Analytics.customization.completed({
-                    hasAvatar: !!data.avatarIpfsHash,
-                    hasDisplayName: !!data.displayName,
-                    hasDescription: !!data.description,
-                    hasSocials: !!(data.twitter || data.website || data.email),
-                });
             }
         } catch (error) {
             console.error('Error saving changes:', error);
