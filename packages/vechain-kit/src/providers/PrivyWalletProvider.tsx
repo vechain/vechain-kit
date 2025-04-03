@@ -31,6 +31,14 @@ import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
 import { ethers } from 'ethers';
+import { ERC20_ABI } from '@vechain/sdk-core';
+
+const B3TR_TOKEN_ADDRESS = {
+    mainnet: '0x5ef79995FE8a89e0812330E4378eB2660ceDe699',
+    testnet: '0xbf64cf86894Ee0877C4e7d03936e35Ee8D8b864F',
+    solo: null,
+};
+const GAS_PRICE_VTHO = 1e-5; // 1 gas = 0,00001 vtho
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
@@ -167,6 +175,91 @@ export const PrivyWalletProvider = ({
         };
     }
 
+    async function buildAugmentedBatchAuthorizationTypedData({
+        clauses,
+        chainId,
+        verifyingContract,
+        depositAddress,
+        genericDelegatorRates,
+    }: {
+        clauses: Connex.VM.Clause[];
+        chainId: number;
+        verifyingContract: string;
+        depositAddress: string;
+        genericDelegatorRates: { b3trRate: number; serviceFee: number };
+    }): Promise<ExecuteBatchWithAuthorizationSignData> {
+        const tempClauses = [...clauses];
+        tempClauses.push({
+            to: "0xbf64cf86894Ee0877C4e7d03936e35Ee8D8b864F",
+            value: 0,
+            data: encodeFunctionData({
+                abi: ERC20_ABI,
+                functionName: 'transfer',
+                args: [
+                    Address.of(depositAddress).toString(), 
+                    999999999999999999n
+                ],
+            }),
+        });
+
+        const tempTypedData = buildBatchAuthorizationTypedData({
+            clauses: tempClauses,
+            chainId,
+            verifyingContract,
+        });
+
+        tempClauses.push(
+            Clause.callFunction(
+                Address.of(verifyingContract),
+                ABIContract.ofAbi(SimpleAccountABI).getFunction(
+                    'executeBatchWithAuthorization',
+                ),
+                [
+                    tempTypedData.message.to,
+                    tempTypedData.message.value?.map((val) => BigInt(val)) ?? [],
+                    tempTypedData.message.data,
+                    BigInt(tempTypedData.message.validAfter),
+                    BigInt(tempTypedData.message.validBefore),
+                    tempTypedData.message.nonce,
+                    `0xf18421b058fed7db78f52fd26723bc6a2b84b915148f08faff985b58efae508245378ebadeaf408c2724280ef39bb07577ec5d43f13b831d8605e0566ff7665e1c`, // dummy signature
+                ],
+            ),
+        );
+
+        const sanitizedTempClauses = tempClauses.map((clause) => ({
+            ...clause,
+            data: clause.data || '0x', // Default to '0x' if data is undefined
+        }));
+        const gasResult = await thor.gas.estimateGas(sanitizedTempClauses, depositAddress, 
+            {
+                gasPadding: genericDelegatorRates.serviceFee,
+            },
+        );
+        const gasInB3tr =
+            genericDelegatorRates.b3trRate *
+            (1 + genericDelegatorRates.serviceFee) *
+            gasResult.totalGas;
+
+        clauses.push({
+            to: B3TR_TOKEN_ADDRESS.testnet,
+            value: 0,
+            data: encodeFunctionData({
+                abi: ERC20_ABI,
+                functionName: 'transfer',
+                args: [depositAddress, BigInt(Math.ceil(gasInB3tr * 1e18 * 1e-5))],
+            }),
+        });
+
+        return buildBatchAuthorizationTypedData({
+            clauses: clauses.map((clause) => ({
+                ...clause,
+                data: clause.data || '0x', // Default to '0x' if data is undefined
+            })),
+            chainId,
+            verifyingContract,
+        });
+    }
+
     /**
      * Build the typed data structure for executeWithAuthorization
      * @param clause - The clause to sign
@@ -259,37 +352,38 @@ export const PrivyWalletProvider = ({
         // Clauses for the transaction
         const clauses = [];
         
-        const rawUnsignedTx = getRawUnsignedTx(txClauses, options);
-        const newTx = await callDelegate (rawUnsignedTx, Address.of(smartAccount.address).toString(), options.token.symbol);
-        if (!newTx) {
-            throw new Error('Failed to retrieve new transaction.');
+        const depositResponse = await callGetDepositAddress();
+        if (!depositResponse) {
+            throw new Error('Failed to contact the generic delegator.');
         }
         
-        const newTxDecoded = decodeRawTx(newTx.raw);
-        const tx_Clauses = newTxDecoded.body.clauses;
-            
+        const genericDelegatorRates = await callEstimate(txClauses);
+        if (!genericDelegatorRates) {
+            throw new Error('Failed to contact the generic delegator.');
+        }
         
-
         // If the smart account was never deployed or the version is >= 3 and we have multiple clauses, we can batch them
         if (
             !hasV1SmartAccount ||
             (smartAccountVersion && smartAccountVersion >= 3)
         ) {
-        
-            const typedData = buildBatchAuthorizationTypedData({
-                clauses: tx_Clauses,
+            const typedData = await buildAugmentedBatchAuthorizationTypedData({
+                clauses: txClauses,
                 chainId: chainId as unknown as number,
                 verifyingContract: smartAccount.address,
+                depositAddress: depositResponse.depositAccount,
+                genericDelegatorRates: genericDelegatorRates as EstimateResponse,
             });
+            
 
             // Sign the typed data (either cross-app or traditional Privy)
             const signature = connection.isConnectedWithCrossApp
                 ? await signTypedDataWithCrossApp({
-                      ...typedData,
-                      address: connectedWallet.address as `0x${string}`,
-                  } as SignTypedDataParameters)
+                    ...typedData,
+                    address: connectedWallet.address as `0x${string}`,
+                } as SignTypedDataParameters)
                 : (
-                      await signTypedDataPrivy(typedData, {
+                      await signTypedDataPrivy(await typedData, {
                           uiOptions: {
                               title,
                               description,
@@ -322,12 +416,12 @@ export const PrivyWalletProvider = ({
                         'executeBatchWithAuthorization',
                     ),
                     [
-                        typedData.message.to,
-                        typedData.message.value?.map((val) => BigInt(val)) ?? 0,
-                        typedData.message.data,
-                        BigInt(typedData.message.validAfter),
-                        BigInt(typedData.message.validBefore),
-                        typedData.message.nonce, // If your contract expects bytes32
+                        (await typedData).message.to,
+                        (await typedData).message.value?.map((val) => BigInt(val)) ?? 0,
+                        (await typedData).message.data,
+                        BigInt((await typedData).message.validAfter),
+                        BigInt((await typedData).message.validBefore),
+                        (await typedData).message.nonce, // If your contract expects bytes32
                         signature as `0x${string}`,
                     ],
                 ),
@@ -440,13 +534,10 @@ export const PrivyWalletProvider = ({
         const gasResult = await thor.gas.estimateGas(
             clauses,
             connectedWallet.address ?? '',
-            {
-                gasPadding: 1.3, // call generic delegator estimate endpoint and add the delegator fee as padding (e.g. with fee 0.1, gasPadding = 1.1)
-            },
         );
 
         const parsedGasLimit = Math.max(
-            gasResult.totalGas,
+            Math.ceil(gasResult.totalGas),
             suggestedMaxGas ?? 0,
         );
 
@@ -485,23 +576,17 @@ export const PrivyWalletProvider = ({
         const rawDelegateSigned = await signer!.signTransaction(txInput);
         */
         const unsignedTx = Transaction.of(txBody);
+        
         const gasPayerResponse = await callDelegateAuthorized(Hex.of(unsignedTx.encoded).toString(), randomTransactionUser.address);
 
         if (gasPayerResponse) {
             // Use the raw value for the next step - TODO take the raw body that was originally sent instead ( to avoid changes in the payload by the gd)
             const tx_body = decodeRawTx(gasPayerResponse.raw);
             
-            const validTx = signFinalTransaction(
-                tx_body, 
-                Buffer.from(
-                    randomTransactionUser.privateKey.slice(2),
-                    'hex',
-                ), 
-                gasPayerResponse.signature
-            );
+            const validTx = signFinalTransaction(tx_body,randomTransactionUser.privateKey.slice(2),gasPayerResponse.signature);
             
             // send the signed transaction using the SDK
-            const id = await (async () => {
+            const txResponse = await (async () => {
                 try {
                     const result = await thor.transactions.sendTransaction(validTx);
                     return result; // Assuming `sendTransaction` returns an object with `id`
@@ -511,8 +596,8 @@ export const PrivyWalletProvider = ({
                 }
             })();
 
-            console.log("Transaction ID:", id);  
-            return id;  
+            console.log("Transaction ID:", txResponse.id);  
+            return txResponse.id;  
         } else {
             console.error("No raw field found in response");
             return  "";
@@ -587,7 +672,7 @@ export const usePrivyWalletProvider = () => {
     return context;
 };
 
-function signFinalTransaction(decodedTx: Transaction, privateKey: string | Uint8Array<ArrayBufferLike>, signature: string) {
+function signFinalTransaction(decodedTx: Transaction, privateKey: string , signature: string) {
     const txHash = Transaction.of(decodedTx.body).getTransactionHash();
     return Transaction.of( 
         decodedTx.body, 
@@ -707,6 +792,63 @@ async function callDelegate(
         console.error("Fetch error:", error);
     }
 }
+
+interface EstimateResponse {
+    gasEstimated: number;
+    vetCost: number;
+    vetRate: number;
+    b3trCost: number;
+    b3trRate: number;
+    serviceFee: number;
+}
+
+
+async function callEstimate(clauses: Connex.VM.Clause[]): Promise<EstimateResponse | undefined> {
+
+    const sanitizedClauses = clauses.map((clause) => ({
+        to: clause.to || '0x', // Default to '0x' if to is undefined
+        value: clause.value ? clause.value.toString() : 0, // Convert BigInt to string --??
+        data: clause.data || '0x', // Default to '0x' if data is undefined
+    }));
+    const signer = "0x435933c8064b4Ae76bE665428e0307eF2cCFBD68"; // dummy signer address
+
+    const requestOptions: RequestInit = {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clauses: sanitizedClauses, signer: signer }),
+        redirect: 'follow' as RequestRedirect,
+    };
+
+    try {
+        const response = await fetch(
+            `${options.genericDelegatorBaseUrl}delegator/estimate`,
+            requestOptions
+        );
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+    return undefined;
+}
+
+async function callGetDepositAddress(): Promise<string | undefined> {
+    const requestOptions: RequestInit = {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+        redirect: 'follow' as RequestRedirect,
+    };
+    try {
+        const response = await fetch(
+            `${options.genericDelegatorBaseUrl}delegator/deposit-account`,
+            requestOptions
+        );
+        return await response.json();
+    }
+    catch (error) {
+        console.error("Fetch error:", error);
+    }
+    return undefined;
+}   
 
 // Request the generic delegator to pay that with B3TR
 async function callDelegateAuthorized (rawUnsignedTx: string, _senderAddress: string) {
