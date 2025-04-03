@@ -1,9 +1,7 @@
-import { Button, GridItem, Icon, useDisclosure } from '@chakra-ui/react';
-import { ConnectionButton, EcosystemModal } from '@/components';
+import { Button, useDisclosure } from '@chakra-ui/react';
+import { EcosystemModal } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
-import { AiOutlineUser } from 'react-icons/ai';
-import { IoIosArrowForward } from 'react-icons/io';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod } from '@/types/mixPanel';
 
@@ -14,12 +12,7 @@ type Props = {
     gridColumn?: number;
 };
 
-export const EcosystemButton = ({
-    isDark,
-    appsInfo,
-    isLoading,
-    gridColumn,
-}: Props) => {
+export const EcosystemButton = ({ appsInfo, isLoading }: Props) => {
     const { t } = useTranslation();
     const ecosystemModal = useDisclosure();
 

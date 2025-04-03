@@ -9,6 +9,9 @@ import { VeLoginMethod, DappKitSource } from '@/types/mixPanel';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { isRejectionError } from '@/utils/StringUtils';
+import { VeWorldLogoDark, VeWorldLogoLight } from '@/assets';
+import { IconType } from 'react-icons';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     isDark: boolean;
@@ -19,9 +22,14 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
     const { t } = useTranslation();
     const { open: openDappKitModal, onConnectionStatusChange } =
         useDAppKitWalletModal();
+    const { dappKit } = useVeChainKitConfig();
+    const { user } = usePrivy();
     const { source } = useDappKitWallet();
 
-    const { user } = usePrivy();
+    // Determine the button text based on the source
+    const buttonText = !dappKit?.allowedWallets?.includes('sync2')
+        ? 'Connect with VeWorld wallet'
+        : t('Connect wallet');
 
     useEffect(() => {
         const handleConnectionChange = (
@@ -86,9 +94,21 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={handleDappKitClick}
-                icon={IoWalletOutline}
-                text={gridColumn >= 2 ? t('Connect wallet') : undefined}
-                rightIcon={<Icon as={IoIosArrowForward} />}
+                icon={
+                    !dappKit?.allowedWallets?.includes('sync2')
+                        ? ((isDark
+                              ? VeWorldLogoLight
+                              : VeWorldLogoDark) as IconType)
+                        : (IoWalletOutline as IconType)
+                }
+                iconWidth={'27px'}
+                text={gridColumn >= 2 ? buttonText : undefined}
+                rightIcon={
+                    (dappKit?.allowedWallets?.includes('sync2') && (
+                        <Icon as={IoIosArrowForward} />
+                    )) ||
+                    undefined
+                }
             />
         </GridItem>
     );
