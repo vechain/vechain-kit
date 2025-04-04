@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "test": "playwright test",
+    "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
     "install-browsers": "npx playwright install",
     "dev:healthcheck": "./healthcheck.sh http://localhost:8669 && ./healthcheck.sh http://localhost:3000/_next/static/chunks/main-app.js",
