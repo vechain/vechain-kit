@@ -110,6 +110,13 @@ export const AccountModal = ({
                     );
                 case 'faq':
                     return <FAQContent {...currentContent.props} />;
+                case 'account-customization':
+                    return (
+                        <CustomizationContent
+                            {...currentContent.props}
+                            setCurrentContent={setCurrentContent}
+                        />
+                    );
             }
         }
 
@@ -183,12 +190,6 @@ export const AccountModal = ({
             case 'ecosystem':
                 return (
                     <ExploreEcosystemContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'account-customization':
-                return (
-                    <CustomizationContent
                         setCurrentContent={setCurrentContent}
                     />
                 );

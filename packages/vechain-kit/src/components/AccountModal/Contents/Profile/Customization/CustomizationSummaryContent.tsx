@@ -39,6 +39,7 @@ export type CustomizationSummaryContentProps = {
         website?: string;
         email?: string;
     };
+    onDoneRedirectContent: AccountModalContentTypes;
 };
 
 type FormValues = {
@@ -53,6 +54,7 @@ type FormValues = {
 export const CustomizationSummaryContent = ({
     setCurrentContent,
     changes,
+    onDoneRedirectContent,
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -112,7 +114,7 @@ export const CustomizationSummaryContent = ({
                         'Your changes have been saved successfully.',
                     ),
                     onDone: () => {
-                        setCurrentContent('profile');
+                        setCurrentContent(onDoneRedirectContent);
                     },
                 },
             });
@@ -215,7 +217,12 @@ export const CustomizationSummaryContent = ({
             stage: 'confirmation',
             reason: 'back_button',
         });
-        setCurrentContent('account-customization');
+        setCurrentContent({
+            type: 'account-customization',
+            props: {
+                setCurrentContent,
+            },
+        });
     };
 
     return (

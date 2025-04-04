@@ -48,13 +48,17 @@ type FormValues = {
     website: string;
 };
 
-export const CustomizationContent = ({
-    setCurrentContent,
-}: {
+export type AccountCustomizationContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-}) => {
+    initialContentSource?: AccountModalContentTypes;
+};
+
+export const CustomizationContent = ({
+    setCurrentContent,
+    initialContentSource = 'profile',
+}: AccountCustomizationContentProps) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { account } = useWallet();
@@ -208,6 +212,7 @@ export const CustomizationContent = ({
             props: {
                 setCurrentContent,
                 changes: getChangedValues(),
+                onDoneRedirectContent: initialContentSource,
             },
         });
     };
@@ -361,8 +366,12 @@ export const CustomizationContent = ({
                                             props: {
                                                 name: '',
                                                 setCurrentContent,
-                                                initialContentSource:
-                                                    'account-customization',
+                                                initialContentSource: {
+                                                    type: 'account-customization',
+                                                    props: {
+                                                        setCurrentContent,
+                                                    },
+                                                },
                                             },
                                         });
                                     } else {
@@ -370,12 +379,19 @@ export const CustomizationContent = ({
                                             type: 'choose-name',
                                             props: {
                                                 setCurrentContent,
-                                                initialContentSource:
-                                                    'account-customization',
+                                                initialContentSource: {
+                                                    type: 'account-customization',
+                                                    props: {
+                                                        setCurrentContent,
+                                                    },
+                                                },
                                                 onBack: () =>
-                                                    setCurrentContent(
-                                                        'account-customization',
-                                                    ),
+                                                    setCurrentContent({
+                                                        type: 'account-customization',
+                                                        props: {
+                                                            setCurrentContent,
+                                                        },
+                                                    }),
                                             },
                                         });
                                     }
