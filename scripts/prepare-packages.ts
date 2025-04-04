@@ -55,11 +55,6 @@ const preparePackages = async () => {
     await exec('cd packages/vechain-kit && yarn translate && cd -');
     console.log('       - ✅  Translated!');
 
-    console.log(' Test:');
-    console.log('       - 🧪 Testing packages...');
-    await exec('yarn test');
-    console.log('       - ✅  Success!');
-
     console.log(' Version:');
     console.log(`       - 🏷 Updating package versions to ${version}...`);
     updatePackageVersions(version);

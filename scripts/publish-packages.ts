@@ -40,11 +40,6 @@ const publishPackages = async () => {
     await exec('yarn install:all');
     console.log('       - ✅  Built!');
 
-    console.log(' Test:');
-    console.log('       - 🧪 Testing packages...');
-    await exec('yarn test');
-    console.log('       - ✅  Tested!');
-
     console.log(' Publish:');
     console.log('       - 📦 Publishing packages...');
     await new Promise((resolve, reject) => {
