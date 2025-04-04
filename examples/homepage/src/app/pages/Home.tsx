@@ -174,7 +174,6 @@ export default function Home(): ReactElement {
 
                 <UIControls />
 
-                {/* <LanguageSelector /> */}
                 <TransactionExamples />
                 <SigningExample />
                 <DataReadingExample />
