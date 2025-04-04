@@ -40,14 +40,14 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     'apple',
                     'twitter',
                     'farcaster',
-                    'email',
+                    // 'email',
                     'discord',
                     'tiktok',
-                    'rabby_wallet',
-                    'coinbase_wallet',
-                    'rainbow',
-                    'phantom',
-                    'metamask',
+                    // 'rabby_wallet',
+                    // 'coinbase_wallet',
+                    // 'rainbow',
+                    // 'phantom',
+                    // 'metamask',
                 ],
                 appearance: {
                     loginMessage: 'Select a login method',
@@ -62,7 +62,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 delegateAllTransactions: false,
             }}
             dappKit={{
-                allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
+                allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
                     projectId:
                         process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,

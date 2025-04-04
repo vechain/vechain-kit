@@ -114,7 +114,7 @@ export const SuccessfulOperationContent = ({
                                 <Text>
                                     {t('View transaction on the explorer')}
                                 </Text>
-                                <Icon size={'sm'} as={GoLinkExternal} />
+                                <Icon size={16} as={GoLinkExternal} />
                             </HStack>
                         </Link>
                     )}
