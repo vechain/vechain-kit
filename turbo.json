@@ -10,21 +10,8 @@
         "purge": {
             "cache": false
         },
-        "test": {
-            "outputs": ["coverage/**"],
-            "dependsOn": ["build"]
-        },
         "preview": {
             "dependsOn": ["build"],
-            "cache": false
-        },
-        "test:e2e": {
-            "cache": false
-        },
-        "test:e2e:headless": {
-            "cache": false
-        },
-        "test:e2e:ci": {
             "cache": false
         },
         "lint": {},
