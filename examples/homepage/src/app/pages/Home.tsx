@@ -167,7 +167,6 @@ export default function Home(): ReactElement {
                 )}
 
                 <Introduction />
-                <LoginUIControl />
 
                 <div ref={featuresRef}>
                     <FeaturesToTry />

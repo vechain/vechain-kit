@@ -52,6 +52,7 @@ export const ProfileContent = ({
                                 type: 'account-customization',
                                 props: {
                                     setCurrentContent,
+                                    initialContentSource: 'profile',
                                 },
                             });
                         }}
