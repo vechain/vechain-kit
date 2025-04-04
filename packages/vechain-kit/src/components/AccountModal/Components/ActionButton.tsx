@@ -30,6 +30,7 @@ type ActionButtonProps = {
     loadingText?: string;
     style?: ButtonProps;
     extraContent?: React.ReactNode;
+    dataTestId?: string;
 };
 
 export const ActionButton = ({
@@ -48,6 +49,7 @@ export const ActionButton = ({
     loadingText,
     style,
     extraContent,
+    dataTestId,
 }: ActionButtonProps) => {
     const { t } = useTranslation();
     return (
@@ -61,6 +63,7 @@ export const ActionButton = ({
             loadingText={loadingText}
             bgColor={backgroundColor}
             _hover={_hover}
+            data-testid={dataTestId}
             {...style}
         >
             <HStack w={'full'} justify={'space-between'}>

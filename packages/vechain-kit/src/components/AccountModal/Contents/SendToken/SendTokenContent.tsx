@@ -291,6 +291,7 @@ export const SendTokenContent = ({
                                         variant="unstyled"
                                         fontSize="4xl"
                                         fontWeight="bold"
+                                        data-testid="tx-amount-input"
                                     />
                                     {selectedToken ? (
                                         <Button
@@ -400,7 +401,7 @@ export const SendTokenContent = ({
                                     )}
                                 </HStack>
                                 {errors.amount && (
-                                    <Text color="#ef4444" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm" data-testid="amount-error-msg">
                                         {errors.amount.message}
                                     </Text>
                                 )}
@@ -488,9 +489,10 @@ export const SendTokenContent = ({
                                     fontSize="lg"
                                     fontWeight="bold"
                                     variant="unstyled"
+                                    data-testid="tx-address-input"
                                 />
                                 {errors.toAddressOrDomain && (
-                                    <Text color="#ef4444" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm" data-testid="address-error-msg">
                                         {errors.toAddressOrDomain.message}
                                     </Text>
                                 )}
@@ -505,6 +507,7 @@ export const SendTokenContent = ({
                     variant="vechainKitPrimary"
                     isDisabled={!selectedToken || !isValid}
                     onClick={handleSubmit(onSubmit)}
+                    data-testid="send-button"
                 >
                     {selectedToken ? t('Send') : t('Select Token')}
                 </Button>

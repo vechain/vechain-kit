@@ -244,7 +244,7 @@ export const CustomizationContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Customization')}</ModalHeader>
+                <ModalHeader data-testid='modal-title'>{t('Customization')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
@@ -382,6 +382,7 @@ export const CustomizationContent = ({
                                 }}
                                 leftIcon={FaRegAddressCard}
                                 rightIcon={MdOutlineNavigateNext}
+                                dataTestId="set-domain-name-button"
                             />
 
                             <FormControl
@@ -403,6 +404,7 @@ export const CustomizationContent = ({
                                             ? t('Set a domain first')
                                             : t('Enter your display name')
                                     }
+                                    data-testid="display-name-input"
                                 />
                                 {errors.displayName && (
                                     <Text color="#ef4444" fontSize="sm" mt={1}>
@@ -426,6 +428,7 @@ export const CustomizationContent = ({
                                         },
                                     })}
                                     placeholder={t('Eg: DevRel @ ENS Labs')}
+                                    data-testid="description-input"
                                 />
                                 {errors.description && (
                                     <Text color="#ef4444" fontSize="sm" mt={1}>
@@ -457,6 +460,7 @@ export const CustomizationContent = ({
                                                 placeholder={t(
                                                     'Twitter username',
                                                 )}
+                                                data-testid='twitter-input'
                                             />
                                         </InputGroup>
                                         {errors.twitter && (
@@ -489,6 +493,7 @@ export const CustomizationContent = ({
                                                 })}
                                                 placeholder={t('Website URL')}
                                                 type="url"
+                                                data-testid='website-input'
                                             />
                                         </InputGroup>
                                         {errors.website && (
@@ -521,6 +526,7 @@ export const CustomizationContent = ({
                                                 })}
                                                 placeholder={t('Email address')}
                                                 type="email"
+                                                data-testid='email-input'
                                             />
                                         </InputGroup>
                                         {errors.email && (
@@ -566,6 +572,7 @@ export const CustomizationContent = ({
                         isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}
                         loadingText={t('Preparing changes...')}
+                        data-testid='save-changes-button'
                     >
                         {t('Save Changes')}
                     </Button>

@@ -42,6 +42,7 @@ export const WalletDisplay = ({ variant }: WalletDisplayProps) => {
                     <Text
                         fontSize={account.domain ? 'xs' : 'sm'}
                         opacity={account.domain ? 0.5 : 1}
+                        data-testid="trimmed-address"
                     >
                         {humanAddress(account.address ?? '', 4, 4)}
                     </Text>

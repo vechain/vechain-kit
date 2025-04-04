@@ -25,6 +25,7 @@ export const ConnectedWallet = ({
             w="full"
             minH={'45px'}
             maxW="fit-content"
+            data-testid='wallet-button'
         >
             <HStack w="full" minW="fit-content">
                 <AccountAvatar
