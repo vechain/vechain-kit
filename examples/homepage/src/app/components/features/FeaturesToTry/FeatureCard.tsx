@@ -1,7 +1,15 @@
 'use client';
 
-import { Box, VStack, Text, Icon, useColorMode } from '@chakra-ui/react';
+import {
+    Box,
+    VStack,
+    Text,
+    Icon,
+    useColorMode,
+    HStack,
+} from '@chakra-ui/react';
 import { IconType } from 'react-icons';
+import { FaHandPointLeft } from 'react-icons/fa';
 
 interface FeatureCardProps {
     title: string;
@@ -10,6 +18,7 @@ interface FeatureCardProps {
     highlight?: boolean;
     content: () => void;
     disabled?: boolean;
+    showHint?: boolean;
 }
 
 export function FeatureCard({
@@ -19,6 +28,7 @@ export function FeatureCard({
     highlight,
     content,
     disabled = false,
+    showHint = false,
 }: FeatureCardProps) {
     const { colorMode } = useColorMode();
 
@@ -46,11 +56,55 @@ export function FeatureCard({
             height="full"
         >
             <VStack spacing={3} align="start">
-                <Icon
-                    as={icon}
-                    boxSize={6}
-                    color={colorMode === 'light' ? 'blue.500' : 'blue.300'}
-                />
+                <HStack>
+                    <Icon
+                        as={icon}
+                        boxSize={6}
+                        color={colorMode === 'light' ? 'blue.500' : 'blue.300'}
+                    />
+                    {showHint && (
+                        <HStack
+                            spacing={3}
+                            animation="bounce-left 1s infinite"
+                            justifyContent="center"
+                            alignItems="center"
+                            transform="rotate(-10deg)"
+                            sx={{
+                                '@keyframes bounce-left': {
+                                    '0%, 100%': {
+                                        transform: 'rotate(0deg) translateX(0)',
+                                    },
+                                    '50%': {
+                                        transform:
+                                            'rotate(0deg) translateX(-5px)',
+                                    },
+                                },
+                            }}
+                        >
+                            <FaHandPointLeft
+                                size={24}
+                                rotate={10}
+                                color={
+                                    colorMode === 'light'
+                                        ? '#4A5568'
+                                        : '#A0AEC0'
+                                }
+                                style={{ marginLeft: '8px' }}
+                            />
+
+                            <Text
+                                fontSize="sm"
+                                color={
+                                    colorMode === 'light'
+                                        ? 'gray.600'
+                                        : 'gray.400'
+                                }
+                            >
+                                Click me!
+                            </Text>
+                        </HStack>
+                    )}
+                </HStack>
                 <Text fontWeight="bold">{title}</Text>
                 <Text
                     fontSize="sm"
