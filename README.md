@@ -73,26 +73,29 @@ Welcome to our project! Here's an overview of our branching strategy.
 
 ## E2E Testing
 
-We utilize Cucumber.js with Selenium for end-to-end (E2E) testing. To conduct these tests, you'll require the ChromeDriver. Here's how to install it:
+We utilize Playwright for end-to-end (E2E) testing. To conduct these tests, you'll need to install browsers first:
 
-**On Mac:**
-
-```shell
-brew install chromedriver
-cd "$(dirname "$(which chromedriver)")"
-xattr -d com.apple.quarantine chromedriver
+```bash
+cd tests/e2e
+yarn install-browsers
 ```
 
 Once installed, you can run tests in the browser using:
 
 ```bash
-yarn test:e2e
+yarn test
 ```
 
-Alternatively, you can run headless tests directly in the console using:
+Alternatively, you can run them in headed mode (the opposite of headless):
 
 ```bash
-yarn test:e2e:headless
+yarn test:headed
+```
+
+Once the tests are done, run this to open the report:
+
+```bash
+yarn report
 ```
 
 ## Translating
