@@ -8,17 +8,14 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '@/providers';
-import {
-    ModalFAQButton,
-    StickyHeaderContainer,
-    VersionFooter,
-} from '@/components/common';
+import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
-import { useWallet } from '@/hooks';
+import { useWallet, useFetchAppInfo } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { EcosystemButton } from '../Components/EcosystemButton';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -33,6 +30,9 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
     const { loginModalUI } = useVeChainKitConfig();
+    const { loginMethods, privyEcosystemAppIDS } = useVeChainKitConfig();
+    const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
+        useFetchAppInfo(privyEcosystemAppIDS);
 
     const handleFAQClick = () => {
         Analytics.help.faqViewed();
@@ -44,6 +44,10 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
             onClose();
         }
     }, [connection.isConnected, onClose]);
+
+    const showEcosystemButton = loginMethods?.some(
+        ({ method }) => method === 'ecosystem',
+    );
 
     return (
         <>
@@ -86,9 +90,19 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                 <ConnectionOptionsStack />
             </ModalBody>
 
-            <ModalFooter pt={0} pb={'5px'}>
-                <VersionFooter />
-            </ModalFooter>
+            {showEcosystemButton ? (
+                <ModalFooter>
+                    <HStack justify={'center'} w={'full'}>
+                        <EcosystemButton
+                            isDark={isDark}
+                            appsInfo={Object.values(appsInfo || {})}
+                            isLoading={isEcosystemAppsLoading}
+                        />
+                    </HStack>
+                </ModalFooter>
+            ) : (
+                <ModalFooter pt={0} pb={'5px'} />
+            )}
         </>
     );
 };

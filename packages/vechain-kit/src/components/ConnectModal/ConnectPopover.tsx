@@ -1,15 +1,20 @@
 import {
     Button,
     ButtonProps,
+    HStack,
     Icon,
     Popover,
     PopoverBody,
     PopoverContent,
+    PopoverFooter,
     PopoverTrigger,
 } from '@chakra-ui/react';
 import { ConnectionOptionsStack } from './Components/ConnectionOptionsStack';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
+import { EcosystemButton } from './Components';
+import { useVeChainKitConfig } from '@/providers';
+import { useFetchAppInfo } from '@/hooks';
 
 type ConnectPopoverProps = {
     isLoading: boolean;
@@ -21,6 +26,18 @@ export const ConnectPopover = ({
     buttonStyle,
 }: ConnectPopoverProps) => {
     const { t } = useTranslation();
+    const {
+        loginMethods,
+        darkMode: isDark,
+        privyEcosystemAppIDS,
+    } = useVeChainKitConfig();
+    const showEcosystemButton = loginMethods?.some(
+        ({ method }) => method === 'ecosystem',
+    );
+
+    const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
+        useFetchAppInfo(privyEcosystemAppIDS);
+
     return (
         <Popover
             placement="bottom-start"
@@ -51,6 +68,17 @@ export const ConnectPopover = ({
                         <PopoverBody>
                             <ConnectionOptionsStack />
                         </PopoverBody>
+                        <PopoverFooter borderTop={'none'} pb={'15px'}>
+                            {showEcosystemButton && (
+                                <HStack justify={'center'} w={'full'}>
+                                    <EcosystemButton
+                                        isDark={isDark}
+                                        appsInfo={Object.values(appsInfo || {})}
+                                        isLoading={isEcosystemAppsLoading}
+                                    />
+                                </HStack>
+                            )}
+                        </PopoverFooter>
                     </PopoverContent>
                 </>
             )}

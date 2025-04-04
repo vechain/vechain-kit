@@ -4,7 +4,7 @@ import {
     useDisclosure,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { useWallet, useDAppKitWallet } from '@/hooks';
+import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '@/hooks';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
@@ -26,7 +26,10 @@ export const WalletButton = ({
     connectionVariant = 'modal',
 }: WalletButtonProps) => {
     const { t } = useTranslation();
-    const { darkMode } = useVeChainKitConfig();
+    const { darkMode, loginMethods } = useVeChainKitConfig();
+
+    const hasOnlyDappKit =
+        loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
 
     const { connection, account } = useWallet();
     const { setSource, connect } = useDAppKitWallet();
@@ -35,11 +38,14 @@ export const WalletButton = ({
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
+    const { open: openDappKit } = useDAppKitWalletModal();
 
     const handleConnect = () => {
         if (connection.isInAppBrowser) {
             setSource('veworld');
             connect();
+        } else if (hasOnlyDappKit) {
+            openDappKit();
         } else {
             connectModal.onOpen();
         }

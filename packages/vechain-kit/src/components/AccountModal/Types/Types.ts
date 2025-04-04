@@ -1,4 +1,5 @@
 import {
+    AccountCustomizationContentProps,
     ChooseNameContentProps,
     ChooseNameSearchContentProps,
     ChooseNameSummaryContentProps,
@@ -25,10 +26,13 @@ export type AccountModalContentTypes =
     | 'ecosystem'
     | 'notifications'
     | 'privy-linked-accounts'
-    | 'account-customization'
     | 'add-custom-token'
     | 'assets'
     | 'bridge'
+    | {
+          type: 'account-customization';
+          props: AccountCustomizationContentProps;
+      }
     | {
           type: 'successful-operation';
           props: SuccessfulOperationContentProps;

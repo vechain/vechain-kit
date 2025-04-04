@@ -5,17 +5,12 @@ import { VeChainWithPrivyLoginButton } from './VeChainWithPrivyLoginButton';
 import { VeChainLoginButton } from './VeChainLoginButton';
 import { PasskeyLoginButton } from './PasskeyLoginButton';
 import { DappKitButton } from './DappKitButton';
-import { EcosystemButton } from './EcosystemButton';
 import { PrivyButton } from './PrivyButton';
-import { useFetchAppInfo, useLoginModalContent, usePrivy } from '@/hooks';
+import { useLoginModalContent, usePrivy } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 export const ConnectionOptionsStack = () => {
-    const {
-        privyEcosystemAppIDS,
-        loginMethods,
-        darkMode: isDark,
-    } = useVeChainKitConfig();
+    const { loginMethods, darkMode: isDark } = useVeChainKitConfig();
 
     // View more login
     const { login: viewMoreLogin } = usePrivy();
@@ -26,14 +21,10 @@ export const ConnectionOptionsStack = () => {
         showPasskey,
         showVeChainLogin,
         showDappKit,
-        showEcosystem,
         showMoreLogin,
         isOfficialVeChainApp,
     } = useLoginModalContent();
 
-    // Load ecosystem apps info, doing it here to avoid loading when opening the modal
-    const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
-        useFetchAppInfo(privyEcosystemAppIDS);
     return (
         <Stack spacing={4} w={'full'} align={'center'}>
             <Grid templateColumns="repeat(4, 1fr)" gap={2} w={'full'}>
@@ -88,18 +79,6 @@ export const ConnectionOptionsStack = () => {
                                     <DappKitButton
                                         key="dappkit"
                                         isDark={isDark}
-                                        gridColumn={gridColumn}
-                                    />
-                                )
-                            );
-                        case 'ecosystem':
-                            return (
-                                showEcosystem && (
-                                    <EcosystemButton
-                                        key="ecosystem"
-                                        isDark={isDark}
-                                        appsInfo={Object.values(appsInfo || {})}
-                                        isLoading={isEcosystemAppsLoading}
                                         gridColumn={gridColumn}
                                     />
                                 )

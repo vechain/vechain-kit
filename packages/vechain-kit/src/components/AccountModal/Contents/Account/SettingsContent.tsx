@@ -6,6 +6,7 @@ import {
     ModalHeader,
     Box,
     Button,
+    Heading,
 } from '@chakra-ui/react';
 import {
     useCrossAppConnectionCache,
@@ -28,6 +29,7 @@ import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { CgProfile } from 'react-icons/cg';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -45,7 +47,7 @@ export const SettingsContent = ({
 
     const { privy } = useVeChainKitConfig();
 
-    const { connection, disconnect, account, smartAccount, connectedWallet } =
+    const { connection, disconnect, smartAccount, connectedWallet, account } =
         useWallet();
 
     const { getConnectionCache } = useCrossAppConnectionCache();
@@ -68,6 +70,17 @@ export const SettingsContent = ({
             contentRef.current.scrollTop = 0;
         }
     }, []);
+
+    const handleCustomizeProfile = () => {
+        Analytics.customization.started();
+        setCurrentContent({
+            type: 'account-customization',
+            props: {
+                setCurrentContent,
+                initialContentSource: 'settings',
+            },
+        });
+    };
 
     const handleNameChange = () => {
         Analytics.nameSelection.started('settings');
@@ -119,9 +132,28 @@ export const SettingsContent = ({
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} spacing={0}>
+                    <Heading
+                        size={'xs'}
+                        fontWeight={'500'}
+                        w={'full'}
+                        opacity={0.5}
+                    >
+                        {t('Wallet')}
+                    </Heading>
                     <ActionButton
                         style={{
                             marginTop: '10px',
+                            borderBottomRadius: '0px',
+                        }}
+                        title={t('Customize profile')}
+                        onClick={handleCustomizeProfile}
+                        leftIcon={CgProfile}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
+
+                    <ActionButton
+                        style={{
+                            borderTopRadius: '0px',
                             borderBottomRadius: connection.isConnectedWithPrivy
                                 ? '0px'
                                 : '12px',
@@ -161,6 +193,15 @@ export const SettingsContent = ({
                         />
                     )}
 
+                    <Heading
+                        size={'xs'}
+                        fontWeight={'500'}
+                        w={'full'}
+                        opacity={0.5}
+                        mt={10}
+                    >
+                        {t('General')}
+                    </Heading>
                     <ActionButton
                         style={{
                             marginTop: '10px',
