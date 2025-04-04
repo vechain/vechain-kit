@@ -79,8 +79,15 @@ export const ChooseNameSearchContent = ({
     useEffect(() => {
         if (!hasInteracted) return;
 
+        // Add validation for special characters, spaces, and periods
+        const hasSpecialChars = /[^a-zA-Z0-9-]|\s/.test(name);
+
         if (name.length < 3) {
             setError(t('Name must be at least 3 characters long'));
+            setIsAvailable(false);
+            setIsOwnDomain(false);
+        } else if (hasSpecialChars) {
+            setError(t('Only letters, numbers, and hyphens are allowed'));
             setIsAvailable(false);
             setIsOwnDomain(false);
         } else if (isProtected) {
