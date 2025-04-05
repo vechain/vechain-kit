@@ -23,6 +23,7 @@ export function LanguageSelector() {
                     width="auto"
                     value={i18n.language}
                     onChange={(e) => i18n.changeLanguage(e.target.value)}
+                    data-testid="select-language"
                 >
                     {supportedLanguages.map((lang) => (
                         <option key={lang} value={lang}>

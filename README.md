@@ -32,6 +32,7 @@ It offers:
 
 -   [Setting up for local development](#setting-up-for-local-development)
 -   [Branching Strategy](#branching-strategy)
+-   [E2E Testing](#e2e-testing)
 -   [Publishing](#publishing)
 
 # Setting up for local development
@@ -69,6 +70,33 @@ Welcome to our project! Here's an overview of our branching strategy.
 
 -   **main**: The main branch represents the production-ready code. Only stable and tested features should be merged into
     this branch. Once ready for publishing, a new tag should be created from this branch.
+
+## E2E Testing
+
+We utilize Playwright for end-to-end (E2E) testing. To conduct these tests, you'll need to install browsers first:
+
+```bash
+cd tests/e2e
+yarn install-browsers
+```
+
+Once installed, you can run tests in the browser using:
+
+```bash
+yarn test
+```
+
+Alternatively, you can run them in headed mode (the opposite of headless):
+
+```bash
+yarn test:headed
+```
+
+Once the tests are done, run this to open the report:
+
+```bash
+yarn report
+```
 
 ## Translating
 

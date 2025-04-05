@@ -47,6 +47,7 @@ export const AssetButton = ({
                 opacity: 0.5,
             }}
             onClick={onClick}
+            data-testid={`asset-${symbol}`}
             {...buttonProps}
         >
             <HStack>
@@ -84,6 +85,7 @@ export const AssetButton = ({
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    data-testid={`${symbol}-balance`}
                 >
                     {compactFormatter.format(amount)}
                 </Text>

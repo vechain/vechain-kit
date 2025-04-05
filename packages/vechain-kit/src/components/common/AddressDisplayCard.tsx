@@ -69,17 +69,17 @@ export const AddressDisplayCard = ({
                     <VStack align="start" spacing={0}>
                         {domain ? (
                             <>
-                                <Text fontWeight="medium" fontSize="sm">
+                                <Text fontWeight="medium" fontSize="sm" data-testid={`${label.toLowerCase()}-domain`}>
                                     {domain}
                                 </Text>
                                 {!hideAddress && (
-                                    <Text fontSize="xs" opacity={0.5}>
+                                    <Text fontSize="xs" opacity={0.5} data-testid={`${label.toLowerCase()}-address`}>
                                         {humanAddress(address, 6, 4)}
                                     </Text>
                                 )}
                             </>
                         ) : (
-                            <Text fontWeight="medium" fontSize="sm">
+                            <Text fontWeight="medium" fontSize="sm" data-testid={`${label.toLowerCase()}-address`}>
                                 {humanAddress(address, 6, 4)}
                             </Text>
                         )}

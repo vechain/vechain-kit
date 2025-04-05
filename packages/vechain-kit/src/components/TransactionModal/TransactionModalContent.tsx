@@ -62,7 +62,7 @@ export const TransactionModalContent = ({
                         (isSendingTransaction
                             ? t('Sending Transaction...')
                             : t('Waiting for confirmation')),
-                    icon: uiConfig?.loadingIcon ?? <Spinner size="xl" />,
+                    icon: uiConfig?.loadingIcon ?? <Spinner size="xl" data-testid="pending-spinner-modal" />,
                     description: isSendingTransaction
                         ? t(
                               'Transaction is being processed, it can take up to 15 seconds.',
@@ -78,6 +78,7 @@ export const TransactionModalContent = ({
                             as={MdOutlineErrorOutline}
                             color="#ef4444"
                             fontSize="100px"
+                            data-testid="error-icon-modal"
                         />
                     ),
                     description:
@@ -91,6 +92,7 @@ export const TransactionModalContent = ({
                             as={IoIosCheckmarkCircleOutline}
                             color="#22c55e"
                             fontSize="100px"
+                            data-testid="success-icon-modal"
                         />
                     ),
                     description: '',
