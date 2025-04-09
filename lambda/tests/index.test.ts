@@ -18,8 +18,7 @@ jest.mock('@privy-io/server-auth', () => ({
 jest.mock('../index', () => {
     const originalModule = jest.requireActual('../index');
     return {
-        ...originalModule,
-        USERCHECK_API_KEY: 'test-key'
+        ...originalModule
     };
 });
 
@@ -119,6 +118,9 @@ describe('Privy User Functions', () => {
     });
 
     describe('tryUserCheck', () => {
+        beforeEach(() => {
+            process.env.USERCHECK_API_KEY = 'test-key';
+        });
         it('should return true if email is disposable', async () => {
             mockedAxios.get.mockResolvedValueOnce({
                 status: 200,

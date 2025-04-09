@@ -26,7 +26,3 @@ jobs:
 
             - name: Run tests
               run: yarn test
-              env:
-                  PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
-                  PRIVY_APP_SECRET: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_SECRET }}
-                  USERCHECK_API_KEY: ${{ secrets.USERCHECK_API_KEY }}
