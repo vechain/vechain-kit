@@ -38,7 +38,6 @@ interface LinkedAccount {
 
 const PRIVY_APP_ID = process.env.PRIVY_APP_ID as string;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET as string;
-const USERCHECK_API_KEY = process.env.USERCHECK_API_KEY as string;
 
 export async function checkPrivyDenylist(email: string): Promise<boolean> {
     const emailDomain = email.split('@')[1];
@@ -89,6 +88,7 @@ export async function checkPrivyDenylist(email: string): Promise<boolean> {
 }
 
 export async function tryUserCheck(email: string): Promise<boolean> {
+    const USERCHECK_API_KEY = process.env.USERCHECK_API_KEY as string;
     if (!USERCHECK_API_KEY) {
         return false;
     }

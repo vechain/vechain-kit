@@ -2,8 +2,6 @@ import axios from 'axios';
 import { PrivyClient, User } from '@privy-io/server-auth';
 import { getUserIdentifiers, checkPrivyDenylist, tryUserCheck } from '../index';
 
-const ENV_VARS = process.env;
-
 // Mock axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -15,6 +13,15 @@ jest.mock('@privy-io/server-auth', () => ({
         getUserByWalletAddress: mockGetUserByWalletAddress
     }))
 }));
+
+// Mock environment variables
+jest.mock('../index', () => {
+    const originalModule = jest.requireActual('../index');
+    return {
+        ...originalModule,
+        USERCHECK_API_KEY: 'test-key'
+    };
+});
 
 const createMockUser = (email: string, linkedAccounts: any[] = []): User => ({
     id: 'test-id',
@@ -36,7 +43,6 @@ describe('Privy User Functions', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockedAxios.get.mockReset();
-        process.env = { ...ENV_VARS };
         privy = new PrivyClient(process.env.PRIVY_APP_ID!, process.env.PRIVY_APP_SECRET!);
     });
 
@@ -52,7 +58,7 @@ describe('Privy User Functions', () => {
                 { type: 'email', email: 'mojawih502@movfull.com' }
             ]);
             mockGetUserByWalletAddress.mockResolvedValueOnce(mockUser);
-            const user = await privy.getUserByWalletAddress('0xe6A9e966139c0C160d0aACb390F3F318397356Fb');
+            const user = await privy.getUserByWalletAddress('0xeae63d5e8d9e582EB59ED3a07f295da1D4068fD4');
             expect(user).toEqual(mockUser);
         });
     });
@@ -119,6 +125,7 @@ describe('Privy User Functions', () => {
             });
             const isDisposable = await tryUserCheck('test@tempmail.com');
             expect(isDisposable).toBe(true);
+            expect(mockedAxios.get).toHaveBeenCalled();
         });
 
         it('should return false if email is not disposable', async () => {
@@ -127,12 +134,23 @@ describe('Privy User Functions', () => {
             });
             const isDisposable = await tryUserCheck('test@gmail.com');
             expect(isDisposable).toBe(false);
+            expect(mockedAxios.get).toHaveBeenCalled();
         });
 
         it('should handle API errors gracefully', async () => {
             mockedAxios.get.mockRejectedValueOnce(new Error('Rate limit exceeded'));
             const isDisposable = await tryUserCheck('test@example.com');
             expect(isDisposable).toBe(false);
+            expect(mockedAxios.get).toHaveBeenCalled();
+        });
+
+        it('should return false if API key is not set', async () => {
+            delete process.env.USERCHECK_API_KEY; // unset the env var
+            jest.resetModules(); // force fresh import
+            const { tryUserCheck } = await import('../index'); // import AFTER env is cleared
+            const isDisposable = await tryUserCheck('test@example.com');
+            expect(isDisposable).toBe(false);
+            expect(mockedAxios.get).not.toHaveBeenCalled();
         });
     });
 }); 
