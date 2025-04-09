@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { PrivyClient, User } from '@privy-io/server-auth';
-import { getUserIdentifiers, checkPrivyDenylist, tryUserCheck } from '../index';
+import { getUserIdentifiers, checkPrivyDenylist, tryUserCheck, addToDenylist } from '../index';
 
 // Mock axios
 jest.mock('axios');
@@ -121,7 +121,10 @@ describe('Privy User Functions', () => {
     describe('tryUserCheck', () => {
         it('should return true if email is disposable', async () => {
             mockedAxios.get.mockResolvedValueOnce({
-                data: { disposable: true }
+                status: 200,
+                data: { 
+                    disposable: true
+                }
             });
             const isDisposable = await tryUserCheck('test@tempmail.com');
             expect(isDisposable).toBe(true);
@@ -130,15 +133,23 @@ describe('Privy User Functions', () => {
 
         it('should return false if email is not disposable', async () => {
             mockedAxios.get.mockResolvedValueOnce({
-                data: { disposable: false }
+                status: 200,
+                data: { 
+                    disposable: false
+                }
             });
             const isDisposable = await tryUserCheck('test@gmail.com');
             expect(isDisposable).toBe(false);
             expect(mockedAxios.get).toHaveBeenCalled();
         });
 
-        it('should handle API errors gracefully', async () => {
-            mockedAxios.get.mockRejectedValueOnce(new Error('Rate limit exceeded'));
+        it('should handle rate limit exceeded', async () => {
+            mockedAxios.get.mockResolvedValueOnce({
+                status: 429,
+                data: {
+                    error: 'Error too many requests'
+                }
+            });
             const isDisposable = await tryUserCheck('test@example.com');
             expect(isDisposable).toBe(false);
             expect(mockedAxios.get).toHaveBeenCalled();
@@ -151,6 +162,35 @@ describe('Privy User Functions', () => {
             const isDisposable = await tryUserCheck('test@example.com');
             expect(isDisposable).toBe(false);
             expect(mockedAxios.get).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('addToDenylist', () => {
+        it('should add email domain to denylist', async () => {
+            mockedAxios.post.mockResolvedValueOnce({
+                status: 200,
+                data: {
+                    rule_type: 'emailDomain',
+                    value: 'movfull.com'
+                }
+            });
+            const successfullyAddedDomain = await addToDenylist('test@movfull.com');
+            expect(successfullyAddedDomain).toBe(true);
+            expect(mockedAxios.post).toHaveBeenCalled();
+        });
+
+        it('should handle invalid domain', async () => {
+            mockedAxios.post.mockRejectedValueOnce({
+                status: 400,
+                response: {
+                    data: {
+                        value: 'Invalid domain'
+                    }
+                }
+            });
+            const successfullyAddedDomain = await addToDenylist('movfull.com'); // should fail because it is not an email address, function gets domain from email address
+            expect(successfullyAddedDomain).toBe(false);
+            expect(mockedAxios.post).toHaveBeenCalled();
         });
     });
 }); 

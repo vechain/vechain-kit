@@ -39,6 +39,33 @@ interface LinkedAccount {
 const PRIVY_APP_ID = process.env.PRIVY_APP_ID as string;
 const PRIVY_APP_SECRET = process.env.PRIVY_APP_SECRET as string;
 
+export async function addToDenylist(email: string): Promise<boolean> {
+    const emailDomain = email.split('@')[1];
+    try {
+        const response = await axios.post(`https://auth.privy.io/api/v1/apps/${PRIVY_APP_ID}/denylist`, {
+            type: 'emailDomain',
+            value: emailDomain
+        }, {
+            auth: {
+                username: PRIVY_APP_ID,
+                password: PRIVY_APP_SECRET
+            },
+            headers: {
+                'privy-app-id': PRIVY_APP_ID
+            }
+        });
+        if (response.status === 200) {
+            return true;
+        } else {
+            console.error('Failed to add domain to denylist. API returned error:', response.data);
+            return false;
+        }
+    } catch (error) {
+        console.error('Unexpected error while adding domain to denylist:', error);
+        return false;
+    }
+}
+    
 export async function checkPrivyDenylist(email: string): Promise<boolean> {
     const emailDomain = email.split('@')[1];
     try {
@@ -79,7 +106,6 @@ export async function checkPrivyDenylist(email: string): Promise<boolean> {
             }
             cursor = nextResponse.data.next_cursor;
         }
-
         return false;
     } catch (error) {
         console.error('Error checking email disposability:', error);
@@ -98,7 +124,15 @@ export async function tryUserCheck(email: string): Promise<boolean> {
                 'Authorization': `Bearer ${USERCHECK_API_KEY}`
             }
         });
-        return response.data.disposable;
+        if (response.status === 200) {
+            return response.data.disposable;
+        } else if (response.status === 400) {
+            console.error('Error domain is invalid:', response.data);
+            return false;
+        } else { // Should be only status 429
+            console.error('Error too many requests:', response.data);
+            return false;
+        }
     } catch (error) {
         console.error('Error checking email disposability:', error);
         return false;
@@ -182,6 +216,9 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
                 if (!isInDenylist) {
                     const isDisposable = await tryUserCheck(identifiers.email);
                     identifiers.isDisposable = isDisposable;
+                    if (isDisposable) {
+                        await addToDenylist(identifiers.email);
+                    }
                 }
             } catch (error) {
                 console.error('Error checking email disposability:', error);
