@@ -4,7 +4,7 @@ on:
     push:
         branches:
             - main
-        paths: ['lambda/**', '.github/workflows/deploy-api-lambda.yaml']
+        paths: ['lambda/**', '!lambda/tests/**', '.github/workflows/deploy-api-lambda.yaml']
 
 permissions:
     contents: read
@@ -40,4 +40,4 @@ jobs:
                 --region ${{ env.AWS_REGION }} \
                 --capabilities CAPABILITY_IAM \
                 --no-fail-on-empty-changeset \
-                --parameter-overrides "PrivyAppId=${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }} PrivyAppSecret=${{ secrets.NEXT_PUBLIC_PRIVY_APP_SECRET }}"
+                --parameter-overrides "PrivyAppId=${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }} PrivyAppSecret=${{ secrets.NEXT_PUBLIC_PRIVY_APP_SECRET }}  UserCheckApiKey=${{ secrets.USERCHECK_API_KEY }}"

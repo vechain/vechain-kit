@@ -1,15 +1,17 @@
 {
     "compilerOptions": {
-      "target": "es2020",
+      "target": "ES2020",
+      "module": "commonjs",
+      "lib": ["ES2020"],
+      "moduleResolution": "node",
+      "outDir": "./dist",
+      "rootDir": "./",
       "strict": true,
-      "preserveConstEnums": true,
-      "noEmit": true,
-      "sourceMap": false,
-      "module":"es2015",
-      "moduleResolution":"node",
-      "esModuleInterop": true, 
+      "noImplicitAny": true,
+      "esModuleInterop": true,
       "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,  
+      "forceConsistentCasingInFileNames": true,
+      "resolveJsonModule": true
     },
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "dist"]
   }
