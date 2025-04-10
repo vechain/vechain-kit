@@ -36,6 +36,8 @@ import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
 } from '@/utils/Constants';
+import { isValidUrl } from '@/utils';
+import { CustomLogicProvider } from './CustomLogicProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -98,6 +100,7 @@ export type VechainKitProviderProps = {
         };
     };
     allowCustomTokens?: boolean;
+    termsAndConditionsUrl?: string;
 };
 
 type VeChainKitConfig = {
@@ -112,6 +115,7 @@ type VeChainKitConfig = {
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
+    termsAndConditionsUrl?: string;
 };
 
 /**
@@ -187,6 +191,12 @@ const validateConfig = (
             }
         }
     }
+    if (
+        props?.termsAndConditionsUrl &&
+        !isValidUrl(props.termsAndConditionsUrl)
+    ) {
+        errors.push('termsAndConditionsUrl must be a valid URL');
+    }
 
     if (errors.length > 0) {
         throw new Error(
@@ -217,6 +227,7 @@ export const VeChainKitProvider = (
         language = 'en',
         network,
         allowCustomTokens,
+        termsAndConditionsUrl,
     } = validatedProps;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
@@ -286,6 +297,7 @@ export const VeChainKitProvider = (
                         language,
                         network,
                         allowCustomTokens,
+                        termsAndConditionsUrl,
                     }}
                 >
                     <PrivyProvider
@@ -376,7 +388,11 @@ export const VeChainKitProvider = (
                                     false
                                 }
                             >
-                                <ModalProvider>{children}</ModalProvider>
+                                <ModalProvider>
+                                    <CustomLogicProvider>
+                                        {children}
+                                    </CustomLogicProvider>
+                                </ModalProvider>
                             </PrivyWalletProvider>
                         </DAppKitProvider>
                     </PrivyProvider>
