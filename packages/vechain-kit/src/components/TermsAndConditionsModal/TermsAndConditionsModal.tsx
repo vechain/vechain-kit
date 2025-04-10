@@ -1,5 +1,7 @@
 import {
     Button,
+    Icon,
+    Link,
     ModalBody,
     ModalCloseButton,
     ModalFooter,
@@ -8,27 +10,24 @@ import {
 } from '@chakra-ui/react';
 import { BaseModal } from '@/components/common';
 import { useTermsAndConditions } from '@/hooks/utils/useTermsAndConditions';
-import { useWallet } from '@/hooks';
-import { useCallback } from 'react';
+import { IoOpenOutline } from 'react-icons/io5';
+import { useVeChainKitConfig } from '@/providers';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
+    onAgree: () => void;
 };
 
-export const TermsAndConditionsModal = ({ isOpen, onClose }: Props) => {
-    const { disconnect } = useWallet();
-    const { agreeToTerms, termsUrl } = useTermsAndConditions();
-
-    const handleAgree = useCallback(() => {
-        agreeToTerms();
-        onClose();
-    }, [agreeToTerms, onClose]);
-
-    const handleDisagree = useCallback(() => {
-        onClose();
-        disconnect();
-    }, [disconnect, onClose]);
+export const TermsAndConditionsModal = ({
+    isOpen,
+    onClose,
+    onAgree,
+}: Props) => {
+    const { termsUrl } = useTermsAndConditions();
+    const { darkMode: isDark } = useVeChainKitConfig();
+    const { t } = useTranslation();
 
     return (
         <BaseModal
@@ -37,29 +36,32 @@ export const TermsAndConditionsModal = ({ isOpen, onClose }: Props) => {
             allowExternalFocus={true}
             blockScrollOnMount={true}
         >
-            <ModalHeader>Terms and Conditions</ModalHeader>
-            <ModalCloseButton onClick={handleDisagree} />
+            <ModalHeader>{t('Terms and Conditions')}</ModalHeader>
+            <ModalCloseButton onClick={onClose} />
             <ModalBody>
                 <Text mb={4}>
-                    To proceed, you must agree to our Terms and Conditions.
+                    {t(
+                        'To proceed, you must agree to our Terms and Conditions.',
+                    )}
                 </Text>
-                <Text>
-                    Please review our terms at:{' '}
-                    <a
-                        href={termsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {termsUrl}
-                    </a>
-                </Text>
+                <Text>{t('Please review our terms at:')}</Text>{' '}
+                <Link
+                    href={termsUrl}
+                    isExternal
+                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    fontSize={'14px'}
+                    textDecoration={'underline'}
+                >
+                    {termsUrl}
+                    <Icon ml={1} as={IoOpenOutline} />
+                </Link>
             </ModalBody>
-            <ModalFooter>
-                <Button variant="ghost" mr={3} onClick={handleDisagree}>
-                    Disagree
+            <ModalFooter w="full" display="flex" gap={2}>
+                <Button variant="vechainKitSecondary" onClick={onClose}>
+                    {t('Disagree')}
                 </Button>
-                <Button colorScheme="blue" onClick={handleAgree}>
-                    Agree
+                <Button variant="vechainKitPrimary" onClick={onAgree}>
+                    {t('Agree')}
                 </Button>
             </ModalFooter>
         </BaseModal>
