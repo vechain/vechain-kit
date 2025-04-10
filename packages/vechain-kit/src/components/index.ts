@@ -9,3 +9,4 @@ export * from './EcosystemModal';
 export * from './ProfileCard';
 export { WalletButton as DAppKitWalletButton } from '@vechain/dapp-kit-react';
 export * from './UpgradeSmartAccountModal';
+export * from './TermsAndConditionsModal';
