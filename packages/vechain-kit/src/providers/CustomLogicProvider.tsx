@@ -2,12 +2,11 @@ import {
     createContext,
     ReactNode,
     useContext,
-    useEffect,
     useState,
+    useEffect,
 } from 'react';
 import { useTermsAndConditions, useWallet } from '@/hooks';
 import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
-import { useDisclosure } from '@chakra-ui/react';
 
 const CustomLogicContext = createContext<null>(null);
 
@@ -22,43 +21,36 @@ export const useCustomLogic = () => {
 };
 
 export const CustomLogicProvider = ({ children }: { children: ReactNode }) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const { connection, account } = useWallet();
-    const { hasAgreedToTerms } = useTermsAndConditions();
-    const [hasShownModal, setHasShownModal] = useState(false);
+    const { connection, account, disconnect } = useWallet();
+    const { hasAgreedToTerms, agreeToTerms } = useTermsAndConditions();
+    const [showTermsModal, setShowTermsModal] = useState(false);
 
     useEffect(() => {
-        if (!connection.isConnected && isOpen) {
-            onClose();
-            return;
+        if (connection.isConnected && account?.address) {
+            setShowTermsModal(!hasAgreedToTerms);
+        } else {
+            setShowTermsModal(false);
         }
-        if (
-            connection.isConnected &&
-            !!account?.address &&
-            !hasAgreedToTerms &&
-            !isOpen &&
-            !hasShownModal
-        ) {
-            onOpen();
-            setHasShownModal(true);
-        }
+    }, [connection.isConnected, account?.address, hasAgreedToTerms]);
 
-        if (hasAgreedToTerms) {
-            setHasShownModal(false);
-        }
-    }, [
-        connection.isConnected,
-        account?.address,
-        hasAgreedToTerms,
-        isOpen,
-        onOpen,
-        onClose,
-    ]);
+    const handleAgree = () => {
+        agreeToTerms();
+        setShowTermsModal(false);
+    };
+
+    const handleCloseOrDisagree = () => {
+        disconnect();
+        setShowTermsModal(false);
+    };
 
     return (
         <CustomLogicContext.Provider value={null}>
             {children}
-            <TermsAndConditionsModal isOpen={isOpen} onClose={onClose} />
+            <TermsAndConditionsModal
+                isOpen={showTermsModal}
+                onClose={handleCloseOrDisagree}
+                onAgree={handleAgree}
+            />
         </CustomLogicContext.Provider>
     );
 };
