@@ -91,7 +91,7 @@ export const BalanceSection = ({
                     />
                 </Box>
             </HStack>
-            <HStack w={'full'} justifyContent={'flex-start'}>
+            <HStack w={'full'} justifyContent={'flex-start'} data-testid='all-assets-button'>
                 <AssetIcons
                     onClick={onAssetsClick}
                     maxIcons={10}

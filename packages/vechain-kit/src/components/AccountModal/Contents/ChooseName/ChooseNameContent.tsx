@@ -51,7 +51,7 @@ export const ChooseNameContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Choose your account name')}</ModalHeader>
+                <ModalHeader data-testid='modal-title'>{t('Choose your account name')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
@@ -94,6 +94,7 @@ export const ChooseNameContent = ({
                             },
                         })
                     }
+                    data-testid="choose-name-button"
                 >
                     {t('Choose name')}
                 </Button>

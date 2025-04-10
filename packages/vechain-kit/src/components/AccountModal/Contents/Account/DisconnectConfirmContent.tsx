@@ -47,6 +47,7 @@ export const DisconnectConfirmContent = ({
                         colorScheme="red"
                         w="full"
                         onClick={onDisconnect}
+                        data-testid="disconnect-button"
                     >
                         {t('Disconnect')}
                     </Button>

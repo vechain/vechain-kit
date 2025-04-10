@@ -7,7 +7,10 @@ export function ThemeToggle() {
 
     return (
         <Box>
-            <Button onClick={toggleColorMode}>
+            <Button
+                onClick={toggleColorMode}
+                data-testid={`${colorMode === 'light' ? 'dark' : 'light'}-mode-button`}
+            >
                 Toggle {colorMode === 'light' ? 'Dark' : 'Light'} Mode
             </Button>
         </Box>
