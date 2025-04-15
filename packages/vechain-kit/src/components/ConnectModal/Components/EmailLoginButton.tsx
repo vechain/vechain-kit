@@ -33,7 +33,11 @@ export const EmailLoginButton = () => {
     const [privyError, setPrivyError] = useState<Error | null>(null);
     const [gmailError, setGmailError] = useState<Error | null>(null);
     const { sendCode, state: emailState } = useLoginWithEmail({onError: (error) => {
-        setPrivyError(new Error(error));
+        if (error === 'unknown_auth_error') {
+            setPrivyError(new Error('Disposable email addresses are not supported'));
+        } else {
+            setPrivyError(new Error(error));
+        }
     }});
 
     const emailCodeVerificationModal = useDisclosure();
