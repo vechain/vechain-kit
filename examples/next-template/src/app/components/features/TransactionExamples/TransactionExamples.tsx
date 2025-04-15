@@ -3,11 +3,12 @@
 import { Box, Button, Heading, HStack } from '@chakra-ui/react';
 import {
     useWallet,
-    useSendTransaction,
+    useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
     TransactionModal,
     TransactionToast,
+    EnhancedClause,
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
@@ -17,6 +18,28 @@ import { useMemo, useCallback } from 'react';
 export function TransactionExamples() {
     const { account, connectedWallet } = useWallet();
 
+    const clauseBuilder = useCallback((): EnhancedClause[] => {
+        if (!connectedWallet?.address) return [];
+
+        const B3TRInterface = IB3TR__factory.createInterface();
+
+        const clausesArray: EnhancedClause[] = [];
+        clausesArray.push({
+            to: b3trMainnetAddress,
+            value: '0x0',
+            data: B3TRInterface.encodeFunctionData('transfer', [
+                connectedWallet?.address,
+                '0', // 0 B3TR (in wei)
+            ]),
+            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
+                connectedWallet?.address,
+            )}`,
+            abi: B3TRInterface.getFunction('transfer'),
+        });
+
+        return clausesArray;
+    }, [connectedWallet?.address]);
+
     const {
         sendTransaction,
         status,
@@ -24,8 +47,8 @@ export function TransactionExamples() {
         isTransactionPending,
         error,
         resetStatus,
-    } = useSendTransaction({
-        signerAccountAddress: account?.address ?? '',
+    } = useBuildTransaction({
+        clauseBuilder,
         privyUIOptions: {
             title: 'Send Dummy Transaction',
             description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
@@ -47,42 +70,20 @@ export function TransactionExamples() {
         isOpen: isTransactionToastOpen,
     } = useTransactionToast();
 
-    const clauses = useMemo(() => {
-        if (!connectedWallet?.address) return [];
-
-        const B3TRInterface = IB3TR__factory.createInterface();
-
-        const clausesArray: any[] = [];
-        clausesArray.push({
-            to: b3trMainnetAddress,
-            value: '0x0',
-            data: B3TRInterface.encodeFunctionData('transfer', [
-                connectedWallet?.address,
-                '0', // 1 B3TR (in wei)
-            ]),
-            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                connectedWallet?.address,
-            )}`,
-            abi: B3TRInterface.getFunction('transfer'),
-        });
-
-        return clausesArray;
-    }, [connectedWallet?.address]);
-
     const handleTransactionWithToast = useCallback(async () => {
         openTransactionToast();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, openTransactionToast]);
+        await sendTransaction();
+    }, [sendTransaction, openTransactionToast]);
 
     const handleTransactionWithModal = useCallback(async () => {
         openTransactionModal();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, openTransactionModal]);
+        await sendTransaction();
+    }, [sendTransaction, openTransactionModal]);
 
     const handleTryAgain = useCallback(async () => {
         resetStatus();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, resetStatus]);
+        await sendTransaction();
+    }, [sendTransaction, resetStatus]);
 
     return (
         <>
