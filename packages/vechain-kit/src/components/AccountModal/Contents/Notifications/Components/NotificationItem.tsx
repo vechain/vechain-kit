@@ -44,14 +44,15 @@ export const NotificationItem = ({
             opacity={notification.isRead ? 0.7 : 1}
             cursor="pointer"
             _hover={{ opacity: 0.8 }}
+            data-testid="notification-item"
         >
             <AlertIcon boxSize={'16px'} />
             <Box>
-                <AlertTitle fontSize={'sm'}>
+                <AlertTitle fontSize={'sm'} data-testid="notification-title">
                     {/* @ts-ignore */}
                     {t(notification.title)}
                 </AlertTitle>
-                <AlertDescription fontSize={'xs'} lineHeight={'1.2'}>
+                <AlertDescription fontSize={'xs'} lineHeight={'1.2'} data-testid="notification-text">
                     {/* @ts-ignore */}
                     {t(notification.description)}
                 </AlertDescription>
@@ -69,6 +70,7 @@ export const NotificationItem = ({
                         handleDismiss();
                     }}
                     aria-label="Mark as read and archive"
+                    data-testid="remove-notification-button"
                 />
             )}
         </Alert>

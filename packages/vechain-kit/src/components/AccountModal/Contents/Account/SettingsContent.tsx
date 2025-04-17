@@ -241,6 +241,7 @@ export const SettingsContent = ({
                                 />
                             )
                         }
+                        dataTestId="notifications-button"
                     />
                     <ActionButton
                         title={t('Help')}

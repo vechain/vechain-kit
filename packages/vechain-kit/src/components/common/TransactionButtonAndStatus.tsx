@@ -62,7 +62,7 @@ export const TransactionButtonAndStatus = ({
     return (
         <VStack width="full" spacing={4}>
             {errorMessage && (
-                <Text color="#da5a5a" textAlign="center" width="full">
+                <Text color="#da5a5a" textAlign="center" width="full" data-testid="tx-send-error-msg">
                     {errorMessage}
                 </Text>
             )}
@@ -81,6 +81,7 @@ export const TransactionButtonAndStatus = ({
                         ? t('Waiting wallet confirmation...')
                         : transactionPendingText
                 }
+                data-testid="confirm-button"
             >
                 {errorMessage
                     ? t('Retry')

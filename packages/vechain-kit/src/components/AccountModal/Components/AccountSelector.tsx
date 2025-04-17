@@ -55,6 +55,7 @@ export const AccountSelector = ({
                 aria-label="Wallet"
                 onClick={onClick}
                 variant="mainContentButton"
+                data-testid="profile-button"
             >
                 <HStack
                     spacing={2}
