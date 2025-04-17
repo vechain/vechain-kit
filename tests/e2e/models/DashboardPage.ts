@@ -94,4 +94,63 @@ export class DashboardPage extends BasePage {
       await this.signTypedDataButton.click()
     })
   }
+
+  async getWalletAddress() {
+    return await test.step('Get wallet address', async () => {
+      const text = await this.page.getByTestId("connected-wallet-address").innerText()
+      return text.substring(text.indexOf(':') + 1).trim()
+    })
+  }
+
+  async getSmartAccountInfo() {
+    return await test.step('Get smart contract info', async () => {
+      const addressText = await this.page.getByTestId("smart-account-address").innerText()
+      const address = addressText.substring(addressText.indexOf(':') + 1).trim()
+      const isDeployedText = await this.page.getByTestId("is-sa-deployed").innerText()
+      const isDeployed = isDeployedText.substring(isDeployedText.indexOf(':') + 1).trim()
+      const b3trBalanceText = await this.page.getByTestId("b3tr-balance").innerText()
+      const b3trBalance = b3trBalanceText.substring(b3trBalanceText.indexOf(':') + 1).trim()
+
+      return {
+        address,
+        isDeployed,
+        b3trBalance,
+      }
+    })
+  }
+
+  async getConnectionInfo() {
+    return await test.step('Get connection info', async () => {
+      const typeText = await this.page.getByTestId("connection-type").innerText()
+      const type = typeText.substring(typeText.indexOf(':') + 1).trim()
+      const networkText = await this.page.getByTestId("network").innerText()
+      const network = networkText.substring(networkText.indexOf(':') + 1).trim()
+
+      return {
+        type,
+        network,
+      }
+    })
+  }
+
+  async getVeBetterDAOInfo() {
+    return await test.step('Get VeBetterDAO' +
+        ' info', async () => {
+      const roundIdText = await this.page.getByTestId("current-allocation-round-id").innerText()
+      const roundId = roundIdText.substring(roundIdText.indexOf(':') + 1).trim()
+      const gmNFTText = await this.page.getByTestId("selected-gm-nft").innerText()
+      const gmNFT = gmNFTText.substring(gmNFTText.indexOf(':') + 1).trim()
+      const participatedInGovernanceText = await this.page.getByTestId("participated-in-governance").innerText()
+      const participatedInGovernance = participatedInGovernanceText.substring(participatedInGovernanceText.indexOf(':') + 1).trim()
+      const isPassportValidText = await this.page.getByTestId("is-passport-valid").innerText()
+      const isPassportValid = isPassportValidText.substring(isPassportValidText.indexOf(':') + 1).trim()
+
+      return {
+        roundId,
+        gmNFT,
+        participatedInGovernance,
+        isPassportValid,
+      }
+    })
+  }
 }
