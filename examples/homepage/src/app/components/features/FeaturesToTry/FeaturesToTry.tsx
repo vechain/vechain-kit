@@ -122,8 +122,12 @@ export function FeaturesToTry() {
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-                {features.map((feature) => (
-                    <FeatureCard key={feature.title} {...feature} />
+                {features.map((feature, index) => (
+                    <FeatureCard
+                        key={feature.title}
+                        {...feature}
+                        showHint={index === 0}
+                    />
                 ))}
                 <LanguageCard />
                 <ThemeCard />

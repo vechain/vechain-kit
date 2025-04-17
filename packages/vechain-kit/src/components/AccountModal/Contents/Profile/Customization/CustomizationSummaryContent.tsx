@@ -17,15 +17,19 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import {
     useWallet,
-    useRefreshMetadata,
     useUpgradeRequired,
     useUpgradeSmartAccountModal,
+    getAvatarQueryKey,
+    getAvatarOfAddressQueryKey,
+    getTextRecordsQueryKey,
 } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/StringUtils';
+import { useQueryClient } from '@tanstack/react-query';
+import { convertUriToUrl } from '@/utils';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -57,12 +61,9 @@ export const CustomizationSummaryContent = ({
     onDoneRedirectContent,
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, network } = useVeChainKitConfig();
     const { account, connectedWallet } = useWallet();
-    const { refresh: refreshMetadata } = useRefreshMetadata(
-        account?.domain ?? '',
-        account?.address ?? '',
-    );
+
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -81,6 +82,8 @@ export const CustomizationSummaryContent = ({
 
     // Pre-fetch the resolver address
     const { data: resolverAddress } = useGetResolverAddress(domain);
+
+    const queryClient = useQueryClient();
 
     const {
         sendTransaction: updateTextRecord,
@@ -120,7 +123,7 @@ export const CustomizationSummaryContent = ({
             });
 
             try {
-                await refreshMetadata();
+                await refresh();
             } catch (error) {
                 console.error('Error refreshing data:', error);
             }
@@ -222,6 +225,28 @@ export const CustomizationSummaryContent = ({
             props: {
                 setCurrentContent,
             },
+        });
+    };
+
+    const refresh = async () => {
+        // Set the new avatar data directly as base64 string
+        queryClient.setQueryData(
+            getAvatarQueryKey(domain, network.type),
+            convertUriToUrl('ipfs://' + changes.avatarIpfsHash, network.type),
+        );
+
+        queryClient.setQueryData(
+            getAvatarOfAddressQueryKey(account?.address ?? ''),
+            convertUriToUrl('ipfs://' + changes.avatarIpfsHash, network.type),
+        );
+
+        // Still refresh text records since they might have other changes
+        await queryClient.invalidateQueries({
+            queryKey: getTextRecordsQueryKey(domain, network.type),
+        });
+
+        await queryClient.refetchQueries({
+            queryKey: getTextRecordsQueryKey(domain, network.type),
         });
     };
 

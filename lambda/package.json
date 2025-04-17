@@ -6,20 +6,48 @@
   "repository": "https://github.com/vechain/vechain-kit",
   "author": "VeChain Kit",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
   "dependencies": {
-    "@privy-io/server-auth": "^1.19.1",
+    "@privy-io/public-api": "^2.20.5",
+    "@privy-io/server-auth": "^1.19.3",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.5",
     "esbuild": "^0.14.14",
-    "viem": "^2.7.9",
-    "ethers": "^6.11.0"
+    "ethers": "^6.11.0",
+    "viem": "^2.7.9"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.92",
-    "@types/node": "^20.5.7",
-    "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "@typescript-eslint/parser": "^5.10.2",
-    "eslint": "^8.8.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "typescript": "^5.0.4"
+    "@types/aws-lambda": "^8.10.119",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.6",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.8.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testMatch": [
+      "**/tests/**/*.test.ts"
+    ]
   }
 }

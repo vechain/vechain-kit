@@ -243,7 +243,7 @@ export const CustomizationContent = ({
                 reason: 'back_button',
             });
         }
-        setCurrentContent('profile');
+        setCurrentContent(initialContentSource);
     };
 
     return (
