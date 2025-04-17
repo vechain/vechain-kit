@@ -116,6 +116,7 @@ for (const authType of [
     'veworld',
     // 'privy'
 ] as AuthType[]) {
+    // most of the tests are disabled because profile customization contract isn't deployed on solo
     test.describe.serial(`[${authType}] Profile customization`, () => {
         const accIndex = randomNumber(4, 18)
         const randStr = randomString(6)
@@ -157,7 +158,7 @@ for (const authType of [
             await expect(accountModal.successIcon).toBeVisible()
         })
 
-        test(`[${authType}] Personalize account`, async () => {
+        test.skip(`[${authType}] Personalize account`, async () => {
             await dashboardPage.openAccountModal()
             await accountModal.personalizeAccount(personalizationData)
             await expect(accountModal.successIcon).toBeVisible()
@@ -165,7 +166,7 @@ for (const authType of [
             await accountModal.expectPersonalizedInfo(personalizationData)
         })
 
-        test(`[${authType}] Set an already owned domain name`, async () => {
+        test.skip(`[${authType}] Set an already owned domain name`, async () => {
             // claim a throw-away domain name
             await dashboardPage.openAccountModal()
             await accountModal.claimDomainName(`${authType}-${randomString(4)}`)
@@ -182,7 +183,7 @@ for (const authType of [
         })
 
         // ignored by beforeEach hook due to unique auth pattern required by test steps
-        test(`[${authType}] Can't claim a domain name owned by other account`, async () => {
+        test.skip(`[${authType}] Can't claim a domain name owned by other account`, async () => {
             const accIndex = randomNumber(4, 18)
             const randStr = randomString(6)
 
