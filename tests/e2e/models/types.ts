@@ -5,6 +5,8 @@ export type TxStatus = 'success' | 'error'
 export type DomainStatus = 'available' | 'unavailable' | 'taken' | 'own' | 'protected'
 export type QuickActionButton = 'swap' | 'receive' | 'send' | 'bridge' | 'ecosystem' | 'settings'
 export type AuthType = 'veworld' | 'privy'
+export type SettingsSectionName = 'notifications' | 'customize profile' | 'choose account name' | 'connection details' | 'help'
+export type NotificationsViewName = 'archived' | 'current'
 
 export type AuthArgs = {
   authType: AuthType;

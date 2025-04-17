@@ -14,6 +14,7 @@ import {
   QuickActionButton,
   TxStatus
 } from "./types";
+import {AccountModalNotifications} from "./AccountModalNotifications";
 
 /**
  * Dashboard page models
@@ -22,6 +23,7 @@ export class AccountModal extends BasePage {
   readonly profile: AccountModalProfile
   readonly assets: AccountModalAssets
   readonly settings: AccountModalSettings
+  readonly notifications: AccountModalNotifications
 
   private readonly modalBody: Locator
   readonly closeButton: Locator
@@ -38,6 +40,7 @@ export class AccountModal extends BasePage {
     this.profile = new AccountModalProfile(page)
     this.assets = new AccountModalAssets(page)
     this.settings = new AccountModalSettings(page)
+    this.notifications = new AccountModalNotifications(page)
 
     this.modalBody = this.page.locator("//*[contains(@class, 'chakra-modal__content-container')]")
     this.closeButton = this.modalBody.locator("//button[@aria-label='Close']")
@@ -169,6 +172,13 @@ export class AccountModal extends BasePage {
         if (data.socialLinks.twitter)
           await expect(this.profile.twitterVal).toHaveAttribute('href', `https://x.com/${data.socialLinks.twitter!}`)
       }
+    })
+  }
+
+  async openNotifications() {
+    return await test.step('Open notifications', async () => {
+      await this.settings.open()
+      await this.settings.openSection('notifications')
     })
   }
 }
