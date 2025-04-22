@@ -16,10 +16,10 @@ import { b3trMainnetAddress } from '../../../constants';
 import { useCallback } from 'react';
 
 export function TransactionExamples() {
-    const { account, connectedWallet } = useWallet();
+    const { account } = useWallet();
 
     const clauseBuilder = useCallback((): EnhancedClause[] => {
-        if (!connectedWallet?.address) return [];
+        if (!account?.address) return [];
 
         const B3TRInterface = IB3TR__factory.createInterface();
 
@@ -28,16 +28,16 @@ export function TransactionExamples() {
                 to: b3trMainnetAddress,
                 value: '0x0',
                 data: B3TRInterface.encodeFunctionData('transfer', [
-                    connectedWallet.address,
+                    account.address,
                     '0', // 0 B3TR
                 ]),
                 comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
-                    connectedWallet.address,
+                    account.address,
                 )}`,
                 abi: B3TRInterface.getFunction('transfer'),
             },
         ];
-    }, [connectedWallet?.address]);
+    }, [account?.address]);
 
     const {
         sendTransaction,
@@ -109,7 +109,7 @@ export function TransactionExamples() {
                 txReceipt={txReceipt}
                 onTryAgain={handleTryAgain}
                 description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
-                    connectedWallet?.address ?? '',
+                    account?.address ?? '',
                 )}`}
             />
 
@@ -123,7 +123,7 @@ export function TransactionExamples() {
                 uiConfig={{
                     title: 'Test Transaction',
                     description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
-                        connectedWallet?.address ?? '',
+                        account?.address ?? '',
                     )}`,
                     showShareOnSocials: true,
                     showExplorerButton: true,
