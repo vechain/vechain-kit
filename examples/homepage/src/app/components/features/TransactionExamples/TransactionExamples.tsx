@@ -4,7 +4,6 @@ import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
 import { MdSend } from 'react-icons/md';
 import { FaCode } from 'react-icons/fa';
 import { useMemo, useCallback } from 'react';
-
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
@@ -14,10 +13,8 @@ import {
     TransactionModal,
     TransactionToast,
 } from '@vechain/vechain-kit';
-
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { b3trMainnetAddress } from '../../../constants';
-import { humanAddress } from '@vechain/vechain-kit/utils';
 
 export function TransactionExamples() {
     const { account } = useWallet();
