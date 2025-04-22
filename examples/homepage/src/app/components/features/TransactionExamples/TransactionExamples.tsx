@@ -6,6 +6,7 @@ import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
     useSendTransaction,
+    useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
     TransactionModal,
@@ -27,7 +28,7 @@ export function TransactionExamples() {
         isTransactionPending,
         error,
         resetStatus,
-    } = useSendTransaction({
+    } = useBuildTransaction({
         signerAccountAddress: account?.address ?? '',
         privyUIOptions: {
             title: 'Send Dummy Transaction',
