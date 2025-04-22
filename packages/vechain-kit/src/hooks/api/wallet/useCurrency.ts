@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { CURRENCY } from '@/types';
+import { useCallback } from 'react';
 
 const STORAGE_KEY = 'vechain_kit_currency';
 const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];
@@ -8,14 +9,12 @@ const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];
 type Token = {
     address: string;
     symbol: string;
-    price: number;
-    usdValue: number;
+    usdPrice: number;
+    valueInUsd: number;
     valueInGbp: number;
     valueInEur: number;
     gbpUsdPrice: number;
     eurUsdPrice: number;
-    balance?: string;
-    numericBalance?: string;
 }
 
 export const getTotalTokenValueInSelectedCurrency = (token: Token, currentCurrency: CURRENCY) => {
@@ -25,18 +24,18 @@ export const getTotalTokenValueInSelectedCurrency = (token: Token, currentCurren
         case 'gbp':
             return token.valueInGbp;
         default:
-            return token.usdValue;
+            return token.valueInUsd;
     }
 };
 
-export const convertTokenValueIntoSelectedCurrency = (usdValue: number, token: Token, currentCurrency: CURRENCY) => {
+export const convertTokenValueIntoSelectedCurrency = (tokenAmountInUsd: number, token: Token, currentCurrency: CURRENCY) => {
     switch (currentCurrency) {
         case 'eur':
-            return usdValue / token.eurUsdPrice;
+            return tokenAmountInUsd / token.eurUsdPrice;
         case 'gbp':
-            return usdValue / token.gbpUsdPrice;
+            return tokenAmountInUsd / token.gbpUsdPrice;
         default:
-            return usdValue;
+            return tokenAmountInUsd;
     }
 };
 
@@ -57,23 +56,33 @@ export const getBalanceInCurrency = (
 export const getCurrencyQueryKey = () => ['VECHAIN_KIT_CURRENT_CURRENCY'];
 
 /**
- * Get the currency with persistence
- * @returns Currency hook with persistent storage
+ * Hook for managing currency preferences and conversions
+ * @returns {Object} An object containing currency management functions and the current currency
+ * @property {CURRENCY} currentCurrency - The currency currently selected by the user
+ * @property {CURRENCY[]} allCurrencies - An array of all supported currencies
+ * @property {Function} changeCurrency - A function to update the current currency
+ * @property {Function} getTotalTokenValueInSelectedCurrency - Function to get the total token value in the selected currency
+ * @property {Function} convertTokenValueIntoSelectedCurrency - Function to convert a token's value into the selected currency
+ * @property {Function} getBalanceInCurrency - Function to get the total balance in the selected currency
  */
 export const useCurrency = () => {
     const queryClient = useQueryClient();
     const { defaultCurrency = 'usd' } = useVeChainKitConfig();
     
-    const getStoredCurrency = (): CURRENCY => {
+    const getStoredCurrency = useCallback((): CURRENCY => {
         try {
             const stored = localStorage.getItem(STORAGE_KEY);
             return (stored as CURRENCY) || defaultCurrency;
         } catch {
             return defaultCurrency;
         }
-    };
+    }, [defaultCurrency]);
     
     const setStoredCurrency = (currency: CURRENCY) => {
+        if (!allCurrencies.includes(currency)) {
+            console.error(`Invalid currency: ${currency}`);
+            return;
+        }
         try {
             localStorage.setItem(STORAGE_KEY, currency);
         } catch (e) {

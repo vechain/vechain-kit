@@ -274,7 +274,7 @@ export const SendTokenSummaryContent = ({
                             domain={account?.domain}
                             imageSrc={account?.image ?? ''}
                             imageAlt="From account"
-                            balance={Number(selectedToken.numericBalance)}
+                            balance={Number(selectedToken.balance)}
                             tokenAddress={selectedToken.address}
                         />
 
@@ -314,7 +314,7 @@ export const SendTokenSummaryContent = ({
                                 <Text fontSize="sm" opacity={0.5}>
                                     ≈ {CURRENCY_SYMBOLS[currentCurrency]}
                                     {compactFormatter.format(
-                                        convertTokenValueIntoSelectedCurrency(Number(amount) * selectedToken.price, selectedToken, currentCurrency),
+                                        convertTokenValueIntoSelectedCurrency(Number(amount) * selectedToken.usdPrice, selectedToken, currentCurrency),
                                     )}
                                 </Text>
                             </HStack>

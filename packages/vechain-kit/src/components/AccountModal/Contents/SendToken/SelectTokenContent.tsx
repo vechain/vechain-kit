@@ -25,15 +25,13 @@ import { CURRENCY_SYMBOLS } from '@/types';
 export type Token = {
     address: string;
     symbol: string;
-    value: string;
-    price: number;
-    usdValue: number;
+    balance: string;
+    usdPrice: number;
+    valueInUsd: number;
     gbpUsdPrice: number;
     eurUsdPrice: number;
     valueInGbp: number;
     valueInEur: number;
-    balance: string;
-    numericBalance: string;
 };
 
 type Props = {
@@ -52,18 +50,9 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { tokens } = useBalances({ address: account?.address ?? '' });
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Convert tokens object to array and add custom tokens
-    const allTokens: Token[] = [
-        ...Object.values(tokens).map((token) => ({
-            ...token,
-            balance: token.value.toString(),
-            numericBalance: token.value,
-        })),
-    ];
-
     // Filter and sort tokens
-    const filteredTokens = allTokens
-        .filter(({ symbol }) =>
+    const filteredTokens: Token[] = [
+        ...Object.values(tokens).filter(({ symbol }) =>
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
@@ -71,7 +60,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                 return getTotalTokenValueInSelectedCurrency(b, currentCurrency) > 0 ? 1 : -1;
             }
             return getTotalTokenValueInSelectedCurrency(b, currentCurrency) - getTotalTokenValueInSelectedCurrency(a, currentCurrency);
-        });
+        })];
 
     useEffect(() => {
         if (searchQuery) {
@@ -138,7 +127,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                             <VStack spacing={2} align="stretch">
                                 {filteredTokens.map((token) => {
                                     const hasBalance =
-                                        Number(token.value) > 0;
+                                        Number(token.balance) > 0;
                                     const valueInCurrency =
                                         getTotalTokenValueInSelectedCurrency(token, currentCurrency);
 
@@ -146,7 +135,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                                         <AssetButton
                                             key={token.address}
                                             symbol={token.symbol}
-                                            amount={Number(token.value)}
+                                            amount={Number(token.balance)}
                                             currencyValue={valueInCurrency}
                                             currencySymbol={CURRENCY_SYMBOLS[currentCurrency]}
                                             onClick={() => onSelectToken(token)}

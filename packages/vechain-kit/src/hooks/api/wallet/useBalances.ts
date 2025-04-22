@@ -148,17 +148,17 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             (acc, balance) => {
                 const usdPrice =
                     prices.find((p) => p.address === balance.priceAddress)?.price || 0;
-                const usdValue = usdPrice * Number(balance.value);
+                const valueInUsd = usdPrice * Number(balance.value);
                 
                 // Convert USD value to selected currency
-                const valueInGbp = usdValue * (1 / (gbpUsdPrice || 1));
-                const valueInEur = usdValue * (1 / (eurUsdPrice || 1));
+                const valueInGbp = valueInUsd * (1 / (gbpUsdPrice || 1));
+                const valueInEur = valueInUsd * (1 / (eurUsdPrice || 1));
 
                 acc[balance.symbol] = {
                     ...balance,
-                    value: balance.value,
-                    price: usdPrice,
-                    usdValue,
+                    balance: balance.value,
+                    usdPrice,
+                    valueInUsd,
                     valueInGbp,
                     valueInEur,
                     gbpUsdPrice: gbpUsdPrice || 1,
@@ -170,10 +170,10 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
                 string,
                 {
                     address: string;
-                    value: string;
+                    balance: string;
                     symbol: string;
-                    price: number;
-                    usdValue: number;
+                    usdPrice: number;
+                    valueInUsd: number;
                     valueInGbp: number;
                     valueInEur: number;
                     gbpUsdPrice: number;

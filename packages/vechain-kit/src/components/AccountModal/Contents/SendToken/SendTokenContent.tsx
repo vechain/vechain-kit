@@ -58,7 +58,7 @@ export const SendTokenContent = ({
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { convertTokenValueIntoSelectedCurrency, currentCurrency } = useCurrency();
+    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
     const [selectedToken, setSelectedToken] = useState<Token | null>(
         preselectedToken ?? null,
     );
@@ -112,10 +112,10 @@ export const SendTokenContent = ({
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            setValue('amount', selectedToken.numericBalance);
+            setValue('amount', selectedToken.balance);
             Analytics.send.flow('amount', {
                 tokenSymbol: selectedToken.symbol,
-                amount: selectedToken.numericBalance,
+                amount: selectedToken.balance,
             });
         }
     };
@@ -172,7 +172,7 @@ export const SendTokenContent = ({
         // Validate amount
         if (selectedToken) {
             const numericAmount = parseEther(data.amount);
-            if (numericAmount > parseEther(selectedToken.numericBalance)) {
+            if (numericAmount > parseEther(selectedToken.balance)) {
                 setError('amount', {
                     type: 'manual',
                     message: t(`Insufficient {{symbol}} balance`, {
@@ -426,14 +426,14 @@ export const SendTokenContent = ({
                                         >
                                             {compactFormatter.format(
                                                 Number(
-                                                    selectedToken.numericBalance,
+                                                    selectedToken.balance,
                                                 ),
                                             )}
                                         </Text>
                                         <Text opacity={0.5}>
                                             ≈ {CURRENCY_SYMBOLS[currentCurrency]}
                                             {compactFormatter.format(
-                                                convertTokenValueIntoSelectedCurrency(Number(selectedToken.numericBalance) * selectedToken.price, selectedToken, currentCurrency)
+                                                getTotalTokenValueInSelectedCurrency(selectedToken, currentCurrency)
                                             )}
                                         </Text>
                                     </HStack>

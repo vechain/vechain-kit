@@ -43,9 +43,9 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const handleTokenSelect = (token: {
         symbol: string;
         address: string;
-        value: string;
-        price: number;
-        usdValue: number;
+        balance: string;
+        usdPrice: number;
+        valueInUsd: number;
         valueInGbp: number;
         valueInEur: number;
         gbpUsdPrice: number;
@@ -58,14 +58,12 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 isNavigatingFromMain: false,
                 preselectedToken: {
                     symbol: token.symbol,
-                    balance: token.value.toString(),
                     address: token.address,
-                    numericBalance: token.value,
-                    price: token.price,
-                    usdValue: token.usdValue,
+                    usdPrice: token.usdPrice,
+                    valueInUsd: token.valueInUsd,
                     valueInGbp: token.valueInGbp,
                     valueInEur: token.valueInEur,
-                    value: token.value,
+                    balance: token.balance,
                     gbpUsdPrice: token.gbpUsdPrice,
                     eurUsdPrice: token.eurUsdPrice,
                 },
@@ -81,9 +79,9 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
             .filter((token) => !tokens[token.symbol]) // Only add custom tokens not in base tokens
             .map((token) => ({
                 ...token,
-                value: tokens[token.symbol]?.value ?? 0,
-                price: tokens[token.symbol]?.price ?? 0,
-                usdValue: tokens[token.symbol]?.usdValue ?? 0,
+                balance: tokens[token.symbol]?.balance ?? 0,
+                usdPrice: tokens[token.symbol]?.usdPrice ?? 0,
+                valueInUsd: tokens[token.symbol]?.valueInUsd ?? 0,
                 valueInGbp: tokens[token.symbol]?.valueInGbp ?? 0,
                 valueInEur: tokens[token.symbol]?.valueInEur ?? 0,
                 gbpUsdPrice: tokens[token.symbol]?.gbpUsdPrice ?? 0,
@@ -97,10 +95,10 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            if (Number(a.value) > 0 !== Number(b.value) > 0) {
-                return Number(b.value) > 0 ? 1 : -1;
+            if (Number(a.balance) > 0 !== Number(b.balance) > 0) {
+                return Number(b.balance) > 0 ? 1 : -1;
             }
-            return Number(b.value) * b.price - Number(a.value) * a.price;
+            return Number(b.balance) * b.usdPrice - Number(a.balance) * a.usdPrice;
         });
 
     return (
@@ -132,14 +130,14 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
 
                     <VStack spacing={2} align="stretch" mt={2}>
                         {filteredTokens.map((token) => {
-                            const hasBalance = Number(token.value) > 0;
+                            const hasBalance = Number(token.balance) > 0;
                             const valueInCurrency = getTotalTokenValueInSelectedCurrency(token, currentCurrency);
 
                             return (
                                 <AssetButton
                                     key={token.address}
                                     symbol={token.symbol}
-                                    amount={Number(token.value)}
+                                    amount={Number(token.balance)}
                                     currencyValue={valueInCurrency}
                                     currencySymbol={CURRENCY_SYMBOLS[currentCurrency]}
                                     onClick={() => handleTokenSelect(token)}

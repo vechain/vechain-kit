@@ -36,7 +36,7 @@ export const AssetIcons = ({
 
     // Create array of tokens with balances and their values
     const tokensList = Object.values(tokens)
-        .filter((token) => Number(token.value) > 0)
+        .filter((token) => Number(token.balance) > 0)
         .sort((a, b) => getTotalTokenValueInSelectedCurrency(b, currentCurrency) - getTotalTokenValueInSelectedCurrency(a, currentCurrency));
 
     const tokensToShow = tokensList.slice(0, maxIcons);
