@@ -349,6 +349,10 @@ export const useSendTransaction = ({
                 }
                 return 'success';
             }
+
+            // By default we return waitingConfirmation because we have a txid,
+            // so it means the tx is broadcasted (even if the receipt is not yet available)
+            return 'waitingConfirmation';
         }
 
         return 'ready';
