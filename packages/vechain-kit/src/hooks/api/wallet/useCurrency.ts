@@ -17,7 +17,7 @@ type Token = {
     eurUsdPrice: number;
 }
 
-export const getTotalTokenValueInSelectedCurrency = (token: Token, currentCurrency: CURRENCY) => {
+export const getTotalTokenValueInSelectedCurrency = (token: Token, currentCurrency: CURRENCY): number => {
     switch (currentCurrency) {
         case 'eur':
             return token.valueInEur;
@@ -28,7 +28,7 @@ export const getTotalTokenValueInSelectedCurrency = (token: Token, currentCurren
     }
 };
 
-export const convertTokenValueIntoSelectedCurrency = (tokenAmountInUsd: number, token: Token, currentCurrency: CURRENCY) => {
+export const convertTokenValueIntoSelectedCurrency = (tokenAmountInUsd: number, token: Token, currentCurrency: CURRENCY): number => {
     switch (currentCurrency) {
         case 'eur':
             return tokenAmountInUsd / token.eurUsdPrice;
@@ -42,7 +42,7 @@ export const convertTokenValueIntoSelectedCurrency = (tokenAmountInUsd: number, 
 export const getBalanceInCurrency = (
     currentCurrency: CURRENCY,
     balances: { totalBalanceEur: number; totalBalanceGbp: number; totalBalanceUsd: number }
-) => {
+): number => {
     switch (currentCurrency) {
         case 'eur':
             return balances.totalBalanceEur;
