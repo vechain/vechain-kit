@@ -24,7 +24,8 @@ import { RiEdit2Line } from 'react-icons/ri';
 import { AccountModalContentTypes } from '../../Types';
 import { CiSearch } from 'react-icons/ci';
 import { useState } from 'react';
-
+import { useCurrency } from '@/hooks/api/wallet';
+import { CURRENCY_SYMBOLS } from '@/types';
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -36,14 +37,19 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { tokens } = useBalances({ address: account?.address });
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { customTokens } = useCustomTokens();
+    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
-
     const handleTokenSelect = (token: {
         symbol: string;
         address: string;
         value: string;
         price: number;
+        usdValue: number;
+        valueInGbp: number;
+        valueInEur: number;
+        gbpUsdPrice: number;
+        eurUsdPrice: number;
     }) => {
         setCurrentContent({
             type: 'send-token',
@@ -56,6 +62,12 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                     address: token.address,
                     numericBalance: token.value,
                     price: token.price,
+                    usdValue: token.usdValue,
+                    valueInGbp: token.valueInGbp,
+                    valueInEur: token.valueInEur,
+                    value: token.value,
+                    gbpUsdPrice: token.gbpUsdPrice,
+                    eurUsdPrice: token.eurUsdPrice,
                 },
                 onBack: () => setCurrentContent('assets'),
             },
@@ -71,8 +83,13 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 ...token,
                 value: tokens[token.symbol]?.value ?? 0,
                 price: tokens[token.symbol]?.price ?? 0,
+                usdValue: tokens[token.symbol]?.usdValue ?? 0,
+                valueInGbp: tokens[token.symbol]?.valueInGbp ?? 0,
+                valueInEur: tokens[token.symbol]?.valueInEur ?? 0,
+                gbpUsdPrice: tokens[token.symbol]?.gbpUsdPrice ?? 0,
+                eurUsdPrice: tokens[token.symbol]?.eurUsdPrice ?? 0,
             })),
-    ].sort((a, b) => Number(b.value) * b.price - Number(a.value) * a.price);
+    ].sort((a, b) => getTotalTokenValueInSelectedCurrency(b, currentCurrency) - getTotalTokenValueInSelectedCurrency(a, currentCurrency));
 
     // Filter and sort tokens
     const filteredTokens = allTokens
@@ -114,16 +131,22 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                     </InputGroup>
 
                     <VStack spacing={2} align="stretch" mt={2}>
-                        {filteredTokens.map((token) => (
-                            <AssetButton
-                                key={token.address}
-                                symbol={token.symbol}
-                                amount={Number(token.value)}
-                                usdValue={Number(token.value) * token.price}
-                                isDisabled={Number(token.value) === 0}
-                                onClick={() => handleTokenSelect(token)}
-                            />
-                        ))}
+                        {filteredTokens.map((token) => {
+                            const hasBalance = Number(token.value) > 0;
+                            const valueInCurrency = getTotalTokenValueInSelectedCurrency(token, currentCurrency);
+
+                            return (
+                                <AssetButton
+                                    key={token.address}
+                                    symbol={token.symbol}
+                                    amount={Number(token.value)}
+                                    currencyValue={valueInCurrency}
+                                    currencySymbol={CURRENCY_SYMBOLS[currentCurrency]}
+                                    onClick={() => handleTokenSelect(token)}
+                                    isDisabled={!hasBalance}
+                                />
+                            );
+                        })}
                     </VStack>
                 </ModalBody>
                 <ModalFooter>

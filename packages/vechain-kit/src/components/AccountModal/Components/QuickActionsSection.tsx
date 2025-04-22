@@ -16,6 +16,7 @@ import {
     useNotifications,
     useUpgradeRequired,
     useWallet,
+    useCurrency,
 } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
@@ -144,10 +145,17 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { totalBalance } = useBalances({
+    const { currentCurrency, getBalanceInCurrency } = useCurrency();
+    const { totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
+
+    const totalBalance = getBalanceInCurrency(currentCurrency, {
+        totalBalanceEur,
+        totalBalanceGbp,
+        totalBalanceUsd
+    })
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',

@@ -20,7 +20,8 @@ const compactFormatter = new Intl.NumberFormat('en-US', {
 type AssetButtonProps = ButtonProps & {
     symbol: string;
     amount: number;
-    usdValue: number;
+    currencyValue: number;
+    currencySymbol?: string;
     isDisabled?: boolean;
     onClick?: () => void;
 };
@@ -28,7 +29,8 @@ type AssetButtonProps = ButtonProps & {
 export const AssetButton = ({
     symbol,
     amount,
-    usdValue,
+    currencyValue,
+    currencySymbol = '$',
     isDisabled,
     onClick,
     ...buttonProps
@@ -80,7 +82,7 @@ export const AssetButton = ({
                 <Text>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
-                <Text>${compactFormatter.format(usdValue)}</Text>
+                <Text>{currencySymbol}{compactFormatter.format(currencyValue)}</Text>
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}

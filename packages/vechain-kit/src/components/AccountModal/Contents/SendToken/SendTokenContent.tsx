@@ -26,9 +26,9 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
 import { useVechainDomain } from '@/hooks';
-
+import { useCurrency } from '@/hooks/api/wallet';
+import { CURRENCY_SYMBOLS } from '@/types';
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
@@ -52,12 +52,13 @@ type FormValues = {
 
 export const SendTokenContent = ({
     setCurrentContent,
-    isNavigatingFromMain = false,
+    isNavigatingFromMain = true,
     preselectedToken,
     onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { convertTokenValueIntoSelectedCurrency, currentCurrency } = useCurrency();
     const [selectedToken, setSelectedToken] = useState<Token | null>(
         preselectedToken ?? null,
     );
@@ -399,45 +400,50 @@ export const SendTokenContent = ({
                                         </Button>
                                     )}
                                 </HStack>
+                                {selectedToken && (
+                                    <HStack
+                                        spacing={1}
+                                        fontSize="sm"
+                                        color={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
+                                        }
+                                    >
+                                        <Text>{t('Balance')}:</Text>
+                                        <Text
+                                            cursor="pointer"
+                                            _hover={{
+                                                color: isDark
+                                                    ? 'blue.300'
+                                                    : 'blue.500',
+                                                textDecoration: 'underline',
+                                            }}
+                                            onClick={handleSetMaxAmount}
+                                            noOfLines={1}
+                                            overflow="hidden"
+                                            textOverflow="ellipsis"
+                                        >
+                                            {compactFormatter.format(
+                                                Number(
+                                                    selectedToken.numericBalance,
+                                                ),
+                                            )}
+                                        </Text>
+                                        <Text opacity={0.5}>
+                                            ≈ {CURRENCY_SYMBOLS[currentCurrency]}
+                                            {compactFormatter.format(
+                                                convertTokenValueIntoSelectedCurrency(Number(selectedToken.numericBalance) * selectedToken.price, selectedToken, currentCurrency)
+                                            )}
+                                        </Text>
+                                    </HStack>
+                                )}
                                 {errors.amount && (
                                     <Text color="#ef4444" fontSize="sm">
                                         {errors.amount.message}
                                     </Text>
                                 )}
                             </FormControl>
-
-                            {selectedToken && (
-                                <HStack
-                                    spacing={1}
-                                    fontSize="sm"
-                                    color={
-                                        isDark
-                                            ? 'whiteAlpha.700'
-                                            : 'blackAlpha.700'
-                                    }
-                                >
-                                    <Text>{t('Balance')}:</Text>
-                                    <Text
-                                        cursor="pointer"
-                                        _hover={{
-                                            color: isDark
-                                                ? 'blue.300'
-                                                : 'blue.500',
-                                            textDecoration: 'underline',
-                                        }}
-                                        onClick={handleSetMaxAmount}
-                                        noOfLines={1}
-                                        overflow="hidden"
-                                        textOverflow="ellipsis"
-                                    >
-                                        {compactFormatter.format(
-                                            Number(
-                                                selectedToken.numericBalance,
-                                            ),
-                                        )}
-                                    </Text>
-                                </HStack>
-                            )}
                         </VStack>
                     </Box>
 

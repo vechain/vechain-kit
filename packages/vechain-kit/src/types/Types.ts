@@ -166,3 +166,11 @@ export enum VePassportUserStatus {
     WHITELIST = 'WHITELIST',
     BLACKLIST = 'BLACKLIST',
 }
+
+export type CURRENCY = "usd" | "gbp" | "eur";
+
+export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {
+    usd: "$",
+    gbp: "£",
+    eur: "€"
+};

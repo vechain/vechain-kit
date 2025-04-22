@@ -6,7 +6,7 @@ import {
     IconButton,
     Box,
 } from '@chakra-ui/react';
-import { useBalances, useRefreshBalances, useWallet } from '@/hooks';
+import { useBalances, useRefreshBalances, useWallet, useCurrency } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VscRefresh } from 'react-icons/vsc';
@@ -14,7 +14,7 @@ import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
+import { CURRENCY_SYMBOLS } from '@/types';
 const compactFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
@@ -32,9 +32,10 @@ export const BalanceSection = ({
     onAssetsClick?: () => void;
 }) => {
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { currentCurrency, getBalanceInCurrency } = useCurrency();
     const { t } = useTranslation();
     const { account } = useWallet();
-    const { isLoading, totalBalance } = useBalances({
+    const { isLoading, totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
 
@@ -62,7 +63,12 @@ export const BalanceSection = ({
                 role="group"
             >
                 <Heading size={'2xl'} fontWeight={'700'}>
-                    ${compactFormatter.format(totalBalance ?? 0)}
+                    {CURRENCY_SYMBOLS[currentCurrency ?? 'usd']}
+                    {compactFormatter.format(getBalanceInCurrency(currentCurrency, {
+                        totalBalanceEur,
+                        totalBalanceGbp,
+                        totalBalanceUsd
+                    }) ?? 0)}
                 </Heading>
 
                 <Box
