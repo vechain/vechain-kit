@@ -13,7 +13,7 @@ import {
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 
 export function TransactionExamples() {
     const { account, connectedWallet } = useWallet();
@@ -23,21 +23,20 @@ export function TransactionExamples() {
 
         const B3TRInterface = IB3TR__factory.createInterface();
 
-        const clausesArray: EnhancedClause[] = [];
-        clausesArray.push({
-            to: b3trMainnetAddress,
-            value: '0x0',
-            data: B3TRInterface.encodeFunctionData('transfer', [
-                connectedWallet?.address,
-                '0', // 0 B3TR (in wei)
-            ]),
-            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                connectedWallet?.address,
-            )}`,
-            abi: B3TRInterface.getFunction('transfer'),
-        });
-
-        return clausesArray;
+        return [
+            {
+                to: b3trMainnetAddress,
+                value: '0x0',
+                data: B3TRInterface.encodeFunctionData('transfer', [
+                    connectedWallet.address,
+                    '0', // 0 B3TR
+                ]),
+                comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
+                    connectedWallet.address,
+                )}`,
+                abi: B3TRInterface.getFunction('transfer'),
+            },
+        ];
     }, [connectedWallet?.address]);
 
     const {
@@ -49,13 +48,6 @@ export function TransactionExamples() {
         resetStatus,
     } = useBuildTransaction({
         clauseBuilder,
-        privyUIOptions: {
-            title: 'Send Dummy Transaction',
-            description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                account?.address ?? '',
-            )}`,
-            buttonText: 'Sign to continue',
-        },
     });
 
     const {
@@ -88,7 +80,7 @@ export function TransactionExamples() {
     return (
         <>
             <Box>
-                <Heading size={'md'}>
+                <Heading size="md">
                     <b>Test Transactions</b>
                 </Heading>
                 <HStack mt={4} spacing={4}>
@@ -116,6 +108,9 @@ export function TransactionExamples() {
                 txError={error}
                 txReceipt={txReceipt}
                 onTryAgain={handleTryAgain}
+                description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
+                    connectedWallet?.address ?? '',
+                )}`}
             />
 
             <TransactionModal
@@ -127,9 +122,9 @@ export function TransactionExamples() {
                 onTryAgain={handleTryAgain}
                 uiConfig={{
                     title: 'Test Transaction',
-                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                        account?.address
-                    }`,
+                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
+                        connectedWallet?.address ?? '',
+                    )}`,
                     showShareOnSocials: true,
                     showExplorerButton: true,
                     isClosable: true,
