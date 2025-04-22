@@ -64,17 +64,17 @@ export function TransactionExamples() {
 
     const handleTransactionWithToast = useCallback(async () => {
         openTransactionToast();
-        await sendTransaction();
+        await sendTransaction({});
     }, [sendTransaction, openTransactionToast]);
 
     const handleTransactionWithModal = useCallback(async () => {
         openTransactionModal();
-        await sendTransaction();
+        await sendTransaction({});
     }, [sendTransaction, openTransactionModal]);
 
     const handleTryAgain = useCallback(async () => {
         resetStatus();
-        await sendTransaction();
+        await sendTransaction({});
     }, [sendTransaction, resetStatus]);
 
     return (
