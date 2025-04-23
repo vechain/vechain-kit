@@ -98,7 +98,7 @@ export type VechainKitProviderProps = {
         };
     };
     allowCustomTokens?: boolean;
-    defaultCurrency: CURRENCY;
+    defaultCurrency?: CURRENCY;
 };
 
 type VeChainKitConfig = {
@@ -113,7 +113,7 @@ type VeChainKitConfig = {
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
-    defaultCurrency: VechainKitProviderProps['defaultCurrency'];
+    defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
 };
 
 /**

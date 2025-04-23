@@ -93,7 +93,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE as NETWORK_TYPE,
             }}
             allowCustomTokens={true}
-            defaultCurrency={'usd'}
         >
             {children}
         </VeChainKitProvider>
