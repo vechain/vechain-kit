@@ -15,7 +15,7 @@ import {
 import { MdEmail } from 'react-icons/md';
 import { BaseModal, StickyHeaderContainer } from '../common';
 import { useEffect, useState } from 'react';
-import { useLoginWithEmail } from '@privy-io/react-auth';
+import { useCreateWallet, useLoginWithEmail } from '@privy-io/react-auth';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -38,7 +38,17 @@ export const EmailCodeVerificationModal = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const [code, setCode] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const { loginWithCode } = useLoginWithEmail({});
+
+    const { createWallet } = useCreateWallet();
+    const { loginWithCode } = useLoginWithEmail({
+        onComplete: async ({ isNewUser }) => {
+            // When using initOAuth Privy does not create an embedded wallet automatically.
+            // So we need to create a wallet manually.
+            if (isNewUser) {
+                await createWallet();
+            }
+        },
+    });
 
     useEffect(() => {
         if (code.length === 6) {
