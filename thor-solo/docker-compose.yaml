@@ -1,0 +1,34 @@
+services:
+  thor-solo:
+    platform: linux/amd64
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    user: root
+    ports:
+      - "8669:8669"
+      - "11235:11235"
+    healthcheck:
+      test: curl --fail 0.0.0.0:8669/blocks/0 || exit 1
+      interval: 2s
+      retries: 30
+    volumes:
+      - thor-volume:/data/thor
+    networks:
+      - vechain-thor
+  insight:
+    image: ghcr.io/vechain/insight-app:master
+    hostname: insight
+    container_name: insight
+    environment:
+      - VUE_APP_SOLO_URL=http://localhost:8669
+    ports:
+      - "8080:80"
+
+volumes:
+  thor-volume:
+
+networks:
+  vechain-thor:
+    driver: bridge
+    name: vechain-thor
