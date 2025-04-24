@@ -51,15 +51,17 @@ export const useClaimVetDomain = ({
 
         if (!domain) throw new Error('Invalid domain');
 
+        const fullDomain = `${domain}.vet`;
+
         if (alreadyOwned) {
             // For already owned domains, set the name in the reverse registrar
             clausesArray.push({
                 to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
                 value: '0x0',
                 data: ReverseRegistrarInterface.encodeFunctionData('setName', [
-                    domain,
+                    fullDomain,
                 ]),
-                comment: `Setting your VeChain nickname to ${domain}`,
+                comment: `Setting your VeChain nickname to ${fullDomain}`,
                 abi: ReverseRegistrarInterface.getFunction('setName'),
             });
 
@@ -69,7 +71,7 @@ export const useClaimVetDomain = ({
             ]);
 
             // Calculate the namehash for the domain
-            const domainNode = ethers.namehash(domain);
+            const domainNode = ethers.namehash(fullDomain);
 
             clausesArray.push({
                 to: getConfig(network.type).vetDomainsPublicResolverAddress,
@@ -78,7 +80,7 @@ export const useClaimVetDomain = ({
                     domainNode,
                     account?.address || '',
                 ]),
-                comment: `Setting the address for ${domain} to ${humanAddress(
+                comment: `Setting the address for ${fullDomain} to ${humanAddress(
                     account?.address ?? '',
                     4,
                     4,

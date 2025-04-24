@@ -18,7 +18,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
 import { AccountAvatar } from '@/components/common';
-import { getPicassoImage, humanDomain } from '@/utils';
+import { getPicassoImage } from '@/utils';
 
 type ExistingDomainsListProps = {
     domains: { name: string }[];
@@ -79,7 +79,7 @@ const DomainListItem = ({
                         fontSize="md"
                         fontWeight="500"
                     >
-                        {humanDomain(domain.name, 24, 0)}
+                        {domain.name}
                     </Text>
                     {isCurrentDomain && (
                         <Text

@@ -56,12 +56,25 @@ export const ChooseNameSearchContent = ({
         useIsDomainProtected(name);
 
     const {
+        data: veworldDomainsOfAddress,
+        isLoading: isVeWorldDomainsOfAddressLoading,
+    } = useGetDomainsOfAddress(account?.address, 'veworld.vet');
+
+    const {
         data: vetDomainsOfAddress,
         isLoading: isVetDomainsOfAddressLoading,
-    } = useGetDomainsOfAddress(account?.address, '');
+    } = useGetDomainsOfAddress(account?.address, 'vet');
+
+    const isLoadingOwnedDomains =
+        isVeWorldDomainsOfAddressLoading || isVetDomainsOfAddressLoading;
 
     const isFetchingDomainInfo =
         isEnsCheckLoading || isDomainInfoLoading || isProtectedLoading;
+
+    const allUserDomains = [
+        ...(veworldDomainsOfAddress?.domains || []),
+        ...(vetDomainsOfAddress?.domains || []),
+    ];
 
     useEffect(() => {
         if (!hasInteracted) return;
@@ -122,7 +135,7 @@ export const ChooseNameSearchContent = ({
             setCurrentContent({
                 type: 'choose-name-summary',
                 props: {
-                    fullDomain: name + '.veworld.vet',
+                    name,
                     isOwnDomain,
                     setCurrentContent,
                     initialContentSource,
@@ -134,12 +147,13 @@ export const ChooseNameSearchContent = ({
     const handleDomainSelect = (selectedDomain: string) => {
         // Extract the domain type and base name
         const parts = selectedDomain.split('.');
+        const baseName = parts[0];
         const domainType = parts.length > 2 ? `${parts[1]}.${parts[2]}` : 'vet';
 
         setCurrentContent({
             type: 'choose-name-summary',
             props: {
-                fullDomain: selectedDomain,
+                name: baseName,
                 domainType: domainType,
                 isOwnDomain: true,
                 setCurrentContent,
@@ -152,7 +166,7 @@ export const ChooseNameSearchContent = ({
         setCurrentContent({
             type: 'choose-name-summary',
             props: {
-                fullDomain: '',
+                name: '',
                 domainType: '',
                 isOwnDomain: false,
                 isUnsetting: true,
@@ -190,10 +204,10 @@ export const ChooseNameSearchContent = ({
             <ModalBody>
                 <VStack spacing={4} align="stretch">
                     <ExistingDomainsList
-                        domains={vetDomainsOfAddress?.domains || []}
+                        domains={allUserDomains}
                         onDomainSelect={handleDomainSelect}
                         onUnsetDomain={handleUnsetDomain}
-                        isLoading={isVetDomainsOfAddressLoading}
+                        isLoading={isLoadingOwnedDomains}
                     />
 
                     <InputGroup size="lg">

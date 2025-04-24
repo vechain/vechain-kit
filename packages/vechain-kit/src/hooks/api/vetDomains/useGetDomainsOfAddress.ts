@@ -26,19 +26,15 @@ export type DomainsResponse = z.infer<typeof DomainsResponseSchema>;
 export const getDomainsOfAddress = async (
     networkType: NETWORK_TYPE,
     address?: string,
-    parentDomain?: string,
+    parentDomain = 'vet',
 ): Promise<DomainsResponse> => {
     if (!address) throw new Error('Address is required');
 
     const graphQlIndexerUrl = getConfig(networkType).graphQlIndexerUrl;
 
-    const whereCondition = parentDomain
-        ? `{owner: "${address.toLowerCase()}", parent_: {name: "${parentDomain}"}}`
-        : `{owner: "${address.toLowerCase()}"}`;
-
     const query = `query Registrations {
         domains(
-            where: ${whereCondition}
+            where: {owner: "${address.toLowerCase()}", parent_: {name: "${parentDomain}"}}
         ) {
             name
         }
@@ -62,14 +58,6 @@ export const getDomainsOfAddress = async (
     }
 
     const json = await response.json();
-
-    // Filter out domains ending with "addr.reverse" before parsing
-    if (json.data && json.data.domains) {
-        json.data.domains = json.data.domains.filter(
-            (domain: any) => !domain.name.endsWith('addr.reverse'),
-        );
-    }
-
     return DomainsResponseSchema.parse(json.data);
 };
 
