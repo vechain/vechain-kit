@@ -27,7 +27,7 @@ export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    name: string;
+    fullDomain: string;
     domainType?: string;
     isOwnDomain: boolean;
     isUnsetting?: boolean;
@@ -36,7 +36,7 @@ export type ChooseNameSummaryContentProps = {
 
 export const ChooseNameSummaryContent = ({
     setCurrentContent,
-    name,
+    fullDomain,
     domainType = 'veworld.vet',
     isOwnDomain,
     isUnsetting = false,
@@ -56,14 +56,14 @@ export const ChooseNameSummaryContent = ({
         if (isRejectionError(error)) {
             Analytics.nameSelection.dropOff('confirmation', {
                 isError: true,
-                name,
+                name: fullDomain,
                 error,
                 reason: 'wallet_rejected',
             });
         } else {
             Analytics.nameSelection.failed('confirmation', {
                 error,
-                name,
+                name: fullDomain,
             });
         }
     };
@@ -78,14 +78,14 @@ export const ChooseNameSummaryContent = ({
 
     // Use the appropriate claim hook based on domain type (only when not unsetting)
     const veWorldSubdomainHook = useClaimVeWorldSubdomain({
-        subdomain: name,
+        subdomain: fullDomain.split('.veworld.vet')[0],
         domain: domainType,
         alreadyOwned: isOwnDomain,
         onSuccess: () => handleSuccess(),
     });
 
     const vetDomainHook = useClaimVetDomain({
-        domain: name,
+        domain: fullDomain,
         alreadyOwned: isOwnDomain,
         onSuccess: () => handleSuccess(),
     });
@@ -112,10 +112,9 @@ export const ChooseNameSummaryContent = ({
                 title: isUnsetting ? t('Domain unset') : t('Domain set'),
                 description: isUnsetting
                     ? t('Your domain has been unset successfully.')
-                    : t(
-                          `Your address has been successfully set to {{name}}.{{domainType}}.`,
-                          { name, domainType },
-                      ),
+                    : t(`Your address has been successfully set to {{name}}`, {
+                          name: fullDomain,
+                      }),
                 onDone: () => {
                     setCurrentContent(initialContentSource);
                 },
@@ -144,7 +143,7 @@ export const ChooseNameSummaryContent = ({
     const handleClose = () => {
         Analytics.nameSelection.dropOff('confirmation', {
             isError: false,
-            name: isUnsetting ? '' : name,
+            name: isUnsetting ? '' : fullDomain,
             error: 'modal_closed',
         });
     };
@@ -152,14 +151,14 @@ export const ChooseNameSummaryContent = ({
     const handleBack = () => {
         Analytics.nameSelection.dropOff('confirmation', {
             isError: false,
-            name: isUnsetting ? '' : name,
+            name: isUnsetting ? '' : fullDomain,
             error: 'back_button',
         });
         setCurrentContent({
             type: 'choose-name-search',
             props: {
                 setCurrentContent,
-                name,
+                name: fullDomain,
                 initialContentSource,
             },
         });
@@ -196,7 +195,7 @@ export const ChooseNameSummaryContent = ({
                     </Text>
                     {!isUnsetting && (
                         <Text fontSize="xl" fontWeight="bold" color="blue.500">
-                            {`${name}.${domainType}`}
+                            {`${fullDomain}`}
                         </Text>
                     )}
                 </VStack>
