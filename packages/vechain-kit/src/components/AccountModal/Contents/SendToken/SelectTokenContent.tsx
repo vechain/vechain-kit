@@ -20,7 +20,6 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { CURRENCY_SYMBOLS } from '@/types';
 
 export type Token = {
     address: string;
@@ -137,7 +136,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                                             symbol={token.symbol}
                                             amount={Number(token.balance)}
                                             currencyValue={valueInCurrency}
-                                            currencySymbol={CURRENCY_SYMBOLS[currentCurrency]}
+                                            currentCurrency={currentCurrency}
                                             onClick={() => onSelectToken(token)}
                                             isDisabled={!hasBalance}
                                         />

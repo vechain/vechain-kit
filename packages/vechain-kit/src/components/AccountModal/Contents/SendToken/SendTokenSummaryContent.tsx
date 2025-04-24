@@ -32,13 +32,6 @@ import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/StringUtils';
 import { useCurrency } from '@/hooks/api/wallet';
-import { CURRENCY_SYMBOLS } from '@/types';
-
-const compactFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 2,
-});
 
 const summaryFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -86,6 +79,13 @@ export const SendTokenSummaryContent = ({
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
 
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: currentCurrency,
+    });
 
     const handleSend = async () => {
         if (upgradeRequired) {
@@ -312,8 +312,7 @@ export const SendTokenSummaryContent = ({
                                     {selectedToken.symbol}
                                 </Text>
                                 <Text fontSize="sm" opacity={0.5}>
-                                    ≈ {CURRENCY_SYMBOLS[currentCurrency]}
-                                    {compactFormatter.format(
+                                    ≈ {compactFormatter.format(
                                         convertTokenValueIntoSelectedCurrency(Number(amount) * selectedToken.usdPrice, selectedToken, currentCurrency),
                                     )}
                                 </Text>

@@ -25,7 +25,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { CiSearch } from 'react-icons/ci';
 import { useState } from 'react';
 import { useCurrency } from '@/hooks/api/wallet';
-import { CURRENCY_SYMBOLS } from '@/types';
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -139,7 +138,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                                     symbol={token.symbol}
                                     amount={Number(token.balance)}
                                     currencyValue={valueInCurrency}
-                                    currencySymbol={CURRENCY_SYMBOLS[currentCurrency]}
+                                    currentCurrency={currentCurrency}
                                     onClick={() => handleTokenSelect(token)}
                                     isDisabled={!hasBalance}
                                 />

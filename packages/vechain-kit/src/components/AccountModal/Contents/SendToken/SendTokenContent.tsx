@@ -28,8 +28,8 @@ import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useVechainDomain } from '@/hooks';
 import { useCurrency } from '@/hooks/api/wallet';
-import { CURRENCY_SYMBOLS } from '@/types';
-const compactFormatter = new Intl.NumberFormat('en-US', {
+
+const balanceFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
     maximumFractionDigits: 2,
@@ -67,6 +67,14 @@ export const SendTokenContent = ({
     );
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
+
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: currentCurrency,
+    });
 
     // Form setup with validation rules
     const {
@@ -424,15 +432,14 @@ export const SendTokenContent = ({
                                             overflow="hidden"
                                             textOverflow="ellipsis"
                                         >
-                                            {compactFormatter.format(
+                                            {balanceFormatter.format(
                                                 Number(
                                                     selectedToken.balance,
                                                 ),
                                             )}
                                         </Text>
                                         <Text opacity={0.5}>
-                                            ≈ {CURRENCY_SYMBOLS[currentCurrency]}
-                                            {compactFormatter.format(
+                                            ≈ {compactFormatter.format(
                                                 getTotalTokenValueInSelectedCurrency(selectedToken, currentCurrency)
                                             )}
                                         </Text>

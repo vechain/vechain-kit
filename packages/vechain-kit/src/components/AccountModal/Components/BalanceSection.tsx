@@ -14,13 +14,6 @@ import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { CURRENCY_SYMBOLS } from '@/types';
-const compactFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
 
 export const BalanceSection = ({
     mb,
@@ -50,6 +43,14 @@ export const BalanceSection = ({
             setIsRefreshing(false);
         }, 1500);
     };
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: currentCurrency,
+    });
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={2} mt={mt} mb={mb}>
@@ -63,7 +64,6 @@ export const BalanceSection = ({
                 role="group"
             >
                 <Heading size={'2xl'} fontWeight={'700'}>
-                    {CURRENCY_SYMBOLS[currentCurrency ?? 'usd']}
                     {compactFormatter.format(getBalanceInCurrency(currentCurrency, {
                         totalBalanceEur,
                         totalBalanceGbp,
