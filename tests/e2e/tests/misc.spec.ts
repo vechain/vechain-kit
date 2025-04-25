@@ -152,7 +152,7 @@ for (const authType of [
             await expect(dashboardPage.walletButton).toBeVisible()
         })
 
-        test(`[${authType}] Claim available domain name`, async () => {
+        test.skip(`[${authType}] Claim available domain name`, async () => {
             await dashboardPage.openAccountModal()
             await accountModal.claimDomainName(`${authType}-${randStr}`)
             await expect(accountModal.successIcon).toBeVisible()

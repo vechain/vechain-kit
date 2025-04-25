@@ -34,7 +34,7 @@ test.describe("Hooks", () => {
     test('Connection', async () => {
         const connection = await dashboardPage.getConnectionInfo()
         expect.soft(connection.type).toBe('wallet')
-        expect.soft(connection.network).toBe('test')
+        expect.soft(connection.network).toBe('solo')
     })
 
     // requires voting round to be started

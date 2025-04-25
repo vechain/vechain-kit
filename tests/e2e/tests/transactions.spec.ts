@@ -6,7 +6,8 @@ import { DashboardPage } from "../models/DashboardPage";
 import {
     PRIVY_TEST_EMAIL_SENDER,
     PRIVY_TEST_EMAIL_RECEIVER,
-    VW_RECIPIENT_ALIAS
+    VW_RECIPIENT_ALIAS,
+    DENIAL_KITCHEN,
 } from "../constants";
 import {AccountModal} from "../models/AccountModal";
 import {AuthArgs, AuthType} from "../models/types";
@@ -53,7 +54,9 @@ for (const authType of [
             await expect(dashboardPage.successToastTitle('Message signed!')).toBeVisible()
         })
 
-        test('sign typed data', async () => {
+        // enable after this is merged and new version of vwmock is published:
+        // https://github.com/vechain/veworld-mock/pull/22
+        test.skip('sign typed data', async () => {
             await dashboardPage.signTypedData()
             await expect(dashboardPage.typedDataSignatureCodeBox).not.toBeEmpty()
             await expect(dashboardPage.successToastTitle('Typed data signed!')).toBeVisible()
@@ -111,9 +114,9 @@ for (const authType of [
         })
 
         for (const recipient of [
-            // { addressType: 'address', address: DENIAL_KITCHEN[1] },
-            { addressType: 'vw-domain', address: VW_RECIPIENT_ALIAS },
-            // { addressType: 'privy-domain', address: PRIVY_RECIPIENT_ALIAS }
+            { addressType: 'address', address: DENIAL_KITCHEN[1] },
+            // { addressType: 'vw-domain', address: VW_RECIPIENT_ALIAS },       // disabled because claiming domain name doesn't work on solo
+            // { addressType: 'privy-domain', address: PRIVY_RECIPIENT_ALIAS }  // disabled because of https://github.com/vechain/vechain-kit/issues/235
         ]) {
             test(`send tx from account modal to wallet ${recipient.addressType}`, async () => {
                 await logIn({
