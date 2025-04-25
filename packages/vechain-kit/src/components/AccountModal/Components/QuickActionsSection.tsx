@@ -145,17 +145,22 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { currentCurrency, getBalanceInCurrency } = useCurrency();
+    const { currentCurrency } = useCurrency();
     const { totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
 
-    const totalBalance = getBalanceInCurrency(currentCurrency, {
-        totalBalanceEur,
-        totalBalanceGbp,
-        totalBalanceUsd
-    })
+    const totalBalance = () => {
+        switch (currentCurrency) {
+            case 'eur':
+                return totalBalanceEur;
+            case 'gbp':
+                return totalBalanceGbp;
+            default:
+                return totalBalanceUsd;
+        }
+    }
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -183,7 +188,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         icon={action.icon}
                         label={action.label}
                         onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(totalBalance)}
+                        isDisabled={action.isDisabled?.(totalBalance())}
                         showRedDot={showRedDot && action.label === 'Settings'}
                     />
                 ))}

@@ -44,7 +44,7 @@ type Props = {
 export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
+    const { getTokenValue, currentCurrency } = useCurrency();
     const { account } = useWallet();
     const { tokens } = useBalances({ address: account?.address ?? '' });
     const [searchQuery, setSearchQuery] = useState('');
@@ -55,10 +55,10 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
             symbol.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort((a, b) => {
-            if (getTotalTokenValueInSelectedCurrency(a, currentCurrency) > 0 !== getTotalTokenValueInSelectedCurrency(b, currentCurrency) > 0) {
-                return getTotalTokenValueInSelectedCurrency(b, currentCurrency) > 0 ? 1 : -1;
+            if (getTokenValue(a) > 0 !== getTokenValue(b) > 0) {
+                return getTokenValue(b) > 0 ? 1 : -1;
             }
-            return getTotalTokenValueInSelectedCurrency(b, currentCurrency) - getTotalTokenValueInSelectedCurrency(a, currentCurrency);
+            return getTokenValue(b) - getTokenValue(a);
         })];
 
     useEffect(() => {
@@ -128,7 +128,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                                     const hasBalance =
                                         Number(token.balance) > 0;
                                     const valueInCurrency =
-                                        getTotalTokenValueInSelectedCurrency(token, currentCurrency);
+                                        getTokenValue(token);
 
                                     return (
                                         <AssetButton

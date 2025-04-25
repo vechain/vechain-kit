@@ -1,7 +1,6 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { CURRENCY } from '@/types';
-import { useCallback } from 'react';
 
 const STORAGE_KEY = 'vechain_kit_currency';
 const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];
@@ -17,96 +16,64 @@ type Token = {
     eurUsdPrice: number;
 }
 
-export const getTotalTokenValueInSelectedCurrency = (token: Token, currentCurrency: CURRENCY): number => {
-    switch (currentCurrency) {
-        case 'eur':
-            return token.valueInEur;
-        case 'gbp':
-            return token.valueInGbp;
-        default:
-            return token.valueInUsd;
-    }
-};
-
-export const convertTokenValueIntoSelectedCurrency = (tokenAmountInUsd: number, token: Token, currentCurrency: CURRENCY): number => {
-    switch (currentCurrency) {
-        case 'eur':
-            return tokenAmountInUsd / token.eurUsdPrice;
-        case 'gbp':
-            return tokenAmountInUsd / token.gbpUsdPrice;
-        default:
-            return tokenAmountInUsd;
-    }
-};
-
-export const getBalanceInCurrency = (
-    currentCurrency: CURRENCY,
-    balances: { totalBalanceEur: number; totalBalanceGbp: number; totalBalanceUsd: number }
-): number => {
-    switch (currentCurrency) {
-        case 'eur':
-            return balances.totalBalanceEur;
-        case 'gbp':
-            return balances.totalBalanceGbp;
-        default:
-            return balances.totalBalanceUsd;
-    }
-};
-
-export const getCurrencyQueryKey = () => ['VECHAIN_KIT_CURRENT_CURRENCY'];
-
 /**
  * Hook for managing currency preferences and conversions
- * @returns {Object} An object containing currency management functions and the current currency
- * @property {CURRENCY} currentCurrency - The currency currently selected by the user
- * @property {CURRENCY[]} allCurrencies - An array of all supported currencies
- * @property {Function} changeCurrency - A function to update the current currency
- * @property {Function} getTotalTokenValueInSelectedCurrency - Function to get the total token value in the selected currency
- * @property {Function} convertTokenValueIntoSelectedCurrency - Function to convert a token's value into the selected currency
- * @property {Function} getBalanceInCurrency - Function to get the total balance in the selected currency
  */
 export const useCurrency = () => {
-    const queryClient = useQueryClient();
     const { defaultCurrency = 'usd' } = useVeChainKitConfig();
-    
-    const getStoredCurrency = useCallback((): CURRENCY => {
+    const [currentCurrency, setCurrentCurrency] = useState<CURRENCY>(() => {
         try {
-            const stored = localStorage.getItem(STORAGE_KEY);
+            const stored = window.localStorage.getItem(STORAGE_KEY);
             return (stored as CURRENCY) || defaultCurrency;
-        } catch {
+        } catch (error) {
+            console.error(error);
             return defaultCurrency;
         }
-    }, [defaultCurrency]);
-    
-    const setStoredCurrency = (currency: CURRENCY) => {
-        if (!allCurrencies.includes(currency)) {
-            console.error(`Invalid currency: ${currency}`);
-            return;
-        }
-        try {
-            localStorage.setItem(STORAGE_KEY, currency);
-        } catch (e) {
-            console.error('Failed to store currency preference:', e);
-        }
-    };
-
-    const { data: currentCurrency = defaultCurrency } = useQuery({
-        queryKey: getCurrencyQueryKey(),
-        queryFn: getStoredCurrency,
-        staleTime: Infinity,
     });
 
+    useEffect(() => {
+        try {
+            window.localStorage.setItem(STORAGE_KEY, currentCurrency);
+        } catch (error) {
+            console.error('Failed to store currency preference:', error);
+        }
+    }, [currentCurrency]);
+
     const changeCurrency = (newCurrency: CURRENCY) => {
-        setStoredCurrency(newCurrency);
-        queryClient.setQueryData(getCurrencyQueryKey(), newCurrency);
+        if (!allCurrencies.includes(newCurrency)) {
+            console.error(`Invalid currency: ${newCurrency}`);
+            return;
+        }
+        setCurrentCurrency(newCurrency);
     };
 
-    return { 
+    const getTokenValue = (token: Token) => {
+        switch (currentCurrency) {
+            case 'eur':
+                return token.valueInEur;
+            case 'gbp':
+                return token.valueInGbp;
+            default:
+                return token.valueInUsd;
+        }
+    };
+
+    const convertTokenValue = (tokenAmountInUsd: number, token: Token) => {
+        switch (currentCurrency) {
+            case 'eur':
+                return tokenAmountInUsd / token.eurUsdPrice;
+            case 'gbp':
+                return tokenAmountInUsd / token.gbpUsdPrice;
+            default:
+                return tokenAmountInUsd;
+        }
+    };
+
+    return {
         currentCurrency,
         allCurrencies,
         changeCurrency,
-        getTotalTokenValueInSelectedCurrency,
-        convertTokenValueIntoSelectedCurrency,
-        getBalanceInCurrency,
+        getTokenValue,
+        convertTokenValue,
     };
 };

@@ -69,7 +69,7 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-    const { currentCurrency, convertTokenValueIntoSelectedCurrency } = useCurrency();
+    const { currentCurrency, convertTokenValue } = useCurrency();
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {
@@ -313,7 +313,7 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                                 <Text fontSize="sm" opacity={0.5}>
                                     ≈ {compactFormatter.format(
-                                        convertTokenValueIntoSelectedCurrency(Number(amount) * selectedToken.usdPrice, selectedToken, currentCurrency),
+                                         convertTokenValue(Number(amount) * selectedToken.usdPrice, selectedToken),
                                     )}
                                 </Text>
                             </HStack>

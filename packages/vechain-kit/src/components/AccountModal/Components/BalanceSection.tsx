@@ -25,12 +25,23 @@ export const BalanceSection = ({
     onAssetsClick?: () => void;
 }) => {
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { currentCurrency, getBalanceInCurrency } = useCurrency();
+    const { currentCurrency } = useCurrency();
     const { t } = useTranslation();
     const { account } = useWallet();
     const { isLoading, totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
+
+    const totalBalance = () => {
+        switch (currentCurrency) {
+            case 'eur':
+                return totalBalanceEur;
+            case 'gbp':
+                return totalBalanceGbp;
+            default:
+                return totalBalanceUsd;
+        }
+    }
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -64,11 +75,7 @@ export const BalanceSection = ({
                 role="group"
             >
                 <Heading size={'2xl'} fontWeight={'700'}>
-                    {compactFormatter.format(getBalanceInCurrency(currentCurrency, {
-                        totalBalanceEur,
-                        totalBalanceGbp,
-                        totalBalanceUsd
-                    }) ?? 0)}
+                    {compactFormatter.format(totalBalance() ?? 0)}
                 </Heading>
 
                 <Box

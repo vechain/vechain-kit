@@ -21,6 +21,12 @@ type AssetButtonProps = ButtonProps & {
     onClick?: () => void;
 };
 
+const amountFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    compactDisplay: 'short',
+    maximumFractionDigits: 2,
+});
+
 export const AssetButton = ({
     symbol,
     amount,
@@ -89,7 +95,7 @@ export const AssetButton = ({
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                 >
-                    {compactFormatter.format(amount)}
+                    {amountFormatter.format(amount)}
                 </Text>
             </VStack>
         </Button>

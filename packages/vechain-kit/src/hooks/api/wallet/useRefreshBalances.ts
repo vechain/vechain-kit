@@ -9,7 +9,7 @@ import {
     getCustomTokenBalanceQueryKey,
 } from '..';
 import { useCustomTokens } from './useCustomTokens';
-import { getCurrencyQueryKey } from './useCurrency';
+
 export const useRefreshBalances = () => {
     const queryClient = useQueryClient();
     const { account } = useWallet();
@@ -49,9 +49,6 @@ export const useRefreshBalances = () => {
             ...customTokenQueryKeys.map((queryKey) =>
                 queryClient.cancelQueries({ queryKey }),
             ),
-            queryClient.cancelQueries({
-                queryKey: getCurrencyQueryKey(),
-            }),
         ]);
 
         // Then refetch all queries
@@ -80,9 +77,6 @@ export const useRefreshBalances = () => {
             ...customTokenQueryKeys.map((queryKey) =>
                 queryClient.refetchQueries({ queryKey }),
             ),
-            queryClient.refetchQueries({
-                queryKey: getCurrencyQueryKey(),
-            }),
         ]);
     };
 

@@ -36,7 +36,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { tokens } = useBalances({ address: account?.address });
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { customTokens } = useCustomTokens();
-    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
+    const { getTokenValue, currentCurrency } = useCurrency();
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
     const handleTokenSelect = (token: {
@@ -86,7 +86,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 gbpUsdPrice: tokens[token.symbol]?.gbpUsdPrice ?? 0,
                 eurUsdPrice: tokens[token.symbol]?.eurUsdPrice ?? 0,
             })),
-    ].sort((a, b) => getTotalTokenValueInSelectedCurrency(b, currentCurrency) - getTotalTokenValueInSelectedCurrency(a, currentCurrency));
+    ].sort((a, b) => getTokenValue(b) - getTokenValue(a));
 
     // Filter and sort tokens
     const filteredTokens = allTokens
@@ -130,7 +130,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                     <VStack spacing={2} align="stretch" mt={2}>
                         {filteredTokens.map((token) => {
                             const hasBalance = Number(token.balance) > 0;
-                            const valueInCurrency = getTotalTokenValueInSelectedCurrency(token, currentCurrency);
+                            const valueInCurrency = getTokenValue(token);
 
                             return (
                                 <AssetButton

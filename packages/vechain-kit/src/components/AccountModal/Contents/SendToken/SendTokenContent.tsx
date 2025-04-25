@@ -58,7 +58,7 @@ export const SendTokenContent = ({
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
+    const { getTokenValue, currentCurrency } = useCurrency();
     const [selectedToken, setSelectedToken] = useState<Token | null>(
         preselectedToken ?? null,
     );
@@ -440,7 +440,7 @@ export const SendTokenContent = ({
                                         </Text>
                                         <Text opacity={0.5}>
                                             ≈ {compactFormatter.format(
-                                                getTotalTokenValueInSelectedCurrency(selectedToken, currentCurrency)
+                                                getTokenValue(selectedToken)
                                             )}
                                         </Text>
                                     </HStack>

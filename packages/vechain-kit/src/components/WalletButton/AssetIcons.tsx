@@ -31,13 +31,13 @@ export const AssetIcons = ({
     const { t } = useTranslation();
     const { tokens } = useBalances({ address });
     const { darkMode } = useVeChainKitConfig();
-    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
+    const { getTokenValue } = useCurrency();
     const marginLeft = iconsGap < 1 ? `-${iconSize / 2}px` : `${iconsGap}px`;
 
     // Create array of tokens with balances and their values
     const tokensList = Object.values(tokens)
         .filter((token) => Number(token.balance) > 0)
-        .sort((a, b) => getTotalTokenValueInSelectedCurrency(b, currentCurrency) - getTotalTokenValueInSelectedCurrency(a, currentCurrency));
+        .sort((a, b) => getTokenValue(b) - getTokenValue(a));
 
     const tokensToShow = tokensList.slice(0, maxIcons);
     const remainingTokens = tokensList.length - maxIcons;

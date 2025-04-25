@@ -33,7 +33,7 @@ export const AddressDisplayCard = ({
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
-    const { getTotalTokenValueInSelectedCurrency, currentCurrency } = useCurrency();
+    const { getTokenValue } = useCurrency();
 
     const { tokens, isLoading } = useBalances({
         address: address,
@@ -48,7 +48,7 @@ export const AddressDisplayCard = ({
         balance !== undefined
             ? balance
             : tokenData
-            ? getTotalTokenValueInSelectedCurrency(tokenData, currentCurrency) || 0
+            ? getTokenValue(tokenData) || 0
             : 0;
     const displaySymbol = tokenData?.symbol || '';
 
