@@ -69,7 +69,18 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-    const { currentCurrency, convertTokenValue } = useCurrency();
+    const { currentCurrency } = useCurrency();
+
+    const convertTokenValue = (tokenAmountInUsd: number, token: Token) => {
+        switch (currentCurrency) {
+            case 'eur':
+                return tokenAmountInUsd / token.eurUsdPrice;
+            case 'gbp':
+                return tokenAmountInUsd / token.gbpUsdPrice;
+            default:
+                return tokenAmountInUsd;
+        }
+    };
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {

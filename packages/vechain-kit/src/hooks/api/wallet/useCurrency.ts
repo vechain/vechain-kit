@@ -58,22 +58,10 @@ export const useCurrency = () => {
         }
     };
 
-    const convertTokenValue = (tokenAmountInUsd: number, token: Token) => {
-        switch (currentCurrency) {
-            case 'eur':
-                return tokenAmountInUsd / token.eurUsdPrice;
-            case 'gbp':
-                return tokenAmountInUsd / token.gbpUsdPrice;
-            default:
-                return tokenAmountInUsd;
-        }
-    };
-
     return {
         currentCurrency,
         allCurrencies,
         changeCurrency,
         getTokenValue,
-        convertTokenValue,
     };
 };
