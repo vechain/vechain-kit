@@ -51,6 +51,12 @@ Resources:
             EndpointConfiguration: REGIONAL
             Auth:
                 ApiKeyRequired: true
+            Domain:
+                DomainName: api.vechainkit.vechain.org
+                CertificateArn: arn:aws:acm:ap-northeast-3:872515252637:certificate/7abee66e-a171-4221-88fa-3aced63ac1ab
+                EndpointConfiguration: REGIONAL
+                Route53:
+                    HostedZoneId: Z01663463ADUP1NUCMZ09
             DefinitionBody:
                 openapi: 3.0.1
                 info:
