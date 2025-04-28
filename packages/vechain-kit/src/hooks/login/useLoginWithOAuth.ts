@@ -1,4 +1,7 @@
-import { useLoginWithOAuth as usePrivyLoginWithOAuth } from '@privy-io/react-auth';
+import {
+    useLoginWithOAuth as usePrivyLoginWithOAuth,
+    useCreateWallet,
+} from '@privy-io/react-auth';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod, VePrivySocialLoginMethod } from '@/types/mixPanel';
 import { usePrivy } from '@privy-io/react-auth';
@@ -26,7 +29,16 @@ const providerToSocialMethod: Record<OAuthProvider, VePrivySocialLoginMethod> =
     };
 
 export const useLoginWithOAuth = () => {
-    const { initOAuth: privyInitOAuth } = usePrivyLoginWithOAuth();
+    const { createWallet } = useCreateWallet();
+    const { initOAuth: privyInitOAuth } = usePrivyLoginWithOAuth({
+        onComplete: async ({ isNewUser }) => {
+            // When using initOAuth Privy does not create an embedded wallet automatically.
+            // So we need to create a wallet manually.
+            if (isNewUser) {
+                await createWallet();
+            }
+        },
+    });
     const { user } = usePrivy();
 
     const initOAuth = async ({ provider }: OAuthOptions) => {
@@ -36,9 +48,7 @@ export const useLoginWithOAuth = () => {
         try {
             Analytics.auth.flowStarted(loginMethod);
             Analytics.auth.methodSelected(loginMethod);
-
             await privyInitOAuth({ provider });
-
             Analytics.auth.completed({
                 userId: user?.id,
                 loginMethod,

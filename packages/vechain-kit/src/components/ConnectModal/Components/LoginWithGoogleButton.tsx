@@ -19,10 +19,10 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
         <GridItem colSpan={gridColumn ?? 4} w={'full'}>
             <ConnectionButton
                 isDark={isDark}
-                onClick={() => {
+                onClick={async () => {
                     Analytics.auth.flowStarted(VeLoginMethod.GOOGLE);
                     Analytics.auth.methodSelected(VeLoginMethod.GOOGLE);
-                    initOAuth({
+                    await initOAuth({
                         provider: 'google',
                     });
                 }}
