@@ -26,6 +26,12 @@ jobs:
       - name: Wait for thor-solo to be ready
         run: sleep 30
 
+      - name: Build vechain-kit
+        working-directory: ./packages/vechain-kit
+        run: |
+          yarn install
+          yarn build
+
       - name: Set next-template app env vars
         run: |
           cat <<EOF > examples/next-template/.env
@@ -49,9 +55,11 @@ jobs:
       - name: Wait for Next app to start
         run: sleep 15
 
-      - name: Install playwright browsers
+      - name: Setup playwright
         working-directory: ./tests/e2e
-        run: yarn install-browsers
+        run: |
+          yarn install
+          yarn install-browsers
 
       - name: Run e2e tests
         working-directory: ./tests/e2e
