@@ -13,13 +13,6 @@ interface OAuthOptions {
     provider: OAuthProvider;
 }
 
-const providerToLoginMethod: Record<OAuthProvider, VeLoginMethod> = {
-    google: VeLoginMethod.GOOGLE,
-    twitter: VeLoginMethod.EMAIL,
-    apple: VeLoginMethod.EMAIL,
-    discord: VeLoginMethod.EMAIL,
-};
-
 const providerToSocialMethod: Record<OAuthProvider, VePrivySocialLoginMethod> =
     {
         google: VePrivySocialLoginMethod.EMAIL,
@@ -42,7 +35,7 @@ export const useLoginWithOAuth = () => {
     const { user } = usePrivy();
 
     const initOAuth = async ({ provider }: OAuthOptions) => {
-        const loginMethod = providerToLoginMethod[provider];
+        const loginMethod = VeLoginMethod.OAUTH;
         const socialMethod = providerToSocialMethod[provider];
 
         try {
