@@ -39,25 +39,25 @@ yarn install-browsers
 
 There are a couple options available. By default, tests are running in a headless state:
 
-```sh
+```bash
 yarn test
 ```
 
 You can also run them in headed state in case you want to see the tests execution:
 
-```sh
+```bash
 yarn test:headed
 ```
 
 And there's a debug option. It will run tests in a serial manner, allowing to execute every test "step-by-step" giving enough time to inspect all the stuff needed in-between steps execution.
 
-```sh
+```bash
 yarn test:debug
 ```
 
 ## Reporting
 
 After tests are complete, run this command. It will generate and open a report in your default browser. 
-```sh
+```bash
 yarn report
 ```
