@@ -1,34 +1,46 @@
 services:
   thor-solo:
-    platform: linux/amd64
-    build:
-      dockerfile: Dockerfile
-      context: ./
+    image: ghcr.io/vechain/thor:release-galactica-latest
+    hostname: thor-solo
+    container_name: thor-solo
     user: root
+    environment:
+      - DOCKER=1
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "apk update && apk upgrade && apk add curl && thor solo --on-demand --persist --data-dir /data/thor --api-addr 0.0.0.0:8669 --api-cors '*' --verbosity 3",
+      ]
     ports:
       - "8669:8669"
-      - "11235:11235"
     healthcheck:
-      test: curl --fail 0.0.0.0:8669/blocks/0 || exit 1
-      interval: 2s
+      test: curl --fail 0.0.0.0:8669/blocks/1 || exit 1
+      interval: "2s"
       retries: 30
     volumes:
-      - thor-volume:/data/thor
+      - thor-data:/data/thor
     networks:
       - vechain-thor
+
   insight:
     image: ghcr.io/vechain/insight-app:master
+    platform: linux/amd64
     hostname: insight
     container_name: insight
     environment:
       - VUE_APP_SOLO_URL=http://localhost:8669
     ports:
       - "8080:80"
-
-volumes:
-  thor-volume:
+    networks:
+      - vechain-thor
 
 networks:
   vechain-thor:
     driver: bridge
     name: vechain-thor
+
+volumes:
+  thor-data:
+    driver: local
+    name: thor-data
