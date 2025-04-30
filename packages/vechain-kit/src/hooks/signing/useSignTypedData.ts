@@ -89,6 +89,7 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                                   ? JSON.stringify(err)
                                   : String(err),
                           );
+                console.error(error);
                 setError(error);
                 throw error;
             } finally {

@@ -31,7 +31,7 @@ export const ProfileContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Profile')}</ModalHeader>
+                <ModalHeader data-testid='modal-title'>{t('Profile')}</ModalHeader>
 
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalCloseButton />

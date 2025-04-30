@@ -114,6 +114,7 @@ export const ProfileCard = ({
                             w="full"
                             textAlign="center"
                             mt={2}
+                            data-testid="display-name-val"
                         >
                             {metadata?.records?.display}
                         </Text>
@@ -125,6 +126,7 @@ export const ProfileCard = ({
                             opacity={0.7}
                             w="full"
                             textAlign="center"
+                            data-testid="description-val"
                         >
                             {metadata?.records?.description}
                         </Text>
@@ -141,6 +143,7 @@ export const ProfileCard = ({
                                 <Link
                                     href={`mailto:${metadata?.records?.email}`}
                                     target="_blank"
+                                    data-testid="mail-link"
                                 >
                                     <Icon as={FaEnvelope} />
                                 </Link>
@@ -149,6 +152,7 @@ export const ProfileCard = ({
                                 <Link
                                     href={metadata?.records?.url}
                                     target="_blank"
+                                    data-testid="website-link"
                                 >
                                     <Icon as={FaGlobe} />
                                 </Link>
@@ -157,6 +161,7 @@ export const ProfileCard = ({
                                 <Link
                                     href={`https://x.com/${metadata?.records?.['com.x']}`}
                                     target="_blank"
+                                    data-testid="twitter-link"
                                 >
                                     <Icon as={FaXTwitter} />
                                 </Link>
@@ -189,6 +194,7 @@ export const ProfileCard = ({
                                 variant="ghost"
                                 leftIcon={<Icon as={FaEdit} />}
                                 onClick={onEditClick ?? (() => {})}
+                                data-testid="customize-button"
                             >
                                 {t('Customize')}
                             </Button>
@@ -200,6 +206,7 @@ export const ProfileCard = ({
                                 leftIcon={<Icon as={RiLogoutBoxLine} />}
                                 colorScheme="red"
                                 onClick={onLogout}
+                                data-testid="logout-button"
                             >
                                 {t('Logout')}
                             </Button>

@@ -167,7 +167,7 @@ export const ChooseNameSummaryContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>
+                <ModalHeader data-testid='confirm-domain'>
                     {isUnsetting
                         ? t('Confirm Unset Domain')
                         : t('Confirm Name')}
@@ -194,7 +194,7 @@ export const ChooseNameSummaryContent = ({
                               )}
                     </Text>
                     {!isUnsetting && (
-                        <Text fontSize="xl" fontWeight="bold" color="blue.500">
+                        <Text fontSize="xl" fontWeight="bold" color="blue.500" data-testid="preconfirm-domain-val">
                             {`${fullDomain}`}
                         </Text>
                     )}

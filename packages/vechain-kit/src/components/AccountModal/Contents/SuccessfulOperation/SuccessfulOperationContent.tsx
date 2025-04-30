@@ -56,6 +56,7 @@ export const SuccessfulOperationContent = ({
                         as={IoIosCheckmarkCircleOutline}
                         fontSize={'100px'}
                         color={darkMode ? '#00ff45de' : '#10ba3e'}
+                        data-testid="success-icon"
                     />
 
                     {description && (

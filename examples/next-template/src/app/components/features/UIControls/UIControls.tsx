@@ -14,10 +14,19 @@ export function UIControls() {
                 <b>UI</b>
             </Heading>
             <HStack mt={4} spacing={4}>
-                <Button colorScheme="primary" onClick={toggleColorMode}>
+                <Button
+                    colorScheme="primary"
+                    onClick={toggleColorMode}
+                    data-testid={`${colorMode === 'dark' ? 'light' : 'dark' }-mode-button`}
+                >
                     {colorMode === 'dark' ? 'Light mode' : 'Dark mode'}
                 </Button>
-                <Button onClick={openAccountModal}>Account Modal</Button>
+                <Button
+                    onClick={openAccountModal}
+                    data-testid="account-modal-button"
+                >
+                    Account Modal
+                </Button>
             </HStack>
         </Box>
     );

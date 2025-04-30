@@ -303,6 +303,7 @@ export const SendTokenSummaryContent = ({
                                     fontSize="xl"
                                     fontWeight="semibold"
                                     textAlign="left"
+                                    data-testid="send-summary-amount"
                                 >
                                     {summaryFormatter.format(Number(amount))}{' '}
                                     {selectedToken.symbol}

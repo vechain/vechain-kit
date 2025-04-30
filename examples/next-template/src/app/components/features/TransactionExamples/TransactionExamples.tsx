@@ -95,6 +95,7 @@ export function TransactionExamples() {
                         onClick={handleTransactionWithToast}
                         isLoading={isTransactionPending}
                         isDisabled={isTransactionPending}
+                        data-testid="tx-with-toast-button"
                     >
                         Tx with toast
                     </Button>
@@ -102,6 +103,7 @@ export function TransactionExamples() {
                         onClick={handleTransactionWithModal}
                         isLoading={isTransactionPending}
                         isDisabled={isTransactionPending}
+                        data-testid="tx-with-modal-button"
                     >
                         Tx with modal
                     </Button>

@@ -114,6 +114,7 @@ export function SigningExample(): ReactElement {
                 <Button
                     onClick={handleSignMessage}
                     isLoading={isMessageSignPending}
+                    data-testid="sign-message-button"
                 >
                     Sign "Hello VeChain!"
                 </Button>
@@ -129,6 +130,7 @@ export function SigningExample(): ReactElement {
                 <Button
                     onClick={handleSignTypedData}
                     isLoading={isTypedDataSignPending}
+                    data-testid="sign-typed-data-button"
                 >
                     Sign Typed Data
                 </Button>

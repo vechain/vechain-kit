@@ -15,12 +15,18 @@ export function AccountInfo() {
                     <Heading size={'md'}>
                         <b>Smart Account</b>
                     </Heading>
-                    <Text>Smart Account: {smartAccount.address}</Text>
-                    <Text>Deployed: {smartAccount.isDeployed.toString()}</Text>
+                    <Text data-testid="smart-account-address">
+                        Smart Account: {smartAccount.address}
+                    </Text>
+                    <Text data-testid="is-sa-deployed">
+                        Deployed: {smartAccount.isDeployed.toString()}
+                    </Text>
                     {b3trBalanceLoading ? (
                         <Spinner />
                     ) : (
-                        <Text>B3TR Balance: {b3trBalance?.formatted}</Text>
+                        <Text data-testid="b3tr-balance">
+                            B3TR Balance: {b3trBalance?.formatted}
+                        </Text>
                     )}
                 </Box>
             )}
@@ -29,7 +35,9 @@ export function AccountInfo() {
                 <Heading size={'md'}>
                     <b>Wallet</b>
                 </Heading>
-                <Text>Address: {connectedWallet?.address}</Text>
+                <Text data-testid="connected-wallet-address">
+                    Address: {connectedWallet?.address}
+                </Text>
             </Box>
         </>
     );

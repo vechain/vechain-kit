@@ -120,7 +120,11 @@ const QuickActionButton = ({
                     <Icon as={icon} boxSize={5} opacity={0.9} />
 
                     <HStack p={0} alignItems={'baseline'} spacing={1}>
-                        <Text fontSize="sm" fontWeight="600">
+                        <Text
+                            fontSize="sm"
+                            fontWeight="600"
+                            data-testid={`${label.toLowerCase()}-button-label`}
+                        >
                             {t(label, label)}
                         </Text>
                         {showRedDot && (

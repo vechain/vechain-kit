@@ -182,7 +182,7 @@ export const ChooseNameSearchContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Choose Name')}</ModalHeader>
+                <ModalHeader data-testid='modal-title'>{t('Choose Name')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
@@ -223,6 +223,7 @@ export const ChooseNameSearchContent = ({
                                 boxShadow: 'none',
                             }}
                             isInvalid={!!error}
+                            data-testid="domain-input"
                         />
                         <InputRightElement
                             width="auto"
@@ -242,7 +243,7 @@ export const ChooseNameSearchContent = ({
                     </InputGroup>
 
                     {error && hasInteracted && (
-                        <Text color="#ef4444" fontSize="sm">
+                        <Text color="#ef4444" fontSize="sm" data-testid="domain-availability-status">
                             {error}
                         </Text>
                     )}
@@ -252,6 +253,7 @@ export const ChooseNameSearchContent = ({
                             fontSize="sm"
                             color={isAvailable ? 'green.500' : '#ef4444'}
                             fontWeight="500"
+                            data-testid="domain-availability-status"
                         >
                             {isOwnDomain
                                 ? t('YOU OWN THIS')
@@ -273,6 +275,7 @@ export const ChooseNameSearchContent = ({
                         isFetchingDomainInfo
                     }
                     onClick={handleContinue}
+                    data-testid="continue-button"
                 >
                     {t('Continue')}
                 </Button>

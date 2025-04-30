@@ -1,0 +1,66 @@
+name: E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Start thor-solo
+        working-directory: ./thor-solo
+        run: |
+          nohup make solo-up > solo.log 2>&1 &
+      - name: Wait for thor-solo to be ready
+        run: sleep 30
+
+      - name: Build vechain-kit
+        working-directory: ./packages/vechain-kit
+        run: |
+          yarn install
+          yarn build
+
+      - name: Set next-template app env vars
+        run: |
+          cat <<EOF > examples/next-template/.env
+          NEXT_PUBLIC_PRIVY_APP_ID=cm7c4nool00g9nzskuswuuvvk
+          NEXT_PUBLIC_PRIVY_CLIENT_ID="client-WY5h7jdJHJcRraocdPRWkv7LSNxCP8WQUQ48pk2btic8S"
+          NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
+          NEXT_PUBLIC_DELEGATOR_URL="https://sponsor-testnet.vechain.energy/by/850"
+          NEXT_PUBLIC_NETWORK_TYPE=solo
+          EOF
+
+      - name: Build next-template app
+        working-directory: ./examples/next-template
+        run: |
+          yarn install
+          yarn build
+
+      - name: Start next-template app
+        working-directory: ./examples/next-template
+        run: |
+          nohup yarn dev > next.log 2>&1 &
+      - name: Wait for Next app to start
+        run: sleep 15
+
+      - name: Setup playwright
+        working-directory: ./tests/e2e
+        run: |
+          yarn install
+          yarn install-browsers
+
+      - name: Run e2e tests
+        working-directory: ./tests/e2e
+        run: yarn test

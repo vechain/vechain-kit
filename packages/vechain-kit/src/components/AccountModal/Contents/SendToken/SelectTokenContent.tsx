@@ -96,6 +96,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                                 pl={12}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                data-testid="search-token-input"
                             />
                             <InputLeftElement h="56px" w="56px" pl={4}>
                                 <CiSearch
