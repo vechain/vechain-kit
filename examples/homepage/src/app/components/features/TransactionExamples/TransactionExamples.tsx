@@ -2,10 +2,12 @@
 
 import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
 import { MdSend } from 'react-icons/md';
+import { FaCode } from 'react-icons/fa';
+import { useMemo, useCallback } from 'react';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
-    useSendTransaction,
+    useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
     TransactionModal,
@@ -13,12 +15,26 @@ import {
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { b3trMainnetAddress } from '../../../constants';
-import { useMemo, useCallback } from 'react';
-import { FaCode } from 'react-icons/fa';
-import { humanAddress } from '@vechain/vechain-kit/utils';
 
 export function TransactionExamples() {
     const { account } = useWallet();
+
+    const clauseBuilder = useCallback(() => {
+        const B3TRInterface = IB3TR__factory.createInterface();
+
+        return [
+            {
+                to: b3trMainnetAddress,
+                value: '0x0',
+                data: B3TRInterface.encodeFunctionData('transfer', [
+                    account?.address ?? '',
+                    '0',
+                ]),
+                comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
+                abi: B3TRInterface.getFunction('transfer'),
+            },
+        ];
+    }, [account?.address]);
 
     const {
         sendTransaction,
@@ -27,15 +43,8 @@ export function TransactionExamples() {
         isTransactionPending,
         error,
         resetStatus,
-    } = useSendTransaction({
-        signerAccountAddress: account?.address ?? '',
-        privyUIOptions: {
-            title: 'Send Dummy Transaction',
-            description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${humanAddress(
-                account?.address ?? '',
-            )}`,
-            buttonText: 'Sign to continue',
-        },
+    } = useBuildTransaction({
+        clauseBuilder,
     });
 
     const {
@@ -50,40 +59,20 @@ export function TransactionExamples() {
         isOpen: isTransactionToastOpen,
     } = useTransactionToast();
 
-    const clauses = useMemo(() => {
-        const B3TRInterface = IB3TR__factory.createInterface();
-
-        const clausesArray: any[] = [];
-        clausesArray.push({
-            to: b3trMainnetAddress,
-            value: '0x0',
-            data: B3TRInterface.encodeFunctionData('transfer', [
-                account?.address ?? '',
-                '0', // 1 B3TR (in wei)
-            ]),
-            comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                account?.address
-            }`,
-            abi: B3TRInterface.getFunction('transfer'),
-        });
-
-        return clausesArray;
-    }, [account?.address]);
-
     const handleTransactionWithToast = useCallback(async () => {
         openTransactionToast();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, openTransactionToast]);
+        await sendTransaction({});
+    }, [sendTransaction, openTransactionToast]);
 
     const handleTransactionWithModal = useCallback(async () => {
         openTransactionModal();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, openTransactionModal]);
+        await sendTransaction({});
+    }, [sendTransaction, openTransactionModal]);
 
     const handleTryAgain = useCallback(async () => {
         resetStatus();
-        await sendTransaction(clauses);
-    }, [sendTransaction, clauses, resetStatus]);
+        await sendTransaction({});
+    }, [sendTransaction, resetStatus]);
 
     return (
         <CollapsibleCard
@@ -99,7 +88,6 @@ export function TransactionExamples() {
                 </Text>
 
                 <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6}>
-                    {/* Transaction Buttons */}
                     <VStack
                         spacing={4}
                         p={6}
@@ -127,7 +115,6 @@ export function TransactionExamples() {
                         </VStack>
                     </VStack>
 
-                    {/* Code Example */}
                     <VStack
                         spacing={4}
                         p={6}
@@ -160,7 +147,6 @@ export function TransactionExamples() {
                     </VStack>
                 </SimpleGrid>
 
-                {/* Transaction UI Components */}
                 <TransactionToast
                     isOpen={isTransactionToastOpen}
                     onClose={closeTransactionToast}
@@ -168,9 +154,7 @@ export function TransactionExamples() {
                     txError={error}
                     txReceipt={txReceipt}
                     onTryAgain={handleTryAgain}
-                    description={`This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                        account?.address
-                    }`}
+                    description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`}
                 />
 
                 <TransactionModal
@@ -182,9 +166,7 @@ export function TransactionExamples() {
                     txError={error}
                     uiConfig={{
                         title: 'Test Transaction',
-                        description: `This is a dummy transaction to test the transaction modal. Confirm to transfer ${0} B3TR to ${
-                            account?.address
-                        }`,
+                        description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
                         showShareOnSocials: true,
                         showExplorerButton: true,
                         isClosable: true,
