@@ -1,7 +1,7 @@
 import { Box, Text, HStack, VStack, Image, Skeleton } from '@chakra-ui/react';
 import { humanAddress } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
-import { useBalances } from '@/hooks';
+import { useBalances, useCurrency } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 
 const compactFormatter = new Intl.NumberFormat('en-US', {
@@ -33,6 +33,7 @@ export const AddressDisplayCard = ({
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
+    const { getTokenValue } = useCurrency();
 
     const { tokens, isLoading } = useBalances({
         address: address,
@@ -42,8 +43,13 @@ export const AddressDisplayCard = ({
     const tokenData = tokenAddress
         ? Object.values(tokens).find((token) => token.address === tokenAddress)
         : null;
+
     const displayBalance =
-        balance !== undefined ? balance : tokenData?.value || 0;
+        balance !== undefined
+            ? balance
+            : tokenData
+            ? getTokenValue(tokenData) || 0
+            : 0;
     const displaySymbol = tokenData?.symbol || '';
 
     return (

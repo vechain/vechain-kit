@@ -1,5 +1,5 @@
 import { HStack, Text, Circle, Image, StackProps } from '@chakra-ui/react';
-import { useBalances } from '@/hooks';
+import { useBalances, useCurrency } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
@@ -31,12 +31,13 @@ export const AssetIcons = ({
     const { t } = useTranslation();
     const { tokens } = useBalances({ address });
     const { darkMode } = useVeChainKitConfig();
+    const { getTokenValue } = useCurrency();
     const marginLeft = iconsGap < 1 ? `-${iconSize / 2}px` : `${iconsGap}px`;
 
     // Create array of tokens with balances and their values
     const tokensList = Object.values(tokens)
-        .filter((token) => Number(token.value) > 0)
-        .sort((a, b) => Number(b.usdValue) - Number(a.usdValue));
+        .filter((token) => Number(token.balance) > 0)
+        .sort((a, b) => getTokenValue(b) - getTokenValue(a));
 
     const tokensToShow = tokensList.slice(0, maxIcons);
     const remainingTokens = tokensList.length - maxIcons;

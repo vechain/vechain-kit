@@ -14,7 +14,7 @@ import {
     useUpgradeRequired,
     useWallet,
 } from '@/hooks';
-import { MdOutlineNavigateNext } from 'react-icons/md';
+import { MdOutlineNavigateNext, MdCurrencyExchange } from 'react-icons/md';
 import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
@@ -115,6 +115,10 @@ export const SettingsContent = ({
         Analytics.settings.connectionDetailsViewed();
     };
 
+    const handleChangeCurrency = () => {
+        setCurrentContent('change-currency');
+    };
+
     const handleLogout = () => {
         Analytics.auth.trackAuth('disconnect_initiated');
         disconnect();
@@ -164,6 +168,17 @@ export const SettingsContent = ({
                         leftIcon={FaRegAddressCard}
                         rightIcon={MdOutlineNavigateNext}
                     />
+                    <ActionButton
+                        style={{
+                            borderTopRadius: '0px',
+                            borderBottomRadius: '0px',
+                        }}
+                        title={t('Change Currency')}
+                        description={t('Change the currency of your account.')}
+                        onClick={handleChangeCurrency}
+                        leftIcon={MdCurrencyExchange}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
 
                     {connection.isConnectedWithPrivy && (
                         <ActionButton
@@ -204,7 +219,7 @@ export const SettingsContent = ({
                     </Heading>
                     <ActionButton
                         style={{
-                            marginTop: '10px',
+                            borderTopRadius: '0px',
                             borderBottomRadius: '0px',
                         }}
                         title={t('Connection details')}

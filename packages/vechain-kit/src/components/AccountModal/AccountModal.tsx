@@ -33,6 +33,7 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { ChangeCurrencyContent } from './Contents/ChangeCurrency/ChangeCurrencyContent';
 
 type Props = {
     isOpen: boolean;
@@ -202,6 +203,12 @@ export const AccountModal = ({
             case 'add-custom-token':
                 return (
                     <ManageCustomTokenContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'change-currency':
+                return (
+                    <ChangeCurrencyContent
                         setCurrentContent={setCurrentContent}
                     />
                 );

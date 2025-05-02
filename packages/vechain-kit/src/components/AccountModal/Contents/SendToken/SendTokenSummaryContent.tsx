@@ -31,12 +31,7 @@ import { useMemo } from 'react';
 import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/StringUtils';
-
-const compactFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 2,
-});
+import { useCurrency } from '@/hooks/api/wallet';
 
 const summaryFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -74,6 +69,18 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+    const { currentCurrency } = useCurrency();
+
+    const convertTokenValue = (tokenAmountInUsd: number, token: Token) => {
+        switch (currentCurrency) {
+            case 'eur':
+                return tokenAmountInUsd / token.eurUsdPrice;
+            case 'gbp':
+                return tokenAmountInUsd / token.gbpUsdPrice;
+            default:
+                return tokenAmountInUsd;
+        }
+    };
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {
@@ -82,6 +89,14 @@ export const SendTokenSummaryContent = ({
         }
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
+
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: currentCurrency,
+    });
 
     const handleSend = async () => {
         if (upgradeRequired) {
@@ -270,7 +285,7 @@ export const SendTokenSummaryContent = ({
                             domain={account?.domain}
                             imageSrc={account?.image ?? ''}
                             imageAlt="From account"
-                            balance={Number(selectedToken.numericBalance)}
+                            balance={Number(selectedToken.balance)}
                             tokenAddress={selectedToken.address}
                         />
 
@@ -309,9 +324,8 @@ export const SendTokenSummaryContent = ({
                                     {selectedToken.symbol}
                                 </Text>
                                 <Text fontSize="sm" opacity={0.5}>
-                                    ≈ $
-                                    {compactFormatter.format(
-                                        Number(amount) * selectedToken.price,
+                                    ≈ {compactFormatter.format(
+                                         convertTokenValue(Number(amount) * selectedToken.usdPrice, selectedToken),
                                     )}
                                 </Text>
                             </HStack>

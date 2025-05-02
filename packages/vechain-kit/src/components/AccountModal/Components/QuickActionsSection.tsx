@@ -16,6 +16,7 @@ import {
     useNotifications,
     useUpgradeRequired,
     useWallet,
+    useCurrency,
 } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
@@ -148,10 +149,22 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { totalBalance } = useBalances({
+    const { currentCurrency } = useCurrency();
+    const { totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
+
+    const totalBalance = () => {
+        switch (currentCurrency) {
+            case 'eur':
+                return totalBalanceEur;
+            case 'gbp':
+                return totalBalanceGbp;
+            default:
+                return totalBalanceUsd;
+        }
+    }
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -179,7 +192,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         icon={action.icon}
                         label={action.label}
                         onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(totalBalance)}
+                        isDisabled={action.isDisabled?.(totalBalance())}
                         showRedDot={showRedDot && action.label === 'Settings'}
                     />
                 ))}

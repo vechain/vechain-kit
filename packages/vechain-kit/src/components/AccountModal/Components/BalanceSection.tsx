@@ -6,7 +6,7 @@ import {
     IconButton,
     Box,
 } from '@chakra-ui/react';
-import { useBalances, useRefreshBalances, useWallet } from '@/hooks';
+import { useBalances, useRefreshBalances, useWallet, useCurrency } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VscRefresh } from 'react-icons/vsc';
@@ -14,13 +14,6 @@ import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
-const compactFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
 
 export const BalanceSection = ({
     mb,
@@ -32,11 +25,23 @@ export const BalanceSection = ({
     onAssetsClick?: () => void;
 }) => {
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { currentCurrency } = useCurrency();
     const { t } = useTranslation();
     const { account } = useWallet();
-    const { isLoading, totalBalance } = useBalances({
+    const { isLoading, totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
+
+    const totalBalance = () => {
+        switch (currentCurrency) {
+            case 'eur':
+                return totalBalanceEur;
+            case 'gbp':
+                return totalBalanceGbp;
+            default:
+                return totalBalanceUsd;
+        }
+    }
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -49,6 +54,14 @@ export const BalanceSection = ({
             setIsRefreshing(false);
         }, 1500);
     };
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: currentCurrency,
+    });
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={2} mt={mt} mb={mb}>
@@ -62,7 +75,7 @@ export const BalanceSection = ({
                 role="group"
             >
                 <Heading size={'2xl'} fontWeight={'700'}>
-                    ${compactFormatter.format(totalBalance ?? 0)}
+                    {compactFormatter.format(totalBalance() ?? 0)}
                 </Heading>
 
                 <Box

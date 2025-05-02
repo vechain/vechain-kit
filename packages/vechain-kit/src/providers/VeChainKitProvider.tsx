@@ -14,7 +14,7 @@ import {
 import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
-import { PrivyLoginMethod } from '@/types';
+import { PrivyLoginMethod, CURRENCY } from '@/types';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
@@ -98,6 +98,7 @@ export type VechainKitProviderProps = {
         };
     };
     allowCustomTokens?: boolean;
+    defaultCurrency?: CURRENCY;
 };
 
 type VeChainKitConfig = {
@@ -112,6 +113,7 @@ type VeChainKitConfig = {
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
+    defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
 };
 
 /**
@@ -217,6 +219,7 @@ export const VeChainKitProvider = (
         language = 'en',
         network,
         allowCustomTokens,
+        defaultCurrency = 'usd',
     } = validatedProps;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
@@ -286,6 +289,7 @@ export const VeChainKitProvider = (
                         language,
                         network,
                         allowCustomTokens,
+                        defaultCurrency,
                     }}
                 >
                     <PrivyProvider
