@@ -16,13 +16,13 @@ import {
     useNotifications,
     useUpgradeRequired,
     useWallet,
-    useCurrency,
 } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import { LuArrowDownToLine } from 'react-icons/lu';
 import { RiSwap3Line } from 'react-icons/ri';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useCallback } from 'react';
 
 type Props = {
     mt?: number;
@@ -35,7 +35,7 @@ type QuickAction = {
     icon: React.ElementType;
     label: string;
     onClick: (setCurrentContent: Props['setCurrentContent']) => void;
-    isDisabled?: (totalBalance: number) => boolean;
+    isDisabled?: (hasAnyBalance: boolean) => boolean;
 };
 
 const QUICK_ACTIONS: QuickAction[] = [
@@ -66,7 +66,7 @@ const QUICK_ACTIONS: QuickAction[] = [
                     isNavigatingFromMain: true,
                 },
             }),
-        isDisabled: (totalBalance) => totalBalance === 0,
+        isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
     {
         icon: RiSwap3Line,
@@ -149,22 +149,14 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { currentCurrency } = useCurrency();
-    const { totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
+    const { balances } = useBalances({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
 
-    const totalBalance = () => {
-        switch (currentCurrency) {
-            case 'eur':
-                return totalBalanceEur;
-            case 'gbp':
-                return totalBalanceGbp;
-            default:
-                return totalBalanceUsd;
-        }
-    }
+    const hasAnyBalance = useCallback(() => {
+        return balances.some((balance) => parseFloat(balance.value) > 0);
+    }, [balances]);
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -192,7 +184,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         icon={action.icon}
                         label={action.label}
                         onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(totalBalance())}
+                        isDisabled={action.isDisabled?.(hasAnyBalance())}
                         showRedDot={showRedDot && action.label === 'Settings'}
                     />
                 ))}
