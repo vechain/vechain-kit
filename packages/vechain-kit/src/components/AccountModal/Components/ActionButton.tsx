@@ -31,6 +31,7 @@ type ActionButtonProps = {
     style?: ButtonProps;
     extraContent?: React.ReactNode;
     dataTestId?: string;
+    variant?: string;
 };
 
 export const ActionButton = ({
@@ -50,12 +51,13 @@ export const ActionButton = ({
     style,
     extraContent,
     dataTestId,
+    variant = 'actionButton',
 }: ActionButtonProps) => {
     const { t } = useTranslation();
     return (
         <Button
-            variant="actionButton"
-            py={stacked ? 0 : 4}
+            variant={variant}
+            py={stacked ? 0 : 2}
             onClick={onClick}
             display={hide ? 'none' : 'flex'}
             isDisabled={showComingSoon || isDisabled}
@@ -66,20 +68,25 @@ export const ActionButton = ({
             data-testid={dataTestId}
             {...style}
         >
-            <HStack w={'full'} justify={'space-between'}>
+            <HStack w={'full'} justify={'space-between'} alignItems={'center'}>
                 <Box minW={'40px'}>
                     {leftImage ? (
                         <Image
                             src={leftImage}
-                            w={'35px'}
-                            h={'35px'}
+                            w={'30px'}
+                            h={'30px'}
                             borderRadius={'full'}
                             alt="left-image"
                             alignSelf={'end'}
                             objectFit="cover"
                         />
                     ) : (
-                        <Icon as={leftIcon} fontSize={'25px'} />
+                        <Icon
+                            as={leftIcon}
+                            fontSize={'20px'}
+                            h={'full'}
+                            alignContent={'center'}
+                        />
                     )}
                 </Box>
                 <VStack

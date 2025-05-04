@@ -28,7 +28,7 @@ export const DisconnectConfirmContent = ({
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Disconnect Wallet')}</ModalHeader>
+                <ModalHeader>{t('Logout')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>

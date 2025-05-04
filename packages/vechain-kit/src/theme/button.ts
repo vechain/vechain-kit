@@ -102,6 +102,19 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
+    vechainKitLogout: defineStyle(({ colorMode }) => ({
+        width: 'full',
+        minHeight: '50px',
+        height: 'fit-content',
+        borderRadius: 'xl',
+        p: 0,
+        backgroundColor: colorMode === 'dark' ? 'red.200' : 'red.50',
+        _hover: {
+            backgroundColor: colorMode === 'dark' ? 'red.200' : 'red.200',
+        },
+        transition: 'all 0.2s',
+        color: 'red.900',
+    })),
     mainContentButton: defineStyle(({ colorMode }) => ({
         width: '100%',
         backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
@@ -115,10 +128,11 @@ const variants = {
     })),
     actionButton: defineStyle(({ colorMode }) => ({
         width: 'full',
-        minHeight: '70px',
+        minHeight: '50px',
         height: 'fit-content',
         backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
         borderRadius: 'xl',
+        p: 0,
         _hover: {
             backgroundColor:
                 colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
