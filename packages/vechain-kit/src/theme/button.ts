@@ -108,12 +108,15 @@ const variants = {
         height: 'fit-content',
         borderRadius: 'xl',
         p: 0,
-        backgroundColor: colorMode === 'dark' ? 'red.200' : 'red.50',
+        backgroundColor:
+            colorMode === 'dark' ? 'rgba(254, 178, 178, 0.12)' : 'red.50',
         _hover: {
-            backgroundColor: colorMode === 'dark' ? 'red.200' : 'red.200',
+            backgroundColor:
+                colorMode === 'dark' ? 'rgba(254, 178, 178, 0.37)' : 'red.200',
+            color: colorMode === 'dark' ? 'red.50' : 'red.900',
         },
         transition: 'all 0.2s',
-        color: 'red.900',
+        color: colorMode === 'dark' ? 'red.200' : 'red.900',
     })),
     mainContentButton: defineStyle(({ colorMode }) => ({
         width: '100%',

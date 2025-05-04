@@ -19,6 +19,9 @@ import {
     ProfileContent,
     AssetsContent,
     BridgeContent,
+    GeneralSettingsContent,
+    LanguageSettingsContent,
+    AppearanceSettingsContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -33,7 +36,7 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { ChangeCurrencyContent } from './Contents/ChangeCurrency/ChangeCurrencyContent';
+import { ChangeCurrencyContent } from './Contents/KitSettings';
 
 type Props = {
     isOpen: boolean;
@@ -91,19 +94,17 @@ export const AccountModal = ({
                     return (
                         <DisconnectConfirmContent {...currentContent.props} />
                     );
+                case 'account-customization':
+                    return <CustomizationContent {...currentContent.props} />;
                 case 'account-customization-summary':
                     return (
                         <CustomizationSummaryContent
                             {...currentContent.props}
-                            setCurrentContent={setCurrentContent}
                         />
                     );
                 case 'successful-operation':
                     return (
-                        <SuccessfulOperationContent
-                            {...currentContent.props}
-                            setCurrentContent={setCurrentContent}
-                        />
+                        <SuccessfulOperationContent {...currentContent.props} />
                     );
                 case 'upgrade-smart-account':
                     return (
@@ -111,13 +112,6 @@ export const AccountModal = ({
                     );
                 case 'faq':
                     return <FAQContent {...currentContent.props} />;
-                case 'account-customization':
-                    return (
-                        <CustomizationContent
-                            {...currentContent.props}
-                            setCurrentContent={setCurrentContent}
-                        />
-                    );
             }
         }
 
@@ -212,6 +206,26 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
+            case 'general-settings':
+                return (
+                    <GeneralSettingsContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'change-language':
+                return (
+                    <LanguageSettingsContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'appearance-settings':
+                return (
+                    <AppearanceSettingsContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            default:
+                return null;
         }
     };
 

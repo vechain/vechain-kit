@@ -502,5 +502,15 @@
     "your@email.com": "your@email.com",
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
-    "Your address has been successfully set to {{name}}": "Your address has been successfully set to {{name}}"
+    "Your address has been successfully set to {{name}}": "Your address has been successfully set to {{name}}",
+    "Language": "Language",
+    "Manage your preferences for currency, language, and appearance.": "Manage your preferences for currency, language, and appearance.",
+    "Choose your preferred language.": "Choose your preferred language.",
+    "Customize the appearance of your wallet.": "Customize the appearance of your wallet.",
+    "Display currency": "Display currency",
+    "Dark mode": "Dark mode",
+    "Appearance": "Appearance",
+    "Select language": "Select language",
+    "Currency": "Currency",
+    "Select currency": "Select currency"
 }

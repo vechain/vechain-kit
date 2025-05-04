@@ -6,7 +6,7 @@ import {
     Box,
 } from '@chakra-ui/react';
 import { useUpgradeRequired, useWallet } from '@/hooks';
-import { MdOutlineNavigateNext, MdCurrencyExchange } from 'react-icons/md';
+import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
 import {
     ModalBackButton,
@@ -24,6 +24,7 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CgProfile } from 'react-icons/cg';
+import { IoSettingsOutline } from 'react-icons/io5';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -102,8 +103,9 @@ export const SettingsContent = ({
         Analytics.settings.connectionDetailsViewed();
     };
 
-    const handleChangeCurrency = () => {
-        setCurrentContent('change-currency');
+    const handleGeneralSettings = () => {
+        setCurrentContent('general-settings');
+        Analytics.settings.generalSettingsViewed();
     };
 
     const handleLogout = () => {
@@ -191,9 +193,9 @@ export const SettingsContent = ({
                                           borderBottomRadius: '0px',
                                       }
                             }
-                            title={t('Change Currency')}
-                            onClick={handleChangeCurrency}
-                            leftIcon={MdCurrencyExchange}
+                            title={t('General')}
+                            onClick={handleGeneralSettings}
+                            leftIcon={IoSettingsOutline}
                             rightIcon={MdOutlineNavigateNext}
                         />
                         <ActionButton

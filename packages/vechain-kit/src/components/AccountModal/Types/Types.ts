@@ -30,6 +30,9 @@ export type AccountModalContentTypes =
     | 'assets'
     | 'bridge'
     | 'change-currency'
+    | 'general-settings'
+    | 'change-language'
+    | 'appearance-settings'
     | {
           type: 'account-customization';
           props: AccountCustomizationContentProps;

@@ -265,7 +265,11 @@ export type SettingsAction =
     | 'upgrade_smart_account'
     | 'embedded_wallet_view'
     | 'connection_view'
-    | 'language_changed';
+    | 'language_changed'
+    | 'general_settings_view'
+    | 'currency_settings_view'
+    | 'language_settings_view'
+    | 'appearance_settings_view';
 
 export type SettingsProperties = {
     action: SettingsAction;
