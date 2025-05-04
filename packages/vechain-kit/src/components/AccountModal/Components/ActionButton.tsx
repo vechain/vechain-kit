@@ -69,7 +69,7 @@ export const ActionButton = ({
             {...style}
         >
             <HStack w={'full'} justify={'space-between'} alignItems={'center'}>
-                <Box minW={'40px'}>
+                <Box minW={'40px'} h={'20px'}>
                     {leftImage ? (
                         <Image
                             src={leftImage}
