@@ -28,7 +28,7 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
 
     // Determine the button text based on the source
     const buttonText = !dappKit?.allowedWallets?.includes('sync2')
-        ? 'Connect with VeWorld wallet'
+        ? t('Connect with VeWorld wallet')
         : t('Connect wallet');
 
     useEffect(() => {

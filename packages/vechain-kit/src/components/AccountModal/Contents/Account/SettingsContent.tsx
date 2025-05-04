@@ -206,6 +206,7 @@ export const SettingsContent = ({
                                     props: {
                                         onGoBack: () =>
                                             setCurrentContent('settings'),
+                                        showLanguageSelector: false,
                                     },
                                 })
                             }

@@ -44,6 +44,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             type: 'faq',
                             props: {
                                 onGoBack: () => setCurrentContent('main'),
+                                showLanguageSelector: false,
                             },
                         })
                     }
@@ -55,7 +56,11 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         p={0}
                         spacing={2}
                     >
-                        <Text fontSize={'md'} fontWeight={'bold'} data-testid='modal-title'>
+                        <Text
+                            fontSize={'md'}
+                            fontWeight={'bold'}
+                            data-testid="modal-title"
+                        >
                             {t('Wallet')}
                         </Text>
                         {network?.type !== 'main' && (
