@@ -12,17 +12,16 @@ import { MdSwapHoriz } from 'react-icons/md';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import {
-    useBalances,
     useNotifications,
     useUpgradeRequired,
     useWallet,
+    useTotalBalance,
 } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import { LuArrowDownToLine } from 'react-icons/lu';
 import { RiSwap3Line } from 'react-icons/ri';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useCallback } from 'react';
 
 type Props = {
     mt?: number;
@@ -149,14 +148,10 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { balances } = useBalances({
+    const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
-
-    const hasAnyBalance = useCallback(() => {
-        return balances.some((balance) => parseFloat(balance.value) > 0);
-    }, [balances]);
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -184,7 +179,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         icon={action.icon}
                         label={action.label}
                         onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(hasAnyBalance())}
+                        isDisabled={action.isDisabled?.(hasAnyBalance)}
                         showRedDot={showRedDot && action.label === 'Settings'}
                     />
                 ))}

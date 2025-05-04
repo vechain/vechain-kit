@@ -6,7 +6,7 @@ import {
     IconButton,
     Box,
 } from '@chakra-ui/react';
-import { useBalances, useRefreshBalances, useWallet, useCurrency } from '@/hooks';
+import { useRefreshBalances, useWallet, useTotalBalance } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VscRefresh } from 'react-icons/vsc';
@@ -25,23 +25,11 @@ export const BalanceSection = ({
     onAssetsClick?: () => void;
 }) => {
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { currentCurrency } = useCurrency();
     const { t } = useTranslation();
     const { account } = useWallet();
-    const { isLoading, totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
+    const { formattedBalance, isLoading } = useTotalBalance({
         address: account?.address ?? '',
     });
-
-    const totalBalance = () => {
-        switch (currentCurrency) {
-            case 'eur':
-                return totalBalanceEur;
-            case 'gbp':
-                return totalBalanceGbp;
-            default:
-                return totalBalanceUsd;
-        }
-    }
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -54,14 +42,6 @@ export const BalanceSection = ({
             setIsRefreshing(false);
         }, 1500);
     };
-    const compactFormatter = new Intl.NumberFormat('en-US', {
-        notation: 'compact',
-        compactDisplay: 'short',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-        style: 'currency',
-        currency: currentCurrency,
-    });
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={2} mt={mt} mb={mb}>
@@ -75,7 +55,7 @@ export const BalanceSection = ({
                 role="group"
             >
                 <Heading size={'2xl'} fontWeight={'700'}>
-                    {compactFormatter.format(totalBalance() ?? 0)}
+                    {formattedBalance}
                 </Heading>
 
                 <Box
@@ -104,7 +84,11 @@ export const BalanceSection = ({
                     />
                 </Box>
             </HStack>
-            <HStack w={'full'} justifyContent={'flex-start'} data-testid='all-assets-button'>
+            <HStack
+                w={'full'}
+                justifyContent={'flex-start'}
+                data-testid="all-assets-button"
+            >
                 <AssetIcons
                     onClick={onAssetsClick}
                     maxIcons={10}

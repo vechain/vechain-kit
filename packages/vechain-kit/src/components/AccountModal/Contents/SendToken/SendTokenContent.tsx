@@ -19,15 +19,16 @@ import { useState, useEffect } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
-import { SelectTokenContent, Token } from './SelectTokenContent';
+import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useVechainDomain } from '@/hooks';
+import { useVechainDomain, TokenWithValue } from '@/hooks';
 import { useCurrency } from '@/hooks/api/wallet';
+import { formatCompactCurrency } from '@/utils/currencyConverter';
 
 const balanceFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
@@ -40,7 +41,7 @@ export type SendTokenContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     isNavigatingFromMain?: boolean;
-    preselectedToken?: Token;
+    preselectedToken?: TokenWithValue;
     onBack?: () => void;
 };
 
@@ -58,8 +59,8 @@ export const SendTokenContent = ({
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { getTokenValue, currentCurrency } = useCurrency();
-    const [selectedToken, setSelectedToken] = useState<Token | null>(
+    const { currentCurrency } = useCurrency();
+    const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
         preselectedToken ?? null,
     );
     const [isSelectingToken, setIsSelectingToken] = useState(
@@ -67,14 +68,6 @@ export const SendTokenContent = ({
     );
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
-
-    const compactFormatter = new Intl.NumberFormat('en-US', {
-        notation: 'compact',
-        compactDisplay: 'short',
-        maximumFractionDigits: 2,
-        style: 'currency',
-        currency: currentCurrency,
-    });
 
     // Form setup with validation rules
     const {
@@ -434,20 +427,25 @@ export const SendTokenContent = ({
                                             textOverflow="ellipsis"
                                         >
                                             {balanceFormatter.format(
-                                                Number(
-                                                    selectedToken.balance,
-                                                ),
+                                                Number(selectedToken.balance),
                                             )}
                                         </Text>
                                         <Text opacity={0.5}>
-                                            ≈ {compactFormatter.format(
-                                                getTokenValue(selectedToken)
+                                            ≈{' '}
+                                            {formatCompactCurrency(
+                                                (amount ? Number(amount) : 0) *
+                                                    selectedToken.priceUsd,
+                                                currentCurrency,
                                             )}
                                         </Text>
                                     </HStack>
                                 )}
                                 {errors.amount && (
-                                    <Text color="#ef4444" fontSize="sm" data-testid="amount-error-msg">
+                                    <Text
+                                        color="#ef4444"
+                                        fontSize="sm"
+                                        data-testid="amount-error-msg"
+                                    >
                                         {errors.amount.message}
                                     </Text>
                                 )}
@@ -505,7 +503,11 @@ export const SendTokenContent = ({
                                     data-testid="tx-address-input"
                                 />
                                 {errors.toAddressOrDomain && (
-                                    <Text color="#ef4444" fontSize="sm" data-testid="address-error-msg">
+                                    <Text
+                                        color="#ef4444"
+                                        fontSize="sm"
+                                        data-testid="address-error-msg"
+                                    >
                                         {errors.toAddressOrDomain.message}
                                     </Text>
                                 )}

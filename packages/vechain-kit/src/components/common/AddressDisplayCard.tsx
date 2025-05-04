@@ -1,14 +1,14 @@
 import { Box, Text, HStack, VStack, Image, Skeleton } from '@chakra-ui/react';
 import { humanAddress } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
-import { useBalances, useCurrency } from '@/hooks';
+import { useTotalBalance, useTokensWithValues } from '@/hooks';
 import { useTranslation } from 'react-i18next';
-
-const compactFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 2,
-});
+import {
+    formatCompactCurrency,
+    SupportedCurrency,
+} from '@/utils/currencyConverter';
+import { useCurrency } from '@/hooks/api/wallet';
+import { useMemo } from 'react';
 
 type AddressDisplayCardProps = {
     label: string;
@@ -33,24 +33,31 @@ export const AddressDisplayCard = ({
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
-    const { getTokenValue } = useCurrency();
+    const { currentCurrency } = useCurrency();
 
-    const { tokens, isLoading } = useBalances({
-        address: address,
+    const { isLoading: totalBalanceLoading } = useTotalBalance({
+        address,
     });
 
-    // Find token by address instead of using it as a key
-    const tokenData = tokenAddress
-        ? Object.values(tokens).find((token) => token.address === tokenAddress)
-        : null;
+    const { tokens, isLoading: tokensLoading } = useTokensWithValues({
+        address,
+    });
 
-    const displayBalance =
-        balance !== undefined
-            ? balance
-            : tokenData
-            ? getTokenValue(tokenData) || 0
-            : 0;
+    // Find token by address if specified
+    const tokenData = useMemo(() => {
+        if (!tokenAddress) return null;
+        return tokens.find((token) => token.address === tokenAddress);
+    }, [tokens, tokenAddress]);
+
+    // Determine what balance to display
+    const displayBalance = useMemo(() => {
+        if (balance !== undefined) return balance;
+        if (tokenData) return tokenData.valueInCurrency;
+        return 0;
+    }, [balance, tokenData]);
+
     const displaySymbol = tokenData?.symbol || '';
+    const isLoading = totalBalanceLoading || tokensLoading;
 
     return (
         <Box
@@ -75,17 +82,29 @@ export const AddressDisplayCard = ({
                     <VStack align="start" spacing={0}>
                         {domain ? (
                             <>
-                                <Text fontWeight="medium" fontSize="sm" data-testid={`${label.toLowerCase()}-domain`}>
+                                <Text
+                                    fontWeight="medium"
+                                    fontSize="sm"
+                                    data-testid={`${label.toLowerCase()}-domain`}
+                                >
                                     {domain}
                                 </Text>
                                 {!hideAddress && (
-                                    <Text fontSize="xs" opacity={0.5} data-testid={`${label.toLowerCase()}-address`}>
+                                    <Text
+                                        fontSize="xs"
+                                        opacity={0.5}
+                                        data-testid={`${label.toLowerCase()}-address`}
+                                    >
                                         {humanAddress(address, 6, 4)}
                                     </Text>
                                 )}
                             </>
                         ) : (
-                            <Text fontWeight="medium" fontSize="sm" data-testid={`${label.toLowerCase()}-address`}>
+                            <Text
+                                fontWeight="medium"
+                                fontSize="sm"
+                                data-testid={`${label.toLowerCase()}-address`}
+                            >
                                 {humanAddress(address, 6, 4)}
                             </Text>
                         )}
@@ -103,7 +122,10 @@ export const AddressDisplayCard = ({
                     </Text>
                     <Skeleton isLoaded={!isLoading}>
                         <Text fontSize="xs" opacity={0.5}>
-                            {compactFormatter.format(Number(displayBalance))}
+                            {formatCompactCurrency(
+                                displayBalance,
+                                currentCurrency as SupportedCurrency,
+                            ).replace(/[^\d.,]+/g, '')}{' '}
                             {displaySymbol && ` ${displaySymbol}`}
                         </Text>
                     </Skeleton>
