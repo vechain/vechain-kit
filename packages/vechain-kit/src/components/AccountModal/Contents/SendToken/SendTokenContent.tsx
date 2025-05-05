@@ -288,6 +288,8 @@ export const SendTokenContent = ({
                                         fontSize="4xl"
                                         fontWeight="bold"
                                         data-testid="tx-amount-input"
+                                        type="number"
+                                        inputMode="decimal"
                                     />
 
                                     {selectedToken ? (
