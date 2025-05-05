@@ -507,5 +507,9 @@
     "Disagree": "Disagree",
     "Agree": "Agree",
     "Terms and Conditions": "Terms and Conditions",
-    "Your address has been successfully set to {{name}}": "Your address has been successfully set to {{name}}"
+    "Your address has been successfully set to {{name}}": "Your address has been successfully set to {{name}}",
+    "I have read and agree to": "I have read and agree to",
+    "Vechain Kit": "Vechain Kit",
+    "Others": "Others",
+    "Accept": "Accept"
 }
