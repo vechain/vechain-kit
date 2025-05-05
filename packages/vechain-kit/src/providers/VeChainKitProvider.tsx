@@ -49,6 +49,19 @@ type LoginMethodOrder = {
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
 };
 
+type LegalDocumentOptions = {
+    privacyPolicy?: LegalDocument[];
+    termsOfService?: LegalDocument[];
+    cookiePolicy?: LegalDocument[];
+};
+
+export type LegalDocument = {
+    url: string;
+    version: number;
+    required: boolean;
+    displayName?: string;
+};
+
 export type VechainKitProviderProps = {
     children: ReactNode;
     privy?: {
@@ -97,7 +110,7 @@ export type VechainKitProviderProps = {
         };
     };
     allowCustomTokens?: boolean;
-    termsAndConditionsUrl?: string;
+    legalDocuments?: LegalDocumentOptions;
     defaultCurrency?: CURRENCY;
 };
 
@@ -113,7 +126,7 @@ type VeChainKitConfig = {
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
-    termsAndConditionsUrl?: string;
+    legalDocuments?: VechainKitProviderProps['legalDocuments'];
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
 };
 
@@ -190,11 +203,35 @@ const validateConfig = (
             }
         }
     }
-    if (
-        props?.termsAndConditionsUrl &&
-        !isValidUrl(props.termsAndConditionsUrl)
-    ) {
-        errors.push('termsAndConditionsUrl must be a valid URL');
+
+    if (props.legalDocuments) {
+        if (props.legalDocuments.termsOfService) {
+            props.legalDocuments.termsOfService.forEach((term) => {
+                if (!isValidUrl(term.url)) {
+                    errors.push(
+                        `legalDocuments.termsOfService.url is invalid: ${term.url}`,
+                    );
+                }
+            });
+        }
+        if (props.legalDocuments.privacyPolicy) {
+            props.legalDocuments.privacyPolicy.forEach((term) => {
+                if (!isValidUrl(term.url)) {
+                    errors.push(
+                        `legalDocuments.privacyPolicy.url is invalid: ${term.url}`,
+                    );
+                }
+            });
+        }
+        if (props.legalDocuments.cookiePolicy) {
+            props.legalDocuments.cookiePolicy.forEach((term) => {
+                if (!isValidUrl(term.url)) {
+                    errors.push(
+                        `legalDocuments.cookiePolicy.url is invalid: ${term.url}`,
+                    );
+                }
+            });
+        }
     }
 
     if (errors.length > 0) {
@@ -226,7 +263,7 @@ export const VeChainKitProvider = (
         language = 'en',
         network,
         allowCustomTokens,
-        termsAndConditionsUrl,
+        legalDocuments,
         defaultCurrency = 'usd',
     } = validatedProps;
 
@@ -297,7 +334,7 @@ export const VeChainKitProvider = (
                         language,
                         network,
                         allowCustomTokens,
-                        termsAndConditionsUrl,
+                        legalDocuments,
                         defaultCurrency,
                     }}
                 >
