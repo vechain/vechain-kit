@@ -51,7 +51,7 @@ type LoginMethodOrder = {
 
 type LegalDocumentOptions = {
     privacyPolicy?: LegalDocument[];
-    termsOfService?: LegalDocument[];
+    termsAndConditions?: LegalDocument[];
     cookiePolicy?: LegalDocument[];
 };
 
@@ -205,11 +205,11 @@ const validateConfig = (
     }
 
     if (props.legalDocuments) {
-        if (props.legalDocuments.termsOfService) {
-            props.legalDocuments.termsOfService.forEach((term) => {
+        if (props.legalDocuments.termsAndConditions) {
+            props.legalDocuments.termsAndConditions.forEach((term) => {
                 if (!isValidUrl(term.url)) {
                     errors.push(
-                        `legalDocuments.termsOfService.url is invalid: ${term.url}`,
+                        `legalDocuments.termsAndConditions.url is invalid: ${term.url}`,
                     );
                 }
             });

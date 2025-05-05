@@ -71,7 +71,7 @@ export const useTermsAndConditions = () => {
     const allTerms = useMemo(() => {
         return [
             VECHAIN_KIT_TERMS_CONFIG,
-            ...(legalDocuments?.termsOfService ?? []),
+            ...(legalDocuments?.termsAndConditions ?? []),
         ];
     }, [legalDocuments]);
 

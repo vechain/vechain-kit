@@ -94,12 +94,12 @@ export function VechainKitProviderWrapper({ children }: Props) {
             }}
             allowCustomTokens={true}
             legalDocuments={{
-                termsOfService: [
+                termsAndConditions: [
                     {
                         url: 'https://myapp.com/terms-of-my-app',
                         version: 1,
                         required: true,
-                        displayName: 'My App Terms of Service',
+                        displayName: 'My App Terms and Conditions',
                     },
                     {
                         url: 'https://myapp.com/other-optional-terms',
