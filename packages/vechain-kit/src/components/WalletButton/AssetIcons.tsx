@@ -1,5 +1,5 @@
 import { HStack, Text, Circle, Image, StackProps } from '@chakra-ui/react';
-import { useBalances, useCurrency } from '@/hooks';
+import { useTokensWithValues } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
@@ -29,21 +29,15 @@ export const AssetIcons = ({
     onClick,
 }: AssetIconsProps) => {
     const { t } = useTranslation();
-    const { tokens } = useBalances({ address });
+    const { tokensWithBalance } = useTokensWithValues({ address });
     const { darkMode } = useVeChainKitConfig();
-    const { getTokenValue } = useCurrency();
     const marginLeft = iconsGap < 1 ? `-${iconSize / 2}px` : `${iconsGap}px`;
 
-    // Create array of tokens with balances and their values
-    const tokensList = Object.values(tokens)
-        .filter((token) => Number(token.balance) > 0)
-        .sort((a, b) => getTokenValue(b) - getTokenValue(a));
-
-    const tokensToShow = tokensList.slice(0, maxIcons);
-    const remainingTokens = tokensList.length - maxIcons;
+    const tokensToShow = tokensWithBalance.slice(0, maxIcons);
+    const remainingTokens = tokensWithBalance.length - maxIcons;
 
     if (!address) return null;
-    if (tokensList.length === 0 && !showNoAssetsWarning) return null;
+    if (tokensWithBalance.length === 0 && !showNoAssetsWarning) return null;
 
     return (
         <HStack spacing={0} ml={ml} {...style} onClick={onClick}>
@@ -110,7 +104,7 @@ export const AssetIcons = ({
                     </Circle>
                 )}
 
-                {tokensList.length === 0 && showNoAssetsWarning && (
+                {tokensWithBalance.length === 0 && showNoAssetsWarning && (
                     <Text
                         fontSize={'sm'}
                         color={darkMode ? 'white' : 'black'}

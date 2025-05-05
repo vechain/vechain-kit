@@ -73,7 +73,16 @@ export const ManageCustomTokenContent = ({
             });
         }
 
-        addToken(data.newTokenAddress);
+        try {
+            await addToken(data.newTokenAddress);
+            setValue('newTokenAddress', ''); // Clear the input after successful addition
+        } catch (error) {
+            console.error('Error adding token 2:', error);
+            setError('newTokenAddress', {
+                type: 'manual',
+                message: t('Invalid token address'),
+            });
+        }
     };
 
     return (

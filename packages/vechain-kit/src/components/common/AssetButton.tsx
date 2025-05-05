@@ -11,6 +11,10 @@ import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import React from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { CURRENCY } from '@/types';
+import {
+    formatCompactCurrency,
+    SupportedCurrency,
+} from '@/utils/currencyConverter';
 
 type AssetButtonProps = ButtonProps & {
     symbol: string;
@@ -21,7 +25,7 @@ type AssetButtonProps = ButtonProps & {
     onClick?: () => void;
 };
 
-const amountFormatter = new Intl.NumberFormat('en-US', {
+const amountFormatter = new Intl.NumberFormat('de-DE', {
     notation: 'compact',
     compactDisplay: 'short',
     maximumFractionDigits: 2,
@@ -37,13 +41,7 @@ export const AssetButton = ({
     ...buttonProps
 }: AssetButtonProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
-    const compactFormatter = new Intl.NumberFormat('en-US', {
-        notation: 'compact',
-        compactDisplay: 'short',
-        maximumFractionDigits: 2,
-        style: 'currency',
-        currency: currentCurrency,
-    });
+
     return (
         <Button
             height="72px"
@@ -91,13 +89,17 @@ export const AssetButton = ({
                 <Text>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
-                <Text>{compactFormatter.format(currencyValue)}</Text>
+                <Text>{amountFormatter.format(amount)}</Text>
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                     data-testid={`${symbol}-balance`}
                 >
-                    {amountFormatter.format(amount)}
+                    {formatCompactCurrency(
+                        currencyValue,
+                        currentCurrency as SupportedCurrency,
+                        'de-DE',
+                    )}
                 </Text>
             </VStack>
         </Button>
