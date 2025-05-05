@@ -30,12 +30,6 @@ import { useVechainDomain, TokenWithValue } from '@/hooks';
 import { useCurrency } from '@/hooks/api/wallet';
 import { formatCompactCurrency } from '@/utils/currencyConverter';
 
-const balanceFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 2,
-});
-
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -295,6 +289,7 @@ export const SendTokenContent = ({
                                         fontWeight="bold"
                                         data-testid="tx-amount-input"
                                     />
+
                                     {selectedToken ? (
                                         <Button
                                             variant="outline"
@@ -406,13 +401,21 @@ export const SendTokenContent = ({
                                     <HStack
                                         spacing={1}
                                         fontSize="sm"
+                                        justifyContent={'space-between'}
                                         color={
                                             isDark
                                                 ? 'whiteAlpha.700'
                                                 : 'blackAlpha.700'
                                         }
                                     >
-                                        <Text>{t('Balance')}:</Text>
+                                        <Text opacity={0.5}>
+                                            ≈{' '}
+                                            {formatCompactCurrency(
+                                                Number(amount) *
+                                                    selectedToken.priceUsd,
+                                                currentCurrency,
+                                            )}
+                                        </Text>
                                         <Text
                                             cursor="pointer"
                                             _hover={{
@@ -426,17 +429,7 @@ export const SendTokenContent = ({
                                             overflow="hidden"
                                             textOverflow="ellipsis"
                                         >
-                                            {balanceFormatter.format(
-                                                Number(selectedToken.balance),
-                                            )}
-                                        </Text>
-                                        <Text opacity={0.5}>
-                                            ≈{' '}
-                                            {formatCompactCurrency(
-                                                (amount ? Number(amount) : 0) *
-                                                    selectedToken.priceUsd,
-                                                currentCurrency,
-                                            )}
+                                            {t('Send all')}
                                         </Text>
                                     </HStack>
                                 )}
@@ -444,6 +437,7 @@ export const SendTokenContent = ({
                                     <Text
                                         color="#ef4444"
                                         fontSize="sm"
+                                        mt={1}
                                         data-testid="amount-error-msg"
                                     >
                                         {errors.amount.message}

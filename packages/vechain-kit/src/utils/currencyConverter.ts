@@ -21,6 +21,7 @@ export const formatCurrencyValue = (
     value: number,
     currency: SupportedCurrency,
     options?: Intl.NumberFormatOptions,
+    locale = 'en-US',
 ): string => {
     const defaultOptions: Intl.NumberFormatOptions = {
         style: 'currency',
@@ -30,15 +31,21 @@ export const formatCurrencyValue = (
         ...options,
     };
 
-    return new Intl.NumberFormat('en-US', defaultOptions).format(value);
+    return new Intl.NumberFormat(locale, defaultOptions).format(value);
 };
 
 export const formatCompactCurrency = (
     value: number,
     currency: SupportedCurrency,
+    locale?: string,
 ): string => {
-    return formatCurrencyValue(value, currency, {
-        notation: 'compact',
-        compactDisplay: 'short',
-    });
+    return formatCurrencyValue(
+        value,
+        currency,
+        {
+            notation: 'compact',
+            compactDisplay: 'short',
+        },
+        locale,
+    );
 };

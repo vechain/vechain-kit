@@ -3,11 +3,6 @@ import { humanAddress } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { useTotalBalance, useTokensWithValues } from '@/hooks';
 import { useTranslation } from 'react-i18next';
-import {
-    formatCompactCurrency,
-    SupportedCurrency,
-} from '@/utils/currencyConverter';
-import { useCurrency } from '@/hooks/api/wallet';
 import { useMemo } from 'react';
 
 type AddressDisplayCardProps = {
@@ -33,7 +28,6 @@ export const AddressDisplayCard = ({
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
-    const { currentCurrency } = useCurrency();
 
     const { isLoading: totalBalanceLoading } = useTotalBalance({
         address,
@@ -51,8 +45,13 @@ export const AddressDisplayCard = ({
 
     // Determine what balance to display
     const displayBalance = useMemo(() => {
+        // If balance is explicitly provided, always use that
         if (balance !== undefined) return balance;
-        if (tokenData) return tokenData.valueInCurrency;
+
+        // Otherwise, find the actual token balance, not its currency value
+        if (tokenData) {
+            return Number(tokenData.balance);
+        }
         return 0;
     }, [balance, tokenData]);
 
@@ -122,10 +121,9 @@ export const AddressDisplayCard = ({
                     </Text>
                     <Skeleton isLoaded={!isLoading}>
                         <Text fontSize="xs" opacity={0.5}>
-                            {formatCompactCurrency(
-                                displayBalance,
-                                currentCurrency as SupportedCurrency,
-                            ).replace(/[^\d.,]+/g, '')}{' '}
+                            {displayBalance.toLocaleString(undefined, {
+                                maximumFractionDigits: 2,
+                            })}
                             {displaySymbol && ` ${displaySymbol}`}
                         </Text>
                     </Skeleton>

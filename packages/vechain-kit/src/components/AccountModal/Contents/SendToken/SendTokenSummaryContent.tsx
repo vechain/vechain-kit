@@ -34,10 +34,10 @@ import { isRejectionError } from '@/utils/StringUtils';
 import { useCurrency } from '@/hooks/api/wallet';
 import { formatCompactCurrency } from '@/utils/currencyConverter';
 
-const summaryFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 18,
+const summaryFormatter = new Intl.NumberFormat('de-DE', {
+    notation: 'standard',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
 });
 
 export type SendTokenSummaryContentProps = {
