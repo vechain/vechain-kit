@@ -22,7 +22,7 @@ export const useCustomLogic = () => {
 
 export const CustomLogicProvider = ({ children }: { children: ReactNode }) => {
     const { connection, account, disconnect } = useWallet();
-    const { hasAgreedToTerms, agreeToTerms } = useTermsAndConditions();
+    const { hasAgreedToTerms } = useTermsAndConditions();
     const [showTermsModal, setShowTermsModal] = useState(false);
 
     useEffect(() => {
@@ -34,7 +34,6 @@ export const CustomLogicProvider = ({ children }: { children: ReactNode }) => {
     }, [connection.isConnected, account?.address, hasAgreedToTerms]);
 
     const handleAgree = () => {
-        agreeToTerms();
         setShowTermsModal(false);
     };
 
