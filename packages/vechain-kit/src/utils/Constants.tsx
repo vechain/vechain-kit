@@ -82,3 +82,10 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
         website: 'https://evearn.io',
     },
 ];
+
+export const VECHAIN_KIT_TERMS_CONFIG = {
+    url: 'https://vechain.org/terms-of-use/',
+    version: 1,
+    required: true,
+    displayName: 'VeChain Kit Terms and Conditions',
+};
