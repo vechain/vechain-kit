@@ -1,9 +1,4 @@
-import {
-    Box,
-    useColorModeValue,
-    VisuallyHidden,
-    ModalContent,
-} from '@chakra-ui/react';
+import { Box, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
 
 type Props = {
@@ -56,14 +51,13 @@ export const BaseBottomSheet = ({
                     style={{
                         zIndex: 3,
                         backgroundColor: bgColor,
-                        borderRadius: '10px 10px 0 0',
+                        borderRadius: '24px 24px 0 0',
                         position: 'fixed',
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        height: 'auto',
-                        maxHeight: '90vh',
-                        overflow: 'hidden',
+                        minHeight: '60vh',
+                        maxHeight: '95vh',
                         display: 'flex',
                         flexDirection: 'column',
                     }}
@@ -81,14 +75,9 @@ export const BaseBottomSheet = ({
                         rounded={'full'}
                     />
 
-                    <ModalContent
-                        bg="transparent"
-                        boxShadow="none"
-                        m={0}
-                        h="auto"
-                    >
+                    <Box flex="1" overflowY="auto">
                         {children}
-                    </ModalContent>
+                    </Box>
                 </Drawer.Content>
             </Drawer.Portal>
         </Drawer.Root>
