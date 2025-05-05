@@ -93,6 +93,21 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE as NETWORK_TYPE,
             }}
             allowCustomTokens={true}
+            legalDocuments={{
+                termsOfService: [
+                    {
+                        url: 'https://myapp.com/terms-of-my-app',
+                        version: 1,
+                        required: true,
+                        displayName: 'My App Terms of Service',
+                    },
+                    {
+                        url: 'https://myapp.com/other-optional-terms',
+                        version: 3,
+                        required: false,
+                    },
+                ],
+            }}
         >
             {children}
         </VeChainKitProvider>
