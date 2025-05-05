@@ -159,13 +159,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
         3,
     );
 
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
-
-    const showRedDot =
-        (connection.isConnectedWithPrivy && upgradeRequired) ||
-        hasUnreadNotifications;
+    const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
 
     return (
         <VStack w={'full'} mt={mt} spacing={4}>
