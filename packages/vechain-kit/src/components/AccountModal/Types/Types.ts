@@ -29,6 +29,7 @@ export type AccountModalContentTypes =
     | 'add-custom-token'
     | 'assets'
     | 'bridge'
+    | 'change-currency'
     | {
           type: 'account-customization';
           props: AccountCustomizationContentProps;

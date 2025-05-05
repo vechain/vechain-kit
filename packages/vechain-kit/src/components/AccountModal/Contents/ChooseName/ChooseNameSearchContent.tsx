@@ -56,25 +56,12 @@ export const ChooseNameSearchContent = ({
         useIsDomainProtected(name);
 
     const {
-        data: veworldDomainsOfAddress,
-        isLoading: isVeWorldDomainsOfAddressLoading,
-    } = useGetDomainsOfAddress(account?.address, 'veworld.vet');
-
-    const {
         data: vetDomainsOfAddress,
         isLoading: isVetDomainsOfAddressLoading,
-    } = useGetDomainsOfAddress(account?.address, 'vet');
-
-    const isLoadingOwnedDomains =
-        isVeWorldDomainsOfAddressLoading || isVetDomainsOfAddressLoading;
+    } = useGetDomainsOfAddress(account?.address, '');
 
     const isFetchingDomainInfo =
         isEnsCheckLoading || isDomainInfoLoading || isProtectedLoading;
-
-    const allUserDomains = [
-        ...(veworldDomainsOfAddress?.domains || []),
-        ...(vetDomainsOfAddress?.domains || []),
-    ];
 
     useEffect(() => {
         if (!hasInteracted) return;
@@ -135,7 +122,7 @@ export const ChooseNameSearchContent = ({
             setCurrentContent({
                 type: 'choose-name-summary',
                 props: {
-                    name,
+                    fullDomain: name + '.veworld.vet',
                     isOwnDomain,
                     setCurrentContent,
                     initialContentSource,
@@ -147,13 +134,12 @@ export const ChooseNameSearchContent = ({
     const handleDomainSelect = (selectedDomain: string) => {
         // Extract the domain type and base name
         const parts = selectedDomain.split('.');
-        const baseName = parts[0];
         const domainType = parts.length > 2 ? `${parts[1]}.${parts[2]}` : 'vet';
 
         setCurrentContent({
             type: 'choose-name-summary',
             props: {
-                name: baseName,
+                fullDomain: selectedDomain,
                 domainType: domainType,
                 isOwnDomain: true,
                 setCurrentContent,
@@ -166,7 +152,7 @@ export const ChooseNameSearchContent = ({
         setCurrentContent({
             type: 'choose-name-summary',
             props: {
-                name: '',
+                fullDomain: '',
                 domainType: '',
                 isOwnDomain: false,
                 isUnsetting: true,
@@ -196,7 +182,7 @@ export const ChooseNameSearchContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Choose Name')}</ModalHeader>
+                <ModalHeader data-testid='modal-title'>{t('Choose Name')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
@@ -204,10 +190,10 @@ export const ChooseNameSearchContent = ({
             <ModalBody>
                 <VStack spacing={4} align="stretch">
                     <ExistingDomainsList
-                        domains={allUserDomains}
+                        domains={vetDomainsOfAddress?.domains || []}
                         onDomainSelect={handleDomainSelect}
                         onUnsetDomain={handleUnsetDomain}
-                        isLoading={isLoadingOwnedDomains}
+                        isLoading={isVetDomainsOfAddressLoading}
                     />
 
                     <InputGroup size="lg">
@@ -237,6 +223,7 @@ export const ChooseNameSearchContent = ({
                                 boxShadow: 'none',
                             }}
                             isInvalid={!!error}
+                            data-testid="domain-input"
                         />
                         <InputRightElement
                             width="auto"
@@ -256,7 +243,7 @@ export const ChooseNameSearchContent = ({
                     </InputGroup>
 
                     {error && hasInteracted && (
-                        <Text color="#ef4444" fontSize="sm">
+                        <Text color="#ef4444" fontSize="sm" data-testid="domain-availability-status">
                             {error}
                         </Text>
                     )}
@@ -266,6 +253,7 @@ export const ChooseNameSearchContent = ({
                             fontSize="sm"
                             color={isAvailable ? 'green.500' : '#ef4444'}
                             fontWeight="500"
+                            data-testid="domain-availability-status"
                         >
                             {isOwnDomain
                                 ? t('YOU OWN THIS')
@@ -287,6 +275,7 @@ export const ChooseNameSearchContent = ({
                         isFetchingDomainInfo
                     }
                     onClick={handleContinue}
+                    data-testid="continue-button"
                 >
                     {t('Continue')}
                 </Button>

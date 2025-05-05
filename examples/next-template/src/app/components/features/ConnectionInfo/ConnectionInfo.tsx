@@ -11,8 +11,8 @@ export function ConnectionInfo() {
             <Heading size={'md'}>
                 <b>Connection</b>
             </Heading>
-            <Text>Type: {connection.source.type}</Text>
-            <Text>Network: {connection.network}</Text>
+            <Text data-testid="connection-type">Type: {connection.source.type}</Text>
+            <Text data-testid="network">Network: {connection.network}</Text>
         </Box>
     );
 }

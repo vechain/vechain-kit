@@ -1,3 +1,26 @@
+import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '@/config/network';
+import { CURRENCY, PrivyLoginMethod } from '@/types';
+import { isValidUrl } from '@/utils';
+import {
+    DEFAULT_PRIVY_ECOSYSTEM_APPS,
+    VECHAIN_KIT_STORAGE_KEYS,
+} from '@/utils/Constants';
+import { initializeI18n } from '@/utils/i18n';
+import {
+    LoginMethodOrderOption,
+    NonEmptyArray,
+    PrivyProvider,
+    WalletListEntry,
+} from '@privy-io/react-auth';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import {
+    WalletSource as DAppKitWalletSource,
+    LogLevel,
+} from '@vechain/dapp-kit';
+import { DAppKitProvider } from '@vechain/dapp-kit-react';
+import { WalletConnectOptions } from '@vechain/dapp-kit-react';
+import { CustomizedStyle, I18n, SourceInfo } from '@vechain/dapp-kit-ui';
 import {
     createContext,
     ReactNode,
@@ -5,39 +28,13 @@ import {
     useEffect,
     useMemo,
 } from 'react';
-import {
-    LoginMethodOrderOption,
-    NonEmptyArray,
-    PrivyProvider,
-    WalletListEntry,
-} from '@privy-io/react-auth';
-import { DAppKitProvider } from '@vechain/dapp-kit-react';
-import { PrivyWalletProvider } from './PrivyWalletProvider';
-import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
-import { PrivyLoginMethod } from '@/types';
-import { EnsureQueryClient } from './EnsureQueryClient';
-import {
-    type LogLevel,
-    type WalletSource as DAppKitWalletSource,
-} from '@vechain/dapp-kit';
-import { type WalletConnectOptions } from '@vechain/dapp-kit-react';
-import {
-    type SourceInfo,
-    type CustomizedStyle,
-    type I18n,
-} from '@vechain/dapp-kit-ui';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 import i18n from '../../i18n';
-import { initializeI18n } from '@/utils/i18n';
-import { ModalProvider } from './ModalProvider';
-import {
-    VECHAIN_KIT_STORAGE_KEYS,
-    DEFAULT_PRIVY_ECOSYSTEM_APPS,
-} from '@/utils/Constants';
-import { isValidUrl } from '@/utils';
 import { CustomLogicProvider } from './CustomLogicProvider';
+import { EnsureQueryClient } from './EnsureQueryClient';
+import { ModalProvider } from './ModalProvider';
+import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
+import { PrivyWalletProvider } from './PrivyWalletProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -101,6 +98,7 @@ export type VechainKitProviderProps = {
     };
     allowCustomTokens?: boolean;
     termsAndConditionsUrl?: string;
+    defaultCurrency?: CURRENCY;
 };
 
 type VeChainKitConfig = {
@@ -116,6 +114,7 @@ type VeChainKitConfig = {
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
     termsAndConditionsUrl?: string;
+    defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
 };
 
 /**
@@ -228,6 +227,7 @@ export const VeChainKitProvider = (
         network,
         allowCustomTokens,
         termsAndConditionsUrl,
+        defaultCurrency = 'usd',
     } = validatedProps;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
@@ -298,6 +298,7 @@ export const VeChainKitProvider = (
                         network,
                         allowCustomTokens,
                         termsAndConditionsUrl,
+                        defaultCurrency,
                     }}
                 >
                     <PrivyProvider

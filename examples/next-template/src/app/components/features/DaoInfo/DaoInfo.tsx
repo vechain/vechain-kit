@@ -21,15 +21,19 @@ export function DaoInfo() {
     return (
         <Box>
             <Heading size={'md'}>VeBetterDAO</Heading>
-            <Text>
+            <Text data-testid="current-allocation-round-id">
                 Current Allocations Round ID: {currentAllocationsRoundId}
             </Text>
-            <Text>Selected GM NFT: {gmId === '0' ? 'None' : gmId}</Text>
-            <Text>
+            <Text data-testid="selected-gm-nft">
+                Selected GM NFT: {gmId === '0' ? 'None' : gmId}
+            </Text>
+            <Text data-testid="participated-in-governance">
                 Participated in Governance:{' '}
                 {participatedInGovernance?.toString()}
             </Text>
-            <Text>Is Passport Valid: {isValidPassport?.toString()}</Text>
+            <Text data-testid="is-passport-valid">
+                Is Passport Valid: {isValidPassport?.toString()}
+            </Text>
         </Box>
     );
 }

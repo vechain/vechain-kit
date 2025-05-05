@@ -35,6 +35,10 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         useGetVeDelegateBalance(address);
     const { data: gloDollarBalance, isLoading: gloDollarLoading } =
         useGetErc20Balance(config.gloDollarContractAddress, address);
+    const { data: eurUsdPrice, isLoading: eurToUsdLoading } =
+        useGetTokenUsdPrice('EUR');
+    const { data: gbpUsdPrice, isLoading: gbpToUsdLoading } =
+        useGetTokenUsdPrice('GBP');
 
     // Custom token balances
     const customTokenBalancesQueries = useGetCustomTokenBalances(address);
@@ -55,7 +59,9 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             veDelegateLoading ||
             vthoUsdPriceLoading ||
             customTokensLoading ||
-            gloDollarLoading;
+            gloDollarLoading ||
+            eurToUsdLoading ||
+            gbpToUsdLoading;
 
         // Get contract addresses from config
         const contractAddresses = {
@@ -127,25 +133,36 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             { address: contractAddresses.USDGLO, price: 1 }, // gloDollar is pegged to 1 USD
         ];
 
-        // Compute total balance
-        const totalBalance = balances.reduce((acc, { priceAddress, value }) => {
+        // Compute total balance in USD
+        const totalBalanceUsd = balances.reduce((acc, { priceAddress, value }) => {
             const price =
                 prices.find((p) => p.address === priceAddress)?.price || 0;
             return acc + Number(value) * price;
         }, 0);
 
-        // Create tokens mapping
+        // Convert total balance to selected currency
+        const totalBalanceGbp = totalBalanceUsd * (1 / (gbpUsdPrice || 1));
+        const totalBalanceEur = totalBalanceUsd * (1 / (eurUsdPrice || 1));
+        // Create tokens mapping with values in selected currency
         const tokens = balances.reduce(
             (acc, balance) => {
+                const usdPrice =
+                    prices.find((p) => p.address === balance.priceAddress)?.price || 0;
+                const valueInUsd = usdPrice * Number(balance.value);
+                
+                // Convert USD value to selected currency
+                const valueInGbp = valueInUsd * (1 / (gbpUsdPrice || 1));
+                const valueInEur = valueInUsd * (1 / (eurUsdPrice || 1));
+
                 acc[balance.symbol] = {
                     ...balance,
-                    value: balance.value,
-                    price:
-                        prices.find((p) => p.address === balance.priceAddress)
-                            ?.price || 0,
-                    usdValue:
-                        (prices.find((p) => p.address === balance.priceAddress)
-                            ?.price || 0) * Number(balance.value),
+                    balance: balance.value,
+                    usdPrice,
+                    valueInUsd,
+                    valueInGbp,
+                    valueInEur,
+                    gbpUsdPrice: gbpUsdPrice || 1,
+                    eurUsdPrice: eurUsdPrice || 1,
                 };
                 return acc;
             },
@@ -153,10 +170,14 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
                 string,
                 {
                     address: string;
-                    value: string;
+                    balance: string;
                     symbol: string;
-                    price: number;
-                    usdValue: number;
+                    usdPrice: number;
+                    valueInUsd: number;
+                    valueInGbp: number;
+                    valueInEur: number;
+                    gbpUsdPrice: number;
+                    eurUsdPrice: number;
                 }
             >,
         );
@@ -165,7 +186,9 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
             isLoading,
             balances,
             prices,
-            totalBalance,
+            totalBalanceGbp,
+            totalBalanceEur,
+            totalBalanceUsd,
             tokens,
         };
     }, [
@@ -186,5 +209,9 @@ export const useBalances = ({ address = '' }: UseBalancesProps) => {
         veDelegateLoading,
         vthoUsdPriceLoading,
         customTokensLoading,
+        eurUsdPrice,
+        gbpUsdPrice,
+        eurToUsdLoading,
+        gbpToUsdLoading,
     ]);
 };

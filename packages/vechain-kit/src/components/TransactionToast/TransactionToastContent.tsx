@@ -64,7 +64,7 @@ export const TransactionToastContent = ({
         switch (status) {
             case 'pending':
                 return {
-                    icon: <Spinner size="md" />,
+                    icon: <Spinner size="md" data-testid="pending-spinner-toast" />,
                     title: isSendingTransaction
                         ? t('Processing transaction...')
                         : t('Waiting for confirmation...'),
@@ -83,6 +83,7 @@ export const TransactionToastContent = ({
                             as={MdOutlineErrorOutline}
                             color={'red.500'}
                             fontSize={'40px'}
+                            data-testid="error-icon-toast"
                         />
                     ),
                     title: t('Transaction failed'),
@@ -91,7 +92,11 @@ export const TransactionToastContent = ({
                 };
             case 'success':
                 return {
-                    icon: <Icon as={FcCheckmark} fontSize={'40px'} />,
+                    icon: <Icon
+                        as={FcCheckmark}
+                        fontSize={'40px'}
+                        data-testid="success-icon-toast"
+                    />,
                     title: t('Transaction successful!'),
                     closeDisabled: false,
                     description: undefined,

@@ -5,6 +5,7 @@ export enum VeLoginMethod {
     DAPPKIT = 'dappkit',
     ECOSYSTEM = 'ecosystem',
     PASSKEY = 'passkey',
+    OAUTH = 'oauth',
     MORE = 'more',
 }
 

@@ -16,6 +16,7 @@ import {
     useNotifications,
     useUpgradeRequired,
     useWallet,
+    useCurrency,
 } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
@@ -120,7 +121,11 @@ const QuickActionButton = ({
                     <Icon as={icon} boxSize={5} opacity={0.9} />
 
                     <HStack p={0} alignItems={'baseline'} spacing={1}>
-                        <Text fontSize="sm" fontWeight="600">
+                        <Text
+                            fontSize="sm"
+                            fontWeight="600"
+                            data-testid={`${label.toLowerCase()}-button-label`}
+                        >
                             {t(label, label)}
                         </Text>
                         {showRedDot && (
@@ -144,10 +149,22 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { totalBalance } = useBalances({
+    const { currentCurrency } = useCurrency();
+    const { totalBalanceUsd, totalBalanceEur, totalBalanceGbp } = useBalances({
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
+
+    const totalBalance = () => {
+        switch (currentCurrency) {
+            case 'eur':
+                return totalBalanceEur;
+            case 'gbp':
+                return totalBalanceGbp;
+            default:
+                return totalBalanceUsd;
+        }
+    }
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -175,7 +192,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         icon={action.icon}
                         label={action.label}
                         onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(totalBalance)}
+                        isDisabled={action.isDisabled?.(totalBalance())}
                         showRedDot={showRedDot && action.label === 'Settings'}
                     />
                 ))}

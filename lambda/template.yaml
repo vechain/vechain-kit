@@ -51,6 +51,12 @@ Resources:
             EndpointConfiguration: REGIONAL
             Auth:
                 ApiKeyRequired: true
+            Domain:
+                DomainName: !Ref DomainName
+                CertificateArn: !Ref CertificateArn
+                EndpointConfiguration: REGIONAL
+                Route53:
+                    HostedZoneId: !Ref HostedZoneId
             DefinitionBody:
                 openapi: 3.0.1
                 info:
@@ -144,6 +150,21 @@ Parameters:
     UserCheckApiKey:
         Type: String
         Description: Usercheck API Key
+        NoEcho: true
+    
+    CertificateArn:
+        Type: String
+        Description: ACM Certificate ARN
+        NoEcho: true
+
+    HostedZoneId:
+        Type: String
+        Description: Route53 Hosted Zone ID
+        NoEcho: true
+
+    DomainName:
+        Type: String
+        Description: Custom Domain Name
         NoEcho: true
 
 Outputs:

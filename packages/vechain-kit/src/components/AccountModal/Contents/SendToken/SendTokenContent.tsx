@@ -26,10 +26,10 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
 import { useVechainDomain } from '@/hooks';
+import { useCurrency } from '@/hooks/api/wallet';
 
-const compactFormatter = new Intl.NumberFormat('en-US', {
+const balanceFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     compactDisplay: 'short',
     maximumFractionDigits: 2,
@@ -52,12 +52,13 @@ type FormValues = {
 
 export const SendTokenContent = ({
     setCurrentContent,
-    isNavigatingFromMain = false,
+    isNavigatingFromMain = true,
     preselectedToken,
     onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { getTokenValue, currentCurrency } = useCurrency();
     const [selectedToken, setSelectedToken] = useState<Token | null>(
         preselectedToken ?? null,
     );
@@ -66,6 +67,14 @@ export const SendTokenContent = ({
     );
     const [isInitialTokenSelection, setIsInitialTokenSelection] =
         useState(isNavigatingFromMain);
+
+    const compactFormatter = new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 2,
+        style: 'currency',
+        currency: currentCurrency,
+    });
 
     // Form setup with validation rules
     const {
@@ -111,10 +120,10 @@ export const SendTokenContent = ({
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            setValue('amount', selectedToken.numericBalance);
+            setValue('amount', selectedToken.balance);
             Analytics.send.flow('amount', {
                 tokenSymbol: selectedToken.symbol,
-                amount: selectedToken.numericBalance,
+                amount: selectedToken.balance,
             });
         }
     };
@@ -171,7 +180,7 @@ export const SendTokenContent = ({
         // Validate amount
         if (selectedToken) {
             const numericAmount = parseEther(data.amount);
-            if (numericAmount > parseEther(selectedToken.numericBalance)) {
+            if (numericAmount > parseEther(selectedToken.balance)) {
                 setError('amount', {
                     type: 'manual',
                     message: t(`Insufficient {{symbol}} balance`, {
@@ -291,6 +300,7 @@ export const SendTokenContent = ({
                                         variant="unstyled"
                                         fontSize="4xl"
                                         fontWeight="bold"
+                                        data-testid="tx-amount-input"
                                     />
                                     {selectedToken ? (
                                         <Button
@@ -399,45 +409,49 @@ export const SendTokenContent = ({
                                         </Button>
                                     )}
                                 </HStack>
+                                {selectedToken && (
+                                    <HStack
+                                        spacing={1}
+                                        fontSize="sm"
+                                        color={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
+                                        }
+                                    >
+                                        <Text>{t('Balance')}:</Text>
+                                        <Text
+                                            cursor="pointer"
+                                            _hover={{
+                                                color: isDark
+                                                    ? 'blue.300'
+                                                    : 'blue.500',
+                                                textDecoration: 'underline',
+                                            }}
+                                            onClick={handleSetMaxAmount}
+                                            noOfLines={1}
+                                            overflow="hidden"
+                                            textOverflow="ellipsis"
+                                        >
+                                            {balanceFormatter.format(
+                                                Number(
+                                                    selectedToken.balance,
+                                                ),
+                                            )}
+                                        </Text>
+                                        <Text opacity={0.5}>
+                                            ≈ {compactFormatter.format(
+                                                getTokenValue(selectedToken)
+                                            )}
+                                        </Text>
+                                    </HStack>
+                                )}
                                 {errors.amount && (
-                                    <Text color="#ef4444" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm" data-testid="amount-error-msg">
                                         {errors.amount.message}
                                     </Text>
                                 )}
                             </FormControl>
-
-                            {selectedToken && (
-                                <HStack
-                                    spacing={1}
-                                    fontSize="sm"
-                                    color={
-                                        isDark
-                                            ? 'whiteAlpha.700'
-                                            : 'blackAlpha.700'
-                                    }
-                                >
-                                    <Text>{t('Balance')}:</Text>
-                                    <Text
-                                        cursor="pointer"
-                                        _hover={{
-                                            color: isDark
-                                                ? 'blue.300'
-                                                : 'blue.500',
-                                            textDecoration: 'underline',
-                                        }}
-                                        onClick={handleSetMaxAmount}
-                                        noOfLines={1}
-                                        overflow="hidden"
-                                        textOverflow="ellipsis"
-                                    >
-                                        {compactFormatter.format(
-                                            Number(
-                                                selectedToken.numericBalance,
-                                            ),
-                                        )}
-                                    </Text>
-                                </HStack>
-                            )}
                         </VStack>
                     </Box>
 
@@ -488,9 +502,10 @@ export const SendTokenContent = ({
                                     fontSize="lg"
                                     fontWeight="bold"
                                     variant="unstyled"
+                                    data-testid="tx-address-input"
                                 />
                                 {errors.toAddressOrDomain && (
-                                    <Text color="#ef4444" fontSize="sm">
+                                    <Text color="#ef4444" fontSize="sm" data-testid="address-error-msg">
                                         {errors.toAddressOrDomain.message}
                                     </Text>
                                 )}
@@ -505,6 +520,7 @@ export const SendTokenContent = ({
                     variant="vechainKitPrimary"
                     isDisabled={!selectedToken || !isValid}
                     onClick={handleSubmit(onSubmit)}
+                    data-testid="send-button"
                 >
                     {selectedToken ? t('Send') : t('Select Token')}
                 </Button>

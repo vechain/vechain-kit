@@ -101,7 +101,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                 <ModalBackButton
                     onClick={() => setCurrentContent('settings')}
                 />
-                <ModalHeader>
+                <ModalHeader data-testid="modal-title">
                     {isArchiveView
                         ? t('Archived Notifications')
                         : t('Notifications')}
@@ -122,6 +122,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                                 }
                                 size="sm"
                                 onClick={handleToggleView}
+                                data-testid='toggle-view-button'
                             >
                                 {isArchiveView ? t('Current') : t('Archived')}
                             </Button>
@@ -130,6 +131,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleClearAll}
+                                    data-testid="clear-all-button"
                                 >
                                     {t('Clear all')}
                                 </Button>

@@ -61,6 +61,8 @@
     "BetterSwap is VeChain's trusted decentralized exchange (DEX) for seamless token swaps. Effortlessly trade VeChain assets in a secure, fast, and user-friendly environment. Click below to get started!": "BetterSwap is VeChain's trusted decentralized exchange (DEX) for seamless token swaps. Effortlessly trade VeChain assets in a secure, fast, and user-friendly environment. Click below to get started!",
     "Bridge": "Bridge",
     "Cancel": "Cancel",
+    "Change Currency": "Change Currency",
+    "Change the currency of your account.": "Change the currency of your account.",
     "Change account name": "Change account name",
     "Changing your domain name will update also your profile image.": "Changing your domain name will update also your profile image.",
     "Choose Name": "Choose Name",
@@ -504,5 +506,6 @@
     "Please review our terms at:": "Please review our terms at:",
     "Disagree": "Disagree",
     "Agree": "Agree",
-    "Terms and Conditions": "Terms and Conditions"
+    "Terms and Conditions": "Terms and Conditions",
+    "Your address has been successfully set to {{name}}": "Your address has been successfully set to {{name}}"
 }
