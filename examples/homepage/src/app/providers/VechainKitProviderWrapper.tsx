@@ -91,6 +91,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             language={i18n.language}
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE as NETWORK_TYPE,
+                // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
             legalDocuments={{

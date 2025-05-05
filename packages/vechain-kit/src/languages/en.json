@@ -511,5 +511,18 @@
     "I have read and agree to <Link>{{termName}}</Link>": "I have read and agree to <Link>{{termName}}</Link>",
     "Vechain Kit": "Vechain Kit",
     "Others": "Others",
-    "Accept": "Accept"
+    "Accept": "Accept",
+    "Language": "Language",
+    "Manage your preferences for currency, language, and appearance.": "Manage your preferences for currency, language, and appearance.",
+    "Choose your preferred language.": "Choose your preferred language.",
+    "Customize the appearance of your wallet.": "Customize the appearance of your wallet.",
+    "Display currency": "Display currency",
+    "Dark mode": "Dark mode",
+    "Appearance": "Appearance",
+    "Select language": "Select language",
+    "Currency": "Currency",
+    "Select currency": "Select currency",
+    "Connect with VeWorld wallet": "Connect with VeWorld wallet",
+    "Invalid token address": "Invalid token address",
+    "Send all": "Send all"
 }

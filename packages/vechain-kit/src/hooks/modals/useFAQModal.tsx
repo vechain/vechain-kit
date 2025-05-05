@@ -12,7 +12,10 @@ export const useFAQModal = () => {
     const open = () => {
         openAccountModal({
             type: 'faq',
-            props: { onGoBack: () => setAccountModalContent('main') },
+            props: {
+                onGoBack: () => setAccountModalContent('main'),
+                showLanguageSelector: false,
+            },
         });
     };
 

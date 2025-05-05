@@ -529,6 +529,18 @@ const Analytics = {
         connectionDetailsViewed: () =>
             Analytics.settings.trackSettings('connection_view'),
 
+        generalSettingsViewed: () =>
+            Analytics.settings.trackSettings('general_settings_view'),
+
+        currencySettingsViewed: () =>
+            Analytics.settings.trackSettings('currency_settings_view'),
+
+        languageSettingsViewed: () =>
+            Analytics.settings.trackSettings('language_settings_view'),
+
+        appearanceSettingsViewed: () =>
+            Analytics.settings.trackSettings('appearance_settings_view'),
+
         manageSecuritySettings: () =>
             Analytics.settings.trackSettings('manage_security_settings'),
 

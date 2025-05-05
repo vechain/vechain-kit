@@ -125,9 +125,12 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     />
 
                     {connection.isConnectedWithSocialLogin ? (
-                        <>
+                        <VStack w="full" justifyContent="center" spacing={0}>
                             <ActionButton
                                 title={t('Login methods and Passkeys')}
+                                style={{
+                                    borderBottomRadius: '0px',
+                                }}
                                 onClick={() => {
                                     setCurrentContent('privy-linked-accounts');
                                 }}
@@ -137,6 +140,10 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
 
                             <ActionButton
                                 title={t('Backup your wallet')}
+                                style={{
+                                    borderTopRadius: '0px',
+                                    borderBottomRadius: '0px',
+                                }}
                                 onClick={() => {
                                     exportWallet();
                                 }}
@@ -145,6 +152,10 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
 
                             <ActionButton
                                 title={t('Manage MFA')}
+                                style={{
+                                    borderTopRadius: '0px',
+                                    borderBottomRadius: '0px',
+                                }}
                                 onClick={() => {
                                     showMfaEnrollmentModal();
                                 }}
@@ -153,12 +164,15 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
 
                             <ActionButton
                                 title={t('Manage Recovery')}
+                                style={{
+                                    borderTopRadius: '0px',
+                                }}
                                 onClick={() => {
                                     setWalletRecovery();
                                 }}
                                 leftIcon={MdOutlineSettingsBackupRestore}
                             />
-                        </>
+                        </VStack>
                     ) : (
                         <CrossAppConnectionSecurityCard />
                     )}

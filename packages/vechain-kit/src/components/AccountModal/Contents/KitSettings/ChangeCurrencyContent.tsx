@@ -1,0 +1,78 @@
+import {
+    ModalBody,
+    ModalCloseButton,
+    ModalHeader,
+    VStack,
+    Button,
+    ModalFooter,
+    Text,
+    Icon,
+    HStack,
+} from '@chakra-ui/react';
+import {
+    ModalBackButton,
+    ScrollToTopWrapper,
+    StickyHeaderContainer,
+} from '@/components/common';
+import { AccountModalContentTypes } from '../../Types';
+import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
+import { useCurrency } from '@/hooks/api/wallet';
+import { BsCheck } from 'react-icons/bs';
+import { useTranslation } from 'react-i18next';
+
+export type ChangeCurrencyContentProps = {
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
+};
+
+export const ChangeCurrencyContent = ({
+    setCurrentContent,
+}: ChangeCurrencyContentProps) => {
+    const { t } = useTranslation();
+    const { currentCurrency, changeCurrency, allCurrencies } = useCurrency();
+
+    const renderCurrencyButton = (currency: CURRENCY) => (
+        <Button
+            key={currency}
+            w="full"
+            variant="ghost"
+            justifyContent="space-between"
+            onClick={() => changeCurrency(currency)}
+            py={6}
+            px={4}
+            _hover={{ bg: 'whiteAlpha.100' }}
+        >
+            <HStack spacing={3}>
+                <Text fontSize="xl">{CURRENCY_SYMBOLS[currency]}</Text>
+                <Text>{currency.toUpperCase()}</Text>
+            </HStack>
+            {currentCurrency === currency && (
+                <Icon as={BsCheck} boxSize={5} color="blue.500" />
+            )}
+        </Button>
+    );
+
+    return (
+        <ScrollToTopWrapper>
+            <StickyHeaderContainer>
+                <ModalHeader>{t('Select currency')}</ModalHeader>
+                <ModalBackButton
+                    onClick={() => setCurrentContent('general-settings')}
+                />
+                <ModalCloseButton />
+            </StickyHeaderContainer>
+            <ModalBody w={'full'}>
+                <VStack
+                    justify={'center'}
+                    spacing={3}
+                    align="flex-start"
+                    w={'full'}
+                >
+                    {allCurrencies.map((cur) => renderCurrencyButton(cur))}
+                </VStack>
+            </ModalBody>
+            <ModalFooter pt={0} />
+        </ScrollToTopWrapper>
+    );
+};

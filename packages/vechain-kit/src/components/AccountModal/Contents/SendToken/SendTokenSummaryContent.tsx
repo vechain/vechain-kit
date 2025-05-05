@@ -22,21 +22,22 @@ import {
     useUpgradeRequired,
     useUpgradeSmartAccountModal,
     useWallet,
+    TokenWithValue,
 } from '@/hooks';
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
-import { Token } from './SelectTokenContent';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/StringUtils';
 import { useCurrency } from '@/hooks/api/wallet';
+import { formatCompactCurrency } from '@/utils/currencyConverter';
 
-const summaryFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 18,
+const summaryFormatter = new Intl.NumberFormat('de-DE', {
+    notation: 'standard',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
 });
 
 export type SendTokenSummaryContentProps = {
@@ -47,7 +48,7 @@ export type SendTokenSummaryContentProps = {
     resolvedDomain?: string;
     resolvedAddress?: string;
     amount: string;
-    selectedToken: Token;
+    selectedToken: TokenWithValue;
 };
 
 export const SendTokenSummaryContent = ({
@@ -71,17 +72,6 @@ export const SendTokenSummaryContent = ({
         useUpgradeSmartAccountModal();
     const { currentCurrency } = useCurrency();
 
-    const convertTokenValue = (tokenAmountInUsd: number, token: Token) => {
-        switch (currentCurrency) {
-            case 'eur':
-                return tokenAmountInUsd / token.eurUsdPrice;
-            case 'gbp':
-                return tokenAmountInUsd / token.gbpUsdPrice;
-            default:
-                return tokenAmountInUsd;
-        }
-    };
-
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -89,14 +79,6 @@ export const SendTokenSummaryContent = ({
         }
         return getPicassoImage(resolvedAddress || toAddressOrDomain);
     }, [avatar, network.type, resolvedAddress, toAddressOrDomain]);
-
-    const compactFormatter = new Intl.NumberFormat('en-US', {
-        notation: 'compact',
-        compactDisplay: 'short',
-        maximumFractionDigits: 2,
-        style: 'currency',
-        currency: currentCurrency,
-    });
 
     const handleSend = async () => {
         if (upgradeRequired) {
@@ -323,9 +305,11 @@ export const SendTokenSummaryContent = ({
                                     {summaryFormatter.format(Number(amount))}{' '}
                                     {selectedToken.symbol}
                                 </Text>
-                                <Text fontSize="sm" opacity={0.5}>
-                                    ≈ {compactFormatter.format(
-                                         convertTokenValue(Number(amount) * selectedToken.usdPrice, selectedToken),
+                                <Text opacity={0.5}>
+                                    ≈{' '}
+                                    {formatCompactCurrency(
+                                        Number(amount) * selectedToken.priceUsd,
+                                        currentCurrency,
                                     )}
                                 </Text>
                             </HStack>

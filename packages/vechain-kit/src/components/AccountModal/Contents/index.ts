@@ -8,3 +8,4 @@ export * from './Profile';
 export * from './UpgradeSmartAccount';
 export * from './Assets';
 export * from './Bridge';
+export * from './KitSettings';

@@ -15,51 +15,36 @@ import { CiSearch } from 'react-icons/ci';
 import { FiSlash } from 'react-icons/fi';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
-import { useBalances, useWallet, useCurrency } from '@/hooks';
+import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-
-export type Token = {
-    address: string;
-    symbol: string;
-    balance: string;
-    usdPrice: number;
-    valueInUsd: number;
-    gbpUsdPrice: number;
-    eurUsdPrice: number;
-    valueInGbp: number;
-    valueInEur: number;
-};
+import { useCurrency } from '@/hooks/api/wallet';
+import { SupportedCurrency } from '@/utils/currencyConverter';
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    onSelectToken: (token: Token) => void;
+    onSelectToken: (token: TokenWithValue) => void;
     onBack: () => void;
 };
 
 export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { getTokenValue, currentCurrency } = useCurrency();
+    const { currentCurrency } = useCurrency();
     const { account } = useWallet();
-    const { tokens } = useBalances({ address: account?.address ?? '' });
+    const { tokensWithBalance } = useTokensWithValues({
+        address: account?.address ?? '',
+    });
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Filter and sort tokens
-    const filteredTokens: Token[] = [
-        ...Object.values(tokens).filter(({ symbol }) =>
-            symbol.toLowerCase().includes(searchQuery.toLowerCase()),
-        )
-        .sort((a, b) => {
-            if (getTokenValue(a) > 0 !== getTokenValue(b) > 0) {
-                return getTokenValue(b) > 0 ? 1 : -1;
-            }
-            return getTokenValue(b) - getTokenValue(a);
-        })];
+    // Filter tokens
+    const filteredTokens = tokensWithBalance.filter(({ symbol }) =>
+        symbol.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
     useEffect(() => {
         if (searchQuery) {
@@ -125,24 +110,18 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                             </VStack>
                         ) : (
                             <VStack spacing={2} align="stretch">
-                                {filteredTokens.map((token) => {
-                                    const hasBalance =
-                                        Number(token.balance) > 0;
-                                    const valueInCurrency =
-                                        getTokenValue(token);
-
-                                    return (
-                                        <AssetButton
-                                            key={token.address}
-                                            symbol={token.symbol}
-                                            amount={Number(token.balance)}
-                                            currencyValue={valueInCurrency}
-                                            currentCurrency={currentCurrency}
-                                            onClick={() => onSelectToken(token)}
-                                            isDisabled={!hasBalance}
-                                        />
-                                    );
-                                })}
+                                {filteredTokens.map((token) => (
+                                    <AssetButton
+                                        key={token.address}
+                                        symbol={token.symbol}
+                                        amount={Number(token.balance)}
+                                        currencyValue={token.valueInCurrency}
+                                        currentCurrency={
+                                            currentCurrency as SupportedCurrency
+                                        }
+                                        onClick={() => onSelectToken(token)}
+                                    />
+                                ))}
                             </VStack>
                         )}
                     </VStack>

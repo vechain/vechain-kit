@@ -28,7 +28,7 @@ export const humanNumber = (
     const suffix = symbol ? ' ' + symbol : '';
 
     originalValue = originalValue || formattedValue;
-    const formatter = new Intl.NumberFormat('en', {
+    const formatter = new Intl.NumberFormat('en-US', {
         style: 'decimal',
         minimumFractionDigits:
             Number.parseFloat(formattedValue.toString()) % 1 === 0 ? 0 : 2,

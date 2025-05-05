@@ -11,7 +11,7 @@ import {
 import {
     StickyHeaderContainer,
     ScrollToTopWrapper,
-    ModalFAQButton,
+    ModalNotificationButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
@@ -22,6 +22,8 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useNotifications } from '@/hooks';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -35,18 +37,20 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
 
+    const { getNotifications } = useNotifications();
+    const notifications = getNotifications();
+    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
+
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalFAQButton
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'faq',
-                            props: {
-                                onGoBack: () => setCurrentContent('main'),
-                            },
-                        })
-                    }
+                <ModalNotificationButton
+                    onClick={() => {
+                        Analytics.notifications.viewed();
+                        setCurrentContent('notifications');
+                    }}
+                    hasUnreadNotifications={hasUnreadNotifications}
+                    data-testid="notifications-button"
                 />
                 <ModalHeader>
                     <HStack
@@ -55,7 +59,11 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         p={0}
                         spacing={2}
                     >
-                        <Text fontSize={'md'} fontWeight={'bold'} data-testid='modal-title'>
+                        <Text
+                            fontSize={'md'}
+                            fontWeight={'bold'}
+                            data-testid="modal-title"
+                        >
                             {t('Wallet')}
                         </Text>
                         {network?.type !== 'main' && (

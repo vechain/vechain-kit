@@ -5,19 +5,8 @@ import { CURRENCY } from '@/types';
 const STORAGE_KEY = 'vechain_kit_currency';
 const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];
 
-type Token = {
-    address: string;
-    symbol: string;
-    usdPrice: number;
-    valueInUsd: number;
-    valueInGbp: number;
-    valueInEur: number;
-    gbpUsdPrice: number;
-    eurUsdPrice: number;
-}
-
 /**
- * Hook for managing currency preferences and conversions
+ * Hook for managing currency preferences
  */
 export const useCurrency = () => {
     const { defaultCurrency = 'usd' } = useVeChainKitConfig();
@@ -47,21 +36,9 @@ export const useCurrency = () => {
         setCurrentCurrency(newCurrency);
     };
 
-    const getTokenValue = (token: Token) => {
-        switch (currentCurrency) {
-            case 'eur':
-                return token.valueInEur;
-            case 'gbp':
-                return token.valueInGbp;
-            default:
-                return token.valueInUsd;
-        }
-    };
-
     return {
         currentCurrency,
         allCurrencies,
         changeCurrency,
-        getTokenValue,
     };
 };
