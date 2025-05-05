@@ -1,5 +1,5 @@
 import { useVeChainKitConfig } from '@/providers';
-import { Box } from '@chakra-ui/react';
+import { Box, useMediaQuery } from '@chakra-ui/react';
 import { useEffect, useState, useRef } from 'react';
 
 type Props = {
@@ -10,6 +10,8 @@ export const StickyHeaderContainer = ({ children }: Props) => {
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
     const { darkMode: isDark } = useVeChainKitConfig();
+    const [isDesktop] = useMediaQuery('(min-width: 768px)');
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -33,12 +35,18 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                bg={isDark ? 'rgb(31 31 30 / 90%)' : 'rgb(255 255 255 / 69%)'}
-                backdropFilter={'blur(12px)'}
-                style={{ WebkitBackdropFilter: 'blur(12px)' }}
+                bg={
+                    isDesktop
+                        ? isDark
+                            ? 'rgb(31 31 30 / 90%)'
+                            : 'rgb(255 255 255 / 69%)'
+                        : 'transparent'
+                }
+                backdropFilter={isDesktop ? 'blur(12px)' : 'none'}
+                style={isDesktop ? { WebkitBackdropFilter: 'blur(12px)' } : {}}
                 zIndex={1000}
                 boxShadow={
-                    hasContentBelow
+                    isDesktop && hasContentBelow
                         ? '0px 2px 4px 1px rgb(0 0 0 / 10%)'
                         : 'none'
                 }
