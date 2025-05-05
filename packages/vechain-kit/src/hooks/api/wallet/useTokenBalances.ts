@@ -10,7 +10,7 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 
-export type TokenBalance = {
+export type WalletTokenBalance = {
     address: string;
     symbol: string;
     balance: string;
@@ -59,7 +59,7 @@ export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
         };
 
         // Base tokens
-        const baseTokens: TokenBalance[] = [
+        const baseTokens: WalletTokenBalance[] = [
             {
                 address: contractAddresses.vet,
                 symbol: 'VET',
@@ -93,7 +93,7 @@ export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
         ];
 
         // Add custom tokens
-        const customTokens: TokenBalance[] = customTokenBalances.map(
+        const customTokens: WalletTokenBalance[] = customTokenBalances.map(
             (token) => ({
                 address: token?.address || '',
                 symbol: token?.symbol || '',

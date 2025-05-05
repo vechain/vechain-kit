@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTokenBalances, TokenBalance } from './useTokenBalances';
+import { useTokenBalances, WalletTokenBalance } from './useTokenBalances';
 import { useTokenPrices } from './useTokenPrices';
 import {
     SupportedCurrency,
@@ -7,7 +7,7 @@ import {
 } from '@/utils/currencyConverter';
 import { useCurrency } from './useCurrency';
 
-export type TokenWithValue = TokenBalance & {
+export type TokenWithValue = WalletTokenBalance & {
     priceUsd: number;
     valueUsd: number;
     valueInCurrency: number;
