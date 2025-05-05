@@ -13,7 +13,6 @@ import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import {
     useBalances,
-    useNotifications,
     useUpgradeRequired,
     useWallet,
     useCurrency,
@@ -164,7 +163,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
             default:
                 return totalBalanceUsd;
         }
-    }
+    };
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -172,13 +171,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
         3,
     );
 
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
-
-    const showRedDot =
-        (connection.isConnectedWithPrivy && upgradeRequired) ||
-        hasUnreadNotifications;
+    const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
 
     return (
         <VStack w={'full'} mt={mt} spacing={4}>

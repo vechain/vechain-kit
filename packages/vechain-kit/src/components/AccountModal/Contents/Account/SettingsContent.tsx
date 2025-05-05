@@ -4,21 +4,17 @@ import {
     ModalFooter,
     ModalHeader,
     Box,
+    ModalCloseButton,
 } from '@chakra-ui/react';
 import { useUpgradeRequired, useWallet } from '@/hooks';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    ModalNotificationButton,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { useEffect, useRef } from 'react';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
@@ -42,10 +38,6 @@ export const SettingsContent = ({
 
     const { connection, disconnect, smartAccount, connectedWallet, account } =
         useWallet();
-
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -120,14 +112,7 @@ export const SettingsContent = ({
                 <ModalHeader>{t('Settings')}</ModalHeader>
 
                 <ModalBackButton onClick={() => setCurrentContent('main')} />
-                <ModalNotificationButton
-                    onClick={() => {
-                        Analytics.notifications.viewed();
-                        setCurrentContent('notifications');
-                    }}
-                    hasUnreadNotifications={hasUnreadNotifications}
-                    data-testid="notifications-button"
-                />
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
