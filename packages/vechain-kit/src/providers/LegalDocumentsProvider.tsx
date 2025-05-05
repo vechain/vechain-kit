@@ -8,19 +8,23 @@ import {
 import { useTermsAndConditions, useWallet } from '@/hooks';
 import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
 
-const CustomLogicContext = createContext<null>(null);
+type Props = {
+    children: Readonly<ReactNode>;
+};
 
-export const useCustomLogic = () => {
-    const context = useContext(CustomLogicContext);
+const LegalDocumentsContext = createContext<null>(null);
+
+export const useLegalDocumentsContext = () => {
+    const context = useContext(LegalDocumentsContext);
     if (!context) {
         throw new Error(
-            'useCustomLogic must be used within CustomLogicProvider',
+            'useLegalDocumentsContext must be used within LegalDocumentsProvider',
         );
     }
     return context;
 };
 
-export const CustomLogicProvider = ({ children }: { children: ReactNode }) => {
+export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
     const { hasAgreedToTerms } = useTermsAndConditions();
     const [showTermsModal, setShowTermsModal] = useState(false);
@@ -43,13 +47,13 @@ export const CustomLogicProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <CustomLogicContext.Provider value={null}>
+        <LegalDocumentsContext.Provider value={null}>
             {children}
             <TermsAndConditionsModal
                 isOpen={showTermsModal}
                 onClose={handleCloseOrDisagree}
                 onAgree={handleAgree}
             />
-        </CustomLogicContext.Provider>
+        </LegalDocumentsContext.Provider>
     );
 };

@@ -30,7 +30,7 @@ import {
 } from 'react';
 
 import i18n from '../../i18n';
-import { CustomLogicProvider } from './CustomLogicProvider';
+import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import { ModalProvider } from './ModalProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
@@ -427,9 +427,9 @@ export const VeChainKitProvider = (
                                 }
                             >
                                 <ModalProvider>
-                                    <CustomLogicProvider>
+                                    <LegalDocumentsProvider>
                                         {children}
-                                    </CustomLogicProvider>
+                                    </LegalDocumentsProvider>
                                 </ModalProvider>
                             </PrivyWalletProvider>
                         </DAppKitProvider>
