@@ -1,7 +1,7 @@
 import { Checkbox, Text, HStack, Link } from '@chakra-ui/react';
 
 import { LegalDocument } from '@/providers';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { UseFormRegister } from 'react-hook-form';
 
 type Props = {
@@ -23,16 +23,25 @@ export const TermItem = ({ term, register, getTermId }: Props) => {
                     required: term.required,
                 })}
             />
+
             <Text>
-                {t('I have read and agree to')}
-                <Link
-                    href={term.url}
-                    isExternal
-                    color="blue.500"
-                    textDecoration="underline"
-                >
-                    {termName}
-                </Link>
+                <Trans
+                    i18nKey="I have read and agree to <Link>{{termName}}</Link>"
+                    components={{
+                        Link: (
+                            <Link
+                                as="span"
+                                href={term.url}
+                                isExternal
+                                color="blue.500"
+                                textDecoration="underline"
+                            />
+                        ),
+                    }}
+                    values={{
+                        termName,
+                    }}
+                />
                 {term.required && (
                     <Text as="span" color="red.500" ml={1}>
                         *
