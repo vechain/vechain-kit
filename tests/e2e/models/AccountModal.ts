@@ -35,6 +35,12 @@ export class AccountModal extends BasePage {
     readonly successIcon: Locator;
     readonly quickActionButton: (action: QuickActionButton) => Locator;
 
+    private readonly summaryFormatter = new Intl.NumberFormat('de-DE', {
+        notation: 'standard',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+
     constructor(page: Page, context: BrowserContext, vwmock?: any) {
         super(page, context, vwmock);
         this.profile = new AccountModalProfile(page);
@@ -105,7 +111,7 @@ export class AccountModal extends BasePage {
                 );
             }
             await expect(this.assets.summaryAmount).toHaveText(
-                `${amount} ${asset}`,
+                `${this.summaryFormatter.format(Number(amount))} ${asset}`,
             );
             await this.confirmButton.click();
             await expect(this.confirmButton).toContainText('Sending...');
