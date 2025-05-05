@@ -11,3 +11,4 @@ export * from './ModalFAQButton';
 export * from './ScrollToTopWrapper';
 export * from './AccountAvatar';
 export * from './TransactionButtonAndStatus';
+export * from './ModalNotificationButton';

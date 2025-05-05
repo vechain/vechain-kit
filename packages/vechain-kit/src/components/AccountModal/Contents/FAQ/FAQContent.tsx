@@ -4,12 +4,8 @@ import {
     ModalBody,
     ModalCloseButton,
     ModalHeader,
-    Text,
     VStack,
     Icon,
-    HStack,
-    Heading,
-    Tag,
     Select,
     ModalFooter,
 } from '@chakra-ui/react';
@@ -20,7 +16,6 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
-import { VechainLogo } from '@/assets';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
@@ -28,10 +23,14 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type FAQContentProps = {
     onGoBack: () => void;
+    showLanguageSelector?: boolean;
 };
 
-export const FAQContent = ({ onGoBack }: FAQContentProps) => {
-    const { network, darkMode: isDark } = useVeChainKitConfig();
+export const FAQContent = ({
+    onGoBack,
+    showLanguageSelector = true,
+}: FAQContentProps) => {
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
 
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -47,34 +46,9 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <ModalBody>
+            <ModalBody w={'full'}>
                 <VStack spacing={6} align="stretch">
-                    <VStack>
-                        <HStack justify={'center'}>
-                            <VechainLogo
-                                isDark={isDark}
-                                w={'200px'}
-                                h={'auto'}
-                                ml={-6}
-                            />
-                        </HStack>
-                        <Text fontSize="sm" opacity={0.7} textAlign={'center'}>
-                            {t(
-                                'Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.',
-                            )}
-                        </Text>
-                    </VStack>
-
-                    <HStack justify={'center'} spacing={2}>
-                        <Tag
-                            size={'sm'}
-                            colorScheme={'blue'}
-                            width={'fit-content'}
-                            justifyContent={'center'}
-                            padding={'10px'}
-                        >
-                            {t('Network')}: {network.type}
-                        </Tag>
+                    {showLanguageSelector && (
                         <Select
                             borderRadius={'md'}
                             size="sm"
@@ -99,33 +73,22 @@ export const FAQContent = ({ onGoBack }: FAQContentProps) => {
                                 </option>
                             ))}
                         </Select>
-                    </HStack>
+                    )}
 
-                    <Heading
-                        fontSize={'md'}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                        mt={4}
-                        mb={1}
+                    <Button
+                        as={Link}
+                        href="https://docs.vechainkit.vechain.org/"
+                        isExternal
+                        variant="vechainKitSecondary"
+                        rightIcon={<Icon as={FaExternalLinkAlt} />}
                     >
-                        {t('Frequently asked questions')}
-                    </Heading>
+                        {t('For developers')}
+                    </Button>
 
                     <FAQAccordion />
                 </VStack>
             </ModalBody>
-            <ModalFooter w="full">
-                <Button
-                    as={Link}
-                    href="https://docs.vechainkit.vechain.org/"
-                    isExternal
-                    variant="vechainKitSecondary"
-                    rightIcon={<Icon as={FaExternalLinkAlt} />}
-                    mt={4}
-                >
-                    {t('For developers')}
-                </Button>
-            </ModalFooter>
+            <ModalFooter pt={0} />
         </ScrollToTopWrapper>
     );
 };

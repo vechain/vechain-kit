@@ -98,9 +98,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalBackButton
-                    onClick={() => setCurrentContent('settings')}
-                />
+                <ModalBackButton onClick={() => setCurrentContent('main')} />
                 <ModalHeader data-testid="modal-title">
                     {isArchiveView
                         ? t('Archived Notifications')
@@ -122,7 +120,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                                 }
                                 size="sm"
                                 onClick={handleToggleView}
-                                data-testid='toggle-view-button'
+                                data-testid="toggle-view-button"
                             >
                                 {isArchiveView ? t('Current') : t('Archived')}
                             </Button>

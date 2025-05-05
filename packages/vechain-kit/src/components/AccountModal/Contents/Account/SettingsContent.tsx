@@ -1,35 +1,26 @@
 import {
     ModalBody,
-    ModalCloseButton,
     VStack,
     ModalFooter,
     ModalHeader,
     Box,
-    Button,
-    Heading,
+    ModalCloseButton,
 } from '@chakra-ui/react';
-import {
-    useCrossAppConnectionCache,
-    useFetchAppInfo,
-    useUpgradeRequired,
-    useWallet,
-} from '@/hooks';
-import { MdOutlineNavigateNext, MdCurrencyExchange } from 'react-icons/md';
+import { useUpgradeRequired, useWallet } from '@/hooks';
+import { MdOutlineNavigateNext } from 'react-icons/md';
 import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
 import { useEffect, useRef } from 'react';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { BiBell } from 'react-icons/bi';
-import { useNotifications } from '@/hooks/notifications';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CgProfile } from 'react-icons/cg';
+import { IoSettingsOutline } from 'react-icons/io5';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -45,19 +36,8 @@ export const SettingsContent = ({
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const { privy } = useVeChainKitConfig();
-
     const { connection, disconnect, smartAccount, connectedWallet, account } =
         useWallet();
-
-    const { getConnectionCache } = useCrossAppConnectionCache();
-    const connectionCache = getConnectionCache();
-
-    const { data: appInfo } = useFetchAppInfo(privy?.appId ?? '');
-
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -115,8 +95,9 @@ export const SettingsContent = ({
         Analytics.settings.connectionDetailsViewed();
     };
 
-    const handleChangeCurrency = () => {
-        setCurrentContent('change-currency');
+    const handleGeneralSettings = () => {
+        setCurrentContent('general-settings');
+        Analytics.settings.generalSettingsViewed();
     };
 
     const handleLogout = () => {
@@ -135,181 +116,124 @@ export const SettingsContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack w={'full'} spacing={0}>
-                    <Heading
-                        size={'xs'}
-                        fontWeight={'500'}
-                        w={'full'}
-                        opacity={0.5}
-                    >
-                        {t('Wallet')}
-                    </Heading>
-                    <ActionButton
-                        style={{
-                            marginTop: '10px',
-                            borderBottomRadius: '0px',
-                        }}
-                        title={t('Customize profile')}
-                        onClick={handleCustomizeProfile}
-                        leftIcon={CgProfile}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
+                <VStack w={'full'} spacing={4}>
+                    <VStack w={'full'} spacing={0}>
+                        <ActionButton
+                            style={{
+                                marginTop: '10px',
+                                borderBottomRadius: '0px',
+                            }}
+                            title={t('Customize profile')}
+                            onClick={handleCustomizeProfile}
+                            leftIcon={CgProfile}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
 
-                    <ActionButton
-                        style={{
-                            borderTopRadius: '0px',
-                            borderBottomRadius: connection.isConnectedWithPrivy
-                                ? '0px'
-                                : '12px',
-                        }}
-                        title={t('Choose account name')}
-                        description={t('Choose a name for your account.')}
-                        onClick={handleNameChange}
-                        leftIcon={FaRegAddressCard}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-                    <ActionButton
-                        style={{
-                            borderTopRadius: '0px',
-                            borderBottomRadius: '0px',
-                        }}
-                        title={t('Change Currency')}
-                        description={t('Change the currency of your account.')}
-                        onClick={handleChangeCurrency}
-                        leftIcon={MdCurrencyExchange}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-
-                    {connection.isConnectedWithPrivy && (
                         <ActionButton
                             style={{
                                 borderTopRadius: '0px',
                             }}
-                            title={t('Access and security')}
-                            description={t(
-                                'Manage your embedded wallet security settings or back it up to a new device.',
-                            )}
-                            onClick={handleAccessAndSecurity}
-                            leftIcon={IoShieldOutline}
+                            title={t('Choose account name')}
+                            description={t('Choose a name for your account.')}
+                            onClick={handleNameChange}
+                            leftIcon={FaRegAddressCard}
                             rightIcon={MdOutlineNavigateNext}
-                            extraContent={
-                                upgradeRequired && (
-                                    <Box
-                                        minWidth="8px"
-                                        height="8px"
-                                        bg="red.500"
-                                        borderRadius="full"
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="center"
-                                    />
-                                )
-                            }
                         />
-                    )}
+                    </VStack>
 
-                    <Heading
-                        size={'xs'}
-                        fontWeight={'500'}
-                        w={'full'}
-                        opacity={0.5}
-                        mt={10}
-                    >
-                        {t('General')}
-                    </Heading>
-                    <ActionButton
-                        style={{
-                            borderTopRadius: '0px',
-                            borderBottomRadius: '0px',
-                        }}
-                        title={t('Connection details')}
-                        description={t(
-                            'View the details of your connection to this app.',
+                    <VStack w={'full'} spacing={0}>
+                        {connection.isConnectedWithPrivy && (
+                            <ActionButton
+                                style={{
+                                    borderBottomRadius: '0px',
+                                }}
+                                title={t('Access and security')}
+                                onClick={handleAccessAndSecurity}
+                                leftIcon={IoShieldOutline}
+                                rightIcon={MdOutlineNavigateNext}
+                                extraContent={
+                                    upgradeRequired && (
+                                        <Box
+                                            minWidth="8px"
+                                            height="8px"
+                                            bg="red.500"
+                                            borderRadius="full"
+                                            display="flex"
+                                            alignItems="center"
+                                            justifyContent="center"
+                                        />
+                                    )
+                                }
+                            />
                         )}
-                        onClick={handleConnectionDetails}
-                        leftIcon={VscDebugDisconnect}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
-                    <ActionButton
-                        style={{
-                            borderTopRadius: '0px',
-                            borderBottomRadius: '0px',
-                        }}
-                        title={t('Notifications')}
-                        description={t('View your notifications and updates.')}
-                        onClick={() => {
-                            Analytics.notifications.viewed();
-                            setCurrentContent('notifications');
-                        }}
-                        leftIcon={BiBell}
-                        rightIcon={MdOutlineNavigateNext}
-                        extraContent={
-                            hasUnreadNotifications && (
-                                <Box
-                                    minWidth="8px"
-                                    height="8px"
-                                    bg="red.500"
-                                    borderRadius="full"
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                />
-                            )
-                        }
-                        dataTestId="notifications-button"
-                    />
-                    <ActionButton
-                        title={t('Help')}
-                        description={t(
-                            'Still have some doubts? Check out our FAQs and learn more.',
-                            {
-                                appName: connection.isConnectedWithCrossApp
-                                    ? connectionCache?.ecosystemApp?.name
-                                    : Object.values(appInfo ?? {})[0]?.name ??
-                                      '',
-                            },
-                        )}
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'faq',
-                                props: {
-                                    onGoBack: () =>
-                                        setCurrentContent('settings'),
-                                },
-                            })
-                        }
-                        leftIcon={BsQuestionCircle}
-                        rightIcon={MdOutlineNavigateNext}
-                        style={{
-                            borderTopRadius: '0px',
-                        }}
-                    />
+                        <ActionButton
+                            style={
+                                connection.isConnectedWithPrivy
+                                    ? {
+                                          borderTopRadius: '0px',
+                                          borderBottomRadius: '0px',
+                                      }
+                                    : {
+                                          borderTopRadius: '12px',
+                                          borderBottomRadius: '0px',
+                                      }
+                            }
+                            title={t('General')}
+                            onClick={handleGeneralSettings}
+                            leftIcon={IoSettingsOutline}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                        <ActionButton
+                            title={t('Help')}
+                            onClick={() =>
+                                setCurrentContent({
+                                    type: 'faq',
+                                    props: {
+                                        onGoBack: () =>
+                                            setCurrentContent('settings'),
+                                        showLanguageSelector: false,
+                                    },
+                                })
+                            }
+                            leftIcon={BsQuestionCircle}
+                            rightIcon={MdOutlineNavigateNext}
+                            style={{
+                                borderTopRadius: '0px',
+                            }}
+                        />
+                    </VStack>
+                    <VStack w={'full'} spacing={0}>
+                        <ActionButton
+                            style={{
+                                borderBottomRadius: '0px',
+                            }}
+                            title={t('Connection details')}
+                            onClick={handleConnectionDetails}
+                            leftIcon={VscDebugDisconnect}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+                        <ActionButton
+                            variant="vechainKitLogout"
+                            style={{
+                                borderTopRadius: '0px',
+                            }}
+                            title={t('Logout')}
+                            onClick={() =>
+                                setCurrentContent({
+                                    type: 'disconnect-confirm',
+                                    props: {
+                                        onDisconnect: handleLogout,
+                                        onBack: () =>
+                                            setCurrentContent('settings'),
+                                    },
+                                })
+                            }
+                            leftIcon={RiLogoutBoxLine}
+                        />
+                    </VStack>
                 </VStack>
             </ModalBody>
-            <ModalFooter>
-                <VStack w={'full'} spacing={4}>
-                    <Button
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: handleLogout,
-                                    onBack: () => setCurrentContent('settings'),
-                                },
-                            })
-                        }
-                        variant="vechainKitSecondary"
-                        leftIcon={
-                            <RiLogoutBoxLine
-                                color="#888888"
-                                fontSize={'16px'}
-                            />
-                        }
-                    >
-                        {t('Logout')}
-                    </Button>
-                </VStack>
-            </ModalFooter>
+            <ModalFooter pt={0} />
         </Box>
     );
 };
