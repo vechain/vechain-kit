@@ -2,12 +2,12 @@ import { VechainKitThemeProvider } from '@/providers';
 import {
     Modal,
     ModalContent,
-    ModalContentProps,
     ModalOverlay,
     useMediaQuery,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useVeChainKitConfig } from '@/providers';
+import { BaseBottomSheet } from './BaseBottomSheet';
 
 type BaseModalProps = {
     isOpen: boolean;
@@ -42,45 +42,50 @@ export const BaseModal = ({
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
     const { darkMode } = useVeChainKitConfig();
 
-    const modalContentProps: ModalContentProps = isDesktop
-        ? {}
-        : {
-              position: 'fixed',
-              bottom: '0',
-              mb: '0',
-              maxW: '2xl',
-              borderRadius: '24px 24px 0px 0px !important',
-              overflowY: 'auto',
-              overflowX: 'hidden',
-              scrollBehavior: 'smooth',
-          };
+    const modalContent = (
+        <Modal
+            motionPreset={motionPreset}
+            isOpen={isOpen}
+            onClose={onClose}
+            isCentered={isCentered}
+            size={size}
+            returnFocusOnClose={false}
+            blockScrollOnMount={blockScrollOnMount}
+            closeOnOverlayClick={closeOnOverlayClick && isCloseable}
+            preserveScrollBarGap={true}
+            portalProps={{ containerRef: undefined }}
+            trapFocus={!allowExternalFocus}
+            autoFocus={!allowExternalFocus}
+        >
+            <ModalOverlay backdropFilter={backdropFilter} />
+            <ModalContent role="dialog" aria-modal={!allowExternalFocus}>
+                {children}
+            </ModalContent>
+        </Modal>
+    );
+
+    const bottomSheetContent = (
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size={size}
+            blockScrollOnMount={blockScrollOnMount}
+        >
+            <BaseBottomSheet
+                isOpen={isOpen}
+                onClose={onClose}
+                ariaTitle={'Modal'}
+                ariaDescription={'Modal content'}
+                isDismissable={isCloseable}
+            >
+                {children}
+            </BaseBottomSheet>
+        </Modal>
+    );
 
     return (
         <VechainKitThemeProvider darkMode={darkMode}>
-            <Modal
-                motionPreset={motionPreset}
-                isOpen={isOpen}
-                onClose={onClose}
-                isCentered={isCentered}
-                size={size}
-                // scrollBehavior="inside"
-                returnFocusOnClose={false}
-                blockScrollOnMount={blockScrollOnMount}
-                closeOnOverlayClick={closeOnOverlayClick && isCloseable}
-                preserveScrollBarGap={true}
-                portalProps={{ containerRef: undefined }}
-                trapFocus={!allowExternalFocus}
-                autoFocus={!allowExternalFocus}
-            >
-                <ModalOverlay backdropFilter={backdropFilter} />
-                <ModalContent
-                    role="dialog"
-                    aria-modal={!allowExternalFocus}
-                    {...modalContentProps}
-                >
-                    {children}
-                </ModalContent>
-            </Modal>
+            {isDesktop ? modalContent : bottomSheetContent}
         </VechainKitThemeProvider>
     );
 };

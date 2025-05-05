@@ -60,6 +60,7 @@
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
     "translo-cli": "^1.0.6",
+    "vaul": "^1.1.2",
     "viem": "^2.21.9",
     "wagmi": "^2.13.4"
   },
