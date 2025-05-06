@@ -52,11 +52,11 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         disconnect();
         setShowTermsModal(false);
         closeAccountModal();
-        Analytics.auth.logoutCompleted(); //TODO: Should we track even if the user didn't agree to the terms?
+        Analytics.auth.logoutCompleted();
     };
 
     const handleCancel = () => {
-        Analytics.auth.trackAuth('disconnect_initiated'); //TODO: Should we track even if the user didn't agree to the terms?
+        Analytics.auth.trackAuth('disconnect_initiated');
         setShowTermsModal(false);
         openAccountModal({
             type: 'disconnect-confirm',
