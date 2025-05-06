@@ -84,7 +84,7 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
 ];
 
 export const VECHAIN_KIT_TERMS_CONFIG = {
-    url: 'https://vechain.org/terms-of-use/',
+    url: 'https://docs.vechainkit.vechain.org/',
     version: 1,
     required: true,
     displayName: 'VeChain Kit Terms and Conditions',

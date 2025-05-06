@@ -97,13 +97,13 @@ export function VechainKitProviderWrapper({ children }: Props) {
             legalDocuments={{
                 termsAndConditions: [
                     {
-                        url: 'https://myapp.com/terms-of-my-app',
+                        url: 'https://vechain.org',
                         version: 1,
                         required: true,
-                        displayName: 'My App Terms and Conditions',
+                        displayName: 'Example T&C',
                     },
                     {
-                        url: 'https://myapp.com/other-optional-terms',
+                        url: 'https://vechain.org/wp-content/uploads/2023/10/vechain-whitepaper-3-0.pdf',
                         version: 3,
                         required: false,
                     },
