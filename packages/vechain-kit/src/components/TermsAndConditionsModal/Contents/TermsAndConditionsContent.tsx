@@ -1,5 +1,4 @@
 import { StickyHeaderContainer } from '@/components/common';
-import { TermItem } from '@/components/TermsAndConditionsModal/Components';
 import { useTermsAndConditions } from '@/hooks/utils/useTermsAndConditions';
 import { LegalDocument, useVeChainKitConfig } from '@/providers';
 import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
@@ -14,6 +13,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { TermItem } from './TermItem';
 
 type Props = {
     onAgree: () => void;
