@@ -1,8 +1,8 @@
-import { Checkbox, Text, HStack, Link } from '@chakra-ui/react';
-
-import { LegalDocument } from '@/providers';
-import { Trans, useTranslation } from 'react-i18next';
+import { LegalDocument, useVeChainKitConfig } from '@/providers';
+import { Box, Checkbox, HStack, Link, Text } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { FiExternalLink } from 'react-icons/fi';
 
 type Props = {
     term: LegalDocument;
@@ -12,42 +12,58 @@ type Props = {
 
 export const TermItem = ({ term, register, getTermId }: Props) => {
     const { t } = useTranslation();
+    const { darkMode: isDark } = useVeChainKitConfig();
     const termName = term.displayName ?? t('Terms and Conditions');
     const termId = getTermId(term);
 
-    return (
-        <HStack align="flex-start" spacing={2} width="full">
-            <Checkbox
-                mt="1px"
-                {...register(termId, {
-                    required: term.required,
-                })}
-            />
+    const borderColor = isDark ? 'whiteAlpha.400' : 'blackAlpha.400';
 
-            <Text>
-                <Trans
-                    i18nKey="I have read and agree to <Link>{{termName}}</Link>"
-                    components={{
-                        Link: (
-                            <Link
-                                as="span"
-                                href={term.url}
-                                isExternal
-                                color="blue.500"
-                                textDecoration="underline"
-                            />
-                        ),
-                    }}
-                    values={{
-                        termName,
-                    }}
+    const linkColor = isDark ? 'blue.300' : 'blue.500';
+    const linkHoverColor = isDark ? 'blue.200' : 'blue.700';
+
+    return (
+        <Box width="full" borderRadius="md" transition="all 0.2s">
+            <HStack align="flex-start" spacing={3} width="full">
+                <Checkbox
+                    mt="2px"
+                    size="md"
+                    colorScheme="blue"
+                    borderColor={borderColor}
+                    {...register(termId, {
+                        required: term.required,
+                    })}
                 />
-                {term.required && (
-                    <Text as="span" color="red.500" ml={1}>
-                        *
-                    </Text>
-                )}
-            </Text>
-        </HStack>
+
+                <Text fontSize="sm" lineHeight="1.6">
+                    I have read and agree to{' '}
+                    <Link
+                        href={term.url}
+                        isExternal
+                        color={linkColor}
+                        textDecoration="underline"
+                        _hover={{
+                            color: linkHoverColor,
+                            textDecoration: 'underline',
+                        }}
+                        fontWeight="medium"
+                        display="inline-flex"
+                        alignItems="center"
+                    >
+                        {termName}
+                        <Box as={FiExternalLink} ml={1} mb="-2px" h="0.9em" />
+                    </Link>
+                    {term.required && (
+                        <Text
+                            as="span"
+                            color="red.500"
+                            ml={1}
+                            fontWeight="bold"
+                        >
+                            *
+                        </Text>
+                    )}
+                </Text>
+            </HStack>
+        </Box>
     );
 };
