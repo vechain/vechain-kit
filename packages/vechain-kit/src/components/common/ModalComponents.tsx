@@ -5,11 +5,9 @@ import {
     ModalHeader,
     ModalFooter,
     ModalCloseButton,
-    IconButton,
     ButtonProps,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { IoCloseOutline } from 'react-icons/io5';
 
 type CommonProps = BoxProps & {
     children?: ReactNode;
@@ -75,23 +73,10 @@ export const AdaptiveModalFooter = ({
 
 export const AdaptiveModalCloseButton = ({
     isBottomSheet,
-    onClose,
     ...props
 }: CloseButtonProps) => {
     if (isBottomSheet) {
-        return (
-            <IconButton
-                icon={<IoCloseOutline />}
-                size="sm"
-                variant="ghost"
-                position="absolute"
-                right={4}
-                top={4}
-                aria-label="Close"
-                onClick={onClose}
-                {...props}
-            />
-        );
+        return null;
     }
     return <ModalCloseButton {...props} />;
 };

@@ -72,7 +72,6 @@ const adaptChildrenToView = (
                 return (
                     <AdaptiveModalCloseButton
                         isBottomSheet={isBottomSheet}
-                        onClose={onClose}
                         {...child.props}
                     />
                 );
