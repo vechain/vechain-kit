@@ -13,17 +13,17 @@ import { ModalCloseButton } from '@chakra-ui/react';
 
 type Props = {
     children: React.ReactNode;
+    showInBottomSheet?: boolean;
 };
 
-export const StickyHeaderContainer = ({ children }: Props) => {
+export const StickyHeaderContainer = ({
+    children,
+    showInBottomSheet = true,
+}: Props) => {
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
     const { darkMode: isDark, useBottomSheet } = useVeChainKitConfig();
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
-
-    const isUsingModal = useMemo(() => {
-        return isDesktop || useBottomSheet === false;
-    }, [useBottomSheet, isDesktop]);
 
     const isBottomSheet = useMemo(() => {
         return !isDesktop && Boolean(useBottomSheet);
@@ -74,28 +74,32 @@ export const StickyHeaderContainer = ({ children }: Props) => {
         return Children.map(children, processChild);
     }, [children, isBottomSheet]);
 
+    if (!showInBottomSheet && isBottomSheet) {
+        return null;
+    }
+
     return (
         <>
             <Box
-                position={isUsingModal ? 'sticky' : 'relative'}
+                position={!isBottomSheet ? 'sticky' : 'relative'}
                 top={'0'}
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
                 bg={
-                    isUsingModal
+                    !isBottomSheet
                         ? isDark
                             ? 'rgb(31 31 30 / 90%)'
                             : 'rgb(255 255 255 / 69%)'
                         : 'transparent'
                 }
-                backdropFilter={isUsingModal ? 'blur(12px)' : 'none'}
+                backdropFilter={!isBottomSheet ? 'blur(12px)' : 'none'}
                 style={
-                    isUsingModal ? { WebkitBackdropFilter: 'blur(12px)' } : {}
+                    !isBottomSheet ? { WebkitBackdropFilter: 'blur(12px)' } : {}
                 }
                 zIndex={1000}
                 boxShadow={
-                    isUsingModal && hasContentBelow
+                    !isBottomSheet && hasContentBelow
                         ? '0px 2px 4px 1px rgb(0 0 0 / 10%)'
                         : 'none'
                 }
