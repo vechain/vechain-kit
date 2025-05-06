@@ -29,6 +29,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useVechainDomain, TokenWithValue } from '@/hooks';
 import { useCurrency } from '@/hooks/api/wallet';
 import { formatCompactCurrency } from '@/utils/currencyConverter';
+import { ens_normalize } from '@adraffy/ens-normalize';
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
@@ -481,10 +482,19 @@ export const SendTokenContent = ({
                                     })}
                                     onChange={(e) => {
                                         const trimmed = e.target.value.trim();
-                                        e.target.value = trimmed;
-                                        setValue('toAddressOrDomain', trimmed, {
-                                            shouldValidate: true,
-                                        });
+                                        // If the input contains a dot, treat it as a domain name and normalize it
+                                        const normalizedValue =
+                                            trimmed.includes('.')
+                                                ? ens_normalize(trimmed)
+                                                : trimmed;
+                                        e.target.value = normalizedValue;
+                                        setValue(
+                                            'toAddressOrDomain',
+                                            normalizedValue,
+                                            {
+                                                shouldValidate: true,
+                                            },
+                                        );
                                     }}
                                     placeholder={t(
                                         'Type the receiver address or domain',
