@@ -1,12 +1,14 @@
+import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
+import { useTermsAndConditions, useWallet } from '@/hooks';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 import {
     createContext,
     ReactNode,
     useContext,
-    useState,
     useEffect,
+    useState,
 } from 'react';
-import { useTermsAndConditions, useWallet } from '@/hooks';
-import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
+import { useModal } from './ModalProvider';
 
 type Props = {
     children: Readonly<ReactNode>;
@@ -28,6 +30,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
     const { hasAgreedToTerms } = useTermsAndConditions();
     const [showTermsModal, setShowTermsModal] = useState(false);
+    const { closeAccountModal, openAccountModal } = useModal();
 
     useEffect(() => {
         if (connection.isConnected && account?.address) {
@@ -37,13 +40,34 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         }
     }, [connection.isConnected, account?.address, hasAgreedToTerms]);
 
+    const onBackConfirmLogout = () => {
+        closeAccountModal();
+        setShowTermsModal(true);
+    };
+
     const handleAgree = () => {
         setShowTermsModal(false);
     };
-
-    const handleCloseOrDisagree = () => {
+    const handleLogout = () => {
         disconnect();
         setShowTermsModal(false);
+        closeAccountModal();
+        Analytics.auth.logoutCompleted(); //TODO: Should we track even if the user didn't agree to the terms?
+    };
+
+    const handleCancel = () => {
+        Analytics.auth.trackAuth('disconnect_initiated'); //TODO: Should we track even if the user didn't agree to the terms?
+        setShowTermsModal(false);
+        openAccountModal({
+            type: 'disconnect-confirm',
+            props: {
+                onDisconnect: handleLogout,
+                onBack: onBackConfirmLogout,
+                //To avoid closing the modal when the user clicks on the close button
+                //And enforce the user to agree to the terms or logout
+                onClose: onBackConfirmLogout,
+            },
+        });
     };
 
     return (
@@ -51,7 +75,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             {children}
             <TermsAndConditionsModal
                 isOpen={showTermsModal}
-                onClose={handleCloseOrDisagree}
+                onCancel={handleCancel}
                 onAgree={handleAgree}
             />
         </LegalDocumentsContext.Provider>

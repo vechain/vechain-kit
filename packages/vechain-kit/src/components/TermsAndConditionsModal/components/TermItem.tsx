@@ -1,5 +1,5 @@
 import { LegalDocument, useVeChainKitConfig } from '@/providers';
-import { Box, Checkbox, HStack, Link, Text } from '@chakra-ui/react';
+import { Checkbox, HStack, Icon, Link, Text } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { FiExternalLink } from 'react-icons/fi';
@@ -22,7 +22,7 @@ export const TermItem = ({ term, register, getTermId }: Props) => {
     const linkHoverColor = isDark ? 'blue.200' : 'blue.700';
 
     return (
-        <Box width="full" borderRadius="md" transition="all 0.2s">
+        <HStack width="full" borderRadius="md" transition="all 0.2s">
             <HStack align="flex-start" spacing={3} width="full">
                 <Checkbox
                     mt="2px"
@@ -35,7 +35,7 @@ export const TermItem = ({ term, register, getTermId }: Props) => {
                 />
 
                 <Text fontSize="sm" lineHeight="1.6">
-                    I have read and agree to{' '}
+                    {t('I have read and agree to ')}
                     <Link
                         href={term.url}
                         isExternal
@@ -50,20 +50,15 @@ export const TermItem = ({ term, register, getTermId }: Props) => {
                         alignItems="center"
                     >
                         {termName}
-                        <Box as={FiExternalLink} ml={1} mb="-2px" h="0.9em" />
+                        <Icon as={FiExternalLink} ml={1} />
                     </Link>
                     {term.required && (
-                        <Text
-                            as="span"
-                            color="red.500"
-                            ml={1}
-                            fontWeight="bold"
-                        >
+                        <Text as="span" color="red.500" fontWeight="bold">
                             *
                         </Text>
                     )}
                 </Text>
             </HStack>
-        </Box>
+        </HStack>
     );
 };
