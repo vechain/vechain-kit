@@ -75,7 +75,7 @@ export const StickyHeaderContainer = ({
     }, [children, isBottomSheet]);
 
     if (!showInBottomSheet && isBottomSheet) {
-        return null;
+        return <Box h={'10px'}></Box>;
     }
 
     return (
