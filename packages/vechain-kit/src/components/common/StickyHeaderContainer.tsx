@@ -1,6 +1,6 @@
 import { useVeChainKitConfig } from '@/providers';
 import { Box, useMediaQuery } from '@chakra-ui/react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 
 type Props = {
     children: React.ReactNode;
@@ -9,8 +9,12 @@ type Props = {
 export const StickyHeaderContainer = ({ children }: Props) => {
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, useBottomSheet } = useVeChainKitConfig();
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
+
+    const isUsingModal = useMemo(() => {
+        return isDesktop || useBottomSheet === false;
+    }, [useBottomSheet, isDesktop]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -30,23 +34,25 @@ export const StickyHeaderContainer = ({ children }: Props) => {
     return (
         <>
             <Box
-                position={'sticky'}
+                position={isUsingModal ? 'sticky' : 'relative'}
                 top={'0'}
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
                 bg={
-                    isDesktop
+                    isUsingModal
                         ? isDark
                             ? 'rgb(31 31 30 / 90%)'
                             : 'rgb(255 255 255 / 69%)'
                         : 'transparent'
                 }
-                backdropFilter={isDesktop ? 'blur(12px)' : 'none'}
-                style={isDesktop ? { WebkitBackdropFilter: 'blur(12px)' } : {}}
+                backdropFilter={isUsingModal ? 'blur(12px)' : 'none'}
+                style={
+                    isUsingModal ? { WebkitBackdropFilter: 'blur(12px)' } : {}
+                }
                 zIndex={1000}
                 boxShadow={
-                    isDesktop && hasContentBelow
+                    isUsingModal && hasContentBelow
                         ? '0px 2px 4px 1px rgb(0 0 0 / 10%)'
                         : 'none'
                 }

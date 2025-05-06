@@ -8,6 +8,7 @@ import {
     ModalHeader,
     ModalFooter,
     ModalCloseButton,
+    ModalContentProps,
 } from '@chakra-ui/react';
 import { ReactNode, Children, isValidElement, cloneElement } from 'react';
 import { useVeChainKitConfig } from '@/providers';
@@ -106,9 +107,26 @@ export const BaseModal = ({
     isCloseable = true,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
-    const { darkMode } = useVeChainKitConfig();
+    const { darkMode, useBottomSheet } = useVeChainKitConfig();
 
-    const adaptedChildren = adaptChildrenToView(children, !isDesktop, onClose);
+    const modalContentProps: ModalContentProps = isDesktop
+        ? {}
+        : {
+              position: 'fixed',
+              bottom: '0',
+              mb: '0',
+              maxW: '2xl',
+              borderRadius: '24px 24px 0px 0px !important',
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              scrollBehavior: 'smooth',
+          };
+
+    const adaptedChildren = adaptChildrenToView(
+        children,
+        !isDesktop && Boolean(useBottomSheet),
+        onClose,
+    );
 
     return (
         <VechainKitThemeProvider darkMode={darkMode}>
@@ -126,12 +144,13 @@ export const BaseModal = ({
                 trapFocus={!allowExternalFocus}
                 autoFocus={!allowExternalFocus}
             >
-                {isDesktop ? (
+                {isDesktop || useBottomSheet === false ? (
                     <>
                         <ModalOverlay backdropFilter={backdropFilter} />
                         <ModalContent
                             role="dialog"
                             aria-modal={!allowExternalFocus}
+                            {...modalContentProps}
                         >
                             {adaptedChildren}
                         </ModalContent>
