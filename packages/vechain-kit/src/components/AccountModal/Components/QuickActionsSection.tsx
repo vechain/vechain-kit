@@ -11,12 +11,7 @@ import {
 import { MdSwapHoriz } from 'react-icons/md';
 import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
-import {
-    useNotifications,
-    useUpgradeRequired,
-    useWallet,
-    useTotalBalance,
-} from '@/hooks';
+import { useUpgradeRequired, useWallet, useTotalBalance } from '@/hooks';
 import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import { LuArrowDownToLine } from 'react-icons/lu';
