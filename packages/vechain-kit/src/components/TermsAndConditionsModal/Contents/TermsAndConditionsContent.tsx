@@ -5,7 +5,6 @@ import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import {
     Button,
     ModalBody,
-    ModalFooter,
     ModalHeader,
     Stack,
     Text,
@@ -14,6 +13,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
 import { TermItem } from '../Components';
 
 type Props = {
@@ -90,7 +90,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
             borderWidth="1px"
             borderColor={borderColor}
             boxShadow={sectionBoxShadow}
-            spacing={shouldShowCategories ? 4 : 3}
+            spacing={5}
         >
             {shouldShowCategories && title && (
                 <Text fontSize="md" fontWeight="bold" color={headingColor}>
@@ -117,8 +117,8 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                     <ModalHeader>{t('Terms and Conditions')}</ModalHeader>
                 </StickyHeaderContainer>
 
-                <ModalBody pt={6}>
-                    <VStack align="stretch" spacing={6} width="full">
+                <ModalBody>
+                    <VStack align="stretch" spacing={5} width="full">
                         {shouldShowCategories ? (
                             <>
                                 {renderTermsSection(
@@ -131,7 +131,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                             renderTermsSection(allTermsNotAccepted)
                         )}
 
-                        <VStack w={'full'} spacing={3} pt={4}>
+                        <VStack w={'full'} spacing={3}>
                             <Button
                                 onClick={handleSubmit(onSubmit)}
                                 variant="vechainKitPrimary"
@@ -150,8 +150,6 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                         </VStack>
                     </VStack>
                 </ModalBody>
-
-                <ModalFooter pt={0} />
             </form>
         </Stack>
     );
