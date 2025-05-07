@@ -3,7 +3,7 @@ import { expect } from "@playwright/test"
 import { veWorldMockClient } from "@vechain/veworld-mock-playwright"
 import { HomePage } from "../models/HomePage";
 import { DashboardPage } from "../models/DashboardPage";
-import {DENIAL_KITCHEN, HOMEPAGE, PRIVY_TEST_EMAIL_SENDER} from "../constants";
+import {DENIAL_KITCHEN, PRIVY_TEST_EMAIL_SENDER} from "../constants";
 import { trimAddress } from "../utils/strings";
 import {AccountModal} from "../models/AccountModal";
 
