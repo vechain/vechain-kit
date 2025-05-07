@@ -1,6 +1,7 @@
 import { StickyHeaderContainer } from '@/components/common';
 import { useTermsAndConditions } from '@/hooks/utils/useTermsAndConditions';
-import { LegalDocument, useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '@/providers';
+import { TermsAndConditions } from '@/hooks/utils/useTermsAndConditions';
 import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import {
     Button,
@@ -63,7 +64,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                         (term) => getTermId(term) === termId,
                     ),
                 )
-                .filter(Boolean) as LegalDocument[];
+                .filter(Boolean) as TermsAndConditions[];
 
             if (agreedTerms.length > 0) {
                 agreeToTerms(agreedTerms);
@@ -81,7 +82,10 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
         ? '0 2px 8px rgba(0, 0, 0, 0.2)'
         : '0 2px 8px rgba(0, 0, 0, 0.05)';
 
-    const renderTermsSection = (terms: LegalDocument[], title?: string) => (
+    const renderTermsSection = (
+        terms: TermsAndConditions[],
+        title?: string,
+    ) => (
         <Stack
             p={4}
             borderRadius="xl"

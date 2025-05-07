@@ -1,79 +1,53 @@
-import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
-import { useMemo, useState, useEffect } from 'react';
-import { useWallet } from '../api/wallet';
 import {
     LegalDocument,
     useVeChainKitConfig,
 } from '@/providers/VeChainKitProvider';
+import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
+import { useCallback, useMemo } from 'react';
 
-export type TermsAndConditionsAgreement = LegalDocument & {
+import { useWallet } from '../api/wallet';
+import { useSyncableLocalStorage } from '../cache';
+
+export type TermsAndConditions = LegalDocument & {
+    id: string;
+};
+
+export type TermsAndConditionsAgreement = TermsAndConditions & {
     walletAddress: string;
     timestamp: number;
-};
-
-const STORAGE_KEY = 'vechain-kit-terms-and-conditions';
-
-// Helper to safely get agreements from localStorage
-const getAgreementsFromStorage = (): TermsAndConditionsAgreement[] => {
-    if (typeof window === 'undefined') return [];
-
-    try {
-        const storedData = window.localStorage.getItem(STORAGE_KEY);
-        return storedData ? JSON.parse(storedData) : [];
-    } catch (error) {
-        console.error('Error reading terms from localStorage:', error);
-        return [];
-    }
-};
-
-// Helper to safely save agreements to localStorage
-const saveAgreementsToStorage = (
-    agreements: TermsAndConditionsAgreement[],
-): void => {
-    if (typeof window === 'undefined') return;
-
-    try {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(agreements));
-    } catch (error) {
-        console.error('Error saving terms to localStorage:', error);
-    }
 };
 
 export const useTermsAndConditions = () => {
     const { account } = useWallet();
     const { legalDocuments } = useVeChainKitConfig();
 
-    // Local state to track agreements
-    const [termsAndConditions, setTermsAndConditionsState] = useState<
-        TermsAndConditionsAgreement[]
-    >([]);
+    const [
+        termsAndConditions,
+        setTermsAndConditions,
+        syncAgreements,
+        getAgreementsFromStorage,
+    ] = useSyncableLocalStorage<TermsAndConditionsAgreement[]>(
+        'vechain-kit-terms-and-conditions',
+        [],
+    );
 
-    // Load agreements from localStorage on initial mount and when account changes
-    useEffect(() => {
-        const storedAgreements = getAgreementsFromStorage();
-        setTermsAndConditionsState(storedAgreements);
-    }, [account?.address]);
-
-    // Helper to update both state and localStorage
-    const setTermsAndConditions = (
-        newAgreements: TermsAndConditionsAgreement[],
-    ) => {
-        setTermsAndConditionsState(newAgreements);
-        saveAgreementsToStorage(newAgreements);
+    const getTermId = (term: LegalDocument) => {
+        return `term-${term.url.replace(/[^\w-]+/g, '-')}-v${term.version}`;
     };
 
-    // Force sync with localStorage
-    const syncWithStorage = () => {
-        const agreements = getAgreementsFromStorage();
-        setTermsAndConditionsState(agreements);
-    };
+    const formatTerms = useCallback(
+        (terms: LegalDocument[]) => {
+            return terms.map((term) => ({ ...term, id: getTermId(term) }));
+        },
+        [getTermId],
+    );
 
     const allTerms = useMemo(() => {
-        return [
+        return formatTerms([
             VECHAIN_KIT_TERMS_CONFIG,
             ...(legalDocuments?.termsAndConditions ?? []),
-        ];
-    }, [legalDocuments]);
+        ]);
+    }, [legalDocuments, formatTerms]);
 
     const requiredTerms = useMemo(() => {
         return allTerms?.filter((term) => term.required);
@@ -82,32 +56,29 @@ export const useTermsAndConditions = () => {
     const allTermsNotAccepted = useMemo(() => {
         return allTerms?.filter(
             (term) =>
-                !termsAndConditions.some(
+                !getAgreementsFromStorage().some(
                     (saved) =>
                         compareAddresses(
                             saved.walletAddress,
                             account?.address,
-                        ) &&
-                        saved.url === term.url &&
-                        saved.version === term.version,
+                        ) && saved.id === term.id,
                 ),
         );
-    }, [allTerms, termsAndConditions, account?.address]);
+    }, [allTerms, account?.address]);
 
     const hasAcceptedAllRequiredTerms = useMemo(() => {
         if (!requiredTerms?.length || !account?.address) return true;
 
         return requiredTerms.every((required) =>
-            termsAndConditions.some(
+            getAgreementsFromStorage().some(
                 (saved) =>
                     compareAddresses(saved.walletAddress, account?.address) &&
-                    saved.url === required.url &&
-                    saved.version === required.version,
+                    saved.id === required.id,
             ),
         );
-    }, [requiredTerms, termsAndConditions, account?.address]);
+    }, [requiredTerms, account?.address]);
 
-    const agreeToTerms = (terms: LegalDocument | LegalDocument[]) => {
+    const agreeToTerms = (terms: TermsAndConditions | TermsAndConditions[]) => {
         if (!account?.address) return;
 
         const termsArray = Array.isArray(terms) ? terms : [terms];
@@ -115,6 +86,7 @@ export const useTermsAndConditions = () => {
 
         const timestamp = new Date().getTime();
         const newAgreements = termsArray.map((term) => ({
+            id: term.id,
             walletAddress: account.address as string,
             url: term.url,
             version: term.version,
@@ -127,19 +99,11 @@ export const useTermsAndConditions = () => {
         const filteredAgreements = currentAgreements.filter(
             (saved) =>
                 !compareAddresses(saved.walletAddress, account.address) ||
-                !termsArray.some(
-                    (term) =>
-                        term.url === saved.url &&
-                        term.version === saved.version,
-                ),
+                !termsArray.some((term) => term.id === saved.id),
         );
 
         const updatedAgreements = [...filteredAgreements, ...newAgreements];
         setTermsAndConditions(updatedAgreements);
-    };
-
-    const getTermId = (term: LegalDocument) => {
-        return `term-${term.url.replace(/[^\w-]+/g, '-')}-v${term.version}`;
     };
 
     return {
@@ -149,6 +113,6 @@ export const useTermsAndConditions = () => {
         allTerms,
         allTermsNotAccepted,
         getTermId,
-        syncAgreements: syncWithStorage,
+        syncAgreements,
     };
 };
