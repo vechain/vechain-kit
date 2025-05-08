@@ -8,13 +8,12 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '@/providers';
-import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
 import { useWallet, useFetchAppInfo } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { EcosystemButton } from '../Components/EcosystemButton';
 
 type Props = {
@@ -24,7 +23,7 @@ type Props = {
     onClose: () => void;
 };
 
-export const MainContent = ({ setCurrentContent, onClose }: Props) => {
+export const MainContent = ({ onClose }: Props) => {
     const { t } = useTranslation();
 
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -33,11 +32,6 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { loginMethods, privyEcosystemAppIDS } = useVeChainKitConfig();
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
-
-    const handleFAQClick = () => {
-        Analytics.help.faqViewed();
-        setCurrentContent('faq');
-    };
 
     useEffect(() => {
         if (connection.isConnected) {
@@ -52,7 +46,6 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     return (
         <>
             <StickyHeaderContainer>
-                <ModalFAQButton onClick={handleFAQClick} />
                 <ModalHeader>{t('Log in or sign up')}</ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>

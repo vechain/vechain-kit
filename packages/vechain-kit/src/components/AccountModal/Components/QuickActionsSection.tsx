@@ -106,12 +106,12 @@ const QuickActionButton = ({
     return (
         <IconButton
             variant="mainContentButton"
-            h="80px"
+            h="70px"
             w="full"
             aria-label={label}
             isDisabled={isDisabled}
             icon={
-                <VStack spacing={4}>
+                <VStack spacing={2}>
                     <Icon as={icon} boxSize={5} opacity={0.9} />
 
                     <HStack p={0} alignItems={'baseline'} spacing={1}>

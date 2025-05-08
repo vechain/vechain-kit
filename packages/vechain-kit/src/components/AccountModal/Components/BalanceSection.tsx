@@ -54,7 +54,7 @@ export const BalanceSection = ({
                 alignItems={'baseline'}
                 role="group"
             >
-                <Heading size={'2xl'} fontWeight={'700'}>
+                <Heading size={'4xl'} fontWeight={'700'}>
                     {formattedBalance}
                 </Heading>
 
