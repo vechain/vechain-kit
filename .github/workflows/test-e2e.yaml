@@ -9,7 +9,7 @@ on:
 jobs:
   e2e-test:
     # test
-    if: ${{ !(contains(github.event.head_commit.message, '[skip e2e]')) }}
+    if: ${{ github.event_name == 'push' && !(contains(github.event.head_commit.message, '[skip e2e]')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
