@@ -17,11 +17,13 @@ import { useTranslation } from 'react-i18next';
 export type DisconnectConfirmContentProps = {
     onDisconnect: () => void;
     onBack: () => void;
+    onClose?: () => void;
 };
 
 export const DisconnectConfirmContent = ({
     onDisconnect,
     onBack,
+    onClose,
 }: DisconnectConfirmContentProps) => {
     const { t } = useTranslation();
 
@@ -30,7 +32,7 @@ export const DisconnectConfirmContent = ({
             <StickyHeaderContainer>
                 <ModalHeader>{t('Logout')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
-                <ModalCloseButton />
+                <ModalCloseButton onClick={onClose} />
             </StickyHeaderContainer>
 
             <ModalBody>
