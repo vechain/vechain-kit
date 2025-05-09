@@ -30,11 +30,11 @@ import {
 } from 'react';
 
 import i18n from '../../i18n';
-import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import { ModalProvider } from './ModalProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
+import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';

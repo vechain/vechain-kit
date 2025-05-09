@@ -12,3 +12,4 @@ export * from './signing';
 export * from './login';
 export * from './utils';
 export * from './cache';
+export { useTermsStatus } from '../providers/LegalDocumentsProvider';
