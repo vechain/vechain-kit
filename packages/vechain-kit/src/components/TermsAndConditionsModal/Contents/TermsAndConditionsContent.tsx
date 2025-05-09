@@ -1,6 +1,6 @@
 import { StickyHeaderContainer } from '@/components/common';
 import { type TermsAndConditions } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
+import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
 import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import {
     Button,
@@ -15,7 +15,6 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { TermItem } from './TermItem';
-import { useTermsStatus } from '@/hooks/utils';
 
 type Props = {
     onAgree: () => void;
@@ -25,7 +24,9 @@ type Props = {
 export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { termsNotAgreed, agreeToTerms, getTermId } = useTermsStatus();
+    const {
+        termsAndConditions: { termsNotAgreed, agreeToTerms, getTermId },
+    } = useLegalDocuments();
 
     const vechainKitTerms = useMemo(() => {
         return termsNotAgreed.filter(

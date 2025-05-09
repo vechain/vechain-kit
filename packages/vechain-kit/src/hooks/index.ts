@@ -1,4 +1,8 @@
-export { usePrivy, useMfaEnrollment, useSetWalletRecovery } from '@privy-io/react-auth';
+export {
+    usePrivy,
+    useMfaEnrollment,
+    useSetWalletRecovery,
+} from '@privy-io/react-auth';
 export {
     useConnex,
     useWallet as useDAppKitWallet,
@@ -12,4 +16,4 @@ export * from './signing';
 export * from './login';
 export * from './utils';
 export * from './cache';
-export { useTermsStatus } from '../providers/LegalDocumentsProvider';
+export { useLegalDocuments } from '../providers/LegalDocumentsProvider';

@@ -1,26 +1,48 @@
 import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
-import { useTermsAndConditions, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
 import {
     createContext,
     ReactNode,
     useContext,
     useEffect,
+    useMemo,
     useState,
+    useCallback,
 } from 'react';
+import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
+import { useSyncableLocalStorage } from '@/hooks/cache';
 import { useModal } from './ModalProvider';
+import { TermsAndConditions, TermsAndConditionsAgreement } from '@/types';
 
 type Props = {
     children: Readonly<ReactNode>;
 };
 
-const LegalDocumentsContext = createContext<null>(null);
+type LegalDocumentsContextType = {
+    termsAndConditions: {
+        hasAgreedToRequiredTerms: boolean;
+        agreements: TermsAndConditionsAgreement[];
+        walletAddress?: string;
+        agreeToTerms: (
+            terms: TermsAndConditions | TermsAndConditions[],
+        ) => void;
+        getTermId: (term: Omit<TermsAndConditions, 'id'>) => string;
+        terms: TermsAndConditions[];
+        termsNotAgreed: TermsAndConditions[];
+    };
+};
 
-export const useLegalDocumentsContext = () => {
+const LegalDocumentsContext = createContext<
+    LegalDocumentsContextType | undefined
+>(undefined);
+
+export const useLegalDocuments = () => {
     const context = useContext(LegalDocumentsContext);
     if (!context) {
         throw new Error(
-            'useLegalDocumentsContext must be used within LegalDocumentsProvider',
+            'useLegalDocuments must be used within LegalDocumentsProvider',
         );
     }
     return context;
@@ -28,17 +50,94 @@ export const useLegalDocumentsContext = () => {
 
 export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
-    const { hasAgreedToTerms } = useTermsAndConditions();
-    const [showTermsModal, setShowTermsModal] = useState(false);
+    const { legalDocuments } = useVeChainKitConfig();
     const { closeAccountModal, openAccountModal } = useModal();
+
+    const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
+        TermsAndConditionsAgreement[]
+    >('vechain-kit-terms-and-conditions', []);
+    const [showTermsModal, setShowTermsModal] = useState(false);
+
+    const getTermId = (term: Omit<TermsAndConditions, 'id'>) =>
+        `term-${term.url.replace(/[^\w-]+/g, '-')}-v${term.version}`;
+
+    const formatTerms = useCallback(
+        (terms: Omit<TermsAndConditions, 'id'>[]) =>
+            terms.map((term) => ({
+                ...term,
+                id: getTermId(term),
+            })),
+        [],
+    );
+
+    const terms = useMemo(() => {
+        return formatTerms([
+            VECHAIN_KIT_TERMS_CONFIG,
+            ...(legalDocuments?.termsAndConditions ?? []),
+        ]);
+    }, [legalDocuments, formatTerms]);
+
+    const requiredTerms = useMemo(
+        () => terms.filter((term) => term.required),
+        [terms],
+    );
+
+    const termsNotAgreed = useMemo(() => {
+        if (!account?.address) return [];
+
+        return terms.filter(
+            (term) =>
+                !storedAgreements.some(
+                    (saved) =>
+                        compareAddresses(
+                            saved.walletAddress,
+                            account.address,
+                        ) && saved.id === term.id,
+                ),
+        );
+    }, [terms, storedAgreements, account?.address]);
+
+    const hasAgreedToRequiredTerms = useMemo(() => {
+        if (!requiredTerms.length || !account?.address) return true;
+
+        return requiredTerms.every((term) =>
+            storedAgreements.some(
+                (saved) =>
+                    compareAddresses(saved.walletAddress, account.address) &&
+                    saved.id === term.id,
+            ),
+        );
+    }, [requiredTerms, storedAgreements, account?.address]);
+
+    const agreeToTerms = (terms: TermsAndConditions | TermsAndConditions[]) => {
+        if (!account?.address) return;
+        const termsArray = Array.isArray(terms) ? terms : [terms];
+        if (!termsArray.length) return;
+
+        const timestamp = Date.now();
+        const newAgreements = termsArray.map((term) => ({
+            ...term,
+            walletAddress: account.address!,
+            timestamp,
+        }));
+
+        const filteredAgreements = storedAgreements.filter(
+            (saved) =>
+                !compareAddresses(saved.walletAddress, account.address) ||
+                !termsArray.some((term) => term.id === saved.id),
+        );
+
+        const updated = [...filteredAgreements, ...newAgreements];
+        setStoredAgreements(updated);
+    };
 
     useEffect(() => {
         if (connection.isConnected && account?.address) {
-            setShowTermsModal(!hasAgreedToTerms);
+            setShowTermsModal(!hasAgreedToRequiredTerms);
         } else {
             setShowTermsModal(false);
         }
-    }, [connection.isConnected, account?.address, hasAgreedToTerms]);
+    }, [connection.isConnected, account?.address, hasAgreedToRequiredTerms]);
 
     const onBackConfirmLogout = () => {
         closeAccountModal();
@@ -46,8 +145,10 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     };
 
     const handleAgree = () => {
+        agreeToTerms(termsNotAgreed);
         setShowTermsModal(false);
     };
+
     const handleLogout = () => {
         disconnect();
         setShowTermsModal(false);
@@ -71,7 +172,19 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     };
 
     return (
-        <LegalDocumentsContext.Provider value={null}>
+        <LegalDocumentsContext.Provider
+            value={{
+                termsAndConditions: {
+                    hasAgreedToRequiredTerms,
+                    agreements: storedAgreements,
+                    walletAddress: account?.address,
+                    agreeToTerms,
+                    getTermId,
+                    terms,
+                    termsNotAgreed,
+                },
+            }}
+        >
             {children}
             <TermsAndConditionsModal
                 isOpen={showTermsModal}
