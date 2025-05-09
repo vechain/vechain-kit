@@ -1,7 +1,6 @@
 import { StickyHeaderContainer } from '@/components/common';
-import { useTermsAndConditions } from '@/hooks/utils/useTermsAndConditions';
+import { type TermsAndConditions } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
-import { TermsAndConditions } from '@/hooks/utils/useTermsAndConditions';
 import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import {
     Button,
@@ -14,7 +13,9 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
 import { TermItem } from './TermItem';
+import { useTermsStatus } from '@/hooks/utils';
 
 type Props = {
     onAgree: () => void;
@@ -24,25 +25,24 @@ type Props = {
 export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const { allTermsNotAccepted, agreeToTerms, getTermId } =
-        useTermsAndConditions();
+    const { termsNotAgreed, agreeToTerms, getTermId } = useTermsStatus();
 
     const vechainKitTerms = useMemo(() => {
-        return allTermsNotAccepted.filter(
+        return termsNotAgreed.filter(
             (term) => term.url === VECHAIN_KIT_TERMS_CONFIG.url,
         );
-    }, [allTermsNotAccepted]);
+    }, [termsNotAgreed]);
 
     const appTerms = useMemo(() => {
-        return allTermsNotAccepted.filter(
+        return termsNotAgreed.filter(
             (term) => term.url !== VECHAIN_KIT_TERMS_CONFIG.url,
         );
-    }, [allTermsNotAccepted]);
+    }, [termsNotAgreed]);
 
     const shouldShowCategories =
         vechainKitTerms.length > 0 && appTerms.length > 0;
 
-    const defaultFormValues = allTermsNotAccepted.reduce((acc, term) => {
+    const defaultFormValues = termsNotAgreed.reduce((acc, term) => {
         acc[getTermId(term)] = term.required;
         return acc;
     }, {} as Record<string, boolean>);
@@ -60,9 +60,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
             const agreedTerms = Object.entries(data)
                 .filter(([_, checked]) => checked)
                 .map(([termId]) =>
-                    allTermsNotAccepted.find(
-                        (term) => getTermId(term) === termId,
-                    ),
+                    termsNotAgreed.find((term) => getTermId(term) === termId),
                 )
                 .filter(Boolean) as TermsAndConditions[];
 
@@ -72,7 +70,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
 
             onAgree();
         },
-        [agreeToTerms, allTermsNotAccepted, getTermId, onAgree],
+        [agreeToTerms, termsNotAgreed, getTermId, onAgree],
     );
 
     const borderColor = isDark ? '#3a3a3a' : '#eaeaea';
@@ -131,7 +129,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                                 {renderTermsSection(appTerms, t('Others'))}
                             </>
                         ) : (
-                            renderTermsSection(allTermsNotAccepted)
+                            renderTermsSection(termsNotAgreed)
                         )}
 
                         <VStack w={'full'} spacing={3}>
