@@ -1,20 +1,21 @@
 import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
 import { useWallet } from '@/hooks';
-import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useSyncableLocalStorage } from '@/hooks/cache';
+import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
+import { TermsAndConditions, TermsAndConditionsAgreement } from '@/types';
 import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 import {
     createContext,
     ReactNode,
+    useCallback,
     useContext,
     useEffect,
     useMemo,
     useState,
-    useCallback,
 } from 'react';
-import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
-import { useSyncableLocalStorage } from '@/hooks/cache';
+
 import { useModal } from './ModalProvider';
-import { TermsAndConditions, TermsAndConditionsAgreement } from '@/types';
 
 type Props = {
     children: Readonly<ReactNode>;
@@ -25,9 +26,6 @@ type LegalDocumentsContextType = {
         hasAgreedToRequiredTerms: boolean;
         agreements: TermsAndConditionsAgreement[];
         walletAddress?: string;
-        agreeToTerms: (
-            terms: TermsAndConditions | TermsAndConditions[],
-        ) => void;
         getTermId: (term: Omit<TermsAndConditions, 'id'>) => string;
         terms: TermsAndConditions[];
         termsNotAgreed: TermsAndConditions[];
@@ -144,8 +142,8 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         setShowTermsModal(true);
     };
 
-    const handleAgree = () => {
-        agreeToTerms(termsNotAgreed);
+    const handleAgree = (terms: TermsAndConditions | TermsAndConditions[]) => {
+        agreeToTerms(terms);
         setShowTermsModal(false);
     };
 
@@ -178,7 +176,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
                     hasAgreedToRequiredTerms,
                     agreements: storedAgreements,
                     walletAddress: account?.address,
-                    agreeToTerms,
                     getTermId,
                     terms,
                     termsNotAgreed,
