@@ -56,6 +56,7 @@ export const TermsAndPrivacyAccordion = () => {
                 color={linkColor}
                 textDecoration="underline"
                 fontWeight="medium"
+                fontSize="xs"
                 isExternal
             >
                 {title}
