@@ -1,1 +1,0 @@
-export { FAQContent } from './FAQContent';
