@@ -1,6 +1,6 @@
 import { StickyHeaderContainer } from '@/components/common';
-import { type TermsAndConditions } from '@/types';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
+import { TermsAndConditions } from '@/types';
 import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import {
     Button,
@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { TermItem } from './TermItem';
 
 type Props = {
-    onAgree: () => void;
+    onAgree: (terms: TermsAndConditions | TermsAndConditions[]) => void;
     onCancel: () => void;
 };
 
@@ -25,7 +25,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const {
-        termsAndConditions: { termsNotAgreed, agreeToTerms, getTermId },
+        termsAndConditions: { termsNotAgreed, getTermId },
     } = useLegalDocuments();
 
     const vechainKitTerms = useMemo(() => {
@@ -66,12 +66,10 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                 .filter(Boolean) as TermsAndConditions[];
 
             if (agreedTerms.length > 0) {
-                agreeToTerms(agreedTerms);
+                onAgree(agreedTerms);
             }
-
-            onAgree();
         },
-        [agreeToTerms, termsNotAgreed, getTermId, onAgree],
+        [termsNotAgreed, getTermId, onAgree],
     );
 
     const borderColor = isDark ? '#3a3a3a' : '#eaeaea';

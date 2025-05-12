@@ -1,22 +1,27 @@
 import {
-    ModalBody,
-    ModalCloseButton,
-    VStack,
-    ModalFooter,
-    ModalHeader,
-    Text,
-} from '@chakra-ui/react';
-import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
-import { AccountModalContentTypes } from '../../Types';
-import { useTranslation } from 'react-i18next';
-import { ActionButton } from '../../Components';
-import { MdOutlineNavigateNext, MdCurrencyExchange } from 'react-icons/md';
-import { IoLanguage } from 'react-icons/io5';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import {
+    ModalBody,
+    ModalCloseButton,
+    ModalFooter,
+    ModalHeader,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { IoLanguage } from 'react-icons/io5';
+import {
+    MdCurrencyExchange,
+    MdOutlineNavigateNext,
+    MdPrivacyTip,
+} from 'react-icons/md';
+
+import { ActionButton } from '../../Components';
+import { AccountModalContentTypes } from '../../Types';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -84,6 +89,21 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             rightIcon={MdOutlineNavigateNext}
                         />
                     </VStack>
+                    <ActionButton
+                        title={t('Terms and Privacy')}
+                        onClick={() => {
+                            Analytics.settings.termsAndPrivacyViewed();
+                            setCurrentContent({
+                                type: 'terms-and-privacy',
+                                props: {
+                                    onGoBack: () =>
+                                        setCurrentContent('settings'),
+                                },
+                            });
+                        }}
+                        leftIcon={MdPrivacyTip}
+                        rightIcon={MdOutlineNavigateNext}
+                    />
                 </VStack>
             </ModalBody>
             <ModalFooter pt={0} />

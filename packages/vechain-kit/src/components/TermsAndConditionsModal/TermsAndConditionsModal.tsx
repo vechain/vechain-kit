@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { BaseModal } from '@/components/common';
 import { TermsAndConditionsContent } from './Contents/TermsAndConditionsContent';
-
+import { TermsAndConditions } from '@/types';
 type Props = {
     isOpen: boolean;
     onCancel: () => void;
-    onAgree: () => void;
+    onAgree: (terms: TermsAndConditions | TermsAndConditions[]) => void;
 };
 
 export type TermsAndConditionsModalContentsTypes = 'terms-and-conditions';

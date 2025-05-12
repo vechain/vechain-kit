@@ -544,6 +544,9 @@ const Analytics = {
         manageSecuritySettings: () =>
             Analytics.settings.trackSettings('manage_security_settings'),
 
+        termsAndPrivacyViewed: () =>
+            Analytics.settings.trackSettings('terms_and_privacy_view'),
+
         language: {
             changed: (language: string, previousLanguage: string) =>
                 Analytics.settings.trackSettings('language_changed', {

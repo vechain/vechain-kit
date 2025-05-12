@@ -12,6 +12,7 @@ import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
+import { TermsAndPrivacyContentProps } from '../Contents/TermsAndPrivacy/TermsAndPrivacyContent';
 
 export type AccountModalContentTypes =
     | 'main'
@@ -74,4 +75,8 @@ export type AccountModalContentTypes =
     | {
           type: 'faq';
           props: FAQContentProps;
+      }
+    | {
+          type: 'terms-and-privacy';
+          props: TermsAndPrivacyContentProps;
       };
