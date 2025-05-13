@@ -19,6 +19,8 @@ import { EnsureQueryClient } from './EnsureQueryClient';
 import {
     type LogLevel,
     type WalletSource as DAppKitWalletSource,
+    CertificateMessage,
+    CertificateOptions,
 } from '@vechain/dapp-kit';
 import { type WalletConnectOptions } from '@vechain/dapp-kit-react';
 import {
@@ -93,8 +95,8 @@ export type VechainKitProviderProps = {
         nodeUrl?: string;
         requireCertificate?: boolean;
         connectionCertificate?: {
-            message?: Connex.Vendor.CertMessage;
-            options?: Connex.Signer.CertOptions;
+            message?: CertificateMessage;
+            options?: CertificateOptions;
         };
     };
     allowCustomTokens?: boolean;
@@ -323,11 +325,10 @@ export const VeChainKitProvider = (
                         }}
                     >
                         <DAppKitProvider
-                            nodeUrl={
+                            node={
                                 network.nodeUrl ??
                                 getConfig(network.type).nodeUrl
                             }
-                            genesis={getConfig(network.type).network.genesis}
                             i18n={i18nConfig}
                             language={language}
                             logLevel={dappKit.logLevel}

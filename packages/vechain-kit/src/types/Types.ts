@@ -1,4 +1,19 @@
+import type { TransactionClause } from '@vechain/sdk-core';
 import { LoginMethodOrderOption } from '@privy-io/react-auth';
+import { useThor } from '@vechain/dapp-kit-react';
+
+export type TokenBalance = {
+    original: string;
+    scaled: string;
+    formatted: string;
+};
+
+export type ThorClient = ReturnType<typeof useThor>;
+
+export type TransactionClauses =
+    | TransactionClause[]
+    | (() => TransactionClause[])
+    | (() => Promise<TransactionClause[]>);
 
 export type ENSRecords = {
     display?: string;
@@ -113,16 +128,6 @@ export type TransactionStatusErrorType = {
         | 'RevertReasonError'
         | 'UserRejectedError';
     reason?: string;
-};
-
-/**
- * An enhanced clause with a comment and an abi
- * @param comment a comment to add to the clause
- * @param abi the abi of the contract to call
- */
-export type EnhancedClause = Connex.VM.Clause & {
-    comment?: string;
-    abi?: object;
 };
 
 export type PrivyAppInfo = {

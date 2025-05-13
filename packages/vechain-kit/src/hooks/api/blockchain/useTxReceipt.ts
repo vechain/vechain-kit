@@ -1,82 +1,68 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useState, useRef, useEffect } from 'react';
+import { useThor } from '@vechain/dapp-kit-react';
+import { CompressedBlockDetail } from '@vechain/sdk-network';
+import { useQuery } from '@tanstack/react-query';
+import { TIME } from '@/utils';
+
+const BLOCK_GENERATION_INTERVAL = 10 * TIME.SECOND;
+
+export const txReceiptQueryKey = (txId: string) => [
+    'VECHAIN_KIT',
+    'TX_RECEIPT',
+    txId,
+];
 
 /**
- * Poll the chain for a transaction receipt until it is found (or timeout after 5 blocks)
- * @param thor Thor instance
- * @param id Transaction id
- * @param blocksTimeout Number of blocks to wait for the receipt
- * @returns Transaction receipt
+ * Retrieve the receipt of a transaction identified by its ID.
+ * If the transaction is not found, the response will be null.
+ * @param txId The ID of the transaction to retrieve the receipt for
+ * @param blockTimeout Optional timeout in milliseconds to stop polling for receipt
+ * @returns Query result containing the transaction receipt
  */
-export const pollForReceipt = async (
-    thor: Connex.Thor,
-    id?: string,
-    blocksTimeout = 5,
-): Promise<Connex.Thor.Transaction.Receipt> => {
-    if (!id) throw new Error('No transaction id provided');
-
-    const transaction = thor.transaction(id);
-    let receipt;
-
-    // Query the transaction until it has a receipt
-    for (let i = 0; i < blocksTimeout; i++) {
-        receipt = await transaction.getReceipt();
-        if (receipt) {
-            break;
-        }
-        await thor.ticker().next();
-    }
-
-    if (!receipt) {
-        throw new Error('Transaction receipt not found');
-    }
-
-    const transactionData = await transaction.get();
-
-    if (!transactionData) throw Error('Failed to get TX data');
-
-    return receipt;
-};
-
-/**
- * Get the tx receipt of a tx id with a block timeout to wait for the receipt
- * @param txId The tx id to get the receipt
- * @param blockTimeout The block timeout to wait for the receipt
- * @returns The tx receipt
- */
-export const useTxReceipt = (txId?: string, blockTimeout?: number) => {
-    const { thor } = useConnex();
-    const [receipt, setReceipt] =
-        useState<Connex.Thor.Transaction.Receipt | null>();
-    const [error, setError] = useState<Error | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+export const useTxReceipt = (txId: string, blockTimeout = 5) => {
+    const thor = useThor();
+    const headBlockRef = useRef<CompressedBlockDetail | null>(
+        thor.blocks.getHeadBlock(),
+    );
+    const [isPolling, setIsPolling] = useState(true);
 
     useEffect(() => {
-        const fetchReceipt = async () => {
-            if (!txId) {
-                setReceipt(null);
-                return;
-            }
+        if (!headBlockRef.current) {
+            const headBlock = thor.blocks.getHeadBlock();
+            if (headBlock) headBlockRef.current = headBlock;
+        }
 
-            setIsLoading(true);
-            try {
-                const result = await pollForReceipt(thor, txId, blockTimeout);
-                setReceipt(result);
-            } catch (e) {
-                setError(e instanceof Error ? e : new Error('Unknown error'));
-            } finally {
-                setIsLoading(false);
-            }
+        return () => {
+            headBlockRef.current = null;
         };
+    }, [thor]);
 
-        fetchReceipt();
-    }, [txId, blockTimeout, thor]);
+    return useQuery({
+        queryKey: txReceiptQueryKey(txId),
+        queryFn: async () => {
+            const headBlock = thor.blocks.getHeadBlock();
+            if (
+                headBlockRef.current &&
+                headBlock &&
+                headBlock.number - headBlockRef.current.number >= blockTimeout
+            ) {
+                setIsPolling(false);
+                throw new Error('Transaction receipt not found');
+            }
+            const response = await thor.transactions.getTransactionReceipt(
+                txId,
+            );
 
-    return {
-        data: receipt,
-        error,
-        isLoading,
-    };
+            // transaction not found
+            if (!response) return null;
+
+            if (response.reverted) throw new Error('Transaction reverted');
+
+            setIsPolling(false);
+            return response;
+        },
+        refetchInterval: isPolling ? BLOCK_GENERATION_INTERVAL : false,
+    });
 };

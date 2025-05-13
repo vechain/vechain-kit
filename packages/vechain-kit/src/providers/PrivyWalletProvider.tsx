@@ -3,7 +3,12 @@
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
 import { encodeFunctionData } from 'viem';
-import { ABIContract, Address, Clause } from '@vechain/sdk-core';
+import {
+    ABIContract,
+    Address,
+    Clause,
+    TransactionClause,
+} from '@vechain/sdk-core';
 import {
     ThorClient,
     VeChainProvider,
@@ -13,7 +18,6 @@ import {
 import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
 import { randomTransactionUser } from '../utils';
 import {
-    EnhancedClause,
     ExecuteBatchWithAuthorizationSignData,
     ExecuteWithAuthorizationSignData,
 } from '@/types';
@@ -34,7 +38,7 @@ export interface PrivyWalletProviderContextType {
     accountFactory: string;
     delegateAllTransactions: boolean;
     sendTransaction: (tx: {
-        txClauses: Connex.VM.Clause[];
+        txClauses: TransactionClause[];
         title?: string;
         description?: string;
         buttonText?: string;
@@ -112,7 +116,7 @@ export const PrivyWalletProvider = ({
         chainId,
         verifyingContract,
     }: {
-        clauses: Connex.VM.Clause[];
+        clauses: TransactionClause[];
         chainId: number;
         verifyingContract: string;
     }): ExecuteBatchWithAuthorizationSignData {
@@ -177,7 +181,7 @@ export const PrivyWalletProvider = ({
         chainId,
         verifyingContract,
     }: {
-        clause: Connex.VM.Clause;
+        clause: TransactionClause;
         chainId: number;
         verifyingContract: string;
     }): ExecuteWithAuthorizationSignData {
@@ -239,7 +243,7 @@ export const PrivyWalletProvider = ({
         buttonText = 'Sign',
         suggestedMaxGas,
     }: {
-        txClauses: Connex.VM.Clause[];
+        txClauses: TransactionClause[];
         title?: string;
         description?: string;
         buttonText?: string;
@@ -366,7 +370,7 @@ export const PrivyWalletProvider = ({
                             title,
                             description:
                                 description ??
-                                ((txClauses[index] as EnhancedClause).comment ||
+                                (txClauses[index].comment ||
                                     (typeof funcData === 'object' &&
                                     funcData !== null &&
                                     'functionName' in funcData
@@ -452,7 +456,11 @@ export const PrivyWalletProvider = ({
                     address: randomTransactionUser.address,
                 },
             ],
-            { delegator: { delegatorUrl } },
+            {
+                // TODO: kit-migration check if this is the correct way of passing delegator
+                // delegator: {  delegatorUrl }
+                gasPayer: { gasPayerServiceUrl: delegatorUrl },
+            },
         );
         const providerWithDelegationEnabled = new VeChainProvider(
             thor,

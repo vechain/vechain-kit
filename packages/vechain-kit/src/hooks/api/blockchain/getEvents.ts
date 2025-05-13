@@ -1,3 +1,9 @@
+import {
+    EventLogs,
+    FilterEventLogsOptions,
+    ThorClient,
+} from '@vechain/sdk-network';
+
 const MAX_EVENTS_PER_QUERY = 1000;
 /**
  * Params for getEvents function
@@ -13,13 +19,13 @@ const MAX_EVENTS_PER_QUERY = 1000;
  */
 export type GetEventsProps = {
     nodeUrl: string;
-    thor: Connex.Thor;
+    thor: ThorClient;
     order?: 'asc' | 'desc';
     offset?: number;
     limit?: number;
     from?: number;
     to?: number;
-    filterCriteria: Connex.Thor.Filter.Criteria<'event'>[];
+    filterCriteria: FilterEventLogsOptions['criteriaSet'];
 };
 /**
  * Get events from blockchain (auction created, auction successful, auction cancelled)
@@ -29,40 +35,31 @@ export type GetEventsProps = {
  * @param from block parse start from
  */
 export const getEvents = async ({
-    nodeUrl,
     thor,
     order = 'asc',
     offset = 0,
     limit = MAX_EVENTS_PER_QUERY,
     from = 0,
-    to = thor.status.head.number,
+    to = thor.blocks.getHeadBlock()?.number,
     filterCriteria,
-}: GetEventsProps): Promise<Connex.Thor.Filter.Row<'event'>[]> => {
-    // Send tx details to the node to get the gas estimate
-    const response = await fetch(`${nodeUrl}/logs/event`, {
-        method: 'POST',
-        body: JSON.stringify({
-            range: {
-                from,
-                to,
-                unit: 'block',
-            },
-            options: {
-                offset,
-                limit,
-            },
-            criteriaSet: filterCriteria,
-            order,
-        }),
+}: GetEventsProps) => {
+    const response = await thor.logs.filterEventLogs({
+        range: {
+            from,
+            to,
+            unit: 'block',
+        },
+        options: {
+            offset,
+            limit,
+        },
+        order,
+        criteriaSet: filterCriteria,
     });
 
-    if (!response.ok) throw new Error('Failed to fetch events');
+    if (!response) throw new Error('Failed to fetch events');
 
-    const outputs = (await response.json()) as Connex.Thor.Filter.Row<
-        'event',
-        object
-    >[];
-    return outputs;
+    return response;
 };
 
 /**
@@ -82,23 +79,17 @@ export const getAllEvents = async ({
     to,
     filterCriteria,
 }: Omit<GetEventsProps, 'offset' | 'limit'>) => {
-    const allEvents: Connex.Thor.Filter.Row<'event', object>[] = [];
+    const allEvents: EventLogs[] = [];
     let offset = 0;
-
-    // thor.block("best").get() is not working, have to use the node directly
-    //   const bestBlock = await fetch(`${appConfig.nodeUrl}/blocks/best`)
-    //   const bestBlockJson = (await bestBlock.json()) as Connex.Thor.Block
-
-    to = to ?? Number.MAX_SAFE_INTEGER;
-
     //return from the function only when we get all the events
+    // TODO: check this can be improved, possible infinite loop here
     while (true) {
         const events = await getEvents({
             nodeUrl,
             thor,
             filterCriteria,
             from,
-            to,
+            to: to ?? Number.MAX_SAFE_INTEGER,
             limit: MAX_EVENTS_PER_QUERY,
             order,
             offset,

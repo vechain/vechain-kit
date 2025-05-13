@@ -1,4 +1,4 @@
-import { useConnex, useLocalStorage } from '@/hooks';
+import { useLocalStorage } from '@/hooks/utils/useLocalStorage';
 import {
     CustomTokenInfo,
     getTokenInfo,
@@ -6,13 +6,14 @@ import {
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(
         'vechain_kit_custom_tokens',
         [],
     );
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     const addToken = async (address: CustomTokenInfo['address']) => {

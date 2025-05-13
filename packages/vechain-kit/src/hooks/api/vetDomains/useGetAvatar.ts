@@ -69,8 +69,7 @@ const fetchAvatarDirectly = async (
 };
 
 export const getAvatarQueryKey = (name: string, networkType: NETWORK_TYPE) => [
-    'VECHAIN_KIT',
-    'VET_DOMAINS',
+    'VECHAIN_KIT_DOMAIN',
     'AVATAR',
     name,
     networkType,

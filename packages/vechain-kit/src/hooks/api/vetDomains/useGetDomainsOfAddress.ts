@@ -64,7 +64,7 @@ export const getDomainsOfAddress = async (
 export const getDomainsOfAddressQueryKey = (
     address?: string,
     parentDomain?: string,
-) => ['VECHAIN_KIT', 'VET_DOMAINS', address, parentDomain];
+) => ['VECHAIN_KIT_DOMAIN', address, parentDomain];
 
 /**
  * Hook to fetch all domains owned by an address

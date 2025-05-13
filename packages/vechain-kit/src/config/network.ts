@@ -1,4 +1,5 @@
-/// <reference types="@vechain/connex-types" />
+import { TIME } from '@/utils';
+import { CompressedBlockDetail } from '@vechain/sdk-network';
 
 /**
  * The type of network that we are connected to (indentified by the genesis block)
@@ -60,7 +61,7 @@ export const genesisesId = {
 };
 
 export const genesises = {
-    get main(): Connex.Thor.Block {
+    get main(): CompressedBlockDetail {
         return {
             number: 0,
             id: '0x00000000851caf3cfdb6e899cf5958bfb1ac3413d346d43539627e6be7ec1b4a',
@@ -84,7 +85,7 @@ export const genesises = {
             transactions: [],
         };
     },
-    get test(): Connex.Thor.Block {
+    get test(): CompressedBlockDetail {
         return {
             number: 0,
             id: '0x000000000b2bce3c70bc649a02749e8687721b09ed2e15997f466536b20bb127',
@@ -108,7 +109,7 @@ export const genesises = {
             transactions: [],
         };
     },
-    get solo(): Connex.Thor.Block {
+    get solo(): CompressedBlockDetail {
         return {
             number: 0,
             id: '0x00000000c05a20fbca2bf6ae3affba6af4a74b800b585bf7a4988aba7aea69f6',
@@ -157,7 +158,7 @@ export const defaultMainNetwork: Network = {
     urls: THOR_MAIN_URLS,
     explorerUrl: MAIN_EXPLORER_URL,
     genesis: genesises.main,
-    blockTime: 1000 * 10,
+    blockTime: 10 * TIME.SECOND,
 };
 
 export const defaultTestNetwork: Network = {
@@ -168,7 +169,7 @@ export const defaultTestNetwork: Network = {
     urls: THOR_TESTNET_URLS,
     explorerUrl: TEST_EXPLORER_URL,
     genesis: genesises.test,
-    blockTime: 1000 * 10,
+    blockTime: 10 * TIME.SECOND,
 };
 
 export const defaultSoloNetwork: Network = {
@@ -179,7 +180,7 @@ export const defaultSoloNetwork: Network = {
     urls: THOR_SOLO_URLS,
     explorerUrl: TEST_EXPLORER_URL,
     genesis: genesises.solo,
-    blockTime: 1000 * 10,
+    blockTime: 10 * TIME.SECOND,
 };
 
 export const defaultNetworks: Network[] = [

@@ -22,7 +22,8 @@
         "preview": "turbo run preview",
         "purge": "npx turbo@latest run purge && rm -rf node_modules",
         "reinstall": "yarn clean && yarn purge && yarn && yarn run build:deps",
-        "stop-preview": "kill -2 $(ps aux | grep '[t]urbo run preview' | awk '{print $2}')"
+        "stop-preview": "kill -2 $(ps aux | grep '[t]urbo run preview' | awk '{print $2}')",
+        "kit:typecheck": "yarn workspace @vechain/vechain-kit typecheck"
     },
     "husky": {
         "hooks": {

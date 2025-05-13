@@ -11,29 +11,17 @@ export const useRefreshMetadata = (domain: string, address: string) => {
     const { network } = useVeChainKitConfig();
 
     const refresh = async () => {
-        await queryClient.invalidateQueries({
-            queryKey: getAvatarQueryKey(domain ?? '', network.type),
-        });
+        const queryKeys = [
+            getAvatarQueryKey(domain ?? '', network.type),
+            getTextRecordsQueryKey(domain, network.type),
+            getAvatarOfAddressQueryKey(address),
+        ];
 
-        await queryClient.refetchQueries({
-            queryKey: getAvatarQueryKey(domain ?? '', network.type),
-        });
-
-        await queryClient.invalidateQueries({
-            queryKey: getTextRecordsQueryKey(domain, network.type),
-        });
-
-        await queryClient.refetchQueries({
-            queryKey: getTextRecordsQueryKey(domain, network.type),
-        });
-
-        await queryClient.invalidateQueries({
-            queryKey: getAvatarOfAddressQueryKey(address),
-        });
-
-        await queryClient.refetchQueries({
-            queryKey: getAvatarOfAddressQueryKey(address),
-        });
+        await Promise.all(
+            queryKeys.map((queryKey) =>
+                queryClient.invalidateQueries({ queryKey }),
+            ),
+        );
     };
 
     return { refresh };

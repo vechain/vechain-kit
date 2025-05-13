@@ -8,14 +8,13 @@ import {
     IReverseRegistrar__factory,
     SubdomainClaimer__factory,
 } from '@/contracts/typechain-types';
-import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
-import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
+import { useInvalidateDomainQueries } from './utils/useInvalidateDomainQueries';
 
 type useClaimVeWorldSubdomainProps = {
     subdomain: string;
@@ -45,7 +44,7 @@ export const useClaimVeWorldSubdomain = ({
     onError,
     alreadyOwned = false,
 }: useClaimVeWorldSubdomainProps): useClaimVeWorldSubdomainReturnValue => {
-    const queryClient = useQueryClient();
+    const invalidateDomainQueries = useInvalidateDomainQueries();
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
     const { refresh: refreshMetadata } = useRefreshMetadata(
@@ -153,32 +152,14 @@ export const useClaimVeWorldSubdomain = ({
 
     //Refetch queries to update ui after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        const fullDomain = `${subdomain}.${domain}`;
-        const address = account?.address ?? '';
-
-        await invalidateAndRefetchDomainQueries(
-            queryClient,
-            address,
-            fullDomain,
-            subdomain,
-            domain,
-            network.type,
-        );
+        await invalidateDomainQueries();
 
         // Use the dedicated metadata refresh utility
         refreshMetadata();
 
         Analytics.nameSelection.completed(subdomain, alreadyOwned);
         onSuccess?.();
-    }, [
-        onSuccess,
-        subdomain,
-        domain,
-        queryClient,
-        account,
-        network.type,
-        refreshMetadata,
-    ]);
+    }, [onSuccess, subdomain, domain, refreshMetadata]);
 
     const result = useSendTransaction({
         signerAccountAddress: account?.address ?? '',

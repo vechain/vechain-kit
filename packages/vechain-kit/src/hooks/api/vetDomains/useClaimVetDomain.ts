@@ -5,12 +5,11 @@ import {
 } from '@/hooks';
 import { useCallback } from 'react';
 import { IReverseRegistrar__factory } from '@/contracts/typechain-types';
-import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
-import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
+import { useInvalidateDomainQueries } from './utils/useInvalidateDomainQueries';
 import { humanAddress } from '@/utils';
 
 type useClaimVetDomainProps = {
@@ -38,7 +37,7 @@ export const useClaimVetDomain = ({
     onError,
     alreadyOwned = false,
 }: useClaimVetDomainProps): useClaimVetDomainReturnValue => {
-    const queryClient = useQueryClient();
+    const invalidateDomainQueries = useInvalidateDomainQueries();
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
     const { refresh: refreshMetadata } = useRefreshMetadata(
@@ -136,29 +135,13 @@ export const useClaimVetDomain = ({
 
     // Refetch queries to update UI after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        const address = account?.address ?? '';
-
-        await invalidateAndRefetchDomainQueries(
-            queryClient,
-            address,
-            domain,
-            '', // No subdomain for primary domains
-            domain.endsWith('.vet') ? domain : `${domain}.vet`,
-            network.type,
-        );
+        await invalidateDomainQueries();
 
         // Use the dedicated metadata refresh utility
         refreshMetadata();
 
         onSuccess?.();
-    }, [
-        onSuccess,
-        domain,
-        queryClient,
-        account,
-        network.type,
-        refreshMetadata,
-    ]);
+    }, [onSuccess, domain, refreshMetadata]);
 
     const result = useSendTransaction({
         signerAccountAddress: account?.address ?? '',

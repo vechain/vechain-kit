@@ -1,29 +1,26 @@
-import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
+import { TIME } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export const currentBlockQueryKey = () => ['VECHAIN_KIT', 'CURRENT_BLOCK'];
+
+const REFETCH_INTERVAL = 10 * TIME.SECOND;
 
 /**
  * Fetches the current block from the blockchain. The block is refetched every 10 seconds.
  * @returns the current block
  */
 export const useCurrentBlock = () => {
-    const { network } = useVeChainKitConfig();
-    const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
+    const thor = useThor();
 
     return useQuery({
         queryKey: currentBlockQueryKey(),
         queryFn: async () => {
-            const response = await fetch(`${nodeUrl}/blocks/best`, {
-                method: 'GET',
-            });
-
-            if (!response.ok) throw new Error(response.statusText);
-            return (await response.json()) as Connex.Thor.Block;
+            const response = await thor.blocks.getBestBlockExpanded();
+            if (!response) throw new Error('Failed to fetch current block');
+            return response;
         },
-        enabled: !!nodeUrl,
         staleTime: 1000 * 60,
-        refetchInterval: 1000 * 10,
+        refetchInterval: REFETCH_INTERVAL,
     });
 };

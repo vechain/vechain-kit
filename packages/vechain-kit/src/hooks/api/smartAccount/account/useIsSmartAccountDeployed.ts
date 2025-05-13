@@ -17,10 +17,9 @@ export const getIsDeployed = async (
 };
 
 export const getIsDeployedQueryKey = (contractAddress?: string) => [
-    'VECHAIN_KIT',
-    'SMART_ACCOUNT',
-    'IS_DEPLOYED',
+    'VECHAIN_KIT_SMART_ACCOUNT',
     contractAddress,
+    'IS_DEPLOYED',
 ];
 
 /**

@@ -105,7 +105,7 @@ export const getTextRecords = async (
 export const getTextRecordsQueryKey = (
     domain?: string,
     network?: NETWORK_TYPE,
-) => ['VECHAIN_KIT_TEXT_RECORDS', domain, network];
+) => ['VECHAIN_KIT_DOMAIN', 'TEXT_RECORDS', domain, network];
 
 export const useGetTextRecords = (domain?: string) => {
     const { network } = useVeChainKitConfig();

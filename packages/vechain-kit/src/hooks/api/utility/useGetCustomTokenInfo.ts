@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { ERC20__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
-import { abi } from 'thor-devkit';
-
-const ERC20Interface = ERC20__factory.createInterface();
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@/types';
 
 export type CustomTokenInfo = {
     name: string;
@@ -13,45 +11,32 @@ export type CustomTokenInfo = {
     symbol: string;
 };
 
-export const getTokenInfo = async (
-    thor: Connex.Thor,
-    tokenAddress: string,
-): Promise<CustomTokenInfo> => {
+export const getTokenInfo = async (thor: ThorClient, tokenAddress: string) => {
     if (!tokenAddress) throw new Error('Token address is required');
 
-    // Define the function fragments for name, symbol, decimals
-    const nameFragment = ERC20Interface.getFunction('name').format('json');
-    const symbolFragment = ERC20Interface.getFunction('symbol').format('json');
-    const decimalsFragment =
-        ERC20Interface.getFunction('decimals').format('json');
+    const contract = thor.contracts.load(tokenAddress, ERC20__factory.abi);
+    const clauses = [
+        contract.clause.name(),
+        contract.clause.symbol(),
+        contract.clause.decimals(),
+    ];
 
-    // Get the ABI for the function fragments
-    const nameAbi = new abi.Function(JSON.parse(nameFragment));
-    const symbolAbi = new abi.Function(JSON.parse(symbolFragment));
-    const decimalsAbi = new abi.Function(JSON.parse(decimalsFragment));
+    const multipleClausesResponse =
+        await thor.contracts.executeMultipleClausesCall(clauses);
 
-    const abis = [nameAbi, symbolAbi, decimalsAbi];
-    // Create clauses for all function calls
-    const clauses = abis.map((funcAbi) => ({
-        to: tokenAddress,
-        value: 0,
-        data: funcAbi.encode(),
-    }));
+    const isSuccess = multipleClausesResponse.every((res) => res.success);
+    if (!isSuccess) throw new Error('Failed to get token info');
 
-    const infoResponse = await thor.explain(clauses).execute();
-
-    // Decode responses using the correct ABI
-    const [name, symbol, decimals] = infoResponse.map((res, index) => {
-        const functionAbi = abis[index];
-        return functionAbi.decode(res.data)[0];
-    });
+    const [name, symbol, decimals] = multipleClausesResponse.map(
+        (res) => res.result.plain,
+    );
 
     return {
         name,
         address: tokenAddress,
         decimals,
         symbol,
-    };
+    } as CustomTokenInfo;
 };
 
 export const getCustomTokenInfo = (tokenAddress: string) => [
@@ -60,7 +45,7 @@ export const getCustomTokenInfo = (tokenAddress: string) => [
 ];
 
 export const useGetCustomTokenInfo = (tokenAddress: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

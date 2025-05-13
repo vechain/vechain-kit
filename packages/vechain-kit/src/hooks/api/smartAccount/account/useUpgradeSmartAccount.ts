@@ -2,9 +2,9 @@ import { useCallback } from 'react';
 import { SimpleAccount__factory } from '@/contracts/typechain-types';
 import { useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
-import { useAccountImplementationAddress } from '@/hooks';
 import { useRefreshSmartAccountQueries } from './useRefreshSmartAccountQueries';
-import { useRefreshFactoryQueries } from '../factory/useRefreshFactoryQueries';
+//import { useAccountImplementationAddress } from '@/hooks';
+// import { useRefreshFactoryQueries } from '../factory/useRefreshFactoryQueries';
 
 type UseUpgradeSmartAccountVersionProps = {
     smartAccountAddress: string;
@@ -25,24 +25,26 @@ export const useUpgradeSmartAccount = ({
     onSuccess,
     onError,
 }: UseUpgradeSmartAccountVersionProps): UseUpgradeSmartAccountVersionReturnValue => {
-    const { refresh: refreshFactoryQueries } = useRefreshFactoryQueries();
     const { refresh: refreshSmartAccountQueries } =
         useRefreshSmartAccountQueries();
 
+    // TODO: kit-migration: update this once the factory is migrated
+    //const { refresh: refreshFactoryQueries } = useRefreshFactoryQueries();
     // Fetch the new implementation address for the requested version
-    const { data: newImplementationAddress } =
-        useAccountImplementationAddress(targetVersion);
+    //const { data: newImplementationAddress } = useAccountImplementationAddress(targetVersion);
+    const newImplementationAddress =
+        '0x0000000000000000000000000000000000000000';
 
     const buildClauses = useCallback(async () => {
         if (!smartAccountAddress || !isValidAddress(smartAccountAddress)) {
             throw new Error('Invalid smart account address');
         }
 
-        if (!newImplementationAddress) {
-            throw new Error(
-                `Unable to fetch implementation address for version ${targetVersion}`,
-            );
-        }
+        // if (!newImplementationAddress) {
+        //     throw new Error(
+        //         `Unable to fetch implementation address for version ${targetVersion}`,
+        //     );
+        // }
 
         return [
             {
@@ -53,7 +55,9 @@ export const useUpgradeSmartAccount = ({
                     [newImplementationAddress, '0x'],
                 ),
                 comment: `Upgrade account to version ${targetVersion}`,
-                abi: simpleAccountInterface.getFunction('upgradeToAndCall'),
+                abi: simpleAccountInterface
+                    .getFunction('upgradeToAndCall')
+                    .format('json'),
             },
         ];
     }, [smartAccountAddress, newImplementationAddress, targetVersion]);
@@ -61,7 +65,7 @@ export const useUpgradeSmartAccount = ({
     const handleOnSuccess = async () => {
         // Refresh all relevant queries
         await Promise.all([
-            refreshFactoryQueries(),
+            // refreshFactoryQueries(),
             refreshSmartAccountQueries(),
         ]);
         onSuccess?.();

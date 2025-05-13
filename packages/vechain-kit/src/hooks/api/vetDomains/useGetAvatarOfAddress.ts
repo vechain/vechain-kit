@@ -4,8 +4,7 @@ import { getPicassoImage } from '@/utils';
 import { useVechainDomain } from './useVechainDomain';
 
 export const getAvatarOfAddressQueryKey = (address?: string) => [
-    'VECHAIN_KIT',
-    'VET_DOMAINS',
+    'VECHAIN_KIT_DOMAIN',
     'AVATAR_OF_ADDRESS',
     address,
 ];

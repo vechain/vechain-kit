@@ -9,3 +9,4 @@ export * from './uri';
 export * from './gmNfts';
 export * from './buildQueryString';
 export * from './XNode';
+export * from './time';

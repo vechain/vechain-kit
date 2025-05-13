@@ -5,11 +5,10 @@ import {
 } from '@/hooks';
 import { useCallback } from 'react';
 import { IReverseRegistrar__factory } from '@/contracts/typechain-types';
-import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
-import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
+import { useInvalidateDomainQueries } from './utils/useInvalidateDomainQueries';
 
 type useUnsetDomainProps = {
     onSuccess?: () => void;
@@ -32,7 +31,7 @@ export const useUnsetDomain = ({
     onSuccess,
     onError,
 }: useUnsetDomainProps): useUnsetDomainReturnValue => {
-    const queryClient = useQueryClient();
+    const invalidateDomainQueries = useInvalidateDomainQueries();
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
 
@@ -57,20 +56,10 @@ export const useUnsetDomain = ({
 
     // Refetch queries to update UI after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
-        const address = account?.address ?? '';
-
-        // Invalidate all domain-related queries
-        await invalidateAndRefetchDomainQueries(
-            queryClient,
-            address,
-            '', // No domain being set
-            '', // No subdomain
-            '', // No full domain
-            network.type,
-        );
+        await invalidateDomainQueries();
 
         onSuccess?.();
-    }, [onSuccess, queryClient, account, network.type]);
+    }, [onSuccess]);
 
     const result = useSendTransaction({
         signerAccountAddress: account?.address ?? '',
