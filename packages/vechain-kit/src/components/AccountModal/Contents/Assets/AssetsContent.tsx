@@ -24,7 +24,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { CiSearch } from 'react-icons/ci';
 import { useState } from 'react';
 import { useCurrency } from '@/hooks/api/wallet';
-import { SupportedCurrency } from '@/utils/currencyConverter';
+import { SupportedCurrency } from '@/utils/currencyUtils';
 
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<

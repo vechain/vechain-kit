@@ -3,7 +3,7 @@ import { useTokensWithValues } from './useTokensWithValues';
 import {
     SupportedCurrency,
     formatCompactCurrency,
-} from '@/utils/currencyConverter';
+} from '@/utils/currencyUtils';
 import { useCurrency } from './useCurrency';
 
 type UseTotalBalanceProps = {

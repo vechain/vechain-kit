@@ -1,7 +1,7 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
-import { compareAddresses } from '@/utils/AddressUtils';
+import { compareAddresses } from '@/utils/addressUtils';
 import { zeroAddress } from 'viem';
 import { useVeChainKitConfig } from '@/providers';
 

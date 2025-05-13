@@ -3,7 +3,7 @@
 import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
 import { MdSend } from 'react-icons/md';
 import { FaCode } from 'react-icons/fa';
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
@@ -31,7 +31,7 @@ export function TransactionExamples() {
                     '0',
                 ]),
                 comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
-                abi: B3TRInterface.getFunction('transfer'),
+                abi: B3TRInterface.getFunction('transfer').format('json'),
             },
         ];
     }, [account?.address]);

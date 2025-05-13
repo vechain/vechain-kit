@@ -35,7 +35,7 @@ import { ModalProvider } from './ModalProvider';
 import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
-} from '@/utils/Constants';
+} from '@/utils/constants';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';

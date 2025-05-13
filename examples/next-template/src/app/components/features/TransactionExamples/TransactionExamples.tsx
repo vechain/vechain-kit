@@ -8,17 +8,17 @@ import {
     useTransactionToast,
     TransactionModal,
     TransactionToast,
-    EnhancedClause,
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';
 import { useCallback } from 'react';
+import { TransactionClause } from '@vechain/sdk-core1.2';
 
 export function TransactionExamples() {
     const { account } = useWallet();
 
-    const clauseBuilder = useCallback((): EnhancedClause[] => {
+    const clauseBuilder = useCallback((): TransactionClause[] => {
         if (!account?.address) return [];
 
         const B3TRInterface = IB3TR__factory.createInterface();
@@ -34,7 +34,7 @@ export function TransactionExamples() {
                 comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
                     account.address,
                 )}`,
-                abi: B3TRInterface.getFunction('transfer'),
+                abi: B3TRInterface.getFunction('transfer').format('json'),
             },
         ];
     }, [account?.address]);

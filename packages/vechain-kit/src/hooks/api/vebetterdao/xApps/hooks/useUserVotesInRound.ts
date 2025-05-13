@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { abi } from 'thor-devkit';
-import { getAllEvents } from '@/hooks/api/blockchain';
+import { getAllEventLogs } from '@/hooks';
 import { XAllocationVoting__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-
+import { FilterCriteria, ThorClient } from '@vechain/sdk-network1.2';
+import { ABIEvent } from '@vechain/sdk-core1.2';
 const XAllocationVotingInterface = XAllocationVoting__factory.createInterface();
 
 export type AllocationVoteCastEvent = {
@@ -40,19 +41,22 @@ export const getUserVotesInRound = async (
      * Filter criteria to get the events from the governor contract that we are interested in
      * This way we can get all of them in one call
      */
-    const filterCriteria: Connex.Thor.Filter.Criteria<'event'>[] = [
+    const filterCriteria: FilterCriteria[] = [
         {
-            address: xAllocationVotingContract,
-            topic0: topics[0] ?? undefined,
-            topic1: topics[1] ?? undefined,
-            topic2: topics[2] ?? undefined,
-            topic3: topics[3] ?? undefined,
-            topic4: topics[4] ?? undefined,
+            criteria: {
+                address: xAllocationVotingContract,
+                topic0: topics[0] ?? undefined,
+                topic1: topics[1] ?? undefined,
+                topic2: topics[2] ?? undefined,
+                topic3: topics[3] ?? undefined,
+                topic4: topics[4] ?? undefined,
+            },
+            eventAbi: new ABIEvent(allocationVoteCast.signature),
         },
     ];
 
-    const events = await getAllEvents({
-        thor,
+    const events = await getAllEventLogs({
+        thor: thor as unknown as ThorClient,
         filterCriteria,
         nodeUrl: getConfig(network).nodeUrl,
     });

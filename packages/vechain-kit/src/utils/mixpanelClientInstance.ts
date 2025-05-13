@@ -33,7 +33,7 @@ import {
     CustomizationProperties,
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
-import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
+import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
 
 const APP_SOURCE: string = document.title || '';
 const PAGE_SOURCE: string = window?.location?.origin || '';

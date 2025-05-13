@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { abi } from 'thor-devkit';
-import { getAllEvents } from '@/hooks';
+import { getAllEventLogs } from '@/hooks';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { ThorClient } from '@vechain/sdk-network1.2';
+import { ABIEvent } from '@vechain/sdk-core1.2';
 
 export type RoundCreated = {
     roundId: string;
@@ -22,7 +24,7 @@ export type RoundCreated = {
  * @returns the allocation rounds events
  */
 export const getAllocationsRoundsEvents = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
 ) => {
     const xAllocationVotingContract =
@@ -34,20 +36,18 @@ export const getAllocationsRoundsEvents = async (
         allocationCreatedAbi as unknown as abi.Event.Definition,
     );
 
-    /**
-     * Filter criteria to get the events from the governor contract that we are interested in
-     * This way we can get all of them in one call
-     */
-    const filterCriteria = [
-        {
-            address: xAllocationVotingContract,
-            topic0: allocationCreatedEvent.signature,
-        },
-    ];
-
-    const events = await getAllEvents({
+    const events = await getAllEventLogs({
         thor,
-        filterCriteria,
+        filterCriteria: [
+            {
+                criteria: {
+                    address: xAllocationVotingContract,
+                    // TODO: migration this is not a topic so might be removed.
+                    topic0: allocationCreatedEvent.signature,
+                },
+                eventAbi: new ABIEvent(allocationCreatedEvent.signature),
+            },
+        ],
         nodeUrl: getConfig(networkType).nodeUrl,
     });
 
@@ -101,7 +101,10 @@ export const useAllocationsRoundsEvents = () => {
     return useQuery({
         queryKey: getAllocationsRoundsEventsQueryKey(),
         queryFn: async () =>
-            await getAllocationsRoundsEvents(thor, network.type),
+            await getAllocationsRoundsEvents(
+                thor as unknown as ThorClient,
+                network.type,
+            ),
         enabled: !!thor && !!network.type,
     });
 };

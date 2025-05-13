@@ -1,5 +1,5 @@
 import { isMobile } from 'react-device-detect';
-import { isRejectionError } from './StringUtils';
+import { isRejectionError } from './stringUtils';
 
 type PopupErrorOptions = {
     error: unknown;

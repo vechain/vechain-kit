@@ -1,62 +1,20 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { Transaction } from 'thor-devkit';
-import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import {
-    EnhancedClause,
-    TransactionStatus,
-    TransactionStatusErrorType,
-} from '@/types';
-import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
-
-const estimateTxGasWithNext = async (
-    clauses: Connex.VM.Clause[],
-    caller: string,
-    buffer = 1.25,
-    nodeUrl: string,
-) => {
-    type InspectClausesResponse = {
-        data: string;
-        gasUsed: number;
-        reverted: boolean;
-        vmError: string;
-        events: Connex.VM.Event[];
-        transfers: Connex.VM.Transfer[];
-    }[];
-
-    // Send tx details to the node to get the gas estimate
-    const response = await fetch(`${nodeUrl}/accounts/*?revision=next`, {
-        method: 'POST',
-        body: JSON.stringify({
-            clauses: clauses.map((clause) => ({
-                to: clause.to,
-                value: clause.value || '0x0',
-                data: clause.data,
-            })),
-            caller,
-        }),
-    });
-
-    if (!response.ok) throw new Error('Failed to estimate gas');
-
-    const outputs = (await response.json()) as InspectClausesResponse;
-
-    const execGas = outputs.reduce((sum, out) => sum + out.gasUsed, 0);
-
-    // Calculate the intrinsic gas (transaction fee) cast is needed as data could be undefined in Connex.Vm.Clause
-    const intrinsicGas = Transaction.intrinsicGas(
-        clauses as Transaction.Clause[],
-    );
-
-    // 15000 is the fee for invoking the VM
-    // Gas estimate is the sum of intrinsic gas and execution gas
-    const gasEstimate = intrinsicGas + (execGas ? execGas + 15000 : 0);
-
-    // Add a % buffer to the gas estimate
-    return Math.round(gasEstimate * buffer);
-};
+    useThor,
+    useWallet as useDAppKitWallet,
+} from '@vechain/dapp-kit-react2';
+import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
+import { TransactionStatus, TransactionStatusErrorType } from '@/types';
+import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
+import { estimateTxGas } from './transactionUtils';
+import {
+    signerUtils,
+    ThorClient,
+    TransactionReceipt,
+} from '@vechain/sdk-network1.2';
+import { TransactionClause } from '@vechain/sdk-core1.2';
 
 /**
  * Props for the {@link useSendTransaction} hook
@@ -68,10 +26,7 @@ const estimateTxGasWithNext = async (
  */
 type UseSendTransactionProps = {
     signerAccountAddress?: string | null;
-    clauses?:
-        | EnhancedClause[]
-        | (() => EnhancedClause[])
-        | (() => Promise<EnhancedClause[]>);
+    clauses?: TransactionClause[];
     onTxConfirmed?: () => void | Promise<void>;
     onTxFailedOrCancelled?: (error?: Error | string) => void | Promise<void>;
     suggestedMaxGas?: number;
@@ -93,10 +48,10 @@ type UseSendTransactionProps = {
  * @param error error that occurred while sending the transaction
  */
 export type UseSendTransactionReturnValue = {
-    sendTransaction: (clauses?: EnhancedClause[]) => Promise<void>;
+    sendTransaction: (clauses?: TransactionClause[]) => Promise<void>;
     isTransactionPending: boolean;
     isWaitingForWalletConfirmation: boolean;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     status: TransactionStatus;
     resetStatus: () => void;
     error?: TransactionStatusErrorType;
@@ -143,38 +98,12 @@ export const useSendTransaction = ({
     suggestedMaxGas,
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
-    const { vendor, thor } = useConnex();
+    const thor = useThor();
+    const { signer } = useDAppKitWallet();
+    const { connection } = useWallet();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
-
-    const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
-
-    /**
-     * Convert the clauses to the format expected by the vendor
-     * If the clauses are a function, it will be executed and the result will be used
-     * If the clauses are an array, it will be used directly
-     * If the wallet is connected with Privy, the clauses will be converted to the format expected by the vendor
-     * @param clauses the clauses to convert
-     * @returns the converted clauses
-     */
-    async function convertClauses(
-        clauses:
-            | EnhancedClause[]
-            | (() => EnhancedClause[])
-            | (() => Promise<EnhancedClause[]>),
-    ) {
-        let parsedClauses;
-
-        if (typeof clauses === 'function') {
-            parsedClauses = await clauses();
-        } else {
-            parsedClauses = clauses;
-        }
-
-        // Don't strip the comment here anymore, just return the clauses
-        return parsedClauses;
-    }
 
     /**
      * Send a transaction with the given clauses (in case you need to pass data to build the clauses to mutate directly)
@@ -183,57 +112,61 @@ export const useSendTransaction = ({
      */
     const sendTransaction = useCallback(
         async (
-            clauses: EnhancedClause[],
+            clauses?:
+                | TransactionClause[]
+                | (() => TransactionClause[])
+                | (() => Promise<TransactionClause[]>),
             options?: {
                 title?: string;
                 description?: string;
                 buttonText?: string;
             },
         ) => {
+            const _clauses =
+                typeof clauses === 'function' ? await clauses() : clauses ?? [];
             if (connection.isConnectedWithPrivy) {
                 return await privyWalletProvider.sendTransaction({
-                    txClauses: clauses,
+                    txClauses: _clauses,
                     ...privyUIOptions,
                     ...options,
                     suggestedMaxGas,
                 });
             }
 
-            let transaction = vendor.sign('tx', clauses);
-
-            if (feeDelegation?.delegateAllTransactions) {
-                transaction = transaction.delegate(feeDelegation.delegatorUrl);
+            if (!signerAccountAddress) {
+                throw new Error('signerAccountAddress is required');
             }
 
-            if (signerAccountAddress) {
-                let gasLimitNext;
-                try {
-                    gasLimitNext = await estimateTxGasWithNext(
-                        [...clauses],
-                        signerAccountAddress,
-                        undefined,
-                        nodeUrl,
-                    );
-                } catch (e) {
-                    console.error('Gas estimation failed', e);
-                }
-
-                const parsedGasLimit = Math.max(
-                    gasLimitNext ?? 0,
-                    suggestedMaxGas ?? 0,
+            let estimatedGas = 0;
+            try {
+                estimatedGas = await estimateTxGas(
+                    // TODO: migration this is package level type issue to be resolved.
+                    thor as unknown as ThorClient,
+                    [..._clauses],
+                    signerAccountAddress,
                 );
-                // specify gasLimit if we have a suggested or an estimation
-                if (parsedGasLimit > 0)
-                    return transaction
-                        .signer(signerAccountAddress)
-                        .gas(parseInt(parsedGasLimit.toString()))
-                        .request();
-                else return transaction.signer(signerAccountAddress).request();
+            } catch (e) {
+                console.error('Gas estimation failed', e);
             }
-            return transaction.request();
+
+            const txBody = await thor.transactions.buildTransactionBody(
+                _clauses,
+                estimatedGas,
+                {
+                    gasLimit: suggestedMaxGas?.toString(),
+                    // TODO: kit-migration check how to pass the delegator url
+                    isDelegated: feeDelegation?.delegateAllTransactions,
+                },
+            );
+
+            return signer.sendTransaction(
+                signerUtils.transactionBodyToTransactionRequestInput(
+                    txBody,
+                    signerAccountAddress,
+                ),
+            );
         },
         [
-            vendor,
             signerAccountAddress,
             suggestedMaxGas,
             nodeUrl,
@@ -246,36 +179,25 @@ export const useSendTransaction = ({
      * Adapter to send the transaction with the clauses passed to the hook or the ones passed to the function,
      * and to store the transaction id and the status of the transaction (pending, success, error).
      */
-    const [sendTransactionTx, setSendTransactionTx] = useState<string | null>(
-        null,
-    );
+    const [txHash, setTxHash] = useState<string | null>(null);
     const [sendTransactionPending, setSendTransactionPending] = useState(false);
     const [sendTransactionError, setSendTransactionError] = useState<
         string | null
     >(null);
 
     const sendTransactionAdapter = useCallback(
-        async (_clauses?: EnhancedClause[]): Promise<void> => {
+        async (_clauses?: TransactionClause[]): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
             try {
-                setSendTransactionTx(null);
+                setTxHash(null);
                 setSendTransactionPending(true);
                 setSendTransactionError(null);
                 setError(undefined);
-                const response = await sendTransaction(
-                    await convertClauses(_clauses ?? []),
-                    {
-                        ...privyUIOptions,
-                    },
-                );
-                // If we send the transaction with the smart account, we get the txid as a string
-                if (typeof response === 'string') {
-                    setSendTransactionTx(response);
-                } else if (typeof response === 'object') {
-                    // If we send the transaction with the vendor, we get the txid from TxResponse
-                    const responseCopy = response as Connex.Vendor.TxResponse;
-                    setSendTransactionTx(responseCopy?.txid);
-                }
+                const response = await sendTransaction(_clauses ?? [], {
+                    ...privyUIOptions,
+                });
+
+                setTxHash(response);
             } catch (error) {
                 setSendTransactionError(
                     error instanceof Error ? error.message : String(error),
@@ -287,7 +209,7 @@ export const useSendTransaction = ({
                 setSendTransactionPending(false);
             }
         },
-        [sendTransaction, clauses, convertClauses, privyUIOptions],
+        [sendTransaction, clauses, privyUIOptions],
     );
 
     /**
@@ -297,7 +219,7 @@ export const useSendTransaction = ({
         data: txReceipt,
         isLoading: isTxReceiptLoading,
         error: txReceiptError,
-    } = useTxReceipt(sendTransactionTx ?? '');
+    } = useTxReceipt(txHash ?? '');
 
     /**
      * Explain the revert reason of the transaction
@@ -305,17 +227,10 @@ export const useSendTransaction = ({
      * @returns the revert reason
      */
     const explainTxRevertReason = useCallback(
-        async (txReceipt: Connex.Thor.Transaction.Receipt) => {
-            if (!txReceipt.reverted) return;
-            const transactionData = await thor
-                .transaction(txReceipt.meta.txID)
-                .get();
-            if (!transactionData) return;
+        async (txReceipt: TransactionReceipt) => {
+            if (!txReceipt.reverted || !txReceipt.meta.txID) return;
 
-            return await thor
-                .explain(transactionData.clauses)
-                .caller(transactionData.origin)
-                .execute();
+            return await thor.transactions.getRevertReason(txReceipt.meta.txID);
         },
         [thor],
     );
@@ -338,7 +253,7 @@ export const useSendTransaction = ({
             return 'error';
         }
 
-        if (sendTransactionTx) {
+        if (txHash) {
             if (isTxReceiptLoading) return 'waitingConfirmation';
             if (txReceiptError) {
                 return 'error';
@@ -349,10 +264,6 @@ export const useSendTransaction = ({
                 }
                 return 'success';
             }
-
-            // By default we return waitingConfirmation because we have a txid,
-            // so it means the tx is broadcasted (even if the receipt is not yet available)
-            return 'waitingConfirmation';
         }
 
         return 'ready';
@@ -360,7 +271,7 @@ export const useSendTransaction = ({
         isTxReceiptLoading,
         sendTransactionError,
         sendTransactionPending,
-        sendTransactionTx,
+        txHash,
         txReceipt,
         txReceiptError,
     ]);
@@ -382,19 +293,10 @@ export const useSendTransaction = ({
                 (async () => {
                     const revertReason = await explainTxRevertReason(txReceipt);
 
-                    const message = revertReason
-                        ?.filter((clause) => {
-                            return clause.reverted && clause.revertReason;
-                        })
-                        .map((clause) => {
-                            return clause.revertReason;
-                        })
-                        .join(', ');
-
                     setError({
                         type: 'RevertReasonError',
-                        reason: message
-                            ? 'Transaction reverted with: ' + message
+                        reason: revertReason
+                            ? 'Transaction reverted with: ' + revertReason
                             : 'Transaction reverted',
                     });
                 })();
@@ -417,7 +319,7 @@ export const useSendTransaction = ({
      * Reset the status of the transaction
      */
     const resetStatus = useCallback(() => {
-        setSendTransactionTx(null);
+        setTxHash(null);
         setSendTransactionPending(false);
         setSendTransactionError(null);
         setError(undefined);

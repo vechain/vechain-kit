@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useCurrency } from '@/hooks/api/wallet';
-import { SupportedCurrency } from '@/utils/currencyConverter';
+import { SupportedCurrency } from '@/utils/currencyUtils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
