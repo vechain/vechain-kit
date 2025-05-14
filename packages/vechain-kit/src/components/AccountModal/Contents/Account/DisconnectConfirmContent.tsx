@@ -49,7 +49,7 @@ export const DisconnectConfirmContent = ({
                         onClick={onDisconnect}
                         data-testid="disconnect-button"
                     >
-                        {t('Disconnect')}
+                        {t('Confirm')}
                     </Button>
                     <Button variant="vechainKitSecondary" onClick={onBack}>
                         {t('Cancel')}

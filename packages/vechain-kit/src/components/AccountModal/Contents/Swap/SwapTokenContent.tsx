@@ -42,7 +42,9 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                 <ModalBody>
                     <VStack spacing={6} align="center" w="full">
                         <Image
-                            src={'https://i.ibb.co/S75JGc9/download-1.png'}
+                            src={
+                                'https://api.gateway-proxy.vechain.org/ipfs/bafybeidvm2qibth26fzp45llucfapshw2zycmfpkebejmecn4amhbqi5qy/media/logo.png'
+                            }
                             alt="swap token"
                             w={'200px'}
                             h={'200px'}

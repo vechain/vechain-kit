@@ -66,20 +66,20 @@ const DEFAULT_APPS: XAppMetadata[] = [
             banner: 'https://vet.domains/assets/walletconnect.png',
         },
     },
-    {
-        name: 'VeChain Kit',
-        description: 'A all-in-one library for building VeChain applications.',
-        external_url: 'https://vechainkit.vechain.org/',
-        logo: 'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png',
-        banner: '',
-        screenshots: [],
-        social_urls: [],
-        app_urls: [],
-        tweets: [],
-        ve_world: {
-            banner: '',
-        },
-    },
+    // {
+    //     name: 'VeChain Kit',
+    //     description: 'A all-in-one library for building VeChain applications.',
+    //     external_url: 'https://vechainkit.vechain.org/',
+    //     logo: 'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png',
+    //     banner: '',
+    //     screenshots: [],
+    //     social_urls: [],
+    //     app_urls: [],
+    //     tweets: [],
+    //     ve_world: {
+    //         banner: '',
+    //     },
+    // },
 ];
 
 export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
