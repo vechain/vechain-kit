@@ -2,14 +2,14 @@ import {
     UseSendTransactionReturnValue,
     useSendTransaction,
     useWallet,
+    useRefreshMetadata,
 } from '@/hooks';
 import { useCallback } from 'react';
-import { IReverseRegistrar__factory } from '@/contracts/typechain-types';
+import { IReverseRegistrar__factory } from '@/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
-import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
 import { humanAddress } from '@/utils';
 

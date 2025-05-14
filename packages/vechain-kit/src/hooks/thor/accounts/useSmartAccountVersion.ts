@@ -15,9 +15,8 @@ export const getVersion = async (
 
     if (!res) throw new Error(`Failed to get version of ${contractAddress}`);
 
-    return Array.isArray(res)
-        ? parseInt(res[0].toString())
-        : parseInt(res.toString());
+    // TODO: migration check if it returns BigInt
+    return Number(res);
 };
 
 export const getVersionQueryKey = (contractAddress?: string) => [

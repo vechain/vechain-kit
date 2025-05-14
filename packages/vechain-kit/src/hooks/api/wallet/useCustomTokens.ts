@@ -1,8 +1,5 @@
 import { useLocalStorage } from '@/hooks';
-import {
-    CustomTokenInfo,
-    getTokenInfo,
-} from '../../thor/contracts/useGetCustomTokenInfo';
+import { CustomTokenInfo, getTokenInfo } from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';

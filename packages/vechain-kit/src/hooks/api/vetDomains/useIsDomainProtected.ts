@@ -1,13 +1,31 @@
 import { getConfig } from '@/config';
 import { SubdomainClaimer__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
+import { ThorClient } from '@vechain/sdk-network1.2';
+import { useQuery } from '@tanstack/react-query';
 
-const contractInterface = SubdomainClaimer__factory.createInterface();
-const method = 'isDomainProtected';
+export const getIsDomainProtectedQueryKey = (domain?: string) => [
+    'VECHAIN_KIT_DOMAIN',
+    domain,
+    'IS_DOMAIN_PROTECTED',
+];
 
-export const getIsDomainProtectedQueryKey = (domain?: string) =>
-    getCallKey({ method, keyArgs: [domain] });
+const getIsDomainProtected = async (
+    thor: ThorClient,
+    network: NETWORK_TYPE,
+    domain?: string,
+) => {
+    const contractAddress =
+        getConfig(network).veWorldSubdomainClaimerContractAddress;
+
+    const res = await thor.contracts
+        .load(contractAddress, SubdomainClaimer__factory.abi)
+        .read.isDomainProtected(domain);
+
+    return res[0];
+};
 
 /**
  * Custom hook to fetch the amount of B3TR tokens donated for a given token ID.
@@ -17,16 +35,17 @@ export const getIsDomainProtectedQueryKey = (domain?: string) =>
  * @returns The result of the useCall hook, with the donation amount formatted in Ether.
  */
 export const useIsDomainProtected = (domain?: string, enabled = true) => {
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
-    const contractAddress = getConfig(
-        network.type,
-    ).veWorldSubdomainClaimerContractAddress;
-    return useCall({
-        contractInterface,
-        contractAddress,
-        method,
-        args: [domain],
+
+    return useQuery({
+        queryKey: getIsDomainProtectedQueryKey(domain),
+        queryFn: () =>
+            getIsDomainProtected(
+                thor as unknown as ThorClient,
+                network.type,
+                domain,
+            ),
         enabled: !!domain && enabled && !!network.type,
-        mapResponse: (res) => res.decoded[0],
     });
 };
