@@ -1,4 +1,3 @@
-export * from './oracle';
 export * from './vebetterdao';
 export * from './veDelegate';
 export * from './privy';
