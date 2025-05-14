@@ -16,7 +16,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
+    "build": "tsc --noEmit && cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
     "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup --watch",
     "clean": "rm -rf dist .turbo",
     "lint": "eslint",
