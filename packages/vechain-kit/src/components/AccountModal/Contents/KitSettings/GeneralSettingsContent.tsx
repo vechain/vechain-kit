@@ -5,6 +5,7 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
+    Box,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -17,6 +18,7 @@ import { ActionButton } from '../../Components';
 import { MdOutlineNavigateNext, MdCurrencyExchange } from 'react-icons/md';
 import { IoLanguage } from 'react-icons/io5';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { useEffect, useState } from 'react';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -26,6 +28,24 @@ type Props = {
 
 export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
+    const [showCurrencyRedDot, setShowCurrencyRedDot] = useState(false);
+
+    useEffect(() => {
+        // Check if user has visited currency settings before
+        const hasVisitedCurrency = localStorage.getItem(
+            'settings-currency-visited',
+        );
+        setShowCurrencyRedDot(!hasVisitedCurrency);
+    }, []);
+
+    const handleCurrencyClick = () => {
+        // Mark currency settings as visited
+        localStorage.setItem('settings-currency-visited', 'true');
+        setShowCurrencyRedDot(false);
+
+        Analytics.settings.currencySettingsViewed();
+        setCurrentContent('change-currency');
+    };
 
     return (
         <ScrollToTopWrapper>
@@ -63,12 +83,22 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             style={{
                                 borderBottomRadius: '0px',
                             }}
-                            onClick={() => {
-                                Analytics.settings.currencySettingsViewed();
-                                setCurrentContent('change-currency');
-                            }}
+                            onClick={handleCurrencyClick}
                             leftIcon={MdCurrencyExchange}
                             rightIcon={MdOutlineNavigateNext}
+                            extraContent={
+                                showCurrencyRedDot && (
+                                    <Box
+                                        minWidth="8px"
+                                        height="8px"
+                                        bg="red.500"
+                                        borderRadius="full"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                    />
+                                )
+                            }
                         />
 
                         <ActionButton

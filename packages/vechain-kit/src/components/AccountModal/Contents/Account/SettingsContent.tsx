@@ -13,7 +13,7 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { VscDebugDisconnect } from 'react-icons/vsc';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
@@ -35,6 +35,7 @@ export const SettingsContent = ({
 }: SettingsContentProps) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
+    const [showGeneralRedDot, setShowGeneralRedDot] = useState(false);
 
     const { connection, disconnect, smartAccount, connectedWallet, account } =
         useWallet();
@@ -49,6 +50,12 @@ export const SettingsContent = ({
         if (contentRef.current) {
             contentRef.current.scrollTop = 0;
         }
+
+        // Check if the user has visited general settings before
+        const hasVisitedGeneral = localStorage.getItem(
+            'settings-general-visited',
+        );
+        setShowGeneralRedDot(!hasVisitedGeneral);
     }, []);
 
     const handleCustomizeProfile = () => {
@@ -96,6 +103,10 @@ export const SettingsContent = ({
     };
 
     const handleGeneralSettings = () => {
+        // Mark general settings as visited
+        localStorage.setItem('settings-general-visited', 'true');
+        setShowGeneralRedDot(false);
+
         setCurrentContent('general-settings');
         Analytics.settings.generalSettingsViewed();
     };
@@ -182,6 +193,19 @@ export const SettingsContent = ({
                             onClick={handleGeneralSettings}
                             leftIcon={IoSettingsOutline}
                             rightIcon={MdOutlineNavigateNext}
+                            extraContent={
+                                showGeneralRedDot && (
+                                    <Box
+                                        minWidth="8px"
+                                        height="8px"
+                                        bg="red.500"
+                                        borderRadius="full"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                    />
+                                )
+                            }
                         />
                         <ActionButton
                             title={t('Help')}
