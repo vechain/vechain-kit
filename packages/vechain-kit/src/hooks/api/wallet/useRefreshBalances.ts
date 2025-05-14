@@ -7,7 +7,7 @@ import {
     getVot3BalanceQueryKey,
     getTokenUsdPriceQueryKey,
     getCustomTokenBalanceQueryKey,
-} from '..';
+} from '@/hooks';
 import { useCustomTokens } from './useCustomTokens';
 
 export const useRefreshBalances = () => {

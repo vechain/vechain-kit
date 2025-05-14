@@ -6,7 +6,7 @@ import {
     useGetVeDelegateBalance,
     useGetErc20Balance,
     useGetCustomTokenBalances,
-} from '..';
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 
