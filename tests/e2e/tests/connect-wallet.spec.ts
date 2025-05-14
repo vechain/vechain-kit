@@ -18,7 +18,7 @@ test.describe("Connect Wallet", () => {
         accountModal = new AccountModal(page, context, veWorldMockClient)
     })
 
-    test('Can log in using VeWorld wallet and then log out', async ({ page }) => {
+    test('Can log in using VeWorld wallet and then log out', async () => {
         await homePage.open()
         await homePage.initVWMock(0)
         await homePage.connectWallet()
@@ -26,8 +26,7 @@ test.describe("Connect Wallet", () => {
         await dashboardPage.openAccountModal()
         await accountModal.logOut()
         await expect(homePage.loginButton).toBeVisible()
-        const storagePostLogout = await page.evaluate(() => { return localStorage });
-        expect(storagePostLogout).not.toHaveProperty("dappkit@vechain/connectionCertificate")
+        await homePage.assertSessionIsDeleted()
     })
 })
 
@@ -42,16 +41,13 @@ test.describe.skip("Privy", () => {
         accountModal = new AccountModal(page, context, veWorldMockClient)
     })
 
-    test('Can log in using email and then log out', async ({ page }) => {
+    test('Can log in using email and then log out', async () => {
         await homePage.open()
         await homePage.loginWithEmail(PRIVY_TEST_EMAIL_SENDER)
         await expect(dashboardPage.walletButton).toBeVisible()
         await dashboardPage.openAccountModal()
         await accountModal.logOut()
         await expect(homePage.loginButton).toBeVisible()
-        const isSessionDeleted = await page.evaluate(() =>
-            Object.keys(localStorage).some(key => key.includes('privy_wallet:'))
-        );
-        expect(isSessionDeleted).toBeTruthy()
+        await homePage.assertSessionIsDeleted()
     })
 })
