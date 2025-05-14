@@ -1,5 +1,5 @@
-import { address } from "thor-devkit";
-import * as HexUtils from "./HexUtils";
+import { address } from 'thor-devkit';
+import * as HexUtils from './hexUtils';
 
 /**
  * Checks if two addresses are equal. Returns true if both values are strings AND:
@@ -11,7 +11,7 @@ import * as HexUtils from "./HexUtils";
  */
 export const compareAddresses = (
     address1?: string,
-    address2?: string
+    address2?: string,
 ): boolean => {
     if (!address1 || !address2) return false;
 
@@ -49,7 +49,7 @@ export const regexPattern = () => {
 
 export const isValidAddress = (addr: string | undefined | null): boolean => {
     try {
-        if (typeof addr !== "string") return false;
+        if (typeof addr !== 'string') return false;
         address.toChecksumed(HexUtils.addPrefix(addr));
         return true;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,11 +60,11 @@ export const isValidAddress = (addr: string | undefined | null): boolean => {
 
 export const leftPadWithZeros = (str: string, length: number): string => {
     // Remove '0x' prefix if it exists
-    const cleanStr = str.startsWith("0x") ? str.slice(2) : str;
+    const cleanStr = str.startsWith('0x') ? str.slice(2) : str;
     if (cleanStr.length > length) {
-        throw new Error("Input string is longer than the specified length");
+        throw new Error('Input string is longer than the specified length');
     }
     // Pad the string to the specified length
-    const paddedStr = cleanStr.padStart(length, "0");
+    const paddedStr = cleanStr.padStart(length, '0');
     return `0x${paddedStr}`;
 };

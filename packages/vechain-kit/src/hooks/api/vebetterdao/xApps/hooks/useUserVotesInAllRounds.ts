@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserVotesInRound, getUserVotesInRoundQueryKey } from '.';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
+import { useThor } from '@vechain/dapp-kit-react2';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 /**
  * useUserVotes is a custom hook that fetches the votes of a user for all rounds up to the current one.
@@ -10,7 +11,7 @@ import { useVeChainKitConfig } from '@/providers';
  * @returns An object containing the status and data of the queries for each round.
  */
 export const useUserVotesInAllRounds = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     const queryClient = useQueryClient();
 
@@ -18,7 +19,7 @@ export const useUserVotesInAllRounds = (address?: string) => {
         queryKey: getUserVotesInRoundQueryKey('ALL', address),
         queryFn: async () => {
             const votesEvents = await getUserVotesInRound(
-                thor,
+                thor as unknown as ThorClient,
                 network.type,
                 undefined,
                 address,
@@ -40,6 +41,9 @@ export const useUserVotesInAllRounds = (address?: string) => {
             return votesEvents;
         },
         enabled:
-            !!thor && !!thor.status.head.number && !!address && !!network.type,
+            !!thor &&
+            !!thor.blocks.getHeadBlock() &&
+            !!address &&
+            !!network.type,
     });
 };

@@ -2,12 +2,13 @@ import { Box } from '@chakra-ui/react';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { TransactionToastContent } from './TransactionToastContent';
+import { TransactionReceipt } from '@vechain/sdk-network1.2';
 
 export type TransactionToastProps = {
     isOpen: boolean;
     onClose: () => void;
     status: TransactionStatus;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     onTryAgain: () => void;
     txError?: Error | TransactionStatusErrorType;
     description?: string;

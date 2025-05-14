@@ -1,7 +1,4 @@
-import {
-    allNodeStrengthLevelToName,
-    NodeStrengthLevelToImage,
-} from '@/utils/XNode';
+import { allNodeStrengthLevelToName, NodeStrengthLevelToImage } from '@/utils';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { useQuery } from '@tanstack/react-query';

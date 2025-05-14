@@ -22,7 +22,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -167,7 +167,7 @@ export const ChooseNameSummaryContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader data-testid='confirm-domain'>
+                <ModalHeader data-testid="confirm-domain">
                     {isUnsetting
                         ? t('Confirm Unset Domain')
                         : t('Confirm Name')}
@@ -194,7 +194,12 @@ export const ChooseNameSummaryContent = ({
                               )}
                     </Text>
                     {!isUnsetting && (
-                        <Text fontSize="xl" fontWeight="bold" color="blue.500" data-testid="preconfirm-domain-val">
+                        <Text
+                            fontSize="xl"
+                            fontWeight="bold"
+                            color="blue.500"
+                            data-testid="preconfirm-domain-val"
+                        >
                             {`${fullDomain}`}
                         </Text>
                     )}

@@ -8,7 +8,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod, DappKitSource } from '@/types/mixPanel';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 import { VeWorldLogoDark, VeWorldLogoLight } from '@/assets';
 import { IconType } from 'react-icons';
 import { useVeChainKitConfig } from '@/providers';

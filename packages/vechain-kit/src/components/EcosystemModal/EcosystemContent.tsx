@@ -21,7 +21,7 @@ import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod } from '@/types/mixPanel';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 type Props = {
     onClose: () => void;
     appsInfo: PrivyAppInfo[];

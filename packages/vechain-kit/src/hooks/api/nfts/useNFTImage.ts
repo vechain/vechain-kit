@@ -1,5 +1,5 @@
 import { useTokenIdByAccount } from '@/hooks';
-import { useNFTMetadataUri } from './useNFTMetadataUri';
+import { useNFTMetadataUri } from '../../thor/contracts/useNFTMetadataUri';
 import { useIpfsImage } from '@/hooks/api/ipfs/useIpfsImage';
 import { useIpfsMetadata } from '@/hooks/api/ipfs/useIpfsMetadata';
 

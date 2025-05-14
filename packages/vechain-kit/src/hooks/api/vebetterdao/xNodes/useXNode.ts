@@ -2,10 +2,7 @@ import { notFoundImage } from '@/utils';
 import { useGetTokenIdAttachedToNode } from '../galaxyMember/hooks/useGetTokenIdAttachedToNode';
 import { useTranslation } from 'react-i18next';
 import { useGetUserNodes } from './useGetUserNodes';
-import {
-    allNodeStrengthLevelToName,
-    NodeStrengthLevelToImage,
-} from '@/utils/XNode';
+import { allNodeStrengthLevelToName, NodeStrengthLevelToImage } from '@/utils';
 import { useXNodeCheckCooldown } from './useXNodeCheckCooldown';
 
 /**

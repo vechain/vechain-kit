@@ -1,7 +1,7 @@
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { getCallKey, useCall } from '@/hooks';
-import { TogglePassportCheck } from '@/utils/Constants';
+import { TogglePassportCheck } from '@/utils/constants';
 import { useVeChainKitConfig } from '@/providers';
 
 const contractInterface = VeBetterPassport__factory.createInterface();

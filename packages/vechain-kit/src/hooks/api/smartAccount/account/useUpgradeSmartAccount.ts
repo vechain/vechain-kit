@@ -5,6 +5,7 @@ import { humanAddress, isValidAddress } from '@/utils';
 import { useAccountImplementationAddress } from '@/hooks';
 import { useRefreshSmartAccountQueries } from './useRefreshSmartAccountQueries';
 import { useRefreshFactoryQueries } from '../factory/useRefreshFactoryQueries';
+import { TransactionClause } from '@vechain/sdk-core1.2';
 
 type UseUpgradeSmartAccountVersionProps = {
     smartAccountAddress: string;
@@ -53,9 +54,11 @@ export const useUpgradeSmartAccount = ({
                     [newImplementationAddress, '0x'],
                 ),
                 comment: `Upgrade account to version ${targetVersion}`,
-                abi: simpleAccountInterface.getFunction('upgradeToAndCall'),
+                abi: simpleAccountInterface
+                    .getFunction('upgradeToAndCall')
+                    .format('json'),
             },
-        ];
+        ] as TransactionClause[];
     }, [smartAccountAddress, newImplementationAddress, targetVersion]);
 
     const handleOnSuccess = async () => {

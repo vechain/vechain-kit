@@ -1,6 +1,6 @@
 import { PrivyAppInfo } from '@/types';
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/Constants';
+import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/constants';
 
 export const fetchPrivyAppInfo = async (
     appId: string,
