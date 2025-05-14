@@ -1,31 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getUpgradeRequiredForAccount = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     contractAddress: string,
     targetVersion: number,
     networkType: NETWORK_TYPE,
 ): Promise<boolean> => {
-    const functionFragment = SimpleAccountFactoryInterface.getFunction(
-        'upgradeRequiredForAccount',
-    ).format('json');
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
+        )
+        .read.upgradeRequiredForAccount(contractAddress, targetVersion);
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call(contractAddress, targetVersion);
+    if (!res)
+        throw new Error(
+            `Failed to get upgrade required for contract address ${contractAddress}`,
+        );
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return res.decoded[0];
+    return res[0] as boolean;
 };
 
 export const getUpgradeRequiredForAccountQueryKey = (
@@ -52,7 +51,7 @@ export const useUpgradeRequiredForAccount = (
     contractAddress: string,
     targetVersion: number,
 ) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -63,7 +62,7 @@ export const useUpgradeRequiredForAccount = (
         ),
         queryFn: async () =>
             getUpgradeRequiredForAccount(
-                thor,
+                thor as unknown as ThorClient,
                 contractAddress,
                 targetVersion,
                 network.type,

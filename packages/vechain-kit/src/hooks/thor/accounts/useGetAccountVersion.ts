@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 type GetAccountVersionReturnValue = {
     version: number;
@@ -14,26 +12,24 @@ type GetAccountVersionReturnValue = {
 };
 
 export const getAccountVersion = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     accountAddress: string,
     ownerAddress: string,
     networkType: NETWORK_TYPE,
 ): Promise<GetAccountVersionReturnValue> => {
-    const functionFragment =
-        SimpleAccountFactoryInterface.getFunction('getAccountVersion').format(
-            'json',
-        );
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
+        )
+        .read.getAccountVersion(accountAddress, ownerAddress);
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call(accountAddress, ownerAddress);
-
-    if (res.reverted) throw new Error('Reverted');
+    if (!res) throw new Error('Failed to get account version');
 
     return {
-        version: res.decoded[0],
-        isDeployed: res.decoded[1],
+        version: parseInt(res[0].toString()),
+        // TODO: migration check if it returns boolean
+        isDeployed: !!res[1],
     };
 };
 
@@ -61,7 +57,7 @@ export const useGetAccountVersion = (
     accountAddress: string,
     ownerAddress: string,
 ) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -71,7 +67,12 @@ export const useGetAccountVersion = (
             network.type,
         ),
         queryFn: async () =>
-            getAccountVersion(thor, accountAddress, ownerAddress, network.type),
+            getAccountVersion(
+                thor as unknown as ThorClient,
+                accountAddress,
+                ownerAddress,
+                network.type,
+            ),
         enabled: !!thor && accountAddress !== '' && ownerAddress !== '',
     });
 };

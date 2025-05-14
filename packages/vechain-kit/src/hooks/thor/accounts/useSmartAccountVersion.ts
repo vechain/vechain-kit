@@ -1,27 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { useThor } from '@vechain/dapp-kit-react2';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getVersion = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     contractAddress?: string,
 ): Promise<number> => {
     if (!contractAddress) throw new Error('Contract address is required');
 
-    const functionFragment =
-        SimpleAccountFactoryInterface.getFunction('version').format('json');
+    const res = await thor.contracts
+        .load(contractAddress, SimpleAccountFactory__factory.abi)
+        .read.version();
 
-    const res = await thor
-        .account(contractAddress)
-        .method(JSON.parse(functionFragment))
-        .call();
+    if (!res) throw new Error(`Failed to get version of ${contractAddress}`);
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return parseInt(res.decoded[0]);
+    return Array.isArray(res)
+        ? parseInt(res[0].toString())
+        : parseInt(res.toString());
 };
 
 export const getVersionQueryKey = (contractAddress?: string) => [
@@ -36,11 +32,12 @@ export const getVersionQueryKey = (contractAddress?: string) => [
  * @returns The version of the smart account
  */
 export const useSmartAccountVersion = (contractAddress?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
 
     return useQuery({
         queryKey: getVersionQueryKey(contractAddress),
-        queryFn: async () => getVersion(thor, contractAddress),
+        queryFn: async () =>
+            getVersion(thor as unknown as ThorClient, contractAddress),
         enabled: !!thor && contractAddress !== '',
     });
 };

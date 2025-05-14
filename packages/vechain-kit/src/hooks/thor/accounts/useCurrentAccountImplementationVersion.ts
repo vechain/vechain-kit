@@ -1,31 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { useThor } from '@vechain/dapp-kit-react2';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getCurrentAccountImplementationVersion = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType?: NETWORK_TYPE,
 ): Promise<number> => {
     if (!networkType) throw new Error('Network type is required');
 
-    const functionFragment = SimpleAccountFactoryInterface.getFunction(
-        'currentAccountImplementationVersion',
-    ).format('json');
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
+        )
+        .read.currentAccountImplementationVersion();
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call();
+    if (!res)
+        throw new Error('Failed to get current account implementation version');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return parseInt(res.decoded[0]);
+    return parseInt(res[0].toString());
 };
 
 export const getCurrentAccountImplementationVersionQueryKey = (
@@ -43,13 +40,16 @@ export const getCurrentAccountImplementationVersionQueryKey = (
  * @returns The current account implementation version
  */
 export const useCurrentAccountImplementationVersion = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getCurrentAccountImplementationVersionQueryKey(network.type),
         queryFn: async () =>
-            getCurrentAccountImplementationVersion(thor, network.type),
+            getCurrentAccountImplementationVersion(
+                thor as unknown as ThorClient,
+                network.type,
+            ),
         enabled: !!thor && !!network,
     });
 };
