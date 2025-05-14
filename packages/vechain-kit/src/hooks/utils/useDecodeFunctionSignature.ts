@@ -1,3 +1,5 @@
+// TODO migration check if this is used, remove if not
+// remove deprecated thor-devkit if possible
 import { useQuery } from '@tanstack/react-query';
 import { abi } from 'thor-devkit';
 
