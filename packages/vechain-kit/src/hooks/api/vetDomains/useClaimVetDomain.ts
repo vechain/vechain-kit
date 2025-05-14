@@ -2,8 +2,8 @@ import {
     UseSendTransactionReturnValue,
     useSendTransaction,
     useWallet,
-    useRefreshMetadata,
 } from '@/hooks';
+import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { useCallback } from 'react';
 import { IReverseRegistrar__factory } from '@/contracts';
 import { useQueryClient } from '@tanstack/react-query';

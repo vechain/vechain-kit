@@ -3,7 +3,6 @@ export * from './useBalances';
 export * from './useCurrency';
 export * from './useCustomTokens';
 export * from './useRefreshBalances';
-export * from './useRefreshMetadata';
 export * from './useTokenBalances';
 export * from './useTokenPrices';
 export * from './useTokensWithValues';

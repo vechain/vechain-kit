@@ -58,7 +58,7 @@ export type UseSendTransactionReturnValue = {
 };
 
 /**
- * Generic hook to send a transaction using connex.
+ * Generic hook to send a transaction using dapp-kit-react.
  * This hook supports both Privy and VeChain wallets.
  *
  * It returns a function to send the transaction and a status to indicate the state
