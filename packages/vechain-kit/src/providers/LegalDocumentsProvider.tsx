@@ -11,7 +11,10 @@ import {
     getTermId,
     getTermsNotAgreed,
 } from '@/utils/legalDocumentsUtils';
-import { Analytics } from '@/utils/mixpanelClientInstance';
+import {
+    Analytics,
+    setConnectedWalletAddress,
+} from '@/utils/mixpanelClientInstance';
 import {
     createContext,
     ReactNode,
@@ -98,10 +101,16 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
 
         const updated = [...filteredAgreements, ...newAgreements];
         setStoredAgreements(updated);
+
+        setConnectedWalletAddress(account.address);
     };
 
     useEffect(() => {
         if (connection.isConnected && account?.address) {
+            // Set the connected wallet address to the mixpanel
+            // This is used to prevent tracking events
+            // if the connected user has not agreed to the terms
+            setConnectedWalletAddress(account.address);
             setShowTermsModal(!hasAgreedToRequiredTerms);
         } else {
             setShowTermsModal(false);
@@ -122,6 +131,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         disconnect();
         setShowTermsModal(false);
         closeAccountModal();
+        setConnectedWalletAddress(null);
         Analytics.auth.logoutCompleted();
     };
 

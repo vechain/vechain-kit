@@ -34,10 +34,15 @@ import {
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
+import { hasAgreedToVeChainKitTerms } from './legalDocumentsUtils';
 
 const APP_SOURCE: string = document.title || '';
 const PAGE_SOURCE: string = window?.location?.origin || '';
 
+// Track current connected wallet address
+let connectedWalletAddress: string | null = null;
+
+// Initialize Mixpanel with basic config, but control actual tracking with consent checks
 if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
     VeChainKitMixpanel.init(VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN, {
         debug: !ENV.isProduction,
@@ -48,6 +53,17 @@ if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
         console.info('Analytics initialized in DEVELOPMENT mode');
     }
 }
+
+// Set the current wallet address - can be called from app when wallet connects
+export const setConnectedWalletAddress = (address: string | null): void => {
+    connectedWalletAddress = address;
+};
+
+// Check if user has consented to tracking
+const hasTrackingConsent = (walletAddress: string | null): boolean => {
+    if (!walletAddress) return false;
+    return hasAgreedToVeChainKitTerms(walletAddress);
+};
 
 // Check if a user is logging in for the first time
 const isFirstLogin = (userId: string): boolean => {
@@ -98,6 +114,18 @@ const trackEvent = <E extends EventName>(
             return;
         }
 
+        // Extract wallet address from properties or use the stored one
+        const userWalletAddress =
+            connectedWalletAddress || (properties as any).userId;
+
+        // Always allow auth flow events (login and terms acceptance)
+        const isAuthEvent = event === 'Auth Flow';
+
+        // Skip tracking for non-auth events when user hasn't consented
+        if (!isAuthEvent && !hasTrackingConsent(userWalletAddress)) {
+            return;
+        }
+
         VeChainKitMixpanel.track(event, {
             ...properties,
             source: APP_SOURCE,
@@ -113,6 +141,14 @@ const setUserProperties = (
     userId?: string,
 ): void => {
     try {
+        // Use either provided userId or the connected wallet address
+        const effectiveUserId = userId ?? connectedWalletAddress;
+
+        // Skip if we don't have consent
+        if (!hasTrackingConsent(effectiveUserId)) {
+            return;
+        }
+
         VeChainKitMixpanel.people.set({
             ...properties,
             source: APP_SOURCE,
@@ -120,8 +156,8 @@ const setUserProperties = (
         });
 
         // Store in localStorage if userId is provided
-        if (userId) {
-            storeUserData(userId, properties);
+        if (effectiveUserId) {
+            storeUserData(effectiveUserId, properties);
         }
     } catch (error) {
         console.error('Error setting user properties:', error);
@@ -134,6 +170,10 @@ const identifyUser = (userId: string): void => {
             return;
         }
 
+        // Always update the stored wallet address
+        setConnectedWalletAddress(userId);
+
+        // Always identify the user (needed for terms acceptance flow)
         VeChainKitMixpanel.identify(userId);
     } catch (error) {
         console.error('Error identifying user:', error);
@@ -142,6 +182,11 @@ const identifyUser = (userId: string): void => {
 
 const incrementUserProperty = (property: string, value: number = 1): void => {
     try {
+        // Skip if no consent
+        if (!hasTrackingConsent(connectedWalletAddress)) {
+            return;
+        }
+
         VeChainKitMixpanel.people.increment(property, value);
     } catch (error) {
         console.error(`Error incrementing property ${property}:`, error);
@@ -151,6 +196,7 @@ const incrementUserProperty = (property: string, value: number = 1): void => {
 const resetUser = (): void => {
     try {
         VeChainKitMixpanel.reset();
+        setConnectedWalletAddress(null);
     } catch (error) {
         console.error('Error resetting user:', error);
     }
@@ -250,6 +296,8 @@ const Analytics = {
 
         logoutCompleted: () => {
             Analytics.auth.trackAuth('logout');
+            // Clear the wallet address when logging out
+            setConnectedWalletAddress(null);
         },
     },
 
