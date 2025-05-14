@@ -1,29 +1,31 @@
 import { useQuery } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { GalaxyMember__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getNFTMetadataUri = async (
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
-    thor: Connex.Thor,
     tokenID: null | string,
 ): Promise<string> => {
     if (!tokenID) return Promise.reject(new Error('tokenID not provided'));
 
-    const galaxyMemberContract =
-        getConfig(networkType).galaxyMemberContractAddress;
-    const functionFragment = GalaxyMember__factory.createInterface()
-        .getFunction('tokenURI')
-        .format('json');
-    const res = await thor
-        .account(galaxyMemberContract)
-        .method(JSON.parse(functionFragment))
-        .call(tokenID);
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).galaxyMemberContractAddress,
+            GalaxyMember__factory.abi,
+        )
+        .read.tokenURI(tokenID);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-    return res.decoded[0];
+    if (!res)
+        return Promise.reject(
+            new Error(`Failed to get NFT metadata URI for ${tokenID}`),
+        );
+
+    return res[0].toString();
 };
 
 export const getNFTMetadataUriQueryKey = (tokenID: null | string) => [
@@ -40,12 +42,17 @@ export const getNFTMetadataUriQueryKey = (tokenID: null | string) => [
  * @returns the metadata URI for the token
  */
 export const useNFTMetadataUri = (tokenID: null | string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getNFTMetadataUriQueryKey(tokenID),
-        queryFn: () => getNFTMetadataUri(network.type, thor, tokenID),
+        queryFn: () =>
+            getNFTMetadataUri(
+                thor as unknown as ThorClient,
+                network.type,
+                tokenID,
+            ),
         enabled: !!tokenID && !!network.type,
     });
 };
