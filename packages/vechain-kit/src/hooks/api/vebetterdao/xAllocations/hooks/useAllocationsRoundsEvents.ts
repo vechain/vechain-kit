@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { abi } from 'thor-devkit';
 import { getAllEventLogs } from '@/hooks';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network1.2';
-import { ABIEvent } from '@vechain/sdk-core1.2';
+import { compareAddresses } from '@/utils';
 
 export type RoundCreated = {
     roundId: string;
@@ -29,12 +28,9 @@ export const getAllocationsRoundsEvents = async (
 ) => {
     const xAllocationVotingContract =
         getConfig(networkType).xAllocationVotingContractAddress;
-    const allocationCreatedAbi =
-        XAllocationVoting__factory.createInterface().getEvent('RoundCreated');
-    if (!allocationCreatedAbi) throw new Error('RoundCreated event not found');
-    const allocationCreatedEvent = new abi.Event(
-        allocationCreatedAbi as unknown as abi.Event.Definition,
-    );
+    const eventAbi = thor.contracts
+        .load(xAllocationVotingContract, XAllocationVoting__factory.abi)
+        .getEventAbi('RoundCreated');
 
     const events = await getAllEventLogs({
         thor,
@@ -43,9 +39,9 @@ export const getAllocationsRoundsEvents = async (
                 criteria: {
                     address: xAllocationVotingContract,
                     // TODO: migration this is not a topic so might be removed.
-                    topic0: allocationCreatedEvent.signature,
+                    topic0: eventAbi.signatureHash,
                 },
-                eventAbi: new ABIEvent(allocationCreatedEvent.signature),
+                eventAbi,
             },
         ],
         nodeUrl: getConfig(networkType).nodeUrl,
@@ -58,26 +54,30 @@ export const getAllocationsRoundsEvents = async (
 
     //   TODO: runtime validation with zod ?
     events.forEach((event: any) => {
-        switch (event.topics[0]) {
-            case allocationCreatedEvent.signature: {
-                const decoded = allocationCreatedEvent.decode(
-                    event.data,
-                    event.topics,
-                );
-                decodedCreatedAllocationEvents.push({
-                    roundId: decoded[0],
-                    proposer: decoded[1],
-                    voteStart: decoded[2],
-                    voteEnd: decoded[3],
-                    appsIds: decoded[4],
-                });
-                break;
-            }
-
-            default: {
-                throw new Error('Unknown event');
-            }
+        if (!event.decodedData) {
+            throw new Error('Event data not decoded');
         }
+
+        if (!compareAddresses(event.address, xAllocationVotingContract)) {
+            throw new Error('Event address not valid');
+        }
+
+        const [roundId, proposer, voteStart, voteEnd, appsIds] =
+            event.decodedData as [
+                RoundCreated['roundId'],
+                RoundCreated['proposer'],
+                RoundCreated['voteStart'],
+                RoundCreated['voteEnd'],
+                RoundCreated['appsIds'],
+            ];
+
+        decodedCreatedAllocationEvents.push({
+            roundId,
+            proposer,
+            voteStart,
+            voteEnd,
+            appsIds,
+        });
     });
 
     return {

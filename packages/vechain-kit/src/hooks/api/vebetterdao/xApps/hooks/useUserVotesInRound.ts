@@ -1,14 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { abi } from 'thor-devkit';
 import { getAllEventLogs } from '@/hooks';
 import { XAllocationVoting__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
 import { FilterCriteria, ThorClient } from '@vechain/sdk-network1.2';
-import { ABIEvent } from '@vechain/sdk-core1.2';
-const XAllocationVotingInterface = XAllocationVoting__factory.createInterface();
+import { compareAddresses } from '@/utils';
 
 export type AllocationVoteCastEvent = {
     voter: string;
@@ -18,25 +16,23 @@ export type AllocationVoteCastEvent = {
 };
 
 export const getUserVotesInRound = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     roundId?: string,
     address?: string,
 ): Promise<AllocationVoteCastEvent[]> => {
     const xAllocationVotingContract =
         getConfig(network).xAllocationVotingContractAddress;
-    const eventFragment =
-        XAllocationVotingInterface.getEvent('AllocationVoteCast').format(
-            'json',
-        );
-    const allocationVoteCast = new abi.Event(
-        JSON.parse(eventFragment) as abi.Event.Definition,
-    );
 
-    const topics = allocationVoteCast.encode({
+    const eventAbi = thor.contracts
+        .load(xAllocationVotingContract, XAllocationVoting__factory.abi)
+        .getEventAbi('AllocationVoteCast');
+
+    const topics = eventAbi.encodeFilterTopicsNoNull({
         ...(address ? { voter: address } : {}),
         ...(roundId ? { roundId } : {}),
     });
+
     /**
      * Filter criteria to get the events from the governor contract that we are interested in
      * This way we can get all of them in one call
@@ -51,7 +47,7 @@ export const getUserVotesInRound = async (
                 topic3: topics[3] ?? undefined,
                 topic4: topics[4] ?? undefined,
             },
-            eventAbi: new ABIEvent(allocationVoteCast.signature),
+            eventAbi,
         },
     ];
 
@@ -66,27 +62,29 @@ export const getUserVotesInRound = async (
      */
     const decodedAllocatedVoteEvents: AllocationVoteCastEvent[] = [];
 
-    //   TODO: runtime validation with zod ?
+    // TODO: runtime validation with zod
     events.forEach((event) => {
-        switch (event.topics[0]) {
-            case allocationVoteCast.signature: {
-                const decoded = allocationVoteCast.decode(
-                    event.data,
-                    event.topics,
-                );
-                decodedAllocatedVoteEvents.push({
-                    voter: decoded[0],
-                    roundId: decoded[1],
-                    appsIds: decoded[2],
-                    voteWeights: decoded[3],
-                });
-                break;
-            }
-
-            default: {
-                throw new Error('Unknown event');
-            }
+        if (!event.decodedData) {
+            throw new Error('Event data not decoded');
         }
+
+        if (!compareAddresses(event.address, xAllocationVotingContract)) {
+            throw new Error('Event address not valid');
+        }
+
+        const [voter, roundId, appsIds, voteWeights] = event.decodedData as [
+            AllocationVoteCastEvent['voter'],
+            AllocationVoteCastEvent['roundId'],
+            AllocationVoteCastEvent['appsIds'],
+            AllocationVoteCastEvent['voteWeights'],
+        ];
+
+        decodedAllocatedVoteEvents.push({
+            voter,
+            roundId,
+            appsIds,
+            voteWeights,
+        });
     });
 
     return decodedAllocatedVoteEvents;
@@ -115,7 +113,7 @@ export const useUserVotesInRound = (roundId?: string, address?: string) => {
         queryKey: getUserVotesInRoundQueryKey(roundId, address),
         queryFn: async () => {
             const votes = await getUserVotesInRound(
-                thor,
+                thor as unknown as ThorClient,
                 network.type,
                 roundId,
                 address,
@@ -150,7 +148,11 @@ export const useVotesInRound = (roundId?: string, enabled = true) => {
     return useQuery({
         queryKey: getVotesInRoundQueryKey(roundId),
         queryFn: async () =>
-            await getUserVotesInRound(thor, network.type, roundId),
+            await getUserVotesInRound(
+                thor as unknown as ThorClient,
+                network.type,
+                roundId,
+            ),
 
         enabled:
             !!thor &&
