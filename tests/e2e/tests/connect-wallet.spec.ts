@@ -21,7 +21,8 @@ test.describe("Connect Wallet", () => {
     test('Can log in using VeWorld wallet and then log out', async () => {
         await homePage.open()
         await homePage.initVWMock(0)
-        await homePage.connectWallet()
+        await homePage.connectWallet({ acceptTnc: true })
+        await expect(homePage.acceptTncButton).toBeVisible({ visible: false })
         await expect(dashboardPage.walletAddress).toHaveText(trimAddress(DENIAL_KITCHEN[0]))
         await dashboardPage.openAccountModal()
         await accountModal.logOut()
@@ -42,10 +43,31 @@ test.describe.skip("Privy", () => {
 
     test('Can log in using email and then log out', async () => {
         await homePage.open()
-        await homePage.loginWithEmail(PRIVY_TEST_EMAIL_SENDER)
+        await homePage.loginWithEmail({ email: PRIVY_TEST_EMAIL_SENDER, acceptTnc: true })
+        await expect(homePage.acceptTncButton).toBeVisible({ visible: false })
         await expect(dashboardPage.walletButton).toBeVisible()
         await dashboardPage.openAccountModal()
         await accountModal.logOut()
         await expect(homePage.loginButton).toBeVisible()
+    })
+})
+
+test.describe('Terms and Conditions', () => {
+    let homePage: HomePage
+    let accountModal: AccountModal
+
+    test.beforeEach(async ({ page, context }) => {
+        homePage = new HomePage(page, context, veWorldMockClient)
+        accountModal = new AccountModal(page, context, veWorldMockClient)
+    })
+
+    test('Reject T&C and disconnect', async () => {
+        await homePage.open()
+        await homePage.initVWMock(0)
+        await homePage.connectWallet({ acceptTnc: false })
+        await accountModal.profile.disconnectButton.click()
+        await expect(homePage.loginButton).toBeVisible()
+        // TODO: uncomment after PR#280 is merged
+        // await homePage.assertSessionIsDeleted()
     })
 })

@@ -137,6 +137,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                                 variant="vechainKitPrimary"
                                 width="full"
                                 isDisabled={!isValid}
+                                data-testid={'accept-tnc-button'}
                             >
                                 {t('Accept')}
                             </Button>
@@ -144,6 +145,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                                 variant="vechainKitSecondary"
                                 width="full"
                                 onClick={onCancel}
+                                data-testid={'reject-tnc-button'}
                             >
                                 {t('Cancel')}
                             </Button>

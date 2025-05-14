@@ -53,7 +53,11 @@ export const DisconnectConfirmContent = ({
                     >
                         {t('Disconnect')}
                     </Button>
-                    <Button variant="vechainKitSecondary" onClick={onBack}>
+                    <Button
+                        variant="vechainKitSecondary"
+                        onClick={onBack}
+                        data-testid="cancel-logout-button"
+                    >
                         {t('Cancel')}
                     </Button>
                 </VStack>

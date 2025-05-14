@@ -32,6 +32,7 @@ export const TermItem = ({ term, register, getTermId }: Props) => {
                     {...register(termId, {
                         required: term.required,
                     })}
+                    data-testid="tnc-checkbox"
                 />
 
                 <Text fontSize="sm" lineHeight="1.6">
