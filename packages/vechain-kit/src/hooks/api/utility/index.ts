@@ -3,3 +3,4 @@ export * from './useGetNodeUrl';
 export * from './useGetCustomTokenBalances';
 export * from './useGetCustomTokenInfo';
 export * from './useDecodeFunctionSingature';
+export * from './useAppHubApps';

@@ -218,13 +218,15 @@ export type EcosystemAction =
     | 'search'
     | 'app_select'
     | 'app_launch'
-    | 'add_shortcut';
+    | 'add_shortcut'
+    | 'filter_by_category';
 
 export type EcosystemProperties = {
     action: EcosystemAction;
     appName?: string;
     query?: string;
     resultsCount?: number;
+    category?: string;
     error?: string;
     isError?: boolean;
 };

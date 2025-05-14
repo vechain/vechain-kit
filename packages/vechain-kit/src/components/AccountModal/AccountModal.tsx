@@ -112,6 +112,15 @@ export const AccountModal = ({
                     );
                 case 'faq':
                     return <FAQContent {...currentContent.props} />;
+                case 'ecosystem-with-category':
+                    return (
+                        <ExploreEcosystemContent
+                            setCurrentContent={setCurrentContent}
+                            selectedCategory={
+                                currentContent.props.selectedCategory
+                            }
+                        />
+                    );
             }
         }
 

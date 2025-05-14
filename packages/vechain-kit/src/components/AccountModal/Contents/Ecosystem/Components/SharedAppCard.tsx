@@ -1,11 +1,13 @@
-import { Card, CardBody, Image, Text, VStack } from '@chakra-ui/react';
+import { Card, CardBody, Image, Text, VStack, Box } from '@chakra-ui/react';
 import { notFoundImage } from '@/utils';
 import React from 'react';
+import { CategoryLabel } from './CategoryLabel';
 
-type SharedAppCardProps = {
+export type SharedAppCardProps = {
     name?: string;
     imageUrl: string;
     linkUrl: string;
+    category?: string;
     logoComponent?: JSX.Element;
     onClick: () => void;
     size?: 'sm' | 'md';
@@ -15,6 +17,7 @@ export const SharedAppCard = ({
     name,
     imageUrl,
     logoComponent,
+    category,
     onClick,
     size = 'md',
 }: SharedAppCardProps) => {
@@ -24,7 +27,13 @@ export const SharedAppCard = ({
             _hover={{ opacity: 0.8 }}
             cursor="pointer"
             onClick={onClick}
+            position="relative"
         >
+            {category && (
+                <Box position="absolute" top="2" right="2" zIndex="1">
+                    <CategoryLabel category={category} />
+                </Box>
+            )}
             <CardBody p={size === 'sm' ? 2 : 4} alignItems="center">
                 <VStack spacing={2} h="100%" justifyContent="space-between">
                     {logoComponent
