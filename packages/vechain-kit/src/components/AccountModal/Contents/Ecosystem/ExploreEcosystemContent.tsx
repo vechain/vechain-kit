@@ -210,7 +210,6 @@ export const ExploreEcosystemContent = ({
     };
 
     const handleCategoryChange = (category: CategoryFilter) => {
-        console.log('Category changed to:', category);
         setCurrentCategory(category);
 
         if (category) {

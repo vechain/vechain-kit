@@ -52,7 +52,6 @@ export const AppOverviewContent = ({
     };
 
     const handleBackClick = () => {
-        console.log('Navigating back with category:', selectedCategory);
         if (selectedCategory) {
             setCurrentContent({
                 type: 'ecosystem-with-category',
