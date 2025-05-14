@@ -3,12 +3,18 @@ import { useWallet } from '@/hooks';
 import { useSyncableLocalStorage } from '@/hooks/cache';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import { TermsAndConditions, TermsAndConditionsAgreement } from '@/types';
-import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
+import { compareAddresses } from '@/utils';
+import {
+    hasAgreedToRequiredTerms as checkHasAgreedToRequiredTerms,
+    getAllTerms,
+    getRequiredTerms,
+    getTermId,
+    getTermsNotAgreed,
+} from '@/utils/legalDocumentsUtils';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import {
     createContext,
     ReactNode,
-    useCallback,
     useContext,
     useEffect,
     useMemo,
@@ -56,56 +62,21 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     >('vechain-kit-terms-and-conditions', []);
     const [showTermsModal, setShowTermsModal] = useState(false);
 
-    const getTermId = (term: Omit<TermsAndConditions, 'id'>) =>
-        `term-${term.url.replace(/[^\w-]+/g, '-')}-v${term.version}`;
-
-    const formatTerms = useCallback(
-        (terms: Omit<TermsAndConditions, 'id'>[]) =>
-            terms.map((term) => ({
-                ...term,
-                id: getTermId(term),
-            })),
-        [],
-    );
-
     const terms = useMemo(() => {
-        return formatTerms([
-            VECHAIN_KIT_TERMS_CONFIG,
-            ...(legalDocuments?.termsAndConditions ?? []),
-        ]);
-    }, [legalDocuments, formatTerms]);
+        return getAllTerms(legalDocuments?.termsAndConditions ?? []);
+    }, [legalDocuments]);
 
-    const requiredTerms = useMemo(
-        () => terms.filter((term) => term.required),
-        [terms],
-    );
+    const requiredTerms = useMemo(() => {
+        return getRequiredTerms(terms);
+    }, [terms]);
 
     const termsNotAgreed = useMemo(() => {
-        if (!account?.address) return [];
-
-        return terms.filter(
-            (term) =>
-                !storedAgreements.some(
-                    (saved) =>
-                        compareAddresses(
-                            saved.walletAddress,
-                            account.address,
-                        ) && saved.id === term.id,
-                ),
-        );
-    }, [terms, storedAgreements, account?.address]);
+        return getTermsNotAgreed(account?.address, terms);
+    }, [terms, account?.address]);
 
     const hasAgreedToRequiredTerms = useMemo(() => {
-        if (!requiredTerms.length || !account?.address) return true;
-
-        return requiredTerms.every((term) =>
-            storedAgreements.some(
-                (saved) =>
-                    compareAddresses(saved.walletAddress, account.address) &&
-                    saved.id === term.id,
-            ),
-        );
-    }, [requiredTerms, storedAgreements, account?.address]);
+        return checkHasAgreedToRequiredTerms(account?.address, requiredTerms);
+    }, [requiredTerms, account?.address]);
 
     const agreeToTerms = (terms: TermsAndConditions | TermsAndConditions[]) => {
         if (!account?.address) return;
