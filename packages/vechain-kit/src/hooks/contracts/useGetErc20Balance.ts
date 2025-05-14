@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { IERC20__factory } from '../../../contracts/typechain-types';
+import { useThor } from '@vechain/dapp-kit-react2';
+import { IERC20__factory } from '@contracts';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getErc20Balance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     tokenAddress: string,
     address?: string,
 ): Promise<{ original: string; scaled: string; formatted: string }> => {
@@ -13,18 +14,13 @@ export const getErc20Balance = async (
         throw new Error('Token address and user address are required');
     }
 
-    const functionFragment = IERC20__factory.createInterface()
-        .getFunction('balanceOf')
-        .format('json');
+    const res = await thor.contracts
+        .load(tokenAddress, IERC20__factory.abi)
+        .read.balanceOf(address);
 
-    const res = await thor
-        .account(tokenAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    if (!res) throw new Error(`Failed to get balance of ${tokenAddress}`);
 
-    if (res.reverted) throw new Error('Reverted');
-
-    const original = res.decoded[0];
+    const original = res[0].toString();
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
@@ -38,14 +34,19 @@ export const getErc20Balance = async (
 export const getErc20BalanceQueryKey = (
     tokenAddress: string,
     address?: string,
-) => ['VECHAIN_KIT_ERC20_BALANCE', tokenAddress, address];
+) => ['VECHAIN_KIT', 'BALANCE', 'ERC20', tokenAddress, address];
 
 export const useGetErc20Balance = (tokenAddress: string, address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
 
     return useQuery({
         queryKey: getErc20BalanceQueryKey(tokenAddress, address),
-        queryFn: async () => getErc20Balance(thor, tokenAddress, address),
+        queryFn: async () =>
+            getErc20Balance(
+                thor as unknown as ThorClient,
+                tokenAddress,
+                address,
+            ),
         enabled: !!thor && !!address && !!tokenAddress,
     });
 };

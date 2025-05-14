@@ -18,3 +18,4 @@ export * from './utils';
 export * from './cache';
 export * from './blocks';
 export * from './logs';
+export * from './contracts';
