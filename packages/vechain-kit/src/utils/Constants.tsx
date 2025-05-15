@@ -84,21 +84,21 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
 ];
 
 export const VECHAIN_KIT_TERMS_CONFIG = {
-    url: 'https://docs.vechainkit.vechain.org/',
+    url: 'https://kit.vechain.org/terms',
     version: 1,
     required: true,
     displayName: 'VeChain Kit Terms and Conditions',
 };
 
 export const VECHAIN_KIT_PRIVACY_CONFIG = {
-    url: 'https://docs.vechainkit.vechain.org/privacy',
+    url: 'https://kit.vechain.org/privacy',
     version: 1,
     required: true,
     displayName: 'VeChain Kit Privacy Policy',
 };
 
 export const VECHAIN_KIT_COOKIE_CONFIG = {
-    url: 'https://docs.vechainkit.vechain.org/cookie',
+    url: 'https://kit.vechain.org/cookie',
     version: 1,
     required: true,
     displayName: 'VeChain Kit Cookie Policy',
