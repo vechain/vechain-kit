@@ -546,7 +546,7 @@
     "Terms and Conditions": "Terms and Conditions",
     "View Current Policy": "View Current Policy",
     "You accepted current policy on {{date}}": "You accepted current policy on {{date}}",
-    "Accepted on {{date}}": "Accepted on {{date}}",
+    "'{{policyName}}' on {{date}}": "'{{policyName}}' on {{date}}",
     "{{variant}} policies you have accepted": "{{variant}} policies you have accepted",
     "Privacy Policy": "Privacy Policy",
     "Cookie Policy": "Cookie Policy",

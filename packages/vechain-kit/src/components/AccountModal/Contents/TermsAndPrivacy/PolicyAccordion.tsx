@@ -103,12 +103,30 @@ export const PolicyAccordion = ({
                                             <Tag size="sm" borderRadius="full">
                                                 v{document.version}
                                             </Tag>
-                                            <Text fontSize="xs">
-                                                {t('Accepted on {{date}}', {
-                                                    date: formatDate(
-                                                        document.timestamp,
-                                                    ),
-                                                })}
+                                            <Text
+                                                fontSize="xs"
+                                                cursor="pointer"
+                                                onClick={() => {
+                                                    window.open(
+                                                        document.url,
+                                                        '_blank',
+                                                    );
+                                                }}
+                                                _hover={{
+                                                    textDecoration: 'underline',
+                                                }}
+                                            >
+                                                {t(
+                                                    "'{{policyName}}' on {{date}}",
+                                                    {
+                                                        policyName:
+                                                            document.displayName ??
+                                                            'Policy',
+                                                        date: formatDate(
+                                                            document.timestamp,
+                                                        ),
+                                                    },
+                                                )}
                                             </Text>
                                         </HStack>
                                     ))}
