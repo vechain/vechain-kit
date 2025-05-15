@@ -551,6 +551,11 @@ const Analytics = {
 
         addAppToShortcuts: (appName: string) =>
             Analytics.ecosystem.trackEcosystem('add_shortcut', { appName }),
+
+        filterByCategory: (category: string) =>
+            Analytics.ecosystem.trackEcosystem('filter_by_category', {
+                category,
+            }),
     },
 
     settings: {

@@ -8,6 +8,7 @@ import {
 } from '../Contents';
 import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
+import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterSection';
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
@@ -49,6 +50,15 @@ export type AccountModalContentTypes =
     | {
           type: 'app-overview';
           props: AppOverviewContentProps;
+      }
+    | {
+          type: 'ecosystem-with-category';
+          props: {
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+              selectedCategory: CategoryFilter;
+          };
       }
     | { type: 'send-token'; props: SendTokenContentProps }
     | {

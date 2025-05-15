@@ -123,6 +123,15 @@ export const AccountModal = ({
                     return <FAQContent {...currentContent.props} />;
                 case 'terms-and-privacy':
                     return <TermsAndPrivacyContent {...currentContent.props} />;
+                case 'ecosystem-with-category':
+                    return (
+                        <ExploreEcosystemContent
+                            setCurrentContent={setCurrentContent}
+                            selectedCategory={
+                                currentContent.props.selectedCategory
+                            }
+                        />
+                    );
             }
         }
 

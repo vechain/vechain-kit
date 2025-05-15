@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { ExistingDomainsList } from './Components/ExistingDomainsList';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { ens_normalize } from '@adraffy/ens-normalize';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -42,7 +43,7 @@ export const ChooseNameSearchContent = ({
     const { t } = useTranslation();
     const { account } = useWallet();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const [name, setName] = useState(initialName);
+    const [name, setName] = useState(ens_normalize(initialName));
     const [error, setError] = useState<string | null>(null);
     const [isOwnDomain, setIsOwnDomain] = useState(false);
     const [isAvailable, setIsAvailable] = useState(false);
@@ -182,7 +183,9 @@ export const ChooseNameSearchContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader data-testid='modal-title'>{t('Choose Name')}</ModalHeader>
+                <ModalHeader data-testid="modal-title">
+                    {t('Choose Name')}
+                </ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton onClick={handleClose} />
             </StickyHeaderContainer>
@@ -201,7 +204,7 @@ export const ChooseNameSearchContent = ({
                             placeholder={t('Enter your name')}
                             value={name}
                             onChange={(e) => {
-                                setName(e.target.value);
+                                setName(ens_normalize(e.target.value));
                                 if (!hasInteracted) setHasInteracted(true);
                             }}
                             paddingRight="120px"
@@ -243,7 +246,11 @@ export const ChooseNameSearchContent = ({
                     </InputGroup>
 
                     {error && hasInteracted && (
-                        <Text color="#ef4444" fontSize="sm" data-testid="domain-availability-status">
+                        <Text
+                            color="#ef4444"
+                            fontSize="sm"
+                            data-testid="domain-availability-status"
+                        >
                             {error}
                         </Text>
                     )}

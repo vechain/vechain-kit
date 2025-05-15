@@ -11,28 +11,44 @@ import {
     ModalFooter,
     Text,
     Box,
+    Spinner,
+    Center,
 } from '@chakra-ui/react';
 import { CiSearch } from 'react-icons/ci';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     useCurrentAllocationsRoundId,
     useEcosystemShortcuts,
     useMostVotedAppsInRound,
     XAppMetadata,
 } from '@/hooks';
+import { useAppHubApps, AppHubApp } from '@/hooks/api/utility/useAppHubApps';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
+import {
+    CategoryFilterSection,
+    CategoryFilter,
+} from './Components/CategoryFilterSection';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { AllowedCategories } from './Components/CategoryLabel';
+
+export type EcosystemWithCategoryProps = {
+    selectedCategory: CategoryFilter;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
+};
 
 type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    selectedCategory?: CategoryFilter;
 };
 
 // Mock data - Replace with real data from your API
@@ -66,39 +82,84 @@ const DEFAULT_APPS: XAppMetadata[] = [
             banner: 'https://vet.domains/assets/walletconnect.png',
         },
     },
-    {
-        name: 'VeChain Kit',
-        description: 'A all-in-one library for building VeChain applications.',
-        external_url: 'https://vechainkit.vechain.org/',
-        logo: 'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png',
-        banner: '',
-        screenshots: [],
-        social_urls: [],
-        app_urls: [],
-        tweets: [],
-        ve_world: {
-            banner: '',
-        },
-    },
+    // {
+    //     name: 'VeChain Kit',
+    //     description: 'A all-in-one library for building VeChain applications.',
+    //     external_url: 'https://vechainkit.vechain.org/',
+    //     logo: 'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png',
+    //     banner: '',
+    //     screenshots: [],
+    //     social_urls: [],
+    //     app_urls: [],
+    //     tweets: [],
+    //     ve_world: {
+    //         banner: '',
+    //     },
+    // },
 ];
 
-export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
+export const ExploreEcosystemContent = ({
+    setCurrentContent,
+    selectedCategory,
+}: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Initialize currentCategory with selectedCategory or null
+    const [currentCategory, setCurrentCategory] = useState<CategoryFilter>(
+        selectedCategory || null,
+    );
+
+    // Update currentCategory when selectedCategory changes
+    useEffect(() => {
+        if (selectedCategory !== undefined) {
+            setCurrentCategory(selectedCategory);
+        }
+    }, [selectedCategory]);
+
     const { data: currentRoundId } = useCurrentAllocationsRoundId();
     const { data: vbdApps } = useMostVotedAppsInRound(
         currentRoundId ? (parseInt(currentRoundId) - 1).toString() : '1',
     );
+    const {
+        data: appHubApps,
+        isLoading: appHubLoading,
+        error: appHubError,
+    } = useAppHubApps();
+
+    // Extract unique categories from app hub apps and add VeBetter category
+    const categories = useMemo(() => {
+        const categorySet = new Set<AllowedCategories>();
+
+        // Add VeBetter category if there are VBD apps and we're on mainnet
+        if (network.type === 'main' && vbdApps && vbdApps.length > 0) {
+            categorySet.add('vebetter');
+        }
+
+        // Add categories from app hub
+        if (appHubApps) {
+            appHubApps.forEach((app) => {
+                if (app.category) {
+                    categorySet.add(app.category);
+                }
+            });
+        }
+
+        return Array.from(categorySet).sort();
+    }, [appHubApps, vbdApps, network.type]);
 
     // Only show VBD apps if we're on mainnet
     const isMainnet = network.type === 'main';
-    const filteredDapps = isMainnet
+
+    // Filter VeBetterDAO apps based on search query
+    const filteredVbdApps = isMainnet
         ? vbdApps.filter((dapp) =>
               dapp.app.name.toLowerCase().includes(searchQuery.toLowerCase()),
           )
         : [];
 
+    // Filter default apps based on search query
     const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
         dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
     ).map((dapp) => {
@@ -113,6 +174,27 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
         return dapp;
     });
 
+    // Filter App Hub apps based on search query and selected category
+    const filteredAppHubApps =
+        appHubApps?.filter(
+            (app: AppHubApp) =>
+                // Text search filter
+                (app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    app.description
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase()) ||
+                    app.tags.some((tag: string) =>
+                        tag.toLowerCase().includes(searchQuery.toLowerCase()),
+                    )) &&
+                // Category filter
+                (currentCategory === null || app.category === currentCategory),
+        ) || [];
+
+    // Determine which apps to display based on category filter
+    const shouldShowDefaultApps = currentCategory === null;
+    const shouldShowVbdApps =
+        currentCategory === null || currentCategory === 'vebetter';
+
     const { shortcuts } = useEcosystemShortcuts();
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,8 +203,20 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
         if (query) {
             Analytics.ecosystem.searchPerformed(
                 query,
-                filteredDefaultApps.length + filteredDapps.length,
+                filteredDefaultApps.length +
+                    filteredVbdApps.length +
+                    filteredAppHubApps.length,
             );
+        }
+    };
+
+    const handleCategoryChange = (category: CategoryFilter) => {
+        setCurrentCategory(category);
+
+        if (category) {
+            Analytics.ecosystem.filterByCategory(category);
+        } else {
+            Analytics.ecosystem.filterByCategory('all');
         }
     };
 
@@ -164,29 +258,103 @@ export const ExploreEcosystemContent = ({ setCurrentContent }: Props) => {
                             />
                         </InputLeftElement>
                     </InputGroup>
+
+                    {/* Category filter section */}
+                    {categories.length > 0 && (
+                        <CategoryFilterSection
+                            selectedCategory={currentCategory}
+                            onCategoryChange={handleCategoryChange}
+                            categories={categories}
+                            darkMode={isDark}
+                        />
+                    )}
+
                     <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
-                        {filteredDefaultApps.map((dapp) => (
-                            <GridItem key={dapp.name}>
-                                <CustomAppComponent
-                                    name={dapp.name}
-                                    image={dapp.logo}
-                                    url={dapp.external_url}
-                                    setCurrentContent={setCurrentContent}
-                                    description={dapp.description}
-                                    {...(dapp.logoComponent && {
-                                        logoComponent: dapp.logoComponent,
-                                    })}
-                                />
+                        {/* Default Apps */}
+                        {shouldShowDefaultApps &&
+                            filteredDefaultApps.length > 0 && (
+                                <>
+                                    {filteredDefaultApps.map((dapp) => (
+                                        <GridItem key={dapp.name}>
+                                            <CustomAppComponent
+                                                name={dapp.name}
+                                                image={dapp.logo}
+                                                url={dapp.external_url}
+                                                setCurrentContent={
+                                                    setCurrentContent
+                                                }
+                                                description={dapp.description}
+                                                selectedCategory={
+                                                    currentCategory
+                                                }
+                                                {...(dapp.logoComponent && {
+                                                    logoComponent:
+                                                        dapp.logoComponent,
+                                                })}
+                                            />
+                                        </GridItem>
+                                    ))}
+                                </>
+                            )}
+
+                        {/* VeBetterDAO Apps */}
+                        {shouldShowVbdApps && filteredVbdApps.length > 0 && (
+                            <>
+                                {filteredVbdApps.map((dapp) => (
+                                    <GridItem key={dapp.id}>
+                                        <AppComponent
+                                            xApp={dapp.app}
+                                            setCurrentContent={
+                                                setCurrentContent
+                                            }
+                                            selectedCategory={currentCategory}
+                                        />
+                                    </GridItem>
+                                ))}
+                            </>
+                        )}
+
+                        {/* App Hub Apps */}
+                        {appHubLoading ? (
+                            <GridItem colSpan={2}>
+                                <Center py={4}>
+                                    <Spinner />
+                                </Center>
                             </GridItem>
-                        ))}
-                        {filteredDapps.map((dapp) => (
-                            <GridItem key={dapp.id}>
-                                <AppComponent
-                                    xApp={dapp.app}
-                                    setCurrentContent={setCurrentContent}
-                                />
+                        ) : appHubError ? (
+                            <GridItem colSpan={2}>
+                                <Text color="red.500" textAlign="center">
+                                    {t('Failed to load App Hub apps')}
+                                </Text>
                             </GridItem>
-                        ))}
+                        ) : filteredAppHubApps.length > 0 ? (
+                            filteredAppHubApps.map((app: AppHubApp) => (
+                                <GridItem key={app.id}>
+                                    <CustomAppComponent
+                                        name={app.name}
+                                        image={app.logo}
+                                        url={app.url}
+                                        setCurrentContent={setCurrentContent}
+                                        description={app.description}
+                                        category={app.category}
+                                        selectedCategory={currentCategory}
+                                    />
+                                </GridItem>
+                            ))
+                        ) : (
+                            currentCategory &&
+                            !shouldShowVbdApps && (
+                                <GridItem colSpan={2}>
+                                    <Center py={4}>
+                                        <Text>
+                                            {t(
+                                                'No apps found in this category',
+                                            )}
+                                        </Text>
+                                    </Center>
+                                </GridItem>
+                            )
+                        )}
                     </Grid>
                 </VStack>
             </ModalBody>

@@ -22,7 +22,8 @@ const config: AppConfig = {
     treasuryContractAddress: '0x039893EBe092A2D22B08E2b029735D211bfF7F50',
     x2EarnRewardsPoolContractAddress:
         '0x5F8f86B8D0Fa93cdaE20936d150175dF0205fB38',
-    veBetterPassportContractAddress: '',
+    veBetterPassportContractAddress:
+        '0x63c061a2753e84635a22ff05954e1687f104f002',
     veDelegate: '0xfc32a9895C78CE00A1047d602Bd81Ea8134CC32b',
     veDelegateVotes: '0xeb71148c9B3cd57e228c2152d79f6e78F5F1ef9a',
     veDelegateTokenContractAddress:

@@ -19,6 +19,7 @@ import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
 import { useCurrency } from '@/hooks/api/wallet';
 import { BsCheck } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 export type ChangeCurrencyContentProps = {
     setCurrentContent: React.Dispatch<
@@ -31,6 +32,11 @@ export const ChangeCurrencyContent = ({
 }: ChangeCurrencyContentProps) => {
     const { t } = useTranslation();
     const { currentCurrency, changeCurrency, allCurrencies } = useCurrency();
+
+    useEffect(() => {
+        // Ensure we mark the currency settings as visited when this component mounts
+        localStorage.setItem('settings-currency-visited', 'true');
+    }, []);
 
     const renderCurrencyButton = (currency: CURRENCY) => (
         <Button
