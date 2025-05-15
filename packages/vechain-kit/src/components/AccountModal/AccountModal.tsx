@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -57,14 +57,6 @@ export const AccountModal = ({
         accountModalContent: currentContent,
         setAccountModalContent: setCurrentContent,
     } = useModal();
-
-    //Disable close on overlay for all content except disconnect confirm
-    const canCloseOnOverlayClick = useMemo(() => {
-        return (
-            typeof currentContent === 'object' &&
-            currentContent.type !== 'disconnect-confirm'
-        );
-    }, [currentContent]);
 
     useEffect(() => {
         if (isOpen && initialContent) {
@@ -255,7 +247,6 @@ export const AccountModal = ({
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
-            closeOnOverlayClick={canCloseOnOverlayClick}
         >
             {renderContent()}
         </BaseModal>
