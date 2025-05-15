@@ -70,6 +70,7 @@ export const StepModal = <T extends string>({
             isOpen={isOpen}
             onClose={handleClose}
             isCloseable={isCloseable}
+            blockScrollOnMount={true}
         >
             <Card p={0}>
                 <CardBody p={0}>
