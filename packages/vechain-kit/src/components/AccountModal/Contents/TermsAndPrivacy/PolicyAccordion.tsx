@@ -3,40 +3,42 @@ import {
     AccordionItem,
     AccordionPanel,
     Box,
+    Button,
+    HStack,
     Icon,
+    Tag,
     Text,
+    VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoChevronDown } from 'react-icons/io5';
 import { IoChevronUp } from 'react-icons/io5';
 
-import { EnrichedLegalDocument } from '@/types';
-import { PolicySection } from './PolicySection';
+import { LegalDocumentAgreement } from '@/types';
+import { MdCheck } from 'react-icons/md';
+import { formatDate } from '@/utils/dateUtils';
 
 type PolicyAccordionProps = {
     title: string;
-    termsDocuments: EnrichedLegalDocument[];
-    privacyDocuments: EnrichedLegalDocument[];
-    cookieDocuments: EnrichedLegalDocument[];
+    description: string;
+    documents: LegalDocumentAgreement[];
     bg: string;
     hoverBg: string;
-    linkColor: string;
+    currentPolicy?: LegalDocumentAgreement;
 };
 
 export const PolicyAccordion = ({
     title,
-    termsDocuments,
-    privacyDocuments,
-    cookieDocuments,
+    description,
+    documents,
     bg,
     hoverBg,
-    linkColor,
+    currentPolicy,
 }: PolicyAccordionProps) => {
     const { t } = useTranslation();
-    const hasDocuments =
-        termsDocuments.length > 0 ||
-        privacyDocuments.length > 0 ||
-        cookieDocuments.length > 0;
+    const hasDocuments = documents.length > 0;
+
+    const hasMoreThanOneAgreement = documents.length > 1;
 
     if (!hasDocuments) return null;
 
@@ -53,6 +55,9 @@ export const PolicyAccordion = ({
                     >
                         <Box flex="1" textAlign="left" py={2}>
                             <Text fontWeight="700">{title}</Text>
+                            <Text fontSize="xs" color="gray.400">
+                                {description}
+                            </Text>
                         </Box>
                         <Icon
                             as={isExpanded ? IoChevronUp : IoChevronDown}
@@ -61,29 +66,71 @@ export const PolicyAccordion = ({
                         />
                     </AccordionButton>
                     <AccordionPanel pb={4} pt={3}>
-                        {termsDocuments.length > 0 && (
-                            <PolicySection
-                                title={t('Terms and Conditions')}
-                                documents={termsDocuments}
-                                linkColor={linkColor}
-                            />
-                        )}
+                        <VStack align="stretch" spacing={4}>
+                            {currentPolicy && (
+                                <HStack w="full">
+                                    <Icon as={MdCheck} color="green.500" />
+                                    <Text fontSize="xs">
+                                        {t(
+                                            'You accepted current policy on {{date}}',
+                                            {
+                                                date: formatDate(
+                                                    currentPolicy.timestamp,
+                                                ),
+                                            },
+                                        )}
+                                    </Text>
+                                </HStack>
+                            )}
 
-                        {privacyDocuments.length > 0 && (
-                            <PolicySection
-                                title="Privacy Policies"
-                                documents={privacyDocuments}
-                                linkColor={linkColor}
-                            />
-                        )}
+                            <HStack w="full" textAlign="left">
+                                <Text fontSize="xs" fontWeight="bold">
+                                    {t(
+                                        '{{variant}} policies you have accepted',
+                                        {
+                                            variant: hasMoreThanOneAgreement
+                                                ? 'Other'
+                                                : 'All',
+                                        },
+                                    )}
+                                </Text>
+                            </HStack>
 
-                        {cookieDocuments.length > 0 && (
-                            <PolicySection
-                                title="Cookie Policies"
-                                documents={cookieDocuments}
-                                linkColor={linkColor}
-                            />
-                        )}
+                            <HStack w="full" gap={2}>
+                                <VStack align="stretch" spacing={2}>
+                                    {documents.map((document) => (
+                                        <HStack justifyContent="space-between">
+                                            <Tag size="sm" borderRadius="full">
+                                                v{document.version}
+                                            </Tag>
+                                            <Text fontSize="xs">
+                                                {t('Accepted on {{date}}', {
+                                                    date: formatDate(
+                                                        document.timestamp,
+                                                    ),
+                                                })}
+                                            </Text>
+                                        </HStack>
+                                    ))}
+                                </VStack>
+                            </HStack>
+
+                            {currentPolicy && (
+                                <Button
+                                    variant="outline"
+                                    size="xs"
+                                    alignSelf="flex-end"
+                                    onClick={() => {
+                                        window.open(
+                                            currentPolicy.url,
+                                            '_blank',
+                                        );
+                                    }}
+                                >
+                                    {t('View Current Policy')}
+                                </Button>
+                            )}
+                        </VStack>
                     </AccordionPanel>
                 </>
             )}
