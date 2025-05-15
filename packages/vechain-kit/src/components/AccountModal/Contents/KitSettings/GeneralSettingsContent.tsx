@@ -120,7 +120,7 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                         />
                     </VStack>
                     <ActionButton
-                        title={t('Terms and Privacy')}
+                        title={t('Terms and Policies')}
                         onClick={() => {
                             Analytics.settings.termsAndPrivacyViewed();
                             setCurrentContent({

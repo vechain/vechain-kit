@@ -26,7 +26,7 @@ export const TermsAndPrivacyContent = ({
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalHeader>{t('Terms and Privacy')}</ModalHeader>
+                <ModalHeader>{t('Terms and Policies')}</ModalHeader>
                 <ModalBackButton onClick={onGoBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
