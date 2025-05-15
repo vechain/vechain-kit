@@ -73,7 +73,7 @@ export const LegalDocumentsModal = ({
                 ),
             },
         ],
-        [LegalDocumentsContent, DisconnectConfirmContent, onAgree],
+        [LegalDocumentsContent, DisconnectConfirmContent, onAgree, logout],
     );
 
     return (
