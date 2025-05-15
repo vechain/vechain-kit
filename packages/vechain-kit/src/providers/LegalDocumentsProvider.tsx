@@ -24,7 +24,7 @@ import {
     useState,
 } from 'react';
 
-import { useModal } from './ModalProvider';
+// import { useModal } from './ModalProvider';
 
 type Props = {
     children: Readonly<ReactNode>;
@@ -58,7 +58,7 @@ export const useLegalDocuments = () => {
 export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
     const { legalDocuments } = useVeChainKitConfig();
-    const { closeAccountModal, openAccountModal } = useModal();
+    // const { closeAccountModal, openAccountModal } = useModal();
 
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         TermsAndConditionsAgreement[]
@@ -117,37 +117,15 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         }
     }, [connection.isConnected, account?.address, hasAgreedToRequiredTerms]);
 
-    const onBackConfirmLogout = () => {
-        closeAccountModal();
-        setShowTermsModal(true);
-    };
-
     const handleAgree = (terms: TermsAndConditions | TermsAndConditions[]) => {
         agreeToTerms(terms);
         setShowTermsModal(false);
     };
 
     const handleLogout = () => {
+        Analytics.auth.trackAuth('disconnect_initiated');
         disconnect();
         setShowTermsModal(false);
-        closeAccountModal();
-        setConnectedWalletAddress(null);
-        Analytics.auth.logoutCompleted();
-    };
-
-    const handleCancel = () => {
-        Analytics.auth.trackAuth('disconnect_initiated');
-        setShowTermsModal(false);
-        openAccountModal({
-            type: 'disconnect-confirm',
-            props: {
-                onDisconnect: handleLogout,
-                onBack: onBackConfirmLogout,
-                //To avoid closing the modal when the user clicks on the close button
-                //And enforce the user to agree to the terms or logout
-                onClose: onBackConfirmLogout,
-            },
-        });
     };
 
     return (
@@ -166,8 +144,8 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             {children}
             <TermsAndConditionsModal
                 isOpen={showTermsModal}
-                onCancel={handleCancel}
                 onAgree={handleAgree}
+                handleLogout={handleLogout}
             />
         </LegalDocumentsContext.Provider>
     );

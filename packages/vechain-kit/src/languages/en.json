@@ -541,5 +541,6 @@
     "Others": "Others",
     "Accept": "Accept",
     "Terms and Privacy": "Terms and Privacy",
-    "Reject and logout": "Reject and logout"
+    "Reject and logout": "Reject and logout",
+    "Are you sure you want to reject the terms and disconnect?": "Are you sure you want to reject the terms and disconnect?"
 }

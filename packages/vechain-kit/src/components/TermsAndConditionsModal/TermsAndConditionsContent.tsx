@@ -19,10 +19,10 @@ import { TermItem } from './Components';
 
 type Props = {
     onAgree: (terms: TermsAndConditions | TermsAndConditions[]) => void;
-    onCancel: () => void;
+    onReject: () => void;
 };
 
-export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
+export const TermsAndConditionsContent = ({ onAgree, onReject }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const {
@@ -147,8 +147,9 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                         <Button
                             variant="ghost"
                             width="full"
-                            onClick={onCancel}
+                            onClick={onReject}
                             data-testid={'reject-tnc-button'}
+                            colorScheme="red"
                         >
                             {t('Reject and logout')}
                         </Button>
