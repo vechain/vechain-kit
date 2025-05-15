@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { getConfig } from '@/config';
 import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 /**
  *  Get the admin of the app
@@ -13,7 +14,7 @@ import { NETWORK_TYPE } from '@/config/network';
  * @returns  the admin of the app
  */
 export const getAppAdmin = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     appId: string,
     networkType: NETWORK_TYPE,
 ): Promise<string> => {

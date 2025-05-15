@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { getConfig } from '@/config';
-import { XAllocationVoting__factory as XAllocationVoting } from '@/contracts';
+import { XAllocationVoting__factory } from '@/contracts';
 import { XApp } from '../getXApps';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-
+import { ThorClient } from '@vechain/sdk-network1.2';
 /**
  * Returns all the available xApps (apps that can be voted on for allocation)
  * @param thor  the thor client
@@ -14,32 +14,23 @@ import { useVeChainKitConfig } from '@/providers';
  * @returns  all the available xApps (apps that can be voted on for allocation) capped to 256 see {@link XApp}
  */
 export const getRoundXApps = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     roundId?: string,
 ): Promise<XApp[]> => {
     if (!roundId) return [];
 
-    const xAllocationVotingContract =
-        getConfig(networkType).xAllocationVotingContractAddress;
-    const functionFragment = XAllocationVoting.createInterface()
-        .getFunction('getAppsOfRound')
-        .format('json');
-    const res = await thor
-        .account(xAllocationVotingContract)
-        .method(JSON.parse(functionFragment))
-        .call(roundId);
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).xAllocationVotingContractAddress,
+            XAllocationVoting__factory.abi,
+        )
+        .read.getAppsOfRound(roundId);
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
+    if (!res) throw new Error(`Failed to get apps of round ${roundId}`);
 
-    const apps = res.decoded[0];
-    return apps.map((app: any) => ({
-        id: app[0],
-        teamWalletAddress: app[1],
-        name: app[2],
-        metadataURI: app[3],
-        createdAtTimestamp: app[4],
-    }));
+    // TODO: migration check if it is in correct format
+    return res as unknown as XApp[];
 };
 
 export const getRoundXAppsQueryKey = (roundId?: string) => [
@@ -57,13 +48,18 @@ export const getRoundXAppsQueryKey = (roundId?: string) => [
  *  @returns all the available xApps (apps that can be voted on for allocation) capped to 256
  */
 export const useRoundXApps = (roundId?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
 
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getRoundXAppsQueryKey(roundId),
-        queryFn: async () => await getRoundXApps(thor, network.type, roundId),
+        queryFn: async () =>
+            await getRoundXApps(
+                thor as unknown as ThorClient,
+                network.type,
+                roundId,
+            ),
         enabled: !!thor && !!roundId && !!network.type,
     });
 };

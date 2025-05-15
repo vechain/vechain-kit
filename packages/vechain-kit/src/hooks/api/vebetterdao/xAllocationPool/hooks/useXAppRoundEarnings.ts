@@ -11,6 +11,7 @@ import { abi } from 'thor-devkit';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'viem';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 const roundEarningsFragment = XAllocationPool__factory.createInterface()
     .getFunction('roundEarnings')
@@ -32,7 +33,7 @@ type UseXAppRoundEarningsQueryResponse = {
  * @returns (amount, appId) amount of $B3TR an xApp earned from an allocation round and the xApp id
  */
 export const getXAppRoundEarnings = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     roundId: string,
     xAppId: string,
     networkType: NETWORK_TYPE,

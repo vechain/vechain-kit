@@ -1,5 +1,11 @@
 import { LoginMethodOrderOption } from '@privy-io/react-auth';
 
+export type TokenBalance = {
+    original: string;
+    scaled: string;
+    formatted: string;
+};
+
 export type ENSRecords = {
     display?: string;
     description?: string;
@@ -167,10 +173,10 @@ export enum VePassportUserStatus {
     BLACKLIST = 'BLACKLIST',
 }
 
-export type CURRENCY = "usd" | "gbp" | "eur";
+export type CURRENCY = 'usd' | 'gbp' | 'eur';
 
 export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {
-    usd: "$",
-    gbp: "£",
-    eur: "€"
+    usd: '$',
+    gbp: '£',
+    eur: '€',
 };
