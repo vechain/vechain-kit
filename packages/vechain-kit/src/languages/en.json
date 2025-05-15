@@ -534,5 +534,11 @@
     "vebetter": "VeBetter",
     "your@email.com": "your@email.com",
     "{{element}} website": "{{element}} website",
-    "{{name}}": "{{name}}"
+    "{{name}}": "{{name}}",
+    "Terms and Conditions": "Terms and Conditions",
+    "I have read and agree to ": "I have read and agree to ",
+    "Vechain Kit": "Vechain Kit",
+    "Others": "Others",
+    "Accept": "Accept",
+    "Terms and Privacy": "Terms and Privacy"
 }
