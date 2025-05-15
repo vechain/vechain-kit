@@ -1,13 +1,13 @@
 import { Box, Tag, Text, Wrap, WrapItem } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { CategoryLabel } from './CategoryLabel';
+import { CategoryLabel, AllowedCategories } from './CategoryLabel';
 
 export type CategoryFilter = string | null;
 
 type CategoryFilterSectionProps = {
     selectedCategory: CategoryFilter;
     onCategoryChange: (category: CategoryFilter) => void;
-    categories: string[];
+    categories: AllowedCategories[];
     darkMode: boolean;
 };
 

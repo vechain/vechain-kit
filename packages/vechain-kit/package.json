@@ -16,12 +16,13 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
+    "build": "tsc --noEmit && cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
     "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup --watch",
     "clean": "rm -rf dist .turbo",
     "lint": "eslint",
     "purge": "yarn clean && rm -rf node_modules",
-    "translate": "dotenv -e .env -- translo-cli"
+    "translate": "dotenv -e .env -- translo-cli",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@adraffy/ens-normalize": "^1.11.0",
