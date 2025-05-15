@@ -43,7 +43,6 @@ export const TermsAndConditionsModal = ({
             onClose={() => {}} //Modal is not closable
             allowExternalFocus={true}
             blockScrollOnMount={true}
-            size="md"
             isCloseable={false}
         >
             {renderContent()}
