@@ -5,6 +5,7 @@ import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import {
     Button,
     ModalBody,
+    ModalFooter,
     ModalHeader,
     Stack,
     Text,
@@ -130,28 +131,29 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                         ) : (
                             renderTermsSection(termsNotAgreed)
                         )}
-
-                        <VStack w={'full'} spacing={3}>
-                            <Button
-                                onClick={handleSubmit(onSubmit)}
-                                variant="vechainKitPrimary"
-                                width="full"
-                                isDisabled={!isValid}
-                                data-testid={'accept-tnc-button'}
-                            >
-                                {t('Accept')}
-                            </Button>
-                            <Button
-                                variant="vechainKitSecondary"
-                                width="full"
-                                onClick={onCancel}
-                                data-testid={'reject-tnc-button'}
-                            >
-                                {t('Cancel')}
-                            </Button>
-                        </VStack>
                     </VStack>
                 </ModalBody>
+                <ModalFooter>
+                    <VStack w={'full'} spacing={3}>
+                        <Button
+                            onClick={handleSubmit(onSubmit)}
+                            variant="vechainKitPrimary"
+                            width="full"
+                            isDisabled={!isValid}
+                            data-testid={'accept-tnc-button'}
+                        >
+                            {t('Accept')}
+                        </Button>
+                        <Button
+                            variant="vechainKitSecondary"
+                            width="full"
+                            onClick={onCancel}
+                            data-testid={'reject-tnc-button'}
+                        >
+                            {t('Reject and logout')}
+                        </Button>
+                    </VStack>
+                </ModalFooter>
             </form>
         </Stack>
     );
