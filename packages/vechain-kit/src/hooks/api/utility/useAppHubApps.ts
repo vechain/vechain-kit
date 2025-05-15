@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-
+import { AllowedCategories } from '@/components/AccountModal/Contents/Ecosystem/Components/CategoryLabel';
 export type AppHubApp = {
     id: string;
     name: string;
     description: string;
     url: string;
     logo: string;
-    category: string;
+    category: AllowedCategories;
     tags: string[];
     isVeWorldSupported: boolean;
     repo?: string;

@@ -1,12 +1,20 @@
 import { Tag, TagProps } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
+export type AllowedCategories =
+    | 'defi'
+    | 'games'
+    | 'collectibles'
+    | 'marketplaces'
+    | 'utilities'
+    | 'vebetter';
+
 type CategoryProps = {
-    category: string;
+    category: AllowedCategories;
 } & Omit<TagProps, 'category'>;
 
-const getCategoryColor = (category: string): string => {
-    switch (category.toLowerCase()) {
+const getCategoryColor = (category: AllowedCategories): string => {
+    switch (category) {
         case 'defi':
             return 'blue';
         case 'games':
@@ -25,7 +33,8 @@ const getCategoryColor = (category: string): string => {
 export const CategoryLabel = ({ category, ...props }: CategoryProps) => {
     const { t } = useTranslation();
 
-    const color = getCategoryColor(category);
+    const categoryKey = category.toLowerCase() as AllowedCategories;
+    const color = getCategoryColor(categoryKey);
 
     return (
         <Tag
@@ -35,7 +44,7 @@ export const CategoryLabel = ({ category, ...props }: CategoryProps) => {
             px={2}
             {...props}
         >
-            {t(category)}
+            {t(categoryKey)}
         </Tag>
     );
 };

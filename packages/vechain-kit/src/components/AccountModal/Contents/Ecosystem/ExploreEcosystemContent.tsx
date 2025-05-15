@@ -35,6 +35,7 @@ import {
     CategoryFilter,
 } from './Components/CategoryFilterSection';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { AllowedCategories } from './Components/CategoryLabel';
 
 export type EcosystemWithCategoryProps = {
     selectedCategory: CategoryFilter;
@@ -129,7 +130,7 @@ export const ExploreEcosystemContent = ({
 
     // Extract unique categories from app hub apps and add VeBetter category
     const categories = useMemo(() => {
-        const categorySet = new Set<string>();
+        const categorySet = new Set<AllowedCategories>();
 
         // Add VeBetter category if there are VBD apps and we're on mainnet
         if (network.type === 'main' && vbdApps && vbdApps.length > 0) {

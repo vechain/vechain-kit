@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { ShortcutButton } from './Components/ShortcutButton';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { CategoryLabel } from './Components/CategoryLabel';
+import { CategoryLabel, AllowedCategories } from './Components/CategoryLabel';
 import { CategoryFilter } from './Components/CategoryFilterSection';
 
 export type AppOverviewContentProps = {
@@ -29,7 +29,7 @@ export type AppOverviewContentProps = {
     image: string;
     url: string;
     description: string;
-    category?: string;
+    category?: AllowedCategories;
     selectedCategory?: CategoryFilter;
     logoComponent?: JSX.Element;
 };

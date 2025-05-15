@@ -1,13 +1,12 @@
 import { Card, CardBody, Image, Text, VStack, Box } from '@chakra-ui/react';
 import { notFoundImage } from '@/utils';
-import React from 'react';
-import { CategoryLabel } from './CategoryLabel';
+import { CategoryLabel, AllowedCategories } from './CategoryLabel';
 
 export type SharedAppCardProps = {
     name?: string;
     imageUrl: string;
     linkUrl: string;
-    category?: string;
+    category?: AllowedCategories;
     logoComponent?: JSX.Element;
     onClick: () => void;
     size?: 'sm' | 'md';

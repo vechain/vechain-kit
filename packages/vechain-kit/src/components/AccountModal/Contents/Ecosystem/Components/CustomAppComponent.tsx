@@ -2,13 +2,14 @@ import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { SharedAppCard } from './SharedAppCard';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CategoryFilter } from './CategoryFilterSection';
+import { AllowedCategories } from './CategoryLabel';
 
 type Props = {
     name: string;
     image: string;
     url: string;
     description: string;
-    category?: string;
+    category?: AllowedCategories;
     logoComponent?: JSX.Element;
     selectedCategory?: CategoryFilter;
     setCurrentContent: React.Dispatch<
