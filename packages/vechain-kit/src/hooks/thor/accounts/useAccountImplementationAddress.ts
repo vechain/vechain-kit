@@ -1,51 +1,48 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getAccountImplementationAddress = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     version?: number,
     networkType?: NETWORK_TYPE,
 ): Promise<string> => {
     if (!networkType) throw new Error('Network type is required');
     if (!version) throw new Error('Version is required');
 
-    let functionFragment: string;
+    const contract = thor.contracts.load(
+        getConfig(networkType).accountFactoryAddress,
+        SimpleAccountFactory__factory.abi,
+    );
+
+    let implementationAddressPromise:
+        | ReturnType<typeof contract.read.accountImplementationV1>
+        | ReturnType<typeof contract.read.accountImplementationV3>;
 
     switch (version) {
         case 1:
-            functionFragment = SimpleAccountFactoryInterface.getFunction(
-                'accountImplementationV1',
-            ).format('json');
-            break;
         case 2:
-            functionFragment = SimpleAccountFactoryInterface.getFunction(
-                'accountImplementationV1',
-            ).format('json');
+            implementationAddressPromise =
+                contract.read.accountImplementationV1();
             break;
+
         case 3:
-            functionFragment = SimpleAccountFactoryInterface.getFunction(
-                'accountImplementationV3',
-            ).format('json');
+            implementationAddressPromise =
+                contract.read.accountImplementationV3();
             break;
         default:
             throw new Error('Invalid version, must be between 1 and 3');
     }
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call();
+    const res = await implementationAddressPromise;
 
-    if (res.reverted) throw new Error('Reverted');
+    if (!res) throw new Error('Failed to get account implementation address');
 
-    return res.decoded[0];
+    return res[0].toString();
 };
 
 export const getAccountImplementationAddressQueryKey = (
@@ -66,7 +63,7 @@ export const getAccountImplementationAddressQueryKey = (
  * @returns The address of the smart account implementation
  */
 export const useAccountImplementationAddress = (version?: number) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -75,7 +72,11 @@ export const useAccountImplementationAddress = (version?: number) => {
             network.type,
         ),
         queryFn: async () =>
-            getAccountImplementationAddress(thor, version, network.type),
+            getAccountImplementationAddress(
+                thor as unknown as ThorClient,
+                version,
+                network.type,
+            ),
         enabled: !!thor && !!version && !!network,
     });
 };

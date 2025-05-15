@@ -1,10 +1,13 @@
 import { useCallback } from 'react';
 import { SimpleAccount__factory } from '@/contracts/typechain-types';
-import { useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
+import {
+    useSendTransaction,
+    UseSendTransactionReturnValue,
+    useAccountImplementationAddress,
+    useRefreshFactoryQueries,
+    useRefreshSmartAccountQueries,
+} from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
-import { useAccountImplementationAddress } from '@/hooks';
-import { useRefreshSmartAccountQueries } from './useRefreshSmartAccountQueries';
-import { useRefreshFactoryQueries } from '../factory/useRefreshFactoryQueries';
 import { TransactionClause } from '@vechain/sdk-core1.2';
 
 type UseUpgradeSmartAccountVersionProps = {

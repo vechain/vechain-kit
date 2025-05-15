@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { ThorClient } from '@vechain/sdk-network';
-import { useGetNodeUrl } from './useGetNodeUrl';
+import { ThorClient } from '@vechain/sdk-network1.2';
+import { useGetNodeUrl } from '../../utils/useGetNodeUrl';
 
 export const getChainId = async (thor: ThorClient) => {
     const genesisBlock = await thor.blocks.getGenesisBlock();
@@ -17,6 +17,7 @@ export const getChainIdQueryKey = () => ['VECHAIN_KIT_CHAIN_ID'];
  * @returns  The account balance
  */
 export const useGetChainId = () => {
+    // TODO: migration can't we use useThor here?
     const nodeUrl = useGetNodeUrl();
     const thor = ThorClient.at(nodeUrl);
 

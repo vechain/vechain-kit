@@ -1,11 +1,12 @@
-import { SimpleAccountFactoryABI } from '@/assets';
 import { useQuery } from '@tanstack/react-query';
-import { ABIContract, Address } from '@vechain/sdk-core';
+import { Address } from '@vechain/sdk-core1.2';
 import { useGetNodeUrl } from '@/hooks';
-import { ThorClient } from '@vechain/sdk-network';
+import { ThorClient } from '@vechain/sdk-network1.2';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
+import { SimpleAccountFactory__factory } from '@/contracts';
+
 export interface SmartAccountReturnType {
     address: string | undefined;
     isDeployed: boolean;
@@ -19,23 +20,27 @@ export const getSmartAccount = async (
         return { address: undefined };
     }
 
-    const account = await thor.contracts.executeCall(
-        getConfig(network).accountFactoryAddress,
-        ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
-            'getAccountAddress',
-        ),
-        [ownerAddress],
-    );
-
-    const isDeployed = (
-        await thor.accounts.getAccount(
-            Address.of(String(account.result.array?.[0])),
+    const res = await thor.contracts
+        .load(
+            getConfig(network).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
         )
-    ).hasCode;
+        .read.getAccountAddress([ownerAddress]);
+
+    if (!res) {
+        throw new Error(`Failed to get account address of ${ownerAddress}`);
+    }
+
+    const accountAddress = Address.of(res[0].toString());
+    const accountDetail = await thor.accounts.getAccount(accountAddress);
+
+    if (!accountDetail) {
+        throw new Error(`Failed to get account detail of ${accountAddress}`);
+    }
 
     return {
-        address: String(account.result.array?.[0]),
-        isDeployed,
+        address: accountAddress.toString(),
+        isDeployed: accountDetail.hasCode,
     };
 };
 
@@ -45,6 +50,7 @@ export const getSmartAccountQueryKey = (ownerAddress?: string) => {
 
 export const useSmartAccount = (ownerAddress?: string) => {
     const { network } = useVeChainKitConfig();
+    // TODO: migration ask can we use useThor here
     const nodeUrl = useGetNodeUrl();
     const thor = ThorClient.at(nodeUrl);
 

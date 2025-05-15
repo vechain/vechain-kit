@@ -1,31 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-// import { networkConfig } from '@repo/config';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { IERC20__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
-
-const ERC20Interface = IERC20__factory.createInterface();
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getVeDelegateBalance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     address?: string,
 ): Promise<{ original: string; scaled: string; formatted: string }> => {
-    const functionFragment =
-        ERC20Interface.getFunction('balanceOf').format('json');
+    const res = await thor.contracts
+        .load(
+            getConfig(network).veDelegateTokenContractAddress,
+            IERC20__factory.abi,
+        )
+        .read.balanceOf(address);
 
-    const res = await thor
-        .account(getConfig(network).veDelegateTokenContractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    if (!res)
+        throw new Error(`Failed to get veDelegate balance for ${address}`);
 
-    if (res.reverted) throw new Error('Reverted');
-
-    const original = res.decoded[0];
+    const original = res[0].toString();
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
@@ -42,12 +40,17 @@ export const getVeDelegateBalanceQueryKey = (address?: string) => [
 ];
 
 export const useGetVeDelegateBalance = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getVeDelegateBalanceQueryKey(address),
-        queryFn: async () => getVeDelegateBalance(thor, network.type, address),
+        queryFn: async () =>
+            getVeDelegateBalance(
+                thor as unknown as ThorClient,
+                network.type,
+                address,
+            ),
         enabled: !!thor && !!address && !!network.type,
     });
 };

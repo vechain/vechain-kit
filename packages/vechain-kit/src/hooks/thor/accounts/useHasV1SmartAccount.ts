@@ -1,34 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-
-const SimpleAccountFactoryInterface =
-    SimpleAccountFactory__factory.createInterface();
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getHasV1SmartAccount = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     ownerAddress?: string,
     networkType?: NETWORK_TYPE,
 ): Promise<boolean> => {
     if (!ownerAddress) throw new Error('Owner address is required');
     if (!networkType) throw new Error('Network type is required');
 
-    const functionFragment =
-        SimpleAccountFactoryInterface.getFunction('hasLegacyAccount').format(
-            'json',
-        );
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).accountFactoryAddress,
+            SimpleAccountFactory__factory.abi,
+        )
+        .read.hasLegacyAccount(ownerAddress);
 
-    const res = await thor
-        .account(getConfig(networkType).accountFactoryAddress)
-        .method(JSON.parse(functionFragment))
-        .call(ownerAddress);
+    if (!res) throw new Error('Failed to get has legacy account');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return res.decoded[0];
+    // TODO: migration checked it returns as boolean ✅
+    return res[0] as boolean;
 };
 
 export const getHasV1SmartAccountQueryKey = (
@@ -48,13 +44,17 @@ export const getHasV1SmartAccountQueryKey = (
  * @returns True if the smart account has a v1 smart account, false otherwise
  */
 export const useHasV1SmartAccount = (ownerAddress?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getHasV1SmartAccountQueryKey(ownerAddress, network.type),
         queryFn: async () =>
-            getHasV1SmartAccount(thor, ownerAddress, network.type),
+            getHasV1SmartAccount(
+                thor as unknown as ThorClient,
+                ownerAddress,
+                network.type,
+            ),
         enabled: !!thor && !!ownerAddress && !!network,
     });
 };

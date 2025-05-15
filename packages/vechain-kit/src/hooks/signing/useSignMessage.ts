@@ -2,7 +2,8 @@
 
 import { useCallback, useState } from 'react';
 import { usePrivyWalletProvider } from '@/providers';
-import { useConnex, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
+import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react2';
 
 type UseSignMessageReturnValue = {
     signMessage: (message: string) => Promise<string>;
@@ -24,7 +25,7 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
     const [error, setError] = useState<Error | null>(null);
 
     const { connection } = useWallet();
-    const { vendor } = useConnex();
+    const { signer } = useDappKitWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
     const signMessage = useCallback(
@@ -34,23 +35,9 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
             setSignature(null);
 
             try {
-                let sig: string;
-
-                if (connection.isConnectedWithDappKit) {
-                    sig = (
-                        await vendor
-                            .sign('cert', {
-                                purpose: 'agreement',
-                                payload: {
-                                    type: 'text',
-                                    content: message,
-                                },
-                            })
-                            .request()
-                    ).signature;
-                } else {
-                    sig = await privyWalletProvider.signMessage(message);
-                }
+                const sig = connection.isConnectedWithDappKit
+                    ? await signer.signMessage(message)
+                    : await privyWalletProvider.signMessage(message);
 
                 setSignature(sig);
                 return sig;

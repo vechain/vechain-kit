@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useWallet } from '../../../api/wallet/useWallet';
+import { useWallet } from '../../api/wallet/useWallet';
 import {
     getAccountVersionQueryKey,
     getUpgradeRequiredQueryKey,
@@ -8,13 +8,14 @@ import {
     getAccountImplementationAddressQueryKey,
     getHasV1SmartAccountQueryKey,
     getAccountAddressQueryKey,
-} from '.';
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 /**
  * Hook to refresh smart account factory-related queries
  * @returns Object with refresh function
  */
+// TODO: migration no need to cancel and refresh, use invalidateQueries with catchall keys instead
 export const useRefreshFactoryQueries = () => {
     const queryClient = useQueryClient();
     const { connectedWallet, smartAccount } = useWallet();

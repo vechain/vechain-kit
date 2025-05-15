@@ -1,15 +1,14 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { MockENS__factory } from '@/contracts/typechain-types/factories/contracts/mocks/MockENS__factory';
+import { MockENS__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
+import { ThorClient } from '@vechain/sdk-network1.2';
 import { concat, keccak256, toBytes } from 'viem';
 
-const MockENSInterface = MockENS__factory.createInterface();
-
 const getEnsRecordExists = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     name: string,
 ): Promise<boolean> => {
@@ -24,17 +23,17 @@ const getEnsRecordExists = async (
     // bytes32 subnode = keccak256(abi.encodePacked(node, label));
     const subnode = keccak256(concat([hashedNode, labelHash]));
 
-    const functionFragment =
-        MockENSInterface.getFunction('recordExists').format('json');
+    const res = await thor.contracts
+        .load(
+            getConfig(network).vetDomainsContractAddress,
+            MockENS__factory.abi,
+        )
+        .read.recordExists(subnode);
 
-    const res = await thor
-        .account(getConfig(network).vetDomainsContractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(subnode);
+    if (!res) throw new Error(`Failed to get ENS record exists for ${name}`);
 
-    if (res.reverted) throw new Error('Reverted');
-
-    return res.decoded[0];
+    // TODO: migration checked it returns as boolean ✅
+    return res[0] as boolean;
 };
 
 export const getEnsRecordExistsQueryKey = (name: string) => [
@@ -45,12 +44,17 @@ export const getEnsRecordExistsQueryKey = (name: string) => [
 export const useEnsRecordExists = (
     name: string,
 ): UseQueryResult<boolean, Error> => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getEnsRecordExistsQueryKey(name),
-        queryFn: () => getEnsRecordExists(thor, network.type, name),
+        queryFn: () =>
+            getEnsRecordExists(
+                thor as unknown as ThorClient,
+                network.type,
+                name,
+            ),
         enabled: !!name,
     });
 };
