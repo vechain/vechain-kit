@@ -49,7 +49,7 @@ type LoginMethodOrder = {
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
 };
 
-type LegalDocumentOptions = {
+export type LegalDocumentOptions = {
     privacyPolicy?: LegalDocument[];
     termsAndConditions?: LegalDocument[];
     cookiePolicy?: LegalDocument[];

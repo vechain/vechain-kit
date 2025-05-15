@@ -1,10 +1,9 @@
 import { Link, Stack, Text, Box } from '@chakra-ui/react';
-import { LegalDocument } from '@/providers/VeChainKitProvider';
-import { TermsAndConditions } from '@/types/legalDocuments';
+import { EnrichedLegalDocument } from '@/types';
 
 type PolicySectionProps = {
     title: string;
-    documents: Array<LegalDocument | TermsAndConditions>;
+    documents: Array<EnrichedLegalDocument>;
     linkColor: string;
 };
 

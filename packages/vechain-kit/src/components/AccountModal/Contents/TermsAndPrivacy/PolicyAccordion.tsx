@@ -1,23 +1,23 @@
-import { LegalDocument } from '@/providers/VeChainKitProvider';
-import { TermsAndConditions } from '@/types/legalDocuments';
 import {
     AccordionButton,
-    Icon,
     AccordionItem,
-    Box,
-    Text,
     AccordionPanel,
+    Box,
+    Icon,
+    Text,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IoChevronDown } from 'react-icons/io5';
 import { IoChevronUp } from 'react-icons/io5';
+
+import { EnrichedLegalDocument } from '@/types';
 import { PolicySection } from './PolicySection';
 
 type PolicyAccordionProps = {
     title: string;
-    termsDocuments: Array<LegalDocument | TermsAndConditions>;
-    privacyDocuments: Array<LegalDocument | TermsAndConditions>;
-    cookieDocuments: Array<LegalDocument | TermsAndConditions>;
+    termsDocuments: EnrichedLegalDocument[];
+    privacyDocuments: EnrichedLegalDocument[];
+    cookieDocuments: EnrichedLegalDocument[];
     bg: string;
     hoverBg: string;
     linkColor: string;

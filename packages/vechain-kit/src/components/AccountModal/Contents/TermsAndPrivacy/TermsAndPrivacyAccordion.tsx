@@ -1,34 +1,41 @@
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
+import { EnrichedLegalDocument, LegalDocumentType } from '@/types';
+import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
 import { Accordion, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
-import { LegalDocument } from '@/providers/VeChainKitProvider';
+
 import { PolicyAccordion } from './PolicyAccordion';
 
 export const TermsAndPrivacyAccordion = () => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const {
-        termsAndConditions: { terms },
+        legalDocuments: { documents },
     } = useLegalDocuments();
-    const { legalDocuments } = useVeChainKitConfig();
 
     // VeChain Kit terms
     const vechainKitTerms =
-        terms?.filter((term) => term.url === VECHAIN_KIT_TERMS_CONFIG.url) ||
-        [];
+        documents?.filter(
+            (term) => term.url === VECHAIN_KIT_TERMS_CONFIG.url,
+        ) || [];
 
     // Application terms
     const appTerms =
-        terms?.filter((term) => term.url !== VECHAIN_KIT_TERMS_CONFIG.url) ||
-        [];
+        documents?.filter(
+            (term) => term.url !== VECHAIN_KIT_TERMS_CONFIG.url,
+        ) || [];
 
-    //TODO: Handle other privacy policies
-    const vechainKitPrivacyPolicy: LegalDocument[] = [];
-    const appPrivacyPolicies = legalDocuments?.privacyPolicy || [];
+    const vechainKitPrivacyPolicy: EnrichedLegalDocument[] = [];
+    const appPrivacyPolicies =
+        documents?.filter(
+            (doc) => doc.documentType === LegalDocumentType.PRIVACY,
+        ) || [];
 
-    const vechainKitCookiePolicy: LegalDocument[] = [];
-    const appCookiePolicies = legalDocuments?.cookiePolicy || [];
+    const vechainKitCookiePolicy: EnrichedLegalDocument[] = [];
+    const appCookiePolicies =
+        documents?.filter(
+            (doc) => doc.documentType === LegalDocumentType.COOKIES,
+        ) || [];
 
     const linkColor = isDark ? '#63B3ED' : '#3182CE';
     const accordionBg = isDark ? 'whiteAlpha.50' : 'blackAlpha.50';

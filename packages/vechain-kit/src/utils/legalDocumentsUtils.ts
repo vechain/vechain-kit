@@ -1,64 +1,115 @@
-import { TermsAndConditions, TermsAndConditionsAgreement } from '@/types';
-import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
+import {
+    EnrichedLegalDocument,
+    LegalDocumentAgreement,
+    LegalDocumentType,
+} from '@/types';
+import {
+    compareAddresses,
+    VECHAIN_KIT_COOKIE_CONFIG,
+    VECHAIN_KIT_PRIVACY_CONFIG,
+    VECHAIN_KIT_TERMS_CONFIG,
+} from '@/utils';
 
-const LOCAL_STORAGE_KEY = 'vechain-kit-terms-and-conditions';
+const LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';
 
 /**
- * Generate a unique ID for a term based on its URL and version
+ * Generate a unique ID for a document based on its type, URL and version
  */
-export const getTermId = (term: Omit<TermsAndConditions, 'id'>): string => {
-    return `term-${term.url.replace(/[^\w-]+/g, '-')}-v${term.version}`;
+export const getDocumentId = (
+    document: Omit<EnrichedLegalDocument, 'id'>,
+): string => {
+    return `${document.documentType}-${document.url.replace(
+        /[^\w-]+/g,
+        '-',
+    )}-v${document.version}`;
 };
 
 /**
- * Format terms by adding IDs
+ * Format documents by adding IDs
  */
-export const formatTerms = (
-    terms: Omit<TermsAndConditions, 'id'>[],
-): TermsAndConditions[] => {
-    return terms.map((term) => ({
-        ...term,
-        id: getTermId(term),
+export const formatDocuments = (
+    documents: Omit<EnrichedLegalDocument, 'id'>[],
+): EnrichedLegalDocument[] => {
+    return documents.map((document) => ({
+        ...document,
+        id: getDocumentId(document),
     }));
 };
 
 /**
- * Get all terms including VeChain Kit terms and custom terms
+ * Get all documents including VeChain Kit documents and custom documents
  */
-export const getAllTerms = (
-    customTerms: Omit<TermsAndConditions, 'id'>[] = [],
-): TermsAndConditions[] => {
-    return formatTerms([VECHAIN_KIT_TERMS_CONFIG, ...customTerms]);
+export const getAllDocuments = (
+    customDocuments: Omit<EnrichedLegalDocument, 'id'>[] | undefined = [],
+): EnrichedLegalDocument[] => {
+    const vechainKitCookiePolicy = {
+        ...VECHAIN_KIT_COOKIE_CONFIG,
+        documentType: LegalDocumentType.COOKIES,
+    };
+
+    const vechainKitPrivacyPolicy = {
+        ...VECHAIN_KIT_PRIVACY_CONFIG,
+        documentType: LegalDocumentType.PRIVACY,
+    };
+
+    const vechainKitTermsAndConditions = {
+        ...VECHAIN_KIT_TERMS_CONFIG,
+        documentType: LegalDocumentType.TERMS,
+    };
+    const vechainKitDocuments = [
+        vechainKitCookiePolicy,
+        vechainKitPrivacyPolicy,
+        vechainKitTermsAndConditions,
+    ];
+
+    return formatDocuments([...vechainKitDocuments, ...customDocuments]);
 };
 
 /**
- * Get only required terms
+ * Get only required documents
+ */
+export const getRequiredDocuments = (
+    documents: EnrichedLegalDocument[],
+): EnrichedLegalDocument[] => {
+    return documents.filter((document) => document.required);
+};
+
+/**
+ * Legacy function for backward compatibility
  */
 export const getRequiredTerms = (
-    terms: TermsAndConditions[],
-): TermsAndConditions[] => {
-    return terms.filter((term) => term.required);
+    terms: EnrichedLegalDocument[],
+): EnrichedLegalDocument[] => {
+    return getRequiredDocuments(terms);
 };
 
 /**
- * Get agreements from localStorage
+ * Get agreements from localStorage (with fallback to legacy storage)
  */
-export const getStoredAgreements = (): TermsAndConditionsAgreement[] => {
+export const getStoredAgreements = (): LegalDocumentAgreement[] => {
     try {
+        // Try new storage format first
         const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return storedData ? JSON.parse(storedData) : [];
+        if (storedData) {
+            return JSON.parse(storedData);
+        }
+
+        return [];
     } catch (e) {
-        console.warn('Error reading terms agreements from localStorage', e);
+        console.warn(
+            'Error reading legal document agreements from localStorage',
+            e,
+        );
         return [];
     }
 };
 
 /**
- * Check if a user has agreed to a specific term
+ * Check if a user has agreed to a specific document
  */
-export const hasAgreedToTerm = (
+export const hasAgreedToDocument = (
     walletAddress: string | undefined,
-    termId: string,
+    documentId: string,
 ): boolean => {
     if (!walletAddress) return false;
 
@@ -66,45 +117,55 @@ export const hasAgreedToTerm = (
     return agreements.some(
         (agreement) =>
             compareAddresses(agreement.walletAddress, walletAddress) &&
-            agreement.id === termId,
+            agreement.id === documentId,
     );
 };
 
 /**
- * Get terms that a user has not agreed to
+ * Legacy function for backward compatibility
  */
-export const getTermsNotAgreed = (
+export const hasAgreedToTerm = (
     walletAddress: string | undefined,
-    terms: TermsAndConditions[],
-): TermsAndConditions[] => {
+    termId: string,
+): boolean => {
+    return hasAgreedToDocument(walletAddress, termId);
+};
+
+/**
+ * Get documents that a user has not agreed to
+ */
+export const getDocumentsNotAgreed = (
+    walletAddress: string | undefined,
+    documents: EnrichedLegalDocument[],
+): EnrichedLegalDocument[] => {
     if (!walletAddress) return [];
 
     const agreements = getStoredAgreements();
-    return terms.filter(
-        (term) =>
+    return documents.filter(
+        (document) =>
             !agreements.some(
                 (agreement) =>
                     compareAddresses(agreement.walletAddress, walletAddress) &&
-                    agreement.id === term.id,
+                    agreement.id === document.id,
             ),
     );
 };
 
 /**
- * Check if a user has agreed to all required terms
+ * Check if a user has agreed to all required documents
  */
-export const hasAgreedToRequiredTerms = (
+export const hasAgreedToRequiredDocuments = (
     walletAddress: string | undefined,
-    requiredTerms: TermsAndConditions[] = [],
+    requiredDocuments: EnrichedLegalDocument[] = [],
 ): boolean => {
-    if (!requiredTerms.length || !walletAddress) return true;
+    if (!requiredDocuments.length || !walletAddress) return true;
 
     const agreements = getStoredAgreements();
-    return requiredTerms.every((term) =>
+    return requiredDocuments.every((document) =>
         agreements.some(
             (agreement) =>
                 compareAddresses(agreement.walletAddress, walletAddress) &&
-                agreement.id === term.id,
+                agreement.id === document.id,
         ),
     );
 };
@@ -116,6 +177,9 @@ export const hasAgreedToRequiredTerms = (
 export const hasAgreedToVeChainKitTerms = (walletAddress?: string): boolean => {
     if (!walletAddress) return false;
 
-    const vkTermId = getTermId(VECHAIN_KIT_TERMS_CONFIG);
-    return hasAgreedToTerm(walletAddress, vkTermId);
+    const vkTermId = getDocumentId({
+        ...VECHAIN_KIT_TERMS_CONFIG,
+        documentType: LegalDocumentType.TERMS,
+    });
+    return hasAgreedToDocument(walletAddress, vkTermId);
 };
