@@ -145,7 +145,7 @@ export const TermsAndConditionsContent = ({ onAgree, onCancel }: Props) => {
                             {t('Accept')}
                         </Button>
                         <Button
-                            variant="vechainKitSecondary"
+                            variant="ghost"
                             width="full"
                             onClick={onCancel}
                             data-testid={'reject-tnc-button'}
