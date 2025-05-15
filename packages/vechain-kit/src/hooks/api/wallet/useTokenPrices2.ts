@@ -6,6 +6,7 @@ import { NETWORK_TYPE } from '@/config/network';
 import { IVechainEnergyOracleV1__factory } from '@/contracts';
 import { useThor } from '@vechain/dapp-kit-react2';
 import { useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 
 const getTokenPrices = async (
     thor: ThorClient,
@@ -24,11 +25,16 @@ const getTokenPrices = async (
 
     const response = await thor.contracts.executeMultipleClausesCall(clauses);
 
-    if (!response.every((r) => r.success && !!r.result.plain)) {
+    if (!response.every((r) => r.success && !!r.result.array)) {
         throw new Error('Failed to get token prices');
     }
 
-    return response.map((r) => r.result.plain as string);
+    return response.map(
+        (r) =>
+            new BigNumber((r.result.array?.[0] ?? 0).toString())
+                .div(1e12)
+                .toNumber() as number,
+    );
 };
 
 const tokens = ['VET', 'VTHO', 'B3TR', 'EUR', 'GBP'] as SupportedToken[];
