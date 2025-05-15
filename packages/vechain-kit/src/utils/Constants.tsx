@@ -87,19 +87,19 @@ export const VECHAIN_KIT_TERMS_CONFIG = {
     url: 'https://kit.vechain.org/terms',
     version: 1,
     required: true,
-    displayName: 'VeChain Kit Terms and Conditions',
+    displayName: 'Vechain Kit Terms',
 };
 
 export const VECHAIN_KIT_PRIVACY_CONFIG = {
     url: 'https://kit.vechain.org/privacy',
     version: 1,
     required: true,
-    displayName: 'VeChain Kit Privacy Policy',
+    displayName: 'Vechain Kit Privacy Policy',
 };
 
 export const VECHAIN_KIT_COOKIE_CONFIG = {
     url: 'https://kit.vechain.org/cookie',
     version: 1,
     required: true,
-    displayName: 'VeChain Kit Cookie Policy',
+    displayName: 'Vechain Kit Cookie Policy',
 };
