@@ -65,6 +65,7 @@ export const LegalDocumentItem = ({
                         required: document.required,
                     })}
                     type="checkbox"
+                    data-testid="tnc-checkbox"
                     hidden
                 />
                 {document.displayName || 'Vechain Kit Policy'}
