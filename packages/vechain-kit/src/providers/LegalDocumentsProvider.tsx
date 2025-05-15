@@ -1,4 +1,4 @@
-import { TermsAndConditionsModal } from '@/components/TermsAndConditionsModal';
+import { TermsAndPrivacyModal } from '@/components/TermsAndPrivacyModal';
 import { useWallet } from '@/hooks';
 import { useSyncableLocalStorage } from '@/hooks/cache';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
@@ -23,8 +23,6 @@ import {
     useMemo,
     useState,
 } from 'react';
-
-// import { useModal } from './ModalProvider';
 
 type Props = {
     children: Readonly<ReactNode>;
@@ -142,7 +140,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             }}
         >
             {children}
-            <TermsAndConditionsModal
+            <TermsAndPrivacyModal
                 isOpen={showTermsModal}
                 onAgree={handleAgree}
                 handleLogout={handleLogout}
