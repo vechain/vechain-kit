@@ -35,11 +35,15 @@ export class BasePage {
         : args.obj.hasOwnProperty(args.property)
     }
 
+    // get browser's local storage
+    const localStorage: any = await this.page.evaluate(() => localStorage);
+
     // check for veworld wallet session
     expect(isObjectHasProperty({
       obj: localStorage,
       property: "dappkit@vechain/connectionCertificate"
     })).toBeFalsy()
+
     // check for privy session
     expect(isObjectHasProperty({
       obj: localStorage,
