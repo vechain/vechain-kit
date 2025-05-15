@@ -535,12 +535,12 @@
     "your@email.com": "your@email.com",
     "{{element}} website": "{{element}} website",
     "{{name}}": "{{name}}",
-    "Terms and Conditions": "Terms and Conditions",
     "I have read and agree to ": "I have read and agree to ",
     "Vechain Kit": "Vechain Kit",
     "Others": "Others",
     "Accept": "Accept",
     "Terms and Privacy": "Terms and Privacy",
     "Reject and logout": "Reject and logout",
-    "Are you sure you want to reject the terms and disconnect?": "Are you sure you want to reject the terms and disconnect?"
+    "Are you sure you want to reject the terms and disconnect?": "Are you sure you want to reject the terms and disconnect?",
+    "By continuing, you agree to <links/>. Please take a moment to review all the terms, with acceptance being mandatory to continue.": "By continuing, you agree to <links/>. Please take a moment to review all the terms, with acceptance being mandatory to continue."
 }
