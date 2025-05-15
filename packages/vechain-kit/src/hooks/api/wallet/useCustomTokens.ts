@@ -1,5 +1,9 @@
-import { useLocalStorage } from '@/hooks';
-import { CustomTokenInfo, getTokenInfo } from '@/hooks';
+import {
+    CustomTokenInfo,
+    getTokenInfo,
+    LocalStorageKey,
+    useLocalStorage,
+} from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
@@ -8,7 +12,7 @@ import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(
-        'vechain_kit_custom_tokens',
+        LocalStorageKey.CUSTOM_TOKENS,
         [],
     );
     const { network } = useVeChainKitConfig();

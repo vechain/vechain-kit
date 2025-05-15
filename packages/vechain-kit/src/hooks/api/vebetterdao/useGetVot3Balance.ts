@@ -37,8 +37,9 @@ export const getVot3Balance = async (
 };
 
 export const getVot3BalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_VOT3_BALANCE',
+    'VECHAIN_KIT_BALANCE',
     address,
+    'VOT3',
 ];
 
 export const useGetVot3Balance = (address?: string) => {

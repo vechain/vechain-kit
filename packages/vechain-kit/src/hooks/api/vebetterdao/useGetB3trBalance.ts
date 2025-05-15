@@ -50,8 +50,9 @@ export const getB3trBalance = async (
 };
 
 export const getB3trBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_B3TR_BALANCE',
+    'VECHAIN_KIT_BALANCE',
     address,
+    'B3TR',
 ];
 
 export const useGetB3trBalance = (address?: string) => {

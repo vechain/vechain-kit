@@ -35,8 +35,9 @@ export const getVeDelegateBalance = async (
 };
 
 export const getVeDelegateBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_VE_DELEGATE_BALANCE',
+    'VECHAIN_KIT_BALANCE',
     address,
+    'VE_DELEGATE',
 ];
 
 export const useGetVeDelegateBalance = (address?: string) => {

@@ -37,7 +37,8 @@ export const getTokenUsdPrice = async (
 };
 
 export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
-    `VECHAIN_KIT_${token}_USD_PRICE`,
+    'VECHAIN_KIT_PRICE',
+    token,
 ];
 
 export const useGetTokenUsdPrice = (token: SupportedToken) => {

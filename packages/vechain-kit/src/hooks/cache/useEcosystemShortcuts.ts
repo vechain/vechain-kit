@@ -1,4 +1,4 @@
-import { useLocalStorage } from './useLocalStorage';
+import { useLocalStorage, LocalStorageKey } from './useLocalStorage';
 
 export type EcosystemShortcut = {
     name: string;
@@ -9,7 +9,7 @@ export type EcosystemShortcut = {
 
 export const useEcosystemShortcuts = () => {
     const [shortcuts, setShortcuts] = useLocalStorage<EcosystemShortcut[]>(
-        'vechain-kit-ecosystem-shortcuts',
+        LocalStorageKey.ECOSYSTEM_SHORTCUTS,
         [],
     );
 

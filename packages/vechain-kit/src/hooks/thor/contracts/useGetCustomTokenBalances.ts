@@ -43,9 +43,9 @@ export const getCustomTokenBalance = async (
 };
 
 export const getCustomTokenBalanceQueryKey = (
-    tokenAddress: string,
+    tokenAddress?: string,
     address?: string,
-) => ['VECHAIN_KIT_CUSTOM_TOKEN_BALANCE', address, tokenAddress];
+) => ['VECHAIN_KIT_BALANCE', address, 'CUSTOM_TOKEN', tokenAddress];
 
 export const useGetCustomTokenBalances = (address?: string) => {
     const thor = useThor();
