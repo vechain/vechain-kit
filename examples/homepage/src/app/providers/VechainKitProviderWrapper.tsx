@@ -94,21 +94,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
-            legalDocuments={{
-                termsAndConditions: [
-                    {
-                        url: 'https://vechain.org',
-                        version: 1,
-                        required: true,
-                        displayName: 'Example T&C',
-                    },
-                    {
-                        url: 'https://vechain.org/wp-content/uploads/2023/10/vechain-whitepaper-3-0.pdf',
-                        version: 3,
-                        required: false,
-                    },
-                ],
-            }}
         >
             {children}
         </VeChainKitProvider>
