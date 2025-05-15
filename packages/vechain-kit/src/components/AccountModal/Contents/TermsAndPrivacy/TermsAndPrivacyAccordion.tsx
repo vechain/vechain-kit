@@ -9,41 +9,51 @@ import { useTranslation } from 'react-i18next';
 
 import { PolicyAccordion } from './PolicyAccordion';
 import { LegalDocumentType } from '@/types';
+import { compareAddresses } from '@/utils';
+import { useMemo } from 'react';
+import { useWallet } from '@/hooks';
 
 export const TermsAndPrivacyAccordion = () => {
+    const { account } = useWallet();
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const {
         legalDocuments: { agreements },
     } = useLegalDocuments();
 
+    const userAgreements = useMemo(() => {
+        return agreements?.filter((agreement) =>
+            compareAddresses(agreement.walletAddress, account?.address),
+        );
+    }, [agreements, account?.address]);
+
     //Vechain Kit current terms
-    const currentVechainKitTerms = agreements?.find(
+    const currentVechainKitTerms = userAgreements?.find(
         (agreement) => agreement.url === VECHAIN_KIT_TERMS_CONFIG.url,
     );
 
     //Vechain Kit current privacy policy
-    const currentVechainKitPrivacyPolicy = agreements?.find(
+    const currentVechainKitPrivacyPolicy = userAgreements?.find(
         (agreement) => agreement.url === VECHAIN_KIT_PRIVACY_CONFIG.url,
     );
 
     //Vechain Kit current cookie policy
-    const currentVechainKitCookiePolicy = agreements?.find(
+    const currentVechainKitCookiePolicy = userAgreements?.find(
         (agreement) => agreement.url === VECHAIN_KIT_COOKIE_CONFIG.url,
     );
 
     //All terms and conditions agreements
-    const allTermsAndConditionsAgreements = agreements?.filter(
+    const allTermsAndConditionsAgreements = userAgreements?.filter(
         (agreement) => agreement.documentType === LegalDocumentType.TERMS,
     );
 
     //All privacy policies agreements
-    const allPrivacyPoliciesAgreements = agreements?.filter(
+    const allPrivacyPoliciesAgreements = userAgreements?.filter(
         (agreement) => agreement.documentType === LegalDocumentType.PRIVACY,
     );
 
     //All cookie policies agreements
-    const allCookiePoliciesAgreements = agreements?.filter(
+    const allCookiePoliciesAgreements = userAgreements?.filter(
         (agreement) => agreement.documentType === LegalDocumentType.COOKIES,
     );
 
