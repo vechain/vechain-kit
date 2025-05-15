@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { BaseModal } from '@/components/common';
-import { TermsAndConditionsContent } from './Contents/TermsAndConditionsContent';
+import { TermsAndConditionsContent } from './TermsAndConditionsContent';
 import { TermsAndConditions } from '@/types';
 type Props = {
     isOpen: boolean;
@@ -17,26 +16,6 @@ export const TermsAndConditionsModal = ({
     onCancel,
     onAgree,
 }: Props) => {
-    const [currentContent, setCurrentContent] =
-        useState<TermsAndConditionsModalContentsTypes>('terms-and-conditions');
-
-    useEffect(() => {
-        if (isOpen) {
-            setCurrentContent('terms-and-conditions');
-        }
-    }, [isOpen]);
-
-    const renderContent = () => {
-        if (currentContent === 'terms-and-conditions') {
-            return (
-                <TermsAndConditionsContent
-                    onAgree={onAgree}
-                    onCancel={onCancel}
-                />
-            );
-        }
-    };
-
     return (
         <BaseModal
             isOpen={isOpen}
@@ -45,7 +24,7 @@ export const TermsAndConditionsModal = ({
             blockScrollOnMount={true}
             isCloseable={false}
         >
-            {renderContent()}
+            <TermsAndConditionsContent onAgree={onAgree} onCancel={onCancel} />
         </BaseModal>
     );
 };

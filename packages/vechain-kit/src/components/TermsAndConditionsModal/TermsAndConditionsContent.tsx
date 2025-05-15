@@ -15,7 +15,7 @@ import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { TermItem } from './TermItem';
+import { TermItem } from './Components';
 
 type Props = {
     onAgree: (terms: TermsAndConditions | TermsAndConditions[]) => void;
