@@ -93,13 +93,13 @@ export const VECHAIN_KIT_TERMS_CONFIG = {
 export const VECHAIN_KIT_PRIVACY_CONFIG = {
     url: 'https://kit.vechain.org/privacy',
     version: 1,
-    required: true,
+    required: false,
     displayName: 'Vechain Kit Privacy Policy',
 };
 
 export const VECHAIN_KIT_COOKIE_CONFIG = {
     url: 'https://kit.vechain.org/cookie',
     version: 1,
-    required: true,
+    required: false,
     displayName: 'Vechain Kit Cookie Policy',
 };
