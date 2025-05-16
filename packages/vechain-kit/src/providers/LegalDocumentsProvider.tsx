@@ -10,7 +10,6 @@ import {
 } from '@/types';
 import { compareAddresses } from '@/utils/AddressUtils';
 import {
-    hasAgreedToRequiredDocuments as checkHasAgreedToRequiredDocuments,
     getAllDocuments,
     getRequiredDocuments,
     getDocumentId,
@@ -110,11 +109,19 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     }, [documents, account?.address]);
 
     const hasAgreedToRequiredDocuments = useMemo(() => {
-        return checkHasAgreedToRequiredDocuments(
-            account?.address,
-            requiredDocuments,
+        //This is using the local storage hook instead of utils , since it needs a dependency hook
+        //Otherwise it will not re-render when the user disconnects and connects again
+        //Which will not notify external usages of this hook
+        if (!requiredDocuments.length || !account?.address) return true;
+
+        return requiredDocuments.every((document) =>
+            storedAgreements.some(
+                (saved) =>
+                    compareAddresses(saved.walletAddress, account.address) &&
+                    saved.id === document.id,
+            ),
         );
-    }, [requiredDocuments, account?.address]);
+    }, [requiredDocuments, storedAgreements, account?.address]);
 
     useEffect(() => {
         if (connection.isConnected && account?.address) {
