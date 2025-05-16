@@ -1,29 +1,49 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'getB3TRtoUpgradeToLevel';
+
+export const getB3trToUpgradeToLevelQueryKey = (
+    networkType: NETWORK_TYPE,
+    level: string,
+) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [BigInt(level)],
+    });
+};
 
 /**
  * Retrieves the amount of B3TR tokens required to upgrade to a specific level for a given token ID.
  *
- * @param tokenId - The ID of the token.
- * @param enabled - Flag indicating whether the hook is enabled or not. Default is true.
+ * @param level - The level to upgrade to.
+ * @param customEnabled - Flag indicating whether the hook is enabled or not. Default is true.
  * @returns The result of the call to the contract method.
  */
-export const useB3trToUpgradeToLevel = (level?: string, enabled = true) => {
+export const useB3trToUpgradeToLevel = (
+    level?: string,
+    customEnabled = true,
+) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [level],
-        enabled: !!level && enabled && !!network.type,
-        mapResponse: (res) => formatEther(res.decoded[0]),
+        args: [BigInt(level!)],
+        queryOptions: {
+            enabled:
+                !!level && customEnabled && !!network.type && !!contractAddress,
+            select: (data: readonly [bigint]) => formatEther(data[0]),
+        },
     });
 };

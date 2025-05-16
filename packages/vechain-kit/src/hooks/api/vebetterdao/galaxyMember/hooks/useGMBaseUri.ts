@@ -1,32 +1,45 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
-const contractInterface = GalaxyMember__factory.createInterface();
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
+
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'baseURI';
 
 /**
  * Query key for the `baseURI` method on the Galaxy Member contract.
- * Using a different name to avoid conflicts with the `baseURI` property on ERC721 contracts.
  */
-export const getGMBaseUriQueryKey = () =>
-    getCallKey({ method: 'getGMBaseUri', keyArgs: [] });
+export const getGMBaseUriQueryKey = (networkType: NETWORK_TYPE) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [],
+    });
+};
 
 /**
  * Custom hook that retrieves the base URI for the Galaxy Member NFT.
  *
+ * @param customEnabled - Determines whether the hook is enabled or not. Default is true.
  * @returns The base URI for the Galaxy Member NFT.
  */
-export const useGMBaseUri = (): UseQueryResult<string, Error> => {
+export const useGMBaseUri = (
+    customEnabled = true,
+): UseQueryResult<string, unknown> => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
         args: [],
-        enabled: !!network.type,
+        queryOptions: {
+            enabled: customEnabled && !!network.type && !!contractAddress,
+        },
     });
 };

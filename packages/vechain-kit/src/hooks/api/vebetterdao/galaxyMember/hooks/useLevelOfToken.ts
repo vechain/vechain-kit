@@ -1,30 +1,48 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'levelOf';
 
-export const getLevelOfTokenQueryKey = (tokenId?: string) =>
-    getCallKey({ method, keyArgs: [tokenId] });
+export const getLevelOfTokenQueryKey = (
+    networkType: NETWORK_TYPE,
+    tokenId: string,
+) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [BigInt(tokenId)],
+    });
+};
 
 /**
  * Custom hook that retrieves the level of the specified token.
  *
  * @param tokenId - The token ID to retrieve the level for.
- * @param enabled - Determines whether the hook is enabled or not. Default is true.
+ * @param customEnabled - Determines whether the hook is enabled or not. Default is true.
  * @returns The level of the specified token.
  */
-export const useLevelOfToken = (tokenId?: string, enabled = true) => {
+export const useLevelOfToken = (tokenId?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [tokenId],
-        enabled: !!tokenId && enabled && !!network.type,
+        args: [BigInt(tokenId!)],
+        queryOptions: {
+            enabled:
+                !!tokenId &&
+                customEnabled &&
+                !!network.type &&
+                !!contractAddress,
+            select: (data) => data[0].toString(),
+        },
     });
 };

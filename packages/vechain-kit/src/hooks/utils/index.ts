@@ -1,4 +1,5 @@
 export * from './useCall';
+export * from './useCallClause';
 export * from './useCurrency';
 export * from './useDecodeFunctionSignature';
 export * from './useFeatureAnnouncement';
