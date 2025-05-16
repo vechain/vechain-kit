@@ -34,7 +34,7 @@ import {
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
-import { hasAgreedToVeChainKitTerms } from './legalDocumentsUtils';
+import { hasAgreedToVeChainKitCookiePolicy } from './legalDocumentsUtils';
 
 const APP_SOURCE: string = document.title || '';
 const PAGE_SOURCE: string = window?.location?.origin || '';
@@ -62,7 +62,7 @@ export const setConnectedWalletAddress = (address: string | null): void => {
 // Check if user has consented to tracking
 const hasTrackingConsent = (walletAddress: string | null): boolean => {
     if (!walletAddress) return false;
-    return hasAgreedToVeChainKitTerms(walletAddress);
+    return hasAgreedToVeChainKitCookiePolicy(walletAddress);
 };
 
 // Check if a user is logging in for the first time

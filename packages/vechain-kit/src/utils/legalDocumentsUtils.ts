@@ -11,7 +11,7 @@ import {
     VECHAIN_KIT_TERMS_CONFIG,
 } from '@/utils';
 
-const LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';
+export const LEGAL_DOCS_LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';
 
 /**
  * Generate a unique ID for a document based on its type, URL and version
@@ -84,7 +84,7 @@ export const getRequiredDocuments = (
 export const getStoredAgreements = (): LegalDocumentAgreement[] => {
     try {
         // Try new storage format first
-        const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const storedData = localStorage.getItem(LEGAL_DOCS_LOCAL_STORAGE_KEY);
         if (storedData) {
             return JSON.parse(storedData);
         }
@@ -156,15 +156,17 @@ export const hasAgreedToRequiredDocuments = (
 };
 
 /**
- * Check if a user has agreed to the VeChain Kit terms specifically
+ * Check if a user has agreed to the VeChain Kit cookie policy specifically
  * This function is simplified for direct usage in mixpanel
  */
-export const hasAgreedToVeChainKitTerms = (walletAddress?: string): boolean => {
+export const hasAgreedToVeChainKitCookiePolicy = (
+    walletAddress?: string,
+): boolean => {
     if (!walletAddress) return false;
 
     const vkTermId = getDocumentId({
-        ...VECHAIN_KIT_TERMS_CONFIG,
-        documentType: LegalDocumentType.TERMS,
+        ...VECHAIN_KIT_COOKIE_CONFIG,
+        documentType: LegalDocumentType.COOKIES,
         documentSource: LegalDocumentSource.VECHAIN_KIT,
     });
     return hasAgreedToDocument(walletAddress, vkTermId);

@@ -14,6 +14,7 @@ import {
     getRequiredDocuments,
     getDocumentId,
     getDocumentsNotAgreed,
+    LEGAL_DOCS_LOCAL_STORAGE_KEY,
 } from '@/utils/legalDocumentsUtils';
 import {
     Analytics,
@@ -64,7 +65,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
 
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         LegalDocumentAgreement[]
-    >('vechain-kit-legal-documents', []);
+    >(LEGAL_DOCS_LOCAL_STORAGE_KEY, []);
     const [showTermsModal, setShowTermsModal] = useState(false);
 
     //All documents with types
