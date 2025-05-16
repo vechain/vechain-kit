@@ -72,7 +72,7 @@ export const StepModal = <T extends string>({
             isCloseable={isCloseable}
             blockScrollOnMount={true}
         >
-            <Card p={0}>
+            <Card p={0} bg="none">
                 <CardBody p={0}>
                     {showHeader ? (
                         <StickyHeaderContainer>
