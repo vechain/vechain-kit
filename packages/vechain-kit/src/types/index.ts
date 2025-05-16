@@ -9,10 +9,16 @@ export enum LegalDocumentType {
     COOKIES = 'cookies',
 }
 
+export enum LegalDocumentSource {
+    VECHAIN_KIT = 'vechain-kit',
+    OTHER = 'other',
+}
+
 // Base type for all legal documents (terms, privacy policy, cookies)
 export type EnrichedLegalDocument = LegalDocument & {
     id: string;
     documentType: LegalDocumentType;
+    documentSource: LegalDocumentSource;
 };
 
 // Agreement record stored in localStorage

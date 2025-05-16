@@ -5,6 +5,7 @@ import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import {
     EnrichedLegalDocument,
     LegalDocumentAgreement,
+    LegalDocumentSource,
     LegalDocumentType,
 } from '@/types';
 import { compareAddresses } from '@/utils/AddressUtils';
@@ -76,16 +77,19 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         const cookiePolicy = cookiePolicies.map((cookiePolicy) => ({
             ...cookiePolicy,
             documentType: LegalDocumentType.COOKIES,
+            documentSource: LegalDocumentSource.OTHER,
         }));
 
         const privacyPolicy = privacyPolicies.map((privacyPolicy) => ({
             ...privacyPolicy,
             documentType: LegalDocumentType.PRIVACY,
+            documentSource: LegalDocumentSource.OTHER,
         }));
 
         const termsAndConditions = termsPolicies.map((termsAndConditions) => ({
             ...termsAndConditions,
             documentType: LegalDocumentType.TERMS,
+            documentSource: LegalDocumentSource.OTHER,
         }));
 
         return [...cookiePolicy, ...privacyPolicy, ...termsAndConditions];

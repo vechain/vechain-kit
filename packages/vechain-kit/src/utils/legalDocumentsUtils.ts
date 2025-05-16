@@ -1,6 +1,7 @@
 import {
     EnrichedLegalDocument,
     LegalDocumentAgreement,
+    LegalDocumentSource,
     LegalDocumentType,
 } from '@/types';
 import {
@@ -45,16 +46,19 @@ export const getAllDocuments = (
     const vechainKitCookiePolicy = {
         ...VECHAIN_KIT_COOKIE_CONFIG,
         documentType: LegalDocumentType.COOKIES,
+        documentSource: LegalDocumentSource.VECHAIN_KIT,
     };
 
     const vechainKitPrivacyPolicy = {
         ...VECHAIN_KIT_PRIVACY_CONFIG,
         documentType: LegalDocumentType.PRIVACY,
+        documentSource: LegalDocumentSource.VECHAIN_KIT,
     };
 
     const vechainKitTermsAndConditions = {
         ...VECHAIN_KIT_TERMS_CONFIG,
         documentType: LegalDocumentType.TERMS,
+        documentSource: LegalDocumentSource.VECHAIN_KIT,
     };
     const vechainKitDocuments = [
         vechainKitCookiePolicy,
@@ -75,16 +79,7 @@ export const getRequiredDocuments = (
 };
 
 /**
- * Legacy function for backward compatibility
- */
-export const getRequiredTerms = (
-    terms: EnrichedLegalDocument[],
-): EnrichedLegalDocument[] => {
-    return getRequiredDocuments(terms);
-};
-
-/**
- * Get agreements from localStorage (with fallback to legacy storage)
+ * Get agreements from localStorage
  */
 export const getStoredAgreements = (): LegalDocumentAgreement[] => {
     try {
@@ -119,16 +114,6 @@ export const hasAgreedToDocument = (
             compareAddresses(agreement.walletAddress, walletAddress) &&
             agreement.id === documentId,
     );
-};
-
-/**
- * Legacy function for backward compatibility
- */
-export const hasAgreedToTerm = (
-    walletAddress: string | undefined,
-    termId: string,
-): boolean => {
-    return hasAgreedToDocument(walletAddress, termId);
 };
 
 /**
@@ -180,6 +165,7 @@ export const hasAgreedToVeChainKitTerms = (walletAddress?: string): boolean => {
     const vkTermId = getDocumentId({
         ...VECHAIN_KIT_TERMS_CONFIG,
         documentType: LegalDocumentType.TERMS,
+        documentSource: LegalDocumentSource.VECHAIN_KIT,
     });
     return hasAgreedToDocument(walletAddress, vkTermId);
 };
