@@ -1,14 +1,9 @@
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import {
-    VECHAIN_KIT_TERMS_CONFIG,
-    VECHAIN_KIT_PRIVACY_CONFIG,
-    VECHAIN_KIT_COOKIE_CONFIG,
-} from '@/utils/Constants';
 import { Accordion, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
 import { PolicyAccordion } from './PolicyAccordion';
-import { LegalDocumentType } from '@/types';
+import { LegalDocumentType, LegalDocumentSource } from '@/types';
 import { compareAddresses } from '@/utils';
 import { useMemo } from 'react';
 import { useWallet } from '@/hooks';
@@ -29,17 +24,23 @@ export const TermsAndPrivacyAccordion = () => {
 
     //Vechain Kit current terms
     const currentVechainKitTerms = userAgreements?.find(
-        (agreement) => agreement.url === VECHAIN_KIT_TERMS_CONFIG.url,
+        (agreement) =>
+            agreement.documentSource === LegalDocumentSource.VECHAIN_KIT &&
+            agreement.documentType === LegalDocumentType.TERMS,
     );
 
     //Vechain Kit current privacy policy
     const currentVechainKitPrivacyPolicy = userAgreements?.find(
-        (agreement) => agreement.url === VECHAIN_KIT_PRIVACY_CONFIG.url,
+        (agreement) =>
+            agreement.documentSource === LegalDocumentSource.VECHAIN_KIT &&
+            agreement.documentType === LegalDocumentType.PRIVACY,
     );
 
     //Vechain Kit current cookie policy
     const currentVechainKitCookiePolicy = userAgreements?.find(
-        (agreement) => agreement.url === VECHAIN_KIT_COOKIE_CONFIG.url,
+        (agreement) =>
+            agreement.documentSource === LegalDocumentSource.VECHAIN_KIT &&
+            agreement.documentType === LegalDocumentType.COOKIES,
     );
 
     //All terms and conditions agreements
