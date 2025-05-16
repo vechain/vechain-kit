@@ -3,8 +3,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import { EnrichedLegalDocument } from '@/types';
-import { VECHAIN_KIT_TERMS_CONFIG } from '@/utils/Constants';
+import { EnrichedLegalDocument, LegalDocumentSource } from '@/types';
 import {
     Button,
     ModalBody,
@@ -45,14 +44,15 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
     // Filter for VechainKit required documents
     const vechainKitRequiredDocuments = useMemo(() => {
         return requiredDocuments.filter(
-            (document) => document.url === VECHAIN_KIT_TERMS_CONFIG.url,
+            (document) =>
+                document.documentSource === LegalDocumentSource.VECHAIN_KIT,
         );
     }, [requiredDocuments]);
 
     // Filter for other required documents
     const appRequiredDocuments = useMemo(() => {
         return requiredDocuments.filter(
-            (document) => document.url !== VECHAIN_KIT_TERMS_CONFIG.url,
+            (document) => document.documentSource === LegalDocumentSource.OTHER,
         );
     }, [requiredDocuments]);
 

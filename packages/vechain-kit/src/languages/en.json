@@ -547,10 +547,11 @@
     "View Current Policy": "View Current Policy",
     "You accepted current policy on {{date}}": "You accepted current policy on {{date}}",
     "'{{policyName}}' on {{date}}": "'{{policyName}}' on {{date}}",
-    "{{variant}} policies you have accepted": "{{variant}} policies you have accepted",
+    "All policies you have accepted": "All policies you have accepted",
     "Privacy Policy": "Privacy Policy",
     "Cookie Policy": "Cookie Policy",
     "Legal agreement between you, Vechain Kit and the current app, outlining the rules for using wallet services.": "Legal agreement between you, Vechain Kit and the current app, outlining the rules for using wallet services.",
     "Privacy policy outlining the data collection and processing practices.": "Privacy policy outlining the data collection and processing practices.",
-    "Cookie policy outlining the use of cookies and tracking technologies.": "Cookie policy outlining the use of cookies and tracking technologies."
+    "Cookie policy outlining the use of cookies and tracking technologies.": "Cookie policy outlining the use of cookies and tracking technologies.",
+    "Policy": "Policy"
 }

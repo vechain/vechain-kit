@@ -2,11 +2,9 @@ import {
     AccordionButton,
     AccordionItem,
     AccordionPanel,
-    Box,
     Button,
     HStack,
     Icon,
-    Tag,
     Text,
     VStack,
 } from '@chakra-ui/react';
@@ -17,6 +15,7 @@ import { IoChevronUp } from 'react-icons/io5';
 import { LegalDocumentAgreement } from '@/types';
 import { MdCheck } from 'react-icons/md';
 import { formatDate } from '@/utils/dateUtils';
+import { AcceptedPolicyItem } from './AcceptedPolicyItem';
 
 type PolicyAccordionProps = {
     title: string;
@@ -38,8 +37,6 @@ export const PolicyAccordion = ({
     const { t } = useTranslation();
     const hasDocuments = documents.length > 0;
 
-    const hasMoreThanOneAgreement = documents.length > 1;
-
     if (!hasDocuments) return null;
 
     return (
@@ -53,12 +50,12 @@ export const PolicyAccordion = ({
                             bg: hoverBg,
                         }}
                     >
-                        <Box flex="1" textAlign="left" py={2}>
+                        <VStack w="full" align="flex-start" textAlign="left">
                             <Text fontWeight="700">{title}</Text>
                             <Text fontSize="xs" color="gray.400">
                                 {description}
                             </Text>
-                        </Box>
+                        </VStack>
                         <Icon
                             as={isExpanded ? IoChevronUp : IoChevronDown}
                             fontSize="20px"
@@ -85,50 +82,17 @@ export const PolicyAccordion = ({
 
                             <HStack w="full" textAlign="left">
                                 <Text fontSize="xs" fontWeight="bold">
-                                    {t(
-                                        '{{variant}} policies you have accepted',
-                                        {
-                                            variant: hasMoreThanOneAgreement
-                                                ? 'Other'
-                                                : 'All',
-                                        },
-                                    )}
+                                    {t('All policies you have accepted')}
                                 </Text>
                             </HStack>
 
                             <HStack w="full" gap={2}>
                                 <VStack align="stretch" spacing={2}>
                                     {documents.map((document) => (
-                                        <HStack justifyContent="space-between">
-                                            <Tag size="sm" borderRadius="full">
-                                                v{document.version}
-                                            </Tag>
-                                            <Text
-                                                fontSize="xs"
-                                                cursor="pointer"
-                                                onClick={() => {
-                                                    window.open(
-                                                        document.url,
-                                                        '_blank',
-                                                    );
-                                                }}
-                                                _hover={{
-                                                    textDecoration: 'underline',
-                                                }}
-                                            >
-                                                {t(
-                                                    "'{{policyName}}' on {{date}}",
-                                                    {
-                                                        policyName:
-                                                            document.displayName ??
-                                                            'Policy',
-                                                        date: formatDate(
-                                                            document.timestamp,
-                                                        ),
-                                                    },
-                                                )}
-                                            </Text>
-                                        </HStack>
+                                        <AcceptedPolicyItem
+                                            key={document.id}
+                                            document={document}
+                                        />
                                     ))}
                                 </VStack>
                             </HStack>

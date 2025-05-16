@@ -19,7 +19,7 @@ export const LegalDocumentItem = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const documentName = document.displayName ?? t('Terms and Policies');
+    const documentName = document.displayName ?? t('Policy');
 
     const borderColor = isDark ? 'whiteAlpha.400' : 'blackAlpha.400';
 
@@ -65,7 +65,6 @@ export const LegalDocumentItem = ({
                         required: document.required,
                     })}
                     type="checkbox"
-                    data-testid="tnc-checkbox"
                     hidden
                 />
                 {document.displayName || 'Vechain Kit Policy'}
