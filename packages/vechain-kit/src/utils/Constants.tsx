@@ -98,7 +98,7 @@ export const VECHAIN_KIT_PRIVACY_CONFIG = {
 };
 
 export const VECHAIN_KIT_COOKIE_CONFIG = {
-    url: 'https://vechainkit.vechain.org/cookie',
+    url: 'https://vechainkit.vechain.org/cookies',
     version: 1,
     required: false,
     displayName: 'Vechain Kit Cookie Policy',
