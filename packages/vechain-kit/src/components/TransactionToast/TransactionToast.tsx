@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { TransactionToastContent } from './TransactionToastContent';
-import { TransactionReceipt } from '@vechain/sdk-network1.2';
+import { TransactionReceipt } from '@vechain/sdk-network';
 
 export type TransactionToastProps = {
     isOpen: boolean;

@@ -1,4 +1,4 @@
-import { CompressedBlockDetail } from '@vechain/sdk-network1.2';
+import { CompressedBlockDetail } from '@vechain/sdk-network';
 
 /**
  * The type of network that we are connected to (indentified by the genesis block)

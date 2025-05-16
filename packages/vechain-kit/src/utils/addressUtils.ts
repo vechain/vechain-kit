@@ -1,5 +1,5 @@
 import * as HexUtils from './hexUtils';
-import { Address } from '@vechain/sdk-core1.2';
+import { Address } from '@vechain/sdk-core';
 
 /**
  * Checks if two addresses are equal. Returns true if both values are strings AND:

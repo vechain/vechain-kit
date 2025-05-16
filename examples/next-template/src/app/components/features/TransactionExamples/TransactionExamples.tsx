@@ -13,7 +13,7 @@ import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';
 import { useCallback } from 'react';
-import { TransactionClause } from '@vechain/sdk-core1.2';
+import { TransactionClause } from '@vechain/sdk-core';
 
 export function TransactionExamples() {
     const { account } = useWallet();

@@ -1,10 +1,10 @@
 import { useQueries } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { ERC20__factory } from '@/contracts';
 import { formatEther } from 'viem';
 import { humanNumber } from '@/utils';
 import { useCustomTokens, type CustomTokenInfo } from '@/hooks';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 import { TokenBalance } from '@/types';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;

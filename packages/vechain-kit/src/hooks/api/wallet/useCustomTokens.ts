@@ -7,8 +7,8 @@ import {
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(

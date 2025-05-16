@@ -3,8 +3,8 @@ import { SimpleAccountFactory__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 
 export const getCurrentAccountImplementationVersion = async (
     thor: ThorClient,

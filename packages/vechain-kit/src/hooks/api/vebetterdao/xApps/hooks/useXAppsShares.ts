@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { XAllocationPool__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 
 /**
  *  Returns the query key for the shares of multiple xApps in an allocation round.

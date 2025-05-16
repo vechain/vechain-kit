@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useWallet } from '@/hooks';
 import { useSendTransaction } from './useSendTransaction';
-import { TransactionClause } from '@vechain/sdk-core1.2';
+import { TransactionClause } from '@vechain/sdk-core';
 
 export type BuildTransactionProps<ClausesParams> = {
     clauseBuilder: (props: ClausesParams) => TransactionClause[];

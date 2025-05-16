@@ -4,8 +4,8 @@ import { NodeManagement__factory } from '@/contracts';
 import { useQuery } from '@tanstack/react-query';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 import type { ViewFunctionResult } from '@/hooks';
 
 /**

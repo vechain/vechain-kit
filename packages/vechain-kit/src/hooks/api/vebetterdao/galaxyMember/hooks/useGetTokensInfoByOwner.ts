@@ -2,7 +2,7 @@ import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 
 /**
  * Generates a query key for the getTokensInfoByOwner query.

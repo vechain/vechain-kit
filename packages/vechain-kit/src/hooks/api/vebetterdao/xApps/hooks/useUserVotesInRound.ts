@@ -4,9 +4,9 @@ import { XAllocationVoting__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-import { FilterCriteria, ThorClient } from '@vechain/sdk-network1.2';
+import { FilterCriteria, ThorClient } from '@vechain/sdk-network';
 import { compareAddresses } from '@/utils';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export type AllocationVoteCastEvent = {
     voter: string;

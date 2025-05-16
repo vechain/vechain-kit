@@ -3,7 +3,7 @@ import { getConfig } from '@/config';
 import { Emissions__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 
 type AllocationAmount = {
     treasury: string;

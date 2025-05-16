@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { useMemo } from 'react';
 import { getRoundRewardQueryKey } from '@/hooks';
 import { VoterRewards__factory } from '@/contracts';

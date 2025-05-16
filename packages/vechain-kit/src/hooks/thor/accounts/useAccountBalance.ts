@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { Address } from '@vechain/sdk-core1.2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { Address } from '@vechain/sdk-core';
+import { ThorClient } from '@vechain/sdk-network';
 import { formatEther } from 'viem';
 
 export const getAccountBalance = async (thor: ThorClient, address?: string) => {

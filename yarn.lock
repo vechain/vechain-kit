@@ -4185,7 +4185,7 @@
   resolved "https://registry.yarnpkg.com/@vanilla-extract/sprinkles/-/sprinkles-1.6.3.tgz#733968d653cc2395538b5c29f04dcdb0a2ca15c5"
   integrity sha512-oCHlQeYOBIJIA2yWy2GnY5wE2A7hGHDyJplJo4lb+KEIBcJWRnDJDg8ywDwQS5VfWJrBBO3drzYZPFpWQjAMiQ==
 
-"@vechain/dapp-kit-react2@npm:@vechain/dapp-kit-react":
+"@vechain/dapp-kit-react@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@vechain/dapp-kit-react/-/dapp-kit-react-2.0.0.tgz#b0ccfcdd425dfc0bdcaf84e2e33029dce9bef67c"
   integrity sha512-jjUw6i+TYzLOfBSQIFOL0CQ5yyK3rgpcLwLykHHeHkN5+mA+Hw6hF8YqT5kAyGtHYaNNVatVoTmDU0Uyp/WopA==
@@ -4233,25 +4233,6 @@
   dependencies:
     mersenne-twister "^1.1.0"
 
-"@vechain/sdk-core1.2@npm:@vechain/sdk-core", "@vechain/sdk-core@1.2.0-rc.2":
-  version "1.2.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@vechain/sdk-core/-/sdk-core-1.2.0-rc.2.tgz#a4af18a8a793f876a2fd25e8eed1dfd56a152bc5"
-  integrity sha512-X3BHSOnKgvTEnE2nC7J26DSzmchkGwM9XlA0auhBwy6GGDzQDZu/0DX3XEml9eKdJ5KL6+qaOLSHhBOZJYNpwQ==
-  dependencies:
-    "@ethereumjs/rlp" "^5.0.2"
-    "@noble/ciphers" "^1.1.1"
-    "@noble/curves" "^1.6.0"
-    "@noble/hashes" "^1.5.0"
-    "@scure/base" "^1.2.4"
-    "@scure/bip32" "^1.4.0"
-    "@scure/bip39" "^1.5.1"
-    "@vechain/sdk-errors" "1.2.0-rc.2"
-    "@vechain/sdk-logging" "1.2.0-rc.2"
-    abitype "^1.0.6"
-    ethers "6.13.4"
-    fast-json-stable-stringify "^2.1.0"
-    viem "^2.21.45"
-
 "@vechain/sdk-core@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@vechain/sdk-core/-/sdk-core-1.1.0.tgz#7997635019c63511e4c22d8cdfdd3760d4e4e5e6"
@@ -4266,6 +4247,25 @@
     "@scure/bip39" "^1.5.1"
     "@vechain/sdk-errors" "1.1.0"
     "@vechain/sdk-logging" "1.1.0"
+    abitype "^1.0.6"
+    ethers "6.13.4"
+    fast-json-stable-stringify "^2.1.0"
+    viem "^2.21.45"
+
+"@vechain/sdk-core@1.2.0-rc.2", "@vechain/sdk-core@^1.2.0-rc.2":
+  version "1.2.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@vechain/sdk-core/-/sdk-core-1.2.0-rc.2.tgz#a4af18a8a793f876a2fd25e8eed1dfd56a152bc5"
+  integrity sha512-X3BHSOnKgvTEnE2nC7J26DSzmchkGwM9XlA0auhBwy6GGDzQDZu/0DX3XEml9eKdJ5KL6+qaOLSHhBOZJYNpwQ==
+  dependencies:
+    "@ethereumjs/rlp" "^5.0.2"
+    "@noble/ciphers" "^1.1.1"
+    "@noble/curves" "^1.6.0"
+    "@noble/hashes" "^1.5.0"
+    "@scure/base" "^1.2.4"
+    "@scure/bip32" "^1.4.0"
+    "@scure/bip39" "^1.5.1"
+    "@vechain/sdk-errors" "1.2.0-rc.2"
+    "@vechain/sdk-logging" "1.2.0-rc.2"
     abitype "^1.0.6"
     ethers "6.13.4"
     fast-json-stable-stringify "^2.1.0"
@@ -4295,19 +4295,6 @@
   dependencies:
     "@vechain/sdk-errors" "1.2.0-rc.2"
 
-"@vechain/sdk-network1.2@npm:@vechain/sdk-network":
-  version "1.2.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@vechain/sdk-network/-/sdk-network-1.2.0-rc.2.tgz#3f505e1a9bee2d95487a0d4f22b3fff2b9719163"
-  integrity sha512-31cGDJhJsyhZdjDwfjKe0LLK1oLvs4Oa8eo9748YEzfUsz9LvO7AwL7VcVwSdw8mXIqVkmKlsUvmab1Lr4qlYQ==
-  dependencies:
-    "@noble/curves" "^1.6.0"
-    "@vechain/sdk-core" "1.2.0-rc.2"
-    "@vechain/sdk-errors" "1.2.0-rc.2"
-    "@vechain/sdk-logging" "1.2.0-rc.2"
-    abitype "^1.0.6"
-    ethers "6.13.4"
-    viem "^2.21.45"
-
 "@vechain/sdk-network@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@vechain/sdk-network/-/sdk-network-1.1.0.tgz#c5c692dd06acb0aa02f86fd34bbb311f7f51cf26"
@@ -4323,6 +4310,19 @@
     isomorphic-ws "^5.0.0"
     viem "^2.21.45"
     ws "^8.18.0"
+
+"@vechain/sdk-network@^1.2.0-rc.2":
+  version "1.2.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@vechain/sdk-network/-/sdk-network-1.2.0-rc.2.tgz#3f505e1a9bee2d95487a0d4f22b3fff2b9719163"
+  integrity sha512-31cGDJhJsyhZdjDwfjKe0LLK1oLvs4Oa8eo9748YEzfUsz9LvO7AwL7VcVwSdw8mXIqVkmKlsUvmab1Lr4qlYQ==
+  dependencies:
+    "@noble/curves" "^1.6.0"
+    "@vechain/sdk-core" "1.2.0-rc.2"
+    "@vechain/sdk-errors" "1.2.0-rc.2"
+    "@vechain/sdk-logging" "1.2.0-rc.2"
+    abitype "^1.0.6"
+    ethers "6.13.4"
+    viem "^2.21.45"
 
 "@vechain/vebetterdao-contracts@^4.0.0", "@vechain/vebetterdao-contracts@^4.1.0":
   version "4.1.0"

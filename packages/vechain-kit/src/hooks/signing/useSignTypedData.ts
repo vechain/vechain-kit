@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { SignTypedDataParams } from '@privy-io/react-auth';
 import { usePrivyWalletProvider } from '@/providers';
 import { useWallet, useDAppKitWallet } from '@/hooks';
-import { SignTypedDataOptions, TypedDataDomain } from '@vechain/sdk-network1.2';
+import { SignTypedDataOptions, TypedDataDomain } from '@vechain/sdk-network';
 
 type UseSignTypedDataReturnValue = {
     signTypedData: (

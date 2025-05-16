@@ -1,5 +1,5 @@
 import { LoginMethodOrderOption } from '@privy-io/react-auth';
-import { TransactionClause } from '@vechain/sdk-core1.2';
+import { TransactionClause } from '@vechain/sdk-core';
 
 export type TokenBalance = {
     original: string;

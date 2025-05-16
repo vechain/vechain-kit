@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getXApps } from '../getXApps';
 import { useVeChainKitConfig } from '@/providers';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 export const getXAppsQueryKey = () => ['VECHAIN_KIT', 'getXApps'];
 

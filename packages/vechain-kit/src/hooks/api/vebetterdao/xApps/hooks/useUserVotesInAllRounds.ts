@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUserVotesInRound, getUserVotesInRoundQueryKey } from '.';
 import { useVeChainKitConfig } from '@/providers';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  * useUserVotes is a custom hook that fetches the votes of a user for all rounds up to the current one.

@@ -4,7 +4,7 @@ import { GalaxyMember__factory } from '@/contracts';
 import { NETWORK_TYPE } from '@/config/network';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { Address } from 'viem';
-import { ZERO_ADDRESS } from '@vechain/sdk-core1.2';
+import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
 const contractAbi = GalaxyMember__factory.abi;
 const method = 'balanceOf';

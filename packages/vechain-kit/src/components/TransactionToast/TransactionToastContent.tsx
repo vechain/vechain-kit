@@ -17,7 +17,7 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
-import { TransactionReceipt } from '@vechain/sdk-network1.2';
+import { TransactionReceipt } from '@vechain/sdk-network';
 
 type TransactionToastContentProps = {
     status: TransactionStatus;

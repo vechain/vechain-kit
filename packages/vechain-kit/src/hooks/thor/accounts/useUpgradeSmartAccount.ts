@@ -8,7 +8,7 @@ import {
     useRefreshSmartAccountQueries,
 } from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
-import { TransactionClause } from '@vechain/sdk-core1.2';
+import { TransactionClause } from '@vechain/sdk-core';
 
 type UseUpgradeSmartAccountVersionProps = {
     smartAccountAddress: string;

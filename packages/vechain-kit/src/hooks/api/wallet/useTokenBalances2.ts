@@ -2,11 +2,11 @@ import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { CustomTokenInfo, useCustomTokens } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 import { IB3TR__factory, IERC20__factory, IVOT3__factory } from '@/contracts';
 import { getAccountBalance } from '@/hooks';
 import { useQueries } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { formatEther } from 'ethers';
 
 const getCustomTokenBalances = async (

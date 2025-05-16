@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { X2EarnRewardsPool__factory } from '@/contracts';
 import { humanNumber } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { TokenBalance } from '@/types';
 import { formatEther } from 'viem';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  * Get the available funds in the x2Earn rewards pool contract for a specific xApp

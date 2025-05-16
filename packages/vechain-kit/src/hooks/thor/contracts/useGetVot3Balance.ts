@@ -6,8 +6,8 @@ import { getConfig } from '@/config';
 import { humanNumber } from '@/utils';
 import { formatEther } from 'ethers';
 import { TokenBalance } from '@/types';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 
 export const getVot3Balance = async (
     thor: ThorClient,

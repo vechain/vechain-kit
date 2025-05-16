@@ -5,9 +5,9 @@ import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { TokenBalance } from '@/types';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  *  Get the b3tr balance of an address from the contract

@@ -4,7 +4,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
 import { Address } from 'viem';
-import { ZERO_ADDRESS } from '@vechain/sdk-core1.2';
+import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
 const contractAbi = VeBetterPassport__factory.abi;
 const method = 'isPerson' as const;

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getXAppRoundEarningsQueryKey } from '@/hooks';
 import { getConfig } from '@/config';
 import { XAllocationPool__factory } from '@/contracts';

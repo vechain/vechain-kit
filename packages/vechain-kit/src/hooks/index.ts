@@ -6,7 +6,7 @@ export {
 export {
     useWallet as useDAppKitWallet,
     useWalletModal as useDAppKitWalletModal,
-} from '@vechain/dapp-kit-react2';
+} from '@vechain/dapp-kit-react';
 export * from './api';
 export * from './modals';
 export * from './notifications';

@@ -2,7 +2,7 @@ import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { X2EarnApps__factory } from '@/contracts';
 import { ViewFunctionResult } from '@/hooks';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  * xApp type

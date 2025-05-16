@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address } from '@vechain/sdk-core1.2';
+import { Address } from '@vechain/sdk-core';
 import { useGetNodeUrl } from '@/hooks';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';

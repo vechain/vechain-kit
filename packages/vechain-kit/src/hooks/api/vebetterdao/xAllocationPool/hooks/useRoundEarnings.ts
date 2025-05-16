@@ -1,11 +1,11 @@
 import { useQueries } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import {
     getXAppRoundEarnings,
     getXAppRoundEarningsQueryKey,
 } from './useXAppRoundEarnings';
 import { useVeChainKitConfig } from '@/providers';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  * Fetch the how much  multiple xApps earned in an allocation round

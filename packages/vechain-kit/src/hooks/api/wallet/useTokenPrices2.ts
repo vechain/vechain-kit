@@ -1,10 +1,10 @@
 import { PRICE_FEED_IDS, SupportedToken } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 import { NETWORK_TYPE } from '@/config/network';
 import { IVechainEnergyOracleV1__factory } from '@/contracts';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 

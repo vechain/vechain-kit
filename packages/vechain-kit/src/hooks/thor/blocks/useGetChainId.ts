@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { ThorClient } from '@vechain/sdk-network1.2';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { ThorClient } from '@vechain/sdk-network';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export const getChainId = async (thor: ThorClient) => {
     const genesisBlock = await thor.blocks.getGenesisBlock();
