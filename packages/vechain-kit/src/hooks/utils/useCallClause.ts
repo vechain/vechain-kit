@@ -15,7 +15,7 @@ type ExtractViewFunction<
     { type: 'function'; stateMutability: 'pure' | 'view'; name: TMethod }
 >;
 
-type ViewFunctionResult<
+export type ViewFunctionResult<
     TAbi extends Abi,
     TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
 > = AbiParametersToPrimitiveTypes<
@@ -62,7 +62,7 @@ export const useCallClause = <
         ExtractViewFunction<TAbi, TMethod>['inputs'],
         AbiParameterKind
     >;
-    queryOptions: Omit<
+    queryOptions?: Omit<
         UseQueryOptions<
             ViewFunctionResult<TAbi, TMethod>,
             unknown,

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { getAllEventLogs } from '@/hooks';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
@@ -53,7 +53,7 @@ export const getAllocationsRoundsEvents = async (
     const decodedCreatedAllocationEvents: RoundCreated[] = [];
 
     //   TODO: runtime validation with zod ?
-    events.forEach((event: any) => {
+    events.forEach((event) => {
         if (!event.decodedData) {
             throw new Error('Event data not decoded');
         }
@@ -95,7 +95,7 @@ export const getAllocationsRoundsEventsQueryKey = () => [
  * @returns the allocation rounds events
  */
 export const useAllocationsRoundsEvents = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

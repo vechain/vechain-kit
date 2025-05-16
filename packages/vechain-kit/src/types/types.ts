@@ -1,4 +1,5 @@
 import { LoginMethodOrderOption } from '@privy-io/react-auth';
+import { TransactionClause } from '@vechain/sdk-core1.2';
 
 export type TokenBalance = {
     original: string;
@@ -126,10 +127,7 @@ export type TransactionStatusErrorType = {
  * @param comment a comment to add to the clause
  * @param abi the abi of the contract to call
  */
-export type EnhancedClause = Connex.VM.Clause & {
-    comment?: string;
-    abi?: object;
-};
+export type EnhancedClause = TransactionClause;
 
 export type PrivyAppInfo = {
     id: string;

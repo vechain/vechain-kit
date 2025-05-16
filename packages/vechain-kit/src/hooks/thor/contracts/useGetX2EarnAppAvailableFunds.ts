@@ -49,7 +49,7 @@ export const getX2EarnAppAvailableFundsQueryKey = (xAppId: string) => [
 /**
  * Get the available funds in the x2Earn rewards pool contract
  *
- * @param thor  the connex instance
+ * @param thor  the thor instance
  * @param xAppId  the xApp id
  * @returns the available funds in the x2Earn rewards pool contract
  */

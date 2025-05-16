@@ -2,19 +2,11 @@ import { allNodeStrengthLevelToName, NodeStrengthLevelToImage } from '@/utils';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { abi } from 'thor-devkit';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-
-const getNodeIdsFragment = NodeManagement__factory.createInterface()
-    .getFunction('getNodeIds')
-    .format('json');
-const getNodeLevelsFragment = NodeManagement__factory.createInterface()
-    .getFunction('getUsersNodeLevels')
-    .format('json');
-const getNodeIdsAbi = new abi.Function(JSON.parse(getNodeIdsFragment));
-const getNodeLevelsAbi = new abi.Function(JSON.parse(getNodeLevelsFragment));
+import { useThor } from '@vechain/dapp-kit-react2';
+import { ThorClient } from '@vechain/sdk-network1.2';
+import type { ViewFunctionResult } from '@/hooks';
 
 /**
  * UserXNode type for the xNodes owned by a user
@@ -38,43 +30,41 @@ export type UserXNode = {
  * @returns  all the available xNodes for an user
  */
 export const getUserXNodes = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
     user?: string,
 ): Promise<UserXNode[]> => {
     if (!user) throw new Error('User address is required');
     const contractAddress =
         getConfig(networkType).nodeManagementContractAddress;
+    const contract = thor.contracts.load(
+        contractAddress,
+        NodeManagement__factory.abi,
+    );
     const clauses = [
-        {
-            to: contractAddress,
-            value: 0,
-            data: getNodeIdsAbi.encode(user),
-        },
-        {
-            to: contractAddress,
-            value: 0,
-            data: getNodeLevelsAbi.encode(user),
-        },
+        contract.clause.getNodeIds(user),
+        contract.clause.getUsersNodeLevels(user),
     ];
 
-    const res = await thor.explain(clauses).execute();
+    const res = await thor.transactions.executeMultipleClausesCall(clauses);
+    if (!res.every((r) => r.success))
+        throw new Error(`Failed to fetch xNodes for user ${user}`);
 
-    const error = res.find((r) => r.reverted)?.revertReason;
-
-    if (error) throw new Error(error ?? 'Error fetching xApps');
-
-    if (!res[0] || !res[1])
-        throw new Error('Error fetching Nodes - Data is missing');
-    const nodeIds: string[] = getNodeIdsAbi.decode(res[0]?.data)[0];
-    const levels: string[] = getNodeLevelsAbi.decode(res[1]?.data)[0];
+    const nodeIds = (res[0].result.array?.[0] || []) as ViewFunctionResult<
+        typeof NodeManagement__factory.abi,
+        'getNodeIds'
+    >;
+    const levels = (res[1].result.array?.[0] || []) as ViewFunctionResult<
+        typeof NodeManagement__factory.abi,
+        'getUsersNodeLevels'
+    >;
 
     if (nodeIds.length !== levels.length)
         throw new Error('Error fetching Nodes - Data is corrupted');
 
     return nodeIds.map((id, index) => {
         return {
-            id,
+            id: id.toString(),
             level: Number(levels[index]),
             image: NodeStrengthLevelToImage[Number(levels[index])] as string,
             name: allNodeStrengthLevelToName[Number(levels[index])] as string,
@@ -94,12 +84,17 @@ export const getUserXNodesQueryKey = (user?: string) => [
  * @returns  the xNodes for the user
  */
 export const useXNodes = (user?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getUserXNodesQueryKey(user),
-        queryFn: async () => await getUserXNodes(thor, network.type, user),
+        queryFn: async () =>
+            await getUserXNodes(
+                thor as unknown as ThorClient,
+                network.type,
+                user,
+            ),
         enabled: !!thor && !!user && !!network.type,
     });
 };

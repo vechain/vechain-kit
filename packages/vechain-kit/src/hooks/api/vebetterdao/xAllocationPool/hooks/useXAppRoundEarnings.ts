@@ -20,7 +20,7 @@ type UseXAppRoundEarningsQueryResponse = {
 /**
  *  Get the amount of $B3TR an xApp earned from an allocation round
  *
- * @param thor  the connex instance
+ * @param thor  the thor instance
  * @param roundId  the round id
  * @param xAppId  the xApp id
  * @param networkType  the network type

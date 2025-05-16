@@ -1,32 +1,45 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { X2EarnApps__factory } from '@/contracts';
-import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = X2EarnApps__factory.createInterface();
-const method = 'appExists';
+const contractAbi = X2EarnApps__factory.abi;
+const method = 'appExists' as const;
 
 /**
  * Get the query key for a boolean value indicating if the app exists
+ * @param networkType the network type
  * @param appId the app id
  */
-export const getAppExistsQueryKey = (appId: string) =>
-    getCallKey({ method, keyArgs: [appId] });
+export const getAppExistsQueryKey = (
+    networkType: NETWORK_TYPE,
+    appId: string,
+) =>
+    getCallClauseQueryKey({
+        address: getConfig(networkType).x2EarnAppsContractAddress,
+        abi: contractAbi,
+        method,
+        args: [appId as `0x${string}`],
+    });
 
 /**
  * Hook to get a boolean value indicating if the app exists
  * @param appId the app id
  * @returns a boolean value, true for apps that have been included in at least one allocation round
  */
-export const useAppExists = (appId: string): UseQueryResult<boolean, Error> => {
+export const useAppExists = (appIdInput: string) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).x2EarnAppsContractAddress;
-    return useCall({
-        contractInterface,
-        contractAddress,
+
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [appId],
-        enabled: !!appId && !!contractAddress,
+        args: [appIdInput as `0x${string}`],
+        queryOptions: {
+            enabled: !!appIdInput && !!contractAddress && !!network.type,
+            select: (res) => res[0],
+        },
     });
 };
