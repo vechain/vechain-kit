@@ -20,6 +20,8 @@ type UseTokenBalancesProps = {
     address?: string;
 };
 
+// TODO: migration check if we can remove hooks inside and bundle this into one query using thor.transactions.executeMultipleClausesCall
+// check example of useTokenBalances2
 export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
     const { network } = useVeChainKitConfig();
     const config = getConfig(network.type);

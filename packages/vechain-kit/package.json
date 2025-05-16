@@ -34,12 +34,9 @@
     "@solana/web3.js": "^1.98.0",
     "@tanstack/react-query": "^5.64.2",
     "@tanstack/react-query-devtools": "^5.64.1",
-    "@vechain/dapp-kit-react": "1.5.0",
     "@vechain/dapp-kit-react2": "npm:@vechain/dapp-kit-react",
     "@vechain/picasso": "^2.1.1",
-    "@vechain/sdk-core": "^1.0.0-rc.5",
     "@vechain/sdk-core1.2": "npm:@vechain/sdk-core",
-    "@vechain/sdk-network": "^1.0.0-rc.5",
     "@vechain/sdk-network1.2": "npm:@vechain/sdk-network",
     "@vechain/vebetterdao-contracts": "^4.1.0",
     "@wagmi/core": "^2.13.4",
@@ -83,8 +80,7 @@
   },
   "peerDependencies": {
     "@chakra-ui/react": "^2.8.2",
-    "@tanstack/react-query": "^5.64.2",
-    "@vechain/dapp-kit-react": "1.5.0"
+    "@tanstack/react-query": "^5.64.2"
   },
   "peerDependenciesMeta": {
     "@vechain/dapp-kit-react": {

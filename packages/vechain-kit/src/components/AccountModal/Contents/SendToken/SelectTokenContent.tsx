@@ -20,7 +20,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useCurrency } from '@/hooks/api/wallet';
+import { useCurrency } from '@/hooks';
 import { SupportedCurrency } from '@/utils/currencyUtils';
 
 type Props = {

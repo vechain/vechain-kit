@@ -4,7 +4,7 @@ import {
     SupportedCurrency,
     formatCompactCurrency,
 } from '@/utils/currencyUtils';
-import { useCurrency } from './useCurrency';
+import { useCurrency } from '../../utils/useCurrency';
 
 type UseTotalBalanceProps = {
     address?: string;

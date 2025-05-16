@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import { getXApps } from '../getXApps';
 import { useVeChainKitConfig } from '@/providers';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 export const getXAppsQueryKey = () => ['VECHAIN_KIT', 'getXApps'];
 
@@ -10,12 +11,13 @@ export const getXAppsQueryKey = () => ['VECHAIN_KIT', 'getXApps'];
  * @returns all the available xApps in the B3TR ecosystem capped to 256
  */
 export const useXApps = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getXAppsQueryKey(),
-        queryFn: async () => await getXApps(thor, network.type),
+        queryFn: async () =>
+            await getXApps(thor as unknown as ThorClient, network.type),
         enabled: !!thor && !!network.type,
     });
 };

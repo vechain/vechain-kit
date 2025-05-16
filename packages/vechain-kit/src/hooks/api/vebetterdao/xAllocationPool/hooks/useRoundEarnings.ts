@@ -1,10 +1,11 @@
 import { useQueries } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
 import {
     getXAppRoundEarnings,
     getXAppRoundEarningsQueryKey,
 } from './useXAppRoundEarnings';
 import { useVeChainKitConfig } from '@/providers';
+import { ThorClient } from '@vechain/sdk-network1.2';
 
 /**
  * Fetch the how much  multiple xApps earned in an allocation round
@@ -13,13 +14,18 @@ import { useVeChainKitConfig } from '@/providers';
  * @returns the earned amount of the xApps in the round and the xApp id
  */
 export const useRoundEarnings = (roundId: string, appIds: string[]) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     return useQueries({
         queries: appIds.map((id) => ({
             queryKey: getXAppRoundEarningsQueryKey(roundId, id),
             queryFn: async () => {
-                return getXAppRoundEarnings(thor, roundId, id, network.type);
+                return getXAppRoundEarnings(
+                    thor as unknown as ThorClient,
+                    roundId,
+                    id,
+                    network.type,
+                );
             },
         })),
     });

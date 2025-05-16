@@ -4,10 +4,9 @@ export {
     useSetWalletRecovery,
 } from '@privy-io/react-auth';
 export {
-    useConnex,
     useWallet as useDAppKitWallet,
     useWalletModal as useDAppKitWalletModal,
-} from '@vechain/dapp-kit-react';
+} from '@vechain/dapp-kit-react2';
 export * from './api';
 export * from './modals';
 export * from './notifications';

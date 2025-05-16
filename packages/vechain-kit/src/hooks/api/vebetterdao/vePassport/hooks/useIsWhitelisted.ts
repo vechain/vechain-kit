@@ -1,35 +1,56 @@
-import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-const method = 'isWhitelisted';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'isWhitelisted' as const;
 
 /**
  * Returns the query key for fetching the isWhitelisted status.
+ * @param networkType - The network type.
+ * @param account - The account address.
  * @returns The query key for fetching the isWhitelisted status.
  */
-export const getIsWhitelistedQueryKey = (address?: string) => {
-    return getCallKey({ method, keyArgs: [address] });
+export const getIsWhitelistedQueryKey = (
+    networkType: NETWORK_TYPE,
+    account: string,
+) => {
+    const veBetterPassportContractAddress =
+        getConfig(networkType).veBetterPassportContractAddress;
+    return getCallClauseQueryKey({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [account as `0x${string}`],
+    });
 };
 
 /**
  * Hook to get the isWhitelisted status from the VeBetterPassport contract.
- * @param address - The user address.
- * @returns The isWhitelisted status.
+ * @param account - The account address.
+ * @param customEnabled - Flag to enable or disable the hook. Default is true.
+ * @returns The isWhitelisted status (boolean).
  */
-export const useIsWhitelisted = (address?: string) => {
+export const useIsWhitelisted = (account?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
+    return useCallClause({
+        abi: contractAbi,
+        address: veBetterPassportContractAddress,
         method,
-        args: [address ?? ''],
-        enabled: !!address && !!veBetterPassportContractAddress,
+        args: [account as `0x${string}`],
+        queryOptions: {
+            enabled:
+                !!account &&
+                customEnabled &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (data: readonly [boolean]) => data[0],
+        },
     });
 };

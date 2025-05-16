@@ -3,7 +3,7 @@ import {
     useVechainDomain,
     useGetTextRecords,
     useGetAvatarOfAddress,
-} from '../vetDomains';
+} from '@/hooks';
 import { convertUriToUrl } from '@/utils';
 import { ENSRecords } from '@/types';
 

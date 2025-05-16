@@ -1,6 +1,6 @@
 import { Text, HStack, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { useWallet } from '@vechain/dapp-kit-react';
+import { useWallet } from '@vechain/dapp-kit-react2';
 import { useVeChainKitConfig } from '@/providers';
 import { NetworkInfo } from './NetworkInfo';
 

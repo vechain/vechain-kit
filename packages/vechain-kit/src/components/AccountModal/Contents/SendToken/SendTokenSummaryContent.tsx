@@ -31,7 +31,7 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
-import { useCurrency } from '@/hooks/api/wallet';
+import { useCurrency } from '@/hooks';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
 
 const summaryFormatter = new Intl.NumberFormat('de-DE', {

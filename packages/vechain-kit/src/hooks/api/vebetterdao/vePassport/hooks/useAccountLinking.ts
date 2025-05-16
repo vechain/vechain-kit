@@ -12,8 +12,10 @@ import { useMemo } from 'react';
  */
 export const useAccountLinking = (user?: string) => {
     const { data: isEntity, isLoading: isEntityLoading } = useIsUserEntity();
-    const { data: userLinkedEntities, isLoading: isUserLinkedEntitiesLoading } =
-        useGetEntitiesLinkedToPassport(user);
+    const {
+        data: userLinkedEntities = [],
+        isLoading: isUserLinkedEntitiesLoading,
+    } = useGetEntitiesLinkedToPassport(user);
     const isPassport = !isEntity && userLinkedEntities?.length > 0;
 
     // if the user is an entity, get the passport for that entity

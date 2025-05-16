@@ -1,38 +1,53 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
-import { VeBetterPassport__factory } from '@/contracts/typechain-types';
+import { VeBetterPassport__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-const method = 'getPassportForEntity';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'getPassportForEntity' as const;
 
 /**
  * Returns the query key for fetching the passport for an entity.
+ * @param networkType The network type.
  * @param entity - The entity address.
  * @returns The query key for fetching the passport for an entity.
  */
-export const getPassportForEntityQueryKey = (entity?: string | null) => {
-    return getCallKey({ method, keyArgs: [entity] });
+export const getPassportForEntityQueryKey = (
+    networkType: NETWORK_TYPE,
+    entity: string,
+) => {
+    return getCallClauseQueryKey({
+        address: getConfig(networkType).veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [entity as `0x${string}`],
+    });
 };
 
 /**
  * Hook to get the passport for an entity from the VeBetterPassport contract.
- * @param entity - The entity address.
+ * @param entityInput - The entity address.
  * @returns The passport address for the given entity.
  */
-export const useGetPassportForEntity = (entity?: string | null) => {
+export const useGetPassportForEntity = (entityInput?: string | null) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
+    return useCallClause({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
         method,
-        keyArgs: [entity],
-        args: [entity],
-        enabled: !!entity && !!veBetterPassportContractAddress,
+        args: [entityInput as `0x${string}`],
+        queryOptions: {
+            enabled:
+                !!entityInput &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (res) => res[0],
+        },
     });
 };
 
@@ -42,5 +57,5 @@ export const useGetPassportForEntity = (entity?: string | null) => {
  * @returns The passport address for the current user's entity.
  */
 export const useGetUserPassportForEntity = (address?: string) => {
-    return useGetPassportForEntity(address ?? '');
+    return useGetPassportForEntity(address);
 };

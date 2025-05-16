@@ -8,10 +8,12 @@ import { useGMbalance } from './useGMbalance';
  * @returns Whether the user can claim a GM NFT
  */
 
-export const useIsGMclaimable = (address?: string) => {
-    const { data: hasVoted } = useParticipatedInGovernance(address ?? '');
+export const useIsGMClaimable = (address?: string) => {
+    const { data: hasVoted } = useParticipatedInGovernance(
+        address as `0x${string}` | null,
+    );
 
-    const { data: nftBalance } = useGMbalance(address ?? '');
+    const { data: nftBalance } = useGMbalance(address as `0x${string}` | null);
 
     if (Number(nftBalance) > 0) return { isClaimable: false, isOwned: true };
 

@@ -1,53 +1,49 @@
-import { useQuery } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { GalaxyMember__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
+import { Address } from 'viem';
 
-export const getParticipatedInGovernance = async (
+const contractAbi = GalaxyMember__factory.abi;
+const method = 'participatedInGovernance';
+
+export const getParticipatedInGovernanceQueryKey = (
     networkType: NETWORK_TYPE,
-    thor: Connex.Thor,
-    address: null | string,
-): Promise<boolean> => {
-    if (!address) return Promise.reject(new Error('Address not provided'));
-
-    const galaxyMemberContract =
-        getConfig(networkType).galaxyMemberContractAddress;
-
-    const functionFragment = GalaxyMember__factory.createInterface()
-        .getFunction('participatedInGovernance')
-        .format('json');
-    const res = await thor
-        .account(galaxyMemberContract)
-        .method(JSON.parse(functionFragment))
-        .call(address);
-
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-
-    return res.decoded[0] as boolean;
+    user: Address,
+) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [user],
+    });
 };
-
-export const getParticipatedInGovernanceQueryKey = (address: null | string) => [
-    'VECHAIN_KIT',
-    'participatedInGovernance',
-    'galaxyMember',
-    address,
-];
 
 /**
  * Get whether an address has participated in governance
  *
- * @param address the address to know if they have participated in governance
+ * @param user the address to know if they have participated in governance
+ * @param customEnabled - Flag to enable or disable the hook. Default is true.
  * @returns whether the address has participated in governance
  */
-export const useParticipatedInGovernance = (address: null | string) => {
-    const { thor } = useConnex();
+export const useParticipatedInGovernance = (
+    user: Address | null,
+    customEnabled = true,
+) => {
     const { network } = useVeChainKitConfig();
+    const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useQuery({
-        queryKey: getParticipatedInGovernanceQueryKey(address),
-        queryFn: () => getParticipatedInGovernance(network.type, thor, address),
-        enabled: !!address && !!network.type,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [user!],
+        queryOptions: {
+            select: (data) => data[0],
+            enabled:
+                !!user && customEnabled && !!network.type && !!contractAddress,
+        },
     });
 };

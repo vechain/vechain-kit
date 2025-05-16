@@ -1,18 +1,27 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = NodeManagement__factory.createInterface();
-const method = 'getNodeManager';
+const contractAbi = NodeManagement__factory.abi;
+const method = 'getNodeManager' as const;
 
 /**
  * Get the query key for the address of the user managing the node ID (endorsement)
  * @param nodeId The ID of the node for which the manager address is being retrieved
  */
-export const getNodeManagerQueryKey = (nodeId: string) =>
-    getCallKey({ method, keyArgs: [nodeId] });
+export const getNodeManagerQueryKey = (
+    nodeId: string,
+    networkType: NETWORK_TYPE,
+) =>
+    getCallClauseQueryKey({
+        abi: contractAbi,
+        address: getConfig(networkType).nodeManagementContractAddress,
+        method,
+        args: [BigInt(nodeId)],
+    });
 
 /**
  * Hook to get the address of the user managing the node ID (endorsement) either through ownership or delegation
@@ -27,11 +36,14 @@ export const useGetNodeManager = (
         network.type,
     ).nodeManagementContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
-        method,
-        args: [nodeId],
-        enabled: !!nodeId && !!network.type,
-    });
+    return useCallClause({
+        abi: contractAbi,
+        address: contractAddress,
+        method: 'getNodeManager',
+        args: [BigInt(nodeId)],
+        queryOptions: {
+            enabled: !!nodeId && !!network.type && !!contractAddress,
+            select: (data) => data[0],
+        },
+    }) as UseQueryResult<string, Error>;
 };

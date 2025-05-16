@@ -1,15 +1,20 @@
 import { notFoundImage, gmNfts } from '@/utils';
-import { useIsGMclaimable } from './useIsGMclaimable';
-import { NFTMetadata, useNFTImage, useNFTMetadataUri } from '@/hooks';
-import { useGetB3trBalance } from '@/hooks';
-import { useSelectedTokenId } from './useSelectedTokenId';
-import { useIpfsImage, useIpfsMetadata } from '@/hooks/api/ipfs';
-import { useLevelOfToken } from './useLevelOfToken';
-import { useLevelMultiplier } from './useLevelMultiplier';
+import {
+    NFTMetadata,
+    useB3trToUpgrade,
+    useGetB3trBalance,
+    useLevelMultiplier,
+    useLevelOfToken,
+    useNFTImage,
+    useNFTMetadataUri,
+    useIpfsImage,
+    useIpfsMetadata,
+    useXNode,
+    useIsGMClaimable,
+} from '@/hooks';
 import { useGetNodeIdAttached } from './useGetNodeIdAttached';
-import { useXNode } from '../../xNodes';
 import { useGMMaxLevel } from './useGMMaxLevel';
-import { useB3trToUpgrade } from '.';
+import { useSelectedTokenId } from './useSelectedTokenId';
 
 /**
  * Custom hook for retrieving data related to a Galaxy Member NFT.
@@ -25,7 +30,7 @@ import { useB3trToUpgrade } from '.';
  *   - attachedNodeId: The ID of the node attached to the Galaxy Member NFT.
  */
 export const useSelectedGmNft = (userAddress?: string) => {
-    const { isOwned: isGMOwned } = useIsGMclaimable(userAddress);
+    const { isOwned: isGMOwned } = useIsGMClaimable(userAddress);
     const { isLoading: isGMLoading } = useNFTImage(userAddress);
     const { data: b3trBalance } = useGetB3trBalance(userAddress ?? '');
     const {
@@ -33,7 +38,7 @@ export const useSelectedGmNft = (userAddress?: string) => {
         isLoading: isSelectedTokenIdLoading,
         isError: isErrorSelectedTokenId,
         error: errorSelectedTokenIdError,
-    } = useSelectedTokenId(userAddress ?? '');
+    } = useSelectedTokenId(userAddress as `0x${string}`);
 
     const {
         data: gmLevel,
@@ -139,9 +144,10 @@ export const useSelectedGmNft = (userAddress?: string) => {
 
     const isEnoughBalanceToUpgradeGM =
         b3trBalance &&
+        b3trToUpgradeGMToNextLevel &&
         Number(b3trBalance?.scaled || 0) >= b3trToUpgradeGMToNextLevel;
     const missingB3trToUpgrade =
-        b3trToUpgradeGMToNextLevel - Number(b3trBalance?.scaled || 0);
+        (b3trToUpgradeGMToNextLevel || 0) - Number(b3trBalance?.scaled || 0);
 
     const { xNodeId } = useXNode(userAddress);
     const isXNodeAttachedToGM = attachedNodeId === xNodeId;

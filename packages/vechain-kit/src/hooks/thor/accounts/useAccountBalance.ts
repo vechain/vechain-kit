@@ -1,14 +1,12 @@
-import { isValidAddress } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react2';
+import { Address } from '@vechain/sdk-core1.2';
+import { ThorClient } from '@vechain/sdk-network1.2';
 import { formatEther } from 'viem';
 
-export const getAccountBalance = async (
-    thor: Connex.Thor,
-    address?: string,
-) => {
+export const getAccountBalance = async (thor: ThorClient, address?: string) => {
     if (!address) throw new Error('Address is required');
-    const account = await thor.account(address).get();
+    const account = await thor.accounts.getAccount(Address.of(address));
 
     return {
         balance: formatEther(BigInt(account.balance)).toString(),
@@ -16,7 +14,7 @@ export const getAccountBalance = async (
     };
 };
 export const getAccountBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_ACCOUNT_BALANCE',
+    'VECHAIN_KIT_BALANCE',
     address,
 ];
 
@@ -26,11 +24,12 @@ export const getAccountBalanceQueryKey = (address?: string) => [
  * @returns  The account balance
  */
 export const useAccountBalance = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     return useQuery({
         queryKey: getAccountBalanceQueryKey(address),
-        queryFn: () => getAccountBalance(thor, address),
-        enabled: !!address && isValidAddress(address),
+        queryFn: () =>
+            getAccountBalance(thor as unknown as ThorClient, address),
+        enabled: !!address && Address.isValid(address),
         refetchInterval: 10000,
     });
 };

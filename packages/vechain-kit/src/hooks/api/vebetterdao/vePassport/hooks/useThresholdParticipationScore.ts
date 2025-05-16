@@ -1,17 +1,26 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-const method = 'thresholdPoPScore';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'thresholdPoPScore' as const;
 
 /**
  * Returns the query key for fetching the threshold participation score.
+ * @param networkType The network type.
  * @returns The query key for fetching the threshold participation score.
  */
-export const getThresholdParticipationScoreQueryKey = () => {
-    return getCallKey({ method, keyArgs: [] });
+export const getThresholdParticipationScoreQueryKey = (
+    networkType: NETWORK_TYPE,
+) => {
+    return getCallClauseQueryKey({
+        address: getConfig(networkType).veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [],
+    });
 };
 
 /**
@@ -24,11 +33,14 @@ export const useThresholdParticipationScore = () => {
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
-        method: 'thresholdPoPScore',
+    return useCallClause({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
         args: [],
-        enabled: !!veBetterPassportContractAddress,
+        queryOptions: {
+            enabled: !!veBetterPassportContractAddress && !!network.type,
+            select: (res) => Number(res[0]),
+        },
     });
 };

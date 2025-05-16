@@ -1,6 +1,6 @@
 export * from './useParticipatedInGovernance';
 export * from './useGMbalance';
-export * from './useIsGMclaimable';
+export * from './useIsGMClaimable';
 export * from './useTokenIdByAccount';
 export * from './useSelectedGmNft';
 export * from './useLevelOfToken';

@@ -1,41 +1,61 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-const method = 'getPendingLinkings';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'getPendingLinkings' as const;
+
+export type PendingLinkings = {
+    incoming: string[];
+    outgoing: string | null;
+};
 
 /**
- * Returns the query key for fetching pending linkings.
+ * Returns the query key for fetching pending linkings for a user.
+ * @param networkType The network type.
  * @param user - The user address.
- * @returns The query key for fetching pending linkings.
+ * @returns The query key.
  */
-export const getPendingLinkingsQueryKey = (user?: string | null) => {
-    return getCallKey({ method, keyArgs: [user] });
+export const getPendingLinkingsQueryKey = (
+    networkType: NETWORK_TYPE,
+    user: string,
+) => {
+    return getCallClauseQueryKey({
+        address: getConfig(networkType).veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [user as `0x${string}`],
+    });
 };
 
 /**
  * Hook to get pending linkings from the VeBetterPassport contract.
- * @param user - The user address.
+ * @param userInput - The user address.
  * @returns An object containing incoming and outgoing pending linkings for the user.
  */
-export const useGetPendingLinkings = (user?: string | null) => {
+export const useGetPendingLinkings = (userInput?: string | null) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
+    return useCallClause({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
         method,
-        args: [user],
-        mapResponse: (response) => ({
-            incoming: response.decoded[0] ?? [],
-            outgoing: response.decoded[1] ?? null,
-        }),
-        enabled: !!user && !!veBetterPassportContractAddress,
+        args: [userInput as `0x${string}`],
+        queryOptions: {
+            enabled:
+                !!userInput &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (response) => ({
+                incoming: response[0] ?? [],
+                outgoing: response[1] ?? null,
+            }),
+        },
     });
 };
 

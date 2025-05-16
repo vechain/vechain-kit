@@ -107,7 +107,7 @@ export const useXNode = (address?: string): XNodeData => {
         delegatee: firstNode?.delegatee,
         attachedGMTokenId,
         isXNodeAttachedToGM,
-        isXNodeOnCooldown,
+        isXNodeOnCooldown: isXNodeOnCooldown ?? false,
         allNodes,
     };
 };

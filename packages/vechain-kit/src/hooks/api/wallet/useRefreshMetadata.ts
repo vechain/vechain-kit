@@ -3,7 +3,7 @@ import {
     getAvatarOfAddressQueryKey,
     getAvatarQueryKey,
     getTextRecordsQueryKey,
-} from '../vetDomains';
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 export const useRefreshMetadata = (domain: string, address: string) => {
@@ -11,29 +11,17 @@ export const useRefreshMetadata = (domain: string, address: string) => {
     const { network } = useVeChainKitConfig();
 
     const refresh = async () => {
-        await queryClient.invalidateQueries({
-            queryKey: getAvatarQueryKey(domain ?? '', network.type),
-        });
-
-        await queryClient.refetchQueries({
-            queryKey: getAvatarQueryKey(domain ?? '', network.type),
-        });
-
-        await queryClient.invalidateQueries({
-            queryKey: getTextRecordsQueryKey(domain, network.type),
-        });
-
-        await queryClient.refetchQueries({
-            queryKey: getTextRecordsQueryKey(domain, network.type),
-        });
-
-        await queryClient.invalidateQueries({
-            queryKey: getAvatarOfAddressQueryKey(address),
-        });
-
-        await queryClient.refetchQueries({
-            queryKey: getAvatarOfAddressQueryKey(address),
-        });
+        await Promise.all([
+            queryClient.invalidateQueries({
+                queryKey: getAvatarQueryKey(domain ?? '', network.type),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getTextRecordsQueryKey(domain, network.type),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: getAvatarOfAddressQueryKey(address),
+            }),
+        ]);
     };
 
     return { refresh };
