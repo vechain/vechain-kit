@@ -272,7 +272,7 @@ export type SettingsAction =
     | 'currency_settings_view'
     | 'language_settings_view'
     | 'appearance_settings_view'
-    | 'terms_and_privacy_view';
+    | 'terms_and_policy_view';
 
 export type SettingsProperties = {
     action: SettingsAction;

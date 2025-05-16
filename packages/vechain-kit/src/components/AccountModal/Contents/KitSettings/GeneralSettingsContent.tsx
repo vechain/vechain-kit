@@ -122,7 +122,7 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                     <ActionButton
                         title={t('Terms and Policies')}
                         onClick={() => {
-                            Analytics.settings.termsAndPrivacyViewed();
+                            Analytics.settings.termsAndPolicyViewed();
                             setCurrentContent({
                                 type: 'terms-and-privacy',
                                 props: {
