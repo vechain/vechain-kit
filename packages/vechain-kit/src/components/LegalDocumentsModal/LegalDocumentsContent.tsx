@@ -113,7 +113,7 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                     <VStack align="stretch" spacing={5} width="full">
                         {hasVechainKitRequiredDocuments && (
                             <Text as="span" fontSize="sm">
-                                By continuing, you agree to{' '}
+                                {t('By continuing, you agree to')}{' '}
                                 {vechainKitRequiredDocuments.map(
                                     (document, index) => (
                                         <Fragment key={getDocumentId(document)}>
