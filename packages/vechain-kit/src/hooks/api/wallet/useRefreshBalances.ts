@@ -18,7 +18,9 @@ export const useRefreshBalances = () => {
                 queryKey: ['VECHAIN_KIT_BALANCE', address],
             }),
             // getTokenUsdPriceQueryKey
-            queryClient.invalidateQueries({ queryKey: 'VECHAIN_KIT_PRICE' }),
+            queryClient.invalidateQueries({
+                queryKey: ['VECHAIN_KIT_PRICE'],
+            }),
         ]);
     };
 

@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { SignTypedDataParams } from '@privy-io/react-auth';
 import { usePrivyWalletProvider } from '@/providers';
 import { useWallet, useDAppKitWallet } from '@/hooks';
+import { SignTypedDataOptions, TypedDataDomain } from '@vechain/sdk-network1.2';
 
 type UseSignTypedDataReturnValue = {
     signTypedData: (
@@ -27,14 +28,14 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
     const [signature, setSignature] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
+    const { signer } = useDAppKitWallet();
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
-    const { signTypedData: signTypedDataDappKit } = useDAppKitWallet();
     const signTypedData = useCallback(
         async (
             data: SignTypedDataParams,
-            options?: { signer?: string },
+            options?: SignTypedDataOptions,
         ): Promise<string> => {
             setIsSigningPending(true);
             setError(null);
@@ -48,15 +49,13 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                         salt: data.domain?.salt
                             ? Buffer.from(data.domain.salt).toString('hex')
                             : undefined,
-                    };
+                    } as TypedDataDomain;
 
-                    sig = await signTypedDataDappKit(
+                    sig = await signer.signTypedData(
                         domain,
-                        data.types as Record<
-                            string,
-                            Array<{ name: string; type: string }>
-                        >,
-                        data.message as Record<string, any>,
+                        data.types,
+                        data.message,
+                        undefined,
                         options,
                     );
                 } else {

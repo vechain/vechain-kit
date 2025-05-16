@@ -457,7 +457,11 @@ export const PrivyWalletProvider = ({
                     address: randomTransactionUser.address,
                 },
             ],
-            { delegator: { delegatorUrl } },
+            {
+                gasPayer: {
+                    gasPayerServiceUrl: delegatorUrl,
+                },
+            },
         );
         const providerWithDelegationEnabled = new VeChainProvider(
             thor,

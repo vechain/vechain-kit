@@ -1,6 +1,5 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
@@ -27,9 +26,7 @@ export const getGMBaseUriQueryKey = (networkType: NETWORK_TYPE) => {
  * @param customEnabled - Determines whether the hook is enabled or not. Default is true.
  * @returns The base URI for the Galaxy Member NFT.
  */
-export const useGMBaseUri = (
-    customEnabled = true,
-): UseQueryResult<string, unknown> => {
+export const useGMBaseUri = (customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 

@@ -60,7 +60,7 @@ export const useCallClause = <
     method: TMethod;
     args: AbiParametersToPrimitiveTypes<
         ExtractViewFunction<TAbi, TMethod>['inputs'],
-        AbiParameterKind
+        'inputs'
     >;
     queryOptions?: Omit<
         UseQueryOptions<

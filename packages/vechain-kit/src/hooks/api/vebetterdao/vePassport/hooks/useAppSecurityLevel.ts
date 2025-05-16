@@ -3,10 +3,8 @@ import { NETWORK_TYPE } from '@/config/network';
 import { VeBetterPassport__factory } from '@/contracts';
 import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { Address } from 'viem';
-import { ZERO_ADDRESS } from '@vechain/sdk-core1.2'; // For placeholder if needed
 
-const contractAbi = VeBetterPassport__factory.abi; // Changed from abi to contractAbi for consistency
+const contractAbi = VeBetterPassport__factory.abi;
 const method = 'appSecurity' as const;
 
 // TODO: migration check if necessary, otherwise remove
@@ -14,7 +12,7 @@ export const APP_SECURITY_LEVELS = ['NONE', 'LOW', 'MEDIUM', 'HIGH'];
 
 export const getAppSecurityLevelQueryKey = (
     networkType: NETWORK_TYPE,
-    appId: Address,
+    appId: string,
 ) => {
     const contractAddress =
         getConfig(networkType).veBetterPassportContractAddress;
@@ -22,7 +20,7 @@ export const getAppSecurityLevelQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [appId],
+        args: [appId as `0x${string}`],
     });
 };
 
@@ -32,7 +30,7 @@ export const getAppSecurityLevelQueryKey = (
  * @param customEnabled - Flag to enable or disable the hook. Default is true.
  * @returns the security level of the app as a number corresponding to APP_SECURITY_LEVELS index
  */
-export const useAppSecurityLevel = (appId?: Address, customEnabled = true) => {
+export const useAppSecurityLevel = (appId?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(
         network.type,
@@ -42,12 +40,11 @@ export const useAppSecurityLevel = (appId?: Address, customEnabled = true) => {
         abi: contractAbi,
         address: contractAddress,
         method,
-        args: [appId ?? ZERO_ADDRESS], // Use placeholder if appId is undefined
+        args: [appId as `0x${string}`],
         queryOptions: {
             enabled:
                 !!appId && customEnabled && !!contractAddress && !!network.type,
-            // Assuming appSecurity returns a uint8 or similar, decoded as a number by ethers
-            select: (data: readonly [number]) => data[0],
+            select: (data) => data[0],
         },
     });
 };
