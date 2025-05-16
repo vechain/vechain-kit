@@ -1,12 +1,10 @@
-import {
-    StickyFooterContainer,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
 import { EnrichedLegalDocument, LegalDocumentSource } from '@/types';
 import {
     Button,
     ModalBody,
+    ModalFooter,
     ModalHeader,
     Stack,
     Text,
@@ -14,7 +12,8 @@ import {
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { Fragment } from 'react';
 
 import { LegalDocumentItem } from './Components';
 
@@ -112,29 +111,30 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
 
                 <ModalBody>
                     <VStack align="stretch" spacing={5} width="full">
-                        {hasVechainKitRequiredDocuments ? (
+                        {hasVechainKitRequiredDocuments && (
                             <Text as="span" fontSize="sm">
-                                <Trans
-                                    key="vechainKitRequiredDocuments"
-                                    i18nKey="By continuing, you agree to <links/>. Please take a moment to review all the terms, with acceptance being mandatory to continue."
-                                    components={{
-                                        links: (
-                                            <>
-                                                {vechainKitRequiredDocuments.map(
-                                                    (document) => (
-                                                        <LegalDocumentItem
-                                                            document={document}
-                                                            register={register}
-                                                            isText={true}
-                                                        />
-                                                    ),
-                                                )}
-                                            </>
-                                        ),
-                                    }}
-                                />
+                                By continuing, you agree to{' '}
+                                {vechainKitRequiredDocuments.map(
+                                    (document, index) => (
+                                        <Fragment key={getDocumentId(document)}>
+                                            <LegalDocumentItem
+                                                key={getDocumentId(document)}
+                                                document={document}
+                                                register={register}
+                                                isText={true}
+                                            />
+                                            {index <
+                                                vechainKitRequiredDocuments.length -
+                                                    1 && ', '}
+                                        </Fragment>
+                                    ),
+                                )}
+                                .{' '}
+                                {t(
+                                    'Please take a moment to review all the terms, with acceptance being mandatory to continue.',
+                                )}
                             </Text>
-                        ) : null}
+                        )}
 
                         {hasOtherDocuments && (
                             <Stack
@@ -157,6 +157,7 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                                     {appsAndOptionalDocuments.map(
                                         (document) => (
                                             <LegalDocumentItem
+                                                key={getDocumentId(document)}
                                                 document={document}
                                                 register={register}
                                             />
@@ -167,26 +168,28 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                         )}
                     </VStack>
                 </ModalBody>
-                <StickyFooterContainer>
-                    <Button
-                        variant="vechainKitPrimary"
-                        width="full"
-                        type="submit"
-                        isDisabled={!isValid}
-                        data-testid={'accept-tnc-button'}
-                    >
-                        {t('Accept')}
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        width="full"
-                        onClick={onReject}
-                        data-testid={'reject-tnc-button'}
-                        colorScheme="red"
-                    >
-                        {t('Reject and logout')}
-                    </Button>
-                </StickyFooterContainer>
+                <ModalFooter>
+                    <VStack width="full" spacing={3}>
+                        <Button
+                            variant="vechainKitPrimary"
+                            width="full"
+                            type="submit"
+                            isDisabled={!isValid}
+                            data-testid={'accept-tnc-button'}
+                        >
+                            {t('Accept')}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            width="full"
+                            onClick={onReject}
+                            data-testid={'reject-tnc-button'}
+                            colorScheme="red"
+                        >
+                            {t('Reject and logout')}
+                        </Button>
+                    </VStack>
+                </ModalFooter>
             </form>
         </Stack>
     );
