@@ -22,6 +22,7 @@ import {
     GeneralSettingsContent,
     LanguageSettingsContent,
     AppearanceSettingsContent,
+    TermsAndPrivacyContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -112,6 +113,8 @@ export const AccountModal = ({
                     );
                 case 'faq':
                     return <FAQContent {...currentContent.props} />;
+                case 'terms-and-privacy':
+                    return <TermsAndPrivacyContent {...currentContent.props} />;
                 case 'ecosystem-with-category':
                     return (
                         <ExploreEcosystemContent

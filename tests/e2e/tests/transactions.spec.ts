@@ -29,9 +29,9 @@ for (const authType of [
             await homePage.open()
             if (authType === 'veworld') {
                 await homePage.initVWMock(0)
-                await homePage.connectWallet()
+                await homePage.connectWallet({ acceptTnc: true })
             } else if (authType === 'privy') {
-                await homePage.loginWithEmail(PRIVY_TEST_EMAIL_SENDER)
+                await homePage.loginWithEmail({ email: PRIVY_TEST_EMAIL_SENDER, acceptTnc: true })
             } else {
                 throw new Error(`Invalid auth type: "${authType}"`)
             }
@@ -85,9 +85,9 @@ for (const authType of [
         const logIn = async (args: AuthArgs) => {
             if (args.authType === 'veworld') {
                 await homePage.initVWMock(args.accountIndex)
-                await homePage.connectWallet()
+                await homePage.connectWallet({ acceptTnc: true })
             } else if (args.authType === 'privy') {
-                await homePage.loginWithEmail(args.email)
+                await homePage.loginWithEmail({ email: args.email, acceptTnc: true })
             } else {
                 throw new Error(`Invalid auth type: "${authType}"`)
             }

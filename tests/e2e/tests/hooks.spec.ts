@@ -15,7 +15,7 @@ test.describe("Hooks", () => {
 
         await homePage.open()
         await homePage.initVWMock(0)
-        await homePage.connectWallet()
+        await homePage.connectWallet({ acceptTnc: true })
     })
 
     // smart account is not available on thor solo

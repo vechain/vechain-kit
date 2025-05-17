@@ -17,26 +17,35 @@ import { useTranslation } from 'react-i18next';
 export type DisconnectConfirmContentProps = {
     onDisconnect: () => void;
     onBack: () => void;
+    onClose?: () => void;
+    text?: string;
+    showCloseButton?: boolean;
 };
 
 export const DisconnectConfirmContent = ({
     onDisconnect,
     onBack,
+    onClose,
+    showCloseButton = true,
+    text,
 }: DisconnectConfirmContentProps) => {
     const { t } = useTranslation();
-
+    const textTitle =
+        text ?? t('Are you sure you want to disconnect your wallet?');
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Logout')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
-                <ModalCloseButton />
+                {showCloseButton ? (
+                    <ModalCloseButton onClick={onClose} />
+                ) : null}
             </StickyHeaderContainer>
 
             <ModalBody>
                 <VStack spacing={6} align="stretch">
                     <Text fontSize="md" textAlign="center">
-                        {t('Are you sure you want to disconnect your wallet?')}
+                        {textTitle}
                     </Text>
                 </VStack>
             </ModalBody>
@@ -51,7 +60,11 @@ export const DisconnectConfirmContent = ({
                     >
                         {t('Confirm')}
                     </Button>
-                    <Button variant="vechainKitSecondary" onClick={onBack}>
+                    <Button
+                        variant="vechainKitSecondary"
+                        onClick={onBack}
+                        data-testid="cancel-logout-button"
+                    >
                         {t('Cancel')}
                     </Button>
                 </VStack>

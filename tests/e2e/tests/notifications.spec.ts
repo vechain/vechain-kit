@@ -20,7 +20,7 @@ test.describe.serial("Hooks", () => {
 
         await homePage.open()
         await homePage.initVWMock(15)
-        await homePage.connectWallet()
+        await homePage.connectWallet({ acceptTnc: true })
     })
 
     test('Can see a notification', async () => {

@@ -16,3 +16,4 @@ export * from './signing';
 export * from './login';
 export * from './utils';
 export * from './cache';
+export { useLegalDocuments } from '../providers/LegalDocumentsProvider';

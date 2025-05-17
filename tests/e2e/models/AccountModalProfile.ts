@@ -12,6 +12,7 @@ export class AccountModalProfile {
     readonly preconfirmDomain: Locator
     readonly logoutButton: Locator
     readonly disconnectButton: Locator
+    readonly cancelLogoutButton: Locator
     readonly displayNameInput: Locator
     readonly descriptionInput: Locator
     readonly twitterInput: Locator
@@ -35,6 +36,7 @@ export class AccountModalProfile {
         this.preconfirmDomain = this.page.getByTestId("preconfirm-domain-val")
         this.logoutButton = this.page.getByTestId('logout-button')
         this.disconnectButton = this.page.getByTestId('disconnect-button')
+        this.cancelLogoutButton = this.page.getByTestId('cancel-logout-button')
         this.displayNameInput = this.page.getByTestId('display-name-input')
         this.descriptionInput = this.page.getByTestId('description-input')
         this.twitterInput = this.page.getByTestId('twitter-input')

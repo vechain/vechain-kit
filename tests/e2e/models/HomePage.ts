@@ -13,6 +13,9 @@ export class HomePage extends BasePage {
   readonly connectWalletButton: Locator
   readonly veworldButton: Locator
   readonly socialLoginButton: Locator
+  readonly tncCheckbox: Locator
+  readonly acceptTncButton: Locator
+  readonly rejectTncButton: Locator
 
   constructor(page: Page, context: BrowserContext, vwmock?: any) {
     super(page, context, vwmock)
@@ -22,6 +25,9 @@ export class HomePage extends BasePage {
     this.connectWalletButton = this.page.locator("//*[text()='Connect wallet']/../..")
     this.veworldButton = this.page.getByTestId('VeWorld')
     this.socialLoginButton = this.page.getByText('Use social login with VeChain')
+    this.tncCheckbox = this.page.getByTestId('tnc-checkbox').locator('input')
+    this.acceptTncButton = this.page.getByTestId('accept-tnc-button')
+    this.rejectTncButton = this.page.getByTestId('reject-tnc-button')
   }
 
   async open() {
@@ -31,16 +37,48 @@ export class HomePage extends BasePage {
     })
   }
 
-  async connectWallet() {
+  async acceptTnc() {
+    return await test.step('Accept Terms & Conditions', async () => {
+      // if checkbox is not checked out - check it out
+      await this.tncCheckbox.waitFor()
+      const isChecked = await this.tncCheckbox.isChecked()
+      if (!isChecked) {
+        await this.tncCheckbox.click()
+      }
+      await this.acceptTncButton.click()
+    })
+  }
+
+  async rejectTnc() {
+    return await test.step('Reject Terms and Conditions', async () => {
+      await this.tncCheckbox.waitFor()
+      await this.rejectTncButton.click()
+    })
+  }
+
+  async connectWallet(args?: { acceptTnc: boolean }) {
     return await test.step('Connect VeChain Wallet', async () => {
       await this.loginButton.click()
       await this.connectWalletButton.click()
       await this.veworldButton.click()
+      if (args) {
+        switch (args!.acceptTnc) {
+          case true:
+            await this.acceptTnc()
+            break
+          case false:
+            await this.rejectTnc()
+            break
+          default:
+            console.error(`unknown 'acceptTnc' value received: "${args!.acceptTnc}", omitting taking action`)
+            break
+        }
+      }
     })
   }
 
-  async loginWithEmail(email: string) {
-    return await test.step(`Login with Email address: "${email}"`, async () => {
+  async loginWithEmail(args: { email: string, acceptTnc?: boolean }) {
+    return await test.step(`Login with Email address: "${args.email}"`, async () => {
       await this.loginButton.click()
 
       // instantiate the context of the auth modal window
@@ -59,7 +97,20 @@ export class HomePage extends BasePage {
       });
 
       const socialLoginModal = new SocialLoginModal(page_socialLoginModal)
-      await socialLoginModal.fillInEmailAndSubmit(email)
+      await socialLoginModal.fillInEmailAndSubmit(args.email)
+      if (args.acceptTnc !== null) {
+        switch (args!.acceptTnc) {
+          case true:
+            await this.acceptTnc()
+            break
+          case false:
+            await this.rejectTnc()
+            break
+          default:
+            console.error(`unknown 'acceptTnc' value received: "${args!.acceptTnc}", omitting taking action`)
+            break
+        }
+      }
     })
   }
 }
