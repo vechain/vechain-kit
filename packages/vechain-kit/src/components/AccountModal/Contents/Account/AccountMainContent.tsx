@@ -11,7 +11,8 @@ import {
 import {
     StickyHeaderContainer,
     ScrollToTopWrapper,
-    ModalNotificationButton,
+    NotificationButton,
+    ModalFAQButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
@@ -43,15 +44,19 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
 
     return (
         <ScrollToTopWrapper>
-            <StickyHeaderContainer>
-                <ModalNotificationButton
-                    onClick={() => {
-                        Analytics.notifications.viewed();
-                        setCurrentContent('notifications');
-                    }}
-                    hasUnreadNotifications={hasUnreadNotifications}
-                    data-testid="notifications-button"
+            <StickyHeaderContainer showInBottomSheet={false}>
+                <ModalFAQButton
+                    onClick={() =>
+                        setCurrentContent({
+                            type: 'faq',
+                            props: {
+                                onGoBack: () => setCurrentContent('main'),
+                                showLanguageSelector: false,
+                            },
+                        })
+                    }
                 />
+
                 <ModalHeader>
                     <HStack
                         w={'full'}
@@ -90,13 +95,23 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                     justifyContent={'flex-start'}
                     spacing={6}
                 >
-                    <AccountSelector
-                        style={{ justifyContent: 'flex-start' }}
-                        onClick={() => {
-                            setCurrentContent('profile');
-                        }}
-                        wallet={wallet}
-                    />
+                    <HStack w={'full'} justifyContent={'flex-start'}>
+                        <NotificationButton
+                            onClick={() => {
+                                Analytics.notifications.viewed();
+                                setCurrentContent('notifications');
+                            }}
+                            hasUnreadNotifications={hasUnreadNotifications}
+                            data-testid="notifications-button"
+                        />
+                        <AccountSelector
+                            style={{ justifyContent: 'flex-start' }}
+                            onClick={() => {
+                                setCurrentContent('profile');
+                            }}
+                            wallet={wallet}
+                        />
+                    </HStack>
 
                     <BalanceSection
                         onAssetsClick={() => {

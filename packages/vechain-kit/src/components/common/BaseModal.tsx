@@ -2,12 +2,23 @@ import { VechainKitThemeProvider } from '@/providers';
 import {
     Modal,
     ModalContent,
-    ModalContentProps,
     ModalOverlay,
     useMediaQuery,
+    ModalBody,
+    ModalHeader,
+    ModalFooter,
+    ModalCloseButton,
+    ModalContentProps,
 } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { ReactNode, Children, isValidElement, cloneElement } from 'react';
 import { useVeChainKitConfig } from '@/providers';
+import { BaseBottomSheet } from './BaseBottomSheet';
+import {
+    AdaptiveModalBody,
+    AdaptiveModalHeader,
+    AdaptiveModalFooter,
+    AdaptiveModalCloseButton,
+} from './ModalComponents';
 
 type BaseModalProps = {
     isOpen: boolean;
@@ -26,6 +37,61 @@ type BaseModalProps = {
     isCloseable?: boolean;
 };
 
+const adaptChildrenToView = (
+    children: ReactNode,
+    isBottomSheet: boolean,
+    onClose: () => void,
+): ReactNode => {
+    return Children.map(children, (child) => {
+        if (!isValidElement(child)) return child;
+
+        // Replace Chakra Modal components with our adaptive components
+        switch (child.type) {
+            case ModalBody:
+                return (
+                    <AdaptiveModalBody
+                        isBottomSheet={isBottomSheet}
+                        {...child.props}
+                    />
+                );
+            case ModalHeader:
+                return (
+                    <AdaptiveModalHeader
+                        isBottomSheet={isBottomSheet}
+                        {...child.props}
+                    />
+                );
+            case ModalFooter:
+                return (
+                    <AdaptiveModalFooter
+                        isBottomSheet={isBottomSheet}
+                        {...child.props}
+                    />
+                );
+            case ModalCloseButton:
+                return (
+                    <AdaptiveModalCloseButton
+                        isBottomSheet={isBottomSheet}
+                        {...child.props}
+                    />
+                );
+            default:
+                // If the child has children, recursively adapt them
+                if (child.props.children) {
+                    return cloneElement(child, {
+                        ...child.props,
+                        children: adaptChildrenToView(
+                            child.props.children,
+                            isBottomSheet,
+                            onClose,
+                        ),
+                    });
+                }
+                return child;
+        }
+    });
+};
+
 export const BaseModal = ({
     isOpen,
     onClose,
@@ -40,7 +106,7 @@ export const BaseModal = ({
     isCloseable = true,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
-    const { darkMode } = useVeChainKitConfig();
+    const { darkMode, useBottomSheet } = useVeChainKitConfig();
 
     const modalContentProps: ModalContentProps = isDesktop
         ? {}
@@ -55,6 +121,12 @@ export const BaseModal = ({
               scrollBehavior: 'smooth',
           };
 
+    const adaptedChildren = adaptChildrenToView(
+        children,
+        !isDesktop && Boolean(useBottomSheet),
+        onClose,
+    );
+
     return (
         <VechainKitThemeProvider darkMode={darkMode}>
             <Modal
@@ -63,7 +135,6 @@ export const BaseModal = ({
                 onClose={onClose}
                 isCentered={isCentered}
                 size={size}
-                // scrollBehavior="inside"
                 returnFocusOnClose={false}
                 blockScrollOnMount={blockScrollOnMount}
                 closeOnOverlayClick={closeOnOverlayClick && isCloseable}
@@ -72,14 +143,28 @@ export const BaseModal = ({
                 trapFocus={!allowExternalFocus}
                 autoFocus={!allowExternalFocus}
             >
-                <ModalOverlay backdropFilter={backdropFilter} />
-                <ModalContent
-                    role="dialog"
-                    aria-modal={!allowExternalFocus}
-                    {...modalContentProps}
-                >
-                    {children}
-                </ModalContent>
+                {isDesktop || useBottomSheet === false ? (
+                    <>
+                        <ModalOverlay backdropFilter={backdropFilter} />
+                        <ModalContent
+                            role="dialog"
+                            aria-modal={!allowExternalFocus}
+                            {...modalContentProps}
+                        >
+                            {adaptedChildren}
+                        </ModalContent>
+                    </>
+                ) : (
+                    <BaseBottomSheet
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        ariaTitle={'Modal'}
+                        ariaDescription={'Modal content'}
+                        isDismissable={isCloseable}
+                    >
+                        {adaptedChildren}
+                    </BaseBottomSheet>
+                )}
             </Modal>
         </VechainKitThemeProvider>
     );
