@@ -1,4 +1,4 @@
-import {BrowserContext, Page, test} from "@playwright/test"
+import {BrowserContext, expect, Page, test} from "@playwright/test"
 
 export class BasePage {
   protected page: Page
@@ -24,5 +24,31 @@ export class BasePage {
       await this.vwmock.setOptions(this.page, { gasMultiplier: 0.5 })
       if (accountIndex) await this.vwmock.setConfig(this.page, { accountIndex: accountIndex })
     })
+  }
+
+  async assertSessionIsDeleted() {
+    const isObjectHasProperty = (
+        args: { obj: any, property: string, isPropNameSubstring?: boolean }
+    ) => {
+      return args.isPropNameSubstring
+        ? Object.keys(args.obj).some(key => key.includes(args.property))
+        : args.obj.hasOwnProperty(args.property)
+    }
+
+    // get browser's local storage
+    const localStorage: any = await this.page.evaluate(() => localStorage);
+
+    // check for veworld wallet session
+    expect(isObjectHasProperty({
+      obj: localStorage,
+      property: "dappkit@vechain/connectionCertificate"
+    })).toBeFalsy()
+
+    // check for privy session
+    expect(isObjectHasProperty({
+      obj: localStorage,
+      property: "privy_wallet:",
+      isPropNameSubstring: true
+    })).toBeFalsy()
   }
 }
