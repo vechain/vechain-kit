@@ -10,7 +10,7 @@ export const AcceptedPolicyItem = ({
 }) => {
     const { t } = useTranslation();
     return (
-        <HStack justifyContent="space-between">
+        <HStack>
             <Tag size="sm" borderRadius="full">
                 v{document.version}
             </Tag>

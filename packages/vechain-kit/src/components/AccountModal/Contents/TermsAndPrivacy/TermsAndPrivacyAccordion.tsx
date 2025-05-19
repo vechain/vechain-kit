@@ -1,62 +1,44 @@
+import { useWallet } from '@/hooks';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
+import { LegalDocumentAgreement, LegalDocumentType } from '@/types';
+import { compareAddresses } from '@/utils';
 import { Accordion, VStack } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PolicyAccordion } from './PolicyAccordion';
-import { LegalDocumentType, LegalDocumentSource } from '@/types';
-import { compareAddresses } from '@/utils';
-import { useMemo } from 'react';
-import { useWallet } from '@/hooks';
 
 export const TermsAndPrivacyAccordion = () => {
     const { account } = useWallet();
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const {
-        legalDocuments: { agreements },
+        legalDocuments: { agreements, documents },
     } = useLegalDocuments();
 
-    const userAgreements = useMemo(() => {
-        return agreements?.filter((agreement) =>
+    const agreementsByDocumentType = useMemo(() => {
+        const filteredAgreements = agreements?.filter((agreement) =>
             compareAddresses(agreement.walletAddress, account?.address),
         );
+
+        return filteredAgreements?.reduce((acc, agreement) => {
+            acc[agreement.documentType] = [
+                ...(acc[agreement.documentType] || []),
+                agreement,
+            ];
+            return acc;
+        }, {} as Record<LegalDocumentType, LegalDocumentAgreement[]>);
     }, [agreements, account?.address]);
 
-    //Vechain Kit current terms
-    const currentVechainKitTerms = userAgreements?.find(
-        (agreement) =>
-            agreement.documentSource === LegalDocumentSource.VECHAIN_KIT &&
-            agreement.documentType === LegalDocumentType.TERMS,
-    );
-
-    //Vechain Kit current privacy policy
-    const currentVechainKitPrivacyPolicy = userAgreements?.find(
-        (agreement) =>
-            agreement.documentSource === LegalDocumentSource.VECHAIN_KIT &&
-            agreement.documentType === LegalDocumentType.PRIVACY,
-    );
-
-    //Vechain Kit current cookie policy
-    const currentVechainKitCookiePolicy = userAgreements?.find(
-        (agreement) =>
-            agreement.documentSource === LegalDocumentSource.VECHAIN_KIT &&
-            agreement.documentType === LegalDocumentType.COOKIES,
-    );
-
-    //All terms and conditions agreements
-    const allTermsAndConditionsAgreements = userAgreements?.filter(
-        (agreement) => agreement.documentType === LegalDocumentType.TERMS,
-    );
-
-    //All privacy policies agreements
-    const allPrivacyPoliciesAgreements = userAgreements?.filter(
-        (agreement) => agreement.documentType === LegalDocumentType.PRIVACY,
-    );
-
-    //All cookie policies agreements
-    const allCookiePoliciesAgreements = userAgreements?.filter(
-        (agreement) => agreement.documentType === LegalDocumentType.COOKIES,
-    );
+    const latestDocumentsByType = useMemo(() => {
+        return documents.reduce((acc, document) => {
+            const docType = document.documentType;
+            if (!acc[docType] || document.version > acc[docType].version) {
+                acc[docType] = document;
+            }
+            return acc;
+        }, {} as Record<LegalDocumentType, (typeof documents)[0]>);
+    }, [documents]);
 
     const accordionBg = isDark ? 'whiteAlpha.50' : 'blackAlpha.50';
     const accordionHoverBg = isDark ? 'whiteAlpha.100' : 'blackAlpha.100';
@@ -69,10 +51,14 @@ export const TermsAndPrivacyAccordion = () => {
                     description={t(
                         'Legal agreement between you, Vechain Kit and the current app, outlining the rules for using wallet services.',
                     )}
-                    documents={allTermsAndConditionsAgreements}
+                    documents={
+                        agreementsByDocumentType[LegalDocumentType.TERMS]
+                    }
                     bg={accordionBg}
                     hoverBg={accordionHoverBg}
-                    currentPolicy={currentVechainKitTerms}
+                    currentPolicy={
+                        latestDocumentsByType[LegalDocumentType.TERMS]
+                    }
                 />
 
                 <PolicyAccordion
@@ -80,10 +66,14 @@ export const TermsAndPrivacyAccordion = () => {
                     description={t(
                         'Privacy policy outlining the data collection and processing practices.',
                     )}
-                    documents={allPrivacyPoliciesAgreements}
+                    documents={
+                        agreementsByDocumentType[LegalDocumentType.PRIVACY]
+                    }
                     bg={accordionBg}
                     hoverBg={accordionHoverBg}
-                    currentPolicy={currentVechainKitPrivacyPolicy}
+                    currentPolicy={
+                        latestDocumentsByType[LegalDocumentType.PRIVACY]
+                    }
                 />
 
                 <PolicyAccordion
@@ -91,10 +81,14 @@ export const TermsAndPrivacyAccordion = () => {
                     description={t(
                         'Cookie policy outlining the use of cookies and tracking technologies.',
                     )}
-                    documents={allCookiePoliciesAgreements}
+                    documents={
+                        agreementsByDocumentType[LegalDocumentType.COOKIES]
+                    }
                     bg={accordionBg}
                     hoverBg={accordionHoverBg}
-                    currentPolicy={currentVechainKitCookiePolicy}
+                    currentPolicy={
+                        latestDocumentsByType[LegalDocumentType.COOKIES]
+                    }
                 />
             </Accordion>
         </VStack>

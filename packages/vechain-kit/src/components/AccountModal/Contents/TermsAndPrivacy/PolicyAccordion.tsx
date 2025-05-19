@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { IoChevronDown } from 'react-icons/io5';
 import { IoChevronUp } from 'react-icons/io5';
 
-import { LegalDocumentAgreement } from '@/types';
+import { EnrichedLegalDocument, LegalDocumentAgreement } from '@/types';
 import { MdCheck } from 'react-icons/md';
 import { formatDate } from '@/utils/dateUtils';
 import { AcceptedPolicyItem } from './AcceptedPolicyItem';
@@ -23,7 +23,7 @@ type PolicyAccordionProps = {
     documents: LegalDocumentAgreement[];
     bg: string;
     hoverBg: string;
-    currentPolicy?: LegalDocumentAgreement;
+    currentPolicy?: EnrichedLegalDocument | undefined;
 };
 
 export const PolicyAccordion = ({
@@ -35,7 +35,11 @@ export const PolicyAccordion = ({
     currentPolicy,
 }: PolicyAccordionProps) => {
     const { t } = useTranslation();
-    const hasDocuments = documents.length > 0;
+    const hasDocuments = documents?.length > 0;
+
+    const currentPolicyAgreement = documents?.find(
+        (document) => document.id === currentPolicy?.id,
+    );
 
     if (!hasDocuments) return null;
 
@@ -64,7 +68,7 @@ export const PolicyAccordion = ({
                     </AccordionButton>
                     <AccordionPanel pb={4} pt={3}>
                         <VStack align="stretch" spacing={4}>
-                            {currentPolicy && (
+                            {currentPolicyAgreement?.id ? (
                                 <HStack w="full">
                                     <Icon as={MdCheck} color="green.500" />
                                     <Text fontSize="xs">
@@ -72,13 +76,13 @@ export const PolicyAccordion = ({
                                             'You accepted current policy on {{date}}',
                                             {
                                                 date: formatDate(
-                                                    currentPolicy.timestamp,
+                                                    currentPolicyAgreement.timestamp,
                                                 ),
                                             },
                                         )}
                                     </Text>
                                 </HStack>
-                            )}
+                            ) : null}
 
                             <HStack w="full" textAlign="left">
                                 <Text fontSize="xs" fontWeight="bold">

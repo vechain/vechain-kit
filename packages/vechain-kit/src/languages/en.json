@@ -537,12 +537,11 @@
     "{{name}}": "{{name}}",
     "I have read and agree to ": "I have read and agree to ",
     "Vechain Kit": "Vechain Kit",
-    "Others": "Others",
+    "Optional": "Optional",
     "Accept": "Accept",
     "Terms and Policies": "Terms and Policies",
     "Reject and logout": "Reject and logout",
     "Are you sure you want to reject the terms and disconnect?": "Are you sure you want to reject the terms and disconnect?",
-    "By continuing, you agree to <links/>. Please take a moment to review all the terms, with acceptance being mandatory to continue.": "By continuing, you agree to <links/>. Please take a moment to review all the terms, with acceptance being mandatory to continue.",
     "Terms and Conditions": "Terms and Conditions",
     "View Current Policy": "View Current Policy",
     "You accepted current policy on {{date}}": "You accepted current policy on {{date}}",
@@ -555,5 +554,6 @@
     "Cookie policy outlining the use of cookies and tracking technologies.": "Cookie policy outlining the use of cookies and tracking technologies.",
     "Policy": "Policy",
     "By continuing, you agree to": "By continuing, you agree to",
-    "Please take a moment to review all the terms, with acceptance being mandatory to continue.": "Please take a moment to review all the terms, with acceptance being mandatory to continue."
+    "Please take a moment to review all the policies, with acceptance being mandatory to continue.": "Please take a moment to review all the policies, with acceptance being mandatory to continue.",
+    " and ": " and "
 }

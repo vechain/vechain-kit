@@ -67,8 +67,8 @@ export const LegalDocumentItem = ({
                     type="checkbox"
                     hidden
                 />
-                {document.displayName || 'Vechain Kit Policy'}
-                <Icon as={FaExternalLinkAlt} ml={1} />
+                {displayName}
+                <Icon as={FaExternalLinkAlt} ml={1} boxSize={3} />
             </Link>
         );
     }

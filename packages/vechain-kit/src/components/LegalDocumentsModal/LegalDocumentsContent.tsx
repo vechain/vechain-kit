@@ -1,6 +1,6 @@
 import { StickyHeaderContainer } from '@/components/common';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import { EnrichedLegalDocument, LegalDocumentSource } from '@/types';
+import { EnrichedLegalDocument } from '@/types';
 import {
     Button,
     ModalBody,
@@ -31,40 +31,32 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
         legalDocuments: { documentsNotAgreed, getDocumentId },
     } = useLegalDocuments();
 
-    // Separate required and optional documents
-    const requiredDocuments = useMemo(() => {
-        return documentsNotAgreed.filter((document) => document.required);
+    const { requiredDocuments, optionalDocuments } = useMemo(() => {
+        return documentsNotAgreed.reduce<{
+            requiredDocuments: EnrichedLegalDocument[];
+            optionalDocuments: EnrichedLegalDocument[];
+        }>(
+            (acc, document) => {
+                if (document.required) {
+                    acc.requiredDocuments.push(document);
+                } else {
+                    acc.optionalDocuments.push(document);
+                }
+                return acc;
+            },
+            { requiredDocuments: [], optionalDocuments: [] },
+        );
     }, [documentsNotAgreed]);
 
-    const optionalDocuments = useMemo(() => {
-        return documentsNotAgreed.filter((document) => !document.required);
-    }, [documentsNotAgreed]);
-
-    // Filter for VechainKit required documents
-    const vechainKitRequiredDocuments = useMemo(() => {
-        return requiredDocuments.filter(
-            (document) =>
-                document.documentSource === LegalDocumentSource.VECHAIN_KIT,
+    const defaultFormValues = useMemo(() => {
+        return documentsNotAgreed.reduce<Record<string, boolean>>(
+            (acc, document) => {
+                acc[getDocumentId(document)] = document.required;
+                return acc;
+            },
+            {},
         );
-    }, [requiredDocuments]);
-
-    // Filter for other required documents
-    const appRequiredDocuments = useMemo(() => {
-        return requiredDocuments.filter(
-            (document) =>
-                document.documentSource === LegalDocumentSource.APPLICATION,
-        );
-    }, [requiredDocuments]);
-
-    // Filter for optional documents
-    const allOptionalDocuments = useMemo(() => {
-        return optionalDocuments;
-    }, [optionalDocuments]);
-
-    const defaultFormValues = documentsNotAgreed.reduce((acc, document) => {
-        acc[getDocumentId(document)] = document.required;
-        return acc;
-    }, {} as Record<string, boolean>);
+    }, [documentsNotAgreed, getDocumentId]);
 
     const {
         handleSubmit,
@@ -75,11 +67,14 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
     });
 
     const onSubmit = (data: Record<string, boolean>) => {
-        const agreedInputs = Object.entries(data)
-            .filter(([_, checked]) => checked)
-            .filter(Boolean);
+        const agreedDocumentIds = new Set(
+            Object.entries(data)
+                .filter(([_, checked]) => checked)
+                .map(([docId]) => docId),
+        );
+
         const agreedDocuments = documentsNotAgreed.filter((document) =>
-            agreedInputs.some(([documentId]) => documentId === document.id),
+            agreedDocumentIds.has(getDocumentId(document)),
         );
 
         if (agreedDocuments.length > 0) {
@@ -94,14 +89,8 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
         ? '0 2px 8px rgba(0, 0, 0, 0.2)'
         : '0 2px 8px rgba(0, 0, 0, 0.05)';
 
-    const hasVechainKitRequiredDocuments =
-        vechainKitRequiredDocuments.length > 0;
-
-    const appsAndOptionalDocuments = [
-        ...appRequiredDocuments,
-        ...allOptionalDocuments,
-    ];
-    const hasOtherDocuments = appsAndOptionalDocuments.length > 0;
+    const hasRequiredDocuments = requiredDocuments.length > 0;
+    const hasOptionalDocuments = optionalDocuments.length > 0;
 
     return (
         <Stack width="full">
@@ -112,32 +101,35 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
 
                 <ModalBody>
                     <VStack align="stretch" spacing={5} width="full">
-                        {hasVechainKitRequiredDocuments && (
+                        {hasRequiredDocuments && (
                             <Text as="span" fontSize="sm">
                                 {t('By continuing, you agree to')}{' '}
-                                {vechainKitRequiredDocuments.map(
-                                    (document, index) => (
-                                        <Fragment key={getDocumentId(document)}>
-                                            <LegalDocumentItem
-                                                key={getDocumentId(document)}
-                                                document={document}
-                                                register={register}
-                                                isText={true}
-                                            />
-                                            {index <
-                                                vechainKitRequiredDocuments.length -
-                                                    1 && ', '}
-                                        </Fragment>
-                                    ),
-                                )}
+                                {requiredDocuments.map((document, index) => (
+                                    <Fragment key={getDocumentId(document)}>
+                                        <LegalDocumentItem
+                                            key={getDocumentId(document)}
+                                            document={document}
+                                            register={register}
+                                            isText={true}
+                                        />
+                                        {index < requiredDocuments.length - 1
+                                            ? index ===
+                                                  requiredDocuments.length -
+                                                      2 &&
+                                              requiredDocuments.length > 1
+                                                ? t(' and ')
+                                                : ', '
+                                            : null}
+                                    </Fragment>
+                                ))}
                                 .{' '}
                                 {t(
-                                    'Please take a moment to review all the terms, with acceptance being mandatory to continue.',
+                                    'Please take a moment to review all the policies, with acceptance being mandatory to continue.',
                                 )}
                             </Text>
                         )}
 
-                        {hasOtherDocuments && (
+                        {hasOptionalDocuments && (
                             <Stack
                                 p={4}
                                 borderRadius="xl"
@@ -152,18 +144,16 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                                     fontWeight="bold"
                                     color={headingColor}
                                 >
-                                    {t('Others')}
+                                    {t('Optional')}
                                 </Text>
                                 <VStack align="stretch" spacing={4}>
-                                    {appsAndOptionalDocuments.map(
-                                        (document) => (
-                                            <LegalDocumentItem
-                                                key={getDocumentId(document)}
-                                                document={document}
-                                                register={register}
-                                            />
-                                        ),
-                                    )}
+                                    {optionalDocuments.map((document) => (
+                                        <LegalDocumentItem
+                                            key={getDocumentId(document)}
+                                            document={document}
+                                            register={register}
+                                        />
+                                    ))}
                                 </VStack>
                             </Stack>
                         )}
