@@ -7,6 +7,8 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PolicyAccordion } from './PolicyAccordion';
+import { EmptyContent } from '@/components/common/EmptyContent';
+import { MdGavel } from 'react-icons/md';
 
 export const TermsAndPrivacyAccordion = () => {
     const { account } = useWallet();
@@ -17,11 +19,11 @@ export const TermsAndPrivacyAccordion = () => {
     } = useLegalDocuments();
 
     const agreementsByDocumentType = useMemo(() => {
-        const filteredAgreements = agreements?.filter((agreement) =>
+        const userAgreements = agreements?.filter((agreement) =>
             compareAddresses(agreement.walletAddress, account?.address),
         );
 
-        return filteredAgreements?.reduce((acc, agreement) => {
+        return userAgreements?.reduce((acc, agreement) => {
             acc[agreement.documentType] = [
                 ...(acc[agreement.documentType] || []),
                 agreement,
@@ -40,8 +42,26 @@ export const TermsAndPrivacyAccordion = () => {
         }, {} as Record<LegalDocumentType, (typeof documents)[0]>);
     }, [documents]);
 
+    const hasAgreements = useMemo(() => {
+        return Object.values(agreementsByDocumentType).some(
+            (agreements) => agreements.length > 0,
+        );
+    }, [agreementsByDocumentType]);
+
     const accordionBg = isDark ? 'whiteAlpha.50' : 'blackAlpha.50';
     const accordionHoverBg = isDark ? 'whiteAlpha.100' : 'blackAlpha.100';
+
+    if (!hasAgreements) {
+        return (
+            <EmptyContent
+                title={t('No policies accepted')}
+                description={t(
+                    'When you have accepted a policy, it will appear here',
+                )}
+                icon={MdGavel}
+            />
+        );
+    }
 
     return (
         <VStack spacing={4} align="stretch">
