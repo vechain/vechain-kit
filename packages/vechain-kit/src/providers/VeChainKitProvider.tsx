@@ -88,6 +88,7 @@ export type VechainKitProviderProps = {
     darkMode?: boolean;
     i18n?: I18n;
     language?: string;
+    useBottomSheet?: boolean;
     network: {
         type: NETWORK_TYPE;
         nodeUrl?: string;
@@ -111,6 +112,7 @@ type VeChainKitConfig = {
     darkMode: boolean;
     i18n?: VechainKitProviderProps['i18n'];
     language?: VechainKitProviderProps['language'];
+    useBottomSheet: VechainKitProviderProps['useBottomSheet'];
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
@@ -215,6 +217,7 @@ export const VeChainKitProvider = (
         loginModalUI,
         loginMethods,
         darkMode = false,
+        useBottomSheet = true,
         i18n: i18nConfig,
         language = 'en',
         network,
@@ -285,6 +288,7 @@ export const VeChainKitProvider = (
                         loginModalUI,
                         loginMethods: validatedLoginMethods,
                         darkMode,
+                        useBottomSheet,
                         i18n: i18nConfig,
                         language,
                         network,
