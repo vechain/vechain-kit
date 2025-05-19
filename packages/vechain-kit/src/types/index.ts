@@ -11,7 +11,7 @@ export enum LegalDocumentType {
 
 export enum LegalDocumentSource {
     VECHAIN_KIT = 'vechain-kit',
-    OTHER = 'other',
+    APPLICATION = 'application',
 }
 
 // Base type for all legal documents (terms, privacy policy, cookies)

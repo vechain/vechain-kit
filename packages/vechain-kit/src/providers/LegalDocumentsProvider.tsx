@@ -11,14 +11,14 @@ import {
 import { compareAddresses } from '@/utils/AddressUtils';
 import {
     getAllDocuments,
-    getRequiredDocuments,
     getDocumentId,
     getDocumentsNotAgreed,
+    getRequiredDocuments,
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
 } from '@/utils/legalDocumentsUtils';
 import {
     Analytics,
-    setConnectedWalletAddress,
+    setHasTrackingConsent,
 } from '@/utils/mixpanelClientInstance';
 import {
     createContext,
@@ -77,19 +77,19 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         const cookiePolicy = cookiePolicies.map((cookiePolicy) => ({
             ...cookiePolicy,
             documentType: LegalDocumentType.COOKIES,
-            documentSource: LegalDocumentSource.OTHER,
+            documentSource: LegalDocumentSource.APPLICATION,
         }));
 
         const privacyPolicy = privacyPolicies.map((privacyPolicy) => ({
             ...privacyPolicy,
             documentType: LegalDocumentType.PRIVACY,
-            documentSource: LegalDocumentSource.OTHER,
+            documentSource: LegalDocumentSource.APPLICATION,
         }));
 
         const termsAndConditions = termsPolicies.map((termsAndConditions) => ({
             ...termsAndConditions,
             documentType: LegalDocumentType.TERMS,
-            documentSource: LegalDocumentSource.OTHER,
+            documentSource: LegalDocumentSource.APPLICATION,
         }));
 
         return [...cookiePolicy, ...privacyPolicy, ...termsAndConditions];
@@ -108,6 +108,11 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     const documentsNotAgreed = useMemo(() => {
         return getDocumentsNotAgreed(account?.address, documents);
     }, [documents, account?.address]);
+
+    const isAnalyticsAllowed = useMemo(() => {
+        //If allowAnalytics is not set, it defaults to false
+        return legalDocuments?.allowAnalytics ?? false;
+    }, [legalDocuments?.allowAnalytics]);
 
     const hasAgreedToRequiredDocuments = useMemo(() => {
         //This is using the local storage hook instead of utils , since it needs a dependency hook
@@ -129,7 +134,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             // Set the connected wallet address to the mixpanel
             // This is used to prevent tracking events
             // if the connected user has not agreed to the terms
-            setConnectedWalletAddress(account.address);
+            setHasTrackingConsent(isAnalyticsAllowed);
             setShowTermsModal(!hasAgreedToRequiredDocuments);
         } else {
             setShowTermsModal(false);
@@ -138,6 +143,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         connection.isConnected,
         account?.address,
         hasAgreedToRequiredDocuments,
+        isAnalyticsAllowed,
     ]);
 
     const agreeToDocs = (
@@ -164,8 +170,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
 
         const updated = [...filteredAgreements, ...newAgreements];
         setStoredAgreements(updated);
-
-        setConnectedWalletAddress(walletAddress);
     };
 
     const handleAgree = useCallback(

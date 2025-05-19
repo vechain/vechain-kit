@@ -11,9 +11,9 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useMemo } from 'react';
+import { Fragment } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Fragment } from 'react';
 
 import { LegalDocumentItem } from './Components';
 
@@ -51,7 +51,8 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
     // Filter for other required documents
     const appRequiredDocuments = useMemo(() => {
         return requiredDocuments.filter(
-            (document) => document.documentSource === LegalDocumentSource.OTHER,
+            (document) =>
+                document.documentSource === LegalDocumentSource.APPLICATION,
         );
     }, [requiredDocuments]);
 

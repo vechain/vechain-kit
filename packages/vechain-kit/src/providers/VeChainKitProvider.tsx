@@ -31,10 +31,10 @@ import {
 
 import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
+import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { ModalProvider } from './ModalProvider';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
-import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -50,6 +50,7 @@ type LoginMethodOrder = {
 };
 
 export type LegalDocumentOptions = {
+    allowAnalytics?: boolean;
     privacyPolicy?: LegalDocument[];
     termsAndConditions?: LegalDocument[];
     cookiePolicy?: LegalDocument[];
@@ -204,7 +205,7 @@ const validateConfig = (
         }
     }
 
-    if (props.legalDocuments) {
+    if (props?.legalDocuments) {
         if (props.legalDocuments.termsAndConditions) {
             props.legalDocuments.termsAndConditions.forEach((term) => {
                 if (!isValidUrl(term.url)) {

@@ -82,24 +82,3 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
         website: 'https://evearn.io',
     },
 ];
-
-export const VECHAIN_KIT_TERMS_CONFIG = {
-    url: 'https://vechainkit.vechain.org/terms',
-    version: 1,
-    required: true,
-    displayName: 'Vechain Kit Terms',
-};
-
-export const VECHAIN_KIT_PRIVACY_CONFIG = {
-    url: 'https://vechainkit.vechain.org/privacy',
-    version: 1,
-    required: false,
-    displayName: 'Vechain Kit Privacy Policy',
-};
-
-export const VECHAIN_KIT_COOKIE_CONFIG = {
-    url: 'https://vechainkit.vechain.org/cookies',
-    version: 1,
-    required: false,
-    displayName: 'Vechain Kit Cookie Policy',
-};

@@ -1,15 +1,5 @@
-import {
-    EnrichedLegalDocument,
-    LegalDocumentAgreement,
-    LegalDocumentSource,
-    LegalDocumentType,
-} from '@/types';
-import {
-    compareAddresses,
-    VECHAIN_KIT_COOKIE_CONFIG,
-    VECHAIN_KIT_PRIVACY_CONFIG,
-    VECHAIN_KIT_TERMS_CONFIG,
-} from '@/utils';
+import { EnrichedLegalDocument, LegalDocumentAgreement } from '@/types';
+import { compareAddresses } from '@/utils';
 
 export const LEGAL_DOCS_LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';
 
@@ -43,30 +33,7 @@ export const formatDocuments = (
 export const getAllDocuments = (
     customDocuments: Omit<EnrichedLegalDocument, 'id'>[] | undefined = [],
 ): EnrichedLegalDocument[] => {
-    const vechainKitCookiePolicy = {
-        ...VECHAIN_KIT_COOKIE_CONFIG,
-        documentType: LegalDocumentType.COOKIES,
-        documentSource: LegalDocumentSource.VECHAIN_KIT,
-    };
-
-    const vechainKitPrivacyPolicy = {
-        ...VECHAIN_KIT_PRIVACY_CONFIG,
-        documentType: LegalDocumentType.PRIVACY,
-        documentSource: LegalDocumentSource.VECHAIN_KIT,
-    };
-
-    const vechainKitTermsAndConditions = {
-        ...VECHAIN_KIT_TERMS_CONFIG,
-        documentType: LegalDocumentType.TERMS,
-        documentSource: LegalDocumentSource.VECHAIN_KIT,
-    };
-    const vechainKitDocuments = [
-        vechainKitCookiePolicy,
-        vechainKitPrivacyPolicy,
-        vechainKitTermsAndConditions,
-    ];
-
-    return formatDocuments([...vechainKitDocuments, ...customDocuments]);
+    return formatDocuments(customDocuments);
 };
 
 /**
@@ -153,21 +120,4 @@ export const hasAgreedToRequiredDocuments = (
                 agreement.id === document.id,
         ),
     );
-};
-
-/**
- * Check if a user has agreed to the VeChain Kit cookie policy specifically
- * This function is simplified for direct usage in mixpanel
- */
-export const hasAgreedToVeChainKitCookiePolicy = (
-    walletAddress?: string,
-): boolean => {
-    if (!walletAddress) return false;
-
-    const vkTermId = getDocumentId({
-        ...VECHAIN_KIT_COOKIE_CONFIG,
-        documentType: LegalDocumentType.COOKIES,
-        documentSource: LegalDocumentSource.VECHAIN_KIT,
-    });
-    return hasAgreedToDocument(walletAddress, vkTermId);
 };
