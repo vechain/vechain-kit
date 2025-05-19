@@ -1,4 +1,37 @@
-import { AccountAction, AccountProperties, AuthAction, AuthProperties, BridgeAction, BridgeProperties, CustomizationAction, CustomizationProperties, DappKitSource, DropOffStage, EcosystemAction, EcosystemProperties, EventName, EventPropertiesMap, FAQAction, FAQProperties, NameSelectionAction, NameSelectionDropOffStage, NameSelectionProperties, NotificationAction, NotificationProperties, SendAction, SendProperties, SettingsAction, SettingsProperties, SwapAction, SwapProperties, UserProperties, VeLoginMethod, VePrivySocialLoginMethod, WalletAction, WalletProperties } from '@/types/mixPanel';
+import {
+    AccountAction,
+    AccountProperties,
+    AuthAction,
+    AuthProperties,
+    BridgeAction,
+    BridgeProperties,
+    CustomizationAction,
+    CustomizationProperties,
+    DappKitSource,
+    DropOffStage,
+    EcosystemAction,
+    EcosystemProperties,
+    EventName,
+    EventPropertiesMap,
+    FAQAction,
+    FAQProperties,
+    NameSelectionAction,
+    NameSelectionDropOffStage,
+    NameSelectionProperties,
+    NotificationAction,
+    NotificationProperties,
+    SendAction,
+    SendProperties,
+    SettingsAction,
+    SettingsProperties,
+    SwapAction,
+    SwapProperties,
+    UserProperties,
+    VeLoginMethod,
+    VePrivySocialLoginMethod,
+    WalletAction,
+    WalletProperties,
+} from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 
 import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './Constants';
@@ -9,7 +42,7 @@ const PAGE_SOURCE: string = window?.location?.origin || '';
 let hasTrackingConsent = false;
 
 // Initialize Mixpanel with basic config, but control actual tracking with consent checks
-if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN && hasTrackingConsent) {
+if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
     VeChainKitMixpanel.init(VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN, {
         debug: !ENV.isProduction,
     });
