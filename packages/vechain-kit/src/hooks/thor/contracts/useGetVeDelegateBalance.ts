@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { IERC20__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 export const getVeDelegateBalance = async (
     thor: ThorClient,
@@ -35,8 +35,9 @@ export const getVeDelegateBalance = async (
 };
 
 export const getVeDelegateBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_VE_DELEGATE_BALANCE',
+    'VECHAIN_KIT_BALANCE',
     address,
+    'VE_DELEGATE',
 ];
 
 export const useGetVeDelegateBalance = (address?: string) => {

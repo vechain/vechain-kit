@@ -1,20 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-// import { networkConfig } from '@repo/config';
-import { IB3TR__factory } from '../../../contracts/typechain-types';
+import { B3TR__factory } from '../../../contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { formatEther } from 'viem';
+import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
-
-const B3TRInterface = IB3TR__factory.createInterface();
-
-export type TokenBalance = {
-    original: string;
-    scaled: string;
-    formatted: string;
-};
+import { useThor } from '@vechain/dapp-kit-react';
+import { TokenBalance } from '@/types';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  *  Get the b3tr balance of an address from the contract
@@ -24,21 +17,17 @@ export type TokenBalance = {
  * @returns Balance of the token in the form of {@link TokenBalance} (original, scaled down and formatted)
  */
 export const getB3trBalance = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     network: NETWORK_TYPE,
     address?: string,
 ): Promise<TokenBalance> => {
-    const functionFragment =
-        B3TRInterface.getFunction('balanceOf').format('json');
+    const res = await thor.contracts
+        .load(getConfig(network).b3trContractAddress, B3TR__factory.abi)
+        .read.balanceOf(address);
 
-    const res = await thor
-        .account(getConfig(network).b3trContractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
+    if (!res) throw new Error('Failed to get b3tr balance');
 
-    if (res.reverted) throw new Error('Reverted');
-
-    const original = res.decoded[0];
+    const original = res[0].toString();
     const scaled = formatEther(original);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
 
@@ -50,17 +39,23 @@ export const getB3trBalance = async (
 };
 
 export const getB3trBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_B3TR_BALANCE',
+    'VEBETTERDAO_BALANCE',
     address,
+    'B3TR',
 ];
 
 export const useGetB3trBalance = (address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getB3trBalanceQueryKey(address),
-        queryFn: async () => getB3trBalance(thor, network.type, address),
+        queryFn: async () =>
+            getB3trBalance(
+                thor as unknown as ThorClient,
+                network.type,
+                address,
+            ),
         enabled: !!thor && !!address && !!network.type,
     });
 };

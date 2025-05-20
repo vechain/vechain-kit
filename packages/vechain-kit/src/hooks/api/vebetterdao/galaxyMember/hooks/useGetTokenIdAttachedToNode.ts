@@ -1,33 +1,51 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'getIdAttachedToNode';
 
-export const getGetTokenIdAttachedToNodeQueryKey = (nodeId?: string) =>
-    getCallKey({ method, keyArgs: [nodeId] });
+export const getGetTokenIdAttachedToNodeQueryKey = (
+    networkType: NETWORK_TYPE,
+    nodeId: string,
+) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [BigInt(nodeId || 0)],
+    });
+};
 
 /**
  * Custom hook that retrieves the GM Token ID attached to the given Vechain Node ID.
  *
  * @param nodeId - The Vechain Node ID to check for attached GM Token.
- * @param enabled - Determines whether the hook is enabled or not. Default is true.
+ * @param customEnabled - Determines whether the hook is enabled or not. Default is true.
  * @returns The GM Token ID attached to the given Vechain Node ID.
  */
 export const useGetTokenIdAttachedToNode = (
     nodeId?: string,
-    enabled = true,
+    customEnabled = true,
 ) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [nodeId],
-        enabled: !!nodeId && enabled && !!network.type,
+        args: [BigInt(nodeId || 0)],
+        queryOptions: {
+            enabled:
+                !!nodeId &&
+                customEnabled &&
+                !!network.type &&
+                !!contractAddress,
+            select: (data) => data[0].toString(),
+        },
     });
 };

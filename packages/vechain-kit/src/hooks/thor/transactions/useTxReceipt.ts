@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { CompressedBlockDetail } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { CompressedBlockDetail } from '@vechain/sdk-network';
 import { useQuery } from '@tanstack/react-query';
 import { TIME } from '@/utils';
 

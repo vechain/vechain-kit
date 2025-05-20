@@ -1,12 +1,21 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'MAX_LEVEL';
 
-export const getGMMaxLevelQueryKey = () => getCallKey({ method });
+export const getGMMaxLevelQueryKey = (networkType: NETWORK_TYPE) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [],
+    });
+};
 
 /**
  * Custom hook that retrieves the maximum level of the Galaxy Member NFT.
@@ -18,11 +27,13 @@ export const useGMMaxLevel = (enabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
         args: [],
-        enabled: enabled && !!network.type,
+        queryOptions: {
+            enabled: enabled && !!network.type && !!contractAddress,
+        },
     });
 };

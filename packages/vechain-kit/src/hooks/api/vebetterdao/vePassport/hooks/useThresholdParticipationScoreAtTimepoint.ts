@@ -1,40 +1,54 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-const method = 'thresholdPoPScoreAtTimepoint';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'thresholdPoPScoreAtTimepoint' as const;
 
 /**
  * Returns the query key for fetching the threshold participation score at a specific timepoint.
- * @param blockNumber - The block number at which to get the threshold participation score.
- * @returns The query key for fetching the threshold participation score at a specific timepoint.
+ * @param networkType The network type.
+ * @param timepoint - The timepoint (block number, uint48).
+ * @returns The query key.
  */
 export const getThresholdParticipationScoreAtTimepointQueryKey = (
-    blockNumber: string,
+    networkType: NETWORK_TYPE,
+    timepoint: number | string,
 ) => {
-    return getCallKey({ method, keyArgs: [blockNumber] });
+    return getCallClauseQueryKey({
+        address: getConfig(networkType).veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [Number(timepoint)],
+    });
 };
 
 /**
  * Hook to get the threshold participation score at a specific timepoint from the VeBetterPassport contract.
- * @param blockNumber - The block number at which to get the threshold participation score.
- * @returns The threshold participation score at a specific timepoint.
+ * @param timepointInput - The timepoint (block number, uint48).
+ * @returns The threshold participation score
  */
 export const useThresholdParticipationScoreAtTimepoint = (
-    blockNumber: string,
+    timepointInput?: number | string,
 ) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
-        method: 'thresholdPoPScoreAtTimepoint',
-        args: [blockNumber],
-        enabled: !!blockNumber && !!veBetterPassportContractAddress,
+    return useCallClause({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [Number(timepointInput!)],
+        queryOptions: {
+            enabled:
+                timepointInput !== undefined &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (res) => res[0],
+        },
     });
 };

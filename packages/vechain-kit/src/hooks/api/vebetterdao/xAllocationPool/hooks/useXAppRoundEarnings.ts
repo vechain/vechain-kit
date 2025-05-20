@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationPool__factory } from '@/contracts';
 import { getOrCreateQueryClient } from '@/providers/EnsureQueryClient';
@@ -7,15 +7,10 @@ import {
     getRoundXApps,
     getRoundXAppsQueryKey,
 } from '@/hooks/api/vebetterdao/xApps/hooks/useRoundXApps';
-import { abi } from 'thor-devkit';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'viem';
-
-const roundEarningsFragment = XAllocationPool__factory.createInterface()
-    .getFunction('roundEarnings')
-    .format('json');
-const roundEarningsAbi = new abi.Function(JSON.parse(roundEarningsFragment));
+import { ThorClient } from '@vechain/sdk-network';
 
 type UseXAppRoundEarningsQueryResponse = {
     amount: string;
@@ -25,32 +20,31 @@ type UseXAppRoundEarningsQueryResponse = {
 /**
  *  Get the amount of $B3TR an xApp earned from an allocation round
  *
- * @param thor  the connex instance
+ * @param thor  the thor instance
  * @param roundId  the round id
  * @param xAppId  the xApp id
  * @param networkType  the network type
  * @returns (amount, appId) amount of $B3TR an xApp earned from an allocation round and the xApp id
  */
 export const getXAppRoundEarnings = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     roundId: string,
     xAppId: string,
     networkType: NETWORK_TYPE,
 ): Promise<UseXAppRoundEarningsQueryResponse> => {
-    const xAllocationPoolContract =
-        getConfig(networkType).xAllocationPoolContractAddress;
+    const res = await thor.contracts
+        .load(
+            getConfig(networkType).xAllocationPoolContractAddress,
+            XAllocationPool__factory.abi,
+        )
+        .read.roundEarnings(roundId, xAppId);
 
-    const functionFragment = XAllocationPool__factory.createInterface()
-        .getFunction('roundEarnings')
-        .format('json');
-    const res = await thor
-        .account(xAllocationPoolContract)
-        .method(JSON.parse(functionFragment))
-        .call(roundId, xAppId);
+    if (!res)
+        throw new Error(
+            `Failed to fetch xApp round earnings for ${xAppId} in round ${roundId}`,
+        );
 
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-
-    return { amount: formatEther(res.decoded['0']), appId: xAppId };
+    return { amount: formatEther(BigInt(res[0] || 0)), appId: xAppId };
 };
 
 export const getXAppRoundEarningsQueryKey = (
@@ -73,7 +67,7 @@ export const getXAppRoundEarningsQueryKey = (
  * @returns amount of $B3TR an xApp can claim from an allocation round
  */
 export const useXAppRoundEarnings = (roundId: string, xAppId: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const queryClient = getOrCreateQueryClient();
 
     const { network } = useVeChainKitConfig();
@@ -82,7 +76,12 @@ export const useXAppRoundEarnings = (roundId: string, xAppId: string) => {
         queryKey: getXAppRoundEarningsQueryKey(roundId, xAppId),
         queryFn: async () => {
             const data = await queryClient.ensureQueryData({
-                queryFn: () => getRoundXApps(thor, network.type, roundId),
+                queryFn: () =>
+                    getRoundXApps(
+                        thor as unknown as ThorClient,
+                        network.type,
+                        roundId,
+                    ),
                 queryKey: getRoundXAppsQueryKey(roundId),
             });
 
@@ -91,7 +90,7 @@ export const useXAppRoundEarnings = (roundId: string, xAppId: string) => {
             if (!isXAppInRound) return { amount: '0', xAppId };
 
             return await getXAppRoundEarnings(
-                thor,
+                thor as unknown as ThorClient,
                 roundId,
                 xAppId,
                 network.type,
@@ -111,7 +110,7 @@ export const useMultipleXAppRoundEarnings = (
     roundId: string,
     xAppIds: string[],
 ) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const queryClient = getOrCreateQueryClient();
 
     const { network } = useVeChainKitConfig();
@@ -120,7 +119,12 @@ export const useMultipleXAppRoundEarnings = (
         queryKey: getXAppRoundEarningsQueryKey(roundId, 'ALL'),
         queryFn: async () => {
             const data = await queryClient.ensureQueryData({
-                queryFn: () => getRoundXApps(thor, network.type, roundId),
+                queryFn: () =>
+                    getRoundXApps(
+                        thor as unknown as ThorClient,
+                        network.type,
+                        roundId,
+                    ),
                 queryKey: getRoundXAppsQueryKey(roundId),
             });
 
@@ -129,22 +133,25 @@ export const useMultipleXAppRoundEarnings = (
             ).xAllocationPoolContractAddress;
             const xAppsInRound = data.filter((app) => xAppIds.includes(app.id));
 
-            const clauses = xAppsInRound.map((app) => ({
-                to: xAllocationPoolContract,
-                value: 0,
-                data: roundEarningsAbi.encode(roundId, app.id),
-            }));
-            const res = await thor.explain(clauses).execute();
+            const contract = thor.contracts.load(
+                xAllocationPoolContract,
+                XAllocationPool__factory.abi,
+            );
+            const clauses = xAppsInRound.map((app) =>
+                contract.clause.roundEarnings(roundId, app.id),
+            );
 
-            const decoded = res.map((r, index) => {
-                if (r.reverted)
-                    throw new Error(
-                        `Clause ${index + 1} reverted with reason ${
-                            r.revertReason
-                        }`,
-                    );
-                const decoded = roundEarningsAbi.decode(r.data);
-                const parsedAmount = formatEther(decoded[0]);
+            const res = await thor.transactions.executeMultipleClausesCall(
+                clauses,
+            );
+
+            if (!res.every((r) => r.success))
+                throw new Error('Failed to fetch xApp round earnings');
+
+            const decoded = res.map((earnings, index) => {
+                const parsedAmount = formatEther(
+                    earnings.result.plain as bigint,
+                );
                 const appId = xAppsInRound[index]?.id as string;
                 // Update the cache with the new amount
                 queryClient.setQueryData(

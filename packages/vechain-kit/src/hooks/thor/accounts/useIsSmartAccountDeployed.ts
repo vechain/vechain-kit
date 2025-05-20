@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useGetNodeUrl } from '@/hooks';
-import { ThorClient } from '@vechain/sdk-network1.2';
-import { Address } from '@vechain/sdk-core1.2';
+import { ThorClient } from '@vechain/sdk-network';
+import { Address } from '@vechain/sdk-core';
 
 export const getIsDeployed = async (
     thor: ThorClient,

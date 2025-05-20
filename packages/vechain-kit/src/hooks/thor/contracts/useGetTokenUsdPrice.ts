@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { IVechainEnergyOracleV1__factory } from '@/contracts';
 import { BigNumber } from 'bignumber.js';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 
 // Create an enum or object for supported price feed IDs
 export const PRICE_FEED_IDS = {
@@ -37,7 +37,8 @@ export const getTokenUsdPrice = async (
 };
 
 export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
-    `VECHAIN_KIT_${token}_USD_PRICE`,
+    'VECHAIN_KIT_PRICE',
+    token,
 ];
 
 export const useGetTokenUsdPrice = (token: SupportedToken) => {

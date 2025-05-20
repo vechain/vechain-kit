@@ -1,32 +1,49 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'getB3TRtoUpgrade';
 
-export const getB3trToUpgradeQueryKey = (tokenId?: string) =>
-    getCallKey({ method, keyArgs: [tokenId] });
+export const getB3trToUpgradeQueryKey = (
+    networkType: NETWORK_TYPE,
+    tokenId: string,
+) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [BigInt(tokenId || 0)],
+    });
+};
 
 /**
  * Retrieves the amount of B3TR tokens required to upgrade a specific token.
  *
  * @param tokenId - The ID of the token.
- * @param enabled - Flag indicating whether the hook is enabled or not. Default is true.
+ * @param customEnabled - Flag indicating whether the hook is enabled or not. Default is true.
  * @returns The result of the call to the contract method.
  */
-export const useB3trToUpgrade = (tokenId?: string, enabled = true) => {
+export const useB3trToUpgrade = (tokenId?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useCall({
-        contractInterface,
-        contractAddress,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [tokenId],
-        enabled: !!tokenId && enabled && !!network.type,
-        mapResponse: (res) => formatEther(res.decoded[0]),
+        args: [BigInt(tokenId || 0)],
+        queryOptions: {
+            enabled:
+                !!tokenId &&
+                customEnabled &&
+                !!network.type &&
+                !!contractAddress,
+            select: (data) => Number(formatEther(data[0])),
+        },
     });
 };

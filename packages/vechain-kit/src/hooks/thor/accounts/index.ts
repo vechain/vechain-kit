@@ -1,3 +1,4 @@
+export * from './useAccountBalance';
 export * from './useAccountImplementationAddress';
 export * from './useCurrentAccountImplementationVersion';
 export * from './useGetAccountAddress';

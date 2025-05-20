@@ -3,8 +3,8 @@ import { NETWORK_TYPE } from '@/config/network';
 import { MockENS__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 import { concat, keccak256, toBytes } from 'viem';
 
 const getEnsRecordExists = async (

@@ -1,29 +1,49 @@
 import { getConfig } from '@/config';
 import { GalaxyMember__factory } from '@/contracts';
-import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
+import { Address } from 'viem';
 
-const contractInterface = GalaxyMember__factory.createInterface();
+const contractAbi = GalaxyMember__factory.abi;
 const method = 'getSelectedTokenId';
 
-export const getSelectedTokenIdQueryKey = (account?: string | null) =>
-    getCallKey({ method, keyArgs: [account] });
+export const getSelectedTokenIdQueryKey = (
+    networkType: NETWORK_TYPE,
+    account: Address,
+) => {
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [account],
+    });
+};
 
 /**
  * Custom hook that retrieves the selected token ID for the selected galaxy member.
  *
- * @param address - The address of the account.
- * @param enabled - Determines whether the hook is enabled or not. Default is true.
+ * @param account - The address of the account.
+ * @param customEnabled - Determines whether the hook is enabled or not. Default is true.
  * @returns The selected token ID for the galaxy member.
  */
-export const useSelectedTokenId = (address: string, enabled = true) => {
+export const useSelectedTokenId = (account?: Address, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
-    return useCall({
-        contractInterface,
-        contractAddress,
+
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [address],
-        enabled: !!address && enabled && !!contractAddress,
+        args: [account!],
+        queryOptions: {
+            enabled:
+                !!account &&
+                customEnabled &&
+                !!network.type &&
+                !!contractAddress,
+            select: (data) => data[0].toString(),
+        },
     });
 };

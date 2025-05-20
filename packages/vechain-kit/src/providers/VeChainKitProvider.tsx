@@ -36,6 +36,7 @@ import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
 } from '@/utils/constants';
+import { Certificate, CertificateData } from '@vechain/sdk-core';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -92,9 +93,10 @@ export type VechainKitProviderProps = {
         type: NETWORK_TYPE;
         nodeUrl?: string;
         requireCertificate?: boolean;
+        // TODO: migration check these types
         connectionCertificate?: {
-            message?: Connex.Vendor.CertMessage;
-            options?: Connex.Signer.CertOptions;
+            message?: Certificate;
+            options?: CertificateData;
         };
     };
     allowCustomTokens?: boolean;
@@ -327,11 +329,10 @@ export const VeChainKitProvider = (
                         }}
                     >
                         <DAppKitProvider
-                            nodeUrl={
+                            node={
                                 network.nodeUrl ??
                                 getConfig(network.type).nodeUrl
                             }
-                            genesis={getConfig(network.type).network.genesis}
                             i18n={i18nConfig}
                             language={language}
                             logLevel={dappKit.logLevel}

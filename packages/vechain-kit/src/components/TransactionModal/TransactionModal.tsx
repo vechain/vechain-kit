@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { TransactionReceipt } from '@vechain/sdk-network1.2';
+import { TransactionReceipt } from '@vechain/sdk-network';
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;

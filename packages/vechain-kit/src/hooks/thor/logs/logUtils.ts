@@ -2,7 +2,7 @@ import {
     EventLogs,
     FilterEventLogsOptions,
     ThorClient,
-} from '@vechain/sdk-network1.2';
+} from '@vechain/sdk-network';
 
 const MAX_EVENTS_PER_QUERY = 1000;
 /**

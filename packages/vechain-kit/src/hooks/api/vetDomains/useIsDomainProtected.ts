@@ -1,9 +1,9 @@
 import { getConfig } from '@/config';
 import { SubdomainClaimer__factory } from '@/contracts';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 import { useQuery } from '@tanstack/react-query';
 
 export const getIsDomainProtectedQueryKey = (domain?: string) => [

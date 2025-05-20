@@ -1,11 +1,12 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const contractInterface = NodeManagement__factory.createInterface();
-const method = 'getUserNodes';
+const contractAbi = NodeManagement__factory.abi;
+const method = 'getUserNodes' as const;
 
 export type UserNode = {
     nodeId: string;
@@ -20,42 +21,50 @@ export type UserNode = {
 
 /**
  * Get the query key for fetching user nodes
- * @param user - The address of the user to check
+ * @param networkType the network type
+ * @param user - The address of the user to check (non-optional)
  */
-export const getUserNodesQueryKey = (user?: string) =>
-    getCallKey({ method, keyArgs: [user] });
+export const getUserNodesQueryKey = (networkType: NETWORK_TYPE, user: string) =>
+    getCallClauseQueryKey({
+        address: getConfig(networkType).nodeManagementContractAddress,
+        abi: contractAbi,
+        method,
+        args: [user as `0x${string}`],
+    });
 
 /**
  * Hook to get delegation details for all nodes associated with a user
- * @param user - The address of the user to check
+ * @param userInput - The address of the user to check
  * @returns An array of objects containing user node details
  */
 export const useGetUserNodes = (
-    user?: string,
-): UseQueryResult<UserNode[], Error> => {
+    userInput?: string,
+): UseQueryResult<UserNode[], unknown> => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(
         network.type,
     ).nodeManagementContractAddress;
-    return useCall({
-        contractInterface,
-        contractAddress,
+
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
         method,
-        args: [user],
-        mapResponse: (response) => {
-            // Response will be an array of node structs
-            return response.decoded[0].map((node: any) => ({
-                nodeId: node.nodeId.toString(),
-                nodeLevel: Number(node.nodeLevel),
-                xNodeOwner: node.xNodeOwner,
-                isXNodeHolder: node.isXNodeHolder,
-                isXNodeDelegated: node.isXNodeDelegated,
-                isXNodeDelegator: node.isXNodeDelegator,
-                isXNodeDelegatee: node.isXNodeDelegatee,
-                delegatee: node.delegatee,
-            }));
+        args: [userInput as `0x${string}`],
+        queryOptions: {
+            enabled: !!userInput && !!network.type && !!contractAddress,
+            select: (response) => {
+                return response[0].map((node) => ({
+                    nodeId: node.nodeId.toString(),
+                    nodeLevel: Number(node.nodeLevel),
+                    xNodeOwner: node.xNodeOwner,
+                    isXNodeHolder: node.isXNodeHolder,
+                    isXNodeDelegated: node.isXNodeDelegated,
+                    isXNodeDelegator: node.isXNodeDelegator,
+                    isXNodeDelegatee: node.isXNodeDelegatee,
+                    delegatee: node.delegatee,
+                }));
+            },
         },
-        enabled: !!user && !!network.type,
     });
 };
 

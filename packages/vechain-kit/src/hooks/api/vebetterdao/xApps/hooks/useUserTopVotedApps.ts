@@ -34,7 +34,7 @@ export const useUserTopVotedApps = (user?: string) => {
                 appIds.forEach((appId, i) => {
                     appIdToVotes[appId] =
                         (appIdToVotes[appId] || 0) +
-                        Number(formatEther(BigInt(voteWeights[i] ?? '0')));
+                        Number(formatEther(BigInt(voteWeights[i] || 0)));
                 });
             }
         });

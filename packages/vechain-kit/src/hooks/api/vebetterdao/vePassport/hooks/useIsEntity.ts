@@ -1,18 +1,28 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-const method = 'isEntity';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'isEntity' as const;
 
 /**
  * Returns the query key for checking if an address is an entity.
- * @param address - The address to check.
+ * @param networkType The network type.
+ * @param userAddress - The address to check.
  * @returns The query key for checking if an address is an entity.
  */
-export const getIsEntityQueryKey = (address?: string | null) => {
-    return getCallKey({ method, keyArgs: [address] });
+export const getIsEntityQueryKey = (
+    networkType: NETWORK_TYPE,
+    userAddress?: string | null,
+) => {
+    return getCallClauseQueryKey({
+        address: getConfig(networkType).veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [userAddress as `0x${string}`],
+    });
 };
 
 /**
@@ -26,12 +36,18 @@ export const useIsEntity = (address?: string | null) => {
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
+    return useCallClause({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
         method,
-        args: [address],
-        enabled: !!address && !!veBetterPassportContractAddress,
+        args: [address as `0x${string}`],
+        queryOptions: {
+            enabled:
+                !!address &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (data) => data[0],
+        },
     });
 };
 

@@ -1,16 +1,8 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
-import { abi } from 'thor-devkit';
-
-const unendorsedAppsFragment = X2EarnApps.createInterface()
-    .getFunction('unendorsedApps')
-    .format('json');
-const unendorsedAppsAbi = new abi.Function(JSON.parse(unendorsedAppsFragment));
-const allAppsFragment = X2EarnApps.createInterface()
-    .getFunction('apps')
-    .format('json');
-const allAppsAbi = new abi.Function(JSON.parse(allAppsFragment));
+import { X2EarnApps__factory } from '@/contracts';
+import { ViewFunctionResult } from '@/hooks';
+import { ThorClient } from '@vechain/sdk-network';
 
 /**
  * xApp type
@@ -46,71 +38,71 @@ type GetAllApps = {
     endorsed: XApp[];
 };
 export const getXApps = async (
-    thor: Connex.Thor,
+    thor: ThorClient,
     networkType: NETWORK_TYPE,
 ): Promise<GetAllApps> => {
-    const x2EarnAppsContract = getConfig(networkType).x2EarnAppsContractAddress;
-    const clauses = [
-        {
-            to: x2EarnAppsContract,
-            value: 0,
-            data: allAppsAbi.encode(),
-        },
-        {
-            to: x2EarnAppsContract,
-            value: 0,
-            data: unendorsedAppsAbi.encode(),
-        },
-    ];
+    const contract = thor.contracts.load(
+        getConfig(networkType).x2EarnAppsContractAddress,
+        X2EarnApps__factory.abi,
+    );
+    const clauses = [contract.clause.unendorsedApps(), contract.clause.apps()];
 
-    const res = await thor.explain(clauses).execute();
+    const res = await thor.transactions.executeMultipleClausesCall(clauses);
+    if (!res.every((r) => r.success)) throw new Error(`Failed to fetch xApps`);
 
-    const error = res.find((r) => r.reverted)?.revertReason;
+    const apps = res[0].result.plain as ViewFunctionResult<
+        typeof X2EarnApps__factory.abi,
+        'apps'
+    >[0];
 
-    if (error) throw new Error(error ?? 'Error fetching xApps');
+    const unendorsedApps = res[1].result.plain as ViewFunctionResult<
+        typeof X2EarnApps__factory.abi,
+        'unendorsedApps'
+    >[0];
 
-    let apps: XApp[] = [];
-    let unendorsedApps: UnendorsedApp[] = [];
+    const allApps: Record<string, XApp | UnendorsedApp> = {};
 
-    if (res[0]?.data) {
-        const appsDecoded = allAppsAbi.decode(res[0]?.data)[0];
-        if (appsDecoded.length) {
-            apps = appsDecoded.map((app: any) => ({
-                id: app[0],
-                teamWalletAddress: app[1],
-                name: app[2],
-                metadataURI: app[3],
-                createdAtTimestamp: app[4],
-            }));
-        }
+    for (const app of apps) {
+        allApps[app.id] = {
+            id: app.id,
+            teamWalletAddress: app.teamWalletAddress,
+            name: app.name,
+            metadataURI: app.metadataURI,
+            createdAtTimestamp: app.createdAtTimestamp.toString(),
+        };
     }
-    if (res[1]?.data && res[1]?.data !== '0x') {
-        const unendorsedAppsDecoded = unendorsedAppsAbi.decode(res[1]?.data)[0];
-        if (unendorsedAppsDecoded.length) {
-            unendorsedApps = unendorsedAppsDecoded.map((app: any) => ({
-                id: app[0],
-                teamWalletAddress: app[1],
-                name: app[2],
-                metadataURI: app[3],
-                createdAtTimestamp: app[4],
-                appAvailableForAllocationVoting: app[5],
-            }));
-        }
+    for (const app of unendorsedApps) {
+        allApps[app.id] = {
+            id: app.id,
+            teamWalletAddress: app.teamWalletAddress,
+            name: app.name,
+            metadataURI: app.metadataURI,
+            createdAtTimestamp: app.createdAtTimestamp.toString(),
+            appAvailableForAllocationVoting:
+                app.appAvailableForAllocationVoting,
+        };
     }
-
-    const allApps = [...apps, ...unendorsedApps].filter(
-        (app, index, self) => self.findIndex((a) => a.id === app.id) === index,
-    ); // all apps is a union of active and unendorsed apps with deduplication
 
     return {
-        allApps: allApps,
-        active: apps,
-        unendorsed: unendorsedApps,
-        endorsed: apps.filter(
-            (app) =>
-                !unendorsedApps.some(
-                    (unendorsedApp) => unendorsedApp.id === app.id,
-                ),
-        ),
+        allApps: Object.values(allApps),
+        active: apps.map((app) => ({
+            ...app,
+            createdAtTimestamp: app.createdAtTimestamp.toString(),
+        })),
+        unendorsed: unendorsedApps.map((app) => ({
+            ...app,
+            createdAtTimestamp: app.createdAtTimestamp.toString(),
+        })),
+        endorsed: apps
+            .filter(
+                (app) =>
+                    !unendorsedApps.some(
+                        (unendorsedApp) => unendorsedApp.id === app.id,
+                    ),
+            )
+            .map((app) => ({
+                ...app,
+                createdAtTimestamp: app.createdAtTimestamp.toString(),
+            })),
     };
 };

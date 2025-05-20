@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     useThor,
     useWallet as useDAppKitWallet,
-} from '@vechain/dapp-kit-react2';
+} from '@vechain/dapp-kit-react';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
@@ -13,8 +13,8 @@ import {
     signerUtils,
     ThorClient,
     TransactionReceipt,
-} from '@vechain/sdk-network1.2';
-import { TransactionClause } from '@vechain/sdk-core1.2';
+} from '@vechain/sdk-network';
+import { TransactionClause } from '@vechain/sdk-core';
 
 /**
  * Props for the {@link useSendTransaction} hook

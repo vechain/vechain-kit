@@ -1,27 +1,35 @@
-import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
-import { getXAppsMetadataBaseUri } from '../getXAppsMetadataBaseUri';
 import { useVeChainKitConfig } from '@/providers';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
+import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
+import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
 
-export const getXAppsMetadataBaseUriQueryKey = () => [
-    'VECHAIN_KIT',
-    'xApps',
-    'metadata',
-    'baseUri',
-];
+const abi = X2EarnApps.abi;
+const method = 'baseURI' as const;
+
+export const getXAppsMetadataBaseUriQueryKey = (network: NETWORK_TYPE) =>
+    getCallClauseQueryKey({
+        abi,
+        method,
+        address: getConfig(network).x2EarnAppsContractAddress,
+        args: [],
+    });
 
 /**
  *  Hook to get the baseUri of the xApps metadata
  * @returns the baseUri of the xApps metadata
  */
 export const useXAppsMetadataBaseUri = () => {
-    const { thor } = useConnex();
     const { network } = useVeChainKitConfig();
 
-    return useQuery({
-        queryKey: getXAppsMetadataBaseUriQueryKey(),
-        queryFn: async () => await getXAppsMetadataBaseUri(thor, network.type),
-        enabled: !!thor && !!network.type,
-        staleTime: 1000 * 60 * 60, // 1 hour,
+    return useCallClause({
+        abi,
+        address: getConfig(network.type).x2EarnAppsContractAddress,
+        method,
+        args: [],
+        queryOptions: {
+            enabled: !!network.type,
+            staleTime: 1000 * 60 * 60, // 1 hour,
+        },
     });
 };

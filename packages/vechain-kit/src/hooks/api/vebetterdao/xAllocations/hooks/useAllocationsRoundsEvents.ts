@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
+import { useThor } from '@vechain/dapp-kit-react';
 import { getAllEventLogs } from '@/hooks';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { ThorClient } from '@vechain/sdk-network';
 import { compareAddresses } from '@/utils';
 
 export type RoundCreated = {
@@ -53,7 +53,7 @@ export const getAllocationsRoundsEvents = async (
     const decodedCreatedAllocationEvents: RoundCreated[] = [];
 
     //   TODO: runtime validation with zod ?
-    events.forEach((event: any) => {
+    events.forEach((event) => {
         if (!event.decodedData) {
             throw new Error('Event data not decoded');
         }
@@ -95,7 +95,7 @@ export const getAllocationsRoundsEventsQueryKey = () => [
  * @returns the allocation rounds events
  */
 export const useAllocationsRoundsEvents = () => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({

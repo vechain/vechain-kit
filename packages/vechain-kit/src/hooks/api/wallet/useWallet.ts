@@ -213,7 +213,7 @@ export const useWallet = (): UseWalletReturnType => {
 
             // Then perform disconnection logic
             if (isConnectedWithDappKit) {
-                await dappKitDisconnect();
+                dappKitDisconnect();
             } else if (isConnectedWithSocialLogin) {
                 await logout();
             } else if (isConnectedWithCrossApp) {
@@ -224,7 +224,6 @@ export const useWallet = (): UseWalletReturnType => {
             window.dispatchEvent(new Event('wallet_disconnected'));
         } catch (error) {
             console.error('Error during disconnect:', error);
-        } finally {
         }
     }, [
         isConnectedWithDappKit,

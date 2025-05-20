@@ -1,14 +1,11 @@
 import { useQueries } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { ERC20__factory } from '@/contracts';
 import { formatEther } from 'viem';
 import { humanNumber } from '@/utils';
-import {
-    useCustomTokens,
-    type CustomTokenInfo,
-    type TokenBalance,
-} from '@/hooks';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useCustomTokens, type CustomTokenInfo } from '@/hooks';
+import { ThorClient } from '@vechain/sdk-network';
+import { TokenBalance } from '@/types';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;
 
@@ -43,9 +40,9 @@ export const getCustomTokenBalance = async (
 };
 
 export const getCustomTokenBalanceQueryKey = (
-    tokenAddress: string,
+    tokenAddress?: string,
     address?: string,
-) => ['VECHAIN_KIT_CUSTOM_TOKEN_BALANCE', address, tokenAddress];
+) => ['VECHAIN_KIT_BALANCE', address, 'CUSTOM_TOKEN', tokenAddress];
 
 export const useGetCustomTokenBalances = (address?: string) => {
     const thor = useThor();

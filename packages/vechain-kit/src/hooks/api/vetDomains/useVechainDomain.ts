@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react2';
+import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { isAddress } from 'ethers';
-import { type ThorClient } from '@vechain/sdk-network1.2';
+import { type ThorClient } from '@vechain/sdk-network';
 import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
 interface VeChainDomainResult {

@@ -1,57 +1,46 @@
-import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { GalaxyMember__factory } from '@/contracts';
 import { NETWORK_TYPE } from '@/config/network';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { Address } from 'viem';
+import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
-/**
- * Get the number of GM NFTs for an address
- * @param thor the connex instance
- * @param network the network type
- * @param address the address to get the number of GM NFts
- * @returns the number of GM NFTs for the address
- */
-export const getBalanceOf = async (
-    thor: Connex.Thor,
-    network: NETWORK_TYPE,
-    address: null | string,
+const contractAbi = GalaxyMember__factory.abi;
+const method = 'balanceOf';
+
+export const getGMbalanceQueryKey = (
+    networkType: NETWORK_TYPE,
+    owner: Address,
 ) => {
-    if (!address) return Promise.reject(new Error('Address not provided'));
-
-    const contractAddress = getConfig(network).galaxyMemberContractAddress;
-
-    const functionFragment = GalaxyMember__factory.createInterface()
-        .getFunction('balanceOf')
-        .format('json');
-    const res = await thor
-        .account(contractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address);
-
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-    return Number(res.decoded[0]);
+    const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [owner],
+    });
 };
 
-export const getGMbalanceQueryKey = (address: null | string) => [
-    'VECHAIN_KIT',
-    'balanceOf',
-    'galaxyMember',
-    address,
-];
-
 /**
  * Get the number of GM NFTs for an address
- * @param address the address to get the number of GM NFTs owned
+ * @param owner the address to get the number of GM NFTs owned
+ * @param customEnabled - Flag to enable or disable the hook. Default is true.
  * @returns the number of GM NFTs for the address
  */
-export const useGMbalance = (address: null | string) => {
-    const { thor } = useConnex();
+export const useGMbalance = (owner: Address | null, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
+    const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useQuery({
-        queryKey: getGMbalanceQueryKey(address),
-        queryFn: () => getBalanceOf(thor, network.type, address),
-        enabled: !!address && !!network.type,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [owner ?? ZERO_ADDRESS],
+        queryOptions: {
+            enabled:
+                !!owner && customEnabled && !!network.type && !!contractAddress,
+            select: (data) => Number(data[0]),
+        },
     });
 };

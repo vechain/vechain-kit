@@ -1,62 +1,54 @@
-import { useQuery } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { GalaxyMember__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 
-/**
- * Get the token ID for an address given an index
- * @param thor the thor instance
- * @param networkType the network type
- * @param address the address to get the token ID for
- * @param index the index of the token ID
- *
- * @returns the token ID for the address
- */
-export const getTokenIdByAccount = async (
-    thor: Connex.Thor,
+const contractAbi = GalaxyMember__factory.abi;
+const method = 'tokenOfOwnerByIndex';
+
+export const getTokenIdByAccountQueryKey = (
     networkType: NETWORK_TYPE,
-    address: null | string,
+    owner: string,
     index: number,
-): Promise<string> => {
-    if (!address) return Promise.reject(new Error('Address not provided'));
-
+) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
-
-    const functionFragment = GalaxyMember__factory.createInterface()
-        .getFunction('tokenOfOwnerByIndex')
-        .format('json');
-    const res = await thor
-        .account(contractAddress)
-        .method(JSON.parse(functionFragment))
-        .call(address, index);
-
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-    return res.decoded[0];
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [owner as `0x${string}`, BigInt(index || 0)],
+    });
 };
 
-export const getTokenIdByAccountQueryKey = (address: null | string) => [
-    'VECHAIN_KIT',
-    'TokenIdByAccount',
-    'galaxyMember',
-    address,
-];
-
 /**
  * Get the token ID for an address given an index
- * @param address the address to get the token ID for
+ * @param owner the address to get the token ID for
  * @param index the index of the token ID
- *
- * @returns the token ID for the address
+ * @param customEnabled - Flag to enable or disable the hook. Default is true.
+ * @returns the token ID for the address (as a string)
  */
-export const useTokenIdByAccount = (address: null | string, index: number) => {
-    const { thor } = useConnex();
+export const useTokenIdByAccount = (
+    owner?: string,
+    index?: number,
+    customEnabled = true,
+) => {
     const { network } = useVeChainKitConfig();
+    const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
-    return useQuery({
-        queryKey: getTokenIdByAccountQueryKey(address),
-        queryFn: () => getTokenIdByAccount(thor, network.type, address, index),
-        enabled: !!address && !!network.type,
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [owner as `0x${string}`, BigInt(index || 0)],
+        queryOptions: {
+            enabled:
+                !!owner &&
+                index !== undefined &&
+                customEnabled &&
+                !!network.type &&
+                !!contractAddress,
+            select: (data) => data[0].toString(),
+        },
     });
 };

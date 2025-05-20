@@ -1,5 +1,5 @@
-import { address } from 'thor-devkit';
 import * as HexUtils from './hexUtils';
+import { Address } from '@vechain/sdk-core';
 
 /**
  * Checks if two addresses are equal. Returns true if both values are strings AND:
@@ -47,16 +47,7 @@ export const regexPattern = () => {
     return /^0x[a-fA-F0-9]{40}$/;
 };
 
-export const isValidAddress = (addr: string | undefined | null): boolean => {
-    try {
-        if (typeof addr !== 'string') return false;
-        address.toChecksumed(HexUtils.addPrefix(addr));
-        return true;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-        return false;
-    }
-};
+export const isValidAddress = Address.isValid;
 
 export const leftPadWithZeros = (str: string, length: number): string => {
     // Remove '0x' prefix if it exists

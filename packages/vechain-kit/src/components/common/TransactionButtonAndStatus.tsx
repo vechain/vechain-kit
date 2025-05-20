@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';
 import { TransactionStatusErrorType } from '@/types';
 import { getConfig } from '@/config';
-import { TransactionReceipt } from '@vechain/sdk-network1.2';
+import { TransactionReceipt } from '@vechain/sdk-network';
 
 export type TransactionButtonAndStatusProps = {
     isSubmitting: boolean;

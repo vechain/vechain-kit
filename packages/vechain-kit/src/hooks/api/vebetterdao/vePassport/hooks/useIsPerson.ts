@@ -1,36 +1,59 @@
-import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
+import { Address } from 'viem';
+import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'isPerson' as const;
 
 /**
  * Returns the query key for fetching the isPerson status.
+ * @param networkType - The network type.
  * @param user - The user address.
  * @returns The query key for fetching the isPerson status.
  */
-export const getIsPersonQueryKey = (user: string) => {
-    return getCallKey({ method: 'isPerson', keyArgs: [user] });
+export const getIsPersonQueryKey = (
+    networkType: NETWORK_TYPE,
+    user: Address,
+) => {
+    const veBetterPassportContractAddress =
+        getConfig(networkType).veBetterPassportContractAddress;
+    return getCallClauseQueryKey({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [user],
+    });
 };
 
 /**
  * Hook to get the isPerson status from the VeBetterPassport contract.
  * @param user - The user address.
- * @returns The isPerson status.
+ * @param customEnabled - Flag to enable or disable the hook. Default is true.
+ * @returns The isPerson status (boolean).
  */
-export const useIsPerson = (user?: string | null) => {
+export const useIsPerson = (user?: Address, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(
         network.type,
     ).veBetterPassportContractAddress;
 
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
-        method: 'isPerson',
-        args: [user],
-        enabled: !!user && !!veBetterPassportContractAddress,
+    return useCallClause({
+        abi: contractAbi,
+        address: veBetterPassportContractAddress,
+        method,
+        args: [user ?? ZERO_ADDRESS],
+        queryOptions: {
+            enabled:
+                !!user &&
+                customEnabled &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (data: readonly [boolean, string]) => data[0],
+        },
     });
 };
 
@@ -39,6 +62,6 @@ export const useIsPerson = (user?: string | null) => {
  * @param address - The address of the account.
  * @returns The isPerson status.
  */
-export const useIsUserPerson = (address?: string) => {
+export const useIsUserPerson = (address?: Address) => {
     return useIsPerson(address);
 };

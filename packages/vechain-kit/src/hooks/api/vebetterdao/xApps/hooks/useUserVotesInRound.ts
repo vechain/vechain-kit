@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { getAllEventLogs } from '@/hooks';
 import { XAllocationVoting__factory } from '@/contracts';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
-import { FilterCriteria, ThorClient } from '@vechain/sdk-network1.2';
+import { FilterCriteria, ThorClient } from '@vechain/sdk-network';
 import { compareAddresses } from '@/utils';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export type AllocationVoteCastEvent = {
     voter: string;
@@ -106,7 +106,7 @@ export const getUserVotesInRoundQueryKey = (
  * @returns the user votes in a given round from the xAllocationVoting contract
  */
 export const useUserVotesInRound = (roundId?: string, address?: string) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -124,7 +124,7 @@ export const useUserVotesInRound = (roundId?: string, address?: string) => {
         },
         enabled:
             !!thor &&
-            !!thor.status.head.number &&
+            !!thor.blocks.getHeadBlock() &&
             !!roundId &&
             !!address &&
             !!network.type,
@@ -143,7 +143,7 @@ export const getVotesInRoundQueryKey = (roundId?: string) => [
  * @returns  the allocation rounds events (i.e the proposals created)
  */
 export const useVotesInRound = (roundId?: string, enabled = true) => {
-    const { thor } = useConnex();
+    const thor = useThor();
     const { network } = useVeChainKitConfig();
     return useQuery({
         queryKey: getVotesInRoundQueryKey(roundId),
@@ -156,7 +156,7 @@ export const useVotesInRound = (roundId?: string, enabled = true) => {
 
         enabled:
             !!thor &&
-            !!thor.status.head.number &&
+            !!thor.blocks.getHeadBlock() &&
             !!roundId &&
             enabled &&
             !!network.type,

@@ -1,11 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-
-const xAllocationVotingInterface = XAllocationVoting__factory.createInterface();
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 
 export const RoundState = {
     0: 'Active',
@@ -13,41 +10,19 @@ export const RoundState = {
     2: 'Succeeded',
 } as const;
 
-/**
- * Returns the state of a given roundId
- * @param thor the thor client
- * @param networkType the network type
- * @param roundId the roundId to get state for
- * @returns the state of a given roundId
- */
-export const getAllocationsRoundState = async (
-    thor: Connex.Thor,
-    networkType: NETWORK_TYPE,
-    roundId?: string,
-): Promise<keyof typeof RoundState> => {
-    if (!roundId) return Promise.reject(new Error('roundId is required'));
+const abi = XAllocationVoting__factory.abi;
+const method = 'state' as const;
 
-    const xAllocationVotingContract =
-        getConfig(networkType).xAllocationVotingContractAddress;
-    const functionFragment = xAllocationVotingInterface
-        .getFunction('state')
-        .format('json');
-
-    const res = await thor
-        .account(xAllocationVotingContract)
-        .method(JSON.parse(functionFragment))
-        .call(roundId);
-
-    if (res.vmError) return Promise.reject(new Error(res.vmError));
-
-    return Number(res.decoded[0]) as keyof typeof RoundState;
-};
-
-export const getAllocationsRoundStateQueryKey = (roundId?: string) => [
-    'VECHAIN_KIT',
-    'allocationsRoundState',
-    roundId,
-];
+export const getAllocationsRoundStateQueryKey = (
+    roundId: string,
+    network: NETWORK_TYPE,
+) =>
+    getCallClauseQueryKey({
+        abi,
+        method,
+        address: getConfig(network).xAllocationVotingContractAddress,
+        args: [BigInt(roundId || 0)],
+    });
 
 /**
  * Hook to get the state of a given roundId
@@ -55,13 +30,16 @@ export const getAllocationsRoundStateQueryKey = (roundId?: string) => [
  * @returns the state of a given roundId
  */
 export const useAllocationsRoundState = (roundId?: string) => {
-    const { thor } = useConnex();
     const { network } = useVeChainKitConfig();
 
-    return useQuery({
-        queryKey: getAllocationsRoundStateQueryKey(roundId),
-        queryFn: async () =>
-            await getAllocationsRoundState(thor, network.type, roundId),
-        enabled: !!thor && !!network.type && !!roundId,
+    return useCallClause({
+        abi,
+        address: getConfig(network.type).xAllocationVotingContractAddress,
+        method,
+        args: [BigInt(roundId || 0)],
+        queryOptions: {
+            enabled: !!roundId && !!network.type,
+            select: (data) => data[0] as keyof typeof RoundState,
+        },
     });
 };

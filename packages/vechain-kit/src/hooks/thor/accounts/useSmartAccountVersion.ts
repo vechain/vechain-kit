@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useThor } from '@vechain/dapp-kit-react2';
-import { ThorClient } from '@vechain/sdk-network1.2';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 
 export const getVersion = async (
     thor: ThorClient,

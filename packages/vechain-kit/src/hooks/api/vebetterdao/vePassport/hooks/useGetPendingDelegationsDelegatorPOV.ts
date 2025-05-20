@@ -1,21 +1,28 @@
-import { getCallKey, useCall } from '@/hooks';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '@/config/network';
 
-const vePassportInterface = VeBetterPassport__factory.createInterface();
-// const method = "getPendingDelegationsDelegatorPOV"
-const method = 'getPendingDelegations';
+const contractAbi = VeBetterPassport__factory.abi;
+const method = 'getPendingDelegations' as const;
 
 /**
- * Returns the query key for fetching pending delegations.
+ * Returns the query key for fetching the outgoing pending delegation for a delegator.
+ * @param networkType The network type.
  * @param delegator - The delegator address.
- * @returns The query key for fetching pending delegations.
+ * @returns The query key.
  */
 export const getPendingDelegationsQueryKeyDelegatorPOV = (
+    networkType: NETWORK_TYPE,
     delegator: string,
 ) => {
-    return getCallKey({ method, keyArgs: ['outgoing', delegator] });
+    return getCallClauseQueryKey({
+        address: getConfig(networkType).veBetterPassportContractAddress,
+        abi: contractAbi,
+        method,
+        args: [delegator as `0x${string}`],
+    });
 };
 
 /**
@@ -31,14 +38,17 @@ export const useGetPendingDelegationsDelegatorPOV = (
         network.type,
     ).veBetterPassportContractAddress;
 
-    // TODO: remove mocked data
-    return useCall({
-        contractInterface: vePassportInterface,
-        contractAddress: veBetterPassportContractAddress,
+    return useCallClause({
+        address: veBetterPassportContractAddress,
+        abi: contractAbi,
         method,
-        keyArgs: ['outgoing', delegator],
-        args: [delegator],
-        mapResponse: (response) => response.decoded[1] ?? null,
-        enabled: !!delegator && !!veBetterPassportContractAddress,
+        args: [delegator as `0x${string}`],
+        queryOptions: {
+            enabled:
+                !!delegator &&
+                !!veBetterPassportContractAddress &&
+                !!network.type,
+            select: (response) => response[1] ?? null,
+        },
     });
 };

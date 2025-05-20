@@ -1,5 +1,5 @@
-export * from './useCall';
-export * from './useDecodeFunctionSignature';
+export * from './useCallClause';
+export * from './useCurrency';
 export * from './useFeatureAnnouncement';
 export * from './useGetNodeUrl';
 export * from './useIsPwa';

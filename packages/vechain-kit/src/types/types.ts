@@ -1,4 +1,11 @@
 import { LoginMethodOrderOption } from '@privy-io/react-auth';
+import { TransactionClause } from '@vechain/sdk-core';
+
+export type TokenBalance = {
+    original: string;
+    scaled: string;
+    formatted: string;
+};
 
 export type ENSRecords = {
     display?: string;
@@ -120,10 +127,7 @@ export type TransactionStatusErrorType = {
  * @param comment a comment to add to the clause
  * @param abi the abi of the contract to call
  */
-export type EnhancedClause = Connex.VM.Clause & {
-    comment?: string;
-    abi?: object;
-};
+export type EnhancedClause = TransactionClause;
 
 export type PrivyAppInfo = {
     id: string;
@@ -167,10 +171,10 @@ export enum VePassportUserStatus {
     BLACKLIST = 'BLACKLIST',
 }
 
-export type CURRENCY = "usd" | "gbp" | "eur";
+export type CURRENCY = 'usd' | 'gbp' | 'eur';
 
 export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {
-    usd: "$",
-    gbp: "£",
-    eur: "€"
+    usd: '$',
+    gbp: '£',
+    eur: '€',
 };
