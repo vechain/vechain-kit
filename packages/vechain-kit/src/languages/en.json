@@ -557,5 +557,7 @@
     "Please take a moment to review all the policies, with acceptance being mandatory to continue.": "Please take a moment to review all the policies, with acceptance being mandatory to continue.",
     "No policies accepted": "No policies accepted",
     "When you have accepted a policy, it will appear here": "When you have accepted a policy, it will appear here",
-    " and ": " and "
+    " and ": " and ",
+    "{{policyName}} on connect": "{{policyName}} on connect",
+    "Vechain Kit Policy": "Vechain Kit Policy"
 }

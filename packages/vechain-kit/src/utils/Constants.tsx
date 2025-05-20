@@ -82,3 +82,11 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
         website: 'https://evearn.io',
     },
 ];
+
+//Hardcoded for displaying in the "Terms and Privacy" agreements modal
+export const VECHAIN_KIT_TERMS_CONFIG = {
+    url: 'https://vechainkit.vechain.org/terms',
+    version: 1,
+    required: true,
+    displayName: 'Vechain Kit Terms',
+};

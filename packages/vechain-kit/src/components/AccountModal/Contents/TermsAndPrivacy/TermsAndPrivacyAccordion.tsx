@@ -1,14 +1,18 @@
+import { EmptyContent } from '@/components/common/EmptyContent';
 import { useWallet } from '@/hooks';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import { LegalDocumentAgreement, LegalDocumentType } from '@/types';
-import { compareAddresses } from '@/utils';
+import {
+    LegalDocumentAgreement,
+    LegalDocumentSource,
+    LegalDocumentType,
+} from '@/types';
+import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
 import { Accordion, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MdGavel } from 'react-icons/md';
 
 import { PolicyAccordion } from './PolicyAccordion';
-import { EmptyContent } from '@/components/common/EmptyContent';
-import { MdGavel } from 'react-icons/md';
 
 export const TermsAndPrivacyAccordion = () => {
     const { account } = useWallet();
@@ -22,8 +26,21 @@ export const TermsAndPrivacyAccordion = () => {
         const userAgreements = agreements?.filter((agreement) =>
             compareAddresses(agreement.walletAddress, account?.address),
         );
+        const vechainKitDefaultTerms: LegalDocumentAgreement = {
+            id: 'vechain-kit-terms',
+            ...VECHAIN_KIT_TERMS_CONFIG,
+            documentType: LegalDocumentType.TERMS,
+            documentSource: LegalDocumentSource.VECHAIN_KIT,
+            walletAddress: account?.address ?? '',
+            timestamp: new Date().getTime(),
+        };
 
-        return userAgreements?.reduce((acc, agreement) => {
+        const userAgreementsWithVechainKitTerms = [
+            vechainKitDefaultTerms,
+            ...userAgreements,
+        ];
+
+        return userAgreementsWithVechainKitTerms?.reduce((acc, agreement) => {
             acc[agreement.documentType] = [
                 ...(acc[agreement.documentType] || []),
                 agreement,

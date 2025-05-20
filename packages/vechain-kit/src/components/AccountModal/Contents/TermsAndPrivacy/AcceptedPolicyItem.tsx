@@ -1,6 +1,6 @@
-import { Tag, Text, HStack } from '@chakra-ui/react';
-import { LegalDocumentAgreement } from '@/types';
+import { LegalDocumentAgreement, LegalDocumentSource } from '@/types';
 import { formatDate } from '@/utils/dateUtils';
+import { HStack, Tag, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
 export const AcceptedPolicyItem = ({
@@ -9,6 +9,8 @@ export const AcceptedPolicyItem = ({
     document: LegalDocumentAgreement;
 }) => {
     const { t } = useTranslation();
+    const isVechainKitTerms =
+        document.documentSource === LegalDocumentSource.VECHAIN_KIT;
     return (
         <HStack>
             <Tag size="sm" borderRadius="full">
@@ -24,10 +26,15 @@ export const AcceptedPolicyItem = ({
                     textDecoration: 'underline',
                 }}
             >
-                {t("'{{policyName}}' on {{date}}", {
-                    policyName: document.displayName ?? t('Policy'),
-                    date: formatDate(document.timestamp),
-                })}
+                {isVechainKitTerms
+                    ? t('{{policyName}} on connect', {
+                          policyName:
+                              document.displayName ?? t('Vechain Kit Policy'),
+                      })
+                    : t("'{{policyName}}' on {{date}}", {
+                          policyName: document.displayName ?? t('Policy'),
+                          date: formatDate(document.timestamp),
+                      })}
             </Text>
         </HStack>
     );
