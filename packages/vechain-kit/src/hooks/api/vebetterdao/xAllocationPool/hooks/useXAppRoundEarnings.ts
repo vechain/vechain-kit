@@ -44,7 +44,7 @@ export const getXAppRoundEarnings = async (
             `Failed to fetch xApp round earnings for ${xAppId} in round ${roundId}`,
         );
 
-    return { amount: formatEther(BigInt(res[0])), appId: xAppId };
+    return { amount: formatEther(BigInt(res[0] || 0)), appId: xAppId };
 };
 
 export const getXAppRoundEarningsQueryKey = (

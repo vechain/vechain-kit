@@ -20,7 +20,7 @@ export const getNodeCheckCooldownQueryKey = (
         address: getConfig(networkType).x2EarnAppsContractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(nodeId)],
+        args: [BigInt(nodeId || 0)],
     });
 
 /**
@@ -36,7 +36,7 @@ export const useXNodeCheckCooldown = (nodeIdInput?: string | number) => {
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(nodeIdInput!)],
+        args: [BigInt(nodeIdInput || 0)],
         queryOptions: {
             enabled: !!nodeIdInput && !!network.type && !!contractAddress,
             select: (res) => res[0],

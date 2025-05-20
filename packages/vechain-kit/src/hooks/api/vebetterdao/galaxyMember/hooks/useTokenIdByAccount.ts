@@ -17,7 +17,7 @@ export const getTokenIdByAccountQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [owner as `0x${string}`, BigInt(index)],
+        args: [owner as `0x${string}`, BigInt(index || 0)],
     });
 };
 
@@ -40,7 +40,7 @@ export const useTokenIdByAccount = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [owner as `0x${string}`, BigInt(index!)], // owner! and index! are safe due to enabled condition
+        args: [owner as `0x${string}`, BigInt(index || 0)],
         queryOptions: {
             enabled:
                 !!owner &&

@@ -21,7 +21,7 @@ export const getAllocationsRoundStateQueryKey = (
         abi,
         method,
         address: getConfig(network).xAllocationVotingContractAddress,
-        args: [BigInt(roundId)],
+        args: [BigInt(roundId || 0)],
     });
 
 /**
@@ -36,7 +36,7 @@ export const useAllocationsRoundState = (roundId?: string) => {
         abi,
         address: getConfig(network.type).xAllocationVotingContractAddress,
         method,
-        args: [BigInt(roundId!)],
+        args: [BigInt(roundId || 0)],
         queryOptions: {
             enabled: !!roundId && !!network.type,
             select: (data) => data[0] as keyof typeof RoundState,

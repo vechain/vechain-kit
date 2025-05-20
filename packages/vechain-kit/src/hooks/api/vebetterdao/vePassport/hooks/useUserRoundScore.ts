@@ -23,7 +23,7 @@ export const getUserRoundScoreQueryKey = (
         address: getConfig(networkType).veBetterPassportContractAddress,
         abi: contractAbi,
         method,
-        args: [userAddress as `0x${string}`, BigInt(round)],
+        args: [userAddress as `0x${string}`, BigInt(round || 0)],
     });
 };
 
@@ -46,7 +46,7 @@ export const useUserRoundScore = (
         address: veBetterPassportContractAddress,
         abi: contractAbi,
         method,
-        args: [userAddressInput as `0x${string}`, BigInt(roundInput!)],
+        args: [userAddressInput as `0x${string}`, BigInt(roundInput || 0)],
         queryOptions: {
             enabled:
                 !!userAddressInput &&

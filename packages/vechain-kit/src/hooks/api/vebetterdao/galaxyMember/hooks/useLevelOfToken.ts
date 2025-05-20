@@ -16,7 +16,7 @@ export const getLevelOfTokenQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId)],
+        args: [BigInt(tokenId || 0)],
     });
 };
 
@@ -35,7 +35,7 @@ export const useLevelOfToken = (tokenId?: string, customEnabled = true) => {
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId!)],
+        args: [BigInt(tokenId || 0)],
         queryOptions: {
             enabled:
                 !!tokenId &&

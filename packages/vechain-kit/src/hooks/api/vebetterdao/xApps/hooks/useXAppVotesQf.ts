@@ -23,7 +23,7 @@ export const getXAppVotesQfQueryKey = (
         address: getConfig(networkType).xAllocationVotingContractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(roundId), appId as `0x${string}`],
+        args: [BigInt(roundId || 0), appId as `0x${string}`],
     });
 
 /**
@@ -46,7 +46,7 @@ export const useXAppVotesQf = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(roundIdInput!), appIdInput as `0x${string}`],
+        args: [BigInt(roundIdInput || 0), appIdInput as `0x${string}`],
         queryOptions: {
             enabled: !!roundIdInput && !!appIdInput && !!network.type,
             select: (res) => {

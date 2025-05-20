@@ -17,7 +17,7 @@ export const getB3trToUpgradeQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId)],
+        args: [BigInt(tokenId || 0)],
     });
 };
 
@@ -36,7 +36,7 @@ export const useB3trToUpgrade = (tokenId?: string, customEnabled = true) => {
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId!)],
+        args: [BigInt(tokenId || 0)],
         queryOptions: {
             enabled:
                 !!tokenId &&

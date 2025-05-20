@@ -41,7 +41,7 @@ export const useParticipationScoreThreshold = (customEnabled = true) => {
                 customEnabled &&
                 !!veBetterPassportContractAddress &&
                 !!network.type,
-            select: (data: readonly [bigint]) => Number(data[0]),
+            select: (data) => Number(data[0]),
         },
     });
 };

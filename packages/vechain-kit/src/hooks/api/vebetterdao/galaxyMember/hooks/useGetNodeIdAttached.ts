@@ -16,7 +16,7 @@ export const getNodeIdAttachedQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId)],
+        args: [BigInt(tokenId || 0)],
     });
 };
 
@@ -34,7 +34,7 @@ export const useGetNodeIdAttached = (tokenId?: string) => {
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId!)],
+        args: [BigInt(tokenId || 0)],
         queryOptions: {
             enabled: !!tokenId && !!network.type && !!contractAddress,
         },

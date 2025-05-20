@@ -17,7 +17,7 @@ export const getB3trToUpgradeToLevelQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(level)],
+        args: [BigInt(level || 0)],
     });
 };
 
@@ -39,11 +39,11 @@ export const useB3trToUpgradeToLevel = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(level!)],
+        args: [BigInt(level || 0)],
         queryOptions: {
             enabled:
                 !!level && customEnabled && !!network.type && !!contractAddress,
-            select: (data: readonly [bigint]) => formatEther(data[0]),
+            select: (data) => formatEther(data[0]),
         },
     });
 };

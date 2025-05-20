@@ -55,7 +55,7 @@ export const useSecurityMultiplier = (
                 !!veBetterPassportContractAddress &&
                 !!network.type,
             // Assuming the multiplier is a direct number or small enough bigint
-            select: (data: readonly [bigint]) => Number(data[0]),
+            select: (data) => Number(data[0]),
         },
     });
 };

@@ -16,7 +16,7 @@ export const getLevelMultiplierQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(level)],
+        args: [BigInt(level || 0)],
     });
 };
 
@@ -30,12 +30,11 @@ export const useLevelMultiplier = (level?: string, customEnabled = true) => {
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(level!)],
+        args: [BigInt(level || 0)],
         queryOptions: {
             enabled:
                 !!level && customEnabled && !!network.type && !!contractAddress,
-            select: (data: readonly [bigint]) =>
-                percentageToMultiplier(Number(data[0])),
+            select: (data) => percentageToMultiplier(Number(data[0])),
         },
     });
 };

@@ -33,7 +33,7 @@ export const useRoundReward = (address: string, roundId: string) => {
         address: getConfig(network.type).voterRewardsContractAddress,
         abi: VoterRewards__factory.abi,
         method: 'getReward',
-        args: [BigInt(roundId), address as `0x${string}`],
+        args: [BigInt(roundId || 0), address as `0x${string}`],
         queryOptions: {
             enabled: !!address && !!roundId && !!network.type,
             select: (data) => ({

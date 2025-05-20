@@ -24,7 +24,7 @@ export const getGetCumulativeScoreWithDecayQueryKey = (
         address: getConfig(networkType).veBetterPassportContractAddress,
         abi: contractAbi,
         method,
-        args: [user, BigInt(lastRound)],
+        args: [user, BigInt(lastRound || 0)],
     });
 };
 
@@ -43,14 +43,11 @@ export const useGetCumulativeScoreWithDecay = (
         network.type,
     ).veBetterPassportContractAddress;
 
-    const lastRound =
-        lastRoundInput !== undefined ? BigInt(lastRoundInput) : 0n;
-
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,
         method,
-        args: [userInput!, lastRound],
+        args: [userInput!, BigInt(lastRoundInput || 0)],
         queryOptions: {
             enabled:
                 !!userInput &&

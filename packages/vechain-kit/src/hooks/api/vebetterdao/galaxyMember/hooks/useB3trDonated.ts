@@ -17,7 +17,7 @@ export const getB3trDonatedQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId)],
+        args: [BigInt(tokenId || 0)],
     });
 };
 
@@ -36,14 +36,14 @@ export const useB3trDonated = (tokenId?: string, customEnabled = true) => {
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(tokenId!)],
+        args: [BigInt(tokenId || 0)],
         queryOptions: {
             enabled:
                 !!tokenId &&
                 customEnabled &&
                 !!network.type &&
                 !!contractAddress,
-            select: (data: readonly [bigint]) => formatEther(data[0]),
+            select: (data) => formatEther(data[0]),
         },
     });
 };

@@ -16,7 +16,7 @@ export const getGetTokenIdAttachedToNodeQueryKey = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(nodeId)],
+        args: [BigInt(nodeId || 0)],
     });
 };
 
@@ -38,7 +38,7 @@ export const useGetTokenIdAttachedToNode = (
         address: contractAddress,
         abi: contractAbi,
         method,
-        args: [BigInt(nodeId!)],
+        args: [BigInt(nodeId || 0)],
         queryOptions: {
             enabled:
                 !!nodeId &&

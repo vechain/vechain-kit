@@ -20,7 +20,7 @@ export const getNodeManagerQueryKey = (
         abi: contractAbi,
         address: getConfig(networkType).nodeManagementContractAddress,
         method,
-        args: [BigInt(nodeId)],
+        args: [BigInt(nodeId || 0)],
     });
 
 /**
@@ -40,7 +40,7 @@ export const useGetNodeManager = (
         abi: contractAbi,
         address: contractAddress,
         method: 'getNodeManager',
-        args: [BigInt(nodeId)],
+        args: [BigInt(nodeId || 0)],
         queryOptions: {
             enabled: !!nodeId && !!network.type && !!contractAddress,
             select: (data) => data[0],

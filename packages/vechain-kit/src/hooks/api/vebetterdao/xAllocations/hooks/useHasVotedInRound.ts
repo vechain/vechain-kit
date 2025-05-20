@@ -16,7 +16,7 @@ export const getHasVotedInRoundQueryKey = (
         abi,
         address: getConfig(networkType).xAllocationVotingContractAddress,
         method,
-        args: [BigInt(roundId!), address as `0x${string}`],
+        args: [BigInt(roundId || 0), address as `0x${string}`],
     });
 
 /**
@@ -32,7 +32,7 @@ export const useHasVotedInRound = (roundId?: string, address?: string) => {
         abi,
         address: getConfig(network.type).xAllocationVotingContractAddress,
         method,
-        args: [BigInt(roundId!), address as `0x${string}`],
+        args: [BigInt(roundId || 0), address as `0x${string}`],
         queryOptions: {
             enabled: !!roundId && !!address,
         },
