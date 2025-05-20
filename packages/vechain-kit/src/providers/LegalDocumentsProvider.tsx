@@ -9,6 +9,7 @@ import {
     LegalDocumentType,
 } from '@/types';
 import { compareAddresses } from '@/utils/AddressUtils';
+import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils/Constants';
 import {
     createDocumentRecords,
     getAllDocuments,
@@ -21,7 +22,7 @@ import {
 } from '@/utils/legalDocumentsUtils';
 import {
     Analytics,
-    // setHasTrackingConsent,
+    setHasTrackingConsent,
 } from '@/utils/mixpanelClientInstance';
 import {
     createContext,
@@ -87,6 +88,11 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         [optionalRejected],
     );
 
+    const isAnalyticsAllowed = useMemo(() => {
+        //If allowAnalytics is not set, it defaults to false
+        return legalDocuments?.allowAnalytics ?? false;
+    }, [legalDocuments?.allowAnalytics]);
+
     //All documents with types and sources
     const legalDocumentsArray = useMemo(() => {
         const cookiePolicies = legalDocuments?.cookiePolicy || [];
@@ -111,6 +117,14 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             documentSource: LegalDocumentSource.APPLICATION,
         }));
 
+        if (isAnalyticsAllowed) {
+            cookiePolicy.push({
+                ...VECHAIN_KIT_COOKIES_CONFIG,
+                documentType: LegalDocumentType.COOKIES,
+                documentSource: LegalDocumentSource.VECHAIN_KIT,
+            });
+        }
+
         return [...cookiePolicy, ...privacyPolicy, ...termsAndConditions];
     }, [legalDocuments]);
 
@@ -127,11 +141,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     const documentsNotAgreed = useMemo(() => {
         return getDocumentsNotAgreed(account?.address, documents);
     }, [documents, account?.address]);
-
-    const isAnalyticsAllowed = useMemo(() => {
-        //If allowAnalytics is not set, it defaults to false
-        return legalDocuments?.allowAnalytics ?? false;
-    }, [legalDocuments?.allowAnalytics]);
 
     const hasAgreedToRequiredDocuments = useMemo(() => {
         //This is using the local storage hook instead of utils , since it needs a dependency hook
@@ -171,9 +180,22 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         return hasAgreedToRequiredDocuments && hasOptionalDocumentsToShow;
     }, [hasAgreedToRequiredDocuments, hasOptionalDocumentsToShow]);
 
+    const hasAgreedWithAnalytics = useMemo(() => {
+        if (!isAnalyticsAllowed) return false;
+
+        const storedAgreementIds = new Set(
+            storedAgreements.map((agreement) => agreement.id),
+        );
+
+        return documents.some((doc) => storedAgreementIds.has(doc.id));
+    }, [isAnalyticsAllowed, documents, storedAgreements]);
+
+    useEffect(() => {
+        setHasTrackingConsent(hasAgreedWithAnalytics);
+    }, [hasAgreedWithAnalytics]);
+
     useEffect(() => {
         if (connection.isConnected && account?.address) {
-            // setHasTrackingConsent(isAnalyticsAllowed);
             setShowTermsModal(
                 !hasAgreedToRequiredDocuments || hasOptionalDocumentsToShow,
             );
@@ -185,7 +207,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         account?.address,
         hasAgreedToRequiredDocuments,
         hasOptionalDocumentsToShow,
-        isAnalyticsAllowed,
     ]);
 
     const agreeToDocs = useCallback(

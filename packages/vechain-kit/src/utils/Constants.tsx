@@ -90,3 +90,12 @@ export const VECHAIN_KIT_TERMS_CONFIG = {
     required: true,
     displayName: 'Vechain Kit Terms',
 };
+
+//Hardcoded for showing up if allowAnalytics is true
+//So we ask users if they agree with data tracking
+export const VECHAIN_KIT_COOKIES_CONFIG = {
+    url: 'https://vechainkit.vechain.org/cookies',
+    version: 1,
+    required: false,
+    displayName: 'Vechain Kit Cookies',
+};
