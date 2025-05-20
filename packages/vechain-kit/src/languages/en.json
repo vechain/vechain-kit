@@ -541,7 +541,7 @@
     "Accept": "Accept",
     "Terms and Policies": "Terms and Policies",
     "Reject and logout": "Reject and logout",
-    "Are you sure you want to reject the terms and disconnect?": "Are you sure you want to reject the terms and disconnect?",
+    "Are you sure you want to reject the policies and disconnect?": "Are you sure you want to reject the policies and disconnect?",
     "Terms and Conditions": "Terms and Conditions",
     "View Current Policy": "View Current Policy",
     "You accepted current policy on {{date}}": "You accepted current policy on {{date}}",
@@ -559,5 +559,7 @@
     "When you have accepted a policy, it will appear here": "When you have accepted a policy, it will appear here",
     " and ": " and ",
     "'{{policyName}}' on connect": "'{{policyName}}' on connect",
-    "Vechain Kit Policy": "Vechain Kit Policy"
+    "Vechain Kit Policy": "Vechain Kit Policy",
+    "Ignore and continue": "Ignore and continue",
+    "Accept all": "Accept all"
 }

@@ -22,13 +22,18 @@ type Props = {
         documents: EnrichedLegalDocument | EnrichedLegalDocument[],
     ) => void;
     onReject: () => void;
+    onlyOptionalDocuments?: boolean;
 };
 
-export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
+export const LegalDocumentsContent = ({
+    onAgree,
+    onReject,
+    onlyOptionalDocuments = false,
+}: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const {
-        legalDocuments: { documentsNotAgreed, getDocumentId },
+        legalDocuments: { documentsNotAgreed },
     } = useLegalDocuments();
 
     const { requiredDocuments, optionalDocuments } = useMemo(() => {
@@ -51,20 +56,31 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
     const defaultFormValues = useMemo(() => {
         return documentsNotAgreed.reduce<Record<string, boolean>>(
             (acc, document) => {
-                acc[getDocumentId(document)] = document.required;
+                acc[document.id] = document.required;
                 return acc;
             },
             {},
         );
-    }, [documentsNotAgreed, getDocumentId]);
+    }, [documentsNotAgreed]);
 
     const {
         handleSubmit,
         register,
         formState: { isValid },
+        watch,
     } = useForm<Record<string, boolean>>({
         defaultValues: defaultFormValues,
     });
+
+    const formValues = watch();
+
+    // Calculate if any optional documents are selected
+    const selectedDocuments = useMemo(() => {
+        return documentsNotAgreed.filter((document) => formValues[document.id]);
+    }, [documentsNotAgreed, formValues]);
+
+    // Calculate if all optional documents are selected
+    const allSelected = documentsNotAgreed?.length === selectedDocuments.length;
 
     const onSubmit = (data: Record<string, boolean>) => {
         const agreedDocumentIds = new Set(
@@ -74,10 +90,10 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
         );
 
         const agreedDocuments = documentsNotAgreed.filter((document) =>
-            agreedDocumentIds.has(getDocumentId(document)),
+            agreedDocumentIds.has(document.id),
         );
 
-        if (agreedDocuments.length > 0) {
+        if (agreedDocuments.length > 0 || onlyOptionalDocuments) {
             return onAgree(agreedDocuments);
         }
     };
@@ -92,6 +108,21 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
     const hasRequiredDocuments = requiredDocuments.length > 0;
     const hasOptionalDocuments = optionalDocuments.length > 0;
 
+    // Determine the text for the accept button based on selection state
+    const acceptButtonText = useMemo(() => {
+        const selectedOptionalCount = optionalDocuments.filter(
+            (doc) => formValues[doc.id],
+        ).length;
+
+        if (allSelected) {
+            return 'Accept all';
+        }
+        if (onlyOptionalDocuments && selectedOptionalCount === 0) {
+            return 'Ignore and continue';
+        }
+        return 'Accept selected';
+    }, [onlyOptionalDocuments, allSelected, optionalDocuments, formValues]);
+
     return (
         <Stack width="full">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -105,9 +136,9 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                             <Text as="span" fontSize="sm">
                                 {t('By continuing, you agree to')}{' '}
                                 {requiredDocuments.map((document, index) => (
-                                    <Fragment key={getDocumentId(document)}>
+                                    <Fragment key={document.id}>
                                         <LegalDocumentItem
-                                            key={getDocumentId(document)}
+                                            key={document.id}
                                             document={document}
                                             register={register}
                                             isText={true}
@@ -149,7 +180,7 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                                 <VStack align="stretch" spacing={4}>
                                     {optionalDocuments.map((document) => (
                                         <LegalDocumentItem
-                                            key={getDocumentId(document)}
+                                            key={document.id}
                                             document={document}
                                             register={register}
                                         />
@@ -168,17 +199,19 @@ export const LegalDocumentsContent = ({ onAgree, onReject }: Props) => {
                             isDisabled={!isValid}
                             data-testid={'accept-tnc-button'}
                         >
-                            {t('Accept')}
+                            {acceptButtonText}
                         </Button>
-                        <Button
-                            variant="ghost"
-                            width="full"
-                            onClick={onReject}
-                            data-testid={'reject-tnc-button'}
-                            colorScheme="red"
-                        >
-                            {t('Reject and logout')}
-                        </Button>
+                        {!onlyOptionalDocuments && (
+                            <Button
+                                variant="ghost"
+                                width="full"
+                                onClick={onReject}
+                                data-testid={'reject-tnc-button'}
+                                colorScheme="red"
+                            >
+                                {t('Reject and logout')}
+                            </Button>
+                        )}
                     </VStack>
                 </ModalFooter>
             </form>

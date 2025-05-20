@@ -15,6 +15,7 @@ type Props = {
         documents: EnrichedLegalDocument | EnrichedLegalDocument[],
     ) => void;
     handleLogout: () => void;
+    onlyOptionalDocuments?: boolean;
 };
 
 export type LegalDocumentsModalContentsTypes = 'legal-documents';
@@ -27,6 +28,7 @@ export const LegalDocumentsModal = ({
     isOpen,
     onAgree,
     handleLogout,
+    onlyOptionalDocuments,
 }: Props) => {
     const { t } = useTranslation();
     const { activeStep, goToPrevious, setActiveStep, goToNext } = useSteps({
@@ -55,6 +57,7 @@ export const LegalDocumentsModal = ({
                     <LegalDocumentsContent
                         onAgree={onAgree}
                         onReject={goToLogoutScreen}
+                        onlyOptionalDocuments={onlyOptionalDocuments}
                     />
                 ),
             },
@@ -66,7 +69,7 @@ export const LegalDocumentsModal = ({
                         onBack={goToPrevious}
                         onClose={goToPrevious}
                         text={t(
-                            'Are you sure you want to reject the terms and disconnect?',
+                            'Are you sure you want to reject the policies and disconnect?',
                         )}
                         showCloseButton={false}
                     />

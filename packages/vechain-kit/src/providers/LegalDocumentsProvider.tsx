@@ -10,15 +10,18 @@ import {
 } from '@/types';
 import { compareAddresses } from '@/utils/AddressUtils';
 import {
+    createDocumentRecords,
     getAllDocuments,
     getDocumentId,
     getDocumentsNotAgreed,
+    getOptionalDocuments,
     getRequiredDocuments,
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
+    LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
 } from '@/utils/legalDocumentsUtils';
 import {
     Analytics,
-    setHasTrackingConsent,
+    // setHasTrackingConsent,
 } from '@/utils/mixpanelClientInstance';
 import {
     createContext,
@@ -66,9 +69,25 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         LegalDocumentAgreement[]
     >(LEGAL_DOCS_LOCAL_STORAGE_KEY, []);
+
+    const [optionalRejected, setOptionalRejected] = useSyncableLocalStorage<
+        LegalDocumentAgreement[]
+    >(LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY, []);
+
     const [showTermsModal, setShowTermsModal] = useState(false);
 
-    //All documents with types
+    const isDocumentRejectedByUser = useCallback(
+        (doc: EnrichedLegalDocument, walletAddress: string) => {
+            return optionalRejected.some(
+                (rejected) =>
+                    compareAddresses(rejected.walletAddress, walletAddress) &&
+                    rejected.id === doc.id,
+            );
+        },
+        [optionalRejected],
+    );
+
+    //All documents with types and sources
     const legalDocumentsArray = useMemo(() => {
         const cookiePolicies = legalDocuments?.cookiePolicy || [];
         const privacyPolicies = legalDocuments?.privacyPolicy || [];
@@ -129,13 +148,35 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         );
     }, [requiredDocuments, storedAgreements, account?.address]);
 
+    const hasOptionalDocumentsToShow = useMemo(() => {
+        if (!account?.address || documentsNotAgreed.length === 0) return false;
+
+        // Get optional documents that haven't been agreed to
+        const optionalDocsNotAgreed = getOptionalDocuments(documentsNotAgreed);
+
+        if (optionalDocsNotAgreed.length === 0) return false;
+
+        // Check if any of these haven't been rejected yet
+        return optionalDocsNotAgreed.some(
+            (doc) => !isDocumentRejectedByUser(doc, account.address),
+        );
+    }, [
+        documentsNotAgreed,
+        account?.address,
+        getOptionalDocuments,
+        isDocumentRejectedByUser,
+    ]);
+
+    const onlyOptionalDocuments = useMemo(() => {
+        return hasAgreedToRequiredDocuments && hasOptionalDocumentsToShow;
+    }, [hasAgreedToRequiredDocuments, hasOptionalDocumentsToShow]);
+
     useEffect(() => {
         if (connection.isConnected && account?.address) {
-            // Set the connected wallet address to the mixpanel
-            // This is used to prevent tracking events
-            // if the connected user has not agreed to the terms
-            setHasTrackingConsent(isAnalyticsAllowed);
-            setShowTermsModal(!hasAgreedToRequiredDocuments);
+            // setHasTrackingConsent(isAnalyticsAllowed);
+            setShowTermsModal(
+                !hasAgreedToRequiredDocuments || hasOptionalDocumentsToShow,
+            );
         } else {
             setShowTermsModal(false);
         }
@@ -143,42 +184,89 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         connection.isConnected,
         account?.address,
         hasAgreedToRequiredDocuments,
+        hasOptionalDocumentsToShow,
         isAnalyticsAllowed,
     ]);
 
-    const agreeToDocs = (
-        documents: EnrichedLegalDocument | EnrichedLegalDocument[],
-        walletAddress: string,
-    ) => {
-        const documentsArray = Array.isArray(documents)
-            ? documents
-            : [documents];
-        if (!documentsArray.length) return;
+    const agreeToDocs = useCallback(
+        (
+            documents: EnrichedLegalDocument | EnrichedLegalDocument[],
+            walletAddress: string,
+        ) => {
+            const documentsArray = Array.isArray(documents)
+                ? documents
+                : [documents];
+            if (!documentsArray.length) return;
 
-        const timestamp = Date.now();
-        const newAgreements = documentsArray.map((term) => ({
-            ...term,
-            walletAddress,
-            timestamp,
-        }));
+            const newAgreements = createDocumentRecords(
+                documentsArray,
+                walletAddress,
+            );
 
-        const filteredAgreements = storedAgreements.filter(
-            (saved) =>
-                !compareAddresses(saved.walletAddress, walletAddress) ||
-                !documentsArray.some((term) => term.id === saved.id),
-        );
+            const filteredAgreements = storedAgreements.filter(
+                (saved) =>
+                    !compareAddresses(saved.walletAddress, walletAddress) ||
+                    !documentsArray.some((term) => term.id === saved.id),
+            );
 
-        const updated = [...filteredAgreements, ...newAgreements];
-        setStoredAgreements(updated);
-    };
+            const updated = [...filteredAgreements, ...newAgreements];
+            setStoredAgreements(updated);
+        },
+        [storedAgreements, createDocumentRecords],
+    );
+
+    const handleOptionalRejection = useCallback(
+        (acceptedDocs: EnrichedLegalDocument[]) => {
+            if (!account?.address) return;
+
+            // Find optional documents that were not accepted
+            const optionalDocuments = getOptionalDocuments(documentsNotAgreed);
+            if (optionalDocuments.length === 0) return;
+
+            const acceptedDocIds = acceptedDocs.map((doc) => doc.id);
+            const rejectedOptionals = optionalDocuments.filter(
+                (doc) => !acceptedDocIds.includes(doc.id),
+            );
+
+            // If no optional documents were rejected, return
+            if (!rejectedOptionals?.length) {
+                return;
+            }
+
+            const newRejections = createDocumentRecords(
+                rejectedOptionals,
+                account.address,
+            );
+            setOptionalRejected((prev) => [...prev, ...newRejections]);
+        },
+        [
+            account?.address,
+            documentsNotAgreed,
+            getOptionalDocuments,
+            createDocumentRecords,
+        ],
+    );
 
     const handleAgree = useCallback(
         (documents: EnrichedLegalDocument | EnrichedLegalDocument[]) => {
             if (!account?.address) return;
-            agreeToDocs(documents, account.address);
+
+            const docsArray = Array.isArray(documents)
+                ? documents
+                : [documents];
+
+            // Store accepted documents
+            if (docsArray.length > 0) {
+                agreeToDocs(docsArray, account.address);
+            }
+
+            // Handle optional rejection
+            handleOptionalRejection(docsArray);
+
+            // Close the modal
             setShowTermsModal(false);
         },
-        [agreeToDocs, account?.address],
+        [account?.address, agreeToDocs, handleOptionalRejection],
     );
 
     const handleLogout = () => {
@@ -204,7 +292,8 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             <LegalDocumentsModal
                 isOpen={showTermsModal}
                 onAgree={handleAgree}
-                handleLogout={handleLogout}
+                handleLogout={onlyOptionalDocuments ? () => {} : handleLogout}
+                onlyOptionalDocuments={onlyOptionalDocuments}
             />
         </LegalDocumentsContext.Provider>
     );
