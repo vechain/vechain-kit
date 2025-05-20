@@ -7,9 +7,7 @@ export const LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY =
 /**
  * Generate a unique ID for a document based on its type, URL and version
  */
-export const getDocumentId = (
-    document: Omit<EnrichedLegalDocument, 'id'>,
-): string => {
+const getDocumentId = (document: Omit<EnrichedLegalDocument, 'id'>): string => {
     return `${document.documentType}-${document.url.replace(
         /[^\w-]+/g,
         '-',
@@ -26,24 +24,6 @@ export const formatDocuments = (
         ...document,
         id: getDocumentId(document),
     }));
-};
-
-/**
- * Get all documents including VeChain Kit documents and custom documents
- */
-export const getAllDocuments = (
-    customDocuments: Omit<EnrichedLegalDocument, 'id'>[] | undefined = [],
-): EnrichedLegalDocument[] => {
-    return formatDocuments(customDocuments);
-};
-
-/**
- * Get only required documents
- */
-export const getRequiredDocuments = (
-    documents: EnrichedLegalDocument[],
-): EnrichedLegalDocument[] => {
-    return documents.filter((document) => document.required);
 };
 
 /**
@@ -99,23 +79,6 @@ export const getStoredRejectedDocuments = (): LegalDocumentAgreement[] => {
 };
 
 /**
- * Check if a user has agreed to a specific document
- */
-export const hasAgreedToDocument = (
-    walletAddress: string | undefined,
-    documentId: string,
-): boolean => {
-    if (!walletAddress) return false;
-
-    const agreements = getStoredAgreements();
-    return agreements.some(
-        (agreement) =>
-            compareAddresses(agreement.walletAddress, walletAddress) &&
-            agreement.id === documentId,
-    );
-};
-
-/**
  * Get documents that a user has not agreed to
  */
 export const getDocumentsNotAgreed = (
@@ -149,25 +112,6 @@ export const getDocumentsNotAgreed = (
         // Keep the document if it's neither agreed nor rejected
         return true;
     });
-};
-
-/**
- * Check if a user has agreed to all required documents
- */
-export const hasAgreedToRequiredDocuments = (
-    walletAddress: string | undefined,
-    requiredDocuments: EnrichedLegalDocument[] = [],
-): boolean => {
-    if (!requiredDocuments.length || !walletAddress) return true;
-
-    const agreements = getStoredAgreements();
-    return requiredDocuments.every((document) =>
-        agreements.some(
-            (agreement) =>
-                compareAddresses(agreement.walletAddress, walletAddress) &&
-                agreement.id === document.id,
-        ),
-    );
 };
 
 /**

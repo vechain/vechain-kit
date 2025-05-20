@@ -12,11 +12,9 @@ import { compareAddresses } from '@/utils/AddressUtils';
 import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils/Constants';
 import {
     createDocumentRecords,
-    getAllDocuments,
-    getDocumentId,
+    formatDocuments,
     getDocumentsNotAgreed,
     getOptionalDocuments,
-    getRequiredDocuments,
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
 } from '@/utils/legalDocumentsUtils';
@@ -43,7 +41,6 @@ type LegalDocumentsContextType = {
         hasAgreedToRequiredDocuments: boolean;
         agreements: LegalDocumentAgreement[];
         walletAddress?: string;
-        getDocumentId: (document: Omit<EnrichedLegalDocument, 'id'>) => string;
         documents: EnrichedLegalDocument[];
         documentsNotAgreed: EnrichedLegalDocument[];
     };
@@ -93,50 +90,50 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         return legalDocuments?.allowAnalytics ?? false;
     }, [legalDocuments?.allowAnalytics]);
 
-    //All documents with types and sources
-    const legalDocumentsArray = useMemo(() => {
-        const cookiePolicies = legalDocuments?.cookiePolicy || [];
-        const privacyPolicies = legalDocuments?.privacyPolicy || [];
-        const termsPolicies = legalDocuments?.termsAndConditions || [];
+    const [documents, requiredDocuments] = useMemo(() => {
+        // Create document mappings once with consistent naming
+        const documentConfigs = [
+            {
+                items: legalDocuments?.cookiePolicy || [],
+                type: LegalDocumentType.COOKIES,
+                source: LegalDocumentSource.APPLICATION,
+            },
+            {
+                items: legalDocuments?.privacyPolicy || [],
+                type: LegalDocumentType.PRIVACY,
+                source: LegalDocumentSource.APPLICATION,
+            },
+            {
+                items: legalDocuments?.termsAndConditions || [],
+                type: LegalDocumentType.TERMS,
+                source: LegalDocumentSource.APPLICATION,
+            },
+        ];
 
-        const cookiePolicy = cookiePolicies.map((cookiePolicy) => ({
-            ...cookiePolicy,
-            documentType: LegalDocumentType.COOKIES,
-            documentSource: LegalDocumentSource.APPLICATION,
-        }));
+        // Flatten all documents with their types and sources
+        const allDocs = documentConfigs.flatMap((config) =>
+            config.items.map((item) => ({
+                ...item,
+                documentType: config.type,
+                documentSource: config.source,
+            })),
+        );
 
-        const privacyPolicy = privacyPolicies.map((privacyPolicy) => ({
-            ...privacyPolicy,
-            documentType: LegalDocumentType.PRIVACY,
-            documentSource: LegalDocumentSource.APPLICATION,
-        }));
-
-        const termsAndConditions = termsPolicies.map((termsAndConditions) => ({
-            ...termsAndConditions,
-            documentType: LegalDocumentType.TERMS,
-            documentSource: LegalDocumentSource.APPLICATION,
-        }));
-
+        // Add analytics cookie if allowed
         if (isAnalyticsAllowed) {
-            cookiePolicy.push({
+            allDocs.push({
                 ...VECHAIN_KIT_COOKIES_CONFIG,
                 documentType: LegalDocumentType.COOKIES,
                 documentSource: LegalDocumentSource.VECHAIN_KIT,
             });
         }
 
-        return [...cookiePolicy, ...privacyPolicy, ...termsAndConditions];
-    }, [legalDocuments]);
+        // Format documents with IDs and filter required ones in one pass
+        const formattedDocs = formatDocuments(allDocs);
+        const required = formattedDocs.filter((doc) => doc.required);
 
-    const documents = useMemo(() => {
-        return getAllDocuments(
-            legalDocumentsArray as unknown as EnrichedLegalDocument[],
-        );
-    }, [legalDocumentsArray]);
-
-    const requiredDocuments = useMemo(() => {
-        return getRequiredDocuments(documents);
-    }, [documents]);
+        return [formattedDocs, required];
+    }, [legalDocuments, isAnalyticsAllowed]);
 
     const documentsNotAgreed = useMemo(() => {
         return getDocumentsNotAgreed(account?.address, documents);
@@ -158,7 +155,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     }, [requiredDocuments, storedAgreements, account?.address]);
 
     const hasOptionalDocumentsToShow = useMemo(() => {
-        if (!account?.address || documentsNotAgreed.length === 0) return false;
+        if (!account?.address || !documentsNotAgreed?.length) return false;
 
         // Get optional documents that haven't been agreed to
         const optionalDocsNotAgreed = getOptionalDocuments(documentsNotAgreed);
@@ -303,7 +300,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
                     hasAgreedToRequiredDocuments,
                     agreements: storedAgreements,
                     walletAddress: account?.address,
-                    getDocumentId,
                     documents,
                     documentsNotAgreed,
                 },

@@ -1,4 +1,8 @@
-import { LegalDocumentAgreement, LegalDocumentSource } from '@/types';
+import {
+    LegalDocumentAgreement,
+    LegalDocumentSource,
+    LegalDocumentType,
+} from '@/types';
 import { formatDate } from '@/utils/dateUtils';
 import { HStack, Tag, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +14,8 @@ export const AcceptedPolicyItem = ({
 }) => {
     const { t } = useTranslation();
     const isVechainKitTerms =
-        document.documentSource === LegalDocumentSource.VECHAIN_KIT;
+        document.documentSource === LegalDocumentSource.VECHAIN_KIT &&
+        document.documentType === LegalDocumentType.TERMS;
     return (
         <HStack>
             <Tag size="sm" borderRadius="full">
