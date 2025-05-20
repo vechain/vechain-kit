@@ -558,6 +558,6 @@
     "No policies accepted": "No policies accepted",
     "When you have accepted a policy, it will appear here": "When you have accepted a policy, it will appear here",
     " and ": " and ",
-    "{{policyName}} on connect": "{{policyName}} on connect",
+    "'{{policyName}}' on connect": "'{{policyName}}' on connect",
     "Vechain Kit Policy": "Vechain Kit Policy"
 }

@@ -27,7 +27,7 @@ export const AcceptedPolicyItem = ({
                 }}
             >
                 {isVechainKitTerms
-                    ? t('{{policyName}} on connect', {
+                    ? t("'{{policyName}}' on connect", {
                           policyName:
                               document.displayName ?? t('Vechain Kit Policy'),
                       })
