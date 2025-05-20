@@ -74,6 +74,16 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as NETWORK_TYPE,
             }}
             allowCustomTokens={true}
+            legalDocuments={{
+                termsAndConditions: [
+                    {
+                        url: 'https://vechainkit.vechain.org/terms',
+                        version: 1,
+                        required: true,
+                        displayName: 'Example T&C',
+                    },
+                ],
+            }}
         >
             {children}
         </VeChainKitProvider>
