@@ -26,6 +26,7 @@ test.describe("Connect Wallet", () => {
         await dashboardPage.openAccountModal()
         await accountModal.logOut()
         await expect(homePage.loginButton).toBeVisible()
+        await homePage.assertSessionIsDeleted()
     })
 })
 
@@ -47,5 +48,6 @@ test.describe.skip("Privy", () => {
         await dashboardPage.openAccountModal()
         await accountModal.logOut()
         await expect(homePage.loginButton).toBeVisible()
+        await homePage.assertSessionIsDeleted()
     })
 })

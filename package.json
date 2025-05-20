@@ -1,5 +1,5 @@
 {
-  "name": "vechain-dapp-kit",
+  "name": "vechain-kit",
   "private": true,
   "description": "A TypeScript library that facilitates seamless interaction between vechain wallets (veworld, sync2) and dApps.",
   "license": "MIT",
