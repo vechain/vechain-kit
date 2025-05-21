@@ -18,9 +18,7 @@ export const TermsAndPrivacyAccordion = () => {
     const { account } = useWallet();
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const {
-        legalDocuments: { agreements, documents },
-    } = useLegalDocuments();
+    const { agreements, documents } = useLegalDocuments();
 
     const agreementsByDocumentType = useMemo(() => {
         const userAgreements = agreements?.filter((agreement) =>

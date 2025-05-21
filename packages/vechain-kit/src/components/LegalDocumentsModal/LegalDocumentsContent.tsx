@@ -32,9 +32,7 @@ export const LegalDocumentsContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    const {
-        legalDocuments: { documentsNotAgreed },
-    } = useLegalDocuments();
+    const { documentsNotAgreed } = useLegalDocuments();
 
     const { requiredDocuments, optionalDocuments } = useMemo(() => {
         return documentsNotAgreed.reduce<{
