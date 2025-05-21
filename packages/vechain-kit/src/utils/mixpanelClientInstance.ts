@@ -1,36 +1,36 @@
 import {
+    AccountAction,
+    AccountProperties,
+    AuthAction,
+    AuthProperties,
+    BridgeAction,
+    BridgeProperties,
+    CustomizationAction,
+    CustomizationProperties,
+    DappKitSource,
+    DropOffStage,
+    EcosystemAction,
+    EcosystemProperties,
     EventName,
     EventPropertiesMap,
+    FAQAction,
+    FAQProperties,
+    NameSelectionAction,
+    NameSelectionDropOffStage,
+    NameSelectionProperties,
+    NotificationAction,
+    NotificationProperties,
+    SendAction,
+    SendProperties,
+    SettingsAction,
+    SettingsProperties,
+    SwapAction,
+    SwapProperties,
     UserProperties,
     VeLoginMethod,
     VePrivySocialLoginMethod,
-    NotificationAction,
-    NotificationProperties,
-    AuthAction,
-    AuthProperties,
-    FAQAction,
-    FAQProperties,
-    AccountAction,
-    AccountProperties,
-    SettingsAction,
-    SettingsProperties,
     WalletAction,
     WalletProperties,
-    SendAction,
-    SendProperties,
-    EcosystemAction,
-    EcosystemProperties,
-    SwapAction,
-    SwapProperties,
-    BridgeAction,
-    BridgeProperties,
-    DropOffStage,
-    DappKitSource,
-    NameSelectionDropOffStage,
-    NameSelectionAction,
-    NameSelectionProperties,
-    CustomizationAction,
-    CustomizationProperties,
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
@@ -38,6 +38,9 @@ import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
 const APP_SOURCE: string = document.title || '';
 const PAGE_SOURCE: string = window?.location?.origin || '';
 
+let hasTrackingConsent = false;
+
+// Initialize Mixpanel with basic config, but control actual tracking with consent checks
 if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
     VeChainKitMixpanel.init(VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN, {
         debug: !ENV.isProduction,
@@ -49,9 +52,18 @@ if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
     }
 }
 
+export const setHasTrackingConsent = (consent: boolean): void => {
+    hasTrackingConsent = consent;
+};
+
 // Check if a user is logging in for the first time
 const isFirstLogin = (userId: string): boolean => {
     try {
+        // Skip if we don't have consent
+        if (!hasTrackingConsent) {
+            return false;
+        }
+
         const userDataKey = `user_data_${userId}`;
         const userData = localStorage.getItem(userDataKey);
         if (userData) {
@@ -68,6 +80,11 @@ const isFirstLogin = (userId: string): boolean => {
 // Store user data in localStorage for future reference
 const storeUserData = (userId: string, properties: UserProperties): void => {
     try {
+        // Skip if we don't have consent
+        if (!hasTrackingConsent) {
+            return;
+        }
+
         const userDataKey = `user_data_${userId}`;
         const existingData = localStorage.getItem(userDataKey);
         let userData = properties;
@@ -98,6 +115,11 @@ const trackEvent = <E extends EventName>(
             return;
         }
 
+        // Skip tracking for non-auth events when user hasn't consented
+        if (!hasTrackingConsent) {
+            return;
+        }
+
         VeChainKitMixpanel.track(event, {
             ...properties,
             source: APP_SOURCE,
@@ -113,6 +135,14 @@ const setUserProperties = (
     userId?: string,
 ): void => {
     try {
+        // Skip if we don't have consent
+        if (!hasTrackingConsent) {
+            return;
+        }
+
+        // Use either provided userId or the connected wallet address
+        const effectiveUserId = userId;
+
         VeChainKitMixpanel.people.set({
             ...properties,
             source: APP_SOURCE,
@@ -120,8 +150,8 @@ const setUserProperties = (
         });
 
         // Store in localStorage if userId is provided
-        if (userId) {
-            storeUserData(userId, properties);
+        if (effectiveUserId) {
+            storeUserData(effectiveUserId, properties);
         }
     } catch (error) {
         console.error('Error setting user properties:', error);
@@ -130,10 +160,11 @@ const setUserProperties = (
 
 const identifyUser = (userId: string): void => {
     try {
-        if (!userId) {
+        if (!userId || !hasTrackingConsent) {
             return;
         }
 
+        // Always identify the user (needed for terms acceptance flow)
         VeChainKitMixpanel.identify(userId);
     } catch (error) {
         console.error('Error identifying user:', error);
@@ -142,6 +173,11 @@ const identifyUser = (userId: string): void => {
 
 const incrementUserProperty = (property: string, value: number = 1): void => {
     try {
+        // Skip if no consent
+        if (!hasTrackingConsent) {
+            return;
+        }
+
         VeChainKitMixpanel.people.increment(property, value);
     } catch (error) {
         console.error(`Error incrementing property ${property}:`, error);
@@ -150,6 +186,11 @@ const incrementUserProperty = (property: string, value: number = 1): void => {
 
 const resetUser = (): void => {
     try {
+        // Skip if no consent
+        if (!hasTrackingConsent) {
+            return;
+        }
+
         VeChainKitMixpanel.reset();
     } catch (error) {
         console.error('Error resetting user:', error);
@@ -548,6 +589,9 @@ const Analytics = {
 
         manageSecuritySettings: () =>
             Analytics.settings.trackSettings('manage_security_settings'),
+
+        termsAndPolicyViewed: () =>
+            Analytics.settings.trackSettings('terms_and_policy_view'),
 
         language: {
             changed: (language: string, previousLanguage: string) =>

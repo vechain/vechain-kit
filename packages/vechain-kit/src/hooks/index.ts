@@ -7,6 +7,8 @@ export {
   useWallet as useDAppKitWallet,
   useWalletModal as useDAppKitWalletModal,
 } from '@vechain/dapp-kit-react';
+export { useLegalDocuments } from '../providers/LegalDocumentsProvider';
+
 export * from './api';
 export * from './modals';
 export * from './notifications';

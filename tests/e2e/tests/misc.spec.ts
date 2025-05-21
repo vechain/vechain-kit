@@ -23,7 +23,7 @@ test.describe("Misc", () => {
 
         await homePage.open()
         await homePage.initVWMock(0)
-        await homePage.connectWallet()
+        await homePage.connectWallet({ acceptTnc: true })
     })
 
     test('Can change the theme', async () => {
@@ -143,9 +143,9 @@ for (const authType of [
             await homePage.open()
             if (authType === 'veworld') {
                 await homePage.initVWMock(accIndex)
-                await homePage.connectWallet()
+                await homePage.connectWallet({ acceptTnc: true })
             } else if (authType === 'privy') {
-                await homePage.loginWithEmail(PRIVY_TEST_EMAIL(randStr))
+                await homePage.loginWithEmail({ email: PRIVY_TEST_EMAIL(randStr), acceptTnc: true })
             } else {
                 throw new Error(`Invalid auth type: "${authType}"`)
             }
@@ -191,9 +191,9 @@ for (const authType of [
             await homePage.open()
             if (authType === 'veworld') {
                 await homePage.initVWMock(19)
-                await homePage.connectWallet()
+                await homePage.connectWallet({ acceptTnc: true })
             } else if (authType === 'privy') {
-                await homePage.loginWithEmail(PRIVY_TEST_EMAIL(randStr))
+                await homePage.loginWithEmail({ email: PRIVY_TEST_EMAIL(randStr), acceptTnc: true })
             } else {
                 throw new Error(`Invalid auth type: "${authType}"`)
             }
@@ -213,9 +213,9 @@ for (const authType of [
             await homePage.open()
             if (authType === 'veworld') {
                 await homePage.initVWMock(accIndex)
-                await homePage.connectWallet()
+                await homePage.connectWallet({ acceptTnc: true })
             } else if (authType === 'privy') {
-                await homePage.loginWithEmail(PRIVY_TEST_EMAIL(randomString(6)))
+                await homePage.loginWithEmail({email: PRIVY_TEST_EMAIL(randomString(6)), acceptTnc: true})
             } else {
                 throw new Error(`Invalid auth type: "${authType}"`)
             }

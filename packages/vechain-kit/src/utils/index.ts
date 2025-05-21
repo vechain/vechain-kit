@@ -11,3 +11,4 @@ export * from './xNode';
 export * from './time';
 export * from './stringUtils';
 export * from './hexUtils';
+export * from './url';
