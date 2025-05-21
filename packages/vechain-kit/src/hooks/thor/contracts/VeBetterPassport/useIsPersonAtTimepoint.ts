@@ -3,7 +3,6 @@ import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
-import { Address } from 'viem';
 import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
 const contractAbi = VeBetterPassport__factory.abi;
@@ -18,7 +17,7 @@ const method = 'isPersonAtTimepoint' as const;
  */
 export const getIsPersonAtTimepointQueryKey = (
     networkType: NETWORK_TYPE,
-    user: Address,
+    user: string,
     timepoint: string, // Will be converted to Number for args
 ) => {
     const veBetterPassportContractAddress =
@@ -39,7 +38,7 @@ export const getIsPersonAtTimepointQueryKey = (
  * @returns The isPerson status (boolean) at a given block number.
  */
 export const useIsPersonAtTimepoint = (
-    user?: Address,
+    user?: string,
     timepoint?: string,
     customEnabled = true,
 ) => {
@@ -60,8 +59,7 @@ export const useIsPersonAtTimepoint = (
                 customEnabled &&
                 !!veBetterPassportContractAddress &&
                 !!network.type,
-            // Assuming it returns [boolean, string] like isPerson based on typical patterns
-            select: (data: readonly [boolean, string]) => data[0],
+            select: (data) => data[0],
         },
     });
 };

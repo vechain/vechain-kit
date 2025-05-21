@@ -3,7 +3,6 @@ import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { Address } from 'viem';
 
 const contractAbi = VeBetterPassport__factory.abi;
 const method = 'getPendingDelegations' as const;
@@ -16,7 +15,7 @@ const method = 'getPendingDelegations' as const;
  */
 export const getPendingDelegationsQueryKeyDelegateePOV = (
     networkType: NETWORK_TYPE,
-    delegatee: Address,
+    delegatee: string,
 ) => {
     return getCallClauseQueryKey({
         address: getConfig(networkType).veBetterPassportContractAddress,
@@ -32,7 +31,7 @@ export const getPendingDelegationsQueryKeyDelegateePOV = (
  * @returns An array of delegator addresses with pending delegations for the delegatee.
  */
 export const useGetPendingDelegationsDelegateePOV = (
-    delegateeInput?: Address | null,
+    delegateeInput?: string | null,
 ) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(

@@ -3,14 +3,13 @@ import { GalaxyMember__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
-import { Address } from 'viem';
 
 const contractAbi = GalaxyMember__factory.abi;
 const method = 'getSelectedTokenId';
 
 export const getSelectedTokenIdQueryKey = (
     networkType: NETWORK_TYPE,
-    account: Address,
+    account: string,
 ) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
     return getCallClauseQueryKey({
@@ -28,7 +27,7 @@ export const getSelectedTokenIdQueryKey = (
  * @param customEnabled - Determines whether the hook is enabled or not. Default is true.
  * @returns The selected token ID for the galaxy member.
  */
-export const useSelectedTokenId = (account?: Address, customEnabled = true) => {
+export const useSelectedTokenId = (account?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 

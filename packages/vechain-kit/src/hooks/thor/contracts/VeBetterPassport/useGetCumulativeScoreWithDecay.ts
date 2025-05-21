@@ -3,7 +3,6 @@ import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
-import { Address } from 'viem';
 
 const contractAbi = VeBetterPassport__factory.abi;
 const method = 'getCumulativeScoreWithDecay' as const;
@@ -17,7 +16,7 @@ const method = 'getCumulativeScoreWithDecay' as const;
  */
 export const getGetCumulativeScoreWithDecayQueryKey = (
     networkType: NETWORK_TYPE,
-    user: Address,
+    user: string,
     lastRound: number | string,
 ) => {
     return getCallClauseQueryKey({
@@ -35,7 +34,7 @@ export const getGetCumulativeScoreWithDecayQueryKey = (
  * @returns The cumulative score with decay as number.
  */
 export const useGetCumulativeScoreWithDecay = (
-    userInput?: Address | null,
+    userInput?: string | null,
     lastRoundInput?: number | string,
 ) => {
     const { network } = useVeChainKitConfig();

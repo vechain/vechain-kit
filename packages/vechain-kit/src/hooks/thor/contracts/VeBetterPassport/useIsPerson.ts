@@ -3,7 +3,6 @@ import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
-import { Address } from 'viem';
 import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
 const contractAbi = VeBetterPassport__factory.abi;
@@ -17,7 +16,7 @@ const method = 'isPerson' as const;
  */
 export const getIsPersonQueryKey = (
     networkType: NETWORK_TYPE,
-    user: Address,
+    user: string,
 ) => {
     const veBetterPassportContractAddress =
         getConfig(networkType).veBetterPassportContractAddress;
@@ -35,7 +34,7 @@ export const getIsPersonQueryKey = (
  * @param customEnabled - Flag to enable or disable the hook. Default is true.
  * @returns The isPerson status (boolean).
  */
-export const useIsPerson = (user?: Address, customEnabled = true) => {
+export const useIsPerson = (user?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const veBetterPassportContractAddress = getConfig(
         network.type,
@@ -52,7 +51,7 @@ export const useIsPerson = (user?: Address, customEnabled = true) => {
                 customEnabled &&
                 !!veBetterPassportContractAddress &&
                 !!network.type,
-            select: (data: readonly [boolean, string]) => data[0],
+            select: (data) => data[0],
         },
     });
 };
@@ -62,6 +61,6 @@ export const useIsPerson = (user?: Address, customEnabled = true) => {
  * @param address - The address of the account.
  * @returns The isPerson status.
  */
-export const useIsUserPerson = (address?: Address) => {
+export const useIsUserPerson = (address?: string) => {
     return useIsPerson(address);
 };

@@ -3,14 +3,13 @@ import { GalaxyMember__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
-import { Address } from 'viem';
 
 const contractAbi = GalaxyMember__factory.abi;
 const method = 'participatedInGovernance';
 
 export const getParticipatedInGovernanceQueryKey = (
     networkType: NETWORK_TYPE,
-    user: Address,
+    user: string,
 ) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
     return getCallClauseQueryKey({
@@ -29,7 +28,7 @@ export const getParticipatedInGovernanceQueryKey = (
  * @returns whether the address has participated in governance
  */
 export const useParticipatedInGovernance = (
-    user: Address | null,
+    user: string | null,
     customEnabled = true,
 ) => {
     const { network } = useVeChainKitConfig();
