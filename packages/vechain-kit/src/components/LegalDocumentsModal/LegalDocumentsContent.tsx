@@ -13,7 +13,7 @@ import {
 import { useMemo } from 'react';
 import { Fragment } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { LegalDocumentItem } from './Components';
 
@@ -155,6 +155,22 @@ export const LegalDocumentsContent = ({
                                 {t(
                                     'Please take a moment to review all the policies, with acceptance being mandatory to continue.',
                                 )}
+                            </Text>
+                        )}
+                        {onlyOptionalDocuments && (
+                            <Text fontSize="sm" color="gray.300" mb={3}>
+                                <Trans
+                                    i18nKey="<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies and analytics that help us enhance your experience."
+                                    components={{
+                                        bold: (
+                                            <Text
+                                                as="span"
+                                                fontWeight="semibold"
+                                                color="white"
+                                            />
+                                        ),
+                                    }}
+                                />
                             </Text>
                         )}
 

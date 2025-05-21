@@ -561,5 +561,6 @@
     "'{{policyName}}' on connect": "'{{policyName}}' on connect",
     "Vechain Kit Policy": "Vechain Kit Policy",
     "Ignore and continue": "Ignore and continue",
-    "Accept all": "Accept all"
+    "Accept all": "Accept all",
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies and analytics that help us enhance your experience.": "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies and analytics that help us enhance your experience."
 }
