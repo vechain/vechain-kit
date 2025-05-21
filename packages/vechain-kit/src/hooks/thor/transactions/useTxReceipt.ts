@@ -1,8 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
 import { useThor } from '@vechain/dapp-kit-react';
-import { CompressedBlockDetail } from '@vechain/sdk-network';
 import { useQuery } from '@tanstack/react-query';
 import { TIME } from '@/utils';
 
@@ -23,46 +21,18 @@ export const txReceiptQueryKey = (txId: string) => [
  */
 export const useTxReceipt = (txId: string, blockTimeout = 5) => {
     const thor = useThor();
-    const headBlockRef = useRef<CompressedBlockDetail | null>(
-        thor.blocks.getHeadBlock(),
-    );
-    const [isPolling, setIsPolling] = useState(true);
-
-    useEffect(() => {
-        if (!headBlockRef.current) {
-            const headBlock = thor.blocks.getHeadBlock();
-            if (headBlock) headBlockRef.current = headBlock;
-        }
-
-        return () => {
-            headBlockRef.current = null;
-        };
-    }, [thor]);
 
     return useQuery({
         queryKey: txReceiptQueryKey(txId),
         queryFn: async () => {
-            const headBlock = thor.blocks.getHeadBlock();
-            if (
-                headBlockRef.current &&
-                headBlock &&
-                headBlock.number - headBlockRef.current.number >= blockTimeout
-            ) {
-                setIsPolling(false);
-                throw new Error('Transaction receipt not found');
-            }
-            const response = await thor.transactions.getTransactionReceipt(
-                txId,
-            );
+            const response = await thor.transactions.waitForTransaction(txId, {
+                timeoutMs: blockTimeout * BLOCK_GENERATION_INTERVAL,
+            });
 
-            // transaction not found
-            if (!response) return null;
+            if (!response) throw new Error('Transaction receipt not found');
 
-            if (response.reverted) throw new Error('Transaction reverted');
-
-            setIsPolling(false);
             return response;
         },
-        refetchInterval: isPolling ? BLOCK_GENERATION_INTERVAL : false,
+        enabled: !!txId,
     });
 };
