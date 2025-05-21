@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
-import { useCurrentAllocationsRoundId } from './useCurrentAllocationsRoundId';
 import {
     RoundState,
     useAllocationsRoundState,
-} from './useAllocationsRoundState';
+    useCurrentAllocationsRoundId,
+    useCurrentBlock,
+} from '@/hooks';
 import {
     RoundCreated,
     useAllocationsRoundsEvents,
-} from './useAllocationsRoundsEvents';
+} from '@/hooks/thor/contracts/XAllocationVoting';
 import { getConfig } from '@/config';
-import { useCurrentBlock } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 export type AllocationRoundWithState = RoundCreated & {

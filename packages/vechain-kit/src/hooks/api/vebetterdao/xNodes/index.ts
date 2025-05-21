@@ -1,5 +1,2 @@
-export * from "./useXNode"
-export * from "./useUserXNodes"
-export * from "./useGetUserNodes"
-export * from "./useIsNodeHolder"
-export * from "./useXNodeCheckCooldown"
+export * from './useXNode';
+export * from '../../../thor/contracts/NodeManagement/useUserXNodes';

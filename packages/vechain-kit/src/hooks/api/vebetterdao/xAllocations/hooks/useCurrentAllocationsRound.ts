@@ -1,5 +1,4 @@
-import { useCurrentAllocationsRoundId } from './useCurrentAllocationsRoundId';
-import { useAllocationsRound } from './useAllocationsRound';
+import { useCurrentAllocationsRoundId, useAllocationsRound } from '@/hooks';
 
 /**
  * Hook to get info about the current allocation round

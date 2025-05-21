@@ -1,9 +1,11 @@
 import { notFoundImage } from '@/utils';
-import { useGetTokenIdAttachedToNode } from '../galaxyMember/hooks/useGetTokenIdAttachedToNode';
 import { useTranslation } from 'react-i18next';
-import { useGetUserNodes } from './useGetUserNodes';
 import { allNodeStrengthLevelToName, NodeStrengthLevelToImage } from '@/utils';
-import { useXNodeCheckCooldown } from './useXNodeCheckCooldown';
+import {
+    useGetTokenIdAttachedToNode,
+    useGetUserNodes,
+    useXNodeCheckCooldown,
+} from '@/hooks';
 
 /**
  * Custom hook for retrieving data related to an X-Node.

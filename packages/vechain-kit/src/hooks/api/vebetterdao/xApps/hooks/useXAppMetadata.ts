@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useXAppsMetadataBaseUri } from './useXAppsMetadataBaseUri';
-import { useXApp } from './useXApp';
-import { getXAppMetadata } from '../getXAppMetadata';
+import { useXAppsMetadataBaseUri, useXApp, getXAppMetadata } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 export const getXAppMetadataQueryKey = (metadataURI?: string) => [
