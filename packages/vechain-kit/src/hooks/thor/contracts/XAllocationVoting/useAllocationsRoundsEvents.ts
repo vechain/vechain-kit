@@ -7,6 +7,15 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network';
 import { compareAddresses } from '@/utils';
+import { AbiParametersToPrimitiveTypes, ExtractAbiEvent } from 'abitype';
+
+type RoundCreatedEventParameters = AbiParametersToPrimitiveTypes<
+    ExtractAbiEvent<
+        typeof XAllocationVoting__factory.abi,
+        'RoundCreated'
+    >['inputs'],
+    'outputs'
+>;
 
 export type RoundCreated = {
     roundId: string;
@@ -63,20 +72,14 @@ export const getAllocationsRoundsEvents = async (
         }
 
         const [roundId, proposer, voteStart, voteEnd, appsIds] =
-            event.decodedData as [
-                RoundCreated['roundId'],
-                RoundCreated['proposer'],
-                RoundCreated['voteStart'],
-                RoundCreated['voteEnd'],
-                RoundCreated['appsIds'],
-            ];
+            event.decodedData as unknown as RoundCreatedEventParameters;
 
         decodedCreatedAllocationEvents.push({
-            roundId,
+            roundId: roundId.toString(),
             proposer,
-            voteStart,
-            voteEnd,
-            appsIds,
+            voteStart: voteStart.toString(),
+            voteEnd: voteEnd.toString(),
+            appsIds: appsIds.map((appId) => appId.toString()),
         });
     });
 
