@@ -1,3 +1,26 @@
+import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '@/config/network';
+import { CURRENCY, PrivyLoginMethod } from '@/types';
+import { isValidUrl } from '@/utils';
+import {
+    DEFAULT_PRIVY_ECOSYSTEM_APPS,
+    VECHAIN_KIT_STORAGE_KEYS,
+} from '@/utils/Constants';
+import { initializeI18n } from '@/utils/i18n';
+import {
+    LoginMethodOrderOption,
+    NonEmptyArray,
+    PrivyProvider,
+    WalletListEntry,
+} from '@privy-io/react-auth';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import {
+    WalletSource as DAppKitWalletSource,
+    LogLevel,
+} from '@vechain/dapp-kit';
+import { DAppKitProvider } from '@vechain/dapp-kit-react';
+import { WalletConnectOptions } from '@vechain/dapp-kit-react';
+import { CustomizedStyle, I18n, SourceInfo } from '@vechain/dapp-kit-ui';
 import {
     createContext,
     ReactNode,
@@ -5,37 +28,13 @@ import {
     useEffect,
     useMemo,
 } from 'react';
-import {
-    LoginMethodOrderOption,
-    NonEmptyArray,
-    PrivyProvider,
-    WalletListEntry,
-} from '@privy-io/react-auth';
-import { DAppKitProvider } from '@vechain/dapp-kit-react';
-import { PrivyWalletProvider } from './PrivyWalletProvider';
-import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
-import { PrivyLoginMethod, CURRENCY } from '@/types';
-import { EnsureQueryClient } from './EnsureQueryClient';
-import {
-    type LogLevel,
-    type WalletSource as DAppKitWalletSource,
-} from '@vechain/dapp-kit';
-import { type WalletConnectOptions } from '@vechain/dapp-kit-react';
-import {
-    type SourceInfo,
-    type CustomizedStyle,
-    type I18n,
-} from '@vechain/dapp-kit-ui';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 import i18n from '../../i18n';
-import { initializeI18n } from '@/utils/i18n';
+import { EnsureQueryClient } from './EnsureQueryClient';
+import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { ModalProvider } from './ModalProvider';
-import {
-    VECHAIN_KIT_STORAGE_KEYS,
-    DEFAULT_PRIVY_ECOSYSTEM_APPS,
-} from '@/utils/Constants';
+import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
+import { PrivyWalletProvider } from './PrivyWalletProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -48,6 +47,20 @@ type LoginMethodOrder = {
               : PrivyDependentMethods);
     gridColumn?: number;
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
+};
+
+export type LegalDocumentOptions = {
+    allowAnalytics?: boolean;
+    privacyPolicy?: LegalDocument[];
+    termsAndConditions?: LegalDocument[];
+    cookiePolicy?: LegalDocument[];
+};
+
+export type LegalDocument = {
+    url: string;
+    version: number;
+    required: boolean;
+    displayName?: string;
 };
 
 export type VechainKitProviderProps = {
@@ -98,6 +111,7 @@ export type VechainKitProviderProps = {
         };
     };
     allowCustomTokens?: boolean;
+    legalDocuments?: LegalDocumentOptions;
     defaultCurrency?: CURRENCY;
 };
 
@@ -113,6 +127,7 @@ type VeChainKitConfig = {
     language?: VechainKitProviderProps['language'];
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
+    legalDocuments?: VechainKitProviderProps['legalDocuments'];
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
 };
 
@@ -190,6 +205,36 @@ const validateConfig = (
         }
     }
 
+    if (props?.legalDocuments) {
+        if (props.legalDocuments.termsAndConditions) {
+            props.legalDocuments.termsAndConditions.forEach((term) => {
+                if (!isValidUrl(term.url)) {
+                    errors.push(
+                        `legalDocuments.termsAndConditions.url is invalid: ${term.url}`,
+                    );
+                }
+            });
+        }
+        if (props.legalDocuments.privacyPolicy) {
+            props.legalDocuments.privacyPolicy.forEach((term) => {
+                if (!isValidUrl(term.url)) {
+                    errors.push(
+                        `legalDocuments.privacyPolicy.url is invalid: ${term.url}`,
+                    );
+                }
+            });
+        }
+        if (props.legalDocuments.cookiePolicy) {
+            props.legalDocuments.cookiePolicy.forEach((term) => {
+                if (!isValidUrl(term.url)) {
+                    errors.push(
+                        `legalDocuments.cookiePolicy.url is invalid: ${term.url}`,
+                    );
+                }
+            });
+        }
+    }
+
     if (errors.length > 0) {
         throw new Error(
             'VeChainKit Configuration Error:\n' + errors.join('\n'),
@@ -219,6 +264,7 @@ export const VeChainKitProvider = (
         language = 'en',
         network,
         allowCustomTokens,
+        legalDocuments,
         defaultCurrency = 'usd',
     } = validatedProps;
 
@@ -289,6 +335,7 @@ export const VeChainKitProvider = (
                         language,
                         network,
                         allowCustomTokens,
+                        legalDocuments,
                         defaultCurrency,
                     }}
                 >
@@ -380,7 +427,11 @@ export const VeChainKitProvider = (
                                     false
                                 }
                             >
-                                <ModalProvider>{children}</ModalProvider>
+                                <ModalProvider>
+                                    <LegalDocumentsProvider>
+                                        {children}
+                                    </LegalDocumentsProvider>
+                                </ModalProvider>
                             </PrivyWalletProvider>
                         </DAppKitProvider>
                     </PrivyProvider>
