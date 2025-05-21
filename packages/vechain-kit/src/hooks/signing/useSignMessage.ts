@@ -24,20 +24,39 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
     const [signature, setSignature] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
-    const { connection } = useWallet();
-    const { signer } = useDappKitWallet();
+    const { connection, account } = useWallet();
+    const { requestCertificate } = useDappKitWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
     const signMessage = useCallback(
         async (message: string): Promise<string> => {
+            if (!account) throw new Error('Account not found');
+
             setIsSigningPending(true);
             setError(null);
             setSignature(null);
 
             try {
-                const sig = connection.isConnectedWithDappKit
-                    ? await signer.signMessage(message)
-                    : await privyWalletProvider.signMessage(message);
+                let sig: string | null = null;
+
+                if (connection.isConnectedWithDappKit) {
+                    const certResponse = await requestCertificate(
+                        {
+                            purpose: 'agreement',
+                            payload: {
+                                type: 'text',
+                                content: message,
+                            },
+                        },
+                        {
+                            signer: account.address,
+                        },
+                    );
+
+                    sig = certResponse.signature;
+                } else {
+                    sig = await privyWalletProvider.signMessage(message);
+                }
 
                 setSignature(sig);
                 return sig;
