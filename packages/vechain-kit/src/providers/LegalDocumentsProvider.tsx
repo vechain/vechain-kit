@@ -37,13 +37,11 @@ type Props = {
 };
 
 type LegalDocumentsContextType = {
-    legalDocuments: {
-        hasAgreedToRequiredDocuments: boolean;
-        agreements: LegalDocumentAgreement[];
-        walletAddress?: string;
-        documents: EnrichedLegalDocument[];
-        documentsNotAgreed: EnrichedLegalDocument[];
-    };
+    hasAgreedToRequiredDocuments: boolean;
+    agreements: LegalDocumentAgreement[];
+    walletAddress?: string;
+    documents: EnrichedLegalDocument[];
+    documentsNotAgreed: EnrichedLegalDocument[];
 };
 
 const LegalDocumentsContext = createContext<
@@ -296,13 +294,11 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     return (
         <LegalDocumentsContext.Provider
             value={{
-                legalDocuments: {
-                    hasAgreedToRequiredDocuments,
-                    agreements: storedAgreements,
-                    walletAddress: account?.address,
-                    documents,
-                    documentsNotAgreed,
-                },
+                hasAgreedToRequiredDocuments,
+                agreements: storedAgreements,
+                walletAddress: account?.address,
+                documents,
+                documentsNotAgreed,
             }}
         >
             {children}
