@@ -39,7 +39,7 @@
         "@vechain/sdk-core": "^1.2.0-rc.3",
         "@vechain/sdk-network": "^1.2.0-rc.3",
         "@vechain/vebetterdao-contracts": "^4.1.0",
-        "@wagmi/core": "^2.13.4",
+        "@wagmi/core": "^2.17.2",
         "bignumber.js": "^9.1.2",
         "browser-image-compression": "^2.0.2",
         "buffer": "^6.0.3",
@@ -62,8 +62,8 @@
         "stream-browserify": "^3.0.0",
         "stream-http": "^3.2.0",
         "translo-cli": "^1.0.6",
-        "viem": "^2.21.9",
-        "wagmi": "^2.13.4"
+        "viem": "^2.29.3",
+        "wagmi": "^2.15.4"
     },
     "devDependencies": {
         "@types/mixpanel-browser": "^2.51.0",
