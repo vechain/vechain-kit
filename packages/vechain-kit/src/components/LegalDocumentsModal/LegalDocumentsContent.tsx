@@ -10,7 +10,7 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Fragment } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -80,21 +80,21 @@ export const LegalDocumentsContent = ({
     // Calculate if all optional documents are selected
     const allSelected = documentsNotAgreed?.length === selectedDocuments.length;
 
-    const onSubmit = (data: Record<string, boolean>) => {
-        const agreedDocumentIds = new Set(
-            Object.entries(data)
-                .filter(([_, checked]) => checked)
-                .map(([docId]) => docId),
-        );
+    const onSubmit = useCallback(
+        (data: Record<string, boolean>) => {
+            const agreedDocumentIds = new Set(
+                Object.entries(data)
+                    .filter(([_, checked]) => checked)
+                    .map(([docId]) => docId),
+            );
 
-        const agreedDocuments = documentsNotAgreed.filter((document) =>
-            agreedDocumentIds.has(document.id),
-        );
-
-        if (agreedDocuments.length > 0 || onlyOptionalDocuments) {
+            const agreedDocuments = documentsNotAgreed.filter((document) =>
+                agreedDocumentIds.has(document.id),
+            );
             return onAgree(agreedDocuments);
-        }
-    };
+        },
+        [documentsNotAgreed, onAgree],
+    );
 
     const borderColor = isDark ? '#3a3a3a' : '#eaeaea';
     const sectionBgColor = isDark ? '#2a2a2a' : '#f5f5f5';

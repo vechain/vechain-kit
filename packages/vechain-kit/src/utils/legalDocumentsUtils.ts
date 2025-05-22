@@ -1,5 +1,4 @@
 import { EnrichedLegalDocument, LegalDocumentAgreement } from '@/types';
-import { compareAddresses } from '@/utils';
 
 export const LEGAL_DOCS_LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';
 export const LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY =
@@ -76,42 +75,6 @@ export const getStoredRejectedDocuments = (): LegalDocumentAgreement[] => {
         );
         return [];
     }
-};
-
-/**
- * Get documents that a user has not agreed to
- */
-export const getDocumentsNotAgreed = (
-    walletAddress: string | undefined,
-    documents: EnrichedLegalDocument[],
-): EnrichedLegalDocument[] => {
-    if (!walletAddress) return [];
-
-    const agreements = getStoredAgreements();
-    const rejections = getStoredRejectedDocuments();
-
-    return documents.filter((document) => {
-        // Filter out documents that have been agreed to
-        const isAgreed = agreements.some(
-            (agreement) =>
-                compareAddresses(agreement.walletAddress, walletAddress) &&
-                agreement.id === document.id,
-        );
-
-        if (isAgreed) return false;
-
-        // Filter out optional documents that have been explicitly rejected
-        const isRejected = rejections.some(
-            (rejection) =>
-                compareAddresses(rejection.walletAddress, walletAddress) &&
-                rejection.id === document.id,
-        );
-
-        if (isRejected) return false;
-
-        // Keep the document if it's neither agreed nor rejected
-        return true;
-    });
 };
 
 /**
