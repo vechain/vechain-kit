@@ -13,7 +13,6 @@ import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils/Constants';
 import {
     createDocumentRecords,
     formatDocuments,
-    getDocumentsNotAgreed,
     getOptionalDocuments,
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
@@ -134,8 +133,31 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     }, [legalDocuments, isAnalyticsAllowed]);
 
     const documentsNotAgreed = useMemo(() => {
-        return getDocumentsNotAgreed(account?.address, documents);
-    }, [documents, account?.address]);
+        if (!account?.address) return [];
+
+        return documents.filter((document) => {
+            // Use in-memory storedAgreements instead of reading from localStorage
+            const isAgreed = storedAgreements.some(
+                (agreement) =>
+                    compareAddresses(
+                        agreement.walletAddress,
+                        account.address,
+                    ) && agreement.id === document.id,
+            );
+
+            if (isAgreed) return false;
+
+            const isRejected = optionalRejected.some(
+                (rejection) =>
+                    compareAddresses(
+                        rejection.walletAddress,
+                        account.address,
+                    ) && rejection.id === document.id,
+            );
+
+            return !isRejected;
+        });
+    }, [documents, account?.address, storedAgreements, optionalRejected]);
 
     const hasAgreedToRequiredDocuments = useMemo(() => {
         //This is using the local storage hook instead of utils , since it needs a dependency hook
