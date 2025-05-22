@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { Address } from '@vechain/sdk-core';
-import { useGetNodeUrl } from '@/hooks';
 import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { SimpleAccountFactory__factory } from '@/contracts';
+import { useThor } from '@vechain/dapp-kit-react';
 
 export interface SmartAccountReturnType {
     address: string | undefined;
@@ -25,7 +25,7 @@ export const getSmartAccount = async (
             getConfig(network).accountFactoryAddress,
             SimpleAccountFactory__factory.abi,
         )
-        .read.getAccountAddress([ownerAddress]);
+        .read.getAccountAddress(ownerAddress);
 
     if (!res) {
         throw new Error(`Failed to get account address of ${ownerAddress}`);
@@ -50,13 +50,16 @@ export const getSmartAccountQueryKey = (ownerAddress?: string) => {
 
 export const useSmartAccount = (ownerAddress?: string) => {
     const { network } = useVeChainKitConfig();
-    // TODO: migration ask can we use useThor here
-    const nodeUrl = useGetNodeUrl();
-    const thor = ThorClient.at(nodeUrl);
+    const thor = useThor();
 
     return useQuery({
         queryKey: getSmartAccountQueryKey(ownerAddress),
-        queryFn: () => getSmartAccount(thor, network.type, ownerAddress),
+        queryFn: () =>
+            getSmartAccount(
+                thor as unknown as ThorClient,
+                network.type,
+                ownerAddress,
+            ),
         enabled: !!ownerAddress && !!network.type && !!thor,
     });
 };
