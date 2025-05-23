@@ -27,8 +27,8 @@ import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useVechainDomain, TokenWithValue } from '@/hooks';
-import { useCurrency } from '@/hooks/api/wallet';
-import { formatCompactCurrency } from '@/utils/currencyConverter';
+import { useCurrency } from '@/hooks';
+import { formatCompactCurrency } from '@/utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
 
 export type SendTokenContentProps = {

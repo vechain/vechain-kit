@@ -168,7 +168,7 @@ async function parseAvatarRecord(
                     to: contractAddress,
                     data: erc721Interface.encodeFunctionData(
                         isErc1155 ? 'uri' : 'tokenURI',
-                        [BigInt(tokenId)],
+                        [BigInt(tokenId || 0)],
                     ),
                 },
             ];
@@ -203,7 +203,7 @@ async function parseAvatarRecord(
             if (isErc1155) {
                 tokenUri = tokenUri.replace(
                     '{id}',
-                    zeroPadValue(toBeHex(BigInt(tokenId)), 32).slice(2),
+                    zeroPadValue(toBeHex(BigInt(tokenId || 0)), 32).slice(2),
                 );
             }
 

@@ -1,7 +1,7 @@
-import { LegalDocument } from '@/providers';
-
-export * from './Types';
+export * from './types';
 export * from './ensTextRecords';
+
+import { LegalDocument } from '@/providers';
 
 export enum LegalDocumentType {
     TERMS = 'terms',

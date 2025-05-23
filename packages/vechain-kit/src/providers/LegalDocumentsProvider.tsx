@@ -1,6 +1,5 @@
 import { LegalDocumentsModal } from '@/components/LegalDocumentsModal';
-import { useWallet } from '@/hooks';
-import { useSyncableLocalStorage } from '@/hooks/cache';
+import { useWallet, useSyncableLocalStorage } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import {
     EnrichedLegalDocument,
@@ -8,8 +7,8 @@ import {
     LegalDocumentSource,
     LegalDocumentType,
 } from '@/types';
-import { compareAddresses } from '@/utils/AddressUtils';
-import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils/Constants';
+import { compareAddresses } from '@/utils';
+import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils';
 import {
     createDocumentRecords,
     formatDocuments,

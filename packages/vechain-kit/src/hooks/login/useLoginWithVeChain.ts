@@ -5,7 +5,7 @@ import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { VeLoginMethod } from '@/types/mixPanel';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
