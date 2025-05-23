@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx src/main.ts"
+    "dev": "npx tsx src/main.ts",
+    "build": "tsc"
   },
   "devDependencies": {
     "typescript": "~5.8.3"
