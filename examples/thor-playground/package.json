@@ -1,0 +1,19 @@
+{
+  "name": "thor-playground",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsx src/main.ts"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3"
+  },
+  "dependencies": {
+    "@vechain/sdk-core": "^1.2.0-rc.3",
+    "@vechain/sdk-network": "^1.2.0-rc.3",
+    "abitype": "^1.0.8",
+    "bignumber.js": "^9.3.0",
+    "viem": "^2.30.0"
+  }
+}
