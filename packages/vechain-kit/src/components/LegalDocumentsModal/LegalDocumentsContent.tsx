@@ -10,8 +10,7 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import { useCallback, useMemo } from 'react';
-import { Fragment } from 'react';
+import { Fragment, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -113,13 +112,30 @@ export const LegalDocumentsContent = ({
         ).length;
 
         if (allSelected) {
-            return 'Accept all';
+            return t('Accept all');
         }
         if (onlyOptionalDocuments && selectedOptionalCount === 0) {
-            return 'Ignore and continue';
+            return t('Ignore and continue');
         }
-        return 'Accept selected';
+        if (
+            (hasRequiredDocuments && !hasOptionalDocuments) ||
+            (hasRequiredDocuments && selectedOptionalCount === 0)
+        ) {
+            return t('Accept');
+        }
+        return t('Accept selected');
     }, [onlyOptionalDocuments, allSelected, optionalDocuments, formValues]);
+
+    const requiredTextDivider = (index: number) => {
+        //If the last two documents, and there are more than 1 document, return ' and '
+        if (
+            index === requiredDocuments.length - 2 &&
+            requiredDocuments.length > 1
+        ) {
+            return t(' and ');
+        }
+        return ', ';
+    };
 
     return (
         <Stack width="full">
@@ -142,12 +158,7 @@ export const LegalDocumentsContent = ({
                                             isText={true}
                                         />
                                         {index < requiredDocuments.length - 1
-                                            ? index ===
-                                                  requiredDocuments.length -
-                                                      2 &&
-                                              requiredDocuments.length > 1
-                                                ? t(' and ')
-                                                : ', '
+                                            ? requiredTextDivider(index)
                                             : null}
                                     </Fragment>
                                 ))}
@@ -158,7 +169,7 @@ export const LegalDocumentsContent = ({
                             </Text>
                         )}
                         {onlyOptionalDocuments && (
-                            <Text fontSize="sm" color="gray.300" mb={3}>
+                            <Text fontSize="sm" color={headingColor} mb={3}>
                                 <Trans
                                     i18nKey="<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies and analytics that help us enhance your experience."
                                     components={{
@@ -166,7 +177,7 @@ export const LegalDocumentsContent = ({
                                             <Text
                                                 as="span"
                                                 fontWeight="semibold"
-                                                color="white"
+                                                color={headingColor}
                                             />
                                         ),
                                     }}
