@@ -36,6 +36,7 @@ export const useAppSecurityLevel = (appId?: string, customEnabled = true) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport app security level result: [ 0 ]
     return useCallClause({
         abi: contractAbi,
         address: contractAddress,

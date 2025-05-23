@@ -36,6 +36,7 @@ export const useGetPassportForEntity = (entityInput?: string | null) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport get passport for entity result: [ '0xf077b491b355E64048cE21E3A6Fc4751eEeA77fa' ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

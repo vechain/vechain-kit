@@ -36,6 +36,7 @@ export const useIsEntity = (address?: string | null) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport is entity result: [ false ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

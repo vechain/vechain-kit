@@ -159,12 +159,24 @@ export const useSendTransaction = ({
                 },
             );
 
-            return signer.sendTransaction(
+            const txRequestInput =
                 signerUtils.transactionBodyToTransactionRequestInput(
                     txBody,
                     signerAccountAddress,
-                ),
-            );
+                );
+
+            return signer.sendTransaction({
+                ...txRequestInput,
+                // dapp-kit and sdk-network types are not aligned
+                maxPriorityFeePerGas:
+                    typeof txRequestInput.maxPriorityFeePerGas === 'number'
+                        ? txRequestInput.maxPriorityFeePerGas.toString()
+                        : txRequestInput.maxPriorityFeePerGas,
+                maxFeePerGas:
+                    typeof txRequestInput.maxFeePerGas === 'number'
+                        ? txRequestInput.maxFeePerGas.toString()
+                        : txRequestInput.maxFeePerGas,
+            });
         },
         [
             signerAccountAddress,

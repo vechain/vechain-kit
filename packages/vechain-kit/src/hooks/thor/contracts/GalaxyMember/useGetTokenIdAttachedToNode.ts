@@ -34,6 +34,7 @@ export const useGetTokenIdAttachedToNode = (
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member get token ID attached to node result: [ 0n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

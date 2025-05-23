@@ -34,6 +34,7 @@ export const useParticipatedInGovernance = (
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member participated in governance result: [ false ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

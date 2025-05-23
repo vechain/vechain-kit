@@ -42,6 +42,7 @@ export const useXAppVotesQf = (
         network.type,
     ).xAllocationVotingContractAddress;
 
+    // X Allocation Voting Governor app votes QF result: [ 0n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

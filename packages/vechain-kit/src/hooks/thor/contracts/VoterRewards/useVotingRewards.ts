@@ -44,6 +44,7 @@ export const useVotingRewards = (currentRoundId?: string, voter?: string) => {
                 VoterRewards__factory.abi,
             );
             const clauses = rounds.map((roundId) =>
+                // Voter Rewards getReward result type: [ 0n ]
                 contract.clause.getReward(roundId, voter),
             );
             const res = await thor.transactions.executeMultipleClausesCall(

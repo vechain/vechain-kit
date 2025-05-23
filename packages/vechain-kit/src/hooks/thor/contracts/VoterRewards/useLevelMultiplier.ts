@@ -26,6 +26,7 @@ export const useLevelMultiplier = (level?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).voterRewardsContractAddress;
 
+    // Voter Rewards level multiplier result: [ 200n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

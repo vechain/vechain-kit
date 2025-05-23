@@ -31,6 +31,7 @@ export const useGMbalance = (owner: string | null, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member GM balance result: [ 0n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

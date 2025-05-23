@@ -22,6 +22,7 @@ export const getXAppsMetadataBaseUriQueryKey = (network: NETWORK_TYPE) =>
 export const useXAppsMetadataBaseUri = () => {
     const { network } = useVeChainKitConfig();
 
+    // X2Earn Apps metadata base URI result: [ 'ipfs://' ]
     return useCallClause({
         abi,
         address: getConfig(network.type).x2EarnAppsContractAddress,

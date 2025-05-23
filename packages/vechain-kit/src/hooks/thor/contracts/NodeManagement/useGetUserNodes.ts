@@ -45,6 +45,20 @@ export const useGetUserNodes = (
         network.type,
     ).nodeManagementContractAddress;
 
+    // Node Management get user nodes result: [
+    //   [
+    //     {
+    //       nodeId: 2330n,
+    //       nodeLevel: 2,
+    //       xNodeOwner: '0x987b68E1B71D87B82ffce7539aE95b1B11aC7Eb0',
+    //       isXNodeHolder: true,
+    //       isXNodeDelegated: false,
+    //       isXNodeDelegator: false,
+    //       isXNodeDelegatee: false,
+    //       delegatee: '0x0000000000000000000000000000000000000000'
+    //     }
+    //   ]
+    // ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

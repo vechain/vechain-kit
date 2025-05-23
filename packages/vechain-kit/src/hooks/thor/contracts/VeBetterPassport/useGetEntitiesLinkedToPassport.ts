@@ -38,6 +38,7 @@ export const useGetEntitiesLinkedToPassport = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport get entities linked to passport result: [ [] ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

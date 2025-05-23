@@ -36,6 +36,7 @@ export const useIsBlacklisted = (address?: string) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport is blacklisted result: [ false ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

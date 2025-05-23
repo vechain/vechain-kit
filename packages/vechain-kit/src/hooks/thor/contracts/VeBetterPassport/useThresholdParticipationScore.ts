@@ -33,6 +33,7 @@ export const useThresholdParticipationScore = () => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport threshold participation score result: [ 300n ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

@@ -20,6 +20,7 @@ export const getAppAdminQueryKey = (appId: string, networkType: NETWORK_TYPE) =>
 export const useAppAdmin = (appId: string) => {
     const { network } = useVeChainKitConfig();
 
+    // X2Earn Apps app admin result: [ '0xeFc7B2bd05DF22561D927D8Aa61c252BCF1b5dFA' ]
     return useCallClause({
         address: getConfig(network.type).x2EarnAppsContractAddress,
         abi: X2EarnApps.abi,

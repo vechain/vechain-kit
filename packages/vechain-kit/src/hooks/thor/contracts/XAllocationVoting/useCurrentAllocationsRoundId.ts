@@ -22,6 +22,7 @@ export const getCurrentAllocationsRoundIdQueryKey = (network: NETWORK_TYPE) =>
 export const useCurrentAllocationsRoundId = () => {
     const { network } = useVeChainKitConfig();
 
+    // X Allocation Voting current round ID result: [ 47n ]
     return useCallClause({
         abi,
         address: getConfig(network.type).xAllocationVotingContractAddress,

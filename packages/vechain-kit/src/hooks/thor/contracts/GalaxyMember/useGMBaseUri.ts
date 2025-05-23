@@ -30,6 +30,8 @@ export const useGMBaseUri = (customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member GM base URI result:
+    //  [ 'ipfs://bafybeidq2wrzarkqzi7sgmecbsl6fhcnthcvks2xgial3ucqw2zxxvwpty/metadata/' ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

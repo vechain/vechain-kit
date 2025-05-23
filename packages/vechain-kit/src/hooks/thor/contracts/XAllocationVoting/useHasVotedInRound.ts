@@ -35,6 +35,7 @@ export const useHasVotedInRound = (roundId?: string, address?: string) => {
         args: [BigInt(roundId || 0), address as `0x${string}`],
         queryOptions: {
             enabled: !!roundId && !!address,
+            select: (data) => data[0],
         },
     });
 };

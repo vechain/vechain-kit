@@ -38,6 +38,7 @@ export const useGetPendingDelegationsDelegateePOV = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport get pending delegations delegatee POV result: [ [], '0x0000000000000000000000000000000000000000' ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

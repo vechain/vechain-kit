@@ -36,6 +36,7 @@ export const useUserBotSignals = (userAddressInput?: string) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport user bot signals result: [ 1n ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

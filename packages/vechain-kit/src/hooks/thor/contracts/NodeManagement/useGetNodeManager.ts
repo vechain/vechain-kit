@@ -1,7 +1,6 @@
 import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
-import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 
@@ -28,14 +27,13 @@ export const getNodeManagerQueryKey = (
  * @param nodeId The ID of the node for which the manager address is being retrieved
  * @returns address The address of the manager of the specified node
  */
-export const useGetNodeManager = (
-    nodeId: string,
-): UseQueryResult<string, Error> => {
+export const useGetNodeManager = (nodeId: string) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(
         network.type,
     ).nodeManagementContractAddress;
 
+    // Node Management get node manager result: [ '0xf84090b27109454feE78987ae123EC7AEe4c27aE' ]
     return useCallClause({
         abi: contractAbi,
         address: contractAddress,
@@ -45,5 +43,5 @@ export const useGetNodeManager = (
             enabled: !!nodeId && !!network.type && !!contractAddress,
             select: (data) => data[0],
         },
-    }) as UseQueryResult<string, Error>;
+    });
 };

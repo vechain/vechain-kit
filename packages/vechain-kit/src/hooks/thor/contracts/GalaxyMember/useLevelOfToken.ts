@@ -31,6 +31,7 @@ export const useLevelOfToken = (tokenId?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member level of token result: [ 2n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

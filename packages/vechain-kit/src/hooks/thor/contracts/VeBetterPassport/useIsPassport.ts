@@ -36,6 +36,7 @@ export const useIsPassport = (address?: string | null) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport is passport result: [ true ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

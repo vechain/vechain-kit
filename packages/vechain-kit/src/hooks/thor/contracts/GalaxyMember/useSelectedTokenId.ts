@@ -31,6 +31,7 @@ export const useSelectedTokenId = (account?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member selected token ID result: [ 0n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

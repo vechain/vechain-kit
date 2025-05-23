@@ -27,6 +27,7 @@ export const useGMMaxLevel = (enabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member GM max level result: [ 6n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

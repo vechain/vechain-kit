@@ -22,12 +22,14 @@ export const getAppsEligibleInNextRoundQueryKey = (network: NETWORK_TYPE) =>
 export const useAppsEligibleInNextRound = () => {
     const { network } = useVeChainKitConfig();
 
+    // X2Earn Apps eligible in next round result: [[0x,0x,0x]]
     return useCallClause({
         abi,
         address: getConfig(network.type).x2EarnAppsContractAddress,
         method,
         args: [],
         queryOptions: {
+            select: (data) => data[0],
             enabled: !!network.type,
         },
     });

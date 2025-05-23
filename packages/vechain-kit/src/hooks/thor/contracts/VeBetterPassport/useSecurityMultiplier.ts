@@ -43,6 +43,7 @@ export const useSecurityMultiplier = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport security multiplier result: [ 200n ]
     return useCallClause({
         abi: contractAbi,
         address: veBetterPassportContractAddress,

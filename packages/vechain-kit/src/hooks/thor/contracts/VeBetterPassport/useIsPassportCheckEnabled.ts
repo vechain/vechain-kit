@@ -39,6 +39,7 @@ export const useIsPassportCheckEnabled = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport is passport check enabled result: [ false ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

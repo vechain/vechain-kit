@@ -42,6 +42,7 @@ export const useGetCumulativeScoreWithDecay = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport get cumulative score with decay result: [ 0n ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

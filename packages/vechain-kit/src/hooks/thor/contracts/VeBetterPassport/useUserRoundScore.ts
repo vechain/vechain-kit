@@ -42,6 +42,7 @@ export const useUserRoundScore = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport user round score result: [ 0n ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

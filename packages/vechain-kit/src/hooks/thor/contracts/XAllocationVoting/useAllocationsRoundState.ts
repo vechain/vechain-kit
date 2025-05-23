@@ -32,6 +32,7 @@ export const getAllocationsRoundStateQueryKey = (
 export const useAllocationsRoundState = (roundId?: string) => {
     const { network } = useVeChainKitConfig();
 
+    // X Allocation Voting round state result: [ 2 ]
     return useCallClause({
         abi,
         address: getConfig(network.type).xAllocationVotingContractAddress,

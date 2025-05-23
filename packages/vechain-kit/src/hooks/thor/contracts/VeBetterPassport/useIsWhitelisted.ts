@@ -39,6 +39,7 @@ export const useIsWhitelisted = (account?: string, customEnabled = true) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport isWhitelisted result: [ false ]
     return useCallClause({
         abi: contractAbi,
         address: veBetterPassportContractAddress,
@@ -50,7 +51,7 @@ export const useIsWhitelisted = (account?: string, customEnabled = true) => {
                 customEnabled &&
                 !!veBetterPassportContractAddress &&
                 !!network.type,
-            select: (data: readonly [boolean]) => data[0],
+            select: (data) => data[0],
         },
     });
 };

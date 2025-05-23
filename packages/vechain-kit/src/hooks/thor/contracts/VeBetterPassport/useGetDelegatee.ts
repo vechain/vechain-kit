@@ -38,6 +38,7 @@ export const useGetDelegatee = (delegatorInput?: string | null) => {
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport get delegatee result: [ '0x0000000000000000000000000000000000000000' ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

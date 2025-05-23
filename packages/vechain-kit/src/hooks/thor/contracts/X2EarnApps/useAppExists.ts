@@ -32,6 +32,7 @@ export const useAppExists = (appIdInput: string) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).x2EarnAppsContractAddress;
 
+    // X2Earn Apps app exists result: [ false ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

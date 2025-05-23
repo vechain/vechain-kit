@@ -47,6 +47,7 @@ export const useIsPersonAtTimepoint = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport is person at timepoint result: [ false, 'User has been signaled too many times' ]
     return useCallClause({
         abi: contractAbi,
         address: veBetterPassportContractAddress,

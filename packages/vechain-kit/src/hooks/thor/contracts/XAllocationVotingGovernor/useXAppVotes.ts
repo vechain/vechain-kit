@@ -39,6 +39,7 @@ export const useXAppVotes = (roundId?: number | string, appId?: string) => {
         network.type,
     ).xAllocationVotingContractAddress;
 
+    // X Allocation Voting Governor app votes result: [ 0n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

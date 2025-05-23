@@ -38,6 +38,7 @@ export const useThresholdParticipationScoreAtTimepoint = (
         network.type,
     ).veBetterPassportContractAddress;
 
+    // VeBetter Passport threshold participation score at timepoint result: [ 0n ]
     return useCallClause({
         address: veBetterPassportContractAddress,
         abi: contractAbi,

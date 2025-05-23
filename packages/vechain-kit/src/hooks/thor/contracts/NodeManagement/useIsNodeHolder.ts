@@ -25,6 +25,7 @@ export const getIsNodeHolderQueryKey = (address: string) => [
 export const useIsNodeHolder = (address: string) => {
     const { network } = useVeChainKitConfig();
 
+    // Node Management isNodeHolder result: [ false ]
     return useCallClause({
         address: getConfig(network.type).nodeManagementContractAddress,
         abi,

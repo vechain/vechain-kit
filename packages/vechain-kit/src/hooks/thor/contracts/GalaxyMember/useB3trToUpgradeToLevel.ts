@@ -35,6 +35,7 @@ export const useB3trToUpgradeToLevel = (
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member B3TR to upgrade to level result: [ 5000000000000000000000n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

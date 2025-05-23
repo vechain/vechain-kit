@@ -32,6 +32,7 @@ export const useXNodeCheckCooldown = (nodeIdInput?: string | number) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).x2EarnAppsContractAddress;
 
+    // X2Earn Apps X-Node check cooldown result: [ false ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

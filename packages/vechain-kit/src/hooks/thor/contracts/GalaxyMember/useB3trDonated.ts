@@ -32,6 +32,7 @@ export const useB3trDonated = (tokenId?: string, customEnabled = true) => {
     const { network } = useVeChainKitConfig();
     const contractAddress = getConfig(network.type).galaxyMemberContractAddress;
 
+    // Galaxy Member B3TR donated result: [ 10000000000000000000000n ]
     return useCallClause({
         address: contractAddress,
         abi: contractAbi,

@@ -29,6 +29,7 @@ export const getRoundRewardQueryKey = (roundId?: string, address?: string) => [
 export const useRoundReward = (address: string, roundId: string) => {
     const { network } = useVeChainKitConfig();
 
+    // Voter Rewards getReward result type: [ 0n ]
     return useCallClause({
         address: getConfig(network.type).voterRewardsContractAddress,
         abi: VoterRewards__factory.abi,
