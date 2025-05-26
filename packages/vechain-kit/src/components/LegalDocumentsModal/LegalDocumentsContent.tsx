@@ -10,8 +10,7 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { Fragment } from 'react';
+import { Fragment, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -80,21 +79,21 @@ export const LegalDocumentsContent = ({
     // Calculate if all optional documents are selected
     const allSelected = documentsNotAgreed?.length === selectedDocuments.length;
 
-    const onSubmit = (data: Record<string, boolean>) => {
-        const agreedDocumentIds = new Set(
-            Object.entries(data)
-                .filter(([_, checked]) => checked)
-                .map(([docId]) => docId),
-        );
+    const onSubmit = useCallback(
+        (data: Record<string, boolean>) => {
+            const agreedDocumentIds = new Set(
+                Object.entries(data)
+                    .filter(([_, checked]) => checked)
+                    .map(([docId]) => docId),
+            );
 
-        const agreedDocuments = documentsNotAgreed.filter((document) =>
-            agreedDocumentIds.has(document.id),
-        );
-
-        if (agreedDocuments.length > 0 || onlyOptionalDocuments) {
+            const agreedDocuments = documentsNotAgreed.filter((document) =>
+                agreedDocumentIds.has(document.id),
+            );
             return onAgree(agreedDocuments);
-        }
-    };
+        },
+        [documentsNotAgreed, onAgree],
+    );
 
     const borderColor = isDark ? '#3a3a3a' : '#eaeaea';
     const sectionBgColor = isDark ? '#2a2a2a' : '#f5f5f5';
@@ -113,13 +112,30 @@ export const LegalDocumentsContent = ({
         ).length;
 
         if (allSelected) {
-            return 'Accept all';
+            return t('Accept all');
         }
         if (onlyOptionalDocuments && selectedOptionalCount === 0) {
-            return 'Ignore and continue';
+            return t('Ignore and continue');
         }
-        return 'Accept selected';
+        if (
+            (hasRequiredDocuments && !hasOptionalDocuments) ||
+            (hasRequiredDocuments && selectedOptionalCount === 0)
+        ) {
+            return t('Accept');
+        }
+        return t('Accept selected');
     }, [onlyOptionalDocuments, allSelected, optionalDocuments, formValues]);
+
+    const requiredTextDivider = (index: number) => {
+        //If the last two documents, and there are more than 1 document, return ' and '
+        if (
+            index === requiredDocuments.length - 2 &&
+            requiredDocuments.length > 1
+        ) {
+            return t(' and ');
+        }
+        return ', ';
+    };
 
     return (
         <Stack width="full">
@@ -142,12 +158,7 @@ export const LegalDocumentsContent = ({
                                             isText={true}
                                         />
                                         {index < requiredDocuments.length - 1
-                                            ? index ===
-                                                  requiredDocuments.length -
-                                                      2 &&
-                                              requiredDocuments.length > 1
-                                                ? t(' and ')
-                                                : ', '
+                                            ? requiredTextDivider(index)
                                             : null}
                                     </Fragment>
                                 ))}
@@ -158,7 +169,7 @@ export const LegalDocumentsContent = ({
                             </Text>
                         )}
                         {onlyOptionalDocuments && (
-                            <Text fontSize="sm" color="gray.300" mb={3}>
+                            <Text fontSize="sm" color={headingColor} mb={3}>
                                 <Trans
                                     i18nKey="<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies and analytics that help us enhance your experience."
                                     components={{
@@ -166,7 +177,7 @@ export const LegalDocumentsContent = ({
                                             <Text
                                                 as="span"
                                                 fontWeight="semibold"
-                                                color="white"
+                                                color={headingColor}
                                             />
                                         ),
                                     }}
