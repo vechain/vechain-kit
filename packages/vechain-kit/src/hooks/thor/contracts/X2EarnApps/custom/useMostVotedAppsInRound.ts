@@ -1,6 +1,6 @@
 import { useRoundXApps } from './useRoundXApps';
 import { useXApps } from './useXApps';
-import { XApp } from '../getXApps';
+import { XApp } from '@/hooks';
 import { useMemo } from 'react';
 import { useXAppsShares } from './useXAppsShares';
 

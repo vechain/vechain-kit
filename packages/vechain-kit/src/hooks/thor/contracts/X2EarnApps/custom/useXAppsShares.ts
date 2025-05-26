@@ -47,8 +47,8 @@ export const useXAppsShares = (apps: string[], roundId?: string) => {
             const shares = res.map((r, index) => {
                 return {
                     app: apps[index] as string,
-                    share: Number(r.result.array?.[0]) / 100,
-                    unallocatedShare: Number(r.result.array?.[1]) / 100,
+                    share: Number(r.result.array?.[0] || 0) / 100,
+                    unallocatedShare: Number(r.result.array?.[1] || 0) / 100,
                 };
             });
             return shares;

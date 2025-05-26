@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
-import { XApp } from '../getXApps';
+import { XApp } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
 import { ThorClient } from '@vechain/sdk-network';

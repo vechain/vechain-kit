@@ -57,7 +57,6 @@ export const useVotingRewards = (currentRoundId?: string, voter?: string) => {
             let total = new BigNumber(0);
             const roundsRewards = res.map((r, index) => {
                 const roundId = rounds[index] as string;
-                // TODO: migration check response type here
                 const rewards = r.result.plain as bigint;
                 const formattedRewards = formatEther(rewards);
 

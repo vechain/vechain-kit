@@ -49,7 +49,7 @@ export const useXAppTotalEarnings = (roundIds: number[], appId: string) => {
 
             const decoded = res.map((r, index) => {
                 const parsedAmount = formatEther(
-                    (r.result.array?.[0] as bigint) || BigInt(0),
+                    (r.result.plain as bigint) || BigInt(0),
                 );
                 // Update the cache with the new amount
                 queryClient.setQueryData(

@@ -1,4 +1,3 @@
-export * from './vebetterdao';
 export * from './privy';
 export * from './vetDomains';
 export * from './wallet';

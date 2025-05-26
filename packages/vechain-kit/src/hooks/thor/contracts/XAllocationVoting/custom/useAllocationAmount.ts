@@ -49,11 +49,9 @@ export const useAllocationAmount = (roundId?: string) => {
                 );
 
             return {
-                treasury: formatEther(res[0].result.array?.[0] as bigint),
-                voteX2Earn: formatEther(res[1].result.array?.[0] as bigint),
-                voteXAllocations: formatEther(
-                    res[2].result.array?.[0] as bigint,
-                ),
+                treasury: formatEther(res[0].result.plain as bigint),
+                voteX2Earn: formatEther(res[1].result.plain as bigint),
+                voteXAllocations: formatEther(res[2].result.plain as bigint),
             } as AllocationAmount;
         },
         enabled: !!thor && !!roundId && !!network.type,

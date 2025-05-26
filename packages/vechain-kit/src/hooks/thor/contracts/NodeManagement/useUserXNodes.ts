@@ -50,11 +50,11 @@ export const getUserXNodes = async (
     if (!res.every((r) => r.success))
         throw new Error(`Failed to fetch xNodes for user ${user}`);
 
-    const nodeIds = (res[0].result.array?.[0] || []) as ViewFunctionResult<
+    const nodeIds = (res[0]?.result.array?.[0] || []) as ViewFunctionResult<
         typeof NodeManagement__factory.abi,
         'getNodeIds'
     >;
-    const levels = (res[1].result.array?.[0] || []) as ViewFunctionResult<
+    const levels = (res[1]?.result.array?.[0] || []) as ViewFunctionResult<
         typeof NodeManagement__factory.abi,
         'getUsersNodeLevels'
     >;

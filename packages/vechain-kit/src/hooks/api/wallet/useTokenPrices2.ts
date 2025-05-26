@@ -14,17 +14,16 @@ const getTokenPrices = async (
     network: NETWORK_TYPE,
 ) => {
     const config = getConfig(network);
-
-    const clauses = tokens.map((token) => {
-        const oracleContract = thor.contracts.load(
-            config.oracleContractAddress,
-            IVechainEnergyOracleV1__factory.abi,
-        );
-        return oracleContract.clause.getLatestValue(PRICE_FEED_IDS[token]);
-    });
-
-    const response = await thor.contracts.executeMultipleClausesCall(clauses);
-
+    const oracleContract = thor.contracts.load(
+        config.oracleContractAddress,
+        IVechainEnergyOracleV1__factory.abi,
+    );
+    const clauses = tokens.map((token) =>
+        oracleContract.clause.getLatestValue(PRICE_FEED_IDS[token]),
+    );
+    const response = await thor.transactions.executeMultipleClausesCall(
+        clauses,
+    );
     if (!response.every((r) => r.success && !!r.result.array)) {
         throw new Error('Failed to get token prices');
     }
@@ -40,6 +39,13 @@ const getTokenPrices = async (
 const tokens = ['VET', 'VTHO', 'B3TR', 'EUR', 'GBP'] as SupportedToken[];
 
 // TODO: migration check if we can remove hooks inside and bundle this into one query using thor.transactions.executeMultipleClausesCall
+/* this return prices for each token such as [
+  [ 74818449477n, 1748250785n ],
+  [ 27980000000n, 1748244394n ],
+  [ 2486500000n, 1748221052n ],
+  [ 1353980000000n, 1748167036n ],
+  [ 1140100000000n, 1748248579n ]
+] */
 export const useTokenPrices2 = () => {
     const thor = useThor();
     const { network } = useVeChainKitConfig();

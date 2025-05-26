@@ -6,7 +6,7 @@ import { getOrCreateQueryClient } from '@/providers/EnsureQueryClient';
 import {
     getRoundXApps,
     getRoundXAppsQueryKey,
-} from '@/hooks/api/vebetterdao/xApps/hooks/useRoundXApps';
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'viem';

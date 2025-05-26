@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { getXApps } from '../getXApps';
+import { getXApps } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { ThorClient } from '@vechain/sdk-network';
 

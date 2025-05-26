@@ -50,15 +50,16 @@ export const getXApps = async (
     const res = await thor.transactions.executeMultipleClausesCall(clauses);
     if (!res.every((r) => r.success)) throw new Error(`Failed to fetch xApps`);
 
-    const apps = res[0].result.plain as ViewFunctionResult<
-        typeof X2EarnApps__factory.abi,
-        'apps'
-    >[0];
+    const apps = res[0]?.result.plain as
+        | ViewFunctionResult<typeof X2EarnApps__factory.abi, 'apps'>[0]
+        | [];
 
-    const unendorsedApps = res[1].result.plain as ViewFunctionResult<
-        typeof X2EarnApps__factory.abi,
-        'unendorsedApps'
-    >[0];
+    const unendorsedApps = res[1]?.result.plain as
+        | ViewFunctionResult<
+              typeof X2EarnApps__factory.abi,
+              'unendorsedApps'
+          >[0]
+        | [];
 
     const allApps: Record<string, XApp | UnendorsedApp> = {};
 
@@ -83,6 +84,8 @@ export const getXApps = async (
         };
     }
 
+    const unendorsedIds = new Set(unendorsedApps.map((app) => app.id));
+
     return {
         allApps: Object.values(allApps),
         active: apps.map((app) => ({
@@ -94,12 +97,7 @@ export const getXApps = async (
             createdAtTimestamp: app.createdAtTimestamp.toString(),
         })),
         endorsed: apps
-            .filter(
-                (app) =>
-                    !unendorsedApps.some(
-                        (unendorsedApp) => unendorsedApp.id === app.id,
-                    ),
-            )
+            .filter((app) => !unendorsedIds.has(app.id))
             .map((app) => ({
                 ...app,
                 createdAtTimestamp: app.createdAtTimestamp.toString(),
