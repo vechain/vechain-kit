@@ -15,9 +15,8 @@ const method = 'thresholdPoPScore' as const;
 export const getThresholdParticipationScoreQueryKey = (
     networkType: NETWORK_TYPE,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [],
     });

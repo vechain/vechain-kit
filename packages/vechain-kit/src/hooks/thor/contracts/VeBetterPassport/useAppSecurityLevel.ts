@@ -16,9 +16,8 @@ export const getAppSecurityLevelQueryKey = (
 ) => {
     const contractAddress =
         getConfig(networkType).veBetterPassportContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: contractAddress,
-        abi: contractAbi,
         method,
         args: [appId as `0x${string}`],
     });

@@ -25,9 +25,8 @@ export type UserNode = {
  * @param user - The address of the user to check (non-optional)
  */
 export const getUserNodesQueryKey = (networkType: NETWORK_TYPE, user: string) =>
-    getCallClauseQueryKey({
+    getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).nodeManagementContractAddress,
-        abi: contractAbi,
         method,
         args: [user as `0x${string}`],
     });

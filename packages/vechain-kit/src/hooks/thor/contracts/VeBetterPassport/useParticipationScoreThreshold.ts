@@ -12,9 +12,8 @@ export const getParticipationScoreThresholdQueryKey = (
 ) => {
     const veBetterPassportContractAddress =
         getConfig(networkType).veBetterPassportContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [],
     });

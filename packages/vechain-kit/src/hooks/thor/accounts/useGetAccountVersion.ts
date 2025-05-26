@@ -1,51 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { ThorClient } from '@vechain/sdk-network';
+import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 
-type GetAccountVersionReturnValue = {
-    version: number;
-    isDeployed: boolean;
-};
-
-export const getAccountVersion = async (
-    thor: ThorClient,
-    accountAddress: string,
-    ownerAddress: string,
-    networkType: NETWORK_TYPE,
-): Promise<GetAccountVersionReturnValue> => {
-    const res = await thor.contracts
-        .load(
-            getConfig(networkType).accountFactoryAddress,
-            SimpleAccountFactory__factory.abi,
-        )
-        .read.getAccountVersion(accountAddress, ownerAddress);
-
-    if (!res) throw new Error('Failed to get account version');
-
-    return {
-        version: parseInt(res[0].toString()),
-        // TODO: migration check if it returns boolean
-        isDeployed: !!res[1],
-    };
-};
+const abi = SimpleAccountFactory__factory.abi;
 
 export const getAccountVersionQueryKey = (
     accountAddress: string,
     ownerAddress: string,
     networkType: NETWORK_TYPE,
-) => [
-    'VECHAIN_KIT',
-    'SMART_ACCOUNT',
-    'FACTORY',
-    'VERSION',
-    accountAddress,
-    ownerAddress,
-    networkType,
-];
+) =>
+    getCallClauseQueryKey<typeof abi>({
+        address: getConfig(networkType).accountFactoryAddress,
+        method: 'getAccountVersion',
+        args: [accountAddress, ownerAddress],
+    });
 
 /**
  * Check if a smart account has a v1 smart account
@@ -57,17 +27,20 @@ export const useGetAccountVersion = (
     accountAddress: string,
     ownerAddress: string,
 ) => {
-    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
-    return useQuery({
-        queryKey: getAccountVersionQueryKey(
-            accountAddress,
-            ownerAddress,
-            network.type,
-        ),
-        queryFn: async () =>
-            getAccountVersion(thor, accountAddress, ownerAddress, network.type),
-        enabled: !!thor && accountAddress !== '' && ownerAddress !== '',
+    return useCallClause({
+        address: getConfig(network.type).accountFactoryAddress,
+        abi,
+        method: 'getAccountVersion',
+        args: [accountAddress, ownerAddress],
+        queryOptions: {
+            select: (data) => {
+                return {
+                    version: parseInt(data[0].toString()),
+                    isDeployed: data[1],
+                };
+            },
+        },
     });
 };

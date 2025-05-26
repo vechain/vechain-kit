@@ -104,7 +104,8 @@ export const SendTokenContent = ({
         }
     }, [toAddressOrDomain, selectedToken]);
 
-    const { data: resolvedDomainData } = useVechainDomain(toAddressOrDomain);
+    const { data: resolvedDomainData, isLoading } =
+        useVechainDomain(toAddressOrDomain);
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
@@ -527,6 +528,7 @@ export const SendTokenContent = ({
                 <Button
                     variant="vechainKitPrimary"
                     isDisabled={!selectedToken || !isValid}
+                    isLoading={isLoading}
                     onClick={handleSubmit(onSubmit)}
                     data-testid="send-button"
                 >

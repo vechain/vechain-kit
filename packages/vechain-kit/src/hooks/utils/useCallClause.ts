@@ -23,24 +23,22 @@ export type ViewFunctionResult<
     AbiParameterKind
 >;
 
-export const getCallClauseQueryKey = <
-    TAbi extends Abi,
-    TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
->({
+export const getCallClauseQueryKey = <TAbi extends Abi>({
     address,
-    abi,
     method,
     args,
 }: {
     address: string;
-    abi: TAbi;
-    method: TMethod;
+    method: ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>;
     args: AbiParametersToPrimitiveTypes<
-        ExtractViewFunction<TAbi, TMethod>['inputs'],
+        ExtractViewFunction<
+            TAbi,
+            ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
+        >['inputs'],
         AbiParameterKind
     >;
 }) => {
-    return ['callClause', address, abi, method, args] as const;
+    return ['callClause', address, method, args] as const;
 };
 
 // TODO: migration ask why can't we use wagmi useReadContract?
@@ -67,7 +65,7 @@ export const useCallClause = <
             ViewFunctionResult<TAbi, TMethod>,
             unknown,
             TData,
-            ReturnType<typeof getCallClauseQueryKey<TAbi, TMethod>>
+            ReturnType<typeof getCallClauseQueryKey<TAbi>>
         >,
         'queryKey' | 'queryFn'
     >;
@@ -75,7 +73,11 @@ export const useCallClause = <
     const thor = useThor();
 
     return useQuery({
-        queryKey: getCallClauseQueryKey({ address, abi, method, args }),
+        queryKey: getCallClauseQueryKey<TAbi>({
+            address,
+            method,
+            args,
+        }),
         queryFn: async () => {
             const contract = thor.contracts.load(address, abi);
             const res = await contract.read[method](...args);

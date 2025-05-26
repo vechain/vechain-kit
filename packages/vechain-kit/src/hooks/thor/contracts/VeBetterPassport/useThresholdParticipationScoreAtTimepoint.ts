@@ -17,9 +17,8 @@ export const getThresholdParticipationScoreAtTimepointQueryKey = (
     networkType: NETWORK_TYPE,
     timepoint: number | string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [Number(timepoint)],
     });

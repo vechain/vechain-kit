@@ -17,9 +17,8 @@ export const getIsBlacklistedQueryKey = (
     networkType: NETWORK_TYPE,
     userAddress: string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [userAddress as `0x${string}`],
     });

@@ -16,9 +16,8 @@ export const getAppExistsQueryKey = (
     networkType: NETWORK_TYPE,
     appId: string,
 ) =>
-    getCallClauseQueryKey({
+    getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).x2EarnAppsContractAddress,
-        abi: contractAbi,
         method,
         args: [appId as `0x${string}`],
     });

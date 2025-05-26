@@ -22,9 +22,8 @@ export const getPendingLinkingsQueryKey = (
     networkType: NETWORK_TYPE,
     user: string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [user as `0x${string}`],
     });

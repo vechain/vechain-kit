@@ -12,9 +12,8 @@ export const getLevelMultiplierQueryKey = (
     level: string,
 ) => {
     const contractAddress = getConfig(networkType).voterRewardsContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: contractAddress,
-        abi: contractAbi,
         method,
         args: [BigInt(level || 0)],
     });

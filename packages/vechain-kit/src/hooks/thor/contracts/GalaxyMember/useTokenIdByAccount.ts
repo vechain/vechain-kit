@@ -13,9 +13,8 @@ export const getTokenIdByAccountQueryKey = (
     index: number,
 ) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: contractAddress,
-        abi: contractAbi,
         method,
         args: [owner as `0x${string}`, BigInt(index || 0)],
     });

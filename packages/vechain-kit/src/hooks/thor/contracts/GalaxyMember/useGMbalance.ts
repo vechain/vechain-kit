@@ -13,9 +13,8 @@ export const getGMbalanceQueryKey = (
     owner: string,
 ) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: contractAddress,
-        abi: contractAbi,
         method,
         args: [owner],
     });

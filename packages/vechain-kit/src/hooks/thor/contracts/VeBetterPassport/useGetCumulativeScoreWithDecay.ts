@@ -19,9 +19,8 @@ export const getGetCumulativeScoreWithDecayQueryKey = (
     user: string,
     lastRound: number | string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [user, BigInt(lastRound || 0)],
     });

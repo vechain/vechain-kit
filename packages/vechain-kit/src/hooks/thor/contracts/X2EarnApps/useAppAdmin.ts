@@ -5,9 +5,8 @@ import { NETWORK_TYPE } from '@/config/network';
 import { getCallClauseQueryKey, useCallClause } from '@/hooks';
 
 export const getAppAdminQueryKey = (appId: string, networkType: NETWORK_TYPE) =>
-    getCallClauseQueryKey({
+    getCallClauseQueryKey<typeof X2EarnApps.abi>({
         address: getConfig(networkType).x2EarnAppsContractAddress,
-        abi: X2EarnApps.abi,
         method: 'appAdmin',
         args: [appId as `0x${string}`],
     });

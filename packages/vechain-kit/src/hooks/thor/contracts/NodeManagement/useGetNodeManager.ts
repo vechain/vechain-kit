@@ -15,8 +15,7 @@ export const getNodeManagerQueryKey = (
     nodeId: string,
     networkType: NETWORK_TYPE,
 ) =>
-    getCallClauseQueryKey({
-        abi: contractAbi,
+    getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).nodeManagementContractAddress,
         method,
         args: [BigInt(nodeId || 0)],

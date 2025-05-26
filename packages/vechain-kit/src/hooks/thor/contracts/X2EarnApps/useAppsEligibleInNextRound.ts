@@ -8,8 +8,7 @@ const abi = X2EarnApps.abi;
 const method = 'allEligibleApps' as const;
 
 export const getAppsEligibleInNextRoundQueryKey = (network: NETWORK_TYPE) =>
-    getCallClauseQueryKey({
-        abi,
+    getCallClauseQueryKey<typeof abi>({
         method,
         address: getConfig(network).x2EarnAppsContractAddress,
         args: [],

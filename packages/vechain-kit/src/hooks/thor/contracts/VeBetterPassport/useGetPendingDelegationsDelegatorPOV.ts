@@ -17,9 +17,8 @@ export const getPendingDelegationsQueryKeyDelegatorPOV = (
     networkType: NETWORK_TYPE,
     delegator: string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [delegator as `0x${string}`],
     });

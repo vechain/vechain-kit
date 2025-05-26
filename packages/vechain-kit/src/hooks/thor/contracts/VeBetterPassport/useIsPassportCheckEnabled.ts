@@ -18,9 +18,8 @@ export const getPassportCheckEnabledQueryKey = (
     networkType: NETWORK_TYPE,
     checkName: TogglePassportCheck,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [checkName],
     });

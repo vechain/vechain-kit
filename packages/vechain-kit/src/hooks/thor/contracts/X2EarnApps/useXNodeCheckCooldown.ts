@@ -16,9 +16,8 @@ export const getNodeCheckCooldownQueryKey = (
     networkType: NETWORK_TYPE,
     nodeId: string | number,
 ) =>
-    getCallClauseQueryKey({
+    getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).x2EarnAppsContractAddress,
-        abi: contractAbi,
         method,
         args: [BigInt(nodeId || 0)],
     });

@@ -19,9 +19,8 @@ export const getDelegatorQueryKey = (
     networkType: NETWORK_TYPE,
     delegateeAddress: string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [delegateeAddress as `0x${string}`],
     });

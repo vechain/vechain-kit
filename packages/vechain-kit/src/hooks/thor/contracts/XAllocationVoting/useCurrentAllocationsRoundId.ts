@@ -8,8 +8,7 @@ const abi = XAllocationVoting__factory.abi;
 const method = 'currentRoundId' as const;
 
 export const getCurrentAllocationsRoundIdQueryKey = (network: NETWORK_TYPE) =>
-    getCallClauseQueryKey({
-        abi,
+    getCallClauseQueryKey<typeof abi>({
         method,
         address: getConfig(network).xAllocationVotingContractAddress,
         args: [],

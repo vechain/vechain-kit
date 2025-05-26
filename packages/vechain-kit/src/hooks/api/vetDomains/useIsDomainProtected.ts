@@ -24,7 +24,6 @@ const getIsDomainProtected = async (
         .load(contractAddress, SubdomainClaimer__factory.abi)
         .read.isDomainProtected(domain);
 
-    // TODO: migration checked it returns boolean ✅
     return res[0] as boolean;
 };
 

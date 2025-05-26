@@ -6,6 +6,7 @@ import { getConfig } from '@/config';
 import { isAddress } from 'ethers';
 import { type ThorClient } from '@vechain/sdk-network';
 import { ZERO_ADDRESS } from '@vechain/sdk-core';
+import { ViewFunctionResult } from '@/hooks/utils';
 
 interface VeChainDomainResult {
     address?: string;
@@ -21,10 +22,10 @@ const getAddressesABI = [
         outputs: [
             { internalType: 'address[]', name: 'addresses', type: 'address[]' },
         ],
-        stateMutability: 'view' as const,
-        type: 'function' as const,
+        stateMutability: 'view',
+        type: 'function',
     },
-];
+] as const;
 
 const resolverABI = [
     {
@@ -35,10 +36,10 @@ const resolverABI = [
         outputs: [
             { internalType: 'string[]', name: 'names', type: 'string[]' },
         ],
-        stateMutability: 'view' as const,
-        type: 'function' as const,
+        stateMutability: 'view',
+        type: 'function',
     },
-];
+] as const;
 
 export const fetchVechainDomain = async (
     thor: ThorClient,
@@ -56,11 +57,13 @@ export const fetchVechainDomain = async (
 
     if (isAddress(addressOrDomain)) {
         try {
-            const res = await thor.contracts
+            const res = (await thor.contracts
                 .load(getConfig(networkType).vnsResolverAddress, resolverABI)
-                .read.getNames([addressOrDomain]);
-
-            const domainName = res[0] as string;
+                .read.getNames([addressOrDomain])) as ViewFunctionResult<
+                typeof resolverABI,
+                'getNames'
+            >;
+            const domainName = res[0][0];
 
             return {
                 address: addressOrDomain,
@@ -81,11 +84,14 @@ export const fetchVechainDomain = async (
 
     // Otherwise, if the addressOrDomain is a domain, we need to get the address
     try {
-        const res = await thor.contracts
+        const res = (await thor.contracts
             .load(getConfig(networkType).vnsResolverAddress, getAddressesABI)
-            .read.getAddresses([addressOrDomain]);
+            .read.getAddresses([addressOrDomain])) as ViewFunctionResult<
+            typeof getAddressesABI,
+            'getAddresses'
+        >;
 
-        const domainAddress = res[0] as string;
+        const domainAddress = res[0][0] as string;
 
         // Domain could exist, but it is not pointing to an address
         if (domainAddress === ZERO_ADDRESS) {
@@ -98,11 +104,14 @@ export const fetchVechainDomain = async (
         }
 
         // Get the primary domain
-        const primaryDomainRes = await thor.contracts
+        const primaryDomainRes = (await thor.contracts
             .load(getConfig(networkType).vnsResolverAddress, resolverABI)
-            .read.getNames([domainAddress]);
+            .read.getNames([domainAddress])) as ViewFunctionResult<
+            typeof resolverABI,
+            'getNames'
+        >;
 
-        const primaryDomain = primaryDomainRes[0] as string;
+        const primaryDomain = primaryDomainRes[0][0] as string;
 
         return {
             address: domainAddress,

@@ -12,9 +12,8 @@ export const getLevelOfTokenQueryKey = (
     tokenId: string,
 ) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: contractAddress,
-        abi: contractAbi,
         method,
         args: [BigInt(tokenId || 0)],
     });

@@ -12,8 +12,7 @@ export const getHasVotedInRoundQueryKey = (
     address: string,
     networkType: NETWORK_TYPE,
 ) =>
-    getCallClauseQueryKey({
-        abi,
+    getCallClauseQueryKey<typeof abi>({
         address: getConfig(networkType).xAllocationVotingContractAddress,
         method,
         args: [BigInt(roundId || 0), address as `0x${string}`],

@@ -13,9 +13,8 @@ export const getB3trToUpgradeToLevelQueryKey = (
     level: string,
 ) => {
     const contractAddress = getConfig(networkType).galaxyMemberContractAddress;
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: contractAddress,
-        abi: contractAbi,
         method,
         args: [BigInt(level || 0)],
     });

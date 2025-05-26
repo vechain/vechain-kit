@@ -17,9 +17,8 @@ export const getEntitiesLinkedToPassportQueryKey = (
     networkType: NETWORK_TYPE,
     passport: string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [passport as `0x${string}`],
     });

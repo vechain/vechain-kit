@@ -32,7 +32,6 @@ const getEnsRecordExists = async (
 
     if (!res) throw new Error(`Failed to get ENS record exists for ${name}`);
 
-    // TODO: migration checked it returns as boolean ✅
     return res[0] as boolean;
 };
 

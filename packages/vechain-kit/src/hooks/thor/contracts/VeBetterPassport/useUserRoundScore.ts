@@ -19,9 +19,8 @@ export const getUserRoundScoreQueryKey = (
     userAddress: string,
     round: number | string,
 ) => {
-    return getCallClauseQueryKey({
+    return getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).veBetterPassportContractAddress,
-        abi: contractAbi,
         method,
         args: [userAddress as `0x${string}`, BigInt(round || 0)],
     });

@@ -19,9 +19,8 @@ export const getXAppVotesQueryKey = (
     roundId: number | string,
     appId: string,
 ) =>
-    getCallClauseQueryKey({
+    getCallClauseQueryKey<typeof contractAbi>({
         address: getConfig(networkType).xAllocationVotingContractAddress,
-        abi: contractAbi,
         method,
         args: [BigInt(roundId || 0), appId as `0x${string}`],
     });
