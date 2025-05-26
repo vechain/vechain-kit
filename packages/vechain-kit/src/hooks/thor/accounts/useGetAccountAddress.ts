@@ -51,11 +51,7 @@ export const useGetAccountAddress = (ownerAddress?: string) => {
     return useQuery({
         queryKey: getAccountAddressQueryKey(ownerAddress, network.type),
         queryFn: async () =>
-            getAccountAddress(
-                thor as unknown as ThorClient,
-                ownerAddress,
-                network.type,
-            ),
+            getAccountAddress(thor, ownerAddress, network.type),
         enabled: !!thor && !!ownerAddress && !!network,
     });
 };

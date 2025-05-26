@@ -47,12 +47,7 @@ export const useNFTMetadataUri = (tokenID: null | string) => {
 
     return useQuery({
         queryKey: getNFTMetadataUriQueryKey(tokenID),
-        queryFn: () =>
-            getNFTMetadataUri(
-                thor as unknown as ThorClient,
-                network.type,
-                tokenID,
-            ),
+        queryFn: () => getNFTMetadataUri(thor, network.type, tokenID),
         enabled: !!tokenID && !!network.type,
     });
 };

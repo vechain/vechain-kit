@@ -52,11 +52,7 @@ export const useGetCustomTokenBalances = (address?: string) => {
         queries: customTokens.map((token) => ({
             queryKey: getCustomTokenBalanceQueryKey(token.address, address),
             queryFn: async () => {
-                return await getCustomTokenBalance(
-                    thor as unknown as ThorClient,
-                    token,
-                    address,
-                );
+                return await getCustomTokenBalance(thor, token, address);
             },
         })),
     });

@@ -54,12 +54,7 @@ export const useRoundXApps = (roundId?: string) => {
 
     return useQuery({
         queryKey: getRoundXAppsQueryKey(roundId),
-        queryFn: async () =>
-            await getRoundXApps(
-                thor as unknown as ThorClient,
-                network.type,
-                roundId,
-            ),
+        queryFn: async () => await getRoundXApps(thor, network.type, roundId),
         enabled: !!thor && !!roundId && !!network.type,
     });
 };

@@ -47,12 +47,7 @@ export const useGetTokenUsdPrice = (token: SupportedToken) => {
 
     return useQuery({
         queryKey: getTokenUsdPriceQueryKey(token),
-        queryFn: async () =>
-            getTokenUsdPrice(
-                thor as unknown as ThorClient,
-                token,
-                network.type,
-            ),
+        queryFn: async () => getTokenUsdPrice(thor, token, network.type),
         enabled: !!thor && !!network.type,
     });
 };

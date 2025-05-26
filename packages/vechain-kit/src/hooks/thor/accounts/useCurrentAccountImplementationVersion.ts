@@ -46,10 +46,7 @@ export const useCurrentAccountImplementationVersion = () => {
     return useQuery({
         queryKey: getCurrentAccountImplementationVersionQueryKey(network.type),
         queryFn: async () =>
-            getCurrentAccountImplementationVersion(
-                thor as unknown as ThorClient,
-                network.type,
-            ),
+            getCurrentAccountImplementationVersion(thor, network.type),
         enabled: !!thor && !!network,
     });
 };

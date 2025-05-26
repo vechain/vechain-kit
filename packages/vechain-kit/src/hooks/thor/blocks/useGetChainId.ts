@@ -21,7 +21,7 @@ export const useGetChainId = () => {
 
     return useQuery({
         queryKey: getChainIdQueryKey(),
-        queryFn: () => getChainId(thor as unknown as ThorClient),
+        queryFn: () => getChainId(thor),
         enabled: !!thor,
         refetchInterval: 10000,
     });

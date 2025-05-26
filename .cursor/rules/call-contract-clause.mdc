@@ -144,7 +144,7 @@ export const use{HookName} = ({parameters}: {parameterTypes}) => {
         queryKey: get{FunctionName}QueryKey({parameters}),
         queryFn: async () =>
             await get{FunctionName}(
-                thor as unknown as ThorClient,
+                thor,
                 network.type,
                 {parameters},
             ),

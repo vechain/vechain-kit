@@ -89,12 +89,7 @@ export const useXNodes = (user?: string) => {
 
     return useQuery({
         queryKey: getUserXNodesQueryKey(user),
-        queryFn: async () =>
-            await getUserXNodes(
-                thor as unknown as ThorClient,
-                network.type,
-                user,
-            ),
+        queryFn: async () => await getUserXNodes(thor, network.type, user),
         enabled: !!thor && !!user && !!network.type,
     });
 };

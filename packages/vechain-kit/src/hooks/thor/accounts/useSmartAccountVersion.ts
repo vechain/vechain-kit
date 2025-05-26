@@ -35,8 +35,7 @@ export const useSmartAccountVersion = (contractAddress?: string) => {
 
     return useQuery({
         queryKey: getVersionQueryKey(contractAddress),
-        queryFn: async () =>
-            getVersion(thor as unknown as ThorClient, contractAddress),
+        queryFn: async () => getVersion(thor, contractAddress),
         enabled: !!thor && contractAddress !== '',
     });
 };

@@ -9,11 +9,7 @@ import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
 import { estimateTxGas } from './transactionUtils';
-import {
-    signerUtils,
-    ThorClient,
-    TransactionReceipt,
-} from '@vechain/sdk-network';
+import { signerUtils, TransactionReceipt } from '@vechain/sdk-network';
 import { TransactionClause } from '@vechain/sdk-core';
 
 /**
@@ -141,7 +137,7 @@ export const useSendTransaction = ({
             try {
                 estimatedGas = await estimateTxGas(
                     // TODO: migration this is package level type issue to be resolved.
-                    thor as unknown as ThorClient,
+                    thor,
                     [..._clauses],
                     signerAccountAddress,
                 );
@@ -165,18 +161,7 @@ export const useSendTransaction = ({
                     signerAccountAddress,
                 );
 
-            return signer.sendTransaction({
-                ...txRequestInput,
-                // dapp-kit and sdk-network types are not aligned
-                maxPriorityFeePerGas:
-                    typeof txRequestInput.maxPriorityFeePerGas === 'number'
-                        ? txRequestInput.maxPriorityFeePerGas.toString()
-                        : txRequestInput.maxPriorityFeePerGas,
-                maxFeePerGas:
-                    typeof txRequestInput.maxFeePerGas === 'number'
-                        ? txRequestInput.maxFeePerGas.toString()
-                        : txRequestInput.maxFeePerGas,
-            });
+            return signer.sendTransaction(txRequestInput);
         },
         [
             signerAccountAddress,

@@ -72,11 +72,7 @@ export const useAccountImplementationAddress = (version?: number) => {
             network.type,
         ),
         queryFn: async () =>
-            getAccountImplementationAddress(
-                thor as unknown as ThorClient,
-                version,
-                network.type,
-            ),
+            getAccountImplementationAddress(thor, version, network.type),
         enabled: !!thor && !!version && !!network,
     });
 };

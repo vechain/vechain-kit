@@ -61,7 +61,7 @@ export const useX2EarnAppAvailableFunds = (xAppId: string) => {
         queryKey: getX2EarnAppAvailableFundsQueryKey(xAppId),
         queryFn: async () =>
             await getX2EarnAppAvailableFunds(
-                thor as unknown as ThorClient,
+                thor,
                 xAppId,
                 getConfig(network.type).x2EarnRewardsPoolContractAddress,
             ),

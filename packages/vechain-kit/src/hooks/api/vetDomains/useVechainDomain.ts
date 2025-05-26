@@ -132,12 +132,7 @@ export const useVechainDomain = (addressOrDomain?: string | null) => {
 
     return useQuery<VeChainDomainResult>({
         queryKey: getVechainDomainQueryKey(addressOrDomain),
-        queryFn: () =>
-            fetchVechainDomain(
-                thor as unknown as ThorClient,
-                network.type,
-                addressOrDomain,
-            ),
+        queryFn: () => fetchVechainDomain(thor, network.type, addressOrDomain),
         enabled: !!thor && !!addressOrDomain,
     });
 };

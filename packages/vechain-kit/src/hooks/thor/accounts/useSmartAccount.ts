@@ -54,12 +54,7 @@ export const useSmartAccount = (ownerAddress?: string) => {
 
     return useQuery({
         queryKey: getSmartAccountQueryKey(ownerAddress),
-        queryFn: () =>
-            getSmartAccount(
-                thor as unknown as ThorClient,
-                network.type,
-                ownerAddress,
-            ),
+        queryFn: () => getSmartAccount(thor, network.type, ownerAddress),
         enabled: !!ownerAddress && !!network.type && !!thor,
     });
 };

@@ -8,7 +8,6 @@ import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useThor } from '@vechain/dapp-kit-react';
-import { ThorClient } from '@vechain/sdk-network';
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(
@@ -20,10 +19,7 @@ export const useCustomTokens = () => {
 
     const addToken = async (address: CustomTokenInfo['address']) => {
         if (!isTokenIncluded(address) && !isDefaultToken(address)) {
-            const tokenInfo = await getTokenInfo(
-                thor as unknown as ThorClient,
-                address,
-            );
+            const tokenInfo = await getTokenInfo(thor, address);
 
             const token: CustomTokenInfo = {
                 ...tokenInfo,

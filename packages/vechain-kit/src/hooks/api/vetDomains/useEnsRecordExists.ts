@@ -47,12 +47,7 @@ export const useEnsRecordExists = (name: string) => {
 
     return useQuery({
         queryKey: getEnsRecordExistsQueryKey(name),
-        queryFn: () =>
-            getEnsRecordExists(
-                thor as unknown as ThorClient,
-                network.type,
-                name,
-            ),
+        queryFn: () => getEnsRecordExists(thor, network.type, name),
         enabled: !!name,
     });
 };

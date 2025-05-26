@@ -50,11 +50,7 @@ export const useHasV1SmartAccount = (ownerAddress?: string) => {
     return useQuery({
         queryKey: getHasV1SmartAccountQueryKey(ownerAddress, network.type),
         queryFn: async () =>
-            getHasV1SmartAccount(
-                thor as unknown as ThorClient,
-                ownerAddress,
-                network.type,
-            ),
+            getHasV1SmartAccount(thor, ownerAddress, network.type),
         enabled: !!thor && !!ownerAddress && !!network,
     });
 };

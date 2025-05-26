@@ -41,12 +41,7 @@ export const useIsDomainProtected = (domain?: string, enabled = true) => {
 
     return useQuery({
         queryKey: getIsDomainProtectedQueryKey(domain),
-        queryFn: () =>
-            getIsDomainProtected(
-                thor as unknown as ThorClient,
-                network.type,
-                domain,
-            ),
+        queryFn: () => getIsDomainProtected(thor, network.type, domain),
         enabled: !!domain && enabled && !!network.type,
     });
 };

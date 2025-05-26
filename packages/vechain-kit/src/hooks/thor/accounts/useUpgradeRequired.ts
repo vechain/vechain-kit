@@ -70,7 +70,7 @@ export const useUpgradeRequired = (
         ),
         queryFn: async () =>
             getUpgradeRequired(
-                thor as unknown as ThorClient,
+                thor,
                 accountAddress,
                 ownerAddress,
                 targetVersion,

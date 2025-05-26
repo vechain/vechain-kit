@@ -62,7 +62,7 @@ export const useUpgradeRequiredForAccount = (
         ),
         queryFn: async () =>
             getUpgradeRequiredForAccount(
-                thor as unknown as ThorClient,
+                thor,
                 contractAddress,
                 targetVersion,
                 network.type,

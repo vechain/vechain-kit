@@ -41,6 +41,8 @@
     ]
   },
   "devDependencies": {
+    "@vechain/sdk-core": "1.1.0",
+    "@vechain/sdk-network": "1.1.0",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@changesets/cli": "^2.27.1",
     "@commitlint/config-conventional": "^18.0.0",

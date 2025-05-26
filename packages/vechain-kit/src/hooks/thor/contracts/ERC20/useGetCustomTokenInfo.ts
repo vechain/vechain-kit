@@ -51,8 +51,7 @@ export const useGetCustomTokenInfo = (tokenAddress: string) => {
 
     return useQuery({
         queryKey: getCustomTokenInfo(tokenAddress),
-        queryFn: async () =>
-            getTokenInfo(thor as unknown as ThorClient, tokenAddress),
+        queryFn: async () => getTokenInfo(thor, tokenAddress),
         enabled: !!thor && !!network.type && !!tokenAddress,
     });
 };

@@ -124,21 +124,12 @@ export const useTokenBalances2 = ({ address }: { address: string }) => {
         queries: [
             {
                 queryKey: ['base-token-balances', address],
-                queryFn: () =>
-                    getTokenBalances(
-                        thor as unknown as ThorClient,
-                        address,
-                        network.type,
-                    ),
+                queryFn: () => getTokenBalances(thor, address, network.type),
             },
             {
                 queryKey: ['custom-token-balances', address],
                 queryFn: () =>
-                    getCustomTokenBalances(
-                        thor as unknown as ThorClient,
-                        address,
-                        customTokens,
-                    ),
+                    getCustomTokenBalances(thor, address, customTokens),
             },
         ],
         combine: (data) => {

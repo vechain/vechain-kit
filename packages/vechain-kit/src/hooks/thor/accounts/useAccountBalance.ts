@@ -27,8 +27,7 @@ export const useAccountBalance = (address?: string) => {
     const thor = useThor();
     return useQuery({
         queryKey: getAccountBalanceQueryKey(address),
-        queryFn: () =>
-            getAccountBalance(thor as unknown as ThorClient, address),
+        queryFn: () => getAccountBalance(thor, address),
         enabled: !!address && Address.isValid(address),
         refetchInterval: 10000,
     });

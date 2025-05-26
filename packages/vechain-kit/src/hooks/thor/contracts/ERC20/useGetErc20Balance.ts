@@ -41,12 +41,7 @@ export const useGetErc20Balance = (tokenAddress: string, address?: string) => {
 
     return useQuery({
         queryKey: getErc20BalanceQueryKey(tokenAddress, address),
-        queryFn: async () =>
-            getErc20Balance(
-                thor as unknown as ThorClient,
-                tokenAddress,
-                address,
-            ),
+        queryFn: async () => getErc20Balance(thor, tokenAddress, address),
         enabled: !!thor && !!address && !!tokenAddress,
     });
 };

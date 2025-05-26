@@ -104,10 +104,7 @@ export const useAllocationsRoundsEvents = () => {
     return useQuery({
         queryKey: getAllocationsRoundsEventsQueryKey(),
         queryFn: async () =>
-            await getAllocationsRoundsEvents(
-                thor as unknown as ThorClient,
-                network.type,
-            ),
+            await getAllocationsRoundsEvents(thor, network.type),
         enabled: !!thor && !!network.type,
     });
 };

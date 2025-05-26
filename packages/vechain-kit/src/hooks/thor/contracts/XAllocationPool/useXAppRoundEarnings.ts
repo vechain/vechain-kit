@@ -3,10 +3,7 @@ import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationPool__factory } from '@/contracts';
 import { getOrCreateQueryClient } from '@/providers/EnsureQueryClient';
-import {
-    getRoundXApps,
-    getRoundXAppsQueryKey,
-} from '@/hooks';
+import { getRoundXApps, getRoundXAppsQueryKey } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'viem';
@@ -76,12 +73,7 @@ export const useXAppRoundEarnings = (roundId: string, xAppId: string) => {
         queryKey: getXAppRoundEarningsQueryKey(roundId, xAppId),
         queryFn: async () => {
             const data = await queryClient.ensureQueryData({
-                queryFn: () =>
-                    getRoundXApps(
-                        thor as unknown as ThorClient,
-                        network.type,
-                        roundId,
-                    ),
+                queryFn: () => getRoundXApps(thor, network.type, roundId),
                 queryKey: getRoundXAppsQueryKey(roundId),
             });
 
@@ -90,7 +82,7 @@ export const useXAppRoundEarnings = (roundId: string, xAppId: string) => {
             if (!isXAppInRound) return { amount: '0', xAppId };
 
             return await getXAppRoundEarnings(
-                thor as unknown as ThorClient,
+                thor,
                 roundId,
                 xAppId,
                 network.type,
@@ -119,12 +111,7 @@ export const useMultipleXAppRoundEarnings = (
         queryKey: getXAppRoundEarningsQueryKey(roundId, 'ALL'),
         queryFn: async () => {
             const data = await queryClient.ensureQueryData({
-                queryFn: () =>
-                    getRoundXApps(
-                        thor as unknown as ThorClient,
-                        network.type,
-                        roundId,
-                    ),
+                queryFn: () => getRoundXApps(thor, network.type, roundId),
                 queryKey: getRoundXAppsQueryKey(roundId),
             });
 

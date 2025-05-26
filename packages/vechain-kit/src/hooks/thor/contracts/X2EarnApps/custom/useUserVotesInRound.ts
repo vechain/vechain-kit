@@ -52,7 +52,7 @@ export const getUserVotesInRound = async (
     ];
 
     const events = await getAllEventLogs({
-        thor: thor as unknown as ThorClient,
+        thor: thor,
         filterCriteria,
         nodeUrl: getConfig(network).nodeUrl,
     });
@@ -113,7 +113,7 @@ export const useUserVotesInRound = (roundId?: string, address?: string) => {
         queryKey: getUserVotesInRoundQueryKey(roundId, address),
         queryFn: async () => {
             const votes = await getUserVotesInRound(
-                thor as unknown as ThorClient,
+                thor,
                 network.type,
                 roundId,
                 address,
@@ -148,11 +148,7 @@ export const useVotesInRound = (roundId?: string, enabled = true) => {
     return useQuery({
         queryKey: getVotesInRoundQueryKey(roundId),
         queryFn: async () =>
-            await getUserVotesInRound(
-                thor as unknown as ThorClient,
-                network.type,
-                roundId,
-            ),
+            await getUserVotesInRound(thor, network.type, roundId),
 
         enabled:
             !!thor &&

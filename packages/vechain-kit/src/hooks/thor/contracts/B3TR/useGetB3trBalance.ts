@@ -50,12 +50,7 @@ export const useGetB3trBalance = (address?: string) => {
 
     return useQuery({
         queryKey: getB3trBalanceQueryKey(address),
-        queryFn: async () =>
-            getB3trBalance(
-                thor as unknown as ThorClient,
-                network.type,
-                address,
-            ),
+        queryFn: async () => getB3trBalance(thor, network.type, address),
         enabled: !!thor && !!address && !!network.type,
     });
 };

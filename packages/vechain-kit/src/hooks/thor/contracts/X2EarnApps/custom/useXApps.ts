@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { getXApps } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { ThorClient } from '@vechain/sdk-network';
 
 export const getXAppsQueryKey = () => ['VECHAIN_KIT', 'getXApps'];
 
@@ -16,8 +15,7 @@ export const useXApps = () => {
 
     return useQuery({
         queryKey: getXAppsQueryKey(),
-        queryFn: async () =>
-            await getXApps(thor as unknown as ThorClient, network.type),
+        queryFn: async () => await getXApps(thor, network.type),
         enabled: !!thor && !!network.type,
     });
 };

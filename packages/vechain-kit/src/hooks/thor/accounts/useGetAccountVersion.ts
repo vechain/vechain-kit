@@ -67,12 +67,7 @@ export const useGetAccountVersion = (
             network.type,
         ),
         queryFn: async () =>
-            getAccountVersion(
-                thor as unknown as ThorClient,
-                accountAddress,
-                ownerAddress,
-                network.type,
-            ),
+            getAccountVersion(thor, accountAddress, ownerAddress, network.type),
         enabled: !!thor && accountAddress !== '' && ownerAddress !== '',
     });
 };

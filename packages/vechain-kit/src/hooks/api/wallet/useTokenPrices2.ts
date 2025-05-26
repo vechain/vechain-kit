@@ -53,8 +53,7 @@ export const useTokenPrices2 = () => {
 
     return useQuery({
         queryKey: ['token-prices', network.type],
-        queryFn: () =>
-            getTokenPrices(thor as unknown as ThorClient, tokens, network.type),
+        queryFn: () => getTokenPrices(thor, tokens, network.type),
         select: (data) => {
             const [
                 vetUsdPrice,
