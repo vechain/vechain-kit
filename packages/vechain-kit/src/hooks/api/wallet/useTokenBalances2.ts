@@ -1,6 +1,7 @@
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { CustomTokenInfo, useCustomTokens } from '@/hooks';
+import { executeMultipleClausesCall } from '@/utils';
 import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network';
 import { IB3TR__factory, IERC20__factory, IVOT3__factory } from '@/contracts';
@@ -48,38 +49,39 @@ const getTokenBalances = async (
 ) => {
     const config = getConfig(network);
 
-    const b3trContract = thor.contracts.load(
-        config.b3trContractAddress,
-        IB3TR__factory.abi,
-    );
-    const vot3Contract = thor.contracts.load(
-        config.vot3ContractAddress,
-        IVOT3__factory.abi,
-    );
-    const veDelegateContract = thor.contracts.load(
-        config.veDelegate,
-        IERC20__factory.abi,
-    );
-    const gloDollarContract = thor.contracts.load(
-        config.gloDollarContractAddress,
-        IERC20__factory.abi,
-    );
+    const [b3trBalance, vot3Balance, veDelegateBalance, gloDollarBalance] =
+        await executeMultipleClausesCall({
+            thor,
+            calls: [
+                {
+                    abi: IB3TR__factory.abi,
+                    address: config.b3trContractAddress,
+                    functionName: 'balanceOf',
+                    args: [address],
+                },
+                {
+                    abi: IVOT3__factory.abi,
+                    address: config.vot3ContractAddress,
+                    functionName: 'balanceOf',
+                    args: [address],
+                },
+                {
+                    abi: IERC20__factory.abi,
+                    address: config.veDelegate,
+                    functionName: 'balanceOf',
+                    args: [address],
+                },
+                {
+                    abi: IERC20__factory.abi,
+                    address: config.gloDollarContractAddress,
+                    functionName: 'balanceOf',
+                    args: [address],
+                },
+            ],
+        });
 
     const { balance: vetBalance, energy: vthoBalance } =
         await getAccountBalance(thor, address);
-
-    const response = await thor.contracts.executeMultipleClausesCall([
-        b3trContract.clause.balanceOf(address),
-        vot3Contract.clause.balanceOf(address),
-        veDelegateContract.clause.balanceOf(address),
-        gloDollarContract.clause.balanceOf(address),
-    ]);
-
-    if (!response.every((r) => r.success))
-        throw new Error('Failed to get token balances');
-
-    const [b3trBalance, vot3Balance, veDelegateBalance, gloDollarBalance] =
-        response.map((r) => r.result.plain as string);
 
     return [
         {

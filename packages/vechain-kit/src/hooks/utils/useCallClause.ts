@@ -1,3 +1,4 @@
+import { executeCallClause, ViewFunctionResult } from '@/utils';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import {
@@ -13,14 +14,6 @@ type ExtractViewFunction<
 > = Extract<
     TAbi[number],
     { type: 'function'; stateMutability: 'pure' | 'view'; name: TMethod }
->;
-
-export type ViewFunctionResult<
-    TAbi extends Abi,
-    TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
-> = AbiParametersToPrimitiveTypes<
-    ExtractViewFunction<TAbi, TMethod>['outputs'],
-    AbiParameterKind
 >;
 
 export const getCallClauseQueryKey = <TAbi extends Abi>({
@@ -41,7 +34,6 @@ export const getCallClauseQueryKey = <TAbi extends Abi>({
     return ['callClause', address, method, args] as const;
 };
 
-// TODO: migration ask why can't we use wagmi useReadContract?
 export const useCallClause = <
     TAbi extends Abi,
     TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
@@ -78,11 +70,14 @@ export const useCallClause = <
             method,
             args,
         }),
-        queryFn: async () => {
-            const contract = thor.contracts.load(address, abi);
-            const res = await contract.read[method](...args);
-            return res as ViewFunctionResult<TAbi, TMethod>;
-        },
+        queryFn: async () =>
+            executeCallClause({
+                thor,
+                contractAddress: address,
+                abi,
+                method,
+                args,
+            }),
         ...queryOptions,
     });
 };

@@ -4,12 +4,7 @@ import { Emissions__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
 import { useThor } from '@vechain/dapp-kit-react';
-
-type AllocationAmount = {
-    treasury: string;
-    voteX2Earn: string;
-    voteXAllocations: string;
-};
+import { executeMultipleClausesCall } from '@/utils';
 
 export const getAllocationAmountQueryKey = (roundId?: string) => [
     'VECHAIN_KIT',
@@ -30,29 +25,41 @@ export const useAllocationAmount = (roundId?: string) => {
     return useQuery({
         queryKey: getAllocationAmountQueryKey(roundId),
         queryFn: async () => {
-            const contract = thor.contracts.load(
-                getConfig(network.type).emissionsContractAddress,
-                Emissions__factory.abi,
-            );
-            const clauses = [
-                contract.clause.getTreasuryAmount(roundId),
-                contract.clause.getVote2EarnAmount(roundId),
-                contract.clause.getXAllocationAmount(roundId),
-            ];
+            if (!roundId) throw new Error('Round ID is required');
 
-            const res = await thor.transactions.executeMultipleClausesCall(
-                clauses,
-            );
-            if (!res.every((r) => r.success))
-                throw new Error(
-                    `Failed to fetch allocation amount of round ${roundId}`,
-                );
+            const [treasury, voteX2Earn, voteXAllocations] =
+                await executeMultipleClausesCall({
+                    thor,
+                    calls: [
+                        {
+                            abi: Emissions__factory.abi,
+                            address: getConfig(network.type)
+                                .emissionsContractAddress,
+                            functionName: 'getTreasuryAmount',
+                            args: [BigInt(roundId)],
+                        },
+                        {
+                            abi: Emissions__factory.abi,
+                            address: getConfig(network.type)
+                                .emissionsContractAddress,
+                            functionName: 'getVote2EarnAmount',
+                            args: [BigInt(roundId)],
+                        },
+                        {
+                            abi: Emissions__factory.abi,
+                            address: getConfig(network.type)
+                                .emissionsContractAddress,
+                            functionName: 'getXAllocationAmount',
+                            args: [BigInt(roundId)],
+                        },
+                    ],
+                });
 
             return {
-                treasury: formatEther(res[0].result.plain as bigint),
-                voteX2Earn: formatEther(res[1].result.plain as bigint),
-                voteXAllocations: formatEther(res[2].result.plain as bigint),
-            } as AllocationAmount;
+                treasury: formatEther(treasury),
+                voteX2Earn: formatEther(voteX2Earn),
+                voteXAllocations: formatEther(voteXAllocations),
+            };
         },
         enabled: !!thor && !!roundId && !!network.type,
     });

@@ -1,4 +1,8 @@
-import { allNodeStrengthLevelToName, NodeStrengthLevelToImage } from '@/utils';
+import {
+    allNodeStrengthLevelToName,
+    executeMultipleClausesCall,
+    NodeStrengthLevelToImage,
+} from '@/utils';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { useQuery } from '@tanstack/react-query';
@@ -6,7 +10,6 @@ import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
 import { useThor } from '@vechain/dapp-kit-react';
 import { ThorClient } from '@vechain/sdk-network';
-import type { ViewFunctionResult } from '@/hooks';
 
 /**
  * UserXNode type for the xNodes owned by a user
@@ -37,27 +40,24 @@ export const getUserXNodes = async (
     if (!user) throw new Error('User address is required');
     const contractAddress =
         getConfig(networkType).nodeManagementContractAddress;
-    const contract = thor.contracts.load(
-        contractAddress,
-        NodeManagement__factory.abi,
-    );
-    const clauses = [
-        contract.clause.getNodeIds(user),
-        contract.clause.getUsersNodeLevels(user),
-    ];
 
-    const res = await thor.transactions.executeMultipleClausesCall(clauses);
-    if (!res.every((r) => r.success))
-        throw new Error(`Failed to fetch xNodes for user ${user}`);
-
-    const nodeIds = (res[0]?.result.array?.[0] || []) as ViewFunctionResult<
-        typeof NodeManagement__factory.abi,
-        'getNodeIds'
-    >;
-    const levels = (res[1]?.result.array?.[0] || []) as ViewFunctionResult<
-        typeof NodeManagement__factory.abi,
-        'getUsersNodeLevels'
-    >;
+    const [nodeIds, levels] = await executeMultipleClausesCall({
+        thor,
+        calls: [
+            {
+                abi: NodeManagement__factory.abi,
+                address: contractAddress,
+                functionName: 'getNodeIds',
+                args: [user],
+            },
+            {
+                abi: NodeManagement__factory.abi,
+                address: contractAddress,
+                functionName: 'getUsersNodeLevels',
+                args: [user],
+            },
+        ],
+    });
 
     if (nodeIds.length !== levels.length)
         throw new Error('Error fetching Nodes - Data is corrupted');
