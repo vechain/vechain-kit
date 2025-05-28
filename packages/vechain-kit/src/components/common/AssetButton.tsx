@@ -15,6 +15,7 @@ import {
     formatCompactCurrency,
     SupportedCurrency,
 } from '@/utils/currencyConverter';
+import i18n, { bcp47LanguageCodes } from '@i18n';
 
 type AssetButtonProps = ButtonProps & {
     symbol: string;
@@ -25,7 +26,7 @@ type AssetButtonProps = ButtonProps & {
     onClick?: () => void;
 };
 
-const amountFormatter = new Intl.NumberFormat('de-DE', {
+const amountFormatter = (lng: string) => new Intl.NumberFormat(bcp47LanguageCodes[lng], {
     notation: 'compact',
     compactDisplay: 'short',
     maximumFractionDigits: 2,
@@ -89,7 +90,7 @@ export const AssetButton = ({
                 <Text>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
-                <Text>{amountFormatter.format(amount)}</Text>
+                <Text>{amountFormatter(i18n.resolvedLanguage || 'en').format(amount)}</Text>
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
@@ -97,8 +98,7 @@ export const AssetButton = ({
                 >
                     {formatCompactCurrency(
                         currencyValue,
-                        currentCurrency as SupportedCurrency,
-                        'de-DE',
+                        { currency: currentCurrency as SupportedCurrency },
                     )}
                 </Text>
             </VStack>

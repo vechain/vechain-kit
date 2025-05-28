@@ -19,7 +19,7 @@ export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {
     VOT3: <VOT3Logo />,
 };
 
-export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
+export const VECHAIN_PRIVY_APP_ID = 'cm78y5zu102duiamtf6vruf3t';
 
 export const notFoundImage =
     'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';
