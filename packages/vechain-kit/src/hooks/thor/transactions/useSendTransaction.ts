@@ -197,7 +197,9 @@ export const useSendTransaction = ({
                 setTxHash(response);
             } catch (error) {
                 setSendTransactionError(
-                    error instanceof Error ? error.message : String(error),
+                    error && typeof error === 'object' && 'message' in error
+                        ? (error.message as string)
+                        : String(error),
                 );
                 onTxFailedOrCancelled?.(
                     error instanceof Error ? error : new Error(String(error)),
