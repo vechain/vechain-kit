@@ -4,9 +4,10 @@ import { useThor } from '@vechain/dapp-kit-react';
 import {
     ExtractAbiFunctionNames,
     AbiParametersToPrimitiveTypes,
-    AbiParameterKind,
 } from 'abitype';
 import { Abi } from 'viem';
+
+export * from '@/utils/thorUtils';
 
 type ExtractViewFunction<
     TAbi extends Abi,
@@ -28,11 +29,14 @@ export const getCallClauseQueryKey = <TAbi extends Abi>({
             TAbi,
             ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
         >['inputs'],
-        AbiParameterKind
+        'inputs'
     >;
-}) => {
-    return ['callClause', address, method, args] as const;
-};
+}): (string | undefined | unknown[])[] => [
+    'callClause',
+    address,
+    method,
+    args as unknown[],
+];
 
 export const useCallClause = <
     TAbi extends Abi,

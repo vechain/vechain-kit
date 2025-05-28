@@ -2,7 +2,7 @@ import { ThorClient } from '@vechain/sdk-network';
 import {
     ExtractAbiFunctionNames,
     AbiParametersToPrimitiveTypes,
-    AbiParameterKind,
+    ExtractAbiFunction,
 } from 'abitype';
 import { Abi, ContractFunctionParameters } from 'viem';
 import type {
@@ -23,7 +23,7 @@ export type ViewFunctionResult<
     TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
 > = AbiParametersToPrimitiveTypes<
     ExtractViewFunction<TAbi, TMethod>['outputs'],
-    AbiParameterKind
+    'outputs'
 >;
 
 export type MultipleClausesCallParameters<
@@ -51,7 +51,7 @@ export const executeCallClause = async <
     abi: TAbi;
     method: TMethod;
     args: AbiParametersToPrimitiveTypes<
-        ExtractViewFunction<TAbi, TMethod>['inputs'],
+        ExtractAbiFunction<TAbi, TMethod>['inputs'],
         'inputs'
     >;
 }) => {
@@ -86,4 +86,23 @@ export const executeMultipleClausesCall = async <
         contracts,
         allowFailure
     >;
+};
+
+export const buildCallClauses = <
+    contracts extends readonly ContractFunctionParameters[],
+    allowFailure extends boolean = false,
+>({
+    thor,
+    calls,
+}: {
+    thor: ThorClient;
+    calls: MultipleClausesCallParameters<contracts, allowFailure>;
+}) => {
+    if (!Array.isArray(calls)) throw new Error('calls must be an array');
+
+    return calls.map((call) =>
+        thor.contracts
+            .load(call.address, call.abi)
+            .clause[call.functionName](...call.args),
+    );
 };
