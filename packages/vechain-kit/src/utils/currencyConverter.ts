@@ -1,4 +1,5 @@
 import { ExchangeRates } from '@/hooks/api/wallet/useTokenPrices';
+import i18n, { bcp47LanguageCodes } from '@i18n';
 
 export type SupportedCurrency = 'usd' | 'eur' | 'gbp';
 
@@ -19,33 +20,32 @@ export const convertToSelectedCurrency = (
 
 export const formatCurrencyValue = (
     value: number,
-    currency: SupportedCurrency,
+    lng = 'en',
     options?: Intl.NumberFormatOptions,
-    locale = 'en-US',
 ): string => {
     const defaultOptions: Intl.NumberFormatOptions = {
         style: 'currency',
-        currency,
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
+        currency: options?.currency ?? 'usd',
         ...options,
     };
 
-    return new Intl.NumberFormat(locale, defaultOptions).format(value);
+    return new Intl.NumberFormat(bcp47LanguageCodes[lng], defaultOptions).format(value);
 };
 
 export const formatCompactCurrency = (
     value: number,
-    currency: SupportedCurrency,
-    locale?: string,
+    options?: Intl.NumberFormatOptions,
 ): string => {
     return formatCurrencyValue(
         value,
-        currency,
+        i18n.resolvedLanguage,
         {
             notation: 'compact',
             compactDisplay: 'short',
+            currency: options?.currency ?? 'usd',
+            ...options,
         },
-        locale,
     );
 };

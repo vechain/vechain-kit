@@ -34,6 +34,16 @@ export const languageNames = {
     ja: '日本語',
 };
 
+export const bcp47LanguageCodes: Record<string, string> = {
+    en: 'en-US',
+    de: 'de-DE',
+    it: 'it-IT',
+    fr: 'fr-FR',
+    es: 'es-ES',
+    zh: 'zh-CN',
+    ja: 'ja-JP',
+};
+
 // Custom language detector that checks prop first, then browser
 const customLanguageDetector = {
     name: 'customDetector',

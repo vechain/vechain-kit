@@ -38,6 +38,7 @@
           "@assets/*": ["src/assets/*"],
           "@providers": ["src/providers"],
           "@providers/*": ["src/providers/*"],
+          "@i18n": ["./i18n"],
       },
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/*.d.ts", "eslint.config.mjs"]
