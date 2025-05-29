@@ -136,7 +136,6 @@ export const useSendTransaction = ({
             let estimatedGas = 0;
             try {
                 estimatedGas = await estimateTxGas(
-                    // TODO: migration this is package level type issue to be resolved.
                     thor,
                     [..._clauses],
                     signerAccountAddress,

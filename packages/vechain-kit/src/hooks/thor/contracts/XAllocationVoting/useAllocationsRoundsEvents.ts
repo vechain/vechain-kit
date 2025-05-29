@@ -47,7 +47,6 @@ export const getAllocationsRoundsEvents = async (
             {
                 criteria: {
                     address: xAllocationVotingContract,
-                    // TODO: migration this is not a topic so might be removed.
                     topic0: eventAbi.signatureHash,
                 },
                 eventAbi,

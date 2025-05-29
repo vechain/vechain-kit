@@ -8,6 +8,7 @@ export {
   useWallet as useDAppKitWallet,
   useWalletModal as useDAppKitWalletModal,
 } from '@vechain/dapp-kit-react';
+export { ThorClient } from '@vechain/sdk-network';
 export { useLegalDocuments } from '../providers/LegalDocumentsProvider';
 
 export * from './api';

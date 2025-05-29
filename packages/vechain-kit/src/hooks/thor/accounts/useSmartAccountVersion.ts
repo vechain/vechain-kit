@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { SimpleAccountFactory__factory } from '@/contracts';
-import { useThor } from '@vechain/dapp-kit-react';
 import { ThorClient } from '@vechain/sdk-network';
+import { executeCallClause, useThor } from '@/hooks';
+
+const abi = SimpleAccountFactory__factory.abi;
+const method = 'version' as const;
 
 export const getVersion = async (
     thor: ThorClient,
@@ -9,14 +12,15 @@ export const getVersion = async (
 ): Promise<number> => {
     if (!contractAddress) throw new Error('Contract address is required');
 
-    const res = await thor.contracts
-        .load(contractAddress, SimpleAccountFactory__factory.abi)
-        .read.version();
+    const [version] = await executeCallClause({
+        thor,
+        contractAddress,
+        abi,
+        method,
+        args: [],
+    });
 
-    if (!res) throw new Error(`Failed to get version of ${contractAddress}`);
-
-    // TODO: migration check if it returns BigInt
-    return Number(res);
+    return Number(version);
 };
 
 export const getVersionQueryKey = (contractAddress?: string) => [
