@@ -24,7 +24,7 @@ export const getCallClauseQueryKey = <TAbi extends Abi>({
 }: {
     address: string;
     method: ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>;
-    args: AbiParametersToPrimitiveTypes<
+    args?: AbiParametersToPrimitiveTypes<
         ExtractViewFunction<
             TAbi,
             ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
@@ -35,7 +35,7 @@ export const getCallClauseQueryKey = <TAbi extends Abi>({
     'callClause',
     address,
     method,
-    args as unknown[],
+    ...(args ? [args as unknown[]] : []),
 ];
 
 export const useCallClause = <
