@@ -91,16 +91,6 @@
       "optional": true
     }
   },
-  "resolutions": {
-    "@vechain/sdk-core": "1.2.0-rc.3",
-    "@vechain/sdk-network": "1.2.0-rc.3",
-    "@vechain/dapp-kit-ui": "2.0.0-rc.1",
-    "@vechain/dapp-kit": "2.0.0-rc.1"
-  },
-  "overrides": {
-    "@vechain/sdk-core": "1.2.0-rc.3",
-    "@vechain/sdk-network": "1.2.0-rc.3"
-  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
