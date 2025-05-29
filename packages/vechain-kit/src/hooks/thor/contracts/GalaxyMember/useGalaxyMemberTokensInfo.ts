@@ -21,7 +21,7 @@ export const getTokensInfoByOwnerQueryKey = (owner?: string | null) => [
  * @param size - The number of tokens to fetch per page.
  * @returns An infinite query result containing the token information and pagination controls.
  */
-export const useGetTokensInfoByOwner = (
+export const useGalaxyMemberTokensInfo = (
     owner: string | null,
     size: number = 10,
 ) => {

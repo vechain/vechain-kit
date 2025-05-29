@@ -1,1 +1,1 @@
-export * from './useGetTokensInfoByOwner';
+export * from './useGalaxyMemberTokensInfo';
