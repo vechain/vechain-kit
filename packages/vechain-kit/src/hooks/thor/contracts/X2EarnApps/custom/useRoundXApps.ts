@@ -2,10 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
-import { XApp } from '@/hooks';
+import { executeCallClause, XApp } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';
 import { ThorClient } from '@vechain/sdk-network';
+
+const abi = XAllocationVoting__factory.abi;
+const method = 'getAppsOfRound' as const;
+
 /**
  * Returns all the available xApps (apps that can be voted on for allocation)
  * @param thor  the thor client
@@ -20,17 +24,23 @@ export const getRoundXApps = async (
 ): Promise<XApp[]> => {
     if (!roundId) return [];
 
-    const res = await thor.contracts
-        .load(
+    const [xApps] = await executeCallClause({
+        thor,
+        contractAddress:
             getConfig(networkType).xAllocationVotingContractAddress,
-            XAllocationVoting__factory.abi,
-        )
-        .read.getAppsOfRound(roundId);
+        abi,
+        method,
+        args: [BigInt(roundId)],
+    });
 
-    if (!res) throw new Error(`Failed to get apps of round ${roundId}`);
-
-    // TODO: migration check if it is in correct format
-    return res as unknown as XApp[];
+    return xApps.map((app) => ({
+        id: app.id.toString(),
+        teamWalletAddress: app.teamWalletAddress,
+        name: app.name,
+        metadataURI: app.metadataURI,
+        createdAtTimestamp: app.createdAtTimestamp.toString(),
+        appAvailableForAllocationVoting: app.appAvailableForAllocationVoting,
+    }));
 };
 
 export const getRoundXAppsQueryKey = (roundId?: string) => [

@@ -7,8 +7,12 @@ import { useVeChainKitConfig } from '@/providers';
 const contractAbi = VeBetterPassport__factory.abi;
 const method = 'appSecurity' as const;
 
-// TODO: migration check if necessary, otherwise remove
-export const APP_SECURITY_LEVELS = ['NONE', 'LOW', 'MEDIUM', 'HIGH'];
+export enum AppSecurityLevel {
+    NONE,
+    LOW,
+    MEDIUM,
+    HIGH,
+}
 
 export const getAppSecurityLevelQueryKey = (
     networkType: NETWORK_TYPE,
@@ -44,7 +48,7 @@ export const useAppSecurityLevel = (appId?: string, customEnabled = true) => {
         queryOptions: {
             enabled:
                 !!appId && customEnabled && !!contractAddress && !!network.type,
-            select: (data) => data[0],
+            select: (data) => data[0] as AppSecurityLevel,
         },
     });
 };

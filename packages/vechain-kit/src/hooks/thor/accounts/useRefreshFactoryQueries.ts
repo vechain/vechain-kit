@@ -15,7 +15,6 @@ import { useVeChainKitConfig } from '@/providers';
  * Hook to refresh smart account factory-related queries
  * @returns Object with refresh function
  */
-// TODO: migration no need to cancel and refresh, use invalidateQueries with catchall keys instead
 export const useRefreshFactoryQueries = () => {
     const queryClient = useQueryClient();
     const { connectedWallet, smartAccount } = useWallet();

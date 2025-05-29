@@ -5,6 +5,10 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { ThorClient } from '@vechain/sdk-network';
+import { executeCallClause } from '@/utils/thorUtils';
+
+const abi = SimpleAccountFactory__factory.abi;
+const method = 'hasLegacyAccount' as const;
 
 export const getHasV1SmartAccount = async (
     thor: ThorClient,
@@ -14,17 +18,15 @@ export const getHasV1SmartAccount = async (
     if (!ownerAddress) throw new Error('Owner address is required');
     if (!networkType) throw new Error('Network type is required');
 
-    const res = await thor.contracts
-        .load(
-            getConfig(networkType).accountFactoryAddress,
-            SimpleAccountFactory__factory.abi,
-        )
-        .read.hasLegacyAccount(ownerAddress);
+    const [hasLegacyAccount] = await executeCallClause({
+        thor,
+        abi,
+        contractAddress: getConfig(networkType).accountFactoryAddress,
+        method,
+        args: [ownerAddress],
+    });
 
-    if (!res) throw new Error('Failed to get has legacy account');
-
-    // TODO: migration checked it returns as boolean ✅
-    return res[0] as boolean;
+    return hasLegacyAccount;
 };
 
 export const getHasV1SmartAccountQueryKey = (
