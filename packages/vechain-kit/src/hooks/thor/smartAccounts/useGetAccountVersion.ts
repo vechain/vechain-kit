@@ -14,7 +14,7 @@ export const getAccountVersionQueryKey = (
     getCallClauseQueryKey<typeof abi>({
         address: getConfig(networkType).accountFactoryAddress,
         method: 'getAccountVersion',
-        args: [accountAddress, ownerAddress],
+        args: [accountAddress as `0x${string}`, ownerAddress as `0x${string}`],
     });
 
 /**
@@ -33,7 +33,7 @@ export const useGetAccountVersion = (
         address: getConfig(network.type).accountFactoryAddress,
         abi,
         method: 'getAccountVersion',
-        args: [accountAddress, ownerAddress],
+        args: [accountAddress as `0x${string}`, ownerAddress as `0x${string}`],
         queryOptions: {
             select: (data) => {
                 return {

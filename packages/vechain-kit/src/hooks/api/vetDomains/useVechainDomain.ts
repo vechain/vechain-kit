@@ -62,7 +62,7 @@ export const fetchVechainDomain = async (
                 contractAddress: getConfig(networkType).vnsResolverAddress,
                 abi: resolverABI,
                 method: 'getNames',
-                args: [[addressOrDomain]],
+                args: [[addressOrDomain as `0x${string}`]],
             });
             const domainName = res[0][0];
 

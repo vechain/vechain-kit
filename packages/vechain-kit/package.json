@@ -1,7 +1,6 @@
 {
   "name": "@vechain/vechain-kit",
   "version": "2.0.0-rc.1",
-  "private": false,
   "homepage": "https://github.com/vechain/vechain-kit",
   "repository": "github:vechain/vechain-kit",
   "license": "MIT",
@@ -82,15 +81,25 @@
     "@vechain/dapp-kit-react": "2.0.0-rc.1"
   },
   "peerDependenciesMeta": {
-    "@vechain/dapp-kit-react": {
+    "@chakra-ui/react": {
       "optional": true
     },
     "@tanstack/react-query": {
       "optional": true
     },
-    "@chakra-ui/react": {
+    "@vechain/dapp-kit-react": {
       "optional": true
     }
+  },
+  "resolutions": {
+    "@vechain/sdk-core": "1.2.0-rc.3",
+    "@vechain/sdk-network": "1.2.0-rc.3",
+    "@vechain/dapp-kit-ui": "2.0.0-rc.1",
+    "@vechain/dapp-kit": "2.0.0-rc.1"
+  },
+  "overrides": {
+    "@vechain/sdk-core": "1.2.0-rc.3",
+    "@vechain/sdk-network": "1.2.0-rc.3"
   },
   "exports": {
     ".": {

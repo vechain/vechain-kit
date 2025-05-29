@@ -160,7 +160,12 @@ export const useSendTransaction = ({
                     signerAccountAddress,
                 );
 
-            return signer.sendTransaction(txRequestInput);
+            return signer.sendTransaction({
+                ...txRequestInput,
+                maxPriorityFeePerGas:
+                    txRequestInput.maxPriorityFeePerGas?.toString(),
+                maxFeePerGas: txRequestInput.maxFeePerGas?.toString(),
+            });
         },
         [
             signerAccountAddress,
