@@ -1,0 +1,229 @@
+---
+description: 
+globs: **/thor/contracts/**/*.ts
+alwaysApply: false
+---
+When creating a new contract clause call interaction using `useCallClause`, follow this template pattern:
+
+## Template Structure:
+
+```typescript
+import { getConfig } from '@/config';
+import { {ContractName}__factory } from '@/contracts';
+import { useVeChainKitConfig } from '@/providers';
+import { formatEther } from 'viem'; // Import based on data type needed
+import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { NETWORK_TYPE } from '@/config/network';
+
+const contractAbi = {ContractName}__factory.abi;
+const method = '{methodName}';
+
+export const get{HookName}QueryKey = (
+    networkType: NETWORK_TYPE,
+    {parameters}: {parameterTypes},
+) => {
+    const contractAddress = getConfig(networkType).{contractAddressProperty};
+    return getCallClauseQueryKey({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [{transformedParameters}],
+    });
+};
+
+/**
+ * {Hook description}
+ *
+ * @param {parameters} - {Parameter descriptions}
+ * @param customEnabled - Flag indicating whether the hook is enabled or not. Default is true.
+ * @returns The result of the call to the contract method.
+ */
+export const use{HookName} = ({parameters}?: {parameterTypes}, customEnabled = true) => {
+    const { network } = useVeChainKitConfig();
+    const contractAddress = getConfig(network.type).{contractAddressProperty};
+
+    // {Contract} {method} result: {expectedResultFormat}
+    return useCallClause({
+        address: contractAddress,
+        abi: contractAbi,
+        method,
+        args: [{transformedParameters}],
+        queryOptions: {
+            enabled:
+                {enabledConditions} &&
+                customEnabled &&
+                !!network.type &&
+                !!contractAddress,
+            select: (data) => {dataTransformation},
+        },
+    });
+}; 
+
+
+# Thor Multiple Clauses Call Pattern
+
+When using the `thor.transactions.executeMultipleClausesCall` method to execute multiple contract calls in parallel, follow this template pattern:
+
+## Template Structure:
+
+```typescript
+import { getConfig } from '@/config';
+import { {ContractName}__factory } from '@/contracts';
+import { useQuery } from '@tanstack/react-query';
+import { NETWORK_TYPE } from '@/config/network';
+import { useVeChainKitConfig } from '@/providers';
+import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
+import { formatEther } from 'viem'; // Import based on data type needed
+import type { ViewFunctionResult } from '@/hooks';
+
+/**
+ * {Description of the function}
+ * @param thor  the thor client
+ * @param networkType  the network type
+ * @param {parameters}  {parameter descriptions}
+ * @returns  {return description}
+ */
+export const get{FunctionName} = async (
+    thor: ThorClient,
+    networkType: NETWORK_TYPE,
+    {parameters}: {parameterTypes},
+): Promise<{ReturnType}> => {
+    if (!{requiredParameter}) throw new Error('{Parameter} is required');
+
+    const contractAddress = getConfig(networkType).{contractAddressProperty};
+    const contract = thor.contracts.load(
+        contractAddress,
+        {ContractName}__factory.abi,
+    );
+
+    const clauses = [
+        contract.clause.{method1}({args1}),
+        contract.clause.{method2}({args2}),
+        // Add more clauses as needed
+    ];
+
+    const res = await thor.transactions.executeMultipleClausesCall(clauses);
+    if (!res.every((r) => r.success))
+        throw new Error(`Failed to fetch {description} for {parameter}`);
+
+    // Type the results appropriately
+    const {result1} = (res[0]?.result.array?.[0] || []) as ViewFunctionResult<
+        typeof {ContractName}__factory.abi,
+        '{method1}'
+    >;
+    const {result2} = (res[1]?.result.array?.[0] || []) as ViewFunctionResult<
+        typeof {ContractName}__factory.abi,
+        '{method2}'
+    >;
+
+    // Validate data consistency if needed
+    if ({validationCondition})
+        throw new Error('Error fetching {description} - Data is corrupted');
+
+    // Transform and return the data
+    return {transformedData};
+};
+
+export const get{FunctionName}QueryKey = ({parameters}: {parameterTypes}) => [
+    'VECHAIN_KIT',
+    '{QUERY_KEY_IDENTIFIER}',
+    {parameters},
+];
+
+/**
+ * Hook to {description}
+ * @param {parameters}  {parameter descriptions}
+ * @returns  {return description}
+ */
+export const use{HookName} = ({parameters}: {parameterTypes}) => {
+    const thor = useThor();
+    const { network } = useVeChainKitConfig();
+
+    return useQuery({
+        queryKey: get{FunctionName}QueryKey({parameters}),
+        queryFn: async () =>
+            await get{FunctionName}(
+                thor,
+                network.type,
+                {parameters},
+            ),
+        enabled: !!thor && !!{requiredParameters} && !!network.type,
+    });
+};
+```
+
+## Key Patterns:
+
+### 1. Contract Setup
+
+```typescript
+const contractAddress = getConfig(networkType).{contractAddressProperty};
+const contract = thor.contracts.load(
+    contractAddress,
+    {ContractName}__factory.abi,
+);
+```
+
+### 2. Clauses Array Creation
+
+```typescript
+const clauses = [
+    contract.clause.{method1}({args1}),
+    contract.clause.{method2}({args2}),
+    // Multiple clauses for parallel execution
+];
+```
+
+### 3. Execute Multiple Clauses
+
+```typescript
+const res = await thor.transactions.executeMultipleClausesCall(clauses);
+if (!res.every((r) => r.success))
+    throw new Error(`Failed to fetch {description}`);
+```
+
+### 4. Result Type Casting
+
+```typescript
+const {result} = (res[index]?.result.array?.[0] || []) as ViewFunctionResult<
+    typeof {ContractName}__factory.abi,
+    '{methodName}'
+>;
+```
+
+### 5. Data Validation
+
+```typescript
+// Validate data consistency between multiple results
+if ({ validationCondition })
+    throw new Error('Error fetching {description} - Data is corrupted');
+```
+
+### 6. Query Key Pattern
+
+```typescript
+export const get{FunctionName}QueryKey = ({parameters}) => [
+    'VECHAIN_KIT',
+    '{IDENTIFIER}',
+    {parameters},
+];
+```
+
+## Best Practices:
+
+1. **Error Handling**: Always check if all results are successful using `res.every((r) => r.success)`
+2. **Type Safety**: Use `ViewFunctionResult` type for proper typing of contract call results
+3. **Data Validation**: Validate consistency between multiple results when applicable
+4. **Parameter Validation**: Check required parameters before making contract calls
+5. **Query Keys**: Use consistent query key patterns for caching
+6. **Enabled Conditions**: Ensure all required dependencies are available before executing queries
+7. **Result Access**: Access results using `res[index]?.result.array?.[0]` pattern with fallback
+8. **Contract Loading**: Load contracts using the factory ABI and config-based addresses
+
+## Common Use Cases:
+
+-   Fetching multiple related data points from the same contract
+-   Batch reading multiple contract methods for efficiency
+-   Combining results from different contract methods that depend on each other
+-   Optimizing multiple sequential contract calls into a single parallel execution

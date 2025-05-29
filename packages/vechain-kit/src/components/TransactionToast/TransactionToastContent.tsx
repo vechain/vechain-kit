@@ -17,10 +17,11 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
+import { TransactionReceipt } from '@vechain/sdk-network';
 
 type TransactionToastContentProps = {
     status: TransactionStatus;
-    txReceipt: Connex.Thor.Transaction.Receipt | null;
+    txReceipt: TransactionReceipt | null;
     onTryAgain: () => void;
     txError?: Error | TransactionStatusErrorType;
     description?: string;
@@ -64,7 +65,12 @@ export const TransactionToastContent = ({
         switch (status) {
             case 'pending':
                 return {
-                    icon: <Spinner size="md" data-testid="pending-spinner-toast" />,
+                    icon: (
+                        <Spinner
+                            size="md"
+                            data-testid="pending-spinner-toast"
+                        />
+                    ),
                     title: isSendingTransaction
                         ? t('Processing transaction...')
                         : t('Waiting for confirmation...'),
@@ -92,11 +98,13 @@ export const TransactionToastContent = ({
                 };
             case 'success':
                 return {
-                    icon: <Icon
-                        as={FcCheckmark}
-                        fontSize={'40px'}
-                        data-testid="success-icon-toast"
-                    />,
+                    icon: (
+                        <Icon
+                            as={FcCheckmark}
+                            fontSize={'40px'}
+                            data-testid="success-icon-toast"
+                        />
+                    ),
                     title: t('Transaction successful!'),
                     closeDisabled: false,
                     description: undefined,
