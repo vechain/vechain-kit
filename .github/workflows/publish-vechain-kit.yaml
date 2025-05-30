@@ -17,6 +17,7 @@ jobs:
             packages: write
         steps:
             - uses: actions/checkout@v4
+            - name: Enable corepack
               run: corepack enable
             - uses: actions/setup-node@v3
               with:
