@@ -14,8 +14,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - name: Enable corepack
-              run: corepack enable
+            - run: corepack enable
 
             - name: Setup Node.js
               uses: actions/setup-node@v4

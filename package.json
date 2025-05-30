@@ -5,7 +5,9 @@
   "license": "MIT",
   "workspaces": [
     "examples/*",
-    "packages/*"
+    "packages/*",
+    "lambda/*",
+    "tests/*"
   ],
   "scripts": {
     "install:all": "yarn && yarn run build:deps",
