@@ -76,7 +76,7 @@ Welcome to our project! Here's an overview of our branching strategy.
 We utilize Playwright for end-to-end (E2E) testing. To conduct these tests, you'll need to install browsers first:
 
 ```bash
-cd tests/e2e
+cd packages/tests
 yarn install-browsers
 ```
 

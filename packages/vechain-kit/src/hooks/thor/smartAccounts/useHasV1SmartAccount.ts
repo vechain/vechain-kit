@@ -23,7 +23,7 @@ export const getHasV1SmartAccount = async (
         abi,
         contractAddress: getConfig(networkType).accountFactoryAddress,
         method,
-        args: [ownerAddress],
+        args: [ownerAddress as `0x${string}`],
     });
 
     return hasLegacyAccount;

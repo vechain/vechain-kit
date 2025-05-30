@@ -55,27 +55,27 @@ const getTokenBalances = async (
             calls: [
                 {
                     abi: IB3TR__factory.abi,
-                    address: config.b3trContractAddress,
+                    address: config.b3trContractAddress as `0x${string}`,
                     functionName: 'balanceOf',
-                    args: [address],
+                    args: [address as `0x${string}`],
                 },
                 {
                     abi: IVOT3__factory.abi,
-                    address: config.vot3ContractAddress,
+                    address: config.vot3ContractAddress as `0x${string}`,
                     functionName: 'balanceOf',
-                    args: [address],
+                    args: [address as `0x${string}`],
                 },
                 {
                     abi: IERC20__factory.abi,
-                    address: config.veDelegate,
+                    address: config.veDelegate as `0x${string}`,
                     functionName: 'balanceOf',
-                    args: [address],
+                    args: [address as `0x${string}`],
                 },
                 {
                     abi: IERC20__factory.abi,
-                    address: config.gloDollarContractAddress,
+                    address: config.gloDollarContractAddress as `0x${string}`,
                     functionName: 'balanceOf',
-                    args: [address],
+                    args: [address as `0x${string}`],
                 },
             ],
         });

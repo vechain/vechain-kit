@@ -25,7 +25,7 @@ export const getIsPersonAtTimepointQueryKey = (
     return getCallClauseQueryKey<typeof contractAbi>({
         address: veBetterPassportContractAddress,
         method,
-        args: [user, Number(timepoint)],
+        args: [user as `0x${string}`, Number(timepoint)],
     });
 };
 
@@ -51,7 +51,10 @@ export const useIsPersonAtTimepoint = (
         abi: contractAbi,
         address: veBetterPassportContractAddress,
         method,
-        args: [user ?? ZERO_ADDRESS, timepoint ? Number(timepoint) : 0],
+        args: [
+            (user as `0x${string}`) ?? ZERO_ADDRESS,
+            timepoint ? Number(timepoint) : 0,
+        ],
         queryOptions: {
             enabled:
                 !!user &&

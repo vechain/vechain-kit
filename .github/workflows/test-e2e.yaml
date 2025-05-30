@@ -57,11 +57,11 @@ jobs:
         run: sleep 15
 
       - name: Setup playwright
-        working-directory: ./tests/e2e
+        working-directory: ./packages/tests
         run: |
           yarn install
           yarn install-browsers
 
       - name: Run e2e tests
-        working-directory: ./tests/e2e
+        working-directory: ./packages/tests
         run: yarn test
