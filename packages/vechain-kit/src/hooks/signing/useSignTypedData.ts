@@ -55,6 +55,7 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                         domain,
                         data.types,
                         data.message,
+                        undefined,
                         options,
                     );
                 } else {
