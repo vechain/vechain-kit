@@ -17,8 +17,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
-            - run: corepack enable
+              uses: actions/checkout@v3
 
             - name: Setup Node
               uses: actions/setup-node@v3
