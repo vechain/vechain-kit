@@ -21,7 +21,9 @@ jobs:
               with:
                   node-version: 20
                   registry-url: https://npm.pkg.github.com/
-            - run: yarn install:all
+            - run: |
+                  yarn
+                  yarn install:all
             - run: yarn build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'

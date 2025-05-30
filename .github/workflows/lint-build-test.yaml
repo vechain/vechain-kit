@@ -26,7 +26,9 @@ jobs:
                   cache: 'yarn'
 
             - name: Install
-              run: yarn install:all
+              run: |
+                  yarn
+                  yarn install:all
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
 
