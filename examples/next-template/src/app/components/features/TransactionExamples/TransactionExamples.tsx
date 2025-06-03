@@ -3,13 +3,13 @@
 import { Box, Button, Heading, HStack } from '@chakra-ui/react';
 import {
     useWallet,
+    useThor,
     useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
     TransactionModal,
     TransactionToast,
 } from '@vechain/vechain-kit';
-import { useThor } from '@vechain/dapp-kit-react';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';
@@ -39,6 +39,10 @@ export function TransactionExamples() {
                 },
             ];
         },
+        refetchQueryKeys: [],
+        onSuccess: () => {},
+        onFailure: () => {},
+        suggestedMaxGas: undefined,
     });
 
     const {

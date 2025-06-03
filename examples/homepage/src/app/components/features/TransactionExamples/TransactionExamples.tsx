@@ -7,6 +7,7 @@ import { useCallback } from 'react';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
+    useThor,
     useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
@@ -15,7 +16,7 @@ import {
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { b3trMainnetAddress } from '../../../constants';
-import { useThor } from '@vechain/dapp-kit-react';
+
 export function TransactionExamples() {
     const { account } = useWallet();
     const thor = useThor();
