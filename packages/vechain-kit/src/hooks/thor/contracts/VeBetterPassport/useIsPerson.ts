@@ -23,7 +23,7 @@ export const getIsPersonQueryKey = (
     return getCallClauseQueryKey<typeof contractAbi>({
         address: veBetterPassportContractAddress,
         method,
-        args: [user],
+        args: [user as `0x${string}`],
     });
 };
 
@@ -44,7 +44,7 @@ export const useIsPerson = (user?: string, customEnabled = true) => {
         abi: contractAbi,
         address: veBetterPassportContractAddress,
         method,
-        args: [user ?? ZERO_ADDRESS],
+        args: [(user as `0x${string}`) ?? ZERO_ADDRESS],
         queryOptions: {
             enabled:
                 !!user &&
