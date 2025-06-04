@@ -2,7 +2,8 @@
 
 import { useCallback, useState } from 'react';
 import { usePrivyWalletProvider } from '@/providers';
-import { useConnex, useWallet } from '@/hooks';
+import { useWallet } from '@/hooks';
+import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
 type UseSignMessageReturnValue = {
     signMessage: (message: string) => Promise<string>;
@@ -23,31 +24,36 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
     const [signature, setSignature] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
-    const { connection } = useWallet();
-    const { vendor } = useConnex();
+    const { connection, account } = useWallet();
+    const { requestCertificate } = useDappKitWallet();
     const privyWalletProvider = usePrivyWalletProvider();
 
     const signMessage = useCallback(
         async (message: string): Promise<string> => {
+            if (!account) throw new Error('Account not found');
+
             setIsSigningPending(true);
             setError(null);
             setSignature(null);
 
             try {
-                let sig: string;
+                let sig: string | null = null;
 
                 if (connection.isConnectedWithDappKit) {
-                    sig = (
-                        await vendor
-                            .sign('cert', {
-                                purpose: 'agreement',
-                                payload: {
-                                    type: 'text',
-                                    content: message,
-                                },
-                            })
-                            .request()
-                    ).signature;
+                    const certResponse = await requestCertificate(
+                        {
+                            purpose: 'agreement',
+                            payload: {
+                                type: 'text',
+                                content: message,
+                            },
+                        },
+                        {
+                            signer: account.address,
+                        },
+                    );
+
+                    sig = certResponse.signature;
                 } else {
                     sig = await privyWalletProvider.signMessage(message);
                 }

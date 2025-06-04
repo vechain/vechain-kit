@@ -1,9 +1,6 @@
 import { Interface, namehash } from 'ethers';
 import { useCallback } from 'react';
-import {
-    UseSendTransactionReturnValue,
-    useSendTransaction,
-} from '@/hooks/transactions/useSendTransaction';
+import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',

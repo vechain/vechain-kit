@@ -16,7 +16,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
-import { useCurrency } from '@/hooks/api/wallet';
+import { useCurrency } from '@/hooks';
 import { BsCheck } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
