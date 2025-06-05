@@ -1,4 +1,3 @@
-// src/hooks/useFeatureAnnouncement.ts
 import { useState, useEffect } from 'react';
 
 export const useFeatureAnnouncement = () => {

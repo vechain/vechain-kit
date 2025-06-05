@@ -6,18 +6,12 @@ import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
     useCurrentAllocationsRoundId,
-    useSelectedGmNft,
-    useParticipatedInGovernance,
     useIsPerson,
 } from '@vechain/vechain-kit';
 
 export function DaoInfo() {
     const { account } = useWallet();
     const { data: currentAllocationsRoundId } = useCurrentAllocationsRoundId();
-    const { gmId } = useSelectedGmNft(account?.address ?? '');
-    const { data: participatedInGovernance } = useParticipatedInGovernance(
-        account?.address ?? '',
-    );
     const { data: isValidPassport } = useIsPerson(account?.address);
 
     return (
@@ -44,18 +38,6 @@ export function DaoInfo() {
                                     Current Round ID:{' '}
                                 </Text>
                                 {currentAllocationsRoundId}
-                            </Text>
-                            <Text>
-                                <Text as="span" fontWeight="bold">
-                                    Selected GM NFT:{' '}
-                                </Text>
-                                {gmId === '0' ? 'None' : gmId}
-                            </Text>
-                            <Text>
-                                <Text as="span" fontWeight="bold">
-                                    Participated:{' '}
-                                </Text>
-                                {participatedInGovernance?.toString()}
                             </Text>
                             <Text>
                                 <Text as="span" fontWeight="bold">

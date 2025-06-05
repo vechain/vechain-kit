@@ -27,12 +27,12 @@ import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useVechainDomain, TokenWithValue } from '@/hooks';
-import { useCurrency, useTokenPrices } from '@/hooks/api/wallet';
+import { useCurrency, useTokenPrices } from '@/hooks';
 import {
     formatCompactCurrency,
     SupportedCurrency,
     convertToSelectedCurrency
-} from '@/utils/currencyConverter';
+} from '@/utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
 
 export type SendTokenContentProps = {
@@ -123,7 +123,8 @@ export const SendTokenContent = ({
         }
     }, [toAddressOrDomain, selectedToken]);
 
-    const { data: resolvedDomainData } = useVechainDomain(toAddressOrDomain);
+    const { data: resolvedDomainData, isLoading } =
+        useVechainDomain(toAddressOrDomain);
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
@@ -543,6 +544,7 @@ export const SendTokenContent = ({
                 <Button
                     variant="vechainKitPrimary"
                     isDisabled={!selectedToken || !isValid}
+                    isLoading={isLoading}
                     onClick={handleSubmit(onSubmit)}
                     data-testid="send-button"
                 >

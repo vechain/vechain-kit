@@ -3,12 +3,12 @@
 import { Box, Button, Heading, HStack } from '@chakra-ui/react';
 import {
     useWallet,
+    useThor,
     useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
     TransactionModal,
     TransactionToast,
-    EnhancedClause,
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
 import { humanAddress } from '@vechain/vechain-kit/utils';
@@ -17,27 +17,7 @@ import { useCallback } from 'react';
 
 export function TransactionExamples() {
     const { account } = useWallet();
-
-    const clauseBuilder = useCallback((): EnhancedClause[] => {
-        if (!account?.address) return [];
-
-        const B3TRInterface = IB3TR__factory.createInterface();
-
-        return [
-            {
-                to: b3trMainnetAddress,
-                value: '0x0',
-                data: B3TRInterface.encodeFunctionData('transfer', [
-                    account.address,
-                    '0', // 0 B3TR
-                ]),
-                comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
-                    account.address,
-                )}`,
-                abi: B3TRInterface.getFunction('transfer'),
-            },
-        ];
-    }, [account?.address]);
+    const thor = useThor();
 
     const {
         sendTransaction,
@@ -47,7 +27,22 @@ export function TransactionExamples() {
         error,
         resetStatus,
     } = useBuildTransaction({
-        clauseBuilder,
+        clauseBuilder: () => {
+            if (!account?.address) return [];
+
+            return [
+                {
+                    ...thor.contracts
+                        .load(b3trMainnetAddress, IB3TR__factory.abi)
+                        .clause.transfer(account.address, '0').clause,
+                    comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
+                },
+            ];
+        },
+        refetchQueryKeys: [],
+        onSuccess: () => {},
+        onFailure: () => {},
+        suggestedMaxGas: undefined,
     });
 
     const {

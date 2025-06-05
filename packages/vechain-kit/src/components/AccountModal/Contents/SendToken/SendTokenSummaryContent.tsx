@@ -30,7 +30,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<

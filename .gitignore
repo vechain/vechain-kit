@@ -46,3 +46,5 @@ packages/vechain-kit/.env
 
 .aws-sam
 .env.json
+
+.yarn/install-state.gz

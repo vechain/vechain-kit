@@ -14,7 +14,7 @@ import { CURRENCY } from '@/types';
 import {
     formatCompactCurrency,
     SupportedCurrency,
-} from '@/utils/currencyConverter';
+} from '@/utils/currencyUtils';
 
 type AssetButtonProps = ButtonProps & {
     symbol: string;

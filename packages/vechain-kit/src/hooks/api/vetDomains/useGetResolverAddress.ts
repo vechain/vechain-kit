@@ -1,54 +1,29 @@
-import { Interface, namehash } from 'ethers';
-import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { useCallClause } from '@/hooks';
+import { namehash } from 'viem';
 
-const nameInterface = new Interface([
-    'function resolver(bytes32 node) returns (address resolverAddress)',
-]);
-
-/**
- * Get resolver address for a VET domain from the contract
- * @param nodeUrl The node URL to query
- * @param network The network type
- * @param domain The domain to get resolver for
- * @returns The resolver address for the domain
- */
-export const getResolverAddress = async (
-    nodeUrl: string,
-    network: NETWORK_TYPE,
-    domain?: string,
-): Promise<string> => {
-    if (!domain) throw new Error('Domain is required');
-
-    const node = namehash(domain);
-
-    const resolverResponse = await fetch(`${nodeUrl}/accounts/*`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-            clauses: [
-                {
-                    to: getConfig(network).vetDomainsContractAddress,
-                    data: nameInterface.encodeFunctionData('resolver', [node]),
-                },
-            ],
-        }),
-    });
-
-    const [{ data: resolverData, reverted: noResolver }] =
-        await resolverResponse.json();
-
-    if (noResolver) throw new Error('Failed to get resolver address');
-
-    const { resolverAddress } = nameInterface.decodeFunctionResult(
-        'resolver',
-        resolverData,
-    );
-
-    return resolverAddress;
-};
+const nameInterfaceAbi = [
+    {
+        type: 'function',
+        name: 'resolver',
+        inputs: [
+            {
+                type: 'bytes32',
+                name: 'node',
+                internalType: 'bytes32',
+            },
+        ],
+        outputs: [
+            {
+                type: 'address',
+                name: 'resolverAddress',
+                internalType: 'address',
+            },
+        ],
+        stateMutability: 'view',
+    },
+] as const;
 
 export const getResolverAddressQueryKey = (domain?: string) => [
     'VECHAIN_KIT',
@@ -63,11 +38,15 @@ export const getResolverAddressQueryKey = (domain?: string) => [
  */
 export const useGetResolverAddress = (domain?: string) => {
     const { network } = useVeChainKitConfig();
-    const nodeUrl = network.nodeUrl ?? getConfig(network.type).nodeUrl;
 
-    return useQuery({
-        queryKey: getResolverAddressQueryKey(domain),
-        queryFn: () => getResolverAddress(nodeUrl, network.type, domain),
-        enabled: !!domain && !!nodeUrl && !!network.type,
+    return useCallClause({
+        address: getConfig(network.type).vetDomainsContractAddress,
+        abi: nameInterfaceAbi,
+        method: 'resolver',
+        args: [domain ? namehash(domain) : '0x'],
+        queryOptions: {
+            select: (data) => data[0],
+            enabled: !!domain,
+        },
     });
 };

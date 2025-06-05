@@ -27,7 +27,7 @@ import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
 
@@ -229,18 +229,26 @@ export const CustomizationSummaryContent = ({
     };
 
     const refresh = async () => {
-        // Set the new avatar data directly as base64 string
-        queryClient.setQueryData(
-            getAvatarQueryKey(domain, network.type),
-            convertUriToUrl('ipfs://' + changes.avatarIpfsHash, network.type),
-        );
+        // only update avatar data if it's being changed
+        if (changes.avatarIpfsHash) {
+            queryClient.setQueryData(
+                getAvatarQueryKey(domain, network.type),
+                convertUriToUrl(
+                    'ipfs://' + changes.avatarIpfsHash,
+                    network.type,
+                ),
+            );
 
-        queryClient.setQueryData(
-            getAvatarOfAddressQueryKey(account?.address ?? ''),
-            convertUriToUrl('ipfs://' + changes.avatarIpfsHash, network.type),
-        );
+            queryClient.setQueryData(
+                getAvatarOfAddressQueryKey(account?.address ?? ''),
+                convertUriToUrl(
+                    'ipfs://' + changes.avatarIpfsHash,
+                    network.type,
+                ),
+            );
+        }
 
-        // Still refresh text records since they might have other changes
+        // still refresh text records since they might have other changes
         await queryClient.invalidateQueries({
             queryKey: getTextRecordsQueryKey(domain, network.type),
         });

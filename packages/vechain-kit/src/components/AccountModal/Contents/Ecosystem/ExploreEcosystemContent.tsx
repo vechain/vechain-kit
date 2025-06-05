@@ -26,7 +26,7 @@ import {
     useMostVotedAppsInRound,
     XAppMetadata,
 } from '@/hooks';
-import { useAppHubApps, AppHubApp } from '@/hooks/api/utility/useAppHubApps';
+import { useAppHubApps, AppHubApp } from '@/hooks';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';

@@ -2,10 +2,6 @@ import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
-import {
-    DEFAULT_PRIVY_ECOSYSTEM_APPS,
-    VECHAIN_KIT_STORAGE_KEYS,
-} from '@/utils/Constants';
 import { initializeI18n } from '@/utils/i18n';
 import {
     LoginMethodOrderOption,
@@ -33,6 +29,11 @@ import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { ModalProvider } from './ModalProvider';
+import {
+    VECHAIN_KIT_STORAGE_KEYS,
+    DEFAULT_PRIVY_ECOSYSTEM_APPS,
+} from '@/utils/constants';
+import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 
@@ -105,9 +106,10 @@ export type VechainKitProviderProps = {
         type: NETWORK_TYPE;
         nodeUrl?: string;
         requireCertificate?: boolean;
+        // TODO: migration check these types
         connectionCertificate?: {
-            message?: Connex.Vendor.CertMessage;
-            options?: Connex.Signer.CertOptions;
+            message?: Certificate;
+            options?: CertificateData;
         };
     };
     allowCustomTokens?: boolean;
@@ -374,11 +376,10 @@ export const VeChainKitProvider = (
                         }}
                     >
                         <DAppKitProvider
-                            nodeUrl={
+                            node={
                                 network.nodeUrl ??
                                 getConfig(network.type).nodeUrl
                             }
-                            genesis={getConfig(network.type).network.genesis}
                             i18n={i18nConfig}
                             language={language}
                             logLevel={dappKit.logLevel}
