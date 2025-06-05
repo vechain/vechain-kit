@@ -302,7 +302,10 @@ export const SendTokenSummaryContent = ({
                                     textAlign="left"
                                     data-testid="send-summary-amount"
                                 >
-                                    {summaryFormatter(i18n.resolvedLanguage || 'en').format(Number(amount))}{' '}
+                                    {Number(amount).toLocaleString(undefined, {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}{' '}
                                     {selectedToken.symbol}
                                 </Text>
                                 <Text opacity={0.5}>

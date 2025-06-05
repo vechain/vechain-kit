@@ -90,7 +90,10 @@ export const AssetButton = ({
                 <Text>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
-                <Text>{amountFormatter(i18n.resolvedLanguage || 'en').format(amount)}</Text>
+                <Text>
+                    {amount.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                    })}{' '}</Text>
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
