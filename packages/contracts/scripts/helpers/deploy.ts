@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { ethers } from 'hardhat';
+import { Logger } from './logger';
 
 interface DeployInstance {
     owner: any;
@@ -16,7 +16,8 @@ export const getOrDeployContractInstances = async ({
     if (!forceDeploy && cachedDeployInstance !== undefined) {
         return cachedDeployInstance;
     }
-    printLogs && console.log('Deploying contract instances');
+    const logger = new Logger(printLogs);
+    logger.info('Deploying contract instances');
 
     const [owner, otherAccount, ...otherAccounts] = await ethers.getSigners();
 
