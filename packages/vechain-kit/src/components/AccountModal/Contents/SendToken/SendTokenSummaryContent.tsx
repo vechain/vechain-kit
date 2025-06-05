@@ -31,13 +31,6 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/StringUtils';
-import i18n, { bcp47LanguageCodes } from '@i18n';
-
-const summaryFormatter = (lng: string) => new Intl.NumberFormat(bcp47LanguageCodes[lng], {
-    notation: 'standard',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<

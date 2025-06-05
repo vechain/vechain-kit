@@ -15,7 +15,6 @@ import {
     formatCompactCurrency,
     SupportedCurrency,
 } from '@/utils/currencyConverter';
-import i18n, { bcp47LanguageCodes } from '@i18n';
 
 type AssetButtonProps = ButtonProps & {
     symbol: string;
@@ -25,12 +24,6 @@ type AssetButtonProps = ButtonProps & {
     isDisabled?: boolean;
     onClick?: () => void;
 };
-
-const amountFormatter = (lng: string) => new Intl.NumberFormat(bcp47LanguageCodes[lng], {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 2,
-});
 
 export const AssetButton = ({
     symbol,
