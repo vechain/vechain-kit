@@ -2,7 +2,11 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     {
-        ignores: ['**/*.config.ts', 'dist/**'],
+        ignores: [
+            '**/*.config.ts',
+            'dist/**',
+            'packages/contracts/typechain-types/**',
+        ],
         extends: [...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
         rules: {
@@ -14,6 +18,12 @@ export default tseslint.config(
                 'error',
                 { argsIgnorePattern: '^_' },
             ],
+        },
+    },
+    {
+        files: ['typechain-types/**/*.{ts,tsx}'],
+        linterOptions: {
+            reportUnusedDisableDirectives: 'off',
         },
     },
     {
