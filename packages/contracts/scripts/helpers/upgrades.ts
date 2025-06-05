@@ -3,6 +3,7 @@ import { ethers } from 'hardhat';
 import { getImplementationAddress } from '@openzeppelin/upgrades-core';
 import { compareAddresses } from './utils';
 import { DeployUpgradeOptions } from './type';
+import { Logger } from './logger';
 
 export const deployProxy = async (
     contractName: string,
@@ -17,10 +18,9 @@ export const deployProxy = async (
     });
     const implementation = await Contract.deploy();
     await implementation.waitForDeployment();
-    logOutput &&
-        console.log(
-            `${contractName} impl.: ${await implementation.getAddress()}`,
-        );
+
+    const logger = new Logger(logOutput);
+    logger.log(`${contractName} impl.: ${await implementation.getAddress()}`);
 
     // Deploy the proxy contract, link it to the implementation and call the initializer
     const proxyFactory = await ethers.getContractFactory('ContractProxy');
@@ -29,8 +29,7 @@ export const deployProxy = async (
         getInitializerData(Contract.interface, args, version),
     );
     await proxy.waitForDeployment();
-    logOutput &&
-        console.log(`${contractName} proxy: ${await proxy.getAddress()}`);
+    logger.log(`${contractName} proxy: ${await proxy.getAddress()}`);
 
     const newImplementationAddress = await getImplementationAddress(
         ethers.provider,
@@ -62,10 +61,8 @@ export const deployProxyOnly = async (
     });
     const implementation = await Contract.deploy();
     await implementation.waitForDeployment();
-    logOutput &&
-        console.log(
-            `${contractName} impl.: ${await implementation.getAddress()}`,
-        );
+    const logger = new Logger(logOutput);
+    logger.log(`${contractName} impl.: ${await implementation.getAddress()}`);
 
     // Deploy the proxy contract without initialization
     const proxyFactory = await ethers.getContractFactory('B3TRProxy');
@@ -74,8 +71,7 @@ export const deployProxyOnly = async (
         '0x',
     );
     await proxy.waitForDeployment();
-    logOutput &&
-        console.log(`${contractName} proxy: ${await proxy.getAddress()}`);
+    logger.log(`${contractName} proxy: ${await proxy.getAddress()}`);
 
     const newImplementationAddress = await getImplementationAddress(
         ethers.provider,
@@ -150,10 +146,10 @@ export const upgradeProxy = async (
         proxyAddress,
     );
 
-    options?.logOutput &&
-        console.log(
-            `${newVersionContractName} impl.: ${await implementation.getAddress()}`,
-        );
+    const logger = new Logger(!!options?.logOutput);
+    logger.log(
+        `${newVersionContractName} impl.: ${await implementation.getAddress()}`,
+    );
 
     const tx = await currentImplementationContract.upgradeToAndCall(
         await implementation.getAddress(),

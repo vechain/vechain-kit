@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { network } from 'hardhat';
 import { HttpNetworkConfig } from 'hardhat/types';
 
