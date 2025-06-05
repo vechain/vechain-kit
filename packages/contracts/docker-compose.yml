@@ -1,0 +1,55 @@
+services:
+    thor-solo:
+        image: vechain/thor:v2.3.0
+        hostname: thor-solo
+        container_name: thor-solo
+        user: root
+        environment:
+            - DOCKER=1
+        entrypoint:
+            [
+                '/bin/sh',
+                '-c',
+                "apk update && apk upgrade && apk add curl && thor solo --on-demand --persist --data-dir /data/thor --api-addr 0.0.0.0:8669 --api-cors '*' --verbosity 3",
+            ]
+        ports:
+            - '8669:8669'
+        healthcheck:
+            test: curl --fail 0.0.0.0:8669/blocks/0 || exit 1
+            interval: '2s'
+            retries: 30
+        volumes:
+            - thor-data:/data/thor
+        networks:
+            - vechain-thor
+
+    insight:
+        image: ghcr.io/vechain/insight-app:master
+        hostname: insight
+        container_name: insight
+        environment:
+            - VUE_APP_SOLO_URL=http://localhost:8669
+        ports:
+            - '8080:80'
+        networks:
+            - vechain-thor
+
+    inspector:
+        image: ghcr.io/vechain/inspector-app:master
+        hostname: inspector
+        container_name: inspector
+        environment:
+            - VUE_APP_SOLO_URL=http://localhost:8669
+        ports:
+            - '8081:80'
+        networks:
+            - vechain-thor
+
+networks:
+    vechain-thor:
+        driver: bridge
+        name: vechain-thor
+volumes:
+    thor-data:
+        driver: local
+        name: thor-data

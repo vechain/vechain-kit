@@ -21,6 +21,13 @@
         },
         "clean": {
             "cache": false
+        },
+        "compile": {
+            "outputs": ["artifacts/**", "typechain-types/**"],
+            "cache": false
+        },
+        "test": {
+            "cache": false
         }
     }
 }
