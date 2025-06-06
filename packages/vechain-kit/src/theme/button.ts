@@ -102,6 +102,20 @@ const variants = {
         },
         transition: 'all 0.2s',
     })),
+    primarySubtle: defineStyle(({ colorMode }) => ({
+        backgroundColor: colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
+        color: colorMode === 'dark' ? 'whiteAlpha.900' : 'blackAlpha.900',
+        border: '1px solid',
+        borderColor: colorMode === 'dark' ? 'whiteAlpha.200' : 'gray.200',
+        borderRadius: 'full',
+        _hover: {
+            backgroundColor:
+                colorMode === 'dark' ? '#ffffff12' : 'blackAlpha.200',
+            transform: 'scale(1.1)',
+        },
+        transition: 'all 0.2s',
+        shadow: 'sm',
+    })),
     vechainKitLogout: defineStyle(({ colorMode }) => ({
         width: 'full',
         minHeight: '50px',

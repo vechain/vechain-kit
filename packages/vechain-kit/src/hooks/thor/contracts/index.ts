@@ -10,3 +10,4 @@ export * from './X2EarnApps';
 export * from './XAllocationPool';
 export * from './XAllocationVoting';
 export * from './XAllocationVotingGovernor';
+export * from './News';
