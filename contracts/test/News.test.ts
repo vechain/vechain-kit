@@ -218,7 +218,9 @@ describe('News Contract', function () {
 
         it('App creator can publish news', async function () {
             // Set appCreator as the app creator in X2EarnApps
-            await x2EarnApps.addCreator(appId, appCreator.address);
+            await x2EarnApps
+                .connect(appAdmin)
+                .addCreator(appId, appCreator.address);
 
             const { title, description, image, callToActionUrl } =
                 TEST_NEWS.creator;
