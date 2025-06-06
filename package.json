@@ -27,7 +27,9 @@
         "kit:build": "yarn workspace @vechain/vechain-kit build",
         "kit:typecheck": "yarn workspace @vechain/vechain-kit typecheck",
         "contracts:compile": "yarn workspace @vechain/contracts compile",
-        "contracts:test": "yarn workspace @vechain/contracts test"
+        "contracts:test": "yarn workspace @vechain/contracts test",
+        "contracts:deploy:testnet": "yarn workspace @vechain/contracts deploy:testnet",
+        "contracts:deploy:mainnet": "yarn workspace @vechain/contracts deploy:mainnet"
     },
     "husky": {
         "hooks": {
