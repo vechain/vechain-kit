@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { AccountModalContentTypes } from '../Types';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 // Import Swiper core and required modules
 import { A11y, Pagination, Autoplay } from 'swiper/modules';
@@ -22,6 +22,7 @@ import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { useLatestNews } from '@/hooks/thor/contracts/News';
 
 type Props = {
     mt?: number;
@@ -30,42 +31,19 @@ type Props = {
     >;
 };
 
-type NewsItem = {
-    id: string;
-    title: string;
-    description: string;
-    date: string;
-    image: string;
-};
-
-const mockNewsData: NewsItem[] = [
-    {
-        id: '1',
-        title: 'Mugshot Mobile App',
-        description:
-            'Introducing a new mobile app for Mugshot. You can now track your assets on the go.',
-        date: '28 may 2025',
-        image: 'https://pbs.twimg.com/media/Gr4SkmUWoAE-Jli?format=jpg&name=small',
-    },
-    {
-        id: '2',
-        title: 'Vechain Partner',
-        description:
-            "Today, VeChain's cross-chain future moves a step closer. We are excited to announce the first full cross-chain bridging service coming to VeChain via a strategic partnership and integration with the VeChain Foundation.",
-        date: '21 may 2025',
-        image: 'https://pbs.twimg.com/media/GrepbRpW4AAXaFI?format=jpg&name=small',
-    },
-    {
-        id: '3',
-        title: 'B3TR Launchpool',
-        description:
-            "The VeChain Renaissance journey continues, and we're about to step into the most transformative phase yet: Hayabusa. Following Galactica's successful testnet launch, Hayabusa introduces a",
-        date: '10 may 2025',
-        image: 'https://pbs.twimg.com/media/GpT5u6yW0AEx1nS?format=jpg&name=small',
-    },
-];
-
-const NewsCard = ({ item }: { item: NewsItem }) => {
+const NewsCard = ({
+    item,
+}: {
+    item: {
+        id: bigint;
+        title: string;
+        description: string;
+        image: string;
+        callToActionUrl: string;
+        timestamp: bigint;
+        publisher: `0x${string}`;
+    };
+}) => {
     return (
         <Card
             variant={'newsCard'}
@@ -100,7 +78,9 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
                         {item.description}
                     </Text>
                     <Text fontSize="xs" mt="auto" opacity={0.6}>
-                        {item.date}
+                        {new Date(
+                            Number(item.timestamp) * 1000,
+                        ).toLocaleDateString()}
                     </Text>
                 </VStack>
             </CardBody>
@@ -110,13 +90,15 @@ const NewsCard = ({ item }: { item: NewsItem }) => {
 
 export const NewsSection = ({ mt }: Props) => {
     const { t } = useTranslation();
+    const { data: news } = useLatestNews(10, 0);
     const swiperRef = useRef<SwiperClass | null>(null);
     const [isSliderStart, setIsSliderStart] = useState(true);
     const [isSliderEnd, setIsSliderEnd] = useState(false);
 
-    const slides = mockNewsData.map((item) => (
-        <NewsCard key={item.id} item={item} />
-    ));
+    const slides =
+        news?.map((item) => (
+            <NewsCard key={item.id.toString()} item={item} />
+        )) || [];
 
     const handleSliderChange = (swiper: SwiperClass) => {
         setIsSliderStart(swiper.isBeginning);
