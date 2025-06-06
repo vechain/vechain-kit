@@ -28,3 +28,4 @@ export { SubdomainClaimer__factory } from './SubdomainClaimer__factory';
 export * as accounts from './accounts';
 export * as core from './core';
 export { AAProxy__factory } from './AAProxy__factory';
+export { News__factory } from './News__factory';
