@@ -2,11 +2,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     {
-        ignores: [
-            '**/*.config.ts',
-            'dist/**',
-            'packages/contracts/typechain-types/**',
-        ],
+        ignores: ['**/*.config.ts', 'dist/**', 'contracts/typechain-types/**'],
         extends: [...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
         rules: {
@@ -27,7 +23,7 @@ export default tseslint.config(
         },
     },
     {
-        files: ['packages/contracts/scripts/**/*.{ts,tsx}'],
+        files: ['contracts/scripts/**/*.{ts,tsx}'],
         rules: {
             'no-console': 'off',
         },
