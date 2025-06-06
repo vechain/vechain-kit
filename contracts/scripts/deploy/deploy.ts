@@ -21,7 +21,10 @@ export async function deployAll() {
         printLogs: true,
     });
 
-    console.log(deployResult);
+    const contractAddresses = {
+        x2EarnApps: await deployResult.x2EarnApps.getAddress(),
+        news: await deployResult.news.getAddress(),
+    };
 
     console.log(
         '================================================================================',
@@ -32,5 +35,5 @@ export async function deployAll() {
         `Total execution time: ${end.getMinutes()}m ${end.getSeconds()}s`,
     );
 
-    return; //TODO: should return the contract addresses
+    return contractAddresses;
 }
