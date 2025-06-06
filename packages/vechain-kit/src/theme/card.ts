@@ -47,6 +47,26 @@ const variants = {
             },
         }),
 
+    newsCard: (props: StyleFunctionProps) =>
+        definePartsStyle({
+            container: {
+                backgroundColor:
+                    props.colorMode === 'dark' ? '#ffffff0a' : 'blackAlpha.50',
+                borderRadius: '12px',
+                boxShadow: 'none',
+                _hover: {
+                    backgroundColor:
+                        props.colorMode === 'dark'
+                            ? '#ffffff12'
+                            : 'blackAlpha.200',
+                },
+                transition: 'all 0.2s',
+            },
+            body: {
+                p: 4,
+            },
+        }),
+
     vechainKitAppCard: (props: StyleFunctionProps) =>
         definePartsStyle({
             body: {
