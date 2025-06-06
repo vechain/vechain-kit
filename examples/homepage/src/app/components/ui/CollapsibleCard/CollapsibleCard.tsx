@@ -8,6 +8,7 @@ import {
     Collapse,
     HStack,
     IconButton,
+    BoxProps,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdExpandMore, MdExpandLess } from 'react-icons/md';
@@ -17,6 +18,7 @@ interface CollapsibleCardProps {
     icon?: React.ElementType;
     children: React.ReactNode;
     defaultIsOpen?: boolean;
+    style?: BoxProps;
 }
 
 export function CollapsibleCard({
@@ -24,6 +26,7 @@ export function CollapsibleCard({
     icon,
     children,
     defaultIsOpen = false,
+    style,
 }: CollapsibleCardProps) {
     const [isOpen, setIsOpen] = useState(defaultIsOpen);
 
@@ -35,6 +38,7 @@ export function CollapsibleCard({
             bg="whiteAlpha.100"
             backdropFilter="blur(10px)"
             w="full"
+            {...style}
         >
             <VStack spacing={6} align="stretch" justifyContent={'center'}>
                 <HStack
