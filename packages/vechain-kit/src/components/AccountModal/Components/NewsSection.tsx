@@ -22,7 +22,7 @@ import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { useLatestNews } from '@/hooks/thor/contracts/News';
+import { useLatestNews } from '@/hooks';
 
 type Props = {
     mt?: number;
