@@ -13,7 +13,6 @@ type UseTotalBalanceProps = {
 export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
     const { tokensWithBalance, isLoading } = useTokensWithValues({ address });
     const { currentCurrency } = useCurrency();
-
     const totalBalanceInCurrency = useMemo(() => {
         return tokensWithBalance.reduce(
             (total, token) => total + token.valueInCurrency,
@@ -31,7 +30,7 @@ export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
     const formattedBalance = useMemo(() => {
         return formatCompactCurrency(
             totalBalanceInCurrency,
-            currentCurrency as SupportedCurrency,
+            { currency: currentCurrency as SupportedCurrency },
         );
     }, [totalBalanceInCurrency, currentCurrency]);
 
