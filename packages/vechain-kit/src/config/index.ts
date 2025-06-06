@@ -35,6 +35,7 @@ export type AppConfig = {
     vetDomainsReverseRegistrarAddress: string;
     vnsResolverAddress: string;
     gloDollarContractAddress: string;
+    newsContractAddress: string;
     vetDomainAvatarUrl: string;
     nodeUrl: string;
     indexerUrl: string;

@@ -1,8 +1,10 @@
 import { ethers } from 'hardhat';
 
 import { Logger } from './logger';
+import { deployProxy } from './upgrades';
 import { X2EarnAppsLight, News } from '../../typechain-types';
-
+const DEV_TESTNET_X2EARNAPPS_ADDRESS =
+    '0xcB23Eb1bBD5c07553795b9538b1061D0f4ABA153';
 interface DeployInstance {
     owner: any;
     otherAccount: any;
@@ -27,19 +29,30 @@ export const getOrDeployContractInstances = async ({
 
     logger.log('Deployer Address: ', owner.address);
 
-    logger.log('Deploying X2EarnApps contract');
-    const X2EarnApps = await ethers.getContractFactory('X2EarnAppsLight');
-    const x2EarnAppsContract = await X2EarnApps.deploy({ from: owner.address });
-    await x2EarnAppsContract.waitForDeployment();
-    const x2EarnAppsContractAddress = await x2EarnAppsContract.getAddress();
-    logger.log('X2EarnApps contract deployed at: ', x2EarnAppsContractAddress);
+    //Get X2EarnApps contract
+    const x2EarnAppsContract = await ethers.getContractAt(
+        'X2EarnAppsLight',
+        DEV_TESTNET_X2EARNAPPS_ADDRESS,
+    );
 
     logger.log('Deploying News contract');
-    const News = await ethers.getContractFactory('News');
-    const newsContract = await News.deploy({ from: owner.address });
-    await newsContract.waitForDeployment();
+    const cooldownPeriod = 100;
+
+    const newsContract = (await deployProxy(
+        'News',
+        [
+            DEV_TESTNET_X2EARNAPPS_ADDRESS,
+            cooldownPeriod,
+            owner.address,
+            owner.address,
+            owner.address,
+        ],
+        {},
+        printLogs,
+    )) as News;
+
     const newsContractAddress = await newsContract.getAddress();
-    logger.log('News contract deployed at: ', newsContractAddress);
+    logger.log('News contract proxy deployed at: ', newsContractAddress);
 
     cachedDeployInstance = {
         owner,

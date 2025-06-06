@@ -28,6 +28,12 @@
         },
         "test": {
             "cache": false
+        },
+        "deploy:testnet": {
+            "cache": false
+        },
+        "deploy:mainnet": {
+            "cache": false
         }
     }
 }
