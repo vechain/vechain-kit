@@ -1,16 +1,16 @@
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 
 import { Logger } from './logger';
 import { deployProxy } from './upgrades';
-import { X2EarnAppsLight, News } from '../../typechain-types';
-const DEV_TESTNET_X2EARNAPPS_ADDRESS =
-    '0xcB23Eb1bBD5c07553795b9538b1061D0f4ABA153';
+import { X2EarnAppsLight } from '../../typechain-types';
+import { getConfig } from '../../config';
+import { ZeroAddress } from 'ethers';
+
 interface DeployInstance {
     owner: any;
     otherAccount: any;
     otherAccounts: any[];
     x2EarnApps: X2EarnAppsLight;
-    news: News;
 }
 
 let cachedDeployInstance: DeployInstance | undefined = undefined;
@@ -23,43 +23,44 @@ export const getOrDeployContractInstances = async ({
         return cachedDeployInstance;
     }
     const logger = new Logger(printLogs);
-    logger.info('Deploying contract instances');
+    const networkName = network.name;
+    const config = getConfig(networkName);
+
+    logger.info(`Getting or deploying contract instances on ${networkName}`);
 
     const [owner, otherAccount, ...otherAccounts] = await ethers.getSigners();
 
     logger.log('Deployer Address: ', owner.address);
 
-    //Get X2EarnApps contract
-    const x2EarnAppsContract = await ethers.getContractAt(
+    let x2EarnAppsContract: X2EarnAppsLight;
+    let x2EarnAppsContractAddress = config.x2EarnAppsContractAddress;
+
+    // Check if we should deploy fresh or use existing address
+    if (x2EarnAppsContractAddress === ZeroAddress) {
+        logger.log(
+            'Deploying X2EarnApps from scratch (local/development network)',
+        );
+        x2EarnAppsContract = (await deployProxy(
+            'X2EarnAppsLight',
+            [owner.address, owner.address, owner.address],
+            {},
+            printLogs,
+        )) as X2EarnAppsLight;
+
+        x2EarnAppsContractAddress = await x2EarnAppsContract.getAddress();
+        logger.log('X2EarnApps deployed at:', x2EarnAppsContractAddress);
+    }
+
+    x2EarnAppsContract = await ethers.getContractAt(
         'X2EarnAppsLight',
-        DEV_TESTNET_X2EARNAPPS_ADDRESS,
+        x2EarnAppsContractAddress,
     );
-
-    logger.log('Deploying News contract');
-    const cooldownPeriod = 100;
-
-    const newsContract = (await deployProxy(
-        'News',
-        [
-            DEV_TESTNET_X2EARNAPPS_ADDRESS,
-            cooldownPeriod,
-            owner.address,
-            owner.address,
-            owner.address,
-        ],
-        {},
-        printLogs,
-    )) as News;
-
-    const newsContractAddress = await newsContract.getAddress();
-    logger.log('News contract proxy deployed at: ', newsContractAddress);
 
     cachedDeployInstance = {
         owner,
         otherAccount,
         otherAccounts,
         x2EarnApps: x2EarnAppsContract,
-        news: newsContract,
     };
     return cachedDeployInstance as DeployInstance;
 };

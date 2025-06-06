@@ -170,7 +170,7 @@ describe('News Contract', function () {
         });
     });
 
-    describe.only('Publishing News', function () {
+    describe('Publishing News', function () {
         it('Publisher can publish news', async function () {
             const { title, description, image, callToActionUrl } =
                 TEST_NEWS.publisher;
@@ -305,7 +305,7 @@ describe('News Contract', function () {
         });
     });
 
-    describe.only('Reading News', function () {
+    describe('Reading News', function () {
         beforeEach(async function () {
             // Publish some test news items
             const firstNews = TEST_NEWS.sequence[0];
@@ -369,7 +369,7 @@ describe('News Contract', function () {
         });
     });
 
-    describe.only('MODERATOR - Removing News', function () {
+    describe('MODERATOR - Removing News', function () {
         beforeEach(async function () {
             // Publish some test news items
             const firstNews = TEST_NEWS.sequence[0];
