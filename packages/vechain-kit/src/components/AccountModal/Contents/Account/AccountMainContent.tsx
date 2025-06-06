@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useNotifications } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { NewsSection } from '../../Components/NewsSection';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -103,6 +104,8 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             setCurrentContent('assets');
                         }}
                     />
+
+                    <NewsSection setCurrentContent={setCurrentContent} />
 
                     <QuickActionsSection
                         setCurrentContent={setCurrentContent}
