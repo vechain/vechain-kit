@@ -18,12 +18,22 @@ type ExtractViewFunction<
     { type: 'function'; stateMutability: 'pure' | 'view'; name: TMethod }
 >;
 
+type ReplaceBigIntWithString<T> = T extends bigint
+    ? { $bigintString: string }
+    : T extends Array<infer U>
+    ? Array<ReplaceBigIntWithString<U>>
+    : T extends object
+    ? { [K in keyof T]: ReplaceBigIntWithString<T[K]> }
+    : T;
+
 export type ViewFunctionResult<
     TAbi extends Abi,
     TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
-> = AbiParametersToPrimitiveTypes<
-    ExtractViewFunction<TAbi, TMethod>['outputs'],
-    'outputs'
+> = ReplaceBigIntWithString<
+    AbiParametersToPrimitiveTypes<
+        ExtractViewFunction<TAbi, TMethod>['outputs'],
+        'outputs'
+    >
 >;
 
 export type MultipleClausesCallParameters<

@@ -46,7 +46,7 @@ export const useXAppVotes = (roundId?: number | string, appId?: string) => {
         args: [BigInt(roundId || 0), appId as `0x${string}`],
         queryOptions: {
             enabled: !!roundId && !!appId && !!network.type,
-            select: (res) => formatEther(res[0]),
+            select: (res) => formatEther(BigInt(res[0].$bigintString)),
         },
     });
 };

@@ -14,11 +14,11 @@ export * from './components';
  * of contract calls while still allowing BigInt values to be safely serialized.
  */
 declare global {
-  interface BigInt {
-    toJSON(): string
-  }
+    interface BigInt {
+        toJSON(): { $bigintString: string };
+    }
 }
 
 BigInt.prototype.toJSON = function () {
-  return this.toString()
+    return { $bigintString: this.toString() };
 };

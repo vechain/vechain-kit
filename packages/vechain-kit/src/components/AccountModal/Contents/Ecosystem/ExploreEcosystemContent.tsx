@@ -66,6 +66,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         ve_world: {
             banner: 'https://i.ibb.co/cgJBj83/vbd.png',
         },
+        categories: [],
     },
     {
         name: 'vet.domains',
@@ -81,6 +82,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         ve_world: {
             banner: 'https://vet.domains/assets/walletconnect.png',
         },
+        categories: [],
     },
     // {
     //     name: 'VeChain Kit',
