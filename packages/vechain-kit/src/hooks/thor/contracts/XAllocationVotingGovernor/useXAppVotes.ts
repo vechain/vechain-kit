@@ -1,7 +1,7 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { XAllocationVotingGovernor__factory } from '@/contracts';
-import { getCallClauseQueryKey, useCallClause } from '@/hooks';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
 
@@ -19,7 +19,8 @@ export const getXAppVotesQueryKey = (
     roundId: number | string,
     appId: string,
 ) =>
-    getCallClauseQueryKey<typeof contractAbi>({
+    getCallClauseQueryKeyWithArgs({
+        abi: contractAbi,
         address: getConfig(networkType).xAllocationVotingContractAddress,
         method,
         args: [BigInt(roundId || 0), appId as `0x${string}`],
