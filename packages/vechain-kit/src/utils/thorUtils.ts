@@ -18,8 +18,28 @@ type ExtractViewFunction<
     { type: 'function'; stateMutability: 'pure' | 'view'; name: TMethod }
 >;
 
+export function serializeBigints<T>(data: T): any {
+    if (typeof data === 'bigint') {
+        return data.toString();
+    }
+
+    if (Array.isArray(data)) {
+        return data.map(serializeBigints);
+    }
+
+    if (data && typeof data === 'object') {
+        const result: any = {};
+        for (const [key, value] of Object.entries(data)) {
+            result[key] = serializeBigints(value);
+        }
+        return result;
+    }
+
+    return data;
+}
+
 type ReplaceBigIntWithString<T> = T extends bigint
-    ? { $bigintString: string }
+    ? string
     : T extends Array<infer U>
     ? Array<ReplaceBigIntWithString<U>>
     : T extends object
@@ -44,7 +64,7 @@ export type MultipleClausesCallParameters<
 export type MultipleClausesCallReturnType<
     contracts extends readonly unknown[] = readonly ContractFunctionParameters[],
     allowFailure extends boolean = true,
-> = viem_MulticallReturnType<contracts, allowFailure>;
+> = ReplaceBigIntWithString<viem_MulticallReturnType<contracts, allowFailure>>;
 
 export const executeCallClause = async <
     TAbi extends Abi,
@@ -66,7 +86,7 @@ export const executeCallClause = async <
     >;
 }) => {
     const contract = thor.contracts.load(contractAddress, abi);
-    const res = await contract.read[method](...args);
+    const res = serializeBigints(await contract.read[method](...args));
     return res as ViewFunctionResult<TAbi, TMethod>;
 };
 
@@ -92,10 +112,9 @@ export const executeMultipleClausesCall = async <
     if (!res.every((r) => r.success))
         throw new Error('Failed to execute multiple clauses call');
 
-    return res.map((r) => r.result.plain) as MultipleClausesCallReturnType<
-        contracts,
-        allowFailure
-    >;
+    return res.map((r) =>
+        serializeBigints(r.result.plain),
+    ) as MultipleClausesCallReturnType<contracts, allowFailure>;
 };
 
 export const buildCallClauses = <

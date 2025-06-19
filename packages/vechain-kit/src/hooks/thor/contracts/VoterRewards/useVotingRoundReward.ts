@@ -39,7 +39,7 @@ export const useRoundReward = (address: string, roundId: string) => {
             enabled: !!address && !!roundId && !!network.type,
             select: (data) => ({
                 roundId,
-                rewards: formatEther(BigInt(data[0].$bigintString)),
+                rewards: formatEther(BigInt(data[0])),
             }),
         },
     });
