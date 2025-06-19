@@ -74,8 +74,8 @@ export const executeMultipleClausesCall = async <
 
     const clauses = calls.map((call) =>
         thor.contracts
-            .load(call.contractAddress, call.abi)
-            .clause[call.method](...call.args),
+            .load(call.address, call.abi)
+            .clause[call.functionName](...call.args),
     );
     const res = await thor.transactions.executeMultipleClausesCall(clauses);
 

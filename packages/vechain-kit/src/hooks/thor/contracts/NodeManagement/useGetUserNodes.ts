@@ -1,4 +1,4 @@
-import { getCallClauseQueryKey, useCallClause } from '@/hooks';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { NodeManagement__factory } from '@/contracts';
 import { UseQueryResult } from '@tanstack/react-query';
@@ -25,7 +25,8 @@ export type UserNode = {
  * @param user - The address of the user to check (non-optional)
  */
 export const getUserNodesQueryKey = (networkType: NETWORK_TYPE, user: string) =>
-    getCallClauseQueryKey<typeof contractAbi>({
+    getCallClauseQueryKeyWithArgs({
+        abi: contractAbi,
         address: getConfig(networkType).nodeManagementContractAddress,
         method,
         args: [user as `0x${string}`],

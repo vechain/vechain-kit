@@ -1,7 +1,7 @@
 import { getConfig } from '@/config';
 import { XAllocationVoting__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
-import { getCallClauseQueryKey, useCallClause } from '@/hooks/utils';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks/utils';
 import { NETWORK_TYPE } from '@/config/network';
 
 const method = 'hasVoted' as const;
@@ -12,7 +12,8 @@ export const getHasVotedInRoundQueryKey = (
     address: string,
     networkType: NETWORK_TYPE,
 ) =>
-    getCallClauseQueryKey<typeof abi>({
+    getCallClauseQueryKeyWithArgs({
+        abi,
         address: getConfig(networkType).xAllocationVotingContractAddress,
         method,
         args: [BigInt(roundId || 0), address as `0x${string}`],

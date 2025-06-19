@@ -31,7 +31,7 @@ export const getVot3Balance = async (
     };
 };
 
-export const getVot3BalanceQueryKey = (address?: string) => [
+export const getVot3BalanceQueryKey = (address: string) => [
     'VEBETTERDAO_BALANCE',
     address,
     'VOT3',
@@ -42,7 +42,7 @@ export const useGetVot3Balance = (address?: string) => {
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: getVot3BalanceQueryKey(address),
+        queryKey: getVot3BalanceQueryKey(address||''),
         queryFn: async () => getVot3Balance(thor, network.type, address),
         enabled: !!thor && !!address && !!network.type,
     });

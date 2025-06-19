@@ -15,6 +15,7 @@ import { convertUriToUrl } from '@/utils';
 export type XAppMetadata = {
     name: string;
     description: string;
+    distribution_strategy?: string;
     external_url: string;
     logo: string;
     banner: string;
@@ -31,8 +32,9 @@ export type XAppMetadata = {
     tweets: string[];
     ve_world: {
         banner: string;
-    };
-};
+    }
+    categories: string[];
+}
 /**
   dapp-kit broke the pre-fetching
    * @param uri  - The uri of the xApps metadata

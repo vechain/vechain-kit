@@ -1,7 +1,7 @@
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
-import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { useCallClause, getCallClauseQueryKeyWithArgs } from '@/hooks';
 import { NETWORK_TYPE } from '@/config/network';
 import { ZERO_ADDRESS } from '@vechain/sdk-core';
 
@@ -20,7 +20,8 @@ export const getIsPersonQueryKey = (
 ) => {
     const veBetterPassportContractAddress =
         getConfig(networkType).veBetterPassportContractAddress;
-    return getCallClauseQueryKey<typeof contractAbi>({
+    return getCallClauseQueryKeyWithArgs({
+        abi: contractAbi,
         address: veBetterPassportContractAddress,
         method,
         args: [user as `0x${string}`],

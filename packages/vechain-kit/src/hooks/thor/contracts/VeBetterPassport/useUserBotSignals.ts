@@ -1,4 +1,4 @@
-import { getCallClauseQueryKey, useCallClause } from '@/hooks';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 import { getConfig } from '@/config';
 import { VeBetterPassport__factory } from '@/contracts/typechain-types';
 import { useVeChainKitConfig } from '@/providers';
@@ -17,7 +17,8 @@ export const getUserBotSignalsQueryKey = (
     networkType: NETWORK_TYPE,
     userAddress: string,
 ) => {
-    return getCallClauseQueryKey<typeof contractAbi>({
+    return getCallClauseQueryKeyWithArgs({
+        abi: contractAbi,
         address: getConfig(networkType).veBetterPassportContractAddress,
         method,
         args: [userAddress as `0x${string}`],
