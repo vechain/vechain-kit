@@ -25,7 +25,6 @@ function StyleTestContent() {
             const stylesheets = Array.from(document.styleSheets);
             let layersFound = false;
             let hostAppLayerFound = false;
-            let vchainKitLayerFound = false;
 
             stylesheets.forEach((sheet) => {
                 try {
@@ -59,12 +58,12 @@ function StyleTestContent() {
                             hostAppLayerFound = true;
                         }
 
-                        // Check for VeChain Kit styles in correct layer
+                        // Check for vechain-kit styles in correct layer
                         if (
                             ruleText.includes('vechain-kit') &&
                             !ruleText.includes('@layer host-app')
                         ) {
-                            vchainKitLayerFound = true;
+                            // vechain-kit styles detected in correct layer
                         }
                         // problematic global styles
                         if (
@@ -202,7 +201,7 @@ function StyleTestContent() {
         >
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
-                    VeChain Kit + Tailwind CSS Integration Test
+                    vechain-kit + Tailwind CSS Integration Test
                 </h1>
 
                 {/* Status Summary */}
@@ -251,12 +250,12 @@ function StyleTestContent() {
 
                     <div className="bg-white rounded-lg shadow-lg p-6">
                         <h3 className="text-xl font-bold mb-4">
-                            VeChain Kit Components
+                            vechain-kit Components
                         </h3>
                         <div className="space-y-4">
                             <WalletButton />
                             <p className="text-sm text-gray-600">
-                                VeChain Kit wallet button (should not affect
+                                vechain-kit wallet button (should not affect
                                 Tailwind styles)
                             </p>
                         </div>
@@ -300,7 +299,7 @@ function StyleTestContent() {
                         </li>
                         <li>The test image should have a solid blue border</li>
                         <li>
-                            The VeChain Kit wallet button should render properly
+                            The vechain-kit wallet button should render properly
                         </li>
                         <li>
                             Font family should be Arial or system-ui (not Chakra

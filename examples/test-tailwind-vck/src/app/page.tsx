@@ -127,14 +127,14 @@ export default function ImageUploadApp() {
                             Image Upload Demo
                         </h1>
                         <p className="text-gray-600">
-                            Test Tailwind CSS with VeChain Kit integration
+                            Test Tailwind CSS with vechain-kit integration
                         </p>
 
-                        {/* VeChain Kit Integration Test */}
+                        {/* vechain-kit Integration Test */}
                         <div className="flex justify-center gap-4 items-center mb-4">
                             <WalletButton />
                             <span className="text-sm text-gray-500">
-                                ← VeChain Kit component
+                                ← vechain-kit component
                             </span>
                         </div>
 
