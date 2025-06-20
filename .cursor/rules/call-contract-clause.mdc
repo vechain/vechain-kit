@@ -184,7 +184,6 @@ if (!res.every((r) => r.success))
 ```
 
 ### 4. Result Type Casting
-
 ```typescript
 const {result} = (res[index]?.result.array?.[0] || []) as ViewFunctionResult<
     typeof {ContractName}__factory.abi,

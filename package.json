@@ -5,6 +5,7 @@
     "license": "MIT",
     "workspaces": [
         "examples/*",
+        "!examples/test-tailwind-vck",
         "packages/*",
         "contracts"
     ],

@@ -410,8 +410,9 @@ export const VeChainKitProvider = (
                                 '--vdk-color-light-primary-active': '#f0f0f0',
                                 '--vdk-color-light-secondary': 'white',
 
-                                // Font settings
-                                '--vdk-font-family': 'var(--chakra-fonts-body)',
+                                // Font settings - using system fonts instead of Chakra variables
+                                '--vdk-font-family':
+                                    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
                                 '--vdk-font-size-medium': '14px',
                                 '--vdk-font-size-large': '16px',
                                 '--vdk-font-weight-medium': '500',

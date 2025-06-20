@@ -3,6 +3,8 @@ import {
     createStandaloneToast,
     ColorModeScript,
 } from '@chakra-ui/react';
+import { CacheProvider, Global, css } from '@emotion/react';
+import createCache from '@emotion/cache';
 import { ReactNode, useMemo } from 'react';
 import { VechainKitTheme } from '@/theme';
 
@@ -14,7 +16,36 @@ type Props = {
 // Create a standalone toast system
 const { ToastContainer } = createStandaloneToast();
 
-// Base ChakraProvider configuration
+// isolated emotion cache for vechain-kit with CSS layer support
+const createVeChainKitCache = () => {
+    return createCache({
+        key: 'vechain-kit', // consistent with our layer and class names
+        prepend: true,
+        // CSS layers will be handled via Global component injection
+    });
+};
+
+// CSS Layer setup - simpler approach that doesn't interfere with host app
+const LayerSetup = () => {
+    return (
+        <Global
+            styles={css`
+                /* define CSS layers with proper priority order */
+                @layer vechain-kit, host-app;
+
+                /* All vechain-kit styles go in the vechain-kit layer */
+                @layer vechain-kit {
+                    /* scope all Chakra styles to vechain-kit-root */
+                    .vechain-kit-root {
+                        /* vechain-kit styles are contained here */
+                    }
+                }
+            `}
+        />
+    );
+};
+
+// Base ChakraProvider conf with style isolation
 const EnsureChakraProvider = ({
     children,
     theme,
@@ -22,29 +53,23 @@ const EnsureChakraProvider = ({
     children: ReactNode;
     theme: any;
 }) => {
-    try {
-        // Try to access Chakra's CSS variables to check if provider exists
-        const chakraVars = document.documentElement.style.getPropertyValue(
-            '--chakra-colors-transparent',
-        );
-        if (chakraVars) {
-            // If ChakraProvider exists, just add our theme layer
-            return (
-                <ChakraProvider theme={theme} resetCSS={false}>
-                    {children}
-                </ChakraProvider>
-            );
-        }
-    } catch (e) {
-        // Handle any potential errors silently
-        console.error(e);
-    }
+    const cache = useMemo(() => createVeChainKitCache(), []);
 
-    // If no ChakraProvider exists, provide a base one
+    // Always disable CSS reset to prevent conflicts with host apps
+    // vechain-kit components should be self-contained with their own styling
     return (
-        <ChakraProvider theme={theme} resetCSS={true}>
-            {children}
-        </ChakraProvider>
+        <CacheProvider value={cache}>
+            <LayerSetup />
+            <ChakraProvider
+                theme={theme}
+                resetCSS={false}
+                // Undefined portal z-index allows host apps to control their own z-index hierarchy
+                // instead of Chakra forcing high values (1500+) that might conflict
+                portalZIndex={undefined}
+            >
+                <div className="vechain-kit-root">{children}</div>
+            </ChakraProvider>
+        </CacheProvider>
     );
 };
 
