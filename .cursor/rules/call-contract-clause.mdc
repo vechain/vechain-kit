@@ -1,6 +1,6 @@
 ---
 description: 
-globs: 
+globs: **/thor/contracts/**/*.ts
 alwaysApply: false
 ---
 When creating a new contract clause call interaction using `useCallClause`, follow this template pattern:
