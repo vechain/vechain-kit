@@ -16,7 +16,7 @@ type Props = {
 // Create a standalone toast system
 const { ToastContainer } = createStandaloneToast();
 
-// isolated emotion cache for VeChain Kit with CSS layer support
+// isolated emotion cache for vechain-kit with CSS layer support
 const createVeChainKitCache = () => {
     return createCache({
         key: 'vechain-kit', // consistent with our layer and class names
@@ -33,11 +33,11 @@ const LayerSetup = () => {
                 /* define CSS layers with proper priority order */
                 @layer vechain-kit, host-app;
 
-                /* All VeChain Kit styles go in the vechain-kit layer */
+                /* All vechain-kit styles go in the vechain-kit layer */
                 @layer vechain-kit {
                     /* scope all Chakra styles to vechain-kit-root */
                     .vechain-kit-root {
-                        /* VeChain Kit styles are contained here */
+                        /* vechain-kit styles are contained here */
                     }
                 }
             `}
@@ -55,8 +55,8 @@ const EnsureChakraProvider = ({
 }) => {
     const cache = useMemo(() => createVeChainKitCache(), []);
 
-    // Always disable CSS reset to prevent conflicts with host applications
-    // VeChain Kit components should be self-contained with their own styling
+    // Always disable CSS reset to prevent conflicts with host apps
+    // vechain-kit components should be self-contained with their own styling
     return (
         <CacheProvider value={cache}>
             <LayerSetup />
