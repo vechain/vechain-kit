@@ -17,25 +17,42 @@ type ExtractViewFunction<
     { type: 'function'; stateMutability: 'pure' | 'view'; name: TMethod }
 >;
 
-export const getCallClauseQueryKey = <TAbi extends Abi>({
+export const getCallClauseQueryKey = <
+    TAbi extends Abi,
+    TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
+>({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    abi,
+    address,
+    method,
+}: {
+    abi: TAbi;
+    address: string;
+    method: TMethod;
+}) => ['callClause', address, method];
+
+export const getCallClauseQueryKeyWithArgs = <
+    TAbi extends Abi,
+    TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
+>({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    abi,
     address,
     method,
     args,
 }: {
+    abi: TAbi;
     address: string;
-    method: ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>;
+    method: TMethod;
     args?: AbiParametersToPrimitiveTypes<
-        ExtractViewFunction<
-            TAbi,
-            ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>
-        >['inputs'],
+        ExtractViewFunction<TAbi, TMethod>['inputs'],
         'inputs'
     >;
-}): (string | undefined | unknown[])[] => [
+}) => [
     'callClause',
     address,
     method,
-    ...(args ? [args as unknown[]] : []),
+    ...(args?.length ? [args as unknown[]] : []),
 ];
 
 export const useCallClause = <
@@ -61,7 +78,7 @@ export const useCallClause = <
             ViewFunctionResult<TAbi, TMethod>,
             unknown,
             TData,
-            ReturnType<typeof getCallClauseQueryKey<TAbi>>
+            ReturnType<typeof getCallClauseQueryKeyWithArgs<TAbi, TMethod>>
         >,
         'queryKey' | 'queryFn'
     >;
@@ -69,7 +86,8 @@ export const useCallClause = <
     const thor = useThor();
 
     return useQuery({
-        queryKey: getCallClauseQueryKey<TAbi>({
+        queryKey: getCallClauseQueryKeyWithArgs({
+            abi,
             address,
             method,
             args,
