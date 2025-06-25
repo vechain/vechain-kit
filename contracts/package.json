@@ -4,6 +4,7 @@
     "main": "index.ts",
     "types": "index.ts",
     "license": "MIT",
+    "private": true,
     "scripts": {
         "compile": "yarn hardhat compile",
         "deploy:hardhat": "npx hardhat run scripts/deploy --network hardhat",
