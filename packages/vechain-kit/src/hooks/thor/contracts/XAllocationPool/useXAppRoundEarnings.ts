@@ -137,7 +137,7 @@ export const useMultipleXAppRoundEarnings = (
 
             const decoded = res.map((earnings, index) => {
                 const parsedAmount = formatEther(
-                    earnings.result.plain as bigint,
+                    earnings.result.array?.[0] as unknown as bigint || 0n
                 );
                 const appId = xAppsInRound[index]?.id as string;
                 // Update the cache with the new amount
