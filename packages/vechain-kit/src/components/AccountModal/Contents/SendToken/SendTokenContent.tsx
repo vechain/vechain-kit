@@ -15,7 +15,7 @@ import {
     Image,
     FormControl,
 } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -27,8 +27,12 @@ import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useVechainDomain, TokenWithValue } from '@/hooks';
-import { useCurrency } from '@/hooks';
-import { formatCompactCurrency } from '@/utils/currencyUtils';
+import { useCurrency, useTokenPrices } from '@/hooks';
+import {
+    formatCompactCurrency,
+    SupportedCurrency,
+    convertToSelectedCurrency
+} from '@/utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
 
 export type SendTokenContentProps = {
@@ -55,6 +59,7 @@ export const SendTokenContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
+    const { exchangeRates } = useTokenPrices();
     const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
         preselectedToken ?? null,
     );
@@ -82,6 +87,20 @@ export const SendTokenContent = ({
 
     // Watch form values
     const { toAddressOrDomain, amount } = watch();
+
+    const formattedValue = useMemo(() => {
+        if (selectedToken) {
+            return formatCompactCurrency(
+                convertToSelectedCurrency(
+                    Number(amount) * selectedToken.priceUsd,
+                    currentCurrency as SupportedCurrency,
+                    exchangeRates,
+                ),
+                { currency: currentCurrency as SupportedCurrency },
+            );
+        }
+        return '';
+    }, [amount, selectedToken, currentCurrency, exchangeRates]);
 
     useEffect(() => {
         if (selectedToken && amount) {
@@ -200,6 +219,7 @@ export const SendTokenContent = ({
                 resolvedAddress: resolvedDomainData?.address,
                 amount: data.amount,
                 selectedToken,
+                formattedTotalAmount: formattedValue,
                 setCurrentContent,
             },
         });
@@ -414,11 +434,7 @@ export const SendTokenContent = ({
                                     >
                                         <Text opacity={0.5}>
                                             ≈{' '}
-                                            {formatCompactCurrency(
-                                                Number(amount) *
-                                                    selectedToken.priceUsd,
-                                                currentCurrency,
-                                            )}
+                                            {formattedValue}
                                         </Text>
                                         <Text
                                             cursor="pointer"

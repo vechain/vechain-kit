@@ -25,12 +25,6 @@ type AssetButtonProps = ButtonProps & {
     onClick?: () => void;
 };
 
-const amountFormatter = new Intl.NumberFormat('de-DE', {
-    notation: 'compact',
-    compactDisplay: 'short',
-    maximumFractionDigits: 2,
-});
-
 export const AssetButton = ({
     symbol,
     amount,
@@ -89,7 +83,10 @@ export const AssetButton = ({
                 <Text>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
-                <Text>{amountFormatter.format(amount)}</Text>
+                <Text>
+                    {amount.toLocaleString(undefined, {
+                        maximumFractionDigits: 2,
+                    })}{' '}</Text>
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
@@ -97,8 +94,7 @@ export const AssetButton = ({
                 >
                     {formatCompactCurrency(
                         currencyValue,
-                        currentCurrency as SupportedCurrency,
-                        'de-DE',
+                        { currency: currentCurrency as SupportedCurrency },
                     )}
                 </Text>
             </VStack>

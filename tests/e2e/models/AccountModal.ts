@@ -35,7 +35,7 @@ export class AccountModal extends BasePage {
     readonly successIcon: Locator;
     readonly quickActionButton: (action: QuickActionButton) => Locator;
 
-    private readonly summaryFormatter = new Intl.NumberFormat('de-DE', {
+    private readonly summaryFormatter = new Intl.NumberFormat('en-US', {
         notation: 'standard',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,

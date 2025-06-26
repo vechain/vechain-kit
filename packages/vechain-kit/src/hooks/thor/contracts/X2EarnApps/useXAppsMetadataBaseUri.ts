@@ -1,5 +1,5 @@
 import { useVeChainKitConfig } from '@/providers';
-import { getCallClauseQueryKey, useCallClause } from '@/hooks';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
@@ -8,7 +8,8 @@ const abi = X2EarnApps.abi;
 const method = 'baseURI' as const;
 
 export const getXAppsMetadataBaseUriQueryKey = (network: NETWORK_TYPE) =>
-    getCallClauseQueryKey<typeof abi>({
+    getCallClauseQueryKeyWithArgs({
+        abi,
         method,
         address: getConfig(network).x2EarnAppsContractAddress,
         args: [],

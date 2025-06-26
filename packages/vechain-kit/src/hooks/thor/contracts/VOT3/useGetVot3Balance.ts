@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { IVOT3__factory } from '@/contracts';
+import { VOT3__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
@@ -15,7 +15,7 @@ export const getVot3Balance = async (
     address?: string,
 ): Promise<TokenBalance> => {
     const res = await thor.contracts
-        .load(getConfig(network).vot3ContractAddress, IVOT3__factory.abi)
+        .load(getConfig(network).vot3ContractAddress, VOT3__factory.abi)
         .read.balanceOf(address);
 
     if (!res) throw new Error('Reverted');
@@ -31,7 +31,7 @@ export const getVot3Balance = async (
     };
 };
 
-export const getVot3BalanceQueryKey = (address?: string) => [
+export const getVot3BalanceQueryKey = (address: string) => [
     'VEBETTERDAO_BALANCE',
     address,
     'VOT3',
@@ -42,7 +42,7 @@ export const useGetVot3Balance = (address?: string) => {
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: getVot3BalanceQueryKey(address),
+        queryKey: getVot3BalanceQueryKey(address || ''),
         queryFn: async () => getVot3Balance(thor, network.type, address),
         enabled: !!thor && !!address && !!network.type,
     });

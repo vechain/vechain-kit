@@ -45,7 +45,7 @@ export const getXApps = async (
         getConfig(networkType).x2EarnAppsContractAddress,
         X2EarnApps__factory.abi,
     );
-    const clauses = [contract.clause.unendorsedApps(), contract.clause.apps()];
+    const clauses = [contract.clause.apps(),contract.clause.unendorsedApps()];
 
     const res = await thor.transactions.executeMultipleClausesCall(clauses);
     if (!res.every((r) => r.success)) throw new Error(`Failed to fetch xApps`);
