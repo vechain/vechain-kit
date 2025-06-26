@@ -3,6 +3,8 @@ import testnetConfig from './testnet';
 import mainnetConfig from './mainnet';
 import { Network, NETWORK_TYPE } from './network';
 
+export type { NETWORK_TYPE, Network };
+
 export type AppConfig = {
     ipfsFetchingService: string;
     ipfsPinningService: string;
