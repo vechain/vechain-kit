@@ -4,6 +4,7 @@ import {
     QueryClientProvider,
     QueryClientContext,
 } from '@tanstack/react-query';
+import { hashFn } from 'wagmi/query';
 
 // Singleton instance for internal QueryClient
 let internalQueryClient: QueryClient | null = null;
@@ -14,6 +15,7 @@ export function getOrCreateQueryClient(): QueryClient {
         internalQueryClient = new QueryClient({
             defaultOptions: {
                 queries: {
+                    queryKeyHashFn: hashFn,
                     retry: 0,
                     staleTime: 30000,
                     refetchOnWindowFocus: true,

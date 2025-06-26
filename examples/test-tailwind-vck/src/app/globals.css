@@ -1,0 +1,20 @@
+/* Define CSS layers with VeChain Kit having lower priority */
+@layer vechain-kit, host-app;
+
+/* Import Tailwind CSS */
+@import "tailwindcss";
+
+/* Host app custom styles in their own layer for priority */
+@layer host-app {
+    /* Use a very distinctive font to make it obvious if VeChain Kit overrides it */
+    body {
+        font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+        font-weight: bold;
+    }
+    
+    /* Make headings even more distinctive */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Papyrus', 'Bradley Hand', fantasy;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}

@@ -2,7 +2,7 @@ import { SimpleAccountFactory__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { getCallClauseQueryKey, useCallClause } from '@/hooks';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 
 const abi = SimpleAccountFactory__factory.abi;
 
@@ -11,7 +11,8 @@ export const getAccountVersionQueryKey = (
     ownerAddress: string,
     networkType: NETWORK_TYPE,
 ) =>
-    getCallClauseQueryKey<typeof abi>({
+    getCallClauseQueryKeyWithArgs({
+        abi,
         address: getConfig(networkType).accountFactoryAddress,
         method: 'getAccountVersion',
         args: [accountAddress as `0x${string}`, ownerAddress as `0x${string}`],
