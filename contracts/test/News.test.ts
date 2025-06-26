@@ -64,6 +64,7 @@ describe('News Contract', function () {
     let appCreator: HardhatEthersSigner;
     let appModerator: HardhatEthersSigner;
     let appAdmin: HardhatEthersSigner;
+    let vechainKitCustomAppId: string;
 
     // Test variables
     const cooldownPeriod = 10; // 10 blocks cooldown period
@@ -119,10 +120,17 @@ describe('News Contract', function () {
             pauser.address,
         ]);
 
-        // Grant publisher role
+        vechainKitCustomAppId = ethers.keccak256(
+            ethers.toUtf8Bytes('VeChainKit'),
+        );
+
+        // Assign publisher role to the user for a custom app
         await news
             .connect(owner)
-            .grantRole(await news.PUBLISHER_ROLE(), publisher.address);
+            .assignPublisherToCustomApp(
+                vechainKitCustomAppId,
+                publisher.address,
+            );
 
         // Grant moderator role
         await news
@@ -176,20 +184,26 @@ describe('News Contract', function () {
     });
 
     describe('Publishing News', function () {
-        it('Publisher can publish news', async function () {
+        it('Publisher can publish news only if they have the PUBLISHER_ROLE and assigned to the app', async function () {
             const { title, description, image, callToActionUrl } =
                 TEST_NEWS.publisher;
 
             const transaction = await news
                 .connect(publisher)
-                .publish(appId, title, description, image, callToActionUrl);
+                .publish(
+                    vechainKitCustomAppId,
+                    title,
+                    description,
+                    image,
+                    callToActionUrl,
+                );
 
             // Check event was emitted
             await expect(transaction)
                 .to.emit(news, 'NewsPublished')
                 .withArgs(
                     0,
-                    appId,
+                    vechainKitCustomAppId,
                     title,
                     description,
                     image,
@@ -198,7 +212,11 @@ describe('News Contract', function () {
                 );
 
             // Verify news was stored correctly
-            const newsItems = await news.appNewsPaginated(appId, 10, 1);
+            const newsItems = await news.appNewsPaginated(
+                vechainKitCustomAppId,
+                10,
+                1,
+            );
             expect(newsItems.length).to.equal(1);
             expect(newsItems[0].title).to.equal(title);
             expect(newsItems[0].description).to.equal(description);
@@ -291,22 +309,30 @@ describe('News Contract', function () {
                         secondNews.callToActionUrl,
                     ),
             ).to.be.revertedWith('News: app is in cooldown period');
+        });
+        it('Publisher cannot publish news if they are not assigned to the app', async function () {
+            const { title, description, image, callToActionUrl } =
+                TEST_NEWS.publisher;
 
-            // Publisher role users can bypass cooldown
-            const publisherBypassNews = TEST_NEWS.publisher;
+            await expect(
+                news
+                    .connect(publisher)
+                    .publish(appId, title, description, image, callToActionUrl),
+            ).to.be.revertedWith('News: not app admin, creator or moderator');
+        });
+        it('Publisher cannot publish right after being removed from the app', async function () {
+            const { title, description, image, callToActionUrl } =
+                TEST_NEWS.publisher;
+
             await news
-                .connect(publisher)
-                .publish(
-                    appId,
-                    publisherBypassNews.title,
-                    publisherBypassNews.description,
-                    publisherBypassNews.image,
-                    publisherBypassNews.callToActionUrl,
-                );
+                .connect(owner)
+                .removePublisherFromCustomApp(publisher.address);
 
-            // Verify the news were published
-            const newsItems = await news.appNewsPaginated(appId, 10, 1);
-            expect(newsItems.length).to.equal(2);
+            await expect(
+                news
+                    .connect(publisher)
+                    .publish(appId, title, description, image, callToActionUrl),
+            ).to.be.revertedWith('News: not app admin, creator or moderator');
         });
     });
 
@@ -315,7 +341,7 @@ describe('News Contract', function () {
             // Publish some test news items
             const firstNews = TEST_NEWS.sequence[0];
             await news
-                .connect(publisher)
+                .connect(appAdmin)
                 .publish(
                     appId,
                     firstNews.title,
@@ -352,7 +378,7 @@ describe('News Contract', function () {
             );
             await expect(
                 news.appNewsPaginated(nonExistentAppId, 10, 1),
-            ).to.be.revertedWith('News: app does not exist');
+            ).to.be.revertedWith('News: no news found');
         });
 
         it('Should retrieve news item by ID', async function () {
@@ -379,7 +405,7 @@ describe('News Contract', function () {
             // Publish some test news items
             const firstNews = TEST_NEWS.sequence[0];
             await news
-                .connect(publisher)
+                .connect(appAdmin)
                 .publish(
                     appId,
                     firstNews.title,

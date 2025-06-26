@@ -57,6 +57,7 @@ contract News is
         mapping(uint256 newsId => NewsType) newsById;
         mapping(bytes32 appId => uint256[]) appNewsIds;
         mapping(bytes32 appId => uint256) lastNewsBlock;
+        mapping(address publisher => bytes32 appId) appIdOfPublisher;
         uint256 cooldownPeriod;
     }
 
@@ -145,7 +146,7 @@ contract News is
         string memory callToActionUrl
     ) public {
         NewsStorage storage $ = _getNewsStorage();
-        bool isPublisher = hasRole(PUBLISHER_ROLE, msg.sender);
+        bool isPublisher = isPublisherOfApp(msg.sender, appId);
 
         // Only check cooldown for app publishers
         if (!isPublisher) {
@@ -157,8 +158,6 @@ contract News is
                 'News: not app admin, creator or moderator'
             );
             require(!isUnderCooldown(appId), 'News: app is in cooldown period');
-
-            $.lastNewsBlock[appId] = block.number;
         }
         // Update global news increment counter
         uint256 newsId = $.nextNewsId++;
@@ -175,6 +174,7 @@ contract News is
 
         $.newsById[newsId] = newsItem;
         $.appNewsIds[appId].push(newsId);
+        $.lastNewsBlock[appId] = block.number;
 
         emit NewsPublished(
             newsId,
@@ -198,6 +198,37 @@ contract News is
         NewsStorage storage $ = _getNewsStorage();
         emit CooldownPeriodUpdated($.cooldownPeriod, _cooldownPeriod);
         $.cooldownPeriod = _cooldownPeriod;
+    }
+
+    /**
+     * @dev Assigns a publisher to an app, allowing us to track the amount of signals from a specific app
+     * @param appId - the app ID (Custom app ID)
+     * @param user - the publisher address
+     * @notice Custom function so non existing VeBetterDAO app IDs can be used from publisher
+     */
+    function assignPublisherToCustomApp(
+        bytes32 appId,
+        address user
+    ) external onlyRoleOrAdmin(MODERATOR_ROLE) {
+        NewsStorage storage $ = _getNewsStorage();
+        require(
+            !$.x2EarnApps.appExists(appId),
+            'News: cannot assign publisher to VeBetterDAO app'
+        );
+        _grantRole(PUBLISHER_ROLE, user);
+        $.appIdOfPublisher[user] = appId;
+    }
+
+    /**
+     * @dev Removes a publisher from an app
+     * @param user - the publisher address
+     */
+    function removePublisherFromCustomApp(
+        address user
+    ) external onlyRoleOrAdmin(MODERATOR_ROLE) {
+        NewsStorage storage $ = _getNewsStorage();
+        _revokeRole(PUBLISHER_ROLE, user);
+        delete $.appIdOfPublisher[user];
     }
 
     /**
@@ -248,8 +279,6 @@ contract News is
         );
 
         NewsStorage storage $ = _getNewsStorage();
-
-        require($.x2EarnApps.appExists(appId), 'News: app does not exist');
 
         uint256[] memory newsIds = $.appNewsIds[appId];
 
@@ -400,6 +429,21 @@ contract News is
         uint256 _lastNewsBlock = $.lastNewsBlock[appId];
         uint256 requiredBlock = _lastNewsBlock + $.cooldownPeriod;
         return requiredBlock > block.number;
+    }
+
+    /**
+     * @dev Checks if a user is a publisher
+     * @param user The address of the user to check
+     * @param appId The ID of the app to check
+     * @return True if the user is a publisher of the app, false otherwise
+     */
+    function isPublisherOfApp(
+        address user,
+        bytes32 appId
+    ) public view returns (bool) {
+        NewsStorage storage $ = _getNewsStorage();
+        return
+            $.appIdOfPublisher[user] == appId && hasRole(PUBLISHER_ROLE, user);
     }
 
     /**
