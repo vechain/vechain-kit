@@ -1,10 +1,11 @@
-import { ethers } from 'hardhat';
-import { expect } from 'chai';
-import { describe, it, beforeEach } from 'mocha';
 import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers';
-import { deployProxy } from '../scripts/helpers/upgrades';
-import { getOrDeployContractInstances } from '../scripts/helpers/deploy';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+import { beforeEach, describe, it } from 'mocha';
+
 import { moveBlocks } from '../scripts/helpers/common';
+import { getOrDeployContractInstances } from '../scripts/helpers/deploy';
+import { deployProxy } from '../scripts/helpers/upgrades';
 
 // Constants for reusable test data
 const TEST_NEWS = {
@@ -142,27 +143,31 @@ describe('News Contract', function () {
                     await news.DEFAULT_ADMIN_ROLE(),
                     owner.address,
                 ),
-            ).to.be.true;
-            expect(await news.hasRole(await news.PAUSER_ROLE(), pauser.address))
-                .to.be.true;
+            ).to.equal(true);
+
+            expect(
+                await news.hasRole(await news.PAUSER_ROLE(), pauser.address),
+            ).to.equal(true);
             expect(
                 await news.hasRole(
                     await news.UPGRADER_ROLE(),
                     upgrader.address,
                 ),
-            ).to.be.true;
+            ).to.equal(true);
+
             expect(
                 await news.hasRole(
                     await news.PUBLISHER_ROLE(),
                     publisher.address,
                 ),
-            ).to.be.true;
+            ).to.equal(true);
+
             expect(
                 await news.hasRole(
                     await news.MODERATOR_ROLE(),
                     moderator.address,
                 ),
-            ).to.be.true;
+            ).to.equal(true);
         });
 
         it('Should return the correct version', async function () {
