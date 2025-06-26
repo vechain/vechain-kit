@@ -1,31 +1,32 @@
+import { useLatestNews } from '@/hooks';
 import {
-    VStack,
-    Heading,
     Box,
-    IconButton,
     Card,
     CardBody,
-    Text,
     Flex,
+    Heading,
     Hide,
+    IconButton,
     Image,
+    Link,
+    Text,
+    VStack,
 } from '@chakra-ui/react';
-import { AccountModalContentTypes } from '../Types';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useState, useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 // Import Swiper core and required modules
-import { A11y, Pagination, Autoplay } from 'swiper/modules';
+import { A11y, Autoplay, Pagination } from 'swiper/modules';
 // Import Swiper React components
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+
+import { AccountModalContentTypes } from '../Types';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { useLatestNews } from '@/hooks';
 
 type Props = {
-    mt?: number;
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -54,6 +55,9 @@ const NewsCard = ({
             transition="all 0.3s ease"
             position="relative"
             cursor="pointer"
+            onClick={() => {
+                window.open(item.callToActionUrl, '_blank');
+            }}
         >
             <Box position="relative" w="full" h="120px">
                 <Image
@@ -88,7 +92,7 @@ const NewsCard = ({
     );
 };
 
-export const NewsSection = ({ mt }: Props) => {
+export const NewsSection = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { data: news } = useLatestNews(10, 0);
     const swiperRef = useRef<SwiperClass | null>(null);
@@ -105,34 +109,37 @@ export const NewsSection = ({ mt }: Props) => {
         setIsSliderEnd(swiper.isEnd);
     };
 
+    const slideConfig = {
+        spaceBetween: 20,
+        slidesPerView: 1,
+        pagination: true,
+        scrollbar: { draggable: true },
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+    };
+
     return (
-        <VStack w={'full'} mt={mt} spacing={4}>
+        <VStack w={'full'} spacing={4}>
             <Flex w="full" justify="space-between" align="center">
                 <Heading size={'xs'} fontWeight={'500'} opacity={0.5}>
                     {t('News')}
                 </Heading>
-                <Text
+                <Link
                     fontSize="xs"
                     color="blue.500"
-                    cursor="pointer"
-                    _hover={{ textDecoration: 'underline' }}
+                    onClick={() => setCurrentContent('settings')} //TODO: Change to news page
                 >
                     {t('See all')}
-                </Text>
+                </Link>
             </Flex>
 
             <Box position="relative" w="full">
                 <Swiper
+                    {...slideConfig}
                     modules={[A11y, Pagination, Autoplay]}
-                    spaceBetween={20}
-                    slidesPerView={1}
-                    pagination={true}
-                    scrollbar={{ draggable: true }}
-                    autoplay={{
-                        delay: 2500,
-                        disableOnInteraction: false,
-                        pauseOnMouseEnter: true,
-                    }}
                     onSwiper={(swiper) => (swiperRef.current = swiper)}
                     onSlideChange={handleSliderChange}
                 >
