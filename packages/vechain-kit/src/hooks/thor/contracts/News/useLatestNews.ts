@@ -1,8 +1,8 @@
 import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
-import { getCallClauseQueryKey, useCallClause } from '@/hooks/utils';
 import { NETWORK_TYPE } from '@/config/network';
 import { News__factory } from '@/contracts/typechain-types/factories/contracts';
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks/utils';
+import { useVeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 
 const method = 'latestNewsPaginated' as const;
@@ -13,7 +13,8 @@ export const getLatestNewsQueryKey = (
     resultsPerPage: number,
     page: number,
 ) =>
-    getCallClauseQueryKey<typeof abi>({
+    getCallClauseQueryKeyWithArgs<typeof abi, typeof method>({
+        abi,
         address: getConfig(networkType).newsContractAddress,
         method,
         args: [ethers.toBigInt(resultsPerPage), ethers.toBigInt(page)],
