@@ -1,5 +1,6 @@
 {
-    "name": "vechain-kit",
+    "name": "@vechain/vechain-kit-workspace",
+    "version": "1.0.0",
     "private": true,
     "description": "A TypeScript library that facilitates seamless interaction between vechain wallets (veworld, sync2) and dApps.",
     "license": "MIT",
@@ -11,13 +12,19 @@
     ],
     "scripts": {
         "install:all": "yarn && yarn run build:deps",
-        "build": "turbo run build",
+        "build": "yarn build:core && yarn build:react && yarn build:ui",
+        "build:core": "yarn workspace @vechain/vechain-kit-core build",
+        "build:react": "yarn workspace @vechain/vechain-kit-react build",
+        "build:ui": "yarn workspace @vechain/vechain-kit-ui build",
         "build-react-kit": "turbo run build  --filter='@vechain/dapp-kit-react'",
         "build:deps": "turbo build --no-daemon --filter='@vechain/*'",
         "prepare:release": "ts-node scripts/prepare-packages.ts",
         "publish:release": "ts-node scripts/publish-packages.ts",
-        "clean": "rm -rf .turbo .parcel-cache .reports build && npx turbo@latest run clean",
-        "dev": "turbo run dev --filter='@vechain/*'",
+        "clean": "yarn workspaces run clean",
+        "dev": "concurrently \"yarn dev:core\" \"yarn dev:react\" \"yarn dev:ui\"",
+        "dev:core": "yarn workspace @vechain/vechain-kit-core dev",
+        "dev:react": "yarn workspace @vechain/vechain-kit-react dev",
+        "dev:ui": "yarn workspace @vechain/vechain-kit-ui dev",
         "gh-pages-build": "turbo run gh-pages-build",
         "lint": "turbo run lint",
         "prepare": "husky install",
@@ -28,7 +35,8 @@
         "kit:build": "yarn workspace @vechain/vechain-kit-core build",
         "kit:typecheck": "yarn workspace @vechain/vechain-kit-core typecheck",
         "contracts:compile": "yarn workspace @vechain/contracts compile",
-        "contracts:test": "yarn workspace @vechain/contracts test"
+        "contracts:test": "yarn workspace @vechain/contracts test",
+        "test": "yarn workspaces run test"
     },
     "husky": {
         "hooks": {
@@ -48,9 +56,11 @@
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@changesets/cli": "^2.27.1",
         "@commitlint/config-conventional": "^18.0.0",
+        "@swc/core": "^1.12.6",
         "@vechain/sdk-core": "1.1.0",
         "@vechain/sdk-network": "1.1.0",
         "commitlint": "^18.0.0",
+        "concurrently": "^8.2.2",
         "eslint": "^9.12.0",
         "eslint-plugin-prefer-arrow": "1.2.3",
         "hardhat": "2.19.1",
@@ -60,7 +70,7 @@
         "punycode": "^1.4.1",
         "ts-node": "^10.9.2",
         "turbo": "latest",
-        "typescript": "4.9.5",
+        "typescript": "^5.0.0",
         "typescript-eslint": "^8.11.0"
     },
     "packageManager": "yarn@4.5.1"

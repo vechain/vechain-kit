@@ -1,0 +1,48 @@
+{
+    "name": "@vechain/vechain-kit-core",
+    "version": "0.1.0",
+    "description": "Core TypeScript/JavaScript SDK for VeChain blockchain interaction",
+    "homepage": "https://github.com/vechain/vechain-kit",
+    "repository": "github:vechain/vechain-kit",
+    "license": "MIT",
+    "sideEffects": false,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "package.json",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "tsc --noEmit && tsup",
+        "dev": "tsup --watch",
+        "watch": "tsup --watch",
+        "clean": "rm -rf dist .turbo",
+        "lint": "eslint",
+        "purge": "yarn clean && rm -rf node_modules",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@privy-io/js-sdk-core": "^0.52.1",
+        "@privy-io/server-auth": "^1.28.0",
+        "@vechain/picasso": "^2.1.1",
+        "@vechain/sdk-core": "1.1.0",
+        "@vechain/sdk-network": "1.1.0",
+        "@vechain/vebetterdao-contracts": "^4.1.0",
+        "bignumber.js": "^9.1.2",
+        "ethers": "^6.13.5"
+    },
+    "devDependencies": {
+        "eslint": "^9.12.0",
+        "tsup": "*",
+        "typescript": "*"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    }
+}

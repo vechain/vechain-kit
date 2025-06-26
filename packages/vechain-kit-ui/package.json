@@ -1,0 +1,41 @@
+{
+    "name": "@vechain/vechain-kit-ui",
+    "version": "0.1.0",
+    "description": "Framework-agnostic UI components for VeChain Kit",
+    "homepage": "https://github.com/vechain/vechain-kit",
+    "repository": "github:vechain/vechain-kit",
+    "license": "MIT",
+    "sideEffects": false,
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "package.json",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsc --noEmit && tsup",
+        "dev": "tsup --watch",
+        "watch": "tsup --watch",
+        "clean": "rm -rf dist .turbo",
+        "lint": "eslint",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@vechain/vechain-kit-core": "workspace:*",
+        "lit": "^3.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "eslint": "^9.12.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.0.0"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    }
+}
