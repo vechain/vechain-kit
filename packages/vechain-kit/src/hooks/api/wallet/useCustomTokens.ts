@@ -1,13 +1,10 @@
-import {
-    CustomTokenInfo,
-    getTokenInfo,
-    LocalStorageKey,
-    useLocalStorage,
-} from '@/hooks';
+import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useThor } from '@vechain/dapp-kit-react';
+
+import { CustomTokenInfo, getTokenInfo } from './useGetCustomTokenInfo';
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(

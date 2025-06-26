@@ -13,10 +13,10 @@ import {
 } from '@chakra-ui/react';
 import {
     useWallet,
-    useGetB3trBalance,
-    useGetVot3Balance,
+    useTokenBalances,
     useGetTokenUsdPrice,
-    useCurrentAllocationsRound,
+    useCurrentAllocationsRoundId,
+    // useCurrentAllocationsRound,
 } from '@vechain/vechain-kit';
 import { MdDataUsage } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
@@ -25,15 +25,14 @@ export function DataReadingExample(): ReactElement {
     const { account } = useWallet();
     const address = account?.address || '';
 
-    // Example hooks for reading data
-    const { data: b3trBalance, isLoading: isLoadingB3tr } =
-        useGetB3trBalance(address);
-    const { data: vot3Balance, isLoading: isLoadingVot3 } =
-        useGetVot3Balance(address);
+    const { data: tokenBalances, loading: isLoadingTokenBalances } =
+        useTokenBalances(address);
+
+    const { b3trBalance, vot3Balance } = tokenBalances;
+
     const { data: vetPrice, isLoading: isLoadingVetPrice } =
         useGetTokenUsdPrice('VET');
-    const { data: vbdCurrentRound, isLoading: isLoadingVbdCurrentRound } =
-        useCurrentAllocationsRound();
+    const { data: vbdCurrentRoundId } = useCurrentAllocationsRoundId();
 
     return (
         <CollapsibleCard
@@ -61,17 +60,17 @@ export function DataReadingExample(): ReactElement {
                                 <Text as="span" fontWeight="bold">
                                     B3TR Balance:{' '}
                                 </Text>
-                                {isLoadingB3tr
+                                {isLoadingTokenBalances
                                     ? 'Loading...'
-                                    : b3trBalance?.formatted || '0'}
+                                    : b3trBalance?.balance || '0'}
                             </Text>
                             <Text>
                                 <Text as="span" fontWeight="bold">
                                     VOT3 Balance:{' '}
                                 </Text>
-                                {isLoadingVot3
+                                {isLoadingTokenBalances
                                     ? 'Loading...'
-                                    : vot3Balance?.formatted || '0'}
+                                    : vot3Balance?.balance || '0'}
                             </Text>
                             <Text>
                                 <Text as="span" fontWeight="bold">
@@ -84,9 +83,9 @@ export function DataReadingExample(): ReactElement {
                             <VStack mt={4} align="start" spacing={1}>
                                 <Heading size="sm">VeBetterDAO</Heading>
                                 <Text fontWeight="bold">
-                                    Current round: {vbdCurrentRound?.roundId}
+                                    Current round: {vbdCurrentRoundId}
                                 </Text>
-                                <Text fontWeight="bold">
+                                {/* <Text fontWeight="bold">
                                     Next round starts on:{' '}
                                     {isLoadingVbdCurrentRound
                                         ? 'Loading...'
@@ -94,7 +93,7 @@ export function DataReadingExample(): ReactElement {
                                               vbdCurrentRound?.voteEndTimestamp ??
                                                   0,
                                           ).toLocaleString()}
-                                </Text>
+                                </Text> */}
                             </VStack>
                         </VStack>
                     </VStack>

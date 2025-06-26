@@ -1,130 +1,175 @@
-import { useMemo } from 'react';
-import {
-    useAccountBalance,
-    useGetB3trBalance,
-    useGetVot3Balance,
-    useGetVeDelegateBalance,
-    useGetErc20Balance,
-    useGetCustomTokenBalances,
-} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useCustomTokens } from '@/hooks';
+import { executeMultipleClausesCall } from '@/utils';
+import { NETWORK_TYPE } from '@/config/network';
+import { ThorClient } from '@vechain/sdk-network';
+import { IB3TR__factory, IERC20__factory, IVOT3__factory } from '@/contracts';
+import { getAccountBalance } from '@/hooks';
+import { useQueries } from '@tanstack/react-query';
+import { useThor } from '@vechain/dapp-kit-react';
+import { formatEther } from 'ethers';
 
-export type WalletTokenBalance = {
+type CustomTokenInfo = {
+    name: string;
     address: string;
+    decimals: string;
     symbol: string;
-    balance: string;
 };
 
-type UseTokenBalancesProps = {
-    address?: string;
-};
-
-// TODO: migration check if we can remove hooks inside and bundle this into one query using thor.transactions.executeMultipleClausesCall
-// check example of useTokenBalances2
-export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
-    const { network } = useVeChainKitConfig();
-    const config = getConfig(network.type);
-
-    // Base token balances
-    const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);
-    const { data: b3trBalance, isLoading: b3trLoading } =
-        useGetB3trBalance(address);
-    const { data: vot3Balance, isLoading: vot3Loading } =
-        useGetVot3Balance(address);
-    const { data: veDelegateBalance, isLoading: veDelegateLoading } =
-        useGetVeDelegateBalance(address);
-    const { data: gloDollarBalance, isLoading: gloDollarLoading } =
-        useGetErc20Balance(config.gloDollarContractAddress, address);
-
-    // Custom token balances
-    const customTokenBalancesQueries = useGetCustomTokenBalances(address);
-    const customTokenBalances = customTokenBalancesQueries
-        .map((query) => query.data)
-        .filter(Boolean);
-    const customTokensLoading = customTokenBalancesQueries.some(
-        (query) => query.isLoading,
-    );
-
-    // Get all balances
-    const balances = useMemo(() => {
-        if (!address) return [];
-
-        // Get contract addresses from config
-        const contractAddresses = {
-            vet: '0x',
-            vtho: config.vthoContractAddress,
-            b3tr: config.b3trContractAddress,
-            vot3: config.vot3ContractAddress,
-            veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
-        };
-
-        // Base tokens
-        const baseTokens: WalletTokenBalance[] = [
-            {
-                address: contractAddresses.vet,
-                symbol: 'VET',
-                balance: vetData?.balance || '0',
-            },
-            {
-                address: contractAddresses.vtho,
-                symbol: 'VTHO',
-                balance: vetData?.energy || '0',
-            },
-            {
-                address: contractAddresses.b3tr,
-                symbol: 'B3TR',
-                balance: b3trBalance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.vot3,
-                symbol: 'VOT3',
-                balance: vot3Balance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.veDelegate,
-                symbol: 'veDelegate',
-                balance: veDelegateBalance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.USDGLO,
-                symbol: 'USDGLO',
-                balance: gloDollarBalance?.scaled ?? '0',
-            },
-        ];
-
-        // Add custom tokens
-        const customTokens: WalletTokenBalance[] = customTokenBalances.map(
-            (token) => ({
-                address: token?.address || '',
-                symbol: token?.symbol || '',
-                balance: token?.scaled || '0',
-            }),
+const getCustomTokenBalances = async (
+    thor: ThorClient,
+    address: string,
+    customTokens: CustomTokenInfo[],
+) => {
+    const clauses = customTokens.map((token) => {
+        const erc20Contract = thor.contracts.load(
+            token.address,
+            IERC20__factory.abi,
         );
+        return erc20Contract.clause.balanceOf([address]);
+    });
 
-        return [...baseTokens, ...customTokens];
-    }, [
-        address,
-        vetData,
+    const response = await thor.contracts.executeMultipleClausesCall(clauses);
+
+    if (!response.every((r) => r.success && !!r.result.plain)) {
+        throw new Error('Failed to get custom token balances');
+    }
+
+    return response.map((r, index) => {
+        const token = customTokens[index];
+        const original = r.result.plain as string;
+        const scaled = formatEther(BigInt(original)) || '0';
+
+        return {
+            address: token.address,
+            symbol: token.symbol,
+            balance: scaled,
+        };
+    });
+};
+
+const getTokenBalances = async (
+    thor: ThorClient,
+    address: string,
+    network: NETWORK_TYPE,
+) => {
+    const config = getConfig(network);
+
+    const [b3trBalance, vot3Balance, veDelegateBalance, gloDollarBalance] =
+        await executeMultipleClausesCall({
+            thor,
+            calls: [
+                {
+                    abi: IB3TR__factory.abi,
+                    address: config.b3trContractAddress as `0x${string}`,
+                    functionName: 'balanceOf',
+                    args: [address as `0x${string}`],
+                },
+                {
+                    abi: IVOT3__factory.abi,
+                    address: config.vot3ContractAddress as `0x${string}`,
+                    functionName: 'balanceOf',
+                    args: [address as `0x${string}`],
+                },
+                {
+                    abi: IERC20__factory.abi,
+                    address: config.veDelegate as `0x${string}`,
+                    functionName: 'balanceOf',
+                    args: [address as `0x${string}`],
+                },
+                {
+                    abi: IERC20__factory.abi,
+                    address: config.gloDollarContractAddress as `0x${string}`,
+                    functionName: 'balanceOf',
+                    args: [address as `0x${string}`],
+                },
+            ],
+        });
+
+    const { balance: vetBalance, energy: vthoBalance } =
+        await getAccountBalance(thor, address);
+
+    return [
+        {
+            address: '0x',
+            symbol: 'VET',
+            balance: vetBalance.toString(),
+        },
+        {
+            address: config.vthoContractAddress,
+            symbol: 'VTHO',
+            balance: vthoBalance.toString(),
+        },
+        {
+            address: config.b3trContractAddress,
+            symbol: 'B3TR',
+            balance: b3trBalance.toString(),
+        },
+        {
+            address: config.vot3ContractAddress,
+            symbol: 'VOT3',
+            balance: vot3Balance.toString(),
+        },
+        {
+            address: config.veDelegate,
+            symbol: 'veDelegate',
+            balance: veDelegateBalance.toString(),
+        },
+        {
+            address: config.gloDollarContractAddress,
+            symbol: 'USDGLO',
+            balance: gloDollarBalance.toString(),
+        },
+    ];
+};
+
+export const useTokenBalances = (address: string) => {
+    const thor = useThor();
+    const { network } = useVeChainKitConfig();
+    const { customTokens } = useCustomTokens();
+
+    const [baseTokenBalancesQuery, customTokenBalancesQuery] = useQueries({
+        queries: [
+            {
+                queryKey: ['base-token-balances', address],
+                queryFn: () => getTokenBalances(thor, address, network.type),
+            },
+            {
+                queryKey: ['custom-token-balances', address],
+                queryFn: () =>
+                    getCustomTokenBalances(thor, address, customTokens),
+            },
+        ],
+    });
+
+    const [
+        vetBalance,
+        vthoBalance,
         b3trBalance,
         vot3Balance,
         veDelegateBalance,
         gloDollarBalance,
-        customTokenBalances,
-        network.type,
-    ]);
-
-    const isLoading =
-        vetLoading ||
-        b3trLoading ||
-        vot3Loading ||
-        veDelegateLoading ||
-        gloDollarLoading ||
-        customTokensLoading;
+    ] = [
+        ...(baseTokenBalancesQuery.data ?? []),
+        ...(customTokenBalancesQuery.data ?? []),
+    ].map((balance) => ({
+        ...balance,
+        formatted: formatEther(BigInt(balance.balance)),
+    }));
 
     return {
-        balances,
-        isLoading,
+        data: {
+            vetBalance,
+            vthoBalance,
+            b3trBalance,
+            vot3Balance,
+            veDelegateBalance,
+            gloDollarBalance,
+        },
+        loading:
+            baseTokenBalancesQuery.isLoading ||
+            customTokenBalancesQuery.isLoading,
+        error: baseTokenBalancesQuery.error || customTokenBalancesQuery.error,
     };
 };

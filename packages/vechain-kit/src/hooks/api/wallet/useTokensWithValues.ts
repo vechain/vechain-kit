@@ -1,11 +1,17 @@
 import { useMemo } from 'react';
-import { useTokenBalances, WalletTokenBalance } from './useTokenBalances';
+import { useTokenBalances } from './useTokenBalances';
 import { useTokenPrices } from './useTokenPrices';
 import {
     SupportedCurrency,
     convertToSelectedCurrency,
 } from '@/utils/currencyUtils';
 import { useCurrency } from '../../utils/useCurrency';
+
+export type WalletTokenBalance = {
+    address: string;
+    symbol: string;
+    balance: string;
+};
 
 export type TokenWithValue = WalletTokenBalance & {
     priceUsd: number;
@@ -20,9 +26,8 @@ type UseTokensWithValuesProps = {
 export const useTokensWithValues = ({
     address = '',
 }: UseTokensWithValuesProps) => {
-    const { balances, isLoading: balancesLoading } = useTokenBalances({
-        address,
-    });
+    const { data: balances, loading: balancesLoading } =
+        useTokenBalances(address);
     const {
         prices,
         exchangeRates,
@@ -31,7 +36,7 @@ export const useTokensWithValues = ({
     const { currentCurrency } = useCurrency();
 
     const tokensWithValues = useMemo(() => {
-        return balances.map((token) => {
+        return Object.values(balances).map((token) => {
             const priceUsd = prices[token.address] || 0;
             const valueUsd = Number(token.balance) * priceUsd;
             const valueInCurrency = convertToSelectedCurrency(
