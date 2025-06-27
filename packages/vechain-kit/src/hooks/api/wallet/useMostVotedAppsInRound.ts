@@ -1,8 +1,14 @@
-import { useRoundXApps } from './useRoundXApps';
-import { useXApps } from './useXApps';
-import { XApp } from '@/hooks';
 import { useMemo } from 'react';
-import { useXAppsShares } from './useXAppsShares';
+import { useRoundXApps } from './useRoundXApps';
+import { useXAppsShares } from './useXAppShares';
+
+export type XApp = {
+    id: string;
+    teamWalletAddress: string;
+    name: string;
+    metadataURI: string;
+    createdAtTimestamp: string;
+};
 
 export type MostVotedAppsInRoundReturnType = {
     percentage: number;
@@ -19,13 +25,7 @@ export type MostVotedAppsInRoundReturnType = {
 export const useMostVotedAppsInRound = (
     roundId?: string,
 ): { data: MostVotedAppsInRoundReturnType[]; isLoading: boolean } => {
-    // get apps from round
-    const { data: roundXApps } = useRoundXApps(roundId);
-
-    // Notice: this trick is used because when starting the project in the local environment,
-    // the roundId is "0" and the roundXApps is undefined, which will cause the app to not render apps info.
-    const { data: allXApps } = useXApps();
-    const apps = roundId === '0' ? allXApps?.active : roundXApps;
+    const { data: apps } = useRoundXApps(roundId);
 
     // get shares of apps
     const xAppsShares = useXAppsShares(

@@ -1,27 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
-import { IERC20__factory } from '../../../../contracts/typechain-types';
+import { IVOT3__factory } from '@/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
+import { formatEther } from 'ethers';
+import { TokenBalance } from '@/types';
+import { useThor } from '@vechain/dapp-kit-react';
 import { ThorClient } from '@vechain/sdk-network';
 
-export const getVeDelegateBalance = async (
+export const getVot3Balance = async (
     thor: ThorClient,
     network: NETWORK_TYPE,
     address?: string,
-): Promise<{ original: string; scaled: string; formatted: string }> => {
+): Promise<TokenBalance> => {
     const res = await thor.contracts
-        .load(
-            getConfig(network).veDelegateTokenContractAddress,
-            IERC20__factory.abi,
-        )
+        .load(getConfig(network).vot3ContractAddress, IVOT3__factory.abi)
         .read.balanceOf(address);
 
-    if (!res)
-        throw new Error(`Failed to get veDelegate balance for ${address}`);
+    if (!res) throw new Error('Reverted');
 
     const original = res[0].toString();
     const scaled = formatEther(original);
@@ -34,19 +31,19 @@ export const getVeDelegateBalance = async (
     };
 };
 
-export const getVeDelegateBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_BALANCE',
+export const getVot3BalanceQueryKey = (address?: string) => [
+    'VEBETTERDAO_BALANCE',
     address,
-    'VE_DELEGATE',
+    'VOT3',
 ];
 
-export const useGetVeDelegateBalance = (address?: string) => {
+export const useGetVot3Balance = (address?: string) => {
     const thor = useThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
-        queryKey: getVeDelegateBalanceQueryKey(address),
-        queryFn: async () => getVeDelegateBalance(thor, network.type, address),
+        queryKey: getVot3BalanceQueryKey(address),
+        queryFn: async () => getVot3Balance(thor, network.type, address),
         enabled: !!thor && !!address && !!network.type,
     });
 };

@@ -1,8 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { XAllocationPool__factory } from '@/contracts';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
 import { useThor } from '@vechain/dapp-kit-react';
+import { useVeChainKitConfig } from '@/providers';
+import { executeMultipleClausesCall } from '@/utils';
+
+const abi = XAllocationPool__factory.abi;
+const method = 'getAppShares' as const;
 
 /**
  *  Returns the query key for the shares of multiple xApps in an allocation round.
@@ -26,32 +30,32 @@ export const useXAppsShares = (apps: string[], roundId?: string) => {
     const thor = useThor();
     const { network } = useVeChainKitConfig();
 
+    const address = getConfig(network.type)
+        .xAllocationPoolContractAddress as `0x${string}`;
+
     return useQuery({
         queryKey: getXAppsSharesQueryKey(roundId),
         queryFn: async () => {
-            const contract = thor.contracts.load(
-                getConfig(network.type).xAllocationPoolContractAddress,
-                XAllocationPool__factory.abi,
-            );
-            const clauses = apps.map((app) =>
-                contract.clause.getAppShares(roundId, app),
-            );
-            const res = await thor.transactions.executeMultipleClausesCall(
-                clauses,
-            );
-            if (!res.every((r) => r.success))
-                throw new Error(
-                    `Failed to fetch xApps shares for ${apps} in round ${roundId}`,
-                );
+            const shares = await executeMultipleClausesCall({
+                thor,
+                calls: apps.map(
+                    (app) =>
+                        ({
+                            abi,
+                            functionName: method,
+                            address,
+                            args: [roundId, app],
+                        } as const),
+                ),
+            });
 
-            const shares = res.map((r, index) => {
+            return shares.map((share, index) => {
                 return {
                     app: apps[index] as string,
-                    share: Number(r.result.array?.[0] || 0) / 100,
-                    unallocatedShare: Number(r.result.array?.[1] || 0) / 100,
+                    share: Number(share[0] || 0) / 100,
+                    unallocatedShare: Number(share[1] || 0) / 100,
                 };
             });
-            return shares;
         },
         enabled: !!roundId && !!apps.length,
     });
