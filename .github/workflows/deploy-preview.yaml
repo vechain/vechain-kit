@@ -4,6 +4,8 @@ on:
     pull_request:
         branches:
             - main
+            - feat/news-sc
+            - feat/news-ui
         paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
 
 permissions:
