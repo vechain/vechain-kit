@@ -4,7 +4,7 @@ import { useCustomTokens } from '@/hooks';
 import { executeMultipleClausesCall } from '@/utils';
 import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network';
-import { IB3TR__factory, IERC20__factory, IVOT3__factory } from '@/contracts';
+import { B3TR__factory, ERC20__factory, VOT3__factory } from '@/contracts';
 import { getAccountBalance } from '@/hooks';
 import { useQueries } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
@@ -25,7 +25,7 @@ const getCustomTokenBalances = async (
     const clauses = customTokens.map((token) => {
         const erc20Contract = thor.contracts.load(
             token.address,
-            IERC20__factory.abi,
+            ERC20__factory.abi,
         );
         return erc20Contract.clause.balanceOf([address]);
     });
@@ -56,36 +56,40 @@ const getTokenBalances = async (
 ) => {
     const config = getConfig(network);
 
-    const [b3trBalance, vot3Balance, veDelegateBalance, gloDollarBalance] =
-        await executeMultipleClausesCall({
-            thor,
-            calls: [
-                {
-                    abi: IB3TR__factory.abi,
-                    address: config.b3trContractAddress as `0x${string}`,
-                    functionName: 'balanceOf',
-                    args: [address as `0x${string}`],
-                },
-                {
-                    abi: IVOT3__factory.abi,
-                    address: config.vot3ContractAddress as `0x${string}`,
-                    functionName: 'balanceOf',
-                    args: [address as `0x${string}`],
-                },
-                {
-                    abi: IERC20__factory.abi,
-                    address: config.veDelegate as `0x${string}`,
-                    functionName: 'balanceOf',
-                    args: [address as `0x${string}`],
-                },
-                {
-                    abi: IERC20__factory.abi,
-                    address: config.gloDollarContractAddress as `0x${string}`,
-                    functionName: 'balanceOf',
-                    args: [address as `0x${string}`],
-                },
-            ],
-        });
+    const [
+        b3trBalance = { balance: 0n },
+        vot3Balance = { balance: 0n },
+        // veDelegateBalance = { balance: 0n },
+        // gloDollarBalance = { balance: 0n },
+    ] = await executeMultipleClausesCall({
+        thor,
+        calls: [
+            {
+                abi: B3TR__factory.abi,
+                address: config.b3trContractAddress as `0x${string}`,
+                functionName: 'balanceOf',
+                args: [address as `0x${string}`],
+            },
+            {
+                abi: VOT3__factory.abi,
+                address: config.vot3ContractAddress as `0x${string}`,
+                functionName: 'balanceOf',
+                args: [address as `0x${string}`],
+            },
+            // {
+            //     abi: IERC20__factory.abi,
+            //     address: config.veDelegateTokenContractAddress as `0x${string}`,
+            //     functionName: 'balanceOf',
+            //     args: [address as `0x${string}`],
+            // },
+            // {
+            //     abi: IERC20__factory.abi,
+            //     address: config.gloDollarContractAddress as `0x${string}`,
+            //     functionName: 'balanceOf',
+            //     args: [address as `0x${string}`],
+            // },
+        ],
+    });
 
     const { balance: vetBalance, energy: vthoBalance } =
         await getAccountBalance(thor, address);
@@ -111,16 +115,16 @@ const getTokenBalances = async (
             symbol: 'VOT3',
             balance: vot3Balance.toString(),
         },
-        {
-            address: config.veDelegate,
-            symbol: 'veDelegate',
-            balance: veDelegateBalance.toString(),
-        },
-        {
-            address: config.gloDollarContractAddress,
-            symbol: 'USDGLO',
-            balance: gloDollarBalance.toString(),
-        },
+        // {
+        //     address: config.veDelegate,
+        //     symbol: 'veDelegate',
+        //     balance: veDelegateBalance.toString(),
+        // },
+        // {
+        //     address: config.gloDollarContractAddress,
+        //     symbol: 'USDGLO',
+        //     balance: gloDollarBalance.toString(),
+        // },
     ];
 };
 
@@ -143,30 +147,13 @@ export const useTokenBalances = (address: string) => {
         ],
     });
 
-    const [
-        vetBalance,
-        vthoBalance,
-        b3trBalance,
-        vot3Balance,
-        veDelegateBalance,
-        gloDollarBalance,
-    ] = [
+    const data = [
         ...(baseTokenBalancesQuery.data ?? []),
         ...(customTokenBalancesQuery.data ?? []),
-    ].map((balance) => ({
-        ...balance,
-        formatted: formatEther(BigInt(balance.balance)),
-    }));
+    ];
 
     return {
-        data: {
-            vetBalance,
-            vthoBalance,
-            b3trBalance,
-            vot3Balance,
-            veDelegateBalance,
-            gloDollarBalance,
-        },
+        data,
         loading:
             baseTokenBalancesQuery.isLoading ||
             customTokenBalancesQuery.isLoading,

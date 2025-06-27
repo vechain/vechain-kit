@@ -36,7 +36,7 @@ export const useTokensWithValues = ({
     const { currentCurrency } = useCurrency();
 
     const tokensWithValues = useMemo(() => {
-        return Object.values(balances).map((token) => {
+        return balances.map((token) => {
             const priceUsd = prices[token.address] || 0;
             const valueUsd = Number(token.balance) * priceUsd;
             const valueInCurrency = convertToSelectedCurrency(

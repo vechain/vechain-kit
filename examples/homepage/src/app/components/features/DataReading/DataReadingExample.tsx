@@ -16,7 +16,6 @@ import {
     useTokenBalances,
     useGetTokenUsdPrice,
     useCurrentAllocationsRoundId,
-    // useCurrentAllocationsRound,
 } from '@vechain/vechain-kit';
 import { MdDataUsage } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
@@ -28,7 +27,8 @@ export function DataReadingExample(): ReactElement {
     const { data: tokenBalances, loading: isLoadingTokenBalances } =
         useTokenBalances(address);
 
-    const { b3trBalance, vot3Balance } = tokenBalances;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_vetBalance, _vthoBalance, b3trBalance, vot3Balance] = tokenBalances;
 
     const { data: vetPrice, isLoading: isLoadingVetPrice } =
         useGetTokenUsdPrice('VET');
@@ -85,15 +85,6 @@ export function DataReadingExample(): ReactElement {
                                 <Text fontWeight="bold">
                                     Current round: {vbdCurrentRoundId}
                                 </Text>
-                                {/* <Text fontWeight="bold">
-                                    Next round starts on:{' '}
-                                    {isLoadingVbdCurrentRound
-                                        ? 'Loading...'
-                                        : new Date(
-                                              vbdCurrentRound?.voteEndTimestamp ??
-                                                  0,
-                                          ).toLocaleString()}
-                                </Text> */}
                             </VStack>
                         </VStack>
                     </VStack>
