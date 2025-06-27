@@ -6,7 +6,7 @@
     "license": "MIT",
     "private": true,
     "scripts": {
-        "compile": "yarn hardhat compile",
+        "compile": "yarn hardhat compile && yarn ts-node scripts/helpers/copyTypechainFiles.ts",
         "deploy:hardhat": "yarn hardhat run scripts/deploy --network hardhat",
         "deploy:solo": "yarn hardhat run scripts/deploy --network vechain_solo",
         "deploy:testnet": "yarn hardhat run scripts/deploy --network vechain_testnet",
