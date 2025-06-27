@@ -1,13 +1,12 @@
 'use client';
 
 import { Box, Heading, Text, Spinner } from '@chakra-ui/react';
-import { useWallet, useTokenBalances } from '@vechain/vechain-kit';
+import { useWallet, useGetB3trBalance } from '@vechain/vechain-kit';
 
 export function AccountInfo() {
     const { smartAccount, connectedWallet } = useWallet();
-    const { data: tokenBalances, loading: isLoadingTokenBalances } =
-        useTokenBalances(smartAccount.address ?? undefined);
-    const b3trBalance = tokenBalances[2];
+    const { data: b3trBalance, isLoading: b3trBalanceLoading } =
+        useGetB3trBalance(smartAccount.address ?? undefined);
 
     return (
         <>
@@ -22,11 +21,11 @@ export function AccountInfo() {
                     <Text data-testid="is-sa-deployed">
                         Deployed: {smartAccount.isDeployed.toString()}
                     </Text>
-                    {isLoadingTokenBalances ? (
+                    {b3trBalanceLoading ? (
                         <Spinner />
                     ) : (
                         <Text data-testid="b3tr-balance">
-                            B3TR Balance: {b3trBalance.balance}
+                            B3TR Balance: {b3trBalance?.formatted}
                         </Text>
                     )}
                 </Box>

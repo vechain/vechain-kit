@@ -13,7 +13,8 @@ import {
 } from '@chakra-ui/react';
 import {
     useWallet,
-    useTokenBalances,
+    useGetB3trBalance,
+    useGetVot3Balance,
     useGetTokenUsdPrice,
     useCurrentAllocationsRoundId,
 } from '@vechain/vechain-kit';
@@ -24,12 +25,11 @@ export function DataReadingExample(): ReactElement {
     const { account } = useWallet();
     const address = account?.address || '';
 
-    const { data: tokenBalances, loading: isLoadingTokenBalances } =
-        useTokenBalances(address);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_vetBalance, _vthoBalance, b3trBalance, vot3Balance] = tokenBalances;
-
+    // Example hooks for reading data
+    const { data: b3trBalance, isLoading: isLoadingB3tr } =
+        useGetB3trBalance(address);
+    const { data: vot3Balance, isLoading: isLoadingVot3 } =
+        useGetVot3Balance(address);
     const { data: vetPrice, isLoading: isLoadingVetPrice } =
         useGetTokenUsdPrice('VET');
     const { data: vbdCurrentRoundId } = useCurrentAllocationsRoundId();
@@ -60,17 +60,17 @@ export function DataReadingExample(): ReactElement {
                                 <Text as="span" fontWeight="bold">
                                     B3TR Balance:{' '}
                                 </Text>
-                                {isLoadingTokenBalances
+                                {isLoadingB3tr
                                     ? 'Loading...'
-                                    : b3trBalance?.balance || '0'}
+                                    : b3trBalance?.formatted || '0'}
                             </Text>
                             <Text>
                                 <Text as="span" fontWeight="bold">
                                     VOT3 Balance:{' '}
                                 </Text>
-                                {isLoadingTokenBalances
+                                {isLoadingVot3
                                     ? 'Loading...'
-                                    : vot3Balance?.balance || '0'}
+                                    : vot3Balance?.formatted || '0'}
                             </Text>
                             <Text>
                                 <Text as="span" fontWeight="bold">
