@@ -1,0 +1,28 @@
+name: Contracts Tests
+
+on:
+    pull_request:
+        paths: ['contracts/test/**', '.github/workflows/test-contracts.yml']
+
+jobs:
+    test:
+        name: Run Tests
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: contracts
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+
+            - name: Install dependencies
+              run: yarn install
+
+            - name: Run tests
+              run: yarn test
