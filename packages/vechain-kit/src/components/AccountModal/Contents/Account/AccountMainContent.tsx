@@ -8,11 +8,7 @@ import {
     HStack,
     Text,
 } from '@chakra-ui/react';
-import {
-    StickyHeaderContainer,
-    ScrollToTopWrapper,
-    ModalNotificationButton,
-} from '@/components/common';
+import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
@@ -22,8 +18,8 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useNotifications } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
+import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -37,20 +33,15 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
 
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
-
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalNotificationButton
+                <ModalSettingsButton
                     onClick={() => {
                         Analytics.notifications.viewed();
-                        setCurrentContent('notifications');
+                        setCurrentContent('settings');
                     }}
-                    hasUnreadNotifications={hasUnreadNotifications}
-                    data-testid="notifications-button"
+                    data-testid="settings-button"
                 />
                 <ModalHeader>
                     <HStack
