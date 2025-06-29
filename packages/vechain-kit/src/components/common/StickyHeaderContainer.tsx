@@ -33,9 +33,21 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                bg={isDark ? 'rgb(31 31 30 / 90%)' : 'rgb(255 255 255 / 69%)'}
-                backdropFilter={'blur(12px)'}
-                style={{ WebkitBackdropFilter: 'blur(12px)' }}
+                bg={
+                    hasContentBelow
+                        ? isDark
+                            ? 'rgba(21, 21, 21, 0.6)'
+                            : 'rgba(255, 255, 255, 0.6)'
+                        : 'transparent'
+                }
+                backdropFilter={hasContentBelow ? 'blur(15px)' : 'none'}
+                style={
+                    hasContentBelow
+                        ? { WebkitBackdropFilter: 'blur(15px)' }
+                        : {
+                              WebkitBackdropFilter: 'none',
+                          }
+                }
                 zIndex={1000}
                 boxShadow={
                     hasContentBelow
