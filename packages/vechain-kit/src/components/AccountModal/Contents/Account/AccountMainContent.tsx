@@ -87,6 +87,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             setCurrentContent('profile');
                         }}
                         wallet={wallet}
+                        setCurrentContent={setCurrentContent}
                     />
 
                     <BalanceSection
