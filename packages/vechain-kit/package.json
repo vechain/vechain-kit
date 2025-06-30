@@ -1,7 +1,6 @@
 {
   "name": "@vechain/vechain-kit",
-  "version": "1.8.3",
-  "private": false,
+  "version": "1.8.4",
   "homepage": "https://github.com/vechain/vechain-kit",
   "repository": "github:vechain/vechain-kit",
   "license": "MIT",
@@ -84,13 +83,13 @@
     "@vechain/dapp-kit-react": "1.5.1"
   },
   "peerDependenciesMeta": {
-    "@vechain/dapp-kit-react": {
+    "@chakra-ui/react": {
       "optional": true
     },
     "@tanstack/react-query": {
       "optional": true
     },
-    "@chakra-ui/react": {
+    "@vechain/dapp-kit-react": {
       "optional": true
     }
   },

@@ -229,18 +229,26 @@ export const CustomizationSummaryContent = ({
     };
 
     const refresh = async () => {
-        // Set the new avatar data directly as base64 string
-        queryClient.setQueryData(
-            getAvatarQueryKey(domain, network.type),
-            convertUriToUrl('ipfs://' + changes.avatarIpfsHash, network.type),
-        );
+        // only update avatar data if it's being changed
+        if (changes.avatarIpfsHash) {
+            queryClient.setQueryData(
+                getAvatarQueryKey(domain, network.type),
+                convertUriToUrl(
+                    'ipfs://' + changes.avatarIpfsHash,
+                    network.type,
+                ),
+            );
 
-        queryClient.setQueryData(
-            getAvatarOfAddressQueryKey(account?.address ?? ''),
-            convertUriToUrl('ipfs://' + changes.avatarIpfsHash, network.type),
-        );
+            queryClient.setQueryData(
+                getAvatarOfAddressQueryKey(account?.address ?? ''),
+                convertUriToUrl(
+                    'ipfs://' + changes.avatarIpfsHash,
+                    network.type,
+                ),
+            );
+        }
 
-        // Still refresh text records since they might have other changes
+        // still refresh text records since they might have other changes
         await queryClient.invalidateQueries({
             queryKey: getTextRecordsQueryKey(domain, network.type),
         });

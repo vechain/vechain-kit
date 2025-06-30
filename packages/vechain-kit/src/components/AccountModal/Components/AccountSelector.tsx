@@ -14,9 +14,16 @@ import { MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
+import { RiLogoutBoxLine } from 'react-icons/ri';
+import { useWallet } from '@/hooks';
+import { AccountModalContentTypes } from '../Types';
+import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     wallet: Wallet;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
     size?: string;
     onClick?: () => void;
     mt?: number;
@@ -29,8 +36,10 @@ export const AccountSelector = ({
     onClick,
     mt,
     style,
+    setCurrentContent,
 }: Props) => {
     const [copied, setCopied] = useState(false);
+    const { disconnect } = useWallet();
 
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(
@@ -41,6 +50,14 @@ export const AccountSelector = ({
             setCopied(false);
         }, 2000);
     };
+
+    const handleLogout = () => {
+        Analytics.auth.trackAuth('disconnect_initiated');
+        disconnect();
+
+        Analytics.auth.logoutCompleted();
+    };
+
     return (
         <HStack
             mt={mt}
@@ -91,6 +108,25 @@ export const AccountSelector = ({
                 size="sm"
                 opacity={0.5}
                 _hover={{ opacity: 0.8 }}
+            />
+
+            <IconButton
+                aria-label="Logout"
+                icon={<Icon as={RiLogoutBoxLine} />}
+                onClick={() =>
+                    setCurrentContent({
+                        type: 'disconnect-confirm',
+                        props: {
+                            onDisconnect: handleLogout,
+                            onBack: () => setCurrentContent('main'),
+                        },
+                    })
+                }
+                variant="ghost"
+                size="sm"
+                opacity={0.5}
+                _hover={{ opacity: 0.8 }}
+                colorScheme="red"
             />
         </HStack>
     );

@@ -237,7 +237,7 @@ export const SettingsContent = ({
                             rightIcon={MdOutlineNavigateNext}
                         />
                         <ActionButton
-                            variant="vechainKitLogout"
+                            // variant="vechainKitLogout"
                             style={{
                                 borderTopRadius: '0px',
                             }}

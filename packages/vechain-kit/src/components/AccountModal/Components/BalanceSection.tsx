@@ -45,7 +45,7 @@ export const BalanceSection = ({
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={2} mt={mt} mb={mb}>
-            <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.5}>
+            <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.8}>
                 {t('Balance')}
             </Heading>
             <HStack
