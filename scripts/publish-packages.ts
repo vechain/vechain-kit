@@ -7,7 +7,7 @@ const exec = util.promisify(child_process.exec);
 const publishPackages = async () => {
     const version = process.argv[2];
 
-    if (!version || !version.match(/^\d+\.\d+\.\d+$/)) {
+    if (!version || !version.match(/^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?$/)) {
         console.error(
             `🚨 You must specify a semantic version as the first argument  🚨`,
         );
@@ -37,6 +37,7 @@ const publishPackages = async () => {
 
     console.log(' Build:');
     console.log('       - 📦 Install dependencies and build packages...');
+    await exec('yarn');
     await exec('yarn install:all');
     console.log('       - ✅  Built!');
 
