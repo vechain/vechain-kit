@@ -36,7 +36,7 @@ export const BaseModal = ({
     closeOnOverlayClick = true,
     blockScrollOnMount = false,
     allowExternalFocus = false,
-    backdropFilter,
+    backdropFilter = 'blur(2px)',
     isCloseable = true,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
