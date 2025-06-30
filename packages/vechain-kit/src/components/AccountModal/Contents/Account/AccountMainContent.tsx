@@ -29,7 +29,11 @@ type Props = {
     wallet: Wallet;
 };
 
-export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
+export const AccountMainContent = ({
+    setCurrentContent,
+    wallet,
+    onClose,
+}: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
 
@@ -88,6 +92,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         }}
                         wallet={wallet}
                         setCurrentContent={setCurrentContent}
+                        onClose={onClose}
                     />
 
                     <BalanceSection

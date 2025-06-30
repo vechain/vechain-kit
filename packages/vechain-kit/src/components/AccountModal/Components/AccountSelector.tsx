@@ -24,6 +24,7 @@ type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    onClose: () => void;
     size?: string;
     onClick?: () => void;
     mt?: number;
@@ -37,6 +38,7 @@ export const AccountSelector = ({
     mt,
     style,
     setCurrentContent,
+    onClose,
 }: Props) => {
     const [copied, setCopied] = useState(false);
     const { disconnect } = useWallet();
@@ -56,6 +58,7 @@ export const AccountSelector = ({
         disconnect();
 
         Analytics.auth.logoutCompleted();
+        onClose();
     };
 
     return (
