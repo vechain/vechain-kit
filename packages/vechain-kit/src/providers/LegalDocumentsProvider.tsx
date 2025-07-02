@@ -49,9 +49,14 @@ const LegalDocumentsContext = createContext<
 export const useLegalDocuments = () => {
     const context = useContext(LegalDocumentsContext);
     if (!context) {
-        throw new Error(
-            'useLegalDocuments must be used within LegalDocumentsProvider',
-        );
+        // This fallback is used to avoid errors when the context is not available
+        return {
+            hasAgreedToRequiredDocuments: true,
+            agreements: [],
+            walletAddress: undefined,
+            documents: [],
+            documentsNotAgreed: [],
+        };
     }
     return context;
 };
