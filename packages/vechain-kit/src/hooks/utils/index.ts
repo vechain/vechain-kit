@@ -5,3 +5,4 @@ export * from './useFeatureAnnouncement';
 export * from './useGetNodeUrl';
 export * from './useIsPwa';
 export * from './useScrollToTop';
+export * from './useEvents';
