@@ -1,7 +1,11 @@
 import { TransactionClause } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { Interface } from 'ethers';
-import { TransactionManager, TransactionParams, TrackedTransaction } from './TransactionManager.js';
+import {
+    TransactionManager,
+    TransactionParams,
+    TrackedTransaction,
+} from './TransactionManager.js';
 import { ILogger } from '../interfaces/index.js';
 import { createLogger } from '../utils/logger.js';
 
@@ -10,57 +14,57 @@ import { createLogger } from '../utils/logger.js';
  */
 const ERC20_ABI = [
     {
-        "constant": false,
-        "inputs": [
-            {"name": "_to", "type": "address"},
-            {"name": "_value", "type": "uint256"}
+        constant: false,
+        inputs: [
+            { name: '_to', type: 'address' },
+            { name: '_value', type: 'uint256' },
         ],
-        "name": "transfer",
-        "outputs": [{"name": "", "type": "bool"}],
-        "type": "function"
+        name: 'transfer',
+        outputs: [{ name: '', type: 'bool' }],
+        type: 'function',
     },
     {
-        "constant": false,
-        "inputs": [
-            {"name": "_spender", "type": "address"},
-            {"name": "_value", "type": "uint256"}
+        constant: false,
+        inputs: [
+            { name: '_spender', type: 'address' },
+            { name: '_value', type: 'uint256' },
         ],
-        "name": "approve",
-        "outputs": [{"name": "", "type": "bool"}],
-        "type": "function"
+        name: 'approve',
+        outputs: [{ name: '', type: 'bool' }],
+        type: 'function',
     },
     {
-        "constant": false,
-        "inputs": [
-            {"name": "_from", "type": "address"},
-            {"name": "_to", "type": "address"},
-            {"name": "_value", "type": "uint256"}
+        constant: false,
+        inputs: [
+            { name: '_from', type: 'address' },
+            { name: '_to', type: 'address' },
+            { name: '_value', type: 'uint256' },
         ],
-        "name": "transferFrom",
-        "outputs": [{"name": "", "type": "bool"}],
-        "type": "function"
+        name: 'transferFrom',
+        outputs: [{ name: '', type: 'bool' }],
+        type: 'function',
     },
     {
-        "constant": true,
-        "inputs": [{"name": "_owner", "type": "address"}],
-        "name": "balanceOf",
-        "outputs": [{"name": "", "type": "uint256"}],
-        "type": "function"
+        constant: true,
+        inputs: [{ name: '_owner', type: 'address' }],
+        name: 'balanceOf',
+        outputs: [{ name: '', type: 'uint256' }],
+        type: 'function',
     },
     {
-        "constant": true,
-        "inputs": [],
-        "name": "decimals",
-        "outputs": [{"name": "", "type": "uint8"}],
-        "type": "function"
+        constant: true,
+        inputs: [],
+        name: 'decimals',
+        outputs: [{ name: '', type: 'uint8' }],
+        type: 'function',
     },
     {
-        "constant": true,
-        "inputs": [],
-        "name": "symbol",
-        "outputs": [{"name": "", "type": "string"}],
-        "type": "function"
-    }
+        constant: true,
+        inputs: [],
+        name: 'symbol',
+        outputs: [{ name: '', type: 'string' }],
+        type: 'function',
+    },
 ];
 
 /**
@@ -96,7 +100,7 @@ export interface MethodTransactionResult extends TrackedTransaction {
 
 /**
  * TransactionWrapper provides a clean method-calling API on top of TransactionManager
- * 
+ *
  * Instead of manually building clauses, developers can call:
  * ```typescript
  * const tx = await wrapper.send({
@@ -125,28 +129,33 @@ export class TransactionWrapper {
      * Register a custom ABI for a specific contract address
      */
     registerABI(contractAddress: string, abi: any[]): void {
-        this.customInterfaces.set(contractAddress.toLowerCase(), new Interface(abi));
+        this.customInterfaces.set(
+            contractAddress.toLowerCase(),
+            new Interface(abi),
+        );
         this.logger.debug('Custom ABI registered', { contractAddress });
     }
 
     /**
      * Send a transaction using method name and arguments
-     * 
+     *
      * @param params Method transaction parameters
      * @returns TrackedTransaction with method call context
      */
-    async send(params: MethodTransactionParams): Promise<MethodTransactionResult> {
+    async send(
+        params: MethodTransactionParams,
+    ): Promise<MethodTransactionResult> {
         this.logger.info('Initiating method-based transaction', {
             to: params.to,
             method: params.method,
-            args: params.args.map(a => a.toString()),
+            args: params.args.map((a) => a.toString()),
             signerAddress: params.signerAddress,
         });
 
         try {
             // Build the transaction clause from method call
             const clause = await this.buildClauseFromMethod(params);
-            
+
             // Convert to TransactionManager params
             const txParams: TransactionParams = {
                 clauses: [clause],
@@ -160,7 +169,11 @@ export class TransactionWrapper {
             const trackedTx = await this.transactionManager.send(txParams);
 
             // Enhance with method call context
-            const enhancedTx = this.enhanceWithMethodContext(trackedTx, params, clause.data!);
+            const enhancedTx = this.enhanceWithMethodContext(
+                trackedTx,
+                params,
+                clause.data!,
+            );
 
             this.logger.info('Method-based transaction initiated', {
                 txId: trackedTx.id,
@@ -169,11 +182,10 @@ export class TransactionWrapper {
             });
 
             return enhancedTx;
-
         } catch (error) {
             this.logger.error(
                 'Method-based transaction failed',
-                error instanceof Error ? error : new Error(String(error))
+                error instanceof Error ? error : new Error(String(error)),
             );
             throw error;
         }
@@ -187,7 +199,7 @@ export class TransactionWrapper {
         recipient: string,
         amount: string,
         signerAddress: string,
-        options: Partial<MethodTransactionParams> = {}
+        options: Partial<MethodTransactionParams> = {},
     ): Promise<MethodTransactionResult> {
         return this.send({
             to: tokenAddress,
@@ -206,7 +218,7 @@ export class TransactionWrapper {
         spender: string,
         amount: string,
         signerAddress: string,
-        options: Partial<MethodTransactionParams> = {}
+        options: Partial<MethodTransactionParams> = {},
     ): Promise<MethodTransactionResult> {
         return this.send({
             to: tokenAddress,
@@ -220,16 +232,24 @@ export class TransactionWrapper {
     /**
      * Build a transaction clause from method call parameters
      */
-    private async buildClauseFromMethod(params: MethodTransactionParams): Promise<TransactionClause> {
+    private async buildClauseFromMethod(
+        params: MethodTransactionParams,
+    ): Promise<TransactionClause> {
         // Get the appropriate interface for encoding
-        const contractInterface = this.getContractInterface(params.to, params.abi);
-        
+        const contractInterface = this.getContractInterface(
+            params.to,
+            params.abi,
+        );
+
         // Encode the method call
-        const encodedData = contractInterface.encodeFunctionData(params.method, params.args);
+        const encodedData = contractInterface.encodeFunctionData(
+            params.method,
+            params.args,
+        );
 
         this.logger.debug('Method encoded to transaction data', {
             method: params.method,
-            args: params.args.map(a => a.toString()),
+            args: params.args.map((a) => a.toString()),
             encodedData: encodedData.slice(0, 20) + '...',
         });
 
@@ -246,14 +266,19 @@ export class TransactionWrapper {
     /**
      * Get the appropriate contract interface for method encoding
      */
-    private getContractInterface(contractAddress: string, customAbi?: any[]): Interface {
+    private getContractInterface(
+        contractAddress: string,
+        customAbi?: any[],
+    ): Interface {
         // Use custom ABI if provided
         if (customAbi) {
             return new Interface(customAbi);
         }
 
         // Check for registered custom interface
-        const customInterface = this.customInterfaces.get(contractAddress.toLowerCase());
+        const customInterface = this.customInterfaces.get(
+            contractAddress.toLowerCase(),
+        );
         if (customInterface) {
             return customInterface;
         }
@@ -268,11 +293,11 @@ export class TransactionWrapper {
     private enhanceWithMethodContext(
         trackedTx: TrackedTransaction,
         params: MethodTransactionParams,
-        encodedData: string
+        encodedData: string,
     ): MethodTransactionResult {
         // Add method call information to the tracked transaction
         const enhanced = trackedTx as MethodTransactionResult;
-        
+
         (enhanced as any).methodCall = {
             to: params.to,
             method: params.method,

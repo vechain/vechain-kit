@@ -69,6 +69,14 @@ export interface LoginResult {
         state?: string;
         [key: string]: any;
     };
+    user?: {
+        id: string;
+        wallet?: {
+            address: string;
+            walletClientType?: string;
+        };
+        [key: string]: any;
+    };
 }
 
 /**
@@ -121,7 +129,10 @@ export interface ConnectionConfig {
  * Core connection manager for VeChain Kit
  * Handles all wallet connection flows without framework dependencies
  */
-export class ConnectionManager extends EventEmitter implements IConnectionManager {
+export class ConnectionManager
+    extends EventEmitter
+    implements IConnectionManager
+{
     private connectionState: ConnectionState = 'disconnected';
     private currentConnection: Connection | null = null;
     private loadingStates: Map<string, boolean> = new Map();
@@ -132,38 +143,40 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
 
     constructor(config: ConnectionConfig) {
         super();
-        
+
         this.logger = createLogger('ConnectionManager');
-        
+
         // Check if localStorage is available for default cache config
         const storageAvailable = this.isStorageAvailable();
-        
+
         // Default cache config - disabled if localStorage unavailable
         const defaultCacheConfig: ConnectionCacheConfig = {
             enabled: storageAvailable,
             ttlHours: 24,
-            key: 'vechain_kit_connection'
+            key: 'vechain_kit_connection',
         };
-        
+
         this.config = {
             cacheOptions: defaultCacheConfig,
-            ...config
+            ...config,
         };
-        
-        this.cacheKey = this.config.cacheOptions?.key || 'vechain_kit_connection';
-        this.cacheTTL = (this.config.cacheOptions?.ttlHours || 24) * 60 * 60 * 1000;
-        
+
+        this.cacheKey =
+            this.config.cacheOptions?.key || 'vechain_kit_connection';
+        this.cacheTTL =
+            (this.config.cacheOptions?.ttlHours || 24) * 60 * 60 * 1000;
+
         if (this.config.cacheOptions?.enabled) {
             this.logger.debug('Connection caching enabled', {
                 ttlHours: this.config.cacheOptions.ttlHours,
                 cacheKey: this.cacheKey,
-                storageAvailable
+                storageAvailable,
             });
             this.loadConnectionCache();
         } else {
             this.logger.debug('Connection caching disabled', {
                 storageAvailable,
-                explicitlyDisabled: config.cacheOptions?.enabled === false
+                explicitlyDisabled: config.cacheOptions?.enabled === false,
             });
         }
     }
@@ -408,7 +421,9 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
     /**
      * OAuth connection implementation
      */
-    private async connectWithOAuth(provider: string = 'google'): Promise<LoginResult> {
+    private async connectWithOAuth(
+        provider: string = 'google',
+    ): Promise<LoginResult> {
         // This would integrate with Privy's OAuth flows
         // Placeholder implementation
         throw new Error('OAuth connection not yet implemented');
@@ -608,19 +623,16 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
                 ...connection,
                 timestamp: Date.now(),
             };
-            
-            localStorage.setItem(
-                this.cacheKey,
-                JSON.stringify(cacheData),
-            );
-            
+
+            localStorage.setItem(this.cacheKey, JSON.stringify(cacheData));
+
             this.logger.debug('Connection cached', {
                 address: connection.address,
                 cacheKey: this.cacheKey,
             });
         } catch (error) {
-            this.logger.warn('Failed to cache connection', { 
-                error: error instanceof Error ? error.message : String(error) 
+            this.logger.warn('Failed to cache connection', {
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -635,7 +647,9 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
 
         try {
             if (!this.isStorageAvailable()) {
-                this.logger.debug('localStorage not available, skipping cache load');
+                this.logger.debug(
+                    'localStorage not available, skipping cache load',
+                );
                 return null;
             }
 
@@ -649,7 +663,9 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
 
             // Validate cached connection structure
             if (!this.isValidCachedConnection(connection)) {
-                this.logger.warn('Invalid cached connection structure, clearing cache');
+                this.logger.warn(
+                    'Invalid cached connection structure, clearing cache',
+                );
                 this.clearConnectionCache();
                 return null;
             }
@@ -663,14 +679,16 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
 
             this.logger.debug('Connection loaded from cache', {
                 address: connection.address,
-                age: Math.round((Date.now() - connection.timestamp) / 1000 / 60),
+                age: Math.round(
+                    (Date.now() - connection.timestamp) / 1000 / 60,
+                ),
                 cacheKey: this.cacheKey,
             });
-            
+
             return connection;
         } catch (error) {
-            this.logger.warn('Failed to load cached connection', { 
-                error: error instanceof Error ? error.message : String(error) 
+            this.logger.warn('Failed to load cached connection', {
+                error: error instanceof Error ? error.message : String(error),
             });
             return null;
         }
@@ -702,17 +720,19 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
 
         try {
             if (!this.isStorageAvailable()) {
-                this.logger.debug('localStorage not available, skipping cache clear');
+                this.logger.debug(
+                    'localStorage not available, skipping cache clear',
+                );
                 return;
             }
 
             localStorage.removeItem(this.cacheKey);
             this.logger.debug('Connection cache cleared', {
-                cacheKey: this.cacheKey
+                cacheKey: this.cacheKey,
             });
         } catch (error) {
-            this.logger.warn('Failed to clear connection cache', { 
-                error: error instanceof Error ? error.message : String(error) 
+            this.logger.warn('Failed to clear connection cache', {
+                error: error instanceof Error ? error.message : String(error),
             });
         }
     }
@@ -721,17 +741,21 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
      * Get cache configuration
      */
     getCacheConfig(): ConnectionCacheConfig {
-        return this.config.cacheOptions || {
-            enabled: false,
-            ttlHours: 24
-        };
+        return (
+            this.config.cacheOptions || {
+                enabled: false,
+                ttlHours: 24,
+            }
+        );
     }
 
     /**
      * Check if caching is currently working
      */
     isCacheEnabled(): boolean {
-        return !!(this.config.cacheOptions?.enabled && this.isStorageAvailable());
+        return !!(
+            this.config.cacheOptions?.enabled && this.isStorageAvailable()
+        );
     }
 
     /**
@@ -742,19 +766,19 @@ export class ConnectionManager extends EventEmitter implements IConnectionManage
             enabled: true,
             ttlHours: 24,
             ...this.config.cacheOptions,
-            ...config
+            ...config,
         };
-        
+
         if (config.ttlHours) {
             this.cacheTTL = config.ttlHours * 60 * 60 * 1000;
         }
-        
+
         if (config.key) {
             this.cacheKey = config.key;
         }
-        
+
         this.logger.debug('Cache configuration updated', {
-            config: this.config.cacheOptions
+            config: this.config.cacheOptions,
         });
     }
 }

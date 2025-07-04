@@ -179,7 +179,9 @@ export class TokenWrapper {
         accountAddress: string,
     ): Promise<EnhancedTokenBalance> {
         try {
-            const account = await this.thor.accounts.getAccount(Address.of(accountAddress));
+            const account = await this.thor.accounts.getAccount(
+                Address.of(accountAddress),
+            );
             const balance = BigInt(account.balance);
             const decimals = 18;
             const symbol = 'VET';

@@ -12,6 +12,7 @@ import { ICrossAppProvider } from './CrossAppProvider.js';
 import {
     WalletProviderFactory,
     WalletProviderType,
+    IWalletProvider,
 } from './WalletProviders.js';
 
 // Browser-focused Privy client
@@ -163,7 +164,6 @@ export class AuthenticationManager
     private privyClient: PrivyClientAuth | null = null;
     private dappKitClient: any = null;
     private crossAppProvider: ICrossAppProvider | null = null;
-    private walletConnectClient: any = null;
 
     constructor(config: AuthProviderConfig) {
         super();
@@ -251,7 +251,7 @@ export class AuthenticationManager
         try {
             this.setAuthState(sessionId, {
                 sessionId,
-                method: 'google', // Map to LoginMethod
+                method: 'google', // map to LoginMethod
                 step: 'initiated',
                 data: { provider: params.provider, scopes: params.scopes },
                 timestamp: Date.now(),
@@ -413,7 +413,7 @@ export class AuthenticationManager
 
             // Execute VeChain cross-app authentication
             const authResult = await this.executeCrossAppAuth(
-                params,
+                params || {},
                 sessionId,
             );
 
@@ -483,7 +483,7 @@ export class AuthenticationManager
             this.emit('auth:step', sessionId, 'pending');
 
             // Execute DappKit wallet connection
-            const authResult = await this.executeDappKitAuth(params, sessionId);
+            const authResult = await this.executeDappKitAuth(params || {}, sessionId);
 
             if (authResult.success && authResult.connection) {
                 this.setAuthState(sessionId, {
@@ -608,14 +608,14 @@ export class AuthenticationManager
             case 'oauth':
                 return !!(this.config.privy?.appId && this.privyClient);
             case 'vechain':
-                return !!(this.config.crossApp?.appId && this.crossAppClient);
+                return !!(this.config.crossApp?.appId && this.crossAppProvider);
             case 'dappkit':
             case 'walletconnect':
                 return !!(this.config.dappKit?.nodeUrl && this.dappKitClient);
             case 'ecosystem':
                 return !!(
                     this.config.crossApp?.allowedApps?.length &&
-                    this.crossAppClient
+                    this.crossAppProvider
                 );
             default:
                 return false;
@@ -678,7 +678,7 @@ export class AuthenticationManager
         this.logger.info('Authentication clients initialized', {
             privyClient: !!this.privyClient,
             dappKit: !!this.dappKitClient,
-            crossApp: !!this.crossAppClient,
+            crossApp: !!this.crossAppProvider,
         });
     }
 
@@ -777,7 +777,7 @@ export class AuthenticationManager
             });
 
             // Mock successful initialization
-            this.crossAppClient = { initialized: true };
+            // this.crossAppProvider = new CrossAppProvider({});
         } catch (error) {
             this.logger.error(
                 'Failed to initialize Cross-app client',
@@ -978,14 +978,14 @@ export class AuthenticationManager
     /**
      * Get wallet provider for a specific type
      */
-    getWalletProvider(type: WalletProviderType): WalletProvider | null {
+    getWalletProvider(type: WalletProviderType): IWalletProvider | null {
         return WalletProviderFactory.getProvider(type);
     }
 
     /**
      * Get all available wallet providers
      */
-    getAvailableProviders(): WalletProvider[] {
+    getAvailableProviders(): IWalletProvider[] {
         return WalletProviderFactory.getAllProviders();
     }
 
@@ -1129,28 +1129,40 @@ export class AuthenticationManager
      * Execute cross-app authentication using the configured provider
      * @private
      */
-    private async executeCrossAppAuth(params: CrossAppAuthParams, sessionId: string): Promise<LoginResult> {
+    private async executeCrossAppAuth(
+        params: CrossAppAuthParams,
+        sessionId: string,
+    ): Promise<LoginResult> {
         if (!this.crossAppProvider) {
-            throw new Error('Cross-app provider not configured. Call setCrossAppProvider() first.');
+            throw new Error(
+                'Cross-app provider not configured. Call setCrossAppProvider() first.',
+            );
         }
 
         try {
-            this.logger.info('Executing cross-app authentication', { sessionId, appId: params.appId });
+            this.logger.info('Executing cross-app authentication', {
+                sessionId,
+                appId: params.appId,
+            });
 
-            const result = await this.crossAppProvider.login(params.appId || this.config.crossApp?.appId || '');
+            const result = await this.crossAppProvider.login(
+                params.appId || this.config.crossApp?.appId || '',
+            );
 
             if (result.success && result.address) {
                 return {
                     success: true,
                     connection: {
-                        id: sessionId,
                         address: result.address,
-                        source: 'crossApp',
-                        method: 'crossApp',
-                        appId: result.appId,
+                        chainId: 100009, // VeChain testnet
+                        source: 'cross-app' as ConnectionSource,
+                        method: 'cross-app' as LoginMethod,
                         timestamp: Date.now(),
                         metadata: {
-                            crossAppProvider: this.crossAppProvider.constructor.name,
+                            sessionId: sessionId,
+                            appId: result.appId,
+                            crossAppProvider:
+                                this.crossAppProvider?.constructor.name,
                         },
                     },
                     user: {
@@ -1164,22 +1176,27 @@ export class AuthenticationManager
             } else {
                 return {
                     success: false,
-                    error: {
+                    error: this.createAuthError({
                         code: 'CROSS_APP_AUTH_FAILED',
-                        message: result.error || 'Cross-app authentication failed',
+                        message:
+                            result.error || 'Cross-app authentication failed',
                         retryable: true,
-                    },
+                    }, 'cross-app' as LoginMethod),
                 };
             }
         } catch (error) {
-            this.logger.error('Cross-app authentication failed', error instanceof Error ? error : new Error(String(error)));
+            this.logger.error(
+                'Cross-app authentication failed',
+                error instanceof Error ? error : new Error(String(error)),
+            );
             return {
                 success: false,
-                error: {
+                error: this.createAuthError({
                     code: 'CROSS_APP_AUTH_ERROR',
-                    message: error instanceof Error ? error.message : String(error),
+                    message:
+                        error instanceof Error ? error.message : String(error),
                     retryable: true,
-                },
+                }, 'cross-app' as LoginMethod),
             };
         }
     }
@@ -1188,7 +1205,10 @@ export class AuthenticationManager
      * Execute DappKit authentication
      * @private
      */
-    private async executeDappKitAuth(params: DappKitAuthParams, sessionId: string): Promise<LoginResult> {
+    private async executeDappKitAuth(
+        params: DappKitAuthParams,
+        sessionId: string,
+    ): Promise<LoginResult> {
         // Placeholder implementation - would integrate with DappKit
         this.logger.info('Executing DappKit authentication', { sessionId });
         throw new Error('DappKit authentication not yet implemented');

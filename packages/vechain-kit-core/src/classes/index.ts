@@ -13,7 +13,10 @@ export * from './ServerAuthManager.js';
 export * from './VeChainKit.js';
 
 // Export original factory with different name to avoid conflicts
-export { VeChainKitFactory as OriginalVeChainKitFactory, createVeChainKit as originalCreateVeChainKit } from './VeChainKitFactory.js';
+export {
+    VeChainKitFactory as OriginalVeChainKitFactory,
+    createVeChainKit as originalCreateVeChainKit,
+} from './VeChainKitFactory.js';
 
 // Export wallet providers with specific naming to avoid conflicts
 export type { SigningOptions as TransactionSigningOptions } from './TransactionManager.js';
