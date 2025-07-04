@@ -3,12 +3,7 @@
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
 import { encodeFunctionData } from 'viem';
-import {
-    ABIContract,
-    Address,
-    Clause,
-    TransactionClause,
-} from '@vechain/sdk-core';
+import { ABIContract, Clause, TransactionClause } from '@vechain/sdk-core';
 import {
     ThorClient,
     VeChainProvider,
@@ -16,7 +11,7 @@ import {
     signerUtils,
 } from '@vechain/sdk-network';
 import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
-import { randomTransactionUser } from '../utils';
+import { randomTransactionUser, createAddress } from '../utils';
 import {
     EnhancedClause,
     ExecuteBatchWithAuthorizationSignData,
@@ -291,11 +286,16 @@ export const PrivyWalletProvider = ({
 
             // If the smart account is not deployed, deploy it first
             if (!smartAccount.isDeployed) {
+                const factoryAddress = getConfig(
+                    network.type,
+                ).accountFactoryAddress;
+                if (!factoryAddress) {
+                    throw new Error('Account factory address not configured');
+                }
+
                 clauses.push(
                     Clause.callFunction(
-                        Address.of(
-                            getConfig(network.type).accountFactoryAddress,
-                        ),
+                        createAddress(factoryAddress),
                         ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
                             'createAccount',
                         ),
@@ -307,7 +307,7 @@ export const PrivyWalletProvider = ({
             // Now the single batch execution call
             clauses.push(
                 Clause.callFunction(
-                    Address.of(smartAccount.address),
+                    createAddress(smartAccount.address),
                     ABIContract.ofAbi(SimpleAccountABI).getFunction(
                         'executeBatchWithAuthorization',
                     ),
@@ -390,11 +390,16 @@ export const PrivyWalletProvider = ({
 
             // if the account smartAccountAddress has no code yet, it's not been deployed/created yet
             if (!smartAccount.isDeployed) {
+                const factoryAddress = getConfig(
+                    network.type,
+                ).accountFactoryAddress;
+                if (!factoryAddress) {
+                    throw new Error('Account factory address not configured');
+                }
+
                 clauses.push(
                     Clause.callFunction(
-                        Address.of(
-                            getConfig(network.type).accountFactoryAddress,
-                        ),
+                        createAddress(factoryAddress),
                         ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
                             'createAccount',
                         ),
@@ -404,9 +409,11 @@ export const PrivyWalletProvider = ({
             }
 
             dataToSign.forEach((data, index) => {
+                const accountAddr = smartAccount.address ?? '';
+
                 clauses.push(
                     Clause.callFunction(
-                        Address.of(smartAccount.address ?? ''),
+                        createAddress(accountAddr),
                         ABIContract.ofAbi(SimpleAccountABI).getFunction(
                             'executeWithAuthorization',
                         ),

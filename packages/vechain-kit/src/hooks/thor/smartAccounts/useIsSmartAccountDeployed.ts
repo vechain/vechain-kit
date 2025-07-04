@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useGetNodeUrl } from '@/hooks';
 import { ThorClient } from '@vechain/sdk-network';
-import { Address } from '@vechain/sdk-core';
+import { createAddress } from '@/utils/addressUtils';
 
 export const getIsDeployed = async (
     thor: ThorClient,
@@ -10,7 +10,7 @@ export const getIsDeployed = async (
     if (!accountAddress) throw new Error('Account address is required');
 
     const res = await thor.accounts.getAccount(
-        Address.of(String(accountAddress)),
+        createAddress(String(accountAddress)),
     );
 
     if (!res) throw new Error('Account not found');

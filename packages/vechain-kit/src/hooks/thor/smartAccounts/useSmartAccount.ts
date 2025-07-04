@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { SimpleAccountFactory__factory } from '@/contracts';
 import { useThor } from '@vechain/dapp-kit-react';
+import { createAddress } from '@/utils/addressUtils';
 
 export interface SmartAccountReturnType {
     address: string | undefined;
@@ -31,7 +31,8 @@ export const getSmartAccount = async (
         throw new Error(`Failed to get account address of ${ownerAddress}`);
     }
 
-    const accountAddress = Address.of(res[0].toString());
+    const addressStr = res?.[0]?.toString();
+    const accountAddress = createAddress(addressStr);
     const accountDetail = await thor.accounts.getAccount(accountAddress);
 
     if (!accountDetail) {
