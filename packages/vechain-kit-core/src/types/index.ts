@@ -1,4 +1,6 @@
 export * from './types';
+export * from './connection';
+export * from './authentication';
 export * from './ensTextRecords';
 
 export enum LegalDocumentType {

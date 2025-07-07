@@ -4,10 +4,7 @@ import type {
     Connection,
     AuthError,
     LoginMethod,
-    ConnectionSource,
 } from './connection.js';
-import type { ICrossAppProvider } from '../classes/CrossAppProvider.js';
-import type { WalletProviderType } from '../classes/WalletProviders.js';
 
 /**
  * Browser authentication provider configuration

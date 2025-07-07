@@ -152,6 +152,15 @@ export const DEFAULT_GAS_COEFFICIENT = 0;
 export const BASE_GAS_PRICE =
     '0x000000000000000000000000000000000000626173652d6761732d7072696365';
 
+/**
+ * Chain IDs for VeChain networks
+ */
+export enum ChainId {
+    MAINNET = 100009,
+    TESTNET = 100010,
+    SOLO = 100011,
+}
+
 export const defaultMainNetwork: Network = {
     id: 'main',
     name: 'main',
@@ -160,7 +169,7 @@ export const defaultMainNetwork: Network = {
     urls: THOR_MAIN_URLS,
     nodeUrl: THOR_MAIN_URLS[0],
     delegateUrl: THOR_MAIN_URLS[0],
-    chainId: 100009,
+    chainId: ChainId.MAINNET,
     explorerUrl: MAIN_EXPLORER_URL,
     genesis: genesises.main,
     blockTime: 1000 * 10,
@@ -174,7 +183,7 @@ export const defaultTestNetwork: Network = {
     urls: THOR_TESTNET_URLS,
     nodeUrl: THOR_TESTNET_URLS[0],
     delegateUrl: THOR_TESTNET_URLS[0],
-    chainId: 100010,
+    chainId: ChainId.TESTNET,
     explorerUrl: TEST_EXPLORER_URL,
     genesis: genesises.test,
     blockTime: 1000 * 10,
@@ -188,7 +197,7 @@ export const defaultSoloNetwork: Network = {
     urls: THOR_SOLO_URLS,
     nodeUrl: THOR_SOLO_URLS[0],
     delegateUrl: THOR_SOLO_URLS[0],
-    chainId: 100011,
+    chainId: ChainId.SOLO,
     explorerUrl: TEST_EXPLORER_URL,
     genesis: genesises.solo,
     blockTime: 1000 * 10,

@@ -7,151 +7,32 @@ import type {
     AuthError,
     LoginMethod,
     ConnectionSource,
-} from './ConnectionManager.js';
+} from '../types/connection.js';
+import type {
+    AuthProviderConfig,
+    OAuthProvider,
+    WalletProvider,
+    AuthState,
+    EmailAuthParams,
+    OAuthAuthParams,
+    DappKitAuthParams,
+    CrossAppAuthParams,
+    PasskeyAuthParams,
+    AuthEvents,
+    IAuthenticationManager,
+    PrivyClientAuth,
+} from '../types/authentication.js';
 import { ICrossAppProvider } from './CrossAppProvider.js';
 import {
     WalletProviderFactory,
     WalletProviderType,
     IWalletProvider,
 } from './WalletProviders.js';
-import { Network } from '../config/network.js';
-
-// Browser-focused Privy client
-type PrivyClientAuth = any;
 
 /**
- * Browser authentication provider configuration
- */
-export interface AuthProviderConfig {
-    privy?: {
-        appId: string;
-        clientId?: string;
-        environment?: 'production' | 'development';
-    };
-    dappKit?: {
-        nodeUrl: string;
-        walletConnectProjectId?: string;
-        supportedWallets?: WalletProvider[];
-    };
-    crossApp?: {
-        appId: string;
-        allowedApps?: string[];
-        environment?: 'production' | 'development';
-    };
-    analytics?: {
-        enabled: boolean;
-        trackingId?: string;
-    };
-    network?: Network;
-}
-
-/**
- * OAuth provider types
- */
-export type OAuthProvider =
-    | 'google'
-    | 'twitter'
-    | 'apple'
-    | 'discord'
-    | 'github';
-
-/**
- * Wallet provider types for DappKit
- */
-export type WalletProvider = 'veworld' | 'sync2' | 'walletconnect' | 'auto';
-
-/**
- * Authentication state for multi-step flows
- */
-export interface AuthState {
-    sessionId: string;
-    method: LoginMethod;
-    step: 'initiated' | 'pending' | 'verification' | 'completed' | 'failed';
-    data?: any;
-    error?: AuthError;
-    timestamp: number;
-}
-
-/**
- * Email authentication parameters
- */
-export interface EmailAuthParams {
-    email: string;
-    code?: string;
-}
-
-/**
- * OAuth authentication parameters
- */
-export interface OAuthAuthParams {
-    provider: OAuthProvider;
-    redirectUrl?: string;
-    scopes?: string[];
-}
-
-/**
- * DappKit authentication parameters
- */
-export interface DappKitAuthParams {
-    walletType?: WalletProvider;
-    chainId?: number;
-    requiredMethods?: string[];
-}
-
-/**
- * Cross-app authentication parameters
- */
-export interface CrossAppAuthParams {
-    appId?: string;
-    metadata?: {
-        name?: string;
-        description?: string;
-        url?: string;
-        logoUrl?: string;
-    };
-}
-
-/**
- * Passkey authentication parameters
- */
-export interface PasskeyAuthParams {
-    challenge?: string;
-    userDisplayName?: string;
-}
-
-/**
- * Authentication event types
- */
-export interface AuthEvents {
-    'auth:started': [sessionId: string, method: LoginMethod];
-    'auth:step': [sessionId: string, step: AuthState['step']];
-    'auth:success': [sessionId: string, connection: Connection];
-    'auth:failed': [sessionId: string, error: AuthError];
-    'auth:verification': [sessionId: string, data: any];
-}
-
-/**
- * Authentication manager interface
- */
-export interface IAuthenticationManager {
-    authenticateWithEmail(params: EmailAuthParams): Promise<LoginResult>;
-    authenticateWithOAuth(params: OAuthAuthParams): Promise<LoginResult>;
-    authenticateWithPasskey(params?: PasskeyAuthParams): Promise<LoginResult>;
-    authenticateWithVeChain(params?: CrossAppAuthParams): Promise<LoginResult>;
-    authenticateWithDappKit(params?: DappKitAuthParams): Promise<LoginResult>;
-    completeOAuthFlow(
-        provider: OAuthProvider,
-        authorizationCode: string,
-    ): Promise<LoginResult>;
-    getAuthState(sessionId: string): AuthState | null;
-    clearAuthState(sessionId: string): void;
-    isMethodAvailable(method: LoginMethod): boolean;
-}
-
-/**
- * Browser-focused authentication manager for VeChain Kit
- * Handles authentication flows using Privy client SDK
- * Designed for browser environments and UI interactions
+ * Browser-focused auth mgr for VeChain Kit
+ * Handles auth flows using Privy client SDK
+ * Designed for browser envs and UI interactions
  */
 export class AuthenticationManager
     extends EventEmitter<AuthEvents>
@@ -485,7 +366,10 @@ export class AuthenticationManager
             this.emit('auth:step', sessionId, 'pending');
 
             // Execute DappKit wallet connection
-            const authResult = await this.executeDappKitAuth(params || {}, sessionId);
+            const authResult = await this.executeDappKitAuth(
+                params || {},
+                sessionId,
+            );
 
             if (authResult.success && authResult.connection) {
                 this.setAuthState(sessionId, {
@@ -1178,12 +1062,16 @@ export class AuthenticationManager
             } else {
                 return {
                     success: false,
-                    error: this.createAuthError({
-                        code: 'CROSS_APP_AUTH_FAILED',
-                        message:
-                            result.error || 'Cross-app authentication failed',
-                        retryable: true,
-                    }, 'cross-app' as LoginMethod),
+                    error: this.createAuthError(
+                        {
+                            code: 'CROSS_APP_AUTH_FAILED',
+                            message:
+                                result.error ||
+                                'Cross-app authentication failed',
+                            retryable: true,
+                        },
+                        'cross-app' as LoginMethod,
+                    ),
                 };
             }
         } catch (error) {
@@ -1193,12 +1081,17 @@ export class AuthenticationManager
             );
             return {
                 success: false,
-                error: this.createAuthError({
-                    code: 'CROSS_APP_AUTH_ERROR',
-                    message:
-                        error instanceof Error ? error.message : String(error),
-                    retryable: true,
-                }, 'cross-app' as LoginMethod),
+                error: this.createAuthError(
+                    {
+                        code: 'CROSS_APP_AUTH_ERROR',
+                        message:
+                            error instanceof Error
+                                ? error.message
+                                : String(error),
+                        retryable: true,
+                    },
+                    'cross-app' as LoginMethod,
+                ),
             };
         }
     }
