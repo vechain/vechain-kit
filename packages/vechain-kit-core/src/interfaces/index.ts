@@ -1,6 +1,24 @@
 import type { ThorClient } from '@vechain/sdk-network';
 import type { TransactionClause } from '@vechain/sdk-core';
 import type { NETWORK_TYPE, AppConfig } from '../config/index.js';
+import type {
+    ConnectionState,
+    Connection,
+    LoginMethod,
+    LoginResult,
+} from '../types/connection.js';
+import type {
+    EmailAuthParams,
+    OAuthAuthParams,
+    PasskeyAuthParams,
+    CrossAppAuthParams,
+    DappKitAuthParams,
+    AuthState,
+} from '../types/authentication.js';
+import {
+    TrackedTransaction,
+    TransactionParams,
+} from '../classes/TransactionManager.js';
 
 /**
  * Network management interface
@@ -117,54 +135,30 @@ export interface ILogger {
  * Connection manager interface
  */
 export interface IConnectionManager {
-    getConnectionState(): import('../classes/ConnectionManager.js').ConnectionState;
-    getCurrentConnection():
-        | import('../classes/ConnectionManager.js').Connection
-        | null;
+    getConnectionState(): ConnectionState;
+    getCurrentConnection(): Connection | null;
     isConnected(): boolean;
-    getEnabledMethods(): import('../classes/ConnectionManager.js').LoginMethod[];
-    isMethodAvailable(
-        method: import('../classes/ConnectionManager.js').LoginMethod,
-    ): boolean;
+    getEnabledMethods(): LoginMethod[];
+    isMethodAvailable(method: LoginMethod): boolean;
     getLoadingState(key: string): boolean;
-    connect(
-        method: import('../classes/ConnectionManager.js').LoginMethod,
-        params?: any,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
+    connect(method: LoginMethod, params?: any): Promise<LoginResult>;
     disconnect(): Promise<void>;
-    verifyEmailCode(
-        email: string,
-        code: string,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
-    reconnect(): Promise<import('../classes/ConnectionManager.js').LoginResult>;
+    verifyEmailCode(email: string, code: string): Promise<LoginResult>;
+    reconnect(): Promise<LoginResult>;
 }
 
 /**
  * Authentication manager interface
  */
 export interface IAuthenticationManager {
-    authenticateWithEmail(
-        params: import('../classes/AuthenticationManager.js').EmailAuthParams,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
-    authenticateWithOAuth(
-        params: import('../classes/AuthenticationManager.js').OAuthAuthParams,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
-    authenticateWithPasskey(
-        params?: import('../classes/AuthenticationManager.js').PasskeyAuthParams,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
-    authenticateWithVeChain(
-        params?: import('../classes/AuthenticationManager.js').CrossAppAuthParams,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
-    authenticateWithDappKit(
-        params?: import('../classes/AuthenticationManager.js').DappKitAuthParams,
-    ): Promise<import('../classes/ConnectionManager.js').LoginResult>;
-    getAuthState(
-        sessionId: string,
-    ): import('../classes/AuthenticationManager.js').AuthState | null;
+    authenticateWithEmail(params: EmailAuthParams): Promise<LoginResult>;
+    authenticateWithOAuth(params: OAuthAuthParams): Promise<LoginResult>;
+    authenticateWithPasskey(params?: PasskeyAuthParams): Promise<LoginResult>;
+    authenticateWithVeChain(params?: CrossAppAuthParams): Promise<LoginResult>;
+    authenticateWithDappKit(params?: DappKitAuthParams): Promise<LoginResult>;
+    getAuthState(sessionId: string): AuthState | null;
     clearAuthState(sessionId: string): void;
-    isMethodAvailable(
-        method: import('../classes/ConnectionManager.js').LoginMethod,
-    ): boolean;
+    isMethodAvailable(method: LoginMethod): boolean;
 }
 
 /**
@@ -182,13 +176,9 @@ export interface ICache<T> {
  * Transaction manager interface
  */
 export interface ITransactionManager {
-    send(
-        params: import('../classes/TransactionManager.js').TransactionParams,
-    ): Promise<import('../classes/TransactionManager.js').TrackedTransaction>;
-    getTransaction(
-        id: string,
-    ): import('../classes/TransactionManager.js').TrackedTransaction | null;
-    getPendingTransactions(): import('../classes/TransactionManager.js').TrackedTransaction[];
+    send(params: TransactionParams): Promise<TrackedTransaction>;
+    getTransaction(id: string): TrackedTransaction | null;
+    getPendingTransactions(): TrackedTransaction[];
     cancelTransaction(id: string): Promise<boolean>;
     clearCompletedTransactions(): number;
     getStats(): {

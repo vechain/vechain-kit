@@ -7,6 +7,7 @@ import type {
     AuthError,
     LoginMethod,
     ConnectionSource,
+    ErrorCategory,
 } from '../types/connection.js';
 import type {
     AuthProviderConfig,
@@ -893,10 +894,7 @@ export class AuthenticationManager
     /**
      * Categorize error for better handling
      */
-    private categorizeError(
-        error: any,
-        method: LoginMethod,
-    ): import('./ConnectionManager.js').ErrorCategory {
+    private categorizeError(error: any, method: LoginMethod): ErrorCategory {
         const message = error?.message?.toLowerCase() || '';
 
         if (message.includes('rejected') || message.includes('cancelled')) {

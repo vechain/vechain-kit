@@ -33,7 +33,7 @@ export type SmartAccount = Wallet & {
     version: number | null;
 };
 
-export type ConnectionSource = {
+export type ConnectionSourceInfo = {
     type: 'privy' | 'wallet' | 'privy-cross-app';
     displayName: string;
 };

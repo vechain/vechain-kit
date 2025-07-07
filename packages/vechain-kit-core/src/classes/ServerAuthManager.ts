@@ -7,7 +7,8 @@ import type {
     AuthError,
     LoginMethod,
     ConnectionSource,
-} from './ConnectionManager';
+    ErrorCategory,
+} from '../types/connection.js';
 
 // Server auth types
 type PrivyServerAuth = any;
@@ -256,9 +257,7 @@ export class ServerAuthManager extends EventEmitter {
     /**
      * Categorize error for better handling
      */
-    private categorizeError(
-        error: any,
-    ): import('./ConnectionManager.js').ErrorCategory {
+    private categorizeError(error: any): ErrorCategory {
         const message = error?.message?.toLowerCase() || '';
 
         if (message.includes('invalid') || message.includes('expired')) {
