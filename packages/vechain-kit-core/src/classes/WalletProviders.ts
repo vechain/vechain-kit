@@ -3,9 +3,10 @@ import { ILogger } from '../interfaces/index.js';
 import { createLogger } from '../utils/logger.js';
 import type { TransactionClause } from '@vechain/sdk-core';
 import type { Connection, LoginMethod } from '../types/connection.js';
+import { ChainId } from '../config/network.js';
 
 /**
- * Base wallet provider interface that all authentication methods must implement
+ * Base wallet provider interface
  */
 export interface IWalletProvider extends EventEmitter {
     readonly type: WalletProviderType;
@@ -203,11 +204,11 @@ export class DappKitWalletProvider
         // VeChain network chain IDs
         const nodeUrl = this.config?.nodeUrl || 'https://mainnet.vechain.org';
         if (nodeUrl.includes('test')) {
-            return 100010; // VeChain testnet
+            return ChainId.TESTNET;
         } else if (nodeUrl.includes('solo')) {
-            return 100011; // VeChain solo network
+            return ChainId.SOLO;
         }
-        return 100009; // VeChain mainnet
+        return ChainId.MAINNET;
     }
 
     async disconnect(): Promise<void> {
@@ -396,7 +397,7 @@ export class PrivyWalletProvider
 
             const connection: Connection = {
                 address: this.smartAccountAddress || walletAddress,
-                chainId: 100009,
+                chainId: ChainId.MAINNET,
                 source: 'privy',
                 method:
                     params?.method === 'email'
@@ -506,7 +507,7 @@ export class PrivyWalletProvider
                           domain: {
                               name: 'Wallet',
                               version: '1',
-                              chainId: 100009,
+                              chainId: ChainId.MAINNET,
                               verifyingContract: this.smartAccountAddress,
                           },
                           types: {
@@ -534,7 +535,7 @@ export class PrivyWalletProvider
                           domain: {
                               name: 'Wallet',
                               version: '1',
-                              chainId: 100009,
+                              chainId: ChainId.MAINNET,
                               verifyingContract: this.smartAccountAddress,
                           },
                           types: {
@@ -688,7 +689,7 @@ export class CrossAppWalletProvider
 
             const connection: Connection = {
                 address: this.currentAccount,
-                chainId: 100009,
+                chainId: ChainId.MAINNET,
                 source: 'cross-app',
                 method: 'ecosystem',
                 timestamp: Date.now(),
@@ -771,7 +772,7 @@ export class CrossAppWalletProvider
                 domain: {
                     name: 'Wallet',
                     version: '1',
-                    chainId: 100009,
+                    chainId: ChainId.MAINNET,
                     verifyingContract: this.currentAccount,
                 },
                 types: {

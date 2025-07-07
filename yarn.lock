@@ -5140,6 +5140,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@privy-io/cross-app-connect@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@privy-io/cross-app-connect@npm:0.2.2"
+  dependencies:
+    "@noble/curves": "npm:^1.5.0"
+    "@noble/hashes": "npm:1.3.2"
+    "@scure/base": "npm:~1.1.2"
+    fflate: "npm:0.8.2"
+  peerDependencies:
+    "@rainbow-me/rainbowkit": ^2.2.3
+    "@wagmi/core": ^2.16.4
+    viem: ^2.22.23
+  peerDependenciesMeta:
+    "@rainbow-me/rainbowkit":
+      optional: true
+    "@wagmi/core":
+      optional: true
+  checksum: 10c0/0270d68509a9ebfd3e5bd7767b2292f31c8f5ce651d9dde0916a1e77649037ddd3b06448bfd49e409ce37268858e231e22a693c7ebdf4058532d45da8ca9c804
+  languageName: node
+  linkType: hard
+
 "@privy-io/js-sdk-core@npm:0.46.4":
   version: 0.46.4
   resolution: "@privy-io/js-sdk-core@npm:0.46.4"
@@ -5749,7 +5770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/base@npm:^1.1.3, @scure/base@npm:^1.1.9, @scure/base@npm:~1.2.2, @scure/base@npm:~1.2.4, @scure/base@npm:~1.2.5":
+"@scure/base@npm:^1.1.3, @scure/base@npm:^1.1.9, @scure/base@npm:^1.2.4, @scure/base@npm:~1.2.2, @scure/base@npm:~1.2.4, @scure/base@npm:~1.2.5":
   version: 1.2.6
   resolution: "@scure/base@npm:1.2.6"
   checksum: 10c0/49bd5293371c4e062cb6ba689c8fe3ea3981b7bb9c000400dc4eafa29f56814cdcdd27c04311c2fec34de26bc373c593a1d6ca6d754398a488d587943b7c128a
@@ -7467,6 +7488,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/dapp-kit@npm:2.0.2":
+  version: 2.0.2
+  resolution: "@vechain/dapp-kit@npm:2.0.2"
+  dependencies:
+    "@vechain/sdk-core": "npm:1.2.0"
+    "@vechain/sdk-errors": "npm:1.2.0"
+    "@vechain/sdk-network": "npm:1.2.0"
+    "@walletconnect/modal": "npm:2.7.0"
+    "@walletconnect/sign-client": "npm:2.19.2"
+    "@walletconnect/utils": "npm:2.19.2"
+    events: "npm:^3.3.0"
+    valtio: "npm:1.13.2"
+  checksum: 10c0/9169589cf7991ec57090ffa68678ee78872dc12c63fe52c2624c1b30045e270d01cba8f364d7ef72bb87e53c88976b937f3cc34f3a39d6cd43aef8562fc4a63f
+  languageName: node
+  linkType: hard
+
 "@vechain/ethers@npm:^4.0.27-5":
   version: 4.0.27-5
   resolution: "@vechain/ethers@npm:4.0.27-5"
@@ -7551,6 +7588,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/sdk-core@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-core@npm:1.2.0"
+  dependencies:
+    "@ethereumjs/rlp": "npm:^5.0.2"
+    "@noble/ciphers": "npm:^1.1.1"
+    "@noble/curves": "npm:^1.6.0"
+    "@noble/hashes": "npm:^1.5.0"
+    "@scure/base": "npm:^1.2.4"
+    "@scure/bip32": "npm:^1.4.0"
+    "@scure/bip39": "npm:^1.5.1"
+    "@vechain/sdk-errors": "npm:1.2.0"
+    "@vechain/sdk-logging": "npm:1.2.0"
+    abitype: "npm:^1.0.6"
+    ethers: "npm:6.13.4"
+    fast-json-stable-stringify: "npm:^2.1.0"
+    viem: "npm:^2.21.45"
+  checksum: 10c0/4b4f588f54e896e58e80d767dac5b19a22c1db57c30e3f709a7f3cbc0487b8f4187620ef59f0b7ce96b91f484960f14da138c1fcc65ed5a4866f655f3b8344ec
+  languageName: node
+  linkType: hard
+
 "@vechain/sdk-errors@npm:1.0.0-rc.4":
   version: 1.0.0-rc.4
   resolution: "@vechain/sdk-errors@npm:1.0.0-rc.4"
@@ -7562,6 +7620,13 @@ __metadata:
   version: 1.1.0
   resolution: "@vechain/sdk-errors@npm:1.1.0"
   checksum: 10c0/e83fbb4f8254e5b534693f45dacf5adb8163ce5c291e5a6db5d69a67aa5e927bb2cb92d981ac2dcd03cd89ceb420efcfff7305e963ab6eff10536465b8994c8f
+  languageName: node
+  linkType: hard
+
+"@vechain/sdk-errors@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-errors@npm:1.2.0"
+  checksum: 10c0/2d4adcfc2c8af27bd55246ebcbf2f945402c4c20887a2ac67a35aad39d45f85dd70890d25305a8de9b0d4f1fc9cb74758d1f9ed172bbc614511a3dda14ed1ab2
   languageName: node
   linkType: hard
 
@@ -7611,6 +7676,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/sdk-logging@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-logging@npm:1.2.0"
+  dependencies:
+    "@vechain/sdk-errors": "npm:1.2.0"
+  checksum: 10c0/8d79cdc73fcf69793abf75ed8c23e73c77d9c727cfbb78619c1434e43d7f8e7922a2d8f0023bce4541415a2df63645cf0f2eb742c17e9df12b41ab4b060883ae
+  languageName: node
+  linkType: hard
+
 "@vechain/sdk-network@npm:1.0.0-rc.4":
   version: 1.0.0-rc.4
   resolution: "@vechain/sdk-network@npm:1.0.0-rc.4"
@@ -7647,6 +7721,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/sdk-network@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-network@npm:1.2.0"
+  dependencies:
+    "@noble/curves": "npm:^1.6.0"
+    "@vechain/sdk-core": "npm:1.2.0"
+    "@vechain/sdk-errors": "npm:1.2.0"
+    "@vechain/sdk-logging": "npm:1.2.0"
+    abitype: "npm:^1.0.6"
+    ethers: "npm:6.13.4"
+    viem: "npm:^2.21.45"
+  checksum: 10c0/977f8ac523691ffa65db012bd0574dc04bdd355b5009a4b0562f406ec98e365db71c7c4db46603e552524a218944fab7b5759008eb1ecaf507f10412a26405d5
+  languageName: node
+  linkType: hard
+
 "@vechain/vebetterdao-contracts@npm:^4.0.0, @vechain/vebetterdao-contracts@npm:^4.1.0":
   version: 4.1.0
   resolution: "@vechain/vebetterdao-contracts@npm:4.1.0"
@@ -7662,11 +7751,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@vechain/vechain-kit-core@workspace:packages/vechain-kit-core"
   dependencies:
+    "@privy-io/cross-app-connect": "npm:^0.2.2"
     "@privy-io/js-sdk-core": "npm:^0.52.1"
     "@privy-io/server-auth": "npm:^1.28.0"
+    "@vechain/dapp-kit": "npm:2.0.2"
     "@vechain/picasso": "npm:^2.1.1"
-    "@vechain/sdk-core": "npm:1.1.0"
-    "@vechain/sdk-network": "npm:1.1.0"
+    "@vechain/sdk-core": "npm:1.2.0"
+    "@vechain/sdk-network": "npm:1.2.0"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
     bignumber.js: "npm:^9.1.2"
     eslint: "npm:^9.12.0"
@@ -13216,6 +13307,13 @@ __metadata:
   version: 6.0.0
   resolution: "fetch-retry@npm:6.0.0"
   checksum: 10c0/8e275b042ff98041236d30b71966f24c34ff19f957bb0f00e664754bd63d0dfb5122d091e7d5bca21f6370d88a1713d22421b33471305d7b86d6799427278802
+  languageName: node
+  linkType: hard
+
+"fflate@npm:0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 10c0/03448d630c0a583abea594835a9fdb2aaf7d67787055a761515bf4ed862913cfd693b4c4ffd5c3f3b355a70cf1e19033e9ae5aedcca103188aaff91b8bd6e293
   languageName: node
   linkType: hard
 
