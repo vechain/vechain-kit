@@ -47,13 +47,6 @@ export class NetworkManager implements INetworkManager {
     }
 
     /**
-     * Gets the RPC URL for the current network
-     */
-    getRpcUrl(): string {
-        return this._config.network.delegateUrl;
-    }
-
-    /**
      * Gets the node URL for the current network
      */
     getNodeUrl(): string {

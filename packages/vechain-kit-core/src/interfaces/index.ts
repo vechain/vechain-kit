@@ -27,7 +27,6 @@ export interface INetworkManager {
     readonly currentNetwork: NETWORK_TYPE;
     readonly config: AppConfig;
     switchNetwork(network: NETWORK_TYPE): void;
-    getRpcUrl(): string;
     getNodeUrl(): string;
     getContractAddresses(): AppConfig['contracts'];
     getNetworkInfo(): NetworkInfo;

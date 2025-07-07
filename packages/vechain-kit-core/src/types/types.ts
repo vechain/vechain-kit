@@ -1,5 +1,13 @@
-import { LoginMethodOrderOption } from '@privy-io/react-auth';
 import { TransactionClause } from '@vechain/sdk-core';
+type LoginMethodOrderOption =
+    | 'email'
+    | 'google'
+    | 'twitter'
+    | 'apple'
+    | 'discord'
+    | 'github'
+    | 'passkey'
+    | 'wallet';
 
 export type TokenBalance = {
     original: string;
