@@ -14,6 +14,7 @@ import {
     WalletProviderType,
     IWalletProvider,
 } from './WalletProviders.js';
+import { Network } from '../config/network.js';
 
 // Browser-focused Privy client
 type PrivyClientAuth = any;
@@ -41,6 +42,7 @@ export interface AuthProviderConfig {
         enabled: boolean;
         trackingId?: string;
     };
+    network?: Network;
 }
 
 /**
