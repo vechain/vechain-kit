@@ -7,12 +7,10 @@ import {
     ISigningProvider,
 } from './TransactionManager.js';
 import { TokenTransferManager } from './TokenTransferManager.js';
-import {
-    AuthenticationManager,
-    AuthProviderConfig,
-} from './AuthenticationManager.js';
+import { AuthenticationManager } from './AuthenticationManager.js';
 import { ServerAuthManager, ServerAuthConfig } from './ServerAuthManager.js';
 import { ConnectionManager, ConnectionConfig } from './ConnectionManager.js';
+import type { AuthProviderConfig } from '../types/authentication.js';
 
 /**
  * Configuration for VeChain Kit initialization

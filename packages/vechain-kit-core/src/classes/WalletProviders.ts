@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { ILogger } from '../interfaces/index.js';
 import { createLogger } from '../utils/logger.js';
 import type { TransactionClause } from '@vechain/sdk-core';
-import type { Connection, LoginMethod } from './ConnectionManager.js';
+import type { Connection, LoginMethod } from '../types/connection.js';
 
 /**
  * Base wallet provider interface that all authentication methods must implement
