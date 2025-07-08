@@ -42,9 +42,9 @@ export class Logger implements ILogger {
         }
     }
 
-    error(message: string, error?: Error): void {
+    error(message: string, ...args: unknown[]): void {
         if (this.level <= LogLevel.ERROR) {
-            console.error(`${this.prefix} ERROR:`, message, error);
+            console.error(`${this.prefix} ERROR:`, message, ...args);
         }
     }
 
@@ -73,7 +73,7 @@ export class NoOpLogger implements ILogger {
         // No-op
     }
 
-    error(_message: string, _error?: Error): void {
+    error(_message: string, ..._args: unknown[]): void {
         // No-op
     }
 }
