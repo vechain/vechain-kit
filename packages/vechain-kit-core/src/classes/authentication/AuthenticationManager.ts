@@ -16,8 +16,6 @@ import type {
     EmailAuthParams,
     OAuthAuthParams,
     DappKitAuthParams,
-    CrossAppAuthParams,
-    PasskeyAuthParams,
     OAuthProvider,
 } from './types.js';
 import { EmailAuthenticator } from './EmailAuthenticator.js';
@@ -439,14 +437,15 @@ export class AuthenticationManager
      */
     private createAuthError(error: any, method: LoginMethod): AuthError {
         const message = error?.message || 'Authentication failed';
-
-        return {
-            code: error?.code || 'AUTH_ERROR',
-            message,
-            category: this.categorizeError(error, method),
-            retryable: this.isRetryableError(error),
-            userFriendlyMessage: this.getUserFriendlyMessage(error, method),
-        };
+        
+        const authError = new Error(message) as AuthError;
+        authError.name = 'AuthError';
+        authError.code = error?.code || 'AUTH_ERROR';
+        authError.category = this.categorizeError(error, method);
+        authError.retryable = this.isRetryableError(error);
+        authError.userFriendlyMessage = this.getUserFriendlyMessage(error, method);
+        
+        return authError;
     }
 
     /**

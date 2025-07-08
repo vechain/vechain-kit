@@ -98,14 +98,6 @@ export interface CrossAppAuthParams {
 }
 
 /**
- * Passkey authentication parameters
- */
-export interface PasskeyAuthParams {
-    challenge?: string;
-    userDisplayName?: string;
-}
-
-/**
  * Authentication event types
  */
 export interface AuthEvents {
@@ -122,8 +114,6 @@ export interface AuthEvents {
 export interface IAuthenticationManager {
     authenticateWithEmail(params: EmailAuthParams): Promise<LoginResult>;
     authenticateWithOAuth(params: OAuthAuthParams): Promise<LoginResult>;
-    authenticateWithPasskey(params?: PasskeyAuthParams): Promise<LoginResult>;
-    authenticateWithVeChain(params?: CrossAppAuthParams): Promise<LoginResult>;
     authenticateWithDappKit(params?: DappKitAuthParams): Promise<LoginResult>;
     completeOAuthFlow(
         provider: OAuthProvider,

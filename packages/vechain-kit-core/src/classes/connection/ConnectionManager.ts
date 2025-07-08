@@ -388,16 +388,16 @@ export class ConnectionManager
         category: ErrorCategory,
         method?: LoginMethod,
     ): AuthError {
-        return {
-            code: 'CONNECTION_ERROR',
-            message,
+        const error = new Error(message) as AuthError;
+        error.name = 'ConnectionError';
+        error.code = 'CONNECTION_ERROR';
+        error.category = category;
+        error.retryable = category !== 'configuration_error';
+        error.userFriendlyMessage = this.getUserFriendlyErrorMessage(
             category,
-            retryable: category !== 'configuration_error',
-            userFriendlyMessage: this.getUserFriendlyErrorMessage(
-                category,
-                method,
-            ),
-        };
+            method,
+        );
+        return error;
     }
 
     /**

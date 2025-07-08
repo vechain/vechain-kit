@@ -1,21 +1,16 @@
 import { ThorClient } from '@vechain/sdk-network';
 import { ILogger } from '../interfaces/index.js';
 import { createLogger } from '../utils/logger.js';
-import {
-    TransactionManager,
-    TransactionManagerConfig,
-    ISigningProvider,
-} from './TransactionManager.js';
-import { TokenTransferManager } from './TokenTransferManager.js';
-import { AuthenticationManager } from './AuthenticationManager.js';
-import { ServerAuthManager, ServerAuthConfig } from './ServerAuthManager.js';
-import { ConnectionManager, ConnectionConfig } from './ConnectionManager.js';
-import type { AuthProviderConfig } from '../types/authentication.js';
+import { VeChainKit, VeChainKitConfig } from './VeChainKit.js';
+import { AuthenticationManager } from './authentication/AuthenticationManager.js';
+import { ConnectionManager } from './connection/ConnectionManager.js';
+import type { ConnectionConfig } from './connection/types.js';
+import type { AuthProviderConfig } from './authentication/config.js';
 
 /**
- * Configuration for VeChain Kit initialization
+ * Configuration for VeChain Kit Factory initialization
  */
-export interface VeChainKitConfig {
+export interface VeChainKitFactoryConfig {
     // Network configuration
     thorClient?: ThorClient;
     nodeUrl?: string;
@@ -23,183 +18,103 @@ export interface VeChainKitConfig {
 
     // Authentication configuration
     authentication?: AuthProviderConfig;
-    serverAuth?: ServerAuthConfig;
     connection?: ConnectionConfig;
-
-    // Transaction configuration
-    transaction?: Omit<
-        TransactionManagerConfig,
-        'thorClient' | 'signingProvider'
-    >;
-    signingProvider?: ISigningProvider;
 
     // Global configuration
     logger?: ILogger;
-    enableAnalytics?: boolean;
+    analytics?: {
+        enabled?: boolean;
+    };
 }
 
 /**
- * Factory for creating and configuring VeChain Kit managers
- * Ensures proper dependency injection and reduces setup complexity
+ * Factory for creating VeChainKit instances with dependency injection
  */
 export class VeChainKitFactory {
+    public readonly config: VeChainKitFactoryConfig;
     private logger: ILogger;
-    private thorClient?: ThorClient;
 
-    constructor(private config: VeChainKitConfig) {
+    constructor(config: VeChainKitFactoryConfig) {
+        this.config = config;
         this.logger = config.logger || createLogger('VeChainKitFactory');
-        this.thorClient = config.thorClient;
-
-        this.logger.info('VeChain Kit Factory initialized', {
-            network: config.network,
-            hasThorClient: !!config.thorClient,
-            hasSigningProvider: !!config.signingProvider,
-            analyticsEnabled: config.enableAnalytics,
-        });
     }
 
     /**
-     * Create a fully configured TransactionManager
+     * Create a VeChainKit instance
      */
-    createTransactionManager(): TransactionManager {
-        const config: TransactionManagerConfig = {
-            ...this.config.transaction,
-            thorClient: this.thorClient,
-            signingProvider: this.config.signingProvider,
+    createKit(): VeChainKit {
+        const kitConfig: VeChainKitConfig = {
+            network: this.config.network,
+            nodeUrl: this.config.nodeUrl,
+            thorClient: this.config.thorClient,
+            logger: this.logger
         };
 
-        return new TransactionManager(config);
+        return new VeChainKit(kitConfig);
     }
 
     /**
-     * Create a TokenTransferManager with TransactionManager dependency
-     */
-    createTokenTransferManager(): TokenTransferManager {
-        const transactionManager = this.createTransactionManager();
-        return new TokenTransferManager(transactionManager);
-    }
-
-    /**
-     * Create an AuthenticationManager for browser environments
+     * Create an authentication manager
      */
     createAuthenticationManager(): AuthenticationManager {
         if (!this.config.authentication) {
-            throw new Error(
-                'Authentication configuration required for AuthenticationManager',
-            );
+            throw new Error('Authentication configuration is required');
         }
-
         return new AuthenticationManager(this.config.authentication);
     }
 
     /**
-     * Create a ServerAuthManager for server environments
-     */
-    createServerAuthManager(): ServerAuthManager {
-        if (!this.config.serverAuth) {
-            throw new Error(
-                'Server auth configuration required for ServerAuthManager',
-            );
-        }
-
-        return new ServerAuthManager(this.config.serverAuth);
-    }
-
-    /**
-     * Create a ConnectionManager
+     * Create a connection manager
      */
     createConnectionManager(): ConnectionManager {
-        if (!this.config.connection) {
-            throw new Error(
-                'Connection configuration required for ConnectionManager',
-            );
-        }
-
-        return new ConnectionManager(this.config.connection);
-    }
-
-    /**
-     * Create a complete kit with all managers
-     */
-    createKit() {
-        return {
-            transactionManager: this.createTransactionManager(),
-            tokenTransferManager: this.createTokenTransferManager(),
-            authenticationManager: this.config.authentication
-                ? this.createAuthenticationManager()
-                : null,
-            serverAuthManager: this.config.serverAuth
-                ? this.createServerAuthManager()
-                : null,
-            connectionManager: this.config.connection
-                ? this.createConnectionManager()
-                : null,
-            thorClient: this.thorClient,
+        const connectionConfig: ConnectionConfig = {
+            enabledMethods: ['email', 'google', 'oauth', 'dappkit'],
+            ...this.config.connection,
         };
+        return new ConnectionManager(connectionConfig);
     }
 
     /**
-     * Update Thor client for all future manager instances
+     * Create factory for mainnet
      */
-    updateThorClient(thorClient: ThorClient): void {
-        this.thorClient = thorClient;
-        this.logger.info('Thor client updated');
+    static forMainnet(config: Omit<VeChainKitFactoryConfig, 'network'> = {}): VeChainKitFactory {
+        return new VeChainKitFactory({
+            ...config,
+            network: 'main'
+        });
     }
 
     /**
-     * Create factory with sensible defaults for different environments
+     * Create factory for testnet
      */
-    static forMainnet(
-        overrides?: Partial<VeChainKitConfig>,
-    ): VeChainKitFactory {
+    static forTestnet(config: Omit<VeChainKitFactoryConfig, 'network'> = {}): VeChainKitFactory {
         return new VeChainKitFactory({
-            network: 'main',
-            nodeUrl: 'https://mainnet.vechain.org',
-            transaction: {
-                defaultGasLimit: 200000,
-                gasEstimationBuffer: 1.2,
-                monitoringInterval: 5000,
-            },
-            ...overrides,
+            ...config,
+            network: 'test'
         });
     }
 
-    static forTestnet(
-        overrides?: Partial<VeChainKitConfig>,
-    ): VeChainKitFactory {
+    /**
+     * Create factory for solo network
+     */
+    static forSolo(config: Omit<VeChainKitFactoryConfig, 'network'> = {}): VeChainKitFactory {
         return new VeChainKitFactory({
-            network: 'test',
-            nodeUrl: 'https://testnet.vechain.org',
-            transaction: {
-                defaultGasLimit: 200000,
-                gasEstimationBuffer: 1.2,
-                monitoringInterval: 5000,
-            },
-            ...overrides,
+            ...config,
+            network: 'solo'
         });
     }
 
-    static forSolo(
-        nodeUrl: string,
-        overrides?: Partial<VeChainKitConfig>,
-    ): VeChainKitFactory {
-        return new VeChainKitFactory({
-            network: 'solo',
-            nodeUrl,
-            transaction: {
-                defaultGasLimit: 200000,
-                gasEstimationBuffer: 1.1,
-                monitoringInterval: 2000,
-            },
-            ...overrides,
-        });
+    /**
+     * Create factory with custom configuration
+     */
+    static create(config: VeChainKitFactoryConfig): VeChainKitFactory {
+        return new VeChainKitFactory(config);
     }
 }
 
 /**
- * Convenience function for quick setup
+ * Create a VeChainKit instance with simplified configuration
  */
-export function createVeChainKit(config: VeChainKitConfig) {
-    const factory = new VeChainKitFactory(config);
-    return factory.createKit();
+export function createVeChainKit(config?: VeChainKitConfig): VeChainKit {
+    return new VeChainKit(config);
 }

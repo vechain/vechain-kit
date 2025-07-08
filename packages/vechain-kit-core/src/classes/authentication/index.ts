@@ -6,8 +6,6 @@ export type {
     EmailAuthParams,
     OAuthAuthParams,
     DappKitAuthParams,
-    CrossAppAuthParams,
-    PasskeyAuthParams,
     AuthEvents,
     IAuthenticationManager,
 } from './types.js';
@@ -20,8 +18,6 @@ export { AuthenticationManager } from './AuthenticationManager.js';
 // Export individual authenticators (for advanced use cases)
 export { EmailAuthenticator } from './EmailAuthenticator.js';
 export { OAuthAuthenticator } from './OAuthAuthenticator.js';
-export { PasskeyAuthenticator } from './PasskeyAuthenticator.js';
-export { CrossAppAuthenticator } from './CrossAppAuthenticator.js';
 export { DappKitAuthenticator } from './DappKitAuthenticator.js';
 
 // Export utilities

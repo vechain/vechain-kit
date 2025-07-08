@@ -66,7 +66,6 @@ export class MethodAvailability {
             'google',
             'oauth',
             'dappkit',
-            'walletconnect',
         ];
 
         const status: Record<string, any> = {};
@@ -115,7 +114,6 @@ export class MethodAvailability {
                 return !!this.config.privyAppId;
 
             case 'dappkit':
-            case 'walletconnect':
                 return !!this.config.dappKitConfig?.nodeUrl;
 
             default:
@@ -136,7 +134,6 @@ export class MethodAvailability {
                     : 'Privy app ID not configured';
 
             case 'dappkit':
-            case 'walletconnect':
                 return this.config.dappKitConfig?.nodeUrl
                     ? 'DappKit client not initialized'
                     : 'DappKit configuration missing';
@@ -178,7 +175,7 @@ export class MethodAvailability {
             ['email', 'google', 'oauth'].includes(m),
         );
         const hasDappKitMethods = this.config.enabledMethods.some((m) =>
-            ['dappkit', 'walletconnect'].includes(m),
+            m === 'dappkit',
         );
 
         if (hasPrivyMethods && !this.config.privyAppId) {

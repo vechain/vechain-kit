@@ -1,56 +1,28 @@
-export * from './classes/index.js';
-export * from './utils/index.js';
-export * from './config/index.js';
-export * from './contracts/index.js';
-export type {
-    INetworkManager,
-    ISmartAccountManager,
-    ITransactionBuilder,
-    ITransactionManager,
-    ITokenManager,
-    IConnectionManager,
-    IAuthenticationManager,
-    ILogger,
-    ICache,
-    IEventEmitter,
-    NetworkInfo,
-    SmartAccountInfo,
-    TransactionBody,
-    TransactionOptions,
-    TokenBalance,
-    TokenInfo,
-} from './interfaces/index.js';
-export * from './errors/index.js';
+// Export main classes
+export { VeChainKit, createVeChainKit } from './classes/VeChainKit.js';
+export { VeChainKitFactory } from './classes/VeChainKitFactory.js';
 
-// Export types explicitly to avoid conflicts with interfaces
-export type {
-    LegalDocument,
-    EnrichedLegalDocument,
-    LegalDocumentAgreement,
-    LegalDocumentType,
-    LegalDocumentSource,
-} from './types/index.js';
+// Export authentication system
+export * from './classes/authentication/index.js';
+
+// Export connection system  
+export * from './classes/connection/index.js';
+
+// Export interfaces
+export type { ILogger } from './interfaces/index.js';
 
 // Export utility functions
 export { createLogger, LogLevel } from './utils/logger.js';
-export { MemoryCache, createCacheKey, Cacheable } from './utils/cache.js';
 
-// Export main VeChainKit class - the new clean API
-export {
-    VeChainKit,
-    VeChainKitFactory,
-    createVeChainKit,
-} from './classes/VeChainKit.js';
+// Export configuration
+export { ChainId } from './config/network.js';
 
-// Export wallet providers with proper type exports
+// Export connection types
 export type {
-    IWalletProvider,
-    WalletProviderType,
-    SigningOptions as WalletSigningOptions,
-} from './classes/WalletProviders.js';
-export {
-    WalletProviderFactory,
-    DappKitWalletProvider,
-    PrivyWalletProvider,
-    CrossAppWalletProvider,
-} from './classes/WalletProviders.js';
+    ConnectionState,
+    LoginMethod,
+    Connection,
+    LoginResult,
+    AuthError,
+    ErrorCategory,
+} from './types/connection.js';

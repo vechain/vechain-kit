@@ -14,13 +14,8 @@ export type ConnectionState =
 export type LoginMethod =
     | 'email'
     | 'google'
-    | 'vechain'
-    | 'passkey'
     | 'dappkit'
-    | 'ecosystem'
-    | 'walletconnect'
-    | 'oauth'
-    | 'cross-app';
+    | 'oauth';
 
 /**
  * Connection source types
@@ -81,7 +76,7 @@ export interface LoginResult {
 /**
  * Authentication error types
  */
-export interface AuthError {
+export interface AuthError extends Error {
     code: string;
     message: string;
     category: ErrorCategory;

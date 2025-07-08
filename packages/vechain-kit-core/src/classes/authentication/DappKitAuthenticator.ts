@@ -1,6 +1,6 @@
 import { ILogger } from '../../interfaces/index.js';
 import { createLogger } from '../../utils/logger.js';
-import type { LoginResult, Connection } from '../../types/connection.js';
+import type { LoginResult, Connection, AuthError, ErrorCategory } from '../../types/connection.js';
 import type { DappKitAuthParams } from './types.js';
 import { ChainId } from '../../config/network.js';
 
@@ -34,7 +34,7 @@ export class DappKitAuthenticator {
 
         try {
             // Set wallet source if specified
-            if (params.walletType && params.walletType !== 'auto') {
+            if (params.walletType) {
                 this.dappKitClient.wallet.setSource(params.walletType);
                 this.logger.debug('DappKit wallet source set', {
                     walletType: params.walletType,
@@ -73,7 +73,7 @@ export class DappKitAuthenticator {
             this.logger.info('DappKit authentication successful', {
                 sessionId,
                 address: connection.address,
-                walletType: connection.metadata.walletType,
+                walletType: connection.metadata?.walletType,
                 chainId: connection.chainId,
             });
 
@@ -91,15 +91,17 @@ export class DappKitAuthenticator {
             // Determine if error is retryable
             const isRetryable = this.isRetryableError(error);
 
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const authError = new Error(errorMessage) as AuthError;
+            authError.name = 'DappKitAuthError';
+            authError.code = 'DAPPKIT_AUTH_ERROR';
+            authError.category = this.categorizeError(error);
+            authError.retryable = isRetryable;
+            authError.userFriendlyMessage = this.getUserFriendlyMessage(error);
+            
             return {
                 success: false,
-                error: {
-                    code: 'DAPPKIT_AUTH_ERROR',
-                    message: error instanceof Error ? error.message : String(error),
-                    category: this.categorizeError(error),
-                    retryable: isRetryable,
-                    userFriendlyMessage: this.getUserFriendlyMessage(error),
-                },
+                error: authError,
             };
         }
     }
