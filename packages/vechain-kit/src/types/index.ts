@@ -2,6 +2,8 @@ import { LegalDocument } from '@/providers';
 
 export * from './Types';
 export * from './ensTextRecords';
+export * from './GasToken';
+export * from './GasEstimation';
 
 export enum LegalDocumentType {
     TERMS = 'terms',
