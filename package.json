@@ -5,7 +5,8 @@
     "license": "MIT",
     "workspaces": [
         "examples/*",
-        "packages/*"
+        "packages/*",
+        "tests/e2e"
     ],
     "scripts": {
         "install:all": "yarn && yarn run build:deps",
