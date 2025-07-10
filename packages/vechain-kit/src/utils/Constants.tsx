@@ -43,6 +43,9 @@ export const ENV = {
         localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'main',
 };
 
+export const GENERIC_DELEGATOR_URL =
+    'https://testnet.delegator.vechain.org/api';
+
 export const VECHAIN_KIT_MIXPANEL_TOKENS = {
     development: 'e9627dff3f9ac07c28c28615fa86b181',
     production: '2c9e0d4c8a37e9f31e3d59361f48b0dc',
