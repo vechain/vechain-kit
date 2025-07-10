@@ -29,17 +29,14 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
     const { connection } = useWallet();
     const { preferences } = useGasTokenSelection();
 
-    // If developer has configured fee delegation, don't show gas info
     if (config?.feeDelegation?.delegatorUrl) {
         return null;
     }
 
-    // For DAppKit users (VeWorld), gas is handled by wallet so don't show
     if (connection.isConnectedWithDappKit) {
         return null;
     }
 
-    // Use default clauses if none provided
     const estimationClauses = useMemo(() => {
         if (!clauses || clauses.length === 0) {
             return [
@@ -53,7 +50,6 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
         return clauses;
     }, [clauses]);
 
-    // Use the React Query hook
     const {
         data: estimation,
         isLoading,
@@ -62,18 +58,14 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
         clauses: estimationClauses,
     });
 
-    // Get the first priority token
     const primaryToken = preferences.tokenPriority[0];
     const tokenInfo = SUPPORTED_GAS_TOKENS[primaryToken];
 
-    // Get cost for the selected token and speed
     const getCostForToken = (token: GasTokenType): number => {
         if (!estimation) return 0;
 
-        // Use regular speed by default
+        // regular speed by default
         const speedCost = estimation.transactionCost.regular;
-
-        // For smart account users, use the smart account cost
         const isSmartAccount = connection.isConnectedWithPrivy;
 
         switch (token) {
