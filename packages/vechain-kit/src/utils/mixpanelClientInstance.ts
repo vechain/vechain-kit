@@ -588,6 +588,21 @@ const Analytics = {
         appearanceSettingsViewed: () =>
             Analytics.settings.trackSettings('appearance_settings_view'),
 
+        gasTokenSettingsViewed: () =>
+            Analytics.settings.trackSettings('gas_token_settings_view'),
+
+        gasTokenReordered: () =>
+            Analytics.settings.trackSettings('gas_token_reordered'),
+
+        gasTokenConfirmationToggled: (enabled: boolean) =>
+            Analytics.settings.trackSettings('gas_token_confirmation_toggled', { enabled } as any),
+
+        gasTokenCostBreakdownToggled: (enabled: boolean) =>
+            Analytics.settings.trackSettings('gas_token_cost_breakdown_toggled', { enabled } as any),
+
+        gasTokenSettingsReset: () =>
+            Analytics.settings.trackSettings('gas_token_settings_reset'),
+
         manageSecuritySettings: () =>
             Analytics.settings.trackSettings('manage_security_settings'),
 
