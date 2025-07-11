@@ -19,6 +19,7 @@ import {
     MdCurrencyExchange,
     MdOutlineNavigateNext,
     MdPrivacyTip,
+    MdLocalGasStation,
 } from 'react-icons/md';
 
 import { ActionButton } from '../../Components';
@@ -110,12 +111,26 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             title={t('Language')}
                             style={{
                                 borderTopRadius: '0px',
+                                borderBottomRadius: '0px',
                             }}
                             onClick={() => {
                                 Analytics.settings.languageSettingsViewed();
                                 setCurrentContent('change-language');
                             }}
                             leftIcon={IoLanguage}
+                            rightIcon={MdOutlineNavigateNext}
+                        />
+
+                        <ActionButton
+                            title={t('Gas Token Preferences')}
+                            style={{
+                                borderTopRadius: '0px',
+                            }}
+                            onClick={() => {
+                                Analytics.settings.gasTokenSettingsViewed();
+                                setCurrentContent('gas-token-settings');
+                            }}
+                            leftIcon={MdLocalGasStation}
                             rightIcon={MdOutlineNavigateNext}
                         />
                     </VStack>

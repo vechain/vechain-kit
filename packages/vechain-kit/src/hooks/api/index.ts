@@ -10,3 +10,4 @@ export * from './blockchain';
 export * from './nfts';
 export * from './smartAccount';
 export * from './erc20';
+export * from './useGasEstimation';

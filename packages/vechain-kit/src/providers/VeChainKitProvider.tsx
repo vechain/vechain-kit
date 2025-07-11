@@ -152,26 +152,13 @@ const validateConfig = (
 ) => {
     const errors: string[] = [];
 
-    // Check if fee delegation is required based on conditions
-    const requiresFeeDelegation =
-        props.privy !== undefined ||
-        props.loginMethods?.some(
-            (method) =>
-                method.method === 'vechain' || method.method === 'ecosystem',
-        );
-
-    // Validate fee delegation
-    if (requiresFeeDelegation) {
-        if (!props.feeDelegation) {
+    // Fee delegation is now optional - Generic Delegator can be used as fallback
+    // Only validate if feeDelegation is provided
+    if (props.feeDelegation) {
+        if (!props.feeDelegation.delegatorUrl) {
             errors.push(
-                'feeDelegation configuration is required when using Privy or vechain login method',
+                'feeDelegation.delegatorUrl is required when feeDelegation is configured',
             );
-        } else {
-            if (!props.feeDelegation || !props.feeDelegation.delegatorUrl) {
-                errors.push(
-                    'feeDelegation.delegatorUrl is required when using Privy or vechain login method',
-                );
-            }
         }
     }
 
