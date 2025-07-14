@@ -11,7 +11,7 @@ import {
 import { FiInfo } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useGasTokenSelection } from '@/hooks/transactions';
+import { useGasTokenSelection } from '@/hooks/thor/transactions';
 import { useMemo } from 'react';
 import { SUPPORTED_GAS_TOKENS, GasTokenType } from '@/types/GasToken';
 import { formatGasCost } from '@/types/GasEstimation';
@@ -58,7 +58,7 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
         clauses: estimationClauses,
     });
 
-    const primaryToken = preferences.tokenPriority[0];
+    const primaryToken = preferences.tokenPriority[0] as GasTokenType;
     const tokenInfo = SUPPORTED_GAS_TOKENS[primaryToken];
 
     const getCostForToken = (token: GasTokenType): number => {

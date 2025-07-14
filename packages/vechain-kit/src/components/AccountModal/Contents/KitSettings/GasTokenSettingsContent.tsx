@@ -20,7 +20,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useTranslation } from 'react-i18next';
 import { MdRefresh } from 'react-icons/md';
 import { AccountModalContentTypes } from '../../Types';
-import { useGasTokenSelection } from '@/hooks/transactions/useGasTokenSelection';
+import { useGasTokenSelection } from '@/hooks/thor/transactions/useGasTokenSelection';
 import { GasTokenType } from '@/types/GasToken';
 import { GasTokenDragList } from './GasTokenDragList';
 import { useCallback } from 'react';

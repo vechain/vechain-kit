@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useLocalStorage } from '../cache';
+import { useLocalStorage, LocalStorageKey } from '@/hooks/cache';
 import {
     GasTokenPreferences,
     GasTokenType,
@@ -45,13 +45,13 @@ const checkTokenBalance = async (
 
 export const useGasTokenSelection = () => {
     const [preferences, setPreferences] = useLocalStorage<GasTokenPreferences>(
-        'gas-token-preferences',
+        LocalStorageKey.GAS_TOKEN_PREFERENCES,
         DEFAULT_GAS_TOKEN_PREFERENCES,
     );
 
     const availableTokens = useMemo(() => {
         return preferences.tokenPriority.filter(
-            (token) => !preferences.excludedTokens.includes(token),
+            (token: GasTokenType) => !preferences.excludedTokens.includes(token),
         );
     }, [preferences]);
 
@@ -151,7 +151,7 @@ export const useGasTokenSelection = () => {
 
     const updatePreferences = useCallback(
         (updates: Partial<GasTokenPreferences>) => {
-            setPreferences((prev) => ({ ...prev, ...updates }));
+            setPreferences((prev: GasTokenPreferences) => ({ ...prev, ...updates }));
         },
         [setPreferences],
     );
@@ -167,7 +167,7 @@ export const useGasTokenSelection = () => {
         (token: GasTokenType) => {
             const isExcluded = preferences.excludedTokens.includes(token);
             const newExcluded = isExcluded
-                ? preferences.excludedTokens.filter((t) => t !== token)
+                ? preferences.excludedTokens.filter((t: GasTokenType) => t !== token)
                 : [...preferences.excludedTokens, token];
 
             updatePreferences({ excludedTokens: newExcluded });

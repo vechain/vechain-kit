@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createGasEstimationService } from '@/services/api';
 import { EstimationResponse } from '@/types/GasEstimation';
 import { EnhancedClause } from '@/types';
-import { GENERIC_DELEGATOR_URL } from '@/utils/Constants';
+import { GENERIC_DELEGATOR_URL } from '@/utils/constants';
 
 export interface UseGasEstimationParams {
     clauses: EnhancedClause[];
