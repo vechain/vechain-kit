@@ -3,10 +3,9 @@ import {
     useAccountBalance,
     useGetB3trBalance,
     useGetVot3Balance,
-    useGetVeDelegateBalance,
     useGetErc20Balance,
     useGetCustomTokenBalances,
-} from '..';
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 
@@ -16,11 +15,7 @@ export type WalletTokenBalance = {
     balance: string;
 };
 
-type UseTokenBalancesProps = {
-    address?: string;
-};
-
-export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
+export const useTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();
     const config = getConfig(network.type);
 
@@ -31,7 +26,7 @@ export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
     const { data: vot3Balance, isLoading: vot3Loading } =
         useGetVot3Balance(address);
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
-        useGetVeDelegateBalance(address);
+        useGetErc20Balance(config.veDelegateTokenContractAddress, address);
     const { data: gloDollarBalance, isLoading: gloDollarLoading } =
         useGetErc20Balance(config.gloDollarContractAddress, address);
 

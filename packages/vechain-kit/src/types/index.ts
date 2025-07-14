@@ -1,9 +1,9 @@
-import { LegalDocument } from '@/providers';
-
-export * from './Types';
+export * from './types';
 export * from './ensTextRecords';
 export * from './GasToken';
 export * from './GasEstimation';
+
+import { LegalDocument } from '@/providers';
 
 export enum LegalDocumentType {
     TERMS = 'terms',

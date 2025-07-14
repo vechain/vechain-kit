@@ -30,6 +30,26 @@ export function FAQSection() {
             question: 'How is the VeChain Kit implemented?',
             answer: "Developers can easily implement the VeChain Kit by installing the package, customizing its appearance and functionality to match their application's needs, and utilizing the provided hooks and components. End users interact with the Kit to authenticate, manage digital assets, and access important blockchain tools—all within the familiar environment of their favorite applications, without needing to understand the underlying blockchain technology.",
         },
+        {
+            question: 'Is VeChain Kit free to use?',
+            answer: "Yes, VeChain Kit is completely free to use. You only need to pay if you want to use your own Privy account for additional customization and control. The shared VeChain Privy integration doesn't incur any costs for developers.",
+        },
+        {
+            question: 'What are the limitations when using VeChain Kit?',
+            answer: "When using the shared VeChain Kit integration, there are some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions. For full customization freedom, you would need to create your own Privy account.",
+        },
+        {
+            question: 'Which dApps are currently using VeChain Kit?',
+            answer: 'Several dApps are already using VeChain Kit, including: scoopup, vetrade, betterswap, solarwise, vepet, velottery, and eatgreen. You can see an example of how it looks with a custom Privy setup at governance.vebetterdao.org.',
+        },
+        {
+            question: 'Can I customize the login methods shown to users?',
+            answer: 'With the shared VeChain Kit integration, you cannot limit the login methods to specific options (like email-only). All available login options will be shown to users. If you need to target specific login methods, you would need to use your own Privy account.',
+        },
+        {
+            question: 'Do users need to sign transactions to receive rewards?',
+            answer: 'It depends on how you structure your application. In many cases, users should not need to sign anything to receive rewards - this can be handled on the backend. However, users will need to confirm transactions and signings when they initiate actions, similar to how they would with a normal wallet connection.',
+        },
     ];
 
     return (

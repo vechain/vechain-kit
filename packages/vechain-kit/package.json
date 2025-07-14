@@ -1,7 +1,6 @@
 {
   "name": "@vechain/vechain-kit",
-  "version": "1.8.4",
-  "private": false,
+  "version": "2.0.0-rc.5",
   "homepage": "https://github.com/vechain/vechain-kit",
   "repository": "github:vechain/vechain-kit",
   "license": "MIT",
@@ -34,10 +33,8 @@
     "@solana/web3.js": "^1.98.0",
     "@tanstack/react-query": "^5.64.2",
     "@tanstack/react-query-devtools": "^5.64.1",
-    "@vechain/dapp-kit-react": "1.5.1",
+    "@vechain/dapp-kit-react": "2.0.1",
     "@vechain/picasso": "^2.1.1",
-    "@vechain/sdk-core": "^1.2.0-rc.3",
-    "@vechain/sdk-network": "^1.2.0-rc.3",
     "@vechain/vebetterdao-contracts": "^4.1.0",
     "@wagmi/core": "^2.17.2",
     "axios": "^1.10.0",
@@ -82,28 +79,18 @@
   "peerDependencies": {
     "@chakra-ui/react": "^2.8.2",
     "@tanstack/react-query": "^5.64.2",
-    "@vechain/dapp-kit-react": "1.5.1"
+    "@vechain/dapp-kit-react": "2.0.1"
   },
   "peerDependenciesMeta": {
-    "@vechain/dapp-kit-react": {
+    "@chakra-ui/react": {
       "optional": true
     },
     "@tanstack/react-query": {
       "optional": true
     },
-    "@chakra-ui/react": {
+    "@vechain/dapp-kit-react": {
       "optional": true
     }
-  },
-  "resolutions": {
-    "@vechain/sdk-core": "^1.2.0-rc.3",
-    "@vechain/sdk-network": "^1.2.0-rc.3",
-    "@vechain/dapp-kit-ui": "1.5.1",
-    "@vechain/dapp-kit": "1.5.1"
-  },
-  "overrides": {
-    "@vechain/sdk-core": "^1.2.0-rc.3",
-    "@vechain/sdk-network": "^1.2.0-rc.3"
   },
   "exports": {
     ".": {

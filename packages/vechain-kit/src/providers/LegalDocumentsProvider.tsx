@@ -1,6 +1,5 @@
 import { LegalDocumentsModal } from '@/components/LegalDocumentsModal';
-import { useWallet } from '@/hooks';
-import { useSyncableLocalStorage } from '@/hooks/cache';
+import { useWallet, useSyncableLocalStorage } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import {
     EnrichedLegalDocument,
@@ -8,8 +7,8 @@ import {
     LegalDocumentSource,
     LegalDocumentType,
 } from '@/types';
-import { compareAddresses } from '@/utils/AddressUtils';
-import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils/Constants';
+import { compareAddresses } from '@/utils';
+import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils';
 import {
     createDocumentRecords,
     formatDocuments,
@@ -50,9 +49,14 @@ const LegalDocumentsContext = createContext<
 export const useLegalDocuments = () => {
     const context = useContext(LegalDocumentsContext);
     if (!context) {
-        throw new Error(
-            'useLegalDocuments must be used within LegalDocumentsProvider',
-        );
+        // This fallback is used to avoid errors when the context is not available
+        return {
+            hasAgreedToRequiredDocuments: true,
+            agreements: [],
+            walletAddress: undefined,
+            documents: [],
+            documentsNotAgreed: [],
+        };
     }
     return context;
 };

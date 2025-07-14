@@ -4,8 +4,8 @@ import { useTokenPrices } from './useTokenPrices';
 import {
     SupportedCurrency,
     convertToSelectedCurrency,
-} from '@/utils/currencyConverter';
-import { useCurrency } from './useCurrency';
+} from '@/utils/currencyUtils';
+import { useCurrency } from '../../utils/useCurrency';
 
 export type TokenWithValue = WalletTokenBalance & {
     priceUsd: number;
@@ -20,9 +20,7 @@ type UseTokensWithValuesProps = {
 export const useTokensWithValues = ({
     address = '',
 }: UseTokensWithValuesProps) => {
-    const { balances, isLoading: balancesLoading } = useTokenBalances({
-        address,
-    });
+    const { balances, isLoading: balancesLoading } = useTokenBalances(address);
     const {
         prices,
         exchangeRates,

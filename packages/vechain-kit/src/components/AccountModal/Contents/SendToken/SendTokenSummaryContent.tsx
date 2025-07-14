@@ -31,15 +31,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/StringUtils';
-import { useCurrency } from '@/hooks/api/wallet';
-import { formatCompactCurrency } from '@/utils/currencyConverter';
-
-const summaryFormatter = new Intl.NumberFormat('de-DE', {
-    notation: 'standard',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
+import { isRejectionError } from '@/utils/stringUtils';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -50,6 +42,7 @@ export type SendTokenSummaryContentProps = {
     resolvedAddress?: string;
     amount: string;
     selectedToken: TokenWithValue;
+    formattedTotalAmount: string;
 };
 
 export const SendTokenSummaryContent = ({
@@ -59,6 +52,7 @@ export const SendTokenSummaryContent = ({
     resolvedAddress,
     amount,
     selectedToken,
+    formattedTotalAmount,
 }: SendTokenSummaryContentProps) => {
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
@@ -71,7 +65,6 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-    const { currentCurrency } = useCurrency();
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {
@@ -303,15 +296,15 @@ export const SendTokenSummaryContent = ({
                                     textAlign="left"
                                     data-testid="send-summary-amount"
                                 >
-                                    {summaryFormatter.format(Number(amount))}{' '}
+                                    {Number(amount).toLocaleString(undefined, {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}{' '}
                                     {selectedToken.symbol}
                                 </Text>
                                 <Text opacity={0.5}>
                                     ≈{' '}
-                                    {formatCompactCurrency(
-                                        Number(amount) * selectedToken.priceUsd,
-                                        currentCurrency,
-                                    )}
+                                    {formattedTotalAmount}
                                 </Text>
                             </HStack>
                         </VStack>

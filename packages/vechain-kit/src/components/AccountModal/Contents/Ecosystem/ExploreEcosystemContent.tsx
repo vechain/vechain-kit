@@ -26,7 +26,7 @@ import {
     useMostVotedAppsInRound,
     XAppMetadata,
 } from '@/hooks';
-import { useAppHubApps, AppHubApp } from '@/hooks/api/utility/useAppHubApps';
+import { useAppHubApps, AppHubApp } from '@/hooks';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
@@ -66,6 +66,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         ve_world: {
             banner: 'https://i.ibb.co/cgJBj83/vbd.png',
         },
+        categories: [],
     },
     {
         name: 'vet.domains',
@@ -81,6 +82,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         ve_world: {
             banner: 'https://vet.domains/assets/walletconnect.png',
         },
+        categories: [],
     },
     // {
     //     name: 'VeChain Kit',
@@ -162,17 +164,7 @@ export const ExploreEcosystemContent = ({
     // Filter default apps based on search query
     const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
         dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    ).map((dapp) => {
-        if (dapp.logoComponent) {
-            return {
-                ...dapp,
-                logoComponent: React.cloneElement(dapp.logoComponent, {
-                    isDark,
-                }),
-            };
-        }
-        return dapp;
-    });
+    );
 
     // Filter App Hub apps based on search query and selected category
     const filteredAppHubApps =
@@ -287,10 +279,6 @@ export const ExploreEcosystemContent = ({
                                                 selectedCategory={
                                                     currentCategory
                                                 }
-                                                {...(dapp.logoComponent && {
-                                                    logoComponent:
-                                                        dapp.logoComponent,
-                                                })}
                                             />
                                         </GridItem>
                                     ))}

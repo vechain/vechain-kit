@@ -3,10 +3,11 @@
 import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
 import { MdSend } from 'react-icons/md';
 import { FaCode } from 'react-icons/fa';
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
+    useThor,
     useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
@@ -18,23 +19,7 @@ import { b3trMainnetAddress } from '../../../constants';
 
 export function TransactionExamples() {
     const { account } = useWallet();
-
-    const clauseBuilder = useCallback(() => {
-        const B3TRInterface = IB3TR__factory.createInterface();
-
-        return [
-            {
-                to: b3trMainnetAddress,
-                value: '0x0',
-                data: B3TRInterface.encodeFunctionData('transfer', [
-                    account?.address ?? '',
-                    '0',
-                ]),
-                comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
-                abi: B3TRInterface.getFunction('transfer'),
-            },
-        ];
-    }, [account?.address]);
+    const thor = useThor();
 
     const {
         sendTransaction,
@@ -44,7 +29,18 @@ export function TransactionExamples() {
         error,
         resetStatus,
     } = useBuildTransaction({
-        clauseBuilder,
+        clauseBuilder: () => {
+            if (!account?.address) return [];
+
+            return [
+                {
+                    ...thor.contracts
+                        .load(b3trMainnetAddress, IB3TR__factory.abi)
+                        .clause.transfer(account.address, '0').clause,
+                    comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
+                },
+            ];
+        },
     });
 
     const {

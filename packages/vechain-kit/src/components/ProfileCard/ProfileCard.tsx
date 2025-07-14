@@ -22,6 +22,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
+import { useModal } from '@/providers/ModalProvider';
 
 export type ProfileCardProps = {
     address: string;
@@ -51,8 +52,9 @@ export const ProfileCard = ({
     style,
 }: ProfileCardProps) => {
     const { t } = useTranslation();
-    const { account } = useWallet();
+    const { account, disconnect } = useWallet();
     const { network } = useVeChainKitConfig();
+    const { openAccountModal, closeAccountModal } = useModal();
 
     const metadata = useWalletMetadata(address, network.type);
 
@@ -193,7 +195,14 @@ export const ProfileCard = ({
                                 height="40px"
                                 variant="ghost"
                                 leftIcon={<Icon as={FaEdit} />}
-                                onClick={onEditClick ?? (() => {})}
+                                onClick={onEditClick ?? (() => {
+                                    openAccountModal({
+                                        type: 'account-customization',
+                                        props: {
+                                            setCurrentContent: () => closeAccountModal(),
+                                        },
+                                    });
+                                })}
                                 data-testid="customize-button"
                             >
                                 {t('Customize')}
@@ -205,7 +214,18 @@ export const ProfileCard = ({
                                 variant="ghost"
                                 leftIcon={<Icon as={RiLogoutBoxLine} />}
                                 colorScheme="red"
-                                onClick={onLogout}
+                                onClick={onLogout ?? (() => {
+                                    openAccountModal({
+                                        type: 'disconnect-confirm',
+                                            props: {
+                                                onDisconnect: () => {
+                                                    disconnect();
+                                                    closeAccountModal();
+                                                },
+                                                onBack: () => closeAccountModal(),
+                                            },
+                                        });
+                                })}
                                 data-testid="logout-button"
                             >
                                 {t('Logout')}

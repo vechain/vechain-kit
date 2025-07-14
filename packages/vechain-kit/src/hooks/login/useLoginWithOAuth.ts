@@ -5,7 +5,7 @@ import {
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod, VePrivySocialLoginMethod } from '@/types/mixPanel';
 import { usePrivy } from '@privy-io/react-auth';
-import { isRejectionError } from '@/utils/StringUtils';
+import { isRejectionError } from '@/utils/stringUtils';
 
 type OAuthProvider = 'google' | 'twitter' | 'apple' | 'discord';
 
