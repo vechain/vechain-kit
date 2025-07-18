@@ -38,6 +38,7 @@
     "@vechain/vebetterdao-contracts": "^4.1.0",
     "@vechain/vechain-contracts": "^1.0.0",
     "@wagmi/core": "^2.17.2",
+    "axios": "^1.10.0",
     "bignumber.js": "^9.1.2",
     "browser-image-compression": "^2.0.2",
     "buffer": "^6.0.3",
