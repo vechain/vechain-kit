@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { XAllocationVoting__factory } from '@/contracts';
+import { XAllocationVoting__factory } from '@vechain/vechain-contracts';
 import { useCallClause, getCallClauseQueryKey } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 

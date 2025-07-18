@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@/contracts';
+import { SimpleAccountFactory__factory } from '@vechain/vechain-contracts';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';

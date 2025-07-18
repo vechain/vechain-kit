@@ -4,7 +4,7 @@ import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { SimpleAccountFactory__factory } from '@/contracts';
+import { SimpleAccountFactory__factory } from '@vechain/vechain-contracts';
 import { useThor } from '@vechain/dapp-kit-react';
 
 export interface SmartAccountReturnType {

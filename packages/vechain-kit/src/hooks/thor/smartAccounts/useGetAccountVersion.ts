@@ -1,4 +1,4 @@
-import { SimpleAccountFactory__factory } from '@/contracts';
+import { SimpleAccountFactory__factory } from '@vechain/vechain-contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';

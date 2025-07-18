@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { ERC20__factory } from '@/contracts';
+import { ERC20__factory } from '@vechain/vechain-contracts';
 import { formatEther } from 'viem';
 import { humanNumber } from '@/utils';
 import { useCustomTokens, type CustomTokenInfo } from '@/hooks';

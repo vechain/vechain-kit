@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { ERC20__factory } from '@/contracts';
+import { ERC20__factory } from '@vechain/vechain-contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { ThorClient } from '@vechain/sdk-network';
 

@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { XAllocationVoting__factory } from '@/contracts';
+import { XAllocationVoting__factory } from '@vechain/vechain-contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 

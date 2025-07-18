@@ -7390,6 +7390,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/vechain-contracts@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@vechain/vechain-contracts@npm:1.0.0"
+  dependencies:
+    ethers: "npm:^6.13.5"
+  peerDependencies:
+    ethers: ^6.0.0
+  checksum: 10c0/05902e90757d6aae421347c56bda9ddb1c9deb899607ced3971b57200acb3299ac36c35be7efecffdf41ec8901346c27c29d192ee113568e15c390d13e78df5a
+  languageName: node
+  linkType: hard
+
 "@vechain/vechain-kit@workspace:*, @vechain/vechain-kit@workspace:packages/vechain-kit":
   version: 0.0.0-use.local
   resolution: "@vechain/vechain-kit@workspace:packages/vechain-kit"
@@ -7409,6 +7420,7 @@ __metadata:
     "@vechain/dapp-kit-react": "npm:2.0.1"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
+    "@vechain/vechain-contracts": "npm:^1.0.0"
     "@wagmi/core": "npm:^2.17.2"
     bignumber.js: "npm:^9.1.2"
     browser-image-compression: "npm:^2.0.2"

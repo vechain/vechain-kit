@@ -4,7 +4,6 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
     entry: {
         index: 'src/index.ts',
-        'contracts/index': 'src/contracts/index.ts',
         'utils/index': 'src/utils/index.ts',
         'assets/index': 'src/assets/index.ts',
     },

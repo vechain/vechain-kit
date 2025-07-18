@@ -36,6 +36,7 @@
     "@vechain/dapp-kit-react": "2.0.1",
     "@vechain/picasso": "^2.1.1",
     "@vechain/vebetterdao-contracts": "^4.1.0",
+    "@vechain/vechain-contracts": "^1.0.0",
     "@wagmi/core": "^2.17.2",
     "bignumber.js": "^9.1.2",
     "browser-image-compression": "^2.0.2",
@@ -95,10 +96,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./contracts": {
-      "types": "./dist/contracts/index.d.ts",
-      "default": "./dist/contracts/index.js"
     },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
