@@ -146,9 +146,8 @@ export const useSendTransaction = ({
 
             const txBody = await thor.transactions.buildTransactionBody(
                 _clauses,
-                estimatedGas,
+                suggestedMaxGas ?? estimatedGas, //Provide either the suggested max gas (gas Limit) or the estimated gas
                 {
-                    gasLimit: suggestedMaxGas?.toString(),
                     // TODO: kit-migration check how to pass the delegator url
                     isDelegated: feeDelegation?.delegateAllTransactions,
                 },
