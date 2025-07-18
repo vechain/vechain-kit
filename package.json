@@ -6,8 +6,7 @@
     "workspaces": [
         "examples/*",
         "!examples/test-tailwind-vck",
-        "packages/*",
-        "contracts"
+        "packages/*"
     ],
     "scripts": {
         "install:all": "yarn && yarn run build:deps",
@@ -63,8 +62,5 @@
         "typescript": "4.9.5",
         "typescript-eslint": "^8.11.0"
     },
-    "packageManager": "yarn@4.5.1",
-    "dependencies": {
-        "@vechain/vechain-contracts": "^1.0.0"
-    }
+    "packageManager": "yarn@4.5.1"
 }

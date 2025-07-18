@@ -14,7 +14,7 @@ import {
     TransactionModal,
     TransactionToast,
 } from '@vechain/vechain-kit';
-import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
+import { IB3TR__factory } from '@vechain/vechain-contracts';
 import { b3trMainnetAddress } from '../../../constants';
 
 export function TransactionExamples() {
