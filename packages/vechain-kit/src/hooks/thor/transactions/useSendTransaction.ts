@@ -31,6 +31,7 @@ type UseSendTransactionProps = {
         description?: string;
         buttonText?: string;
     };
+    gasPadding?: number;
 };
 
 /**
@@ -93,6 +94,7 @@ export const useSendTransaction = ({
     onTxFailedOrCancelled,
     suggestedMaxGas,
     privyUIOptions,
+    gasPadding,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const thor = useThor();
     const { signer } = useDAppKitWallet();
@@ -139,6 +141,10 @@ export const useSendTransaction = ({
                     thor,
                     [..._clauses],
                     signerAccountAddress,
+                    {
+                        revision: 'next',
+                        ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
+                    },
                 );
             } catch (e) {
                 console.error('Gas estimation failed', e);
