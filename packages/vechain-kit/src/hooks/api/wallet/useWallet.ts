@@ -15,13 +15,20 @@ import {
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
+import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useState } from 'react';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { useWalletMetadata } from './useWalletMetadata';
+import {
+    ThorClient,
+    VeChainAbstractSigner,
+    VeChainProvider,
+} from '@vechain/sdk-network';
+import { SmartAccountSigner } from '@/signers/SmartAccountSigner';
+import { getConfig } from '@/config';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -35,6 +42,8 @@ export type UseWalletReturnType = {
 
     // Privy user if user is connected with privy
     privyUser: User | null;
+
+    signer: VeChainAbstractSigner | null;
 
     // Connection status
     connection: {
@@ -67,10 +76,15 @@ export const useWallet = (): UseWalletReturnType => {
     const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
     const { feeDelegation, network, privy } = useVeChainKitConfig();
+    const privyWalletProvider = usePrivyWalletProvider();
+
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
-    const { account: dappKitAccount, disconnect: dappKitDisconnect } =
-        useDAppKitWallet();
+    const {
+        account: dappKitAccount,
+        disconnect: dappKitDisconnect,
+        signer: dappKitSigner,
+    } = useDAppKitWallet();
 
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
@@ -200,6 +214,28 @@ export const useWallet = (): UseWalletReturnType => {
         smartAccount?.address ?? '',
     );
 
+    const getSigner = useCallback(() => {
+        const config = getConfig(network.type);
+        const provider = new VeChainProvider(ThorClient.at(config.nodeUrl));
+        if (isConnectedWithDappKit) {
+            return dappKitSigner;
+        } else if (isConnectedWithSocialLogin) {
+            return new SmartAccountSigner(
+                {
+                    address: smartAccount?.address,
+                    sendTransaction: privyWalletProvider.sendTransaction,
+                },
+                provider,
+            );
+        }
+        return null;
+    }, [
+        isConnectedWithDappKit,
+        dappKitSigner,
+        isConnectedWithSocialLogin,
+        smartAccount,
+    ]);
+
     const hasActiveSmartAccount =
         !!smartAccount?.address &&
         !!account?.address &&
@@ -266,5 +302,6 @@ export const useWallet = (): UseWalletReturnType => {
             network: network.type,
         },
         disconnect,
+        signer: getSigner(),
     };
 };
