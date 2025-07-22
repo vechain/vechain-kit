@@ -10,6 +10,7 @@ export type BuildTransactionProps<ClausesParams> = {
     onSuccess?: () => void;
     invalidateCache?: boolean;
     suggestedMaxGas?: number;
+    gasPadding?: number;
     onFailure?: () => void;
 };
 
@@ -21,6 +22,7 @@ export type BuildTransactionProps<ClausesParams> = {
  * @param onSuccess - An optional callback function to be called after the transaction is successfully sent.
  * @param onFailure - An optional callback function to be called after the transaction is failed or cancelled.
  * @param suggestedMaxGas - The suggested maximum gas for the transaction.
+ * @param gasPadding - The padding to add to the suggested maximum gas.
  * @returns An object containing the result of the `useSendTransaction` hook and a `sendTransaction` function.
  */
 export const useBuildTransaction = <ClausesParams>({
@@ -30,6 +32,7 @@ export const useBuildTransaction = <ClausesParams>({
     onSuccess,
     onFailure,
     suggestedMaxGas,
+    gasPadding,
 }: BuildTransactionProps<ClausesParams>) => {
     const { account } = useWallet();
     const queryClient = useQueryClient();
@@ -58,6 +61,7 @@ export const useBuildTransaction = <ClausesParams>({
         onTxConfirmed: handleOnSuccess,
         suggestedMaxGas,
         onTxFailedOrCancelled: onFailure,
+        gasPadding,
     });
 
     /**
