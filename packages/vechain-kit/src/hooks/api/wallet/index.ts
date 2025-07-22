@@ -12,7 +12,6 @@ export * from './useMostVotedAppsInRound';
 export * from './useRefreshBalances';
 export * from './useRefreshMetadata';
 export * from './useRoundXApps';
-export * from './useSigner';
 export * from './useTokenBalances';
 export * from './useTokenPrices';
 export * from './useTokensWithValues';

@@ -2,12 +2,7 @@
 
 import { useEffect, type ReactElement } from 'react';
 import { Button, Container, Spinner, VStack } from '@chakra-ui/react';
-import {
-    usePrivyWalletProvider,
-    useWallet,
-    WalletButton,
-    useSigner,
-} from '@vechain/vechain-kit';
+import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { AccountInfo } from '@/app/components/features/AccountInfo';
 import { ConnectionInfo } from '@/app/components/features/ConnectionInfo';
 import { DaoInfo } from '@/app/components/features/DaoInfo';
@@ -21,8 +16,7 @@ import { ThorClient } from '@vechain/sdk-network';
 import { ERC20_ABI, VTHO_ADDRESS } from '@vechain/sdk-core';
 
 export default function Home(): ReactElement {
-    const { account, connection } = useWallet();
-    const signer = useSigner();
+    const { account, connection, signer } = useWallet();
 
     const thorClient = ThorClient.at('https://testnet.vechain.org');
     const contract = thorClient.contracts.load(VTHO_ADDRESS, ERC20_ABI);
