@@ -19,6 +19,8 @@ import { TransactionClause } from '@vechain/sdk-core';
  * @param onTxConfirmed callback to run when the tx is confirmed
  * @param onTxFailedOrCancelled callback to run when the tx fails or is cancelled
  * @param suggestedMaxGas the suggested max gas for the transaction
+ * @param privyUIOptions options to pass to the Privy UI
+ * @param gasPadding the gas padding to use for the transaction (Eg. 0.1 for 10%)
  */
 type UseSendTransactionProps = {
     signerAccountAddress?: string | null;
@@ -31,6 +33,7 @@ type UseSendTransactionProps = {
         description?: string;
         buttonText?: string;
     };
+    gasPadding?: number;
 };
 
 /**
@@ -84,6 +87,7 @@ export type UseSendTransactionReturnValue = {
  * @param onTxFailedOrCancelled callback to run when the tx fails or is cancelled
  * @param suggestedMaxGas the suggested max gas for the transaction
  * @param privyUIOptions options to pass to the Privy UI
+ * @param gasPadding the gas padding to use for the transaction (Eg. 0.1 for 10%)
  * @returns see {@link UseSendTransactionReturnValue}
  */
 export const useSendTransaction = ({
@@ -93,6 +97,7 @@ export const useSendTransaction = ({
     onTxFailedOrCancelled,
     suggestedMaxGas,
     privyUIOptions,
+    gasPadding,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const thor = useThor();
     const { signer } = useDAppKitWallet();
@@ -139,6 +144,10 @@ export const useSendTransaction = ({
                     thor,
                     [..._clauses],
                     signerAccountAddress,
+                    {
+                        revision: 'next',
+                        ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
+                    },
                 );
             } catch (e) {
                 console.error('Gas estimation failed', e);
