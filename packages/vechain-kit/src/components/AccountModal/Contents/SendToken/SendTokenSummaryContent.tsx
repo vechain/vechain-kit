@@ -13,6 +13,7 @@ import {
     StickyHeaderContainer,
     AddressDisplayCard,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
@@ -307,6 +308,8 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
+
+                        <GasFeeSummary />
                     </VStack>
                 </VStack>
             </ModalBody>

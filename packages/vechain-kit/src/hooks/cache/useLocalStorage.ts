@@ -6,6 +6,7 @@ export enum LocalStorageKey {
     CURRENCY = 'vechain_kit_currency',
     NODE_URL = 'vechain_kit_node_url',
     NETWORK = 'vechain_kit_network',
+    GAS_TOKEN_PREFERENCES = 'gas-token-preferences',
 }
 
 export const useLocalStorage = <T>(key: LocalStorageKey, initialValue: T) => {
