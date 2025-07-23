@@ -51,7 +51,7 @@ export const useLegalDocuments = () => {
     if (!context) {
         // This fallback is used to avoid errors when the context is not available
         return {
-            hasAgreedToRequiredDocuments: true,
+            hasAgreedToRequiredDocuments: false,
             agreements: [],
             walletAddress: undefined,
             documents: [],
