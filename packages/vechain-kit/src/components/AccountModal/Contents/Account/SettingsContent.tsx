@@ -21,6 +21,7 @@ import { FaRegAddressCard } from 'react-icons/fa';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CgProfile } from 'react-icons/cg';
 import { IoSettingsOutline } from 'react-icons/io5';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -52,9 +53,7 @@ export const SettingsContent = ({
         }
 
         // Check if the user has visited general settings before
-        const hasVisitedGeneral = localStorage.getItem(
-            'settings-general-visited',
-        );
+        const hasVisitedGeneral = getLocalStorageItem('settings-general-visited');
         setShowGeneralRedDot(!hasVisitedGeneral);
     }, []);
 
@@ -104,7 +103,7 @@ export const SettingsContent = ({
 
     const handleGeneralSettings = () => {
         // Mark general settings as visited
-        localStorage.setItem('settings-general-visited', 'true');
+        setLocalStorageItem('settings-general-visited', 'true');
         setShowGeneralRedDot(false);
 
         setCurrentContent('general-settings');

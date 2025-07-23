@@ -1,5 +1,6 @@
 import { CrossAppConnectionCache } from '@/types';
 import { useCallback } from 'react';
+import { getLocalStorageItem, setLocalStorageItem, removeLocalStorageItem } from '@/utils/ssrUtils';
 
 export const useCrossAppConnectionCache = () => {
     const CACHE_KEY = 'vechain_kit_cross_app_connection';
@@ -15,20 +16,20 @@ export const useCrossAppConnectionCache = () => {
                 timestamp: Date.now(),
                 ecosystemApp,
             };
-            localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+            setLocalStorageItem(CACHE_KEY, JSON.stringify(cacheData));
         },
         [],
     );
 
     const getConnectionCache =
         useCallback((): CrossAppConnectionCache | null => {
-            const cached = localStorage.getItem(CACHE_KEY);
+            const cached = getLocalStorageItem(CACHE_KEY);
             if (!cached) return null;
             return JSON.parse(cached) as CrossAppConnectionCache;
         }, []);
 
     const clearConnectionCache = useCallback(() => {
-        localStorage.removeItem(CACHE_KEY);
+        removeLocalStorageItem(CACHE_KEY);
     }, []);
 
     return {

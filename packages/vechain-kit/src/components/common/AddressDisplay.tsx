@@ -13,6 +13,7 @@ import {
 import { useState } from 'react';
 import { IoCopyOutline, IoCheckmarkOutline } from 'react-icons/io5';
 import { humanAddress } from '@/utils';
+import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { HiOutlineWallet } from 'react-icons/hi2';
@@ -40,12 +41,14 @@ export const AddressDisplay = ({
         textToCopy: string,
         setCopied: (value: boolean) => void,
     ) => {
-        await navigator.clipboard.writeText(textToCopy);
-        setCopied(true);
-        setTimeout(() => {
-            setCopied(false);
-        }, 2000);
-        Analytics.user.profile.addressCopied(fromScreen);
+        const success = await safeCopyToClipboard(textToCopy);
+        if (success) {
+            setCopied(true);
+            setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+            Analytics.user.profile.addressCopied(fromScreen);
+        }
     };
 
     return (
