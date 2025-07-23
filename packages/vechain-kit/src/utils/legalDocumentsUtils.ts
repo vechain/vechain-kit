@@ -1,5 +1,5 @@
 import { EnrichedLegalDocument, LegalDocumentAgreement } from '@/types';
-import { getLocalStorageItem, isBrowser } from './ssrUtils';
+import { getLocalStorageItem } from './ssrUtils';
 
 export const LEGAL_DOCS_LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';
 export const LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY =
@@ -40,11 +40,6 @@ export const getOptionalDocuments = (
  */
 export const getStoredAgreements = (): LegalDocumentAgreement[] => {
     try {
-        // Return empty array during SSR
-        if (!isBrowser()) {
-            return [];
-        }
-
         // Try new storage format first
         const storedData = getLocalStorageItem(LEGAL_DOCS_LOCAL_STORAGE_KEY);
         if (storedData) {
@@ -66,11 +61,6 @@ export const getStoredAgreements = (): LegalDocumentAgreement[] => {
  */
 export const getStoredRejectedDocuments = (): LegalDocumentAgreement[] => {
     try {
-        // Return empty array during SSR
-        if (!isBrowser()) {
-            return [];
-        }
-
         const storedData = getLocalStorageItem(
             LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
         );
