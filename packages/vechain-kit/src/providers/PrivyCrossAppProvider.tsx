@@ -14,6 +14,7 @@ import { SignTypedDataParameters } from '@wagmi/core';
 import { VECHAIN_PRIVY_APP_ID } from '../utils';
 import { defineChain } from 'viem';
 import { handlePopupError } from '@/utils/handlePopupError';
+import { isBrowser } from '@/utils/ssrUtils';
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
@@ -98,7 +99,9 @@ export const usePrivyCrossAppSdk = () => {
             if (isConnected) {
                 await disconnectAsync();
                 // Force a state update after disconnect
-                window.dispatchEvent(new Event('wallet_disconnected'));
+                if (isBrowser()) {
+                    window.dispatchEvent(new Event('wallet_disconnected'));
+                }
             }
         } catch (error) {
             console.error('Error during logout:', error);

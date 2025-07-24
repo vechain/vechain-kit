@@ -42,12 +42,14 @@ export class HomePage extends BasePage {
 
     async acceptTnc() {
         return await test.step('Accept Terms & Conditions', async () => {
+            await this.acceptTncButton.waitFor({ state: 'visible', timeout: 10000 });
             await this.acceptTncButton.click();
         });
     }
 
     async rejectTnc() {
         return await test.step('Reject Terms and Conditions', async () => {
+            await this.rejectTncButton.waitFor({ state: 'visible', timeout: 10000 });
             await this.rejectTncButton.click();
         });
     }
@@ -57,6 +59,7 @@ export class HomePage extends BasePage {
             await this.loginButton.click();
             await this.connectWalletButton.click();
             await this.veworldButton.click();
+            
             if (args) {
                 switch (args!.acceptTnc) {
                     case true:

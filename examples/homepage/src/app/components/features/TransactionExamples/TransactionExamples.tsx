@@ -41,6 +41,7 @@ export function TransactionExamples() {
                 },
             ];
         },
+        gasPadding: 0.25, //Testing with 25% padding
     });
 
     const {
