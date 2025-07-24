@@ -18,5 +18,17 @@ export default defineConfig({
     target: 'node18',
     skipNodeModulesBundle: true,
     metafile: true, // Generate meta file for better build analysis
-    dts: true,
+    // Simplified DTS generation to avoid rollup conflicts
+    dts: {
+        resolve: false, // Avoid resolving external types that cause conflicts
+        compilerOptions: {
+            skipLibCheck: true,
+        },
+    },
+    // Performance optimizations
+    define: {
+        'process.env.NODE_ENV': '"production"',
+    },
+    // Faster builds with less overhead
+    shims: false,
 });
