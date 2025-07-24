@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { XAllocationPool__factory } from '@/contracts';
+import { XAllocationPool__factory } from '@vechain/vechain-contract-types';
 import { getConfig } from '@/config';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';

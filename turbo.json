@@ -3,9 +3,17 @@
     "tasks": {
         "gh-pages-build": {},
         "build": {
-            "outputs": ["build/**", "dist/**"],
+            "outputs": ["build/**", "dist/**", ".next/**", "out/**"],
             "dependsOn": ["^build"],
-            "cache": false
+            "inputs": [
+                "src/**",
+                "package.json",
+                "tsconfig.json",
+                "tsup.config.ts",
+                "next.config.js",
+                "tailwind.config.js"
+            ],
+            "cache": true
         },
         "purge": {
             "cache": false
@@ -14,7 +22,10 @@
             "dependsOn": ["build"],
             "cache": false
         },
-        "lint": {},
+        "lint": {
+            "inputs": ["src/**", "eslint.config.mjs", "package.json"],
+            "cache": true
+        },
         "dev": {
             "cache": false,
             "persistent": true
@@ -24,10 +35,16 @@
         },
         "compile": {
             "outputs": ["artifacts/**", "typechain-types/**"],
-            "cache": false
+            "inputs": ["contracts/**", "hardhat.config.ts", "package.json"],
+            "cache": true
         },
         "test": {
-            "cache": false
+            "inputs": ["src/**", "test/**", "tests/**", "package.json"],
+            "cache": true
+        },
+        "typecheck": {
+            "inputs": ["src/**", "tsconfig.json", "package.json"],
+            "cache": true
         }
     }
 }
