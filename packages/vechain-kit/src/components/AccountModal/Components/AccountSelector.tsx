@@ -9,6 +9,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
+import { copyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountAvatar } from '@/components/common';
@@ -32,14 +33,16 @@ export const AccountSelector = ({
 }: Props) => {
     const [copied, setCopied] = useState(false);
 
-    const copyToClipboard = async () => {
-        await navigator.clipboard.writeText(
+    const handleCopyToClipboard = async () => {
+        const success = await copyToClipboard(
             wallet?.domain ?? wallet?.address ?? '',
         );
-        setCopied(true);
-        setTimeout(() => {
-            setCopied(false);
-        }, 2000);
+        if (success) {
+            setCopied(true);
+            setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+        }
     };
     return (
         <HStack
@@ -86,7 +89,7 @@ export const AccountSelector = ({
             <IconButton
                 aria-label="Copy address"
                 icon={<Icon as={copied ? IoCheckmarkOutline : IoCopyOutline} />}
-                onClick={copyToClipboard}
+                onClick={handleCopyToClipboard}
                 variant="ghost"
                 size="sm"
                 opacity={0.5}

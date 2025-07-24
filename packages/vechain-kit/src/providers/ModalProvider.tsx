@@ -13,6 +13,7 @@ import {
     UpgradeSmartAccountModalStyle,
 } from '../components';
 import { useDAppKitWallet } from '@/hooks';
+import { isBrowser } from '@/utils/ssrUtils';
 
 type ModalContextType = {
     // Connect Modal
@@ -59,7 +60,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const { setSource, connect } = useDAppKitWallet();
     const openConnectModal = useCallback(() => {
         // If the user is in the veworld app, connect to the wallet
-        if (window.vechain && window.vechain.isInAppBrowser) {
+        if (isBrowser() && window.vechain && window.vechain.isInAppBrowser) {
             setSource('veworld');
             connect();
         } else {

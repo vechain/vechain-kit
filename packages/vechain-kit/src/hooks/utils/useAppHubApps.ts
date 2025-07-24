@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { AllowedCategories } from '@/components/AccountModal/Contents/Ecosystem/Components/CategoryLabel';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 export type AppHubApp = {
     id: string;
     name: string;
@@ -34,21 +35,23 @@ export const getAppHubAppsQueryKey = () => ['VECHAIN_KIT', 'appHub', 'apps'];
  * @returns A list of apps from the VeChain App Hub
  */
 export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
-    // Check for cached data first
-    try {
-        const cachedData = localStorage.getItem(CACHE_KEY);
-        const cacheExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
+    // Check for cached data first (skip during SSR)
+    if (typeof window !== 'undefined') {
+        try {
+            const cachedData = getLocalStorageItem(CACHE_KEY);
+            const cacheExpiry = getLocalStorageItem(CACHE_EXPIRY_KEY);
 
-        // If we have valid cached data, use it
-        if (cachedData && cacheExpiry) {
-            const expiryTime = parseInt(cacheExpiry, 10);
-            if (Date.now() < expiryTime) {
-                return JSON.parse(cachedData);
+            // If we have valid cached data, use it
+            if (cachedData && cacheExpiry) {
+                const expiryTime = parseInt(cacheExpiry, 10);
+                if (Date.now() < expiryTime) {
+                    return JSON.parse(cachedData);
+                }
             }
+        } catch {
+            // Invalid cache, continue with fetch
+            console.warn('Invalid app-hub cache, fetching fresh data');
         }
-    } catch {
-        // Invalid cache, continue with fetch
-        console.warn('Invalid app-hub cache, fetching fresh data');
     }
 
     // Fetch fresh data from GitHub
@@ -97,15 +100,17 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
     const appsData = await Promise.all(appPromises);
     const validApps = appsData.filter((app) => app !== null) as AppHubApp[];
 
-    // Cache the valid apps data
-    try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(validApps));
-        localStorage.setItem(
-            CACHE_EXPIRY_KEY,
-            (Date.now() + CACHE_EXPIRY_TIME).toString(),
-        );
-    } catch (e) {
-        console.warn('Failed to cache app-hub data:', e);
+    // Cache the valid apps data (skip during SSR)
+    if (typeof window !== 'undefined') {
+        try {
+            setLocalStorageItem(CACHE_KEY, JSON.stringify(validApps));
+            setLocalStorageItem(
+                CACHE_EXPIRY_KEY,
+                (Date.now() + CACHE_EXPIRY_TIME).toString(),
+            );
+        } catch (e) {
+            console.warn('Failed to cache app-hub data:', e);
+        }
     }
 
     return validApps;

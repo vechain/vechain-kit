@@ -20,6 +20,7 @@ import { useCurrency } from '@/hooks';
 import { BsCheck } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
+import { setLocalStorageItem } from '@/utils/ssrUtils';
 
 export type ChangeCurrencyContentProps = {
     setCurrentContent: React.Dispatch<
@@ -35,7 +36,7 @@ export const ChangeCurrencyContent = ({
 
     useEffect(() => {
         // Ensure we mark the currency settings as visited when this component mounts
-        localStorage.setItem('settings-currency-visited', 'true');
+        setLocalStorageItem('settings-currency-visited', 'true');
     }, []);
 
     const renderCurrencyButton = (currency: CURRENCY) => (
