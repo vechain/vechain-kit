@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { IVechainEnergyOracleV1__factory } from '@vechain/vechain-contracts';
+import { IVechainEnergyOracleV1__factory } from '@vechain/vechain-contract-types';
 import { BigNumber } from 'bignumber.js';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';

@@ -4,7 +4,7 @@ import {
     useWallet,
 } from '@/hooks';
 import { useCallback } from 'react';
-import { IReverseRegistrar__factory } from '@vechain/vechain-contracts';
+import { IReverseRegistrar__factory } from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';

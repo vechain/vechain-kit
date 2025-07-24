@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import {
     IReverseRegistrar__factory,
     SubdomainClaimer__factory,
-} from '@vechain/vechain-contracts';
+} from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';

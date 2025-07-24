@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { B3TR__factory } from '@vechain/vechain-contracts';
+import { B3TR__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';

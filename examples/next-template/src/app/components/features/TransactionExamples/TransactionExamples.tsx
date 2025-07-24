@@ -10,7 +10,7 @@ import {
     TransactionModal,
     TransactionToast,
 } from '@vechain/vechain-kit';
-import { IB3TR__factory } from '@vechain/vechain-contracts';
+import { IB3TR__factory } from '@vechain/vechain-contract-types';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';
 import { useCallback } from 'react';
