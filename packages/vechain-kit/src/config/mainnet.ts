@@ -89,5 +89,7 @@ const config: AppConfig = {
     vnsResolverAddress: '0xA11413086e163e41901bb81fdc5617c975Fa5a1A',
     vetDomainAvatarUrl: 'https://vet.domains/api/avatar',
     gloDollarContractAddress: '0x29c630cce4ddb23900f5fe66ab55e488c15b9f5e',
+    //news
+    newsContractAddress: '0x4b73a87567841cc261d1663499986488a21d4ba0',
 };
 export default config;
