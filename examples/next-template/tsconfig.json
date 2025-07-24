@@ -14,6 +14,9 @@
         "isolatedModules": true,
         "jsx": "preserve",
         "incremental": true,
+        "tsBuildInfoFile": ".next/.tsbuildinfo",
+        // Performance optimizations
+        "assumeChangesOnlyAffectDirectDependencies": true,
         "plugins": [
             {
                 "name": "next"
@@ -32,5 +35,10 @@
         "dist/types/**/*.ts",
         "src/lib/mixpanelClient.js"
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", ".next", "dist"],
+    "ts-node": {
+        "compilerOptions": {
+            "module": "CommonJS"
+        }
+    }
 }
