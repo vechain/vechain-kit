@@ -6337,6 +6337,59 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/connex-types@npm:^2.0.2":
+  version: 2.2.1
+  resolution: "@vechain/connex-types@npm:2.2.1"
+  checksum: 10c0/627d46aeafd503cd3a6e71ce803b34b39939870147fc3f6b63b4c0fb59f83f2e32b5c74a6b92860a1d866b130c1921cffc3bb6353be371f764153a0a126c27ae
+  languageName: node
+  linkType: hard
+
+"@vechain/contracts@workspace:contracts":
+  version: 0.0.0-use.local
+  resolution: "@vechain/contracts@workspace:contracts"
+  dependencies:
+    "@nomicfoundation/hardhat-chai-matchers": "npm:^2.0.8"
+    "@nomicfoundation/hardhat-ethers": "npm:^3.0.4"
+    "@nomicfoundation/hardhat-ignition": "npm:^0.15.5"
+    "@nomicfoundation/hardhat-ignition-ethers": "npm:^0.15.0"
+    "@nomicfoundation/hardhat-network-helpers": "npm:^1.0.0"
+    "@nomicfoundation/hardhat-toolbox": "npm:^5.0.0"
+    "@nomicfoundation/hardhat-verify": "npm:^2.0.12"
+    "@nomiclabs/hardhat-etherscan": "npm:^3.0.0"
+    "@nomiclabs/hardhat-truffle5": "npm:^2.0.7"
+    "@nomiclabs/hardhat-web3": "npm:^2.0.0"
+    "@openzeppelin/contracts": "npm:5.0.2"
+    "@openzeppelin/contracts-upgradeable": "npm:5.0.2"
+    "@openzeppelin/upgrades-core": "npm:^1.32.5"
+    "@typechain/ethers-v6": "npm:^0.4.3"
+    "@typechain/hardhat": "npm:^8.0.0"
+    "@types/chai": "npm:^4.2.0"
+    "@types/mocha": "npm:>=9.1.0"
+    "@vechain/hardhat-ethers": "npm:^0.1.9"
+    "@vechain/sdk-core": "npm:1.2.0"
+    "@vechain/sdk-hardhat-plugin": "npm:1.2.0"
+    "@vechain/web3-providers-connex": "npm:^1.1.2"
+    chai: "npm:^4.2.0"
+    dayjs: "npm:^1.11.10"
+    dotenv: "npm:^16.4.7"
+    ethers: "npm:^6.7.1"
+    ganache-cli: "npm:^6.12.2"
+    hardhat: "npm:^2.19.1"
+    hardhat-contract-sizer: "npm:^2.10.0"
+    hardhat-gas-reporter: "npm:^1.0.8"
+    hardhat-ignore-warnings: "npm:^0.2.11"
+    hardhat-interface-generator: "npm:^0.0.6"
+    prettier-plugin-solidity: "npm:^1.4.1"
+    react-slot-counter: "npm:^2.2.5"
+    solidity-coverage: "npm:^0.8.13"
+    solidity-docgen: "npm:^0.6.0-beta.36"
+    ts-node: "npm:>=8.0.0"
+    tsx: "npm:^4.19.1"
+    typechain: "npm:^8.1.0"
+    typescript: "npm:>=4.5.0"
+  languageName: unknown
+  linkType: soft
+
 "@vechain/dapp-kit-react@npm:2.0.2":
   version: 2.0.2
   resolution: "@vechain/dapp-kit-react@npm:2.0.2"
