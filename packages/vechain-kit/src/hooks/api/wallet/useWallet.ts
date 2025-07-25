@@ -27,6 +27,7 @@ import { useCrossAppConnectionCache } from '@/hooks';
 import { useWalletMetadata } from './useWalletMetadata';
 import { VeChainAbstractSigner, VeChainProvider } from '@vechain/sdk-network';
 import { SmartAccountSigner } from '@/signers/SmartAccountSigner';
+import { type TypedDataDomain, type TypedDataField } from 'ethers';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -74,7 +75,8 @@ export const useWallet = (): UseWalletReturnType => {
     const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
     const { feeDelegation, network, privy } = useVeChainKitConfig();
-    const { sendTransaction } = usePrivyWalletProvider();
+    const { sendTransaction, signTypedData, signMessage } =
+        usePrivyWalletProvider();
 
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
@@ -217,6 +219,58 @@ export const useWallet = (): UseWalletReturnType => {
         !!account?.address &&
         compareAddresses(smartAccount?.address, account?.address);
 
+    // Adapter functions for SmartAccountSigner
+    const adaptSignTypedData = useCallback(
+        ({
+            domain,
+            types,
+            value,
+        }: {
+            domain: TypedDataDomain;
+            types: Record<string, TypedDataField[]>;
+            value: Record<string, unknown>;
+        }) =>
+            signTypedData({
+                domain: {
+                    name: domain.name ?? undefined,
+                    version: domain.version ?? undefined,
+                    chainId: domain.chainId
+                        ? Number(domain.chainId)
+                        : undefined,
+                    verifyingContract: domain.verifyingContract ?? undefined,
+                    salt: domain.salt
+                        ? typeof domain.salt === 'string'
+                            ? (new TextEncoder().encode(domain.salt)
+                                  .buffer as ArrayBuffer)
+                            : domain.salt instanceof Uint8Array
+                            ? (domain.salt.buffer as ArrayBuffer)
+                            : domain.salt &&
+                              typeof domain.salt === 'object' &&
+                              'byteLength' in domain.salt
+                            ? (new Uint8Array(domain.salt as ArrayBufferLike)
+                                  .buffer as ArrayBuffer)
+                            : undefined
+                        : undefined,
+                },
+                types,
+                primaryType: Object.keys(types).find(
+                    (key) => key !== 'EIP712Domain',
+                )!,
+                message: value,
+            }),
+        [signTypedData],
+    );
+
+    const adaptSignMessage = useCallback(
+        ({ message }: { message: string | Uint8Array }) =>
+            signMessage(
+                typeof message === 'string'
+                    ? message
+                    : new TextDecoder().decode(message),
+            ),
+        [signMessage],
+    );
+
     // Embedded signer logic (previously useSigner hook)
     const getSigner = useCallback((): VeChainAbstractSigner | null => {
         const config = getConfig(network.type);
@@ -229,6 +283,8 @@ export const useWallet = (): UseWalletReturnType => {
                 {
                     address: smartAccount?.address,
                     sendTransaction: sendTransaction,
+                    signTypedData: adaptSignTypedData,
+                    signMessage: adaptSignMessage,
                 },
                 provider,
             );
@@ -241,6 +297,8 @@ export const useWallet = (): UseWalletReturnType => {
         smartAccount?.address,
         network.type,
         sendTransaction,
+        adaptSignTypedData,
+        adaptSignMessage,
     ]);
 
     const signer = getSigner();

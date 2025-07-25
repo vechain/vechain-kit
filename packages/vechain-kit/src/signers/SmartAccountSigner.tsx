@@ -35,6 +35,20 @@ class SmartAccountSigner extends VeChainAbstractSigner {
                 description?: string;
                 buttonText?: string;
             }) => Promise<string>;
+            signTypedData: ({
+                domain,
+                types,
+                value,
+            }: {
+                domain: TypedDataDomain;
+                types: Record<string, TypedDataField[]>;
+                value: Record<string, unknown>;
+            }) => Promise<string>;
+            signMessage: ({
+                message,
+            }: {
+                message: string | Uint8Array;
+            }) => Promise<string>;
         },
         provider?: AvailableVeChainProviders,
     ) {
@@ -141,11 +155,17 @@ class SmartAccountSigner extends VeChainAbstractSigner {
         _types: Record<string, TypedDataField[]>,
         _value: Record<string, unknown>,
     ): Promise<string> {
-        throw new Error('Method not implemented.');
+        return this.smartAccount.signTypedData({
+            domain: _domain,
+            types: _types,
+            value: _value,
+        });
     }
 
     signPayload(payload: Uint8Array): Promise<string> {
-        throw new Error('Method not implemented.');
+        return this.smartAccount.signMessage({
+            message: payload,
+        });
     }
 }
 
