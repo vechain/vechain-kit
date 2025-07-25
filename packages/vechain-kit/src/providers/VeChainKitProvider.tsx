@@ -1,7 +1,7 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
-import { isValidUrl } from '@/utils';
+import { isValidUrl, setLocalStorageItem } from '@/utils';
 import { initializeI18n } from '@/utils/i18n';
 import {
     LoginMethodOrderOption,
@@ -317,7 +317,7 @@ export const VeChainKitProvider = (
     }, [language, i18nConfig]);
 
     useEffect(() => {
-        localStorage.setItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
+        setLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
     }, [network]);
 
     return (

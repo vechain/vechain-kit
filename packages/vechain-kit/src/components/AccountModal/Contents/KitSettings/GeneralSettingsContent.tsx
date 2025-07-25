@@ -24,6 +24,7 @@ import {
 import { ActionButton } from '../../Components';
 import { AccountModalContentTypes } from '../../Types';
 import { useEffect, useState } from 'react';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -37,15 +38,13 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
 
     useEffect(() => {
         // Check if user has visited currency settings before
-        const hasVisitedCurrency = localStorage.getItem(
-            'settings-currency-visited',
-        );
+        const hasVisitedCurrency = getLocalStorageItem('settings-currency-visited');
         setShowCurrencyRedDot(!hasVisitedCurrency);
     }, []);
 
     const handleCurrencyClick = () => {
         // Mark currency settings as visited
-        localStorage.setItem('settings-currency-visited', 'true');
+        setLocalStorageItem('settings-currency-visited', 'true');
         setShowCurrencyRedDot(false);
 
         Analytics.settings.currencySettingsViewed();

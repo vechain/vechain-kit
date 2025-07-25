@@ -54,7 +54,7 @@ jobs:
         run: |
           nohup yarn dev > next.log 2>&1 &
       - name: Wait for Next app to start
-        run: sleep 15
+        run: sleep 30
 
       - name: Setup playwright
         working-directory: ./tests/e2e

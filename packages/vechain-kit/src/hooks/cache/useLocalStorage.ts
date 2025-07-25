@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 export enum LocalStorageKey {
     CUSTOM_TOKENS = 'vechain_kit_custom_tokens',
@@ -11,7 +12,7 @@ export enum LocalStorageKey {
 export const useLocalStorage = <T>(key: LocalStorageKey, initialValue: T) => {
     const [storedValue, setStoredValue] = useState<T>(() => {
         try {
-            const item = window.localStorage.getItem(key);
+            const item = getLocalStorageItem(key);
             return item ? JSON.parse(item) : initialValue;
         } catch (error) {
             console.error(error);
@@ -20,7 +21,7 @@ export const useLocalStorage = <T>(key: LocalStorageKey, initialValue: T) => {
     });
 
     useEffect(() => {
-        window.localStorage.setItem(key, JSON.stringify(storedValue));
+        setLocalStorageItem(key, JSON.stringify(storedValue));
     }, [key, storedValue]);
 
     return [storedValue, setStoredValue] as const;

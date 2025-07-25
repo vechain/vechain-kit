@@ -6,8 +6,7 @@
     "workspaces": [
         "examples/*",
         "!examples/test-tailwind-vck",
-        "packages/*",
-        "contracts"
+        "packages/*"
     ],
     "scripts": {
         "install:all": "yarn && yarn run build:deps",
@@ -28,7 +27,11 @@
         "kit:build": "yarn workspace @vechain/vechain-kit build",
         "kit:typecheck": "yarn workspace @vechain/vechain-kit typecheck",
         "contracts:compile": "yarn workspace @vechain/contracts compile",
-        "contracts:test": "yarn workspace @vechain/contracts test"
+        "contracts:test": "yarn workspace @vechain/contracts test",
+        "dev:homepage": "yarn workspace @vechain/vechain-kit watch & yarn workspace vechain-kit-homepage dev",
+        "dev:homepage:build": "yarn workspace @vechain/vechain-kit build & yarn workspace vechain-kit-homepage build",
+        "dev:next-template": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-template dev",
+        "dev:next-template:build": "yarn workspace @vechain/vechain-kit build & yarn workspace next-template build"
     },
     "husky": {
         "hooks": {

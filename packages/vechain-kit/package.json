@@ -1,6 +1,6 @@
 {
   "name": "@vechain/vechain-kit",
-  "version": "2.0.0-rc.7",
+  "version": "2.0.0-rc.8",
   "homepage": "https://github.com/vechain/vechain-kit",
   "repository": "github:vechain/vechain-kit",
   "license": "MIT",
@@ -37,7 +37,9 @@
     "@vechain/dapp-kit-react": "2.0.2",
     "@vechain/picasso": "^2.1.1",
     "@vechain/vebetterdao-contracts": "^4.1.0",
+    "@vechain/vechain-contract-types": "^1.0.0",
     "@wagmi/core": "^2.17.2",
+    "axios": "^1.10.0",
     "bignumber.js": "^9.1.2",
     "browser-image-compression": "^2.0.2",
     "buffer": "^6.0.3",
@@ -96,10 +98,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./contracts": {
-      "types": "./dist/contracts/index.d.ts",
-      "default": "./dist/contracts/index.js"
     },
     "./utils": {
       "types": "./dist/utils/index.d.ts",
