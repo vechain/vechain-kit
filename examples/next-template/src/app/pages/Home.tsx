@@ -52,18 +52,70 @@ export default function Home(): ReactElement {
                         console.log('signer', signer);
                         if (signer) {
                             contract.setSigner(signer);
-
-                            const tx = await (
+                            const receipt = await (
                                 await contract.transact.transfer(
                                     account.address,
                                     0 as any,
                                 )
                             ).wait();
-                            console.log('tx', tx);
+                            console.log('transaction receipt', receipt);
                         }
                     }}
                 >
-                    Get Address
+                    Sign Transaction
+                </Button>
+
+                <Button
+                    onClick={async () => {
+                        console.log('signer', signer);
+                        if (signer) {
+                            try {
+                                const signature = await signer.signTypedData(
+                                    {
+                                        name: 'Test Domain',
+                                        version: '1',
+                                        chainId: 1,
+                                    },
+                                    {
+                                        Person: [
+                                            { name: 'name', type: 'string' },
+                                            { name: 'wallet', type: 'address' },
+                                        ],
+                                    },
+                                    {
+                                        name: 'John Doe',
+                                        wallet: account.address,
+                                    },
+                                );
+                                console.log('Typed data signature:', signature);
+                            } catch (error) {
+                                console.error(
+                                    'Typed data signing failed:',
+                                    error,
+                                );
+                            }
+                        }
+                    }}
+                >
+                    Sign Typed Data
+                </Button>
+
+                <Button
+                    onClick={async () => {
+                        console.log('signer', signer);
+                        if (signer) {
+                            try {
+                                const signature = await signer.signPayload(
+                                    new TextEncoder().encode('Hello, VeChain!'),
+                                );
+                                console.log('Message signature:', signature);
+                            } catch (error) {
+                                console.error('Message signing failed:', error);
+                            }
+                        }
+                    }}
+                >
+                    Sign Message
                 </Button>
                 <AccountInfo />
                 <ConnectionInfo />
