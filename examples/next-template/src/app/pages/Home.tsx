@@ -12,14 +12,10 @@ import { TransactionExamples } from '@/app/components/features/TransactionExampl
 import { SigningExample } from '@/app/components/features/SigningExample/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
 import mixpanelClient from '@/lib/mixpanelClient';
-import { ThorClient } from '@vechain/sdk-network';
-import { ERC20_ABI, VTHO_ADDRESS } from '@vechain/sdk-core';
+import { vthorContract } from '@/app/constants';
 
 export default function Home(): ReactElement {
     const { account, connection, signer } = useWallet();
-
-    const thorClient = ThorClient.at('https://testnet.vechain.org');
-    const contract = thorClient.contracts.load(VTHO_ADDRESS, ERC20_ABI);
 
     if (!account) {
         return <WelcomeSection />;
@@ -51,9 +47,9 @@ export default function Home(): ReactElement {
                     onClick={async () => {
                         console.log('signer', signer);
                         if (signer) {
-                            contract.setSigner(signer);
+                            vthorContract.setSigner(signer);
                             const receipt = await (
-                                await contract.transact.transfer(
+                                await vthorContract.transact.transfer(
                                     account.address,
                                     0 as any,
                                 )
@@ -112,6 +108,19 @@ export default function Home(): ReactElement {
                             } catch (error) {
                                 console.error('Message signing failed:', error);
                             }
+                        }
+                    }}
+                >
+                    Sign Payload
+                </Button>
+                <Button
+                    onClick={async () => {
+                        console.log('signer', signer);
+                        if (signer) {
+                            const signature = await signer.signMessage(
+                                'Hello, VeChain!',
+                            );
+                            console.log('Message signature:', signature);
                         }
                     }}
                 >
