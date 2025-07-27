@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { TransactionClause } from '@vechain/sdk-core';
 import { JSONRPCInvalidParams } from '@vechain/sdk-errors';
 import {
@@ -121,9 +120,10 @@ class SmartAccountSigner extends VeChainAbstractSigner {
      * @returns The signature
      * @throws {Error} Method not implemented
      */
-    /* eslint-disable-next-line @typescript-eslint/require-await */
     async signMessage(_message: string | Uint8Array): Promise<string> {
-        throw new Error('Method not implemented.');
+        return this.smartAccount.signMessage({
+            message: _message,
+        });
     }
 
     /**
@@ -133,7 +133,6 @@ class SmartAccountSigner extends VeChainAbstractSigner {
      * @returns The signed transaction
      * @throws {Error} Method not implemented
      */
-    /* eslint-disable-next-line @typescript-eslint/require-await */
     async signTransaction(
         _transactionToSign: TransactionRequestInput,
     ): Promise<string> {
@@ -149,7 +148,6 @@ class SmartAccountSigner extends VeChainAbstractSigner {
      * @returns The signature
      * @throws {Error} Method not implemented
      */
-    /* eslint-disable-next-line @typescript-eslint/require-await */
     async signTypedData(
         _domain: TypedDataDomain,
         _types: Record<string, TypedDataField[]>,

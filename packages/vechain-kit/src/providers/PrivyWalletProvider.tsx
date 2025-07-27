@@ -27,7 +27,6 @@ import {
     useHasV1SmartAccount,
     useSmartAccount,
     useSmartAccountVersion,
-    useWallet,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
