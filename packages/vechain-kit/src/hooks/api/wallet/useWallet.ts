@@ -274,7 +274,7 @@ export const useWallet = (): UseWalletReturnType => {
         [signMessage],
     );
 
-    // Embedded signer logic (previously useSigner hook)
+    // Embedded signer logic
     const getSigner = useCallback((): VeChainAbstractSigner | null => {
         const config = getConfig(network.type);
         const provider = new VeChainProvider(ThorClient.at(config.nodeUrl));
