@@ -39,6 +39,7 @@ export function DataReadingExample(): ReactElement {
             defaultIsOpen={false}
             title="Reading Blockchain Data"
             icon={MdDataUsage}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
