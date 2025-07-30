@@ -28,6 +28,7 @@ import { useWalletMetadata } from './useWalletMetadata';
 import { VeChainAbstractSigner, VeChainProvider } from '@vechain/sdk-network';
 import { SmartAccountSigner } from '@/signers/SmartAccountSigner';
 import { type TypedDataDomain, type TypedDataField } from 'ethers';
+import { isBrowser } from '@/utils/ssrUtils';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -142,7 +143,9 @@ export const useWallet = (): UseWalletReturnType => {
                 // Clear any cached wallet data
                 clearConnectionCache();
                 // Dispatch event to trigger re-renders
-                window.dispatchEvent(new Event('wallet_disconnected'));
+                if (isBrowser()) {
+                    window.dispatchEvent(new Event('wallet_disconnected'));
+                }
             }
         }
     }, [
@@ -319,7 +322,9 @@ export const useWallet = (): UseWalletReturnType => {
             }
 
             clearConnectionCache();
-            window.dispatchEvent(new Event('wallet_disconnected'));
+            if (isBrowser()) {
+                window.dispatchEvent(new Event('wallet_disconnected'));
+            }
         } catch (error) {
             console.error('Error during disconnect:', error);
         }
@@ -358,7 +363,10 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithVeChain,
             source: connectionSource,
             isInAppBrowser:
-                (window.vechain && window.vechain.isInAppBrowser) ?? false,
+                (isBrowser() &&
+                    window.vechain &&
+                    window.vechain.isInAppBrowser) ??
+                false,
             nodeUrl,
             delegatorUrl: feeDelegation?.delegatorUrl,
             chainId: chainId,

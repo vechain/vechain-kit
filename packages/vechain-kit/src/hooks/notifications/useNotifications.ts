@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { Notification } from './types';
 import { DEFAULT_NOTIFICATIONS } from './useNotificationAlerts';
+import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '@/utils/ssrUtils';
 
 export const useNotifications = () => {
     const { account } = useWallet();
@@ -16,17 +17,17 @@ export const useNotifications = () => {
     }, []);
 
     const initializeNotifications = useCallback(() => {
-        if (!account?.address) return;
+        if (!account?.address || !isBrowser()) return;
 
         const keys = getStorageKeys(account.address);
-        const isInitialized = localStorage.getItem(keys.initialized);
+        const isInitialized = getLocalStorageItem(keys.initialized);
 
         if (!isInitialized) {
-            localStorage.setItem(
+            setLocalStorageItem(
                 keys.notifications,
                 JSON.stringify(DEFAULT_NOTIFICATIONS),
             );
-            localStorage.setItem(keys.initialized, 'true');
+            setLocalStorageItem(keys.initialized, 'true');
         }
     }, [account?.address, getStorageKeys]);
 
@@ -35,32 +36,31 @@ export const useNotifications = () => {
     }, [initializeNotifications]);
 
     const getNotifications = useCallback((): Notification[] => {
-        if (!account?.address) return [];
+        if (!account?.address || !isBrowser()) return [];
 
         const keys = getStorageKeys(account.address);
-        const cached = localStorage.getItem(keys.notifications);
+        const cached = getLocalStorageItem(keys.notifications);
         if (!cached) return [];
         return JSON.parse(cached) as Notification[];
     }, [account?.address, getStorageKeys]);
 
     const getArchivedNotifications = useCallback((): Notification[] => {
-        if (!account?.address) return [];
+        if (!account?.address || !isBrowser()) return [];
 
         const keys = getStorageKeys(account.address);
-        const cached = localStorage.getItem(keys.archived);
+        const cached = getLocalStorageItem(keys.archived);
         if (!cached) return [];
         return JSON.parse(cached) as Notification[];
     }, [account?.address, getStorageKeys]);
 
     const addNotification = useCallback(
         (notification: Omit<Notification, 'timestamp' | 'isRead'>) => {
-            if (!account?.address) return;
+            if (!account?.address || !isBrowser()) return;
 
             const keys = getStorageKeys(account.address);
             const notifications = getNotifications();
-            const archivedNotifications = JSON.parse(
-                localStorage.getItem(keys.archived) || '[]',
-            );
+            const archivedCache = getLocalStorageItem(keys.archived);
+            const archivedNotifications = archivedCache ? JSON.parse(archivedCache) : [];
 
             // Check if notification exists in either active or archived notifications
             const isDuplicate = [
@@ -75,7 +75,7 @@ export const useNotifications = () => {
                 timestamp: Date.now(),
                 isRead: false,
             };
-            localStorage.setItem(
+            setLocalStorageItem(
                 keys.notifications,
                 JSON.stringify([newNotification, ...notifications]),
             );
@@ -85,14 +85,14 @@ export const useNotifications = () => {
 
     const deleteNotification = useCallback(
         (notificationId: string) => {
-            if (!account?.address) return;
+            if (!account?.address || !isBrowser()) return;
 
             const keys = getStorageKeys(account.address);
             const notifications = getNotifications();
             const updatedNotifications = notifications.filter(
                 (n) => n.id !== notificationId,
             );
-            localStorage.setItem(
+            setLocalStorageItem(
                 keys.notifications,
                 JSON.stringify(updatedNotifications),
             );
@@ -101,15 +101,15 @@ export const useNotifications = () => {
     );
 
     const clearAllNotifications = useCallback(() => {
-        if (!account?.address) return;
+        if (!account?.address || !isBrowser()) return;
 
         const keys = getStorageKeys(account.address);
         const notifications = getNotifications();
-        localStorage.setItem(
+        setLocalStorageItem(
             keys.archived,
             JSON.stringify([...getArchivedNotifications(), ...notifications]),
         );
-        localStorage.setItem(keys.notifications, JSON.stringify([]));
+        setLocalStorageItem(keys.notifications, JSON.stringify([]));
     }, [
         account?.address,
         getNotifications,
@@ -119,7 +119,7 @@ export const useNotifications = () => {
 
     const markAsRead = useCallback(
         (notificationId: string) => {
-            if (!account?.address) return;
+            if (!account?.address || !isBrowser()) return;
 
             const keys = getStorageKeys(account.address);
             const notifications = getNotifications();
@@ -143,11 +143,11 @@ export const useNotifications = () => {
                 ];
 
                 // Update both lists in localStorage
-                localStorage.setItem(
+                setLocalStorageItem(
                     keys.notifications,
                     JSON.stringify(updatedNotifications),
                 );
-                localStorage.setItem(
+                setLocalStorageItem(
                     keys.archived,
                     JSON.stringify(updatedArchivedNotifications),
                 );

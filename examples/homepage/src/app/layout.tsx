@@ -42,7 +42,11 @@ export default function RootLayout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                 />
-                <link rel="icon" href={`${basePath}/images/logo.png`} type="image/png" />
+                <link
+                    rel="icon"
+                    href={`${basePath}/images/logo.png`}
+                    type="image/png"
+                />
                 <link
                     rel="apple-touch-icon"
                     sizes="57x57"
@@ -91,7 +95,6 @@ export default function RootLayout({
                 style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'inherit',
                 }}
             >
                 <ChakraProvider theme={darkTheme}>

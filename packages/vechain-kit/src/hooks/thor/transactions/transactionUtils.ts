@@ -16,18 +16,24 @@ export const estimateTxGas = async (
     thor: ThorClient,
     clauses: TransactionClause[],
     caller: string,
-    options: {
+    options?: {
         revision?: Revision;
         gasPadding?: number;
-    } = {
-        revision: 'next', // default revision is next
     },
 ) => {
-    const response = await thor.transactions.estimateGas(clauses, caller, {
-        ...options,
-    });
+    const response = await thor.transactions.estimateGas(
+        clauses,
+        caller,
+        options,
+    );
 
     if (response.reverted) throw new Error('Failed to estimate gas');
 
-    return response.totalGas;
+    let totalGas = response?.totalGas ?? 0;
+    // Ensure it covers the case where the gas estimation is not a number
+    if (!totalGas || Number.isNaN(totalGas)) {
+        totalGas = 0;
+    }
+
+    return Math.ceil(totalGas);
 };
