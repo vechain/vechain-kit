@@ -6425,24 +6425,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-react@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@vechain/dapp-kit-react@npm:2.0.2"
+"@vechain/dapp-kit-react@npm:2.0.3":
+  version: 2.0.3
+  resolution: "@vechain/dapp-kit-react@npm:2.0.3"
   dependencies:
     "@lit/react": "npm:^1.0.7"
-    "@vechain/dapp-kit": "npm:2.0.2"
-    "@vechain/dapp-kit-ui": "npm:2.0.2"
+    "@vechain/dapp-kit": "npm:2.0.3"
+    "@vechain/dapp-kit-ui": "npm:2.0.3"
     "@vechain/sdk-core": "npm:1.2.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/62a11d91046c82c6d7a5efec6669276df975a07576d984c1803e6cf0341e2ab97037ffb00dfd9c04df6a7142441fb75995749f9c6f04d02dc369533322e4cab9
+  checksum: 10c0/a5007f2e9e1a4f1ed8aa17946f07beb205531d9baded5579a51c509121ba486fd3f94994b5d4be4660db04a8bdb2dd1a3c3e952a7d8a9f7e79906b11334a92fe
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-ui@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@vechain/dapp-kit-ui@npm:2.0.2"
+"@vechain/dapp-kit-ui@npm:2.0.3":
+  version: 2.0.3
+  resolution: "@vechain/dapp-kit-ui@npm:2.0.3"
   dependencies:
-    "@vechain/dapp-kit": "npm:2.0.2"
+    "@vechain/dapp-kit": "npm:2.0.3"
     "@vechain/picasso": "npm:2.1.1"
     "@vechain/sdk-core": "npm:1.2.0"
     "@vechain/sdk-network": "npm:1.2.0"
@@ -6452,13 +6452,13 @@ __metadata:
     lit: "npm:3.2.1"
     qrcode: "npm:1.5.4"
     valtio: "npm:1.13.2"
-  checksum: 10c0/84e1779609156fc884c1348d023eefa76b1659dbbdbe215740e0d558ca7ee4d5963a67b1593544f9205cfbe66e73cb3f464339326bca1984ce70693b76a636da
+  checksum: 10c0/190f05672bc6f2d024bbbc4ef58cdcb99a1a216469d5b36ff85257b02ff144d566d5f13d81950f2fd0bd0bbe78982872458fa72e6535e996db0393e6b1387f14
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@vechain/dapp-kit@npm:2.0.2"
+"@vechain/dapp-kit@npm:2.0.3":
+  version: 2.0.3
+  resolution: "@vechain/dapp-kit@npm:2.0.3"
   dependencies:
     "@vechain/sdk-core": "npm:1.2.0"
     "@vechain/sdk-errors": "npm:1.2.0"
@@ -6468,7 +6468,7 @@ __metadata:
     "@walletconnect/utils": "npm:2.19.2"
     events: "npm:^3.3.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/9169589cf7991ec57090ffa68678ee78872dc12c63fe52c2624c1b30045e270d01cba8f364d7ef72bb87e53c88976b937f3cc34f3a39d6cd43aef8562fc4a63f
+  checksum: 10c0/ea4c10527e40b59e19e62a57c559396da9a7cfac61edb5959c3a2ad7b6e4b50792938ea4b61fd66dfe07d07dbcff27c8579ff3f68ebf419724c5550e183d6968
   languageName: node
   linkType: hard
 
@@ -6572,7 +6572,7 @@ __metadata:
     "@types/mixpanel-browser": "npm:^2.51.0"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
-    "@vechain/dapp-kit-react": "npm:2.0.2"
+    "@vechain/dapp-kit-react": "npm:2.0.3"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
     "@vechain/vechain-contract-types": "npm:^1.0.0"
