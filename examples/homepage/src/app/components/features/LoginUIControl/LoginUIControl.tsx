@@ -18,6 +18,7 @@ export const LoginUIControl = () => {
             title="Login UI Examples"
             icon={MdLogin}
             defaultIsOpen={true}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch" w={'full'}>
                 <Text textAlign="center">

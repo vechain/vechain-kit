@@ -35,7 +35,6 @@ export function CollapsibleCard({
             p={4}
             borderRadius="lg"
             boxShadow="xl"
-            bg="whiteAlpha.100"
             backdropFilter="blur(10px)"
             w="full"
             {...style}

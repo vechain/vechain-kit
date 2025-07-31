@@ -76,6 +76,7 @@ export function TransactionExamples() {
             defaultIsOpen={false}
             title="Transaction Examples"
             icon={MdSend}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
