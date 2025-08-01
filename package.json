@@ -6,7 +6,8 @@
     "workspaces": [
         "examples/*",
         "!examples/test-tailwind-vck",
-        "packages/*"
+        "packages/*",
+        "contracts"
     ],
     "scripts": {
         "install:all": "yarn && yarn run build:deps",
