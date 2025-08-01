@@ -2,55 +2,55 @@
 /* tslint:disable */
 /* eslint-disable */
 import type {
-  BaseContract,
-  BigNumberish,
-  BytesLike,
-  FunctionFragment,
-  Result,
-  Interface,
-  EventFragment,
-  AddressLike,
-  ContractRunner,
-  ContractMethod,
-  Listener,
-} from "ethers";
+    BaseContract,
+    BigNumberish,
+    BytesLike,
+    FunctionFragment,
+    Result,
+    Interface,
+    EventFragment,
+    AddressLike,
+    ContractRunner,
+    ContractMethod,
+    Listener,
+} from 'ethers';
 import type {
-  TypedContractEvent,
-  TypedDeferredTopicFilter,
-  TypedEventLog,
-  TypedLogDescription,
-  TypedListener,
-  TypedContractMethod,
-} from "../common";
+    TypedContractEvent,
+    TypedDeferredTopicFilter,
+    TypedEventLog,
+    TypedLogDescription,
+    TypedListener,
+    TypedContractMethod,
+} from '../common';
 
 export declare namespace INews {
-  export type NewsTypeStruct = {
-    id: BigNumberish;
-    title: string;
-    description: string;
-    image: string;
-    callToActionUrl: string;
-    timestamp: BigNumberish;
-    publisher: AddressLike;
-  };
+    export type NewsTypeStruct = {
+        id: BigNumberish;
+        title: string;
+        description: string;
+        image: string;
+        callToActionUrl: string;
+        timestamp: BigNumberish;
+        publisher: AddressLike;
+    };
 
-  export type NewsTypeStructOutput = [
-    id: bigint,
-    title: string,
-    description: string,
-    image: string,
-    callToActionUrl: string,
-    timestamp: bigint,
-    publisher: string
-  ] & {
-    id: bigint;
-    title: string;
-    description: string;
-    image: string;
-    callToActionUrl: string;
-    timestamp: bigint;
-    publisher: string;
-  };
+    export type NewsTypeStructOutput = [
+        id: bigint,
+        title: string,
+        description: string,
+        image: string,
+        callToActionUrl: string,
+        timestamp: bigint,
+        publisher: string,
+    ] & {
+        id: bigint;
+        title: string;
+        description: string;
+        image: string;
+        callToActionUrl: string;
+        timestamp: bigint;
+        publisher: string;
+    };
 }
 
 export interface NewsInterface extends Interface {
@@ -93,18 +93,18 @@ export interface NewsInterface extends Interface {
       | "x2EarnApps"
   ): FunctionFragment;
 
-  getEvent(
-    nameOrSignatureOrTopic:
-      | "CooldownPeriodUpdated"
-      | "Initialized"
-      | "NewsPublished"
-      | "Paused"
-      | "RoleAdminChanged"
-      | "RoleGranted"
-      | "RoleRevoked"
-      | "Unpaused"
-      | "Upgraded"
-  ): EventFragment;
+    getEvent(
+        nameOrSignatureOrTopic:
+            | 'CooldownPeriodUpdated'
+            | 'Initialized'
+            | 'NewsPublished'
+            | 'Paused'
+            | 'RoleAdminChanged'
+            | 'RoleGranted'
+            | 'RoleRevoked'
+            | 'Unpaused'
+            | 'Upgraded',
+    ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "DEFAULT_ADMIN_ROLE",
@@ -345,218 +345,254 @@ export interface NewsInterface extends Interface {
 }
 
 export namespace CooldownPeriodUpdatedEvent {
-  export type InputTuple = [
-    oldCooldownPeriod: BigNumberish,
-    newCooldownPeriod: BigNumberish
-  ];
-  export type OutputTuple = [
-    oldCooldownPeriod: bigint,
-    newCooldownPeriod: bigint
-  ];
-  export interface OutputObject {
-    oldCooldownPeriod: bigint;
-    newCooldownPeriod: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [
+        oldCooldownPeriod: BigNumberish,
+        newCooldownPeriod: BigNumberish,
+    ];
+    export type OutputTuple = [
+        oldCooldownPeriod: bigint,
+        newCooldownPeriod: bigint,
+    ];
+    export interface OutputObject {
+        oldCooldownPeriod: bigint;
+        newCooldownPeriod: bigint;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace InitializedEvent {
-  export type InputTuple = [version: BigNumberish];
-  export type OutputTuple = [version: bigint];
-  export interface OutputObject {
-    version: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [version: BigNumberish];
+    export type OutputTuple = [version: bigint];
+    export interface OutputObject {
+        version: bigint;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace NewsPublishedEvent {
-  export type InputTuple = [
-    id: BigNumberish,
-    appId: BytesLike,
-    title: string,
-    description: string,
-    image: string,
-    callToActionUrl: string,
-    publisher: AddressLike
-  ];
-  export type OutputTuple = [
-    id: bigint,
-    appId: string,
-    title: string,
-    description: string,
-    image: string,
-    callToActionUrl: string,
-    publisher: string
-  ];
-  export interface OutputObject {
-    id: bigint;
-    appId: string;
-    title: string;
-    description: string;
-    image: string;
-    callToActionUrl: string;
-    publisher: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [
+        id: BigNumberish,
+        appId: BytesLike,
+        title: string,
+        description: string,
+        image: string,
+        callToActionUrl: string,
+        publisher: AddressLike,
+    ];
+    export type OutputTuple = [
+        id: bigint,
+        appId: string,
+        title: string,
+        description: string,
+        image: string,
+        callToActionUrl: string,
+        publisher: string,
+    ];
+    export interface OutputObject {
+        id: bigint;
+        appId: string;
+        title: string;
+        description: string;
+        image: string;
+        callToActionUrl: string;
+        publisher: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace PausedEvent {
-  export type InputTuple = [account: AddressLike];
-  export type OutputTuple = [account: string];
-  export interface OutputObject {
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [account: AddressLike];
+    export type OutputTuple = [account: string];
+    export interface OutputObject {
+        account: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace RoleAdminChangedEvent {
-  export type InputTuple = [
-    role: BytesLike,
-    previousAdminRole: BytesLike,
-    newAdminRole: BytesLike
-  ];
-  export type OutputTuple = [
-    role: string,
-    previousAdminRole: string,
-    newAdminRole: string
-  ];
-  export interface OutputObject {
-    role: string;
-    previousAdminRole: string;
-    newAdminRole: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [
+        role: BytesLike,
+        previousAdminRole: BytesLike,
+        newAdminRole: BytesLike,
+    ];
+    export type OutputTuple = [
+        role: string,
+        previousAdminRole: string,
+        newAdminRole: string,
+    ];
+    export interface OutputObject {
+        role: string;
+        previousAdminRole: string;
+        newAdminRole: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace RoleGrantedEvent {
-  export type InputTuple = [
-    role: BytesLike,
-    account: AddressLike,
-    sender: AddressLike
-  ];
-  export type OutputTuple = [role: string, account: string, sender: string];
-  export interface OutputObject {
-    role: string;
-    account: string;
-    sender: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [
+        role: BytesLike,
+        account: AddressLike,
+        sender: AddressLike,
+    ];
+    export type OutputTuple = [role: string, account: string, sender: string];
+    export interface OutputObject {
+        role: string;
+        account: string;
+        sender: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace RoleRevokedEvent {
-  export type InputTuple = [
-    role: BytesLike,
-    account: AddressLike,
-    sender: AddressLike
-  ];
-  export type OutputTuple = [role: string, account: string, sender: string];
-  export interface OutputObject {
-    role: string;
-    account: string;
-    sender: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [
+        role: BytesLike,
+        account: AddressLike,
+        sender: AddressLike,
+    ];
+    export type OutputTuple = [role: string, account: string, sender: string];
+    export interface OutputObject {
+        role: string;
+        account: string;
+        sender: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace UnpausedEvent {
-  export type InputTuple = [account: AddressLike];
-  export type OutputTuple = [account: string];
-  export interface OutputObject {
-    account: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [account: AddressLike];
+    export type OutputTuple = [account: string];
+    export interface OutputObject {
+        account: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace UpgradedEvent {
-  export type InputTuple = [implementation: AddressLike];
-  export type OutputTuple = [implementation: string];
-  export interface OutputObject {
-    implementation: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
+    export type InputTuple = [implementation: AddressLike];
+    export type OutputTuple = [implementation: string];
+    export interface OutputObject {
+        implementation: string;
+    }
+    export type Event = TypedContractEvent<
+        InputTuple,
+        OutputTuple,
+        OutputObject
+    >;
+    export type Filter = TypedDeferredTopicFilter<Event>;
+    export type Log = TypedEventLog<Event>;
+    export type LogDescription = TypedLogDescription<Event>;
 }
 
 export interface News extends BaseContract {
-  connect(runner?: ContractRunner | null): News;
-  waitForDeployment(): Promise<this>;
+    connect(runner?: ContractRunner | null): News;
+    waitForDeployment(): Promise<this>;
 
-  interface: NewsInterface;
+    interface: NewsInterface;
 
-  queryFilter<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
-  queryFilter<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TypedEventLog<TCEvent>>>;
+    queryFilter<TCEvent extends TypedContractEvent>(
+        event: TCEvent,
+        fromBlockOrBlockhash?: string | number | undefined,
+        toBlock?: string | number | undefined,
+    ): Promise<Array<TypedEventLog<TCEvent>>>;
+    queryFilter<TCEvent extends TypedContractEvent>(
+        filter: TypedDeferredTopicFilter<TCEvent>,
+        fromBlockOrBlockhash?: string | number | undefined,
+        toBlock?: string | number | undefined,
+    ): Promise<Array<TypedEventLog<TCEvent>>>;
 
-  on<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  on<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+    on<TCEvent extends TypedContractEvent>(
+        event: TCEvent,
+        listener: TypedListener<TCEvent>,
+    ): Promise<this>;
+    on<TCEvent extends TypedContractEvent>(
+        filter: TypedDeferredTopicFilter<TCEvent>,
+        listener: TypedListener<TCEvent>,
+    ): Promise<this>;
 
-  once<TCEvent extends TypedContractEvent>(
-    event: TCEvent,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
-  once<TCEvent extends TypedContractEvent>(
-    filter: TypedDeferredTopicFilter<TCEvent>,
-    listener: TypedListener<TCEvent>
-  ): Promise<this>;
+    once<TCEvent extends TypedContractEvent>(
+        event: TCEvent,
+        listener: TypedListener<TCEvent>,
+    ): Promise<this>;
+    once<TCEvent extends TypedContractEvent>(
+        filter: TypedDeferredTopicFilter<TCEvent>,
+        listener: TypedListener<TCEvent>,
+    ): Promise<this>;
 
-  listeners<TCEvent extends TypedContractEvent>(
-    event: TCEvent
-  ): Promise<Array<TypedListener<TCEvent>>>;
-  listeners(eventName?: string): Promise<Array<Listener>>;
-  removeAllListeners<TCEvent extends TypedContractEvent>(
-    event?: TCEvent
-  ): Promise<this>;
+    listeners<TCEvent extends TypedContractEvent>(
+        event: TCEvent,
+    ): Promise<Array<TypedListener<TCEvent>>>;
+    listeners(eventName?: string): Promise<Array<Listener>>;
+    removeAllListeners<TCEvent extends TypedContractEvent>(
+        event?: TCEvent,
+    ): Promise<this>;
 
-  DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
+    DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], 'view'>;
 
-  MODERATOR_ROLE: TypedContractMethod<[], [string], "view">;
+    MODERATOR_ROLE: TypedContractMethod<[], [string], 'view'>;
 
-  PAUSER_ROLE: TypedContractMethod<[], [string], "view">;
+    PAUSER_ROLE: TypedContractMethod<[], [string], 'view'>;
 
-  PUBLISHER_ROLE: TypedContractMethod<[], [string], "view">;
+    PUBLISHER_ROLE: TypedContractMethod<[], [string], 'view'>;
 
-  UPGRADER_ROLE: TypedContractMethod<[], [string], "view">;
+    UPGRADER_ROLE: TypedContractMethod<[], [string], 'view'>;
 
-  UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], "view">;
+    UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], 'view'>;
 
   appLatestNews: TypedContractMethod<
     [appId: BytesLike],
@@ -950,92 +986,447 @@ export interface News extends BaseContract {
       CooldownPeriodUpdatedEvent.OutputObject
     >;
 
-    "Initialized(uint64)": TypedContractEvent<
-      InitializedEvent.InputTuple,
-      InitializedEvent.OutputTuple,
-      InitializedEvent.OutputObject
-    >;
-    Initialized: TypedContractEvent<
-      InitializedEvent.InputTuple,
-      InitializedEvent.OutputTuple,
-      InitializedEvent.OutputObject
+    appNewsPaginated: TypedContractMethod<
+        [appId: BytesLike, _resultsPerPage: BigNumberish, _page: BigNumberish],
+        [INews.NewsTypeStructOutput[]],
+        'view'
     >;
 
-    "NewsPublished(uint256,bytes32,string,string,string,string,address)": TypedContractEvent<
-      NewsPublishedEvent.InputTuple,
-      NewsPublishedEvent.OutputTuple,
-      NewsPublishedEvent.OutputObject
-    >;
-    NewsPublished: TypedContractEvent<
-      NewsPublishedEvent.InputTuple,
-      NewsPublishedEvent.OutputTuple,
-      NewsPublishedEvent.OutputObject
+    cooldownPeriod: TypedContractMethod<[], [bigint], 'view'>;
+
+    getNewsById: TypedContractMethod<
+        [newsId: BigNumberish],
+        [INews.NewsTypeStructOutput],
+        'view'
     >;
 
-    "Paused(address)": TypedContractEvent<
-      PausedEvent.InputTuple,
-      PausedEvent.OutputTuple,
-      PausedEvent.OutputObject
-    >;
-    Paused: TypedContractEvent<
-      PausedEvent.InputTuple,
-      PausedEvent.OutputTuple,
-      PausedEvent.OutputObject
+    getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], 'view'>;
+
+    grantRole: TypedContractMethod<
+        [role: BytesLike, account: AddressLike],
+        [void],
+        'nonpayable'
     >;
 
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": TypedContractEvent<
-      RoleAdminChangedEvent.InputTuple,
-      RoleAdminChangedEvent.OutputTuple,
-      RoleAdminChangedEvent.OutputObject
-    >;
-    RoleAdminChanged: TypedContractEvent<
-      RoleAdminChangedEvent.InputTuple,
-      RoleAdminChangedEvent.OutputTuple,
-      RoleAdminChangedEvent.OutputObject
+    hasRole: TypedContractMethod<
+        [role: BytesLike, account: AddressLike],
+        [boolean],
+        'view'
     >;
 
-    "RoleGranted(bytes32,address,address)": TypedContractEvent<
-      RoleGrantedEvent.InputTuple,
-      RoleGrantedEvent.OutputTuple,
-      RoleGrantedEvent.OutputObject
-    >;
-    RoleGranted: TypedContractEvent<
-      RoleGrantedEvent.InputTuple,
-      RoleGrantedEvent.OutputTuple,
-      RoleGrantedEvent.OutputObject
-    >;
-
-    "RoleRevoked(bytes32,address,address)": TypedContractEvent<
-      RoleRevokedEvent.InputTuple,
-      RoleRevokedEvent.OutputTuple,
-      RoleRevokedEvent.OutputObject
-    >;
-    RoleRevoked: TypedContractEvent<
-      RoleRevokedEvent.InputTuple,
-      RoleRevokedEvent.OutputTuple,
-      RoleRevokedEvent.OutputObject
+    initialize: TypedContractMethod<
+        [
+            _x2EarnApps: AddressLike,
+            _cooldownPeriod: BigNumberish,
+            _defaultAdmin: AddressLike,
+            _upgrader: AddressLike,
+            _pauser: AddressLike,
+        ],
+        [void],
+        'nonpayable'
     >;
 
-    "Unpaused(address)": TypedContractEvent<
-      UnpausedEvent.InputTuple,
-      UnpausedEvent.OutputTuple,
-      UnpausedEvent.OutputObject
-    >;
-    Unpaused: TypedContractEvent<
-      UnpausedEvent.InputTuple,
-      UnpausedEvent.OutputTuple,
-      UnpausedEvent.OutputObject
+    isUnderCooldown: TypedContractMethod<[appId: BytesLike], [boolean], 'view'>;
+
+    lastNewsBlock: TypedContractMethod<[appId: BytesLike], [bigint], 'view'>;
+
+    latestNewsPaginated: TypedContractMethod<
+        [_resultsPerPage: BigNumberish, _page: BigNumberish],
+        [INews.NewsTypeStructOutput[]],
+        'view'
     >;
 
-    "Upgraded(address)": TypedContractEvent<
-      UpgradedEvent.InputTuple,
-      UpgradedEvent.OutputTuple,
-      UpgradedEvent.OutputObject
+    newsExists: TypedContractMethod<[newsId: BigNumberish], [boolean], 'view'>;
+
+    pause: TypedContractMethod<[], [void], 'nonpayable'>;
+
+    paused: TypedContractMethod<[], [boolean], 'view'>;
+
+    proxiableUUID: TypedContractMethod<[], [string], 'view'>;
+
+    publish: TypedContractMethod<
+        [
+            appId: BytesLike,
+            title: string,
+            description: string,
+            image: string,
+            callToActionUrl: string,
+        ],
+        [void],
+        'nonpayable'
     >;
-    Upgraded: TypedContractEvent<
-      UpgradedEvent.InputTuple,
-      UpgradedEvent.OutputTuple,
-      UpgradedEvent.OutputObject
+
+    removeNewsById: TypedContractMethod<
+        [newsId: BigNumberish],
+        [void],
+        'nonpayable'
     >;
-  };
+
+    renounceRole: TypedContractMethod<
+        [role: BytesLike, callerConfirmation: AddressLike],
+        [void],
+        'nonpayable'
+    >;
+
+    revokeRole: TypedContractMethod<
+        [role: BytesLike, account: AddressLike],
+        [void],
+        'nonpayable'
+    >;
+
+    setCooldownPeriod: TypedContractMethod<
+        [_cooldownPeriod: BigNumberish],
+        [void],
+        'nonpayable'
+    >;
+
+    setX2EarnApps: TypedContractMethod<
+        [_x2EarnApps: AddressLike],
+        [void],
+        'nonpayable'
+    >;
+
+    supportsInterface: TypedContractMethod<
+        [interfaceId: BytesLike],
+        [boolean],
+        'view'
+    >;
+
+    unpause: TypedContractMethod<[], [void], 'nonpayable'>;
+
+    upgradeToAndCall: TypedContractMethod<
+        [newImplementation: AddressLike, data: BytesLike],
+        [void],
+        'payable'
+    >;
+
+    version: TypedContractMethod<[], [bigint], 'view'>;
+
+    x2EarnApps: TypedContractMethod<[], [string], 'view'>;
+
+    getFunction<T extends ContractMethod = ContractMethod>(
+        key: string | FunctionFragment,
+    ): T;
+
+    getFunction(
+        nameOrSignature: 'DEFAULT_ADMIN_ROLE',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'MODERATOR_ROLE',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'PAUSER_ROLE',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'PUBLISHER_ROLE',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'UPGRADER_ROLE',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'UPGRADE_INTERFACE_VERSION',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'appLatestNews',
+    ): TypedContractMethod<
+        [appId: BytesLike],
+        [INews.NewsTypeStructOutput],
+        'view'
+    >;
+    getFunction(
+        nameOrSignature: 'appNewsPaginated',
+    ): TypedContractMethod<
+        [appId: BytesLike, _resultsPerPage: BigNumberish, _page: BigNumberish],
+        [INews.NewsTypeStructOutput[]],
+        'view'
+    >;
+    getFunction(
+        nameOrSignature: 'cooldownPeriod',
+    ): TypedContractMethod<[], [bigint], 'view'>;
+    getFunction(
+        nameOrSignature: 'getNewsById',
+    ): TypedContractMethod<
+        [newsId: BigNumberish],
+        [INews.NewsTypeStructOutput],
+        'view'
+    >;
+    getFunction(
+        nameOrSignature: 'getRoleAdmin',
+    ): TypedContractMethod<[role: BytesLike], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'grantRole',
+    ): TypedContractMethod<
+        [role: BytesLike, account: AddressLike],
+        [void],
+        'nonpayable'
+    >;
+    getFunction(
+        nameOrSignature: 'hasRole',
+    ): TypedContractMethod<
+        [role: BytesLike, account: AddressLike],
+        [boolean],
+        'view'
+    >;
+    getFunction(
+        nameOrSignature: 'initialize',
+    ): TypedContractMethod<
+        [
+            _x2EarnApps: AddressLike,
+            _cooldownPeriod: BigNumberish,
+            _defaultAdmin: AddressLike,
+            _upgrader: AddressLike,
+            _pauser: AddressLike,
+        ],
+        [void],
+        'nonpayable'
+    >;
+    getFunction(
+        nameOrSignature: 'isUnderCooldown',
+    ): TypedContractMethod<[appId: BytesLike], [boolean], 'view'>;
+    getFunction(
+        nameOrSignature: 'lastNewsBlock',
+    ): TypedContractMethod<[appId: BytesLike], [bigint], 'view'>;
+    getFunction(
+        nameOrSignature: 'latestNewsPaginated',
+    ): TypedContractMethod<
+        [_resultsPerPage: BigNumberish, _page: BigNumberish],
+        [INews.NewsTypeStructOutput[]],
+        'view'
+    >;
+    getFunction(
+        nameOrSignature: 'newsExists',
+    ): TypedContractMethod<[newsId: BigNumberish], [boolean], 'view'>;
+    getFunction(
+        nameOrSignature: 'pause',
+    ): TypedContractMethod<[], [void], 'nonpayable'>;
+    getFunction(
+        nameOrSignature: 'paused',
+    ): TypedContractMethod<[], [boolean], 'view'>;
+    getFunction(
+        nameOrSignature: 'proxiableUUID',
+    ): TypedContractMethod<[], [string], 'view'>;
+    getFunction(
+        nameOrSignature: 'publish',
+    ): TypedContractMethod<
+        [
+            appId: BytesLike,
+            title: string,
+            description: string,
+            image: string,
+            callToActionUrl: string,
+        ],
+        [void],
+        'nonpayable'
+    >;
+    getFunction(
+        nameOrSignature: 'removeNewsById',
+    ): TypedContractMethod<[newsId: BigNumberish], [void], 'nonpayable'>;
+    getFunction(
+        nameOrSignature: 'renounceRole',
+    ): TypedContractMethod<
+        [role: BytesLike, callerConfirmation: AddressLike],
+        [void],
+        'nonpayable'
+    >;
+    getFunction(
+        nameOrSignature: 'revokeRole',
+    ): TypedContractMethod<
+        [role: BytesLike, account: AddressLike],
+        [void],
+        'nonpayable'
+    >;
+    getFunction(
+        nameOrSignature: 'setCooldownPeriod',
+    ): TypedContractMethod<
+        [_cooldownPeriod: BigNumberish],
+        [void],
+        'nonpayable'
+    >;
+    getFunction(
+        nameOrSignature: 'setX2EarnApps',
+    ): TypedContractMethod<[_x2EarnApps: AddressLike], [void], 'nonpayable'>;
+    getFunction(
+        nameOrSignature: 'supportsInterface',
+    ): TypedContractMethod<[interfaceId: BytesLike], [boolean], 'view'>;
+    getFunction(
+        nameOrSignature: 'unpause',
+    ): TypedContractMethod<[], [void], 'nonpayable'>;
+    getFunction(
+        nameOrSignature: 'upgradeToAndCall',
+    ): TypedContractMethod<
+        [newImplementation: AddressLike, data: BytesLike],
+        [void],
+        'payable'
+    >;
+    getFunction(
+        nameOrSignature: 'version',
+    ): TypedContractMethod<[], [bigint], 'view'>;
+    getFunction(
+        nameOrSignature: 'x2EarnApps',
+    ): TypedContractMethod<[], [string], 'view'>;
+
+    getEvent(
+        key: 'CooldownPeriodUpdated',
+    ): TypedContractEvent<
+        CooldownPeriodUpdatedEvent.InputTuple,
+        CooldownPeriodUpdatedEvent.OutputTuple,
+        CooldownPeriodUpdatedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'Initialized',
+    ): TypedContractEvent<
+        InitializedEvent.InputTuple,
+        InitializedEvent.OutputTuple,
+        InitializedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'NewsPublished',
+    ): TypedContractEvent<
+        NewsPublishedEvent.InputTuple,
+        NewsPublishedEvent.OutputTuple,
+        NewsPublishedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'Paused',
+    ): TypedContractEvent<
+        PausedEvent.InputTuple,
+        PausedEvent.OutputTuple,
+        PausedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'RoleAdminChanged',
+    ): TypedContractEvent<
+        RoleAdminChangedEvent.InputTuple,
+        RoleAdminChangedEvent.OutputTuple,
+        RoleAdminChangedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'RoleGranted',
+    ): TypedContractEvent<
+        RoleGrantedEvent.InputTuple,
+        RoleGrantedEvent.OutputTuple,
+        RoleGrantedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'RoleRevoked',
+    ): TypedContractEvent<
+        RoleRevokedEvent.InputTuple,
+        RoleRevokedEvent.OutputTuple,
+        RoleRevokedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'Unpaused',
+    ): TypedContractEvent<
+        UnpausedEvent.InputTuple,
+        UnpausedEvent.OutputTuple,
+        UnpausedEvent.OutputObject
+    >;
+    getEvent(
+        key: 'Upgraded',
+    ): TypedContractEvent<
+        UpgradedEvent.InputTuple,
+        UpgradedEvent.OutputTuple,
+        UpgradedEvent.OutputObject
+    >;
+
+    filters: {
+        'CooldownPeriodUpdated(uint256,uint256)': TypedContractEvent<
+            CooldownPeriodUpdatedEvent.InputTuple,
+            CooldownPeriodUpdatedEvent.OutputTuple,
+            CooldownPeriodUpdatedEvent.OutputObject
+        >;
+        CooldownPeriodUpdated: TypedContractEvent<
+            CooldownPeriodUpdatedEvent.InputTuple,
+            CooldownPeriodUpdatedEvent.OutputTuple,
+            CooldownPeriodUpdatedEvent.OutputObject
+        >;
+
+        'Initialized(uint64)': TypedContractEvent<
+            InitializedEvent.InputTuple,
+            InitializedEvent.OutputTuple,
+            InitializedEvent.OutputObject
+        >;
+        Initialized: TypedContractEvent<
+            InitializedEvent.InputTuple,
+            InitializedEvent.OutputTuple,
+            InitializedEvent.OutputObject
+        >;
+
+        'NewsPublished(uint256,bytes32,string,string,string,string,address)': TypedContractEvent<
+            NewsPublishedEvent.InputTuple,
+            NewsPublishedEvent.OutputTuple,
+            NewsPublishedEvent.OutputObject
+        >;
+        NewsPublished: TypedContractEvent<
+            NewsPublishedEvent.InputTuple,
+            NewsPublishedEvent.OutputTuple,
+            NewsPublishedEvent.OutputObject
+        >;
+
+        'Paused(address)': TypedContractEvent<
+            PausedEvent.InputTuple,
+            PausedEvent.OutputTuple,
+            PausedEvent.OutputObject
+        >;
+        Paused: TypedContractEvent<
+            PausedEvent.InputTuple,
+            PausedEvent.OutputTuple,
+            PausedEvent.OutputObject
+        >;
+
+        'RoleAdminChanged(bytes32,bytes32,bytes32)': TypedContractEvent<
+            RoleAdminChangedEvent.InputTuple,
+            RoleAdminChangedEvent.OutputTuple,
+            RoleAdminChangedEvent.OutputObject
+        >;
+        RoleAdminChanged: TypedContractEvent<
+            RoleAdminChangedEvent.InputTuple,
+            RoleAdminChangedEvent.OutputTuple,
+            RoleAdminChangedEvent.OutputObject
+        >;
+
+        'RoleGranted(bytes32,address,address)': TypedContractEvent<
+            RoleGrantedEvent.InputTuple,
+            RoleGrantedEvent.OutputTuple,
+            RoleGrantedEvent.OutputObject
+        >;
+        RoleGranted: TypedContractEvent<
+            RoleGrantedEvent.InputTuple,
+            RoleGrantedEvent.OutputTuple,
+            RoleGrantedEvent.OutputObject
+        >;
+
+        'RoleRevoked(bytes32,address,address)': TypedContractEvent<
+            RoleRevokedEvent.InputTuple,
+            RoleRevokedEvent.OutputTuple,
+            RoleRevokedEvent.OutputObject
+        >;
+        RoleRevoked: TypedContractEvent<
+            RoleRevokedEvent.InputTuple,
+            RoleRevokedEvent.OutputTuple,
+            RoleRevokedEvent.OutputObject
+        >;
+
+        'Unpaused(address)': TypedContractEvent<
+            UnpausedEvent.InputTuple,
+            UnpausedEvent.OutputTuple,
+            UnpausedEvent.OutputObject
+        >;
+        Unpaused: TypedContractEvent<
+            UnpausedEvent.InputTuple,
+            UnpausedEvent.OutputTuple,
+            UnpausedEvent.OutputObject
+        >;
+
+        'Upgraded(address)': TypedContractEvent<
+            UpgradedEvent.InputTuple,
+            UpgradedEvent.OutputTuple,
+            UpgradedEvent.OutputObject
+        >;
+        Upgraded: TypedContractEvent<
+            UpgradedEvent.InputTuple,
+            UpgradedEvent.OutputTuple,
+            UpgradedEvent.OutputObject
+        >;
+    };
 }
