@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { TransactionToastContent } from './TransactionToastContent';
 import { TransactionReceipt } from '@vechain/sdk-network';
 
@@ -28,26 +28,28 @@ export const TransactionToast = ({
     if (!isOpen) return null;
 
     return (
-        <Box
-            position="fixed"
-            bottom="5"
-            left="5"
-            zIndex="11111"
-            bg={isDark ? '#1f1f1e' : 'white'}
-            borderRadius={'md'}
-            p={5}
-            boxShadow="lg"
-            maxW="sm"
-            minW="300px"
-        >
-            <TransactionToastContent
-                status={status}
-                txReceipt={txReceipt}
-                txError={txError}
-                onTryAgain={onTryAgain}
-                description={description}
-                onClose={onClose}
-            />
-        </Box>
+        <VechainKitThemeProvider darkMode={isDark}>
+            <Box
+                position="fixed"
+                bottom="5"
+                left="5"
+                zIndex="11111"
+                bg={isDark ? '#1f1f1e' : 'white'}
+                borderRadius={'md'}
+                p={5}
+                boxShadow="lg"
+                maxW="sm"
+                minW="300px"
+            >
+                <TransactionToastContent
+                    status={status}
+                    txReceipt={txReceipt}
+                    txError={txError}
+                    onTryAgain={onTryAgain}
+                    description={description}
+                    onClose={onClose}
+                />
+            </Box>
+        </VechainKitThemeProvider>
     );
 };

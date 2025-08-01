@@ -9,7 +9,7 @@ import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { ConnectPopover } from '../ConnectModal';
 
 export type WalletButtonProps = {
@@ -26,7 +26,7 @@ export const WalletButton = ({
     connectionVariant = 'modal',
 }: WalletButtonProps) => {
     const { t } = useTranslation();
-    const { loginMethods } = useVeChainKitConfig();
+    const { darkMode, loginMethods } = useVeChainKitConfig();
 
     const hasOnlyDappKit =
         loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
@@ -52,7 +52,7 @@ export const WalletButton = ({
     };
 
     return (
-        <>
+        <VechainKitThemeProvider darkMode={darkMode}>
             {connection.isConnected && !!account ? (
                 <ConnectedWallet
                     mobileVariant={mobileVariant}
@@ -83,6 +83,6 @@ export const WalletButton = ({
                 isOpen={accountModal.isOpen}
                 onClose={accountModal.onClose}
             />
-        </>
+        </VechainKitThemeProvider>
     );
 };
