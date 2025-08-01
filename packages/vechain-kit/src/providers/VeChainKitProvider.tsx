@@ -36,6 +36,7 @@ import {
 import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
+import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
@@ -341,102 +342,111 @@ export const VeChainKitProvider = (
                         defaultCurrency,
                     }}
                 >
-                    <PrivyProvider
-                        appId={privyAppId}
-                        clientId={privyClientId}
-                        config={{
-                            // loginMethods: privy?.loginMethods,
-                            loginMethodsAndOrder: {
-                                primary: (privy?.loginMethods.slice(0, 4) ??
-                                    []) as NonEmptyArray<LoginMethodOrderOption>,
-                                overflow: (privy?.loginMethods.slice(4) ??
-                                    []) as Array<LoginMethodOrderOption>,
-                            },
-                            externalWallets: {
-                                walletConnect: {
-                                    enabled: false,
+                    <VechainKitThemeProvider darkMode={darkMode}>
+                        <PrivyProvider
+                            appId={privyAppId}
+                            clientId={privyClientId}
+                            config={{
+                                // loginMethods: privy?.loginMethods,
+                                loginMethodsAndOrder: {
+                                    primary: (privy?.loginMethods.slice(0, 4) ??
+                                        []) as NonEmptyArray<LoginMethodOrderOption>,
+                                    overflow: (privy?.loginMethods.slice(4) ??
+                                        []) as Array<LoginMethodOrderOption>,
                                 },
-                            },
-                            appearance: {
-                                theme: darkMode ? 'dark' : 'light',
-                                accentColor:
-                                    privy?.appearance.accentColor ??
-                                    (darkMode ? '#3182CE' : '#2B6CB0'),
-                                loginMessage: privy?.appearance.loginMessage,
-                                logo: privy?.appearance.logo,
-                            },
-                            embeddedWallets: {
-                                createOnLogin:
-                                    privy?.embeddedWallets?.createOnLogin ??
-                                    'all-users',
-                            },
-                            passkeys: {
-                                shouldUnlinkOnUnenrollMfa: false,
-                            },
-                        }}
-                    >
-                        <DAppKitProvider
-                            node={
-                                network.nodeUrl ??
-                                getConfig(network.type).nodeUrl
-                            }
-                            i18n={i18nConfig}
-                            language={language}
-                            logLevel={dappKit.logLevel}
-                            modalParent={dappKit.modalParent}
-                            onSourceClick={dappKit.onSourceClick}
-                            usePersistence={dappKit.usePersistence ?? true}
-                            allowedWallets={dappKit.allowedWallets}
-                            walletConnectOptions={dappKit.walletConnectOptions}
-                            themeMode={darkMode ? 'DARK' : 'LIGHT'}
-                            themeVariables={{
-                                '--vdk-modal-z-index': '10000',
-                                '--vdk-modal-width': '22rem',
-                                '--vdk-modal-backdrop-filter': 'blur(3px)',
-                                '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
-                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
-
-                                // Dark mode colors
-                                '--vdk-color-dark-primary': 'transparent',
-                                '--vdk-color-dark-primary-hover':
-                                    'rgba(255, 255, 255, 0.05)',
-                                '--vdk-color-dark-primary-active':
-                                    'rgba(255, 255, 255, 0.1)',
-                                '--vdk-color-dark-secondary': '#1f1f1e',
-
-                                // Light mode colors
-                                '--vdk-color-light-primary': '#ffffff',
-                                '--vdk-color-light-primary-hover': '#f8f8f8',
-                                '--vdk-color-light-primary-active': '#f0f0f0',
-                                '--vdk-color-light-secondary': 'white',
-
-                                // Font settings - using system fonts instead of Chakra variables
-                                '--vdk-font-family':
-                                    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                                '--vdk-font-size-medium': '14px',
-                                '--vdk-font-size-large': '16px',
-                                '--vdk-font-weight-medium': '500',
+                                externalWallets: {
+                                    walletConnect: {
+                                        enabled: false,
+                                    },
+                                },
+                                appearance: {
+                                    theme: darkMode ? 'dark' : 'light',
+                                    accentColor:
+                                        privy?.appearance.accentColor ??
+                                        (darkMode ? '#3182CE' : '#2B6CB0'),
+                                    loginMessage:
+                                        privy?.appearance.loginMessage,
+                                    logo: privy?.appearance.logo,
+                                },
+                                embeddedWallets: {
+                                    createOnLogin:
+                                        privy?.embeddedWallets?.createOnLogin ??
+                                        'all-users',
+                                },
+                                passkeys: {
+                                    shouldUnlinkOnUnenrollMfa: false,
+                                },
                             }}
                         >
-                            <PrivyWalletProvider
-                                nodeUrl={
+                            <DAppKitProvider
+                                node={
                                     network.nodeUrl ??
                                     getConfig(network.type).nodeUrl
                                 }
-                                delegatorUrl={feeDelegation?.delegatorUrl ?? ''}
-                                delegateAllTransactions={
-                                    feeDelegation?.delegateAllTransactions ??
-                                    false
+                                i18n={i18nConfig}
+                                language={language}
+                                logLevel={dappKit.logLevel}
+                                modalParent={dappKit.modalParent}
+                                onSourceClick={dappKit.onSourceClick}
+                                usePersistence={dappKit.usePersistence ?? true}
+                                allowedWallets={dappKit.allowedWallets}
+                                walletConnectOptions={
+                                    dappKit.walletConnectOptions
                                 }
+                                themeMode={darkMode ? 'DARK' : 'LIGHT'}
+                                themeVariables={{
+                                    '--vdk-modal-z-index': '10000',
+                                    '--vdk-modal-width': '22rem',
+                                    '--vdk-modal-backdrop-filter': 'blur(3px)',
+                                    '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
+                                    '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
+
+                                    // Dark mode colors
+                                    '--vdk-color-dark-primary': 'transparent',
+                                    '--vdk-color-dark-primary-hover':
+                                        'rgba(255, 255, 255, 0.05)',
+                                    '--vdk-color-dark-primary-active':
+                                        'rgba(255, 255, 255, 0.1)',
+                                    '--vdk-color-dark-secondary': '#1f1f1e',
+
+                                    // Light mode colors
+                                    '--vdk-color-light-primary': '#ffffff',
+                                    '--vdk-color-light-primary-hover':
+                                        '#f8f8f8',
+                                    '--vdk-color-light-primary-active':
+                                        '#f0f0f0',
+                                    '--vdk-color-light-secondary': 'white',
+
+                                    // Font settings - using system fonts instead of Chakra variables
+                                    '--vdk-font-family':
+                                        'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                                    '--vdk-font-size-medium': '14px',
+                                    '--vdk-font-size-large': '16px',
+                                    '--vdk-font-weight-medium': '500',
+                                }}
                             >
-                                <ModalProvider>
-                                    <LegalDocumentsProvider>
-                                        {children}
-                                    </LegalDocumentsProvider>
-                                </ModalProvider>
-                            </PrivyWalletProvider>
-                        </DAppKitProvider>
-                    </PrivyProvider>
+                                <PrivyWalletProvider
+                                    nodeUrl={
+                                        network.nodeUrl ??
+                                        getConfig(network.type).nodeUrl
+                                    }
+                                    delegatorUrl={
+                                        feeDelegation?.delegatorUrl ?? ''
+                                    }
+                                    delegateAllTransactions={
+                                        feeDelegation?.delegateAllTransactions ??
+                                        false
+                                    }
+                                >
+                                    <ModalProvider>
+                                        <LegalDocumentsProvider>
+                                            {children}
+                                        </LegalDocumentsProvider>
+                                    </ModalProvider>
+                                </PrivyWalletProvider>
+                            </DAppKitProvider>
+                        </PrivyProvider>
+                    </VechainKitThemeProvider>
                 </VeChainKitContext.Provider>
             </PrivyCrossAppProvider>
         </EnsureQueryClient>
