@@ -64,12 +64,14 @@ export interface NewsInterface extends Interface {
       | "UPGRADE_INTERFACE_VERSION"
       | "appLatestNews"
       | "appNewsPaginated"
+      | "assignPublisherToCustomApp"
       | "cooldownPeriod"
       | "getNewsById"
       | "getRoleAdmin"
       | "grantRole"
       | "hasRole"
       | "initialize"
+      | "isPublisherOfApp"
       | "isUnderCooldown"
       | "lastNewsBlock"
       | "latestNewsPaginated"
@@ -79,6 +81,7 @@ export interface NewsInterface extends Interface {
       | "proxiableUUID"
       | "publish"
       | "removeNewsById"
+      | "removePublisherFromCustomApp"
       | "renounceRole"
       | "revokeRole"
       | "setCooldownPeriod"
@@ -136,6 +139,10 @@ export interface NewsInterface extends Interface {
     values: [BytesLike, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "assignPublisherToCustomApp",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "cooldownPeriod",
     values?: undefined
   ): string;
@@ -158,6 +165,10 @@ export interface NewsInterface extends Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [AddressLike, BigNumberish, AddressLike, AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isPublisherOfApp",
+    values: [AddressLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "isUnderCooldown",
@@ -188,6 +199,10 @@ export interface NewsInterface extends Interface {
   encodeFunctionData(
     functionFragment: "removeNewsById",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removePublisherFromCustomApp",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
@@ -253,6 +268,10 @@ export interface NewsInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "assignPublisherToCustomApp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "cooldownPeriod",
     data: BytesLike
   ): Result;
@@ -267,6 +286,10 @@ export interface NewsInterface extends Interface {
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isPublisherOfApp",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isUnderCooldown",
     data: BytesLike
@@ -289,6 +312,10 @@ export interface NewsInterface extends Interface {
   decodeFunctionResult(functionFragment: "publish", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeNewsById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removePublisherFromCustomApp",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -543,6 +570,12 @@ export interface News extends BaseContract {
     "view"
   >;
 
+  assignPublisherToCustomApp: TypedContractMethod<
+    [appId: BytesLike, user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   cooldownPeriod: TypedContractMethod<[], [bigint], "view">;
 
   getNewsById: TypedContractMethod<
@@ -577,6 +610,12 @@ export interface News extends BaseContract {
     "nonpayable"
   >;
 
+  isPublisherOfApp: TypedContractMethod<
+    [user: AddressLike, appId: BytesLike],
+    [boolean],
+    "view"
+  >;
+
   isUnderCooldown: TypedContractMethod<[appId: BytesLike], [boolean], "view">;
 
   lastNewsBlock: TypedContractMethod<[appId: BytesLike], [bigint], "view">;
@@ -609,6 +648,12 @@ export interface News extends BaseContract {
 
   removeNewsById: TypedContractMethod<
     [newsId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  removePublisherFromCustomApp: TypedContractMethod<
+    [user: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -692,6 +737,13 @@ export interface News extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "assignPublisherToCustomApp"
+  ): TypedContractMethod<
+    [appId: BytesLike, user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "cooldownPeriod"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -730,6 +782,13 @@ export interface News extends BaseContract {
     ],
     [void],
     "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "isPublisherOfApp"
+  ): TypedContractMethod<
+    [user: AddressLike, appId: BytesLike],
+    [boolean],
+    "view"
   >;
   getFunction(
     nameOrSignature: "isUnderCooldown"
@@ -772,6 +831,9 @@ export interface News extends BaseContract {
   getFunction(
     nameOrSignature: "removeNewsById"
   ): TypedContractMethod<[newsId: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "removePublisherFromCustomApp"
+  ): TypedContractMethod<[user: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "renounceRole"
   ): TypedContractMethod<
