@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { CURRENCY } from '@/types';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 const STORAGE_KEY = 'vechain_kit_currency';
 const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];
@@ -12,7 +13,7 @@ export const useCurrency = () => {
     const { defaultCurrency = 'usd' } = useVeChainKitConfig();
     const [currentCurrency, setCurrentCurrency] = useState<CURRENCY>(() => {
         try {
-            const stored = window.localStorage.getItem(STORAGE_KEY);
+            const stored = getLocalStorageItem(STORAGE_KEY);
             return (stored as CURRENCY) || defaultCurrency;
         } catch (error) {
             console.error(error);
@@ -21,11 +22,7 @@ export const useCurrency = () => {
     });
 
     useEffect(() => {
-        try {
-            window.localStorage.setItem(STORAGE_KEY, currentCurrency);
-        } catch (error) {
-            console.error('Failed to store currency preference:', error);
-        }
+        setLocalStorageItem(STORAGE_KEY, currentCurrency);
     }, [currentCurrency]);
 
     const changeCurrency = (newCurrency: CURRENCY) => {

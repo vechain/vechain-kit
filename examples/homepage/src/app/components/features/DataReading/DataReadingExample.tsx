@@ -16,7 +16,7 @@ import {
     useGetB3trBalance,
     useGetVot3Balance,
     useGetTokenUsdPrice,
-    useCurrentAllocationsRound,
+    useCurrentAllocationsRoundId,
 } from '@vechain/vechain-kit';
 import { MdDataUsage } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
@@ -32,14 +32,14 @@ export function DataReadingExample(): ReactElement {
         useGetVot3Balance(address);
     const { data: vetPrice, isLoading: isLoadingVetPrice } =
         useGetTokenUsdPrice('VET');
-    const { data: vbdCurrentRound, isLoading: isLoadingVbdCurrentRound } =
-        useCurrentAllocationsRound();
+    const { data: vbdCurrentRoundId } = useCurrentAllocationsRoundId();
 
     return (
         <CollapsibleCard
             defaultIsOpen={false}
             title="Reading Blockchain Data"
             icon={MdDataUsage}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
@@ -84,16 +84,7 @@ export function DataReadingExample(): ReactElement {
                             <VStack mt={4} align="start" spacing={1}>
                                 <Heading size="sm">VeBetterDAO</Heading>
                                 <Text fontWeight="bold">
-                                    Current round: {vbdCurrentRound?.roundId}
-                                </Text>
-                                <Text fontWeight="bold">
-                                    Next round starts on:{' '}
-                                    {isLoadingVbdCurrentRound
-                                        ? 'Loading...'
-                                        : new Date(
-                                              vbdCurrentRound?.voteEndTimestamp ??
-                                                  0,
-                                          ).toLocaleString()}
+                                    Current round: {vbdCurrentRoundId}
                                 </Text>
                             </VStack>
                         </VStack>

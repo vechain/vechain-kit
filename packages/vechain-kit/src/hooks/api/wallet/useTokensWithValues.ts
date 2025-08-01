@@ -20,9 +20,7 @@ type UseTokensWithValuesProps = {
 export const useTokensWithValues = ({
     address = '',
 }: UseTokensWithValuesProps) => {
-    const { balances, isLoading: balancesLoading } = useTokenBalances({
-        address,
-    });
+    const { balances, isLoading: balancesLoading } = useTokenBalances(address);
     const {
         prices,
         exchangeRates,

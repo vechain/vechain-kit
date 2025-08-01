@@ -15,6 +15,10 @@ build
 # other
 dist
 
+# TypeScript incremental build info
+*.tsbuildinfo
+.tsbuildinfo
+
 # misc
 .DS_Store
 *.pem

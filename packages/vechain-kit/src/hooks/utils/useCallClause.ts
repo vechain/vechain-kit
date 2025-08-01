@@ -1,11 +1,17 @@
-import { executeCallClause, ViewFunctionResult } from '@/utils';
+import {
+    executeCallClause,
+    executeMultipleClausesCall,
+    MultipleClausesCallParameters,
+    ViewFunctionResult,
+} from '@/utils';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
+import { ThorClient } from '@vechain/sdk-network';
 import {
     ExtractAbiFunctionNames,
     AbiParametersToPrimitiveTypes,
 } from 'abitype';
-import { Abi } from 'viem';
+import { Abi, ContractFunctionParameters } from 'viem';
 
 export * from '@/utils/thorUtils';
 
@@ -103,3 +109,23 @@ export const useCallClause = <
         ...queryOptions,
     });
 };
+
+export const useMultipleClausesCall = <
+    contracts extends readonly ContractFunctionParameters[],
+    allowFailure extends boolean = false,
+>({
+    thor,
+    calls,
+    queryKey,
+    enabled = true,
+}: {
+    thor: ThorClient;
+    calls: MultipleClausesCallParameters<contracts, allowFailure>;
+    queryKey: string[];
+    enabled?: boolean;
+}) =>
+    useQuery({
+        queryKey,
+        queryFn: () => executeMultipleClausesCall({ thor, calls }),
+        enabled,
+    });

@@ -15,7 +15,11 @@ export function DaoInfo() {
     const { data: isValidPassport } = useIsPerson(account?.address);
 
     return (
-        <CollapsibleCard title="Contract Interactions" icon={MdAccountBalance}>
+        <CollapsibleCard
+            title="Contract Interactions"
+            icon={MdAccountBalance}
+            style={{ bg: 'whiteAlpha.100' }}
+        >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
                     VeChain Kit provides hooks to easily interact with popular

@@ -18,6 +18,7 @@ import { LuArrowDownToLine } from 'react-icons/lu';
 import { RiSwap3Line } from 'react-icons/ri';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useEffect, useState } from 'react';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 type Props = {
     mt?: number;
@@ -151,7 +152,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const [isFirstVisit, setIsFirstVisit] = useState(false);
 
     useEffect(() => {
-        const hasVisited = localStorage.getItem('app-first-visit');
+        const hasVisited = getLocalStorageItem('app-first-visit');
         setIsFirstVisit(!hasVisited);
     }, []);
 
@@ -177,7 +178,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         label={action.label}
                         onClick={() => {
                             if (isFirstVisit) {
-                                localStorage.setItem('app-first-visit', 'true');
+                                setLocalStorageItem('app-first-visit', 'true');
                                 setIsFirstVisit(false);
                             }
                             action.onClick(setCurrentContent);

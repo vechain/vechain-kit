@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { SimpleAccount__factory } from '@/contracts/typechain-types';
+import { SimpleAccount__factory } from '@vechain/vechain-contract-types';
 import {
     useSendTransaction,
     UseSendTransactionReturnValue,

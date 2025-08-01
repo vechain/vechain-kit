@@ -22,7 +22,11 @@ export function ConnectionInfo() {
     };
 
     return (
-        <CollapsibleCard title="Your Connection Source" icon={RiShieldUserLine}>
+        <CollapsibleCard
+            title="Your Connection Source"
+            icon={RiShieldUserLine}
+            style={{ bg: 'whiteAlpha.100' }}
+        >
             <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
                 <Text>
                     <Text as="span" fontWeight="bold">
