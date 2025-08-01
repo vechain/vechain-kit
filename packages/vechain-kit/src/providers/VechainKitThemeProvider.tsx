@@ -7,6 +7,7 @@ import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { ReactNode, useMemo } from 'react';
 import { VechainKitTheme } from '@/theme';
+import { safeQuerySelector } from '@/utils/ssrUtils';
 
 type Props = {
     children: ReactNode;
@@ -76,9 +77,7 @@ const EnsureChakraProvider = ({
 const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
     try {
         // Check if ColorModeScript already exists by looking for its data attribute
-        const existingScript = document.querySelector(
-            '[data-chakra-color-mode]',
-        );
+        const existingScript = safeQuerySelector('[data-chakra-color-mode]');
         if (existingScript) {
             return null; // Don't render another one if it exists
         }

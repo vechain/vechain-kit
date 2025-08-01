@@ -1,7 +1,7 @@
 #### An all-in-one library for building VeChain applications.
 
 <div align="center">
-    <img src="https://i.ibb.co/NgDN6XD3/kit-preview.png" alt="VeChain Kit Banner">
+    <img src="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/intro.png" alt="VeChain Kit Banner">
 </div>
 
 ## Introduction

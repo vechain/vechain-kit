@@ -28,6 +28,7 @@ export function UIControls() {
             title="UI Customization Examples"
             icon={MdBrush}
             defaultIsOpen={false}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch" w={'full'}>
                 <Text textAlign="center">

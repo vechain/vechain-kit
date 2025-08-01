@@ -14,7 +14,7 @@ import {
     TransactionModal,
     TransactionToast,
 } from '@vechain/vechain-kit';
-import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
+import { IB3TR__factory } from '@vechain/vechain-contract-types';
 import { b3trMainnetAddress } from '../../../constants';
 
 export function TransactionExamples() {
@@ -41,6 +41,7 @@ export function TransactionExamples() {
                 },
             ];
         },
+        gasPadding: 0.25, //Testing with 25% padding
     });
 
     const {
@@ -75,6 +76,7 @@ export function TransactionExamples() {
             defaultIsOpen={false}
             title="Transaction Examples"
             icon={MdSend}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">

@@ -10,6 +10,7 @@ export function SmartAccountInfo() {
         <CollapsibleCard
             title="Smart Account Explained"
             icon={RiShieldKeyholeLine}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">

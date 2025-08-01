@@ -54,41 +54,44 @@ export declare namespace INews {
 }
 
 export interface NewsInterface extends Interface {
-    getFunction(
-        nameOrSignature:
-            | 'DEFAULT_ADMIN_ROLE'
-            | 'MODERATOR_ROLE'
-            | 'PAUSER_ROLE'
-            | 'PUBLISHER_ROLE'
-            | 'UPGRADER_ROLE'
-            | 'UPGRADE_INTERFACE_VERSION'
-            | 'appLatestNews'
-            | 'appNewsPaginated'
-            | 'cooldownPeriod'
-            | 'getNewsById'
-            | 'getRoleAdmin'
-            | 'grantRole'
-            | 'hasRole'
-            | 'initialize'
-            | 'isUnderCooldown'
-            | 'lastNewsBlock'
-            | 'latestNewsPaginated'
-            | 'newsExists'
-            | 'pause'
-            | 'paused'
-            | 'proxiableUUID'
-            | 'publish'
-            | 'removeNewsById'
-            | 'renounceRole'
-            | 'revokeRole'
-            | 'setCooldownPeriod'
-            | 'setX2EarnApps'
-            | 'supportsInterface'
-            | 'unpause'
-            | 'upgradeToAndCall'
-            | 'version'
-            | 'x2EarnApps',
-    ): FunctionFragment;
+  getFunction(
+    nameOrSignature:
+      | "DEFAULT_ADMIN_ROLE"
+      | "MODERATOR_ROLE"
+      | "PAUSER_ROLE"
+      | "PUBLISHER_ROLE"
+      | "UPGRADER_ROLE"
+      | "UPGRADE_INTERFACE_VERSION"
+      | "appLatestNews"
+      | "appNewsPaginated"
+      | "assignPublisherToCustomApp"
+      | "cooldownPeriod"
+      | "getNewsById"
+      | "getRoleAdmin"
+      | "grantRole"
+      | "hasRole"
+      | "initialize"
+      | "isPublisherOfApp"
+      | "isUnderCooldown"
+      | "lastNewsBlock"
+      | "latestNewsPaginated"
+      | "newsExists"
+      | "pause"
+      | "paused"
+      | "proxiableUUID"
+      | "publish"
+      | "removeNewsById"
+      | "removePublisherFromCustomApp"
+      | "renounceRole"
+      | "revokeRole"
+      | "setCooldownPeriod"
+      | "setX2EarnApps"
+      | "supportsInterface"
+      | "unpause"
+      | "upgradeToAndCall"
+      | "version"
+      | "x2EarnApps"
+  ): FunctionFragment;
 
     getEvent(
         nameOrSignatureOrTopic:
@@ -103,239 +106,242 @@ export interface NewsInterface extends Interface {
             | 'Upgraded',
     ): EventFragment;
 
-    encodeFunctionData(
-        functionFragment: 'DEFAULT_ADMIN_ROLE',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'MODERATOR_ROLE',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'PAUSER_ROLE',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'PUBLISHER_ROLE',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'UPGRADER_ROLE',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'UPGRADE_INTERFACE_VERSION',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'appLatestNews',
-        values: [BytesLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'appNewsPaginated',
-        values: [BytesLike, BigNumberish, BigNumberish],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'cooldownPeriod',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'getNewsById',
-        values: [BigNumberish],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'getRoleAdmin',
-        values: [BytesLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'grantRole',
-        values: [BytesLike, AddressLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'hasRole',
-        values: [BytesLike, AddressLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'initialize',
-        values: [
-            AddressLike,
-            BigNumberish,
-            AddressLike,
-            AddressLike,
-            AddressLike,
-        ],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'isUnderCooldown',
-        values: [BytesLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'lastNewsBlock',
-        values: [BytesLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'latestNewsPaginated',
-        values: [BigNumberish, BigNumberish],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'newsExists',
-        values: [BigNumberish],
-    ): string;
-    encodeFunctionData(functionFragment: 'pause', values?: undefined): string;
-    encodeFunctionData(functionFragment: 'paused', values?: undefined): string;
-    encodeFunctionData(
-        functionFragment: 'proxiableUUID',
-        values?: undefined,
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'publish',
-        values: [BytesLike, string, string, string, string],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'removeNewsById',
-        values: [BigNumberish],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'renounceRole',
-        values: [BytesLike, AddressLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'revokeRole',
-        values: [BytesLike, AddressLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'setCooldownPeriod',
-        values: [BigNumberish],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'setX2EarnApps',
-        values: [AddressLike],
-    ): string;
-    encodeFunctionData(
-        functionFragment: 'supportsInterface',
-        values: [BytesLike],
-    ): string;
-    encodeFunctionData(functionFragment: 'unpause', values?: undefined): string;
-    encodeFunctionData(
-        functionFragment: 'upgradeToAndCall',
-        values: [AddressLike, BytesLike],
-    ): string;
-    encodeFunctionData(functionFragment: 'version', values?: undefined): string;
-    encodeFunctionData(
-        functionFragment: 'x2EarnApps',
-        values?: undefined,
-    ): string;
+  encodeFunctionData(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MODERATOR_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PAUSER_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "PUBLISHER_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "UPGRADER_ROLE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "UPGRADE_INTERFACE_VERSION",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "appLatestNews",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "appNewsPaginated",
+    values: [BytesLike, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "assignPublisherToCustomApp",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "cooldownPeriod",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getNewsById",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleAdmin",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [AddressLike, BigNumberish, AddressLike, AddressLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isPublisherOfApp",
+    values: [AddressLike, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isUnderCooldown",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastNewsBlock",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "latestNewsPaginated",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "newsExists",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "proxiableUUID",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "publish",
+    values: [BytesLike, string, string, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removeNewsById",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "removePublisherFromCustomApp",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "renounceRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "revokeRole",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setCooldownPeriod",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setX2EarnApps",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "supportsInterface",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "upgradeToAndCall",
+    values: [AddressLike, BytesLike]
+  ): string;
+  encodeFunctionData(functionFragment: "version", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "x2EarnApps",
+    values?: undefined
+  ): string;
 
-    decodeFunctionResult(
-        functionFragment: 'DEFAULT_ADMIN_ROLE',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'MODERATOR_ROLE',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'PAUSER_ROLE',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'PUBLISHER_ROLE',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'UPGRADER_ROLE',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'UPGRADE_INTERFACE_VERSION',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'appLatestNews',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'appNewsPaginated',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'cooldownPeriod',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'getNewsById',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'getRoleAdmin',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'grantRole',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(functionFragment: 'hasRole', data: BytesLike): Result;
-    decodeFunctionResult(
-        functionFragment: 'initialize',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'isUnderCooldown',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'lastNewsBlock',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'latestNewsPaginated',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'newsExists',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(functionFragment: 'pause', data: BytesLike): Result;
-    decodeFunctionResult(functionFragment: 'paused', data: BytesLike): Result;
-    decodeFunctionResult(
-        functionFragment: 'proxiableUUID',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(functionFragment: 'publish', data: BytesLike): Result;
-    decodeFunctionResult(
-        functionFragment: 'removeNewsById',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'renounceRole',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'revokeRole',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'setCooldownPeriod',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'setX2EarnApps',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(
-        functionFragment: 'supportsInterface',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(functionFragment: 'unpause', data: BytesLike): Result;
-    decodeFunctionResult(
-        functionFragment: 'upgradeToAndCall',
-        data: BytesLike,
-    ): Result;
-    decodeFunctionResult(functionFragment: 'version', data: BytesLike): Result;
-    decodeFunctionResult(
-        functionFragment: 'x2EarnApps',
-        data: BytesLike,
-    ): Result;
+  decodeFunctionResult(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "MODERATOR_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PAUSER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "PUBLISHER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "UPGRADER_ROLE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "UPGRADE_INTERFACE_VERSION",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "appLatestNews",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "appNewsPaginated",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "assignPublisherToCustomApp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "cooldownPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getNewsById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isPublisherOfApp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isUnderCooldown",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastNewsBlock",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "latestNewsPaginated",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "newsExists", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "proxiableUUID",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "publish", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "removeNewsById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "removePublisherFromCustomApp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceRole",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setCooldownPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setX2EarnApps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "upgradeToAndCall",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "x2EarnApps", data: BytesLike): Result;
 }
 
 export namespace CooldownPeriodUpdatedEvent {
@@ -588,10 +594,396 @@ export interface News extends BaseContract {
 
     UPGRADE_INTERFACE_VERSION: TypedContractMethod<[], [string], 'view'>;
 
-    appLatestNews: TypedContractMethod<
-        [appId: BytesLike],
-        [INews.NewsTypeStructOutput],
-        'view'
+  appLatestNews: TypedContractMethod<
+    [appId: BytesLike],
+    [INews.NewsTypeStructOutput],
+    "view"
+  >;
+
+  appNewsPaginated: TypedContractMethod<
+    [appId: BytesLike, _resultsPerPage: BigNumberish, _page: BigNumberish],
+    [INews.NewsTypeStructOutput[]],
+    "view"
+  >;
+
+  assignPublisherToCustomApp: TypedContractMethod<
+    [appId: BytesLike, user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  cooldownPeriod: TypedContractMethod<[], [bigint], "view">;
+
+  getNewsById: TypedContractMethod<
+    [newsId: BigNumberish],
+    [INews.NewsTypeStructOutput],
+    "view"
+  >;
+
+  getRoleAdmin: TypedContractMethod<[role: BytesLike], [string], "view">;
+
+  grantRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  hasRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [boolean],
+    "view"
+  >;
+
+  initialize: TypedContractMethod<
+    [
+      _x2EarnApps: AddressLike,
+      _cooldownPeriod: BigNumberish,
+      _defaultAdmin: AddressLike,
+      _upgrader: AddressLike,
+      _pauser: AddressLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  isPublisherOfApp: TypedContractMethod<
+    [user: AddressLike, appId: BytesLike],
+    [boolean],
+    "view"
+  >;
+
+  isUnderCooldown: TypedContractMethod<[appId: BytesLike], [boolean], "view">;
+
+  lastNewsBlock: TypedContractMethod<[appId: BytesLike], [bigint], "view">;
+
+  latestNewsPaginated: TypedContractMethod<
+    [_resultsPerPage: BigNumberish, _page: BigNumberish],
+    [INews.NewsTypeStructOutput[]],
+    "view"
+  >;
+
+  newsExists: TypedContractMethod<[newsId: BigNumberish], [boolean], "view">;
+
+  pause: TypedContractMethod<[], [void], "nonpayable">;
+
+  paused: TypedContractMethod<[], [boolean], "view">;
+
+  proxiableUUID: TypedContractMethod<[], [string], "view">;
+
+  publish: TypedContractMethod<
+    [
+      appId: BytesLike,
+      title: string,
+      description: string,
+      image: string,
+      callToActionUrl: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+
+  removeNewsById: TypedContractMethod<
+    [newsId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  removePublisherFromCustomApp: TypedContractMethod<
+    [user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  renounceRole: TypedContractMethod<
+    [role: BytesLike, callerConfirmation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  revokeRole: TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  setCooldownPeriod: TypedContractMethod<
+    [_cooldownPeriod: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
+  setX2EarnApps: TypedContractMethod<
+    [_x2EarnApps: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  supportsInterface: TypedContractMethod<
+    [interfaceId: BytesLike],
+    [boolean],
+    "view"
+  >;
+
+  unpause: TypedContractMethod<[], [void], "nonpayable">;
+
+  upgradeToAndCall: TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+
+  version: TypedContractMethod<[], [bigint], "view">;
+
+  x2EarnApps: TypedContractMethod<[], [string], "view">;
+
+  getFunction<T extends ContractMethod = ContractMethod>(
+    key: string | FunctionFragment
+  ): T;
+
+  getFunction(
+    nameOrSignature: "DEFAULT_ADMIN_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "MODERATOR_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "PAUSER_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "PUBLISHER_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "UPGRADER_ROLE"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "UPGRADE_INTERFACE_VERSION"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "appLatestNews"
+  ): TypedContractMethod<
+    [appId: BytesLike],
+    [INews.NewsTypeStructOutput],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "appNewsPaginated"
+  ): TypedContractMethod<
+    [appId: BytesLike, _resultsPerPage: BigNumberish, _page: BigNumberish],
+    [INews.NewsTypeStructOutput[]],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "assignPublisherToCustomApp"
+  ): TypedContractMethod<
+    [appId: BytesLike, user: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "cooldownPeriod"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "getNewsById"
+  ): TypedContractMethod<
+    [newsId: BigNumberish],
+    [INews.NewsTypeStructOutput],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "getRoleAdmin"
+  ): TypedContractMethod<[role: BytesLike], [string], "view">;
+  getFunction(
+    nameOrSignature: "grantRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "hasRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "initialize"
+  ): TypedContractMethod<
+    [
+      _x2EarnApps: AddressLike,
+      _cooldownPeriod: BigNumberish,
+      _defaultAdmin: AddressLike,
+      _upgrader: AddressLike,
+      _pauser: AddressLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "isPublisherOfApp"
+  ): TypedContractMethod<
+    [user: AddressLike, appId: BytesLike],
+    [boolean],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "isUnderCooldown"
+  ): TypedContractMethod<[appId: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "lastNewsBlock"
+  ): TypedContractMethod<[appId: BytesLike], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "latestNewsPaginated"
+  ): TypedContractMethod<
+    [_resultsPerPage: BigNumberish, _page: BigNumberish],
+    [INews.NewsTypeStructOutput[]],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "newsExists"
+  ): TypedContractMethod<[newsId: BigNumberish], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "pause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "paused"
+  ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "proxiableUUID"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "publish"
+  ): TypedContractMethod<
+    [
+      appId: BytesLike,
+      title: string,
+      description: string,
+      image: string,
+      callToActionUrl: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "removeNewsById"
+  ): TypedContractMethod<[newsId: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "removePublisherFromCustomApp"
+  ): TypedContractMethod<[user: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "renounceRole"
+  ): TypedContractMethod<
+    [role: BytesLike, callerConfirmation: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "revokeRole"
+  ): TypedContractMethod<
+    [role: BytesLike, account: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setCooldownPeriod"
+  ): TypedContractMethod<[_cooldownPeriod: BigNumberish], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "setX2EarnApps"
+  ): TypedContractMethod<[_x2EarnApps: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "supportsInterface"
+  ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "unpause"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "upgradeToAndCall"
+  ): TypedContractMethod<
+    [newImplementation: AddressLike, data: BytesLike],
+    [void],
+    "payable"
+  >;
+  getFunction(
+    nameOrSignature: "version"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "x2EarnApps"
+  ): TypedContractMethod<[], [string], "view">;
+
+  getEvent(
+    key: "CooldownPeriodUpdated"
+  ): TypedContractEvent<
+    CooldownPeriodUpdatedEvent.InputTuple,
+    CooldownPeriodUpdatedEvent.OutputTuple,
+    CooldownPeriodUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Initialized"
+  ): TypedContractEvent<
+    InitializedEvent.InputTuple,
+    InitializedEvent.OutputTuple,
+    InitializedEvent.OutputObject
+  >;
+  getEvent(
+    key: "NewsPublished"
+  ): TypedContractEvent<
+    NewsPublishedEvent.InputTuple,
+    NewsPublishedEvent.OutputTuple,
+    NewsPublishedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Paused"
+  ): TypedContractEvent<
+    PausedEvent.InputTuple,
+    PausedEvent.OutputTuple,
+    PausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "RoleAdminChanged"
+  ): TypedContractEvent<
+    RoleAdminChangedEvent.InputTuple,
+    RoleAdminChangedEvent.OutputTuple,
+    RoleAdminChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "RoleGranted"
+  ): TypedContractEvent<
+    RoleGrantedEvent.InputTuple,
+    RoleGrantedEvent.OutputTuple,
+    RoleGrantedEvent.OutputObject
+  >;
+  getEvent(
+    key: "RoleRevoked"
+  ): TypedContractEvent<
+    RoleRevokedEvent.InputTuple,
+    RoleRevokedEvent.OutputTuple,
+    RoleRevokedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Unpaused"
+  ): TypedContractEvent<
+    UnpausedEvent.InputTuple,
+    UnpausedEvent.OutputTuple,
+    UnpausedEvent.OutputObject
+  >;
+  getEvent(
+    key: "Upgraded"
+  ): TypedContractEvent<
+    UpgradedEvent.InputTuple,
+    UpgradedEvent.OutputTuple,
+    UpgradedEvent.OutputObject
+  >;
+
+  filters: {
+    "CooldownPeriodUpdated(uint256,uint256)": TypedContractEvent<
+      CooldownPeriodUpdatedEvent.InputTuple,
+      CooldownPeriodUpdatedEvent.OutputTuple,
+      CooldownPeriodUpdatedEvent.OutputObject
+    >;
+    CooldownPeriodUpdated: TypedContractEvent<
+      CooldownPeriodUpdatedEvent.InputTuple,
+      CooldownPeriodUpdatedEvent.OutputTuple,
+      CooldownPeriodUpdatedEvent.OutputObject
     >;
 
     appNewsPaginated: TypedContractMethod<

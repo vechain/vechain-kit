@@ -164,17 +164,7 @@ export const ExploreEcosystemContent = ({
     // Filter default apps based on search query
     const filteredDefaultApps = DEFAULT_APPS.filter((dapp) =>
         dapp.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    ).map((dapp) => {
-        if (dapp.logoComponent) {
-            return {
-                ...dapp,
-                logoComponent: React.cloneElement(dapp.logoComponent, {
-                    isDark,
-                }),
-            };
-        }
-        return dapp;
-    });
+    );
 
     // Filter App Hub apps based on search query and selected category
     const filteredAppHubApps =
@@ -289,10 +279,6 @@ export const ExploreEcosystemContent = ({
                                                 selectedCategory={
                                                     currentCategory
                                                 }
-                                                {...(dapp.logoComponent && {
-                                                    logoComponent:
-                                                        dapp.logoComponent,
-                                                })}
                                             />
                                         </GridItem>
                                     ))}

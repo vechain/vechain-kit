@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
-import { useGetTokenUsdPrice } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useGetTokenUsdPrice } from './useGetTokenUsdPrice';
 
 export type ExchangeRates = {
     eurUsdPrice: number;
     gbpUsdPrice: number;
 };
 
-// TODO: migration check if we can remove hooks inside and bundle this into one query using thor.transactions.executeMultipleClausesCall
-// check example in useTokenPrices2.ts
 export const useTokenPrices = () => {
     const { network } = useVeChainKitConfig();
     const config = getConfig(network.type);

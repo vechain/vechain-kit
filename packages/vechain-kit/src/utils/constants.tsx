@@ -1,6 +1,7 @@
 import { VeBetterIcon, VTHOLogo } from '@/assets';
 import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
+import { getLocalStorageItem } from './ssrUtils';
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: 'https://cryptologos.cc/logos/vechain-vet-logo.png',
@@ -36,11 +37,33 @@ export const VECHAIN_KIT_STORAGE_KEYS = {
     NETWORK: 'vechain-kit:network',
 };
 
+// SSR-safe ENV getter function
+export const getENV = () => {
+    // During SSR, always return safe defaults
+    if (typeof window === 'undefined') {
+        return {
+            isDevelopment: false,
+            isProduction: true,
+        };
+    }
+    
+    // In browser, check localStorage using SSR-safe utility
+    const network = getLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK);
+    return {
+        isDevelopment: network === 'test',
+        isProduction: network === 'main',
+    };
+};
+
+// For backward compatibility, create a getter-based ENV object
+// This ensures ENV properties are evaluated lazily and won't crash during SSR
 export const ENV = {
-    isDevelopment:
-        localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'test',
-    isProduction:
-        localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'main',
+    get isDevelopment() {
+        return getENV().isDevelopment;
+    },
+    get isProduction() {
+        return getENV().isProduction;
+    },
 };
 
 export const VECHAIN_KIT_MIXPANEL_TOKENS = {
@@ -48,9 +71,15 @@ export const VECHAIN_KIT_MIXPANEL_TOKENS = {
     production: '2c9e0d4c8a37e9f31e3d59361f48b0dc',
 };
 
-export const VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN = ENV.isProduction
-    ? VECHAIN_KIT_MIXPANEL_TOKENS.production
-    : VECHAIN_KIT_MIXPANEL_TOKENS.development;
+export const getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN = () => {
+    const env = getENV();
+    return env.isProduction
+        ? VECHAIN_KIT_MIXPANEL_TOKENS.production
+        : VECHAIN_KIT_MIXPANEL_TOKENS.development;
+};
+
+// Default to development token for SSR compatibility
+export const VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN = VECHAIN_KIT_MIXPANEL_TOKENS.development;
 
 export const VECHAIN_KIT_MIXPANEL_PROJECT_NAME = 'vechain-kit';
 

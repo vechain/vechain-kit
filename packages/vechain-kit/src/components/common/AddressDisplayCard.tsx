@@ -29,10 +29,7 @@ export const AddressDisplayCard = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
 
-    const { isLoading: totalBalanceLoading } = useTotalBalance({
-        address,
-    });
-
+    const { isLoading: totalBalanceLoading } = useTotalBalance({ address });
     const { tokens, isLoading: tokensLoading } = useTokensWithValues({
         address,
     });

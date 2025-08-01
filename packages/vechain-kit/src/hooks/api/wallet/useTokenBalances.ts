@@ -3,7 +3,6 @@ import {
     useAccountBalance,
     useGetB3trBalance,
     useGetVot3Balance,
-    useGetVeDelegateBalance,
     useGetErc20Balance,
     useGetCustomTokenBalances,
 } from '@/hooks';
@@ -16,13 +15,7 @@ export type WalletTokenBalance = {
     balance: string;
 };
 
-type UseTokenBalancesProps = {
-    address?: string;
-};
-
-// TODO: migration check if we can remove hooks inside and bundle this into one query using thor.transactions.executeMultipleClausesCall
-// check example of useTokenBalances2
-export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
+export const useTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();
     const config = getConfig(network.type);
 
@@ -33,7 +26,7 @@ export const useTokenBalances = ({ address = '' }: UseTokenBalancesProps) => {
     const { data: vot3Balance, isLoading: vot3Loading } =
         useGetVot3Balance(address);
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
-        useGetVeDelegateBalance(address);
+        useGetErc20Balance(config.veDelegateTokenContractAddress, address);
     const { data: gloDollarBalance, isLoading: gloDollarLoading } =
         useGetErc20Balance(config.gloDollarContractAddress, address);
 

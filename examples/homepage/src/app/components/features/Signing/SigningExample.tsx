@@ -104,7 +104,11 @@ export function SigningExample(): ReactElement {
 
     if (!connection.isConnected) {
         return (
-            <CollapsibleCard title="Message Signing" icon={MdFingerprint}>
+            <CollapsibleCard
+                title="Message Signing"
+                icon={MdFingerprint}
+                style={{ bg: 'whiteAlpha.100' }}
+            >
                 <VStack spacing={4}>
                     <Text>Connect your wallet to start signing messages</Text>
                     <WalletButton />
@@ -118,6 +122,7 @@ export function SigningExample(): ReactElement {
             defaultIsOpen={false}
             title="Message Signing"
             icon={MdFingerprint}
+            style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
