@@ -42,6 +42,12 @@
             "inputs": ["src/**", "test/**", "tests/**", "package.json"],
             "cache": true
         },
+        "deploy:testnet": {
+            "cache": false
+        },
+        "deploy:mainnet": {
+            "cache": false
+        },
         "typecheck": {
             "inputs": ["src/**", "tsconfig.json", "package.json"],
             "cache": true

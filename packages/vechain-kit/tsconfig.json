@@ -49,5 +49,6 @@
         "src/**/*.tsx",
         "src/*.d.ts",
         "eslint.config.mjs"
-    ]
+    ],
+    "exclude": ["src/contracts/typechain-types/**/*"]
 }
