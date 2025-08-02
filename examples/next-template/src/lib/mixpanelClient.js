@@ -9,7 +9,9 @@ if (!MIXPANEL_PROJECT_TOKEN) {
 
 // **Core Function to Track Events**
 const trackEvent = (event, properties = {}) => {
-    mixpanel.track(event, properties);
+    if (MIXPANEL_PROJECT_TOKEN) {
+        mixpanel.track(event, properties);
+    }
 };
 
 // **Reset User Data (For Logout)**

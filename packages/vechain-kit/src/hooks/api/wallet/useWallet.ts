@@ -11,22 +11,30 @@ import {
     useGetNodeUrl,
     useSmartAccountVersion,
     useDAppKitWallet,
+    ThorClient,
 } from '@/hooks';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
 import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { usePrivyWalletProvider } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '@/config';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useState } from 'react';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { useWalletMetadata } from './useWalletMetadata';
+import { VeChainAbstractSigner, VeChainProvider } from '@vechain/sdk-network';
+import { SmartAccountSigner } from '@/signers/SmartAccountSigner';
+import { type TypedDataDomain, type TypedDataField } from 'ethers';
 import { isBrowser } from '@/utils/ssrUtils';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
     account: Wallet;
+
+    signer: VeChainAbstractSigner | null;
 
     // The wallet in use between dappKitWallet, embeddedWallet and crossAppWallet
     connectedWallet: Wallet;
@@ -68,10 +76,16 @@ export const useWallet = (): UseWalletReturnType => {
     const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
     const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
     const { feeDelegation, network, privy } = useVeChainKitConfig();
+    const { sendTransaction, signTypedData, signMessage } =
+        usePrivyWalletProvider();
+
     const { user, authenticated, logout, ready } = usePrivy();
     const { data: chainId } = useGetChainId();
-    const { account: dappKitAccount, disconnect: dappKitDisconnect } =
-        useDAppKitWallet();
+    const {
+        account: dappKitAccount,
+        disconnect: dappKitDisconnect,
+        signer: dappKitSigner,
+    } = useDAppKitWallet();
 
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
@@ -208,6 +222,90 @@ export const useWallet = (): UseWalletReturnType => {
         !!account?.address &&
         compareAddresses(smartAccount?.address, account?.address);
 
+    // Adapter functions for SmartAccountSigner
+    const adaptSignTypedData = useCallback(
+        ({
+            domain,
+            types,
+            value,
+        }: {
+            domain: TypedDataDomain;
+            types: Record<string, TypedDataField[]>;
+            value: Record<string, unknown>;
+        }) =>
+            signTypedData({
+                domain: {
+                    name: domain.name ?? undefined,
+                    version: domain.version ?? undefined,
+                    chainId: domain.chainId
+                        ? Number(domain.chainId)
+                        : undefined,
+                    verifyingContract: domain.verifyingContract ?? undefined,
+                    salt: domain.salt
+                        ? typeof domain.salt === 'string'
+                            ? (new TextEncoder().encode(domain.salt)
+                                  .buffer as ArrayBuffer)
+                            : domain.salt instanceof Uint8Array
+                            ? (domain.salt.buffer as ArrayBuffer)
+                            : domain.salt &&
+                              typeof domain.salt === 'object' &&
+                              'byteLength' in domain.salt
+                            ? (new Uint8Array(domain.salt as ArrayBufferLike)
+                                  .buffer as ArrayBuffer)
+                            : undefined
+                        : undefined,
+                },
+                types,
+                primaryType: Object.keys(types).find(
+                    (key) => key !== 'EIP712Domain',
+                )!,
+                message: value,
+            }),
+        [signTypedData],
+    );
+
+    const adaptSignMessage = useCallback(
+        ({ message }: { message: string | Uint8Array }) =>
+            signMessage(
+                typeof message === 'string'
+                    ? message
+                    : new TextDecoder().decode(message),
+            ),
+        [signMessage],
+    );
+
+    // Embedded signer logic
+    const getSigner = useCallback((): VeChainAbstractSigner | null => {
+        const config = getConfig(network.type);
+        const provider = new VeChainProvider(ThorClient.at(config.nodeUrl));
+
+        if (isConnectedWithDappKit) {
+            return dappKitSigner;
+        } else if (isConnectedWithPrivy && smartAccount?.address) {
+            return new SmartAccountSigner(
+                {
+                    address: smartAccount?.address,
+                    sendTransaction: sendTransaction,
+                    signTypedData: adaptSignTypedData,
+                    signMessage: adaptSignMessage,
+                },
+                provider,
+            );
+        }
+        return null;
+    }, [
+        isConnectedWithDappKit,
+        dappKitSigner,
+        isConnectedWithPrivy,
+        smartAccount?.address,
+        network.type,
+        sendTransaction,
+        adaptSignTypedData,
+        adaptSignMessage,
+    ]);
+
+    const signer = getSigner();
+
     // Modify the disconnect function to ensure state updates
     const disconnect = useCallback(async () => {
         try {
@@ -252,6 +350,7 @@ export const useWallet = (): UseWalletReturnType => {
             isLoadingMetadata: smartAccountMetadata.isLoading,
             metadata: smartAccountMetadata.records,
         },
+        signer,
         connectedWallet,
         privyUser: user,
         connection: {
@@ -264,7 +363,10 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithVeChain,
             source: connectionSource,
             isInAppBrowser:
-                (isBrowser() && window.vechain && window.vechain.isInAppBrowser) ?? false,
+                (isBrowser() &&
+                    window.vechain &&
+                    window.vechain.isInAppBrowser) ??
+                false,
             nodeUrl,
             delegatorUrl: feeDelegation?.delegatorUrl,
             chainId: chainId,
