@@ -38,7 +38,7 @@ import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
-type PrivyDependentMethods = 'email' | 'google' | 'passkey' | 'more';
+type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
 
 type LoginMethodOrder = {
     method:

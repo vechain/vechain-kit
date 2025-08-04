@@ -1,25 +1,16 @@
 import {
     useLoginWithOAuth as usePrivyLoginWithOAuth,
     useCreateWallet,
+    OAuthProviderType,
 } from '@privy-io/react-auth';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod, VePrivySocialLoginMethod } from '@/types/mixPanel';
+import { VeLoginMethod } from '@/types/mixPanel';
 import { usePrivy } from '@privy-io/react-auth';
 import { isRejectionError } from '@/utils/stringUtils';
 
-type OAuthProvider = 'google' | 'twitter' | 'apple' | 'discord';
-
 interface OAuthOptions {
-    provider: OAuthProvider;
+    provider: OAuthProviderType;
 }
-
-const providerToSocialMethod: Record<OAuthProvider, VePrivySocialLoginMethod> =
-    {
-        google: VePrivySocialLoginMethod.EMAIL,
-        twitter: VePrivySocialLoginMethod.X,
-        apple: VePrivySocialLoginMethod.EMAIL,
-        discord: VePrivySocialLoginMethod.DISCORD,
-    };
 
 export const useLoginWithOAuth = () => {
     const { createWallet } = useCreateWallet();
@@ -36,7 +27,6 @@ export const useLoginWithOAuth = () => {
 
     const initOAuth = async ({ provider }: OAuthOptions) => {
         const loginMethod = VeLoginMethod.OAUTH;
-        const socialMethod = providerToSocialMethod[provider];
 
         try {
             Analytics.auth.flowStarted(loginMethod);
@@ -45,7 +35,6 @@ export const useLoginWithOAuth = () => {
             Analytics.auth.completed({
                 userId: user?.id,
                 loginMethod,
-                platform: socialMethod,
             });
         } catch (error) {
             const errorMsg =
