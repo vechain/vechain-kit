@@ -249,6 +249,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@base-org/account@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "@base-org/account@npm:1.1.1"
+  dependencies:
+    "@noble/hashes": "npm:1.4.0"
+    clsx: "npm:1.2.1"
+    eventemitter3: "npm:5.0.1"
+    idb-keyval: "npm:6.2.1"
+    ox: "npm:0.6.9"
+    preact: "npm:10.24.2"
+    viem: "npm:^2.31.7"
+    zustand: "npm:5.0.3"
+  checksum: 10c0/36912a6c8e22582f42dd6fe5139c8eb89b1b5523d966f50ce06d56221893d563acdeeb3a70bed71a109b8de3ca935a13ec9138eda348d57eed766e7861c51fe6
+  languageName: node
+  linkType: hard
+
 "@bitcoinerlab/secp256k1@npm:^1.1.1":
   version: 1.2.0
   resolution: "@bitcoinerlab/secp256k1@npm:1.2.0"
@@ -1838,6 +1854,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@coinbase/wallet-sdk@npm:4.3.2":
+  version: 4.3.2
+  resolution: "@coinbase/wallet-sdk@npm:4.3.2"
+  dependencies:
+    "@noble/hashes": "npm:^1.4.0"
+    clsx: "npm:^1.2.1"
+    eventemitter3: "npm:^5.0.1"
+    preact: "npm:^10.24.2"
+  checksum: 10c0/b1170d135d7384fa8b45bc6723decdd94b44b614280c0da4c38d9a484123f23ef5aace16ade2286f81c0d18d9420db50d077b93a1b7a3bbed8c60581f6a6f5ed
+  languageName: node
+  linkType: hard
+
 "@coinbase/wallet-sdk@npm:4.3.6":
   version: 4.3.6
   resolution: "@coinbase/wallet-sdk@npm:4.3.6"
@@ -1851,19 +1879,6 @@ __metadata:
     viem: "npm:^2.27.2"
     zustand: "npm:5.0.3"
   checksum: 10c0/ad5c7b124217ef191950c8c485d709d806f4a17eb039b1b8f325510cbc751b48c1e68acf8b44c3b24bb35682e44a6e3140eaba2d623166bf5a4e9dd4c4aef2e1
-  languageName: node
-  linkType: hard
-
-"@coinbase/wallet-sdk@npm:^4.3.2":
-  version: 4.3.7
-  resolution: "@coinbase/wallet-sdk@npm:4.3.7"
-  dependencies:
-    "@noble/hashes": "npm:^1.4.0"
-    clsx: "npm:^1.2.1"
-    eventemitter3: "npm:^5.0.1"
-    preact: "npm:^10.24.2"
-    viem: "npm:^2.27.2"
-  checksum: 10c0/cc7530fdacd0a5813bc1f1f648c8262ab4fa2c04981e98f4ba62ac075aa893a03a99f387ca37d93ac27499cd838fdef198ebafc49b73e8f94317d9c02a4eb694
   languageName: node
   linkType: hard
 
@@ -4720,19 +4735,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/api-base@npm:1.5.1":
-  version: 1.5.1
-  resolution: "@privy-io/api-base@npm:1.5.1"
+"@privy-io/api-base@npm:1.5.2":
+  version: 1.5.2
+  resolution: "@privy-io/api-base@npm:1.5.2"
   dependencies:
     zod: "npm:^3.24.3"
-  checksum: 10c0/ed7f5907a372a2f62ccb3150f813463ea7083259e850395ceb63a58524c4f55f4fa5bb287025e3cec985d8561b73cc81c67f93356068a2f2eb64186abe50931b
+  checksum: 10c0/4adfe187dfdce9b32fa427e9c49877c431a02471c3d31dc7f5cc2d10725f617393f06bfdeb73afa63b5abec85090316ab986b902332ab8f6105fe30a42ba1006
   languageName: node
   linkType: hard
 
-"@privy-io/chains@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@privy-io/chains@npm:0.0.1"
-  checksum: 10c0/1eb5a17af33e3247842fa19505e05d7e19fcebf2546de3d1371d5fb6b87d99a6b132736e05309d7015b937fcfd91189927853520aec9a73a4454ae9e87bca26c
+"@privy-io/chains@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@privy-io/chains@npm:0.0.2"
+  checksum: 10c0/855684b3b145d326691f09c82deb229e97c8ccaea5014b891fcb9484f2d3d9cafceb063221bfca4b15735cabf5a2e5311715907b02d6d61708dcd8b36b135770
   languageName: node
   linkType: hard
 
@@ -4757,18 +4772,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/ethereum@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@privy-io/ethereum@npm:0.0.1"
+"@privy-io/ethereum@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@privy-io/ethereum@npm:0.0.2"
   peerDependencies:
     viem: ^2.21.36
-  checksum: 10c0/0d5e274688f4d22603677bd7c406dc7b491c4449cfdb18f75ced1418ef6299a468f7fb59d5700ac64dd25f3d3917c3fe206e8200d8cb6d53995195ab26ba9309
+  checksum: 10c0/c38dbc312e6a850691b5707045528632a57c3a90a12270c55a8390a89032104d1e73f8949c2fb715cd8e66a13cf0de7bc1c3141dddd2c21b088cae395e8cceaa
   languageName: node
   linkType: hard
 
-"@privy-io/js-sdk-core@npm:0.50.9":
-  version: 0.50.9
-  resolution: "@privy-io/js-sdk-core@npm:0.50.9"
+"@privy-io/js-sdk-core@npm:0.53.0":
+  version: 0.53.0
+  resolution: "@privy-io/js-sdk-core@npm:0.53.0"
   dependencies:
     "@ethersproject/abstract-signer": "npm:^5.7.0"
     "@ethersproject/bignumber": "npm:^5.7.0"
@@ -4776,9 +4791,9 @@ __metadata:
     "@ethersproject/providers": "npm:^5.7.2"
     "@ethersproject/transactions": "npm:^5.7.0"
     "@ethersproject/units": "npm:^5.7.0"
-    "@privy-io/api-base": "npm:1.5.1"
-    "@privy-io/chains": "npm:0.0.1"
-    "@privy-io/public-api": "npm:2.33.0"
+    "@privy-io/api-base": "npm:1.5.2"
+    "@privy-io/chains": "npm:0.0.2"
+    "@privy-io/public-api": "npm:2.40.1"
     canonicalize: "npm:^2.0.0"
     eventemitter3: "npm:^5.0.1"
     fetch-retry: "npm:^6.0.0"
@@ -4788,51 +4803,55 @@ __metadata:
     set-cookie-parser: "npm:^2.6.0"
     uuid: "npm:>=8 <10"
   peerDependencies:
-    permissionless: ^0.2.10
-    viem: ^2.21.36
+    permissionless: ^0.2.47
+    viem: ^2.30.6
   peerDependenciesMeta:
     permissionless:
       optional: true
     viem:
       optional: true
-  checksum: 10c0/1aa4305de1f0629f779ef3d0fb460e2b7f99bb82fba011a7623b8bd1a928fa4bbca94a4d260574f19d8fa5a4ec3dcdad8ea2fe475b4eb79ef6ec6d22334573ed
+  checksum: 10c0/4a5e49227cd83e099aa944f5a1490f9e45141299c77a6396e58241deb47596c36b74d90fafe0ec9b9e3ad7eab202878e18e6f0011e31915a1e6af6a935adbe9c
   languageName: node
   linkType: hard
 
-"@privy-io/public-api@npm:2.33.0":
-  version: 2.33.0
-  resolution: "@privy-io/public-api@npm:2.33.0"
+"@privy-io/public-api@npm:2.40.1":
+  version: 2.40.1
+  resolution: "@privy-io/public-api@npm:2.40.1"
   dependencies:
-    "@privy-io/api-base": "npm:1.5.1"
+    "@privy-io/api-base": "npm:1.5.2"
     bs58: "npm:^5.0.0"
     libphonenumber-js: "npm:^1.10.31"
     viem: "npm:^2"
     zod: "npm:^3.24.3"
-  checksum: 10c0/155f9df49c1745ef1ae65ab73f3079b0b467c36fe7ca53e3ce81428177a4c726a3230d078f7d178aae27657f91615a6f3a3876bd2f29d8af31d070c737d2b845
+  checksum: 10c0/6f5b0b3a6bc0e76706f38582c3b80de95bdb8e1ecb7ee2e38add66ce8313d4df3da33f0058620ab47e09f464e79ff684169c7e4865396019ba247556eefb6949
   languageName: node
   linkType: hard
 
-"@privy-io/react-auth@npm:2.14.0":
-  version: 2.14.0
-  resolution: "@privy-io/react-auth@npm:2.14.0"
+"@privy-io/react-auth@npm:2.20.0":
+  version: 2.20.0
+  resolution: "@privy-io/react-auth@npm:2.20.0"
   dependencies:
-    "@coinbase/wallet-sdk": "npm:^4.3.2"
+    "@base-org/account": "npm:^1.1.0"
+    "@coinbase/wallet-sdk": "npm:4.3.2"
     "@floating-ui/react": "npm:^0.26.22"
     "@headlessui/react": "npm:^2.2.0"
     "@heroicons/react": "npm:^2.1.1"
     "@marsidev/react-turnstile": "npm:^0.4.1"
     "@metamask/eth-sig-util": "npm:^6.0.0"
-    "@privy-io/chains": "npm:0.0.1"
-    "@privy-io/ethereum": "npm:0.0.1"
-    "@privy-io/js-sdk-core": "npm:0.50.9"
-    "@reown/appkit": "npm:^1.7.4"
+    "@privy-io/api-base": "npm:1.5.2"
+    "@privy-io/chains": "npm:0.0.2"
+    "@privy-io/ethereum": "npm:0.0.2"
+    "@privy-io/js-sdk-core": "npm:0.53.0"
+    "@privy-io/public-api": "npm:2.40.1"
+    "@reown/appkit": "npm:^1.7.11"
     "@scure/base": "npm:^1.2.5"
     "@simplewebauthn/browser": "npm:^9.0.1"
     "@solana/wallet-adapter-base": "npm:0.9.23"
     "@solana/wallet-standard-wallet-adapter-base": "npm:^1.1.2"
     "@solana/wallet-standard-wallet-adapter-react": "npm:^1.1.2"
+    "@tanstack/react-virtual": "npm:^3.13.10"
     "@wallet-standard/app": "npm:^1.0.1"
-    "@walletconnect/ethereum-provider": "npm:2.19.2"
+    "@walletconnect/ethereum-provider": "npm:2.21.5"
     base64-js: "npm:^1.5.1"
     dotenv: "npm:^16.0.3"
     encoding: "npm:^0.1.13"
@@ -4852,13 +4871,13 @@ __metadata:
     stylis: "npm:^4.3.4"
     tinycolor2: "npm:^1.6.0"
     uuid: "npm:>=8 <10"
-    viem: "npm:^2.24.1"
+    viem: "npm:^2.32.0"
     zustand: "npm:^5.0.0"
   peerDependencies:
     "@abstract-foundation/agw-client": ^1.0.0
     "@solana/spl-token": ^0.4.9
     "@solana/web3.js": ^1.95.8
-    permissionless: ^0.2.10
+    permissionless: ^0.2.47
     react: ^18 || ^19
     react-dom: ^18 || ^19
   peerDependenciesMeta:
@@ -4870,7 +4889,7 @@ __metadata:
       optional: true
     permissionless:
       optional: true
-  checksum: 10c0/72214aa5c15472a1c73d7a1a087e85259d1787992c2f5d5e0a6ac0ab0057f9af969eecb0dd220fda39aa5cbb0496eea80f6a5c238e8102ea60376ed58383b401
+  checksum: 10c0/aeeff045745e606a6d45bf4e7088ce345d904e9fb9870a177b8dec0bbff1243fcdb94570691bb30ea65d6514b92090b3b90bc3a334f1a78eac87addb69bec41b
   languageName: node
   linkType: hard
 
@@ -5233,7 +5252,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reown/appkit@npm:^1.7.4":
+"@reown/appkit@npm:^1.7.11":
   version: 1.7.17
   resolution: "@reown/appkit@npm:1.7.17"
   dependencies:
@@ -5881,7 +5900,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-virtual@npm:^3.13.9":
+"@tanstack/react-virtual@npm:^3.13.10, @tanstack/react-virtual@npm:^3.13.9":
   version: 3.13.12
   resolution: "@tanstack/react-virtual@npm:3.13.12"
   dependencies:
@@ -6750,7 +6769,7 @@ __metadata:
     "@choc-ui/chakra-autocomplete": "npm:^5.3.0"
     "@emotion/styled": "npm:^11.14.1"
     "@privy-io/cross-app-connect": "npm:0.2.2"
-    "@privy-io/react-auth": "npm:2.14.0"
+    "@privy-io/react-auth": "npm:2.20.0"
     "@rainbow-me/rainbowkit": "npm:^2.1.5"
     "@solana/web3.js": "npm:^1.98.0"
     "@tanstack/react-query": "npm:^5.64.2"
@@ -7048,25 +7067,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/ethereum-provider@npm:2.19.2":
-  version: 2.19.2
-  resolution: "@walletconnect/ethereum-provider@npm:2.19.2"
-  dependencies:
-    "@walletconnect/jsonrpc-http-connection": "npm:1.0.8"
-    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/modal": "npm:2.7.0"
-    "@walletconnect/sign-client": "npm:2.19.2"
-    "@walletconnect/types": "npm:2.19.2"
-    "@walletconnect/universal-provider": "npm:2.19.2"
-    "@walletconnect/utils": "npm:2.19.2"
-    events: "npm:3.3.0"
-  checksum: 10c0/bee280682f8e073038eff48d502fa372bcfeb7c13fbf7eaa2a1ecacc034e908d2f836efe64353341653d8879d36a421ca29586313c765be62e351a7237445173
-  languageName: node
-  linkType: hard
-
 "@walletconnect/ethereum-provider@npm:2.21.1":
   version: 2.21.1
   resolution: "@walletconnect/ethereum-provider@npm:2.21.1"
@@ -7083,6 +7083,25 @@ __metadata:
     "@walletconnect/utils": "npm:2.21.1"
     events: "npm:3.3.0"
   checksum: 10c0/91247045202a7f040338f7588d7c323cc845ac47c6ca8749f38ab07ac30a219a1ef6698ee03b97f5d48ca57e3fa1e1863c9fbc1371a1471501b5843014cacd18
+  languageName: node
+  linkType: hard
+
+"@walletconnect/ethereum-provider@npm:2.21.5":
+  version: 2.21.5
+  resolution: "@walletconnect/ethereum-provider@npm:2.21.5"
+  dependencies:
+    "@reown/appkit": "npm:1.7.8"
+    "@walletconnect/jsonrpc-http-connection": "npm:1.0.8"
+    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
+    "@walletconnect/jsonrpc-types": "npm:1.0.4"
+    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
+    "@walletconnect/keyvaluestorage": "npm:1.1.1"
+    "@walletconnect/sign-client": "npm:2.21.5"
+    "@walletconnect/types": "npm:2.21.5"
+    "@walletconnect/universal-provider": "npm:2.21.5"
+    "@walletconnect/utils": "npm:2.21.5"
+    events: "npm:3.3.0"
+  checksum: 10c0/0959baf7ea8813cfd6703ddba7dbe10a3d95767db2e23f39d613345c97a712a1d962bbeac8eb2cae0022dbdab04331ab2e0a7fcc8c155a76316032db87e11dfe
   languageName: node
   linkType: hard
 
@@ -7381,26 +7400,6 @@ __metadata:
     "@walletconnect/logger": "npm:2.1.2"
     events: "npm:3.3.0"
   checksum: 10c0/b870cae5295b9951305be653d78346bb81dedee945d395d043597034635d402ba0e688bf65d0c8cc3b50f86387727449c6043805795250135f70c9b7c6bc5998
-  languageName: node
-  linkType: hard
-
-"@walletconnect/universal-provider@npm:2.19.2":
-  version: 2.19.2
-  resolution: "@walletconnect/universal-provider@npm:2.19.2"
-  dependencies:
-    "@walletconnect/events": "npm:1.0.1"
-    "@walletconnect/jsonrpc-http-connection": "npm:1.0.8"
-    "@walletconnect/jsonrpc-provider": "npm:1.0.14"
-    "@walletconnect/jsonrpc-types": "npm:1.0.4"
-    "@walletconnect/jsonrpc-utils": "npm:1.0.8"
-    "@walletconnect/keyvaluestorage": "npm:1.1.1"
-    "@walletconnect/logger": "npm:2.1.2"
-    "@walletconnect/sign-client": "npm:2.19.2"
-    "@walletconnect/types": "npm:2.19.2"
-    "@walletconnect/utils": "npm:2.19.2"
-    es-toolkit: "npm:1.33.0"
-    events: "npm:3.3.0"
-  checksum: 10c0/e4d64e5e95ee56a0babe62242c636d1bc691ee9acd2d46c1632117bf88ec0f48387224493387c3d397f2e0c030d2c64385f592ad0e92d8f4a50406058697ddb5
   languageName: node
   linkType: hard
 
@@ -18502,7 +18501,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:>=2.29.0, viem@npm:^2, viem@npm:^2.1.1, viem@npm:^2.21.45, viem@npm:^2.24.1, viem@npm:^2.27.2, viem@npm:^2.29.3, viem@npm:^2.31.7":
+"viem@npm:>=2.29.0, viem@npm:^2, viem@npm:^2.1.1, viem@npm:^2.21.45, viem@npm:^2.27.2, viem@npm:^2.29.3, viem@npm:^2.31.7":
   version: 2.33.0
   resolution: "viem@npm:2.33.0"
   dependencies:
@@ -18523,7 +18522,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:>=2.32.0":
+"viem@npm:>=2.32.0, viem@npm:^2.32.0":
   version: 2.33.2
   resolution: "viem@npm:2.33.2"
   dependencies:
