@@ -1783,16 +1783,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@coinbase/wallet-sdk@npm:^4.3.2":
-  version: 4.3.7
-  resolution: "@coinbase/wallet-sdk@npm:4.3.7"
+"@coinbase/wallet-sdk@npm:4.3.2":
+  version: 4.3.2
+  resolution: "@coinbase/wallet-sdk@npm:4.3.2"
   dependencies:
     "@noble/hashes": "npm:^1.4.0"
     clsx: "npm:^1.2.1"
     eventemitter3: "npm:^5.0.1"
     preact: "npm:^10.24.2"
-    viem: "npm:^2.27.2"
-  checksum: 10c0/cc7530fdacd0a5813bc1f1f648c8262ab4fa2c04981e98f4ba62ac075aa893a03a99f387ca37d93ac27499cd838fdef198ebafc49b73e8f94317d9c02a4eb694
+  checksum: 10c0/b1170d135d7384fa8b45bc6723decdd94b44b614280c0da4c38d9a484123f23ef5aace16ade2286f81c0d18d9420db50d077b93a1b7a3bbed8c60581f6a6f5ed
   languageName: node
   linkType: hard
 
@@ -4266,19 +4265,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/api-base@npm:1.5.1":
-  version: 1.5.1
-  resolution: "@privy-io/api-base@npm:1.5.1"
+"@privy-io/api-base@npm:1.5.2":
+  version: 1.5.2
+  resolution: "@privy-io/api-base@npm:1.5.2"
   dependencies:
     zod: "npm:^3.24.3"
-  checksum: 10c0/ed7f5907a372a2f62ccb3150f813463ea7083259e850395ceb63a58524c4f55f4fa5bb287025e3cec985d8561b73cc81c67f93356068a2f2eb64186abe50931b
+  checksum: 10c0/4adfe187dfdce9b32fa427e9c49877c431a02471c3d31dc7f5cc2d10725f617393f06bfdeb73afa63b5abec85090316ab986b902332ab8f6105fe30a42ba1006
   languageName: node
   linkType: hard
 
-"@privy-io/chains@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@privy-io/chains@npm:0.0.1"
-  checksum: 10c0/1eb5a17af33e3247842fa19505e05d7e19fcebf2546de3d1371d5fb6b87d99a6b132736e05309d7015b937fcfd91189927853520aec9a73a4454ae9e87bca26c
+"@privy-io/chains@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@privy-io/chains@npm:0.0.2"
+  checksum: 10c0/855684b3b145d326691f09c82deb229e97c8ccaea5014b891fcb9484f2d3d9cafceb063221bfca4b15735cabf5a2e5311715907b02d6d61708dcd8b36b135770
   languageName: node
   linkType: hard
 
@@ -4303,18 +4302,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/ethereum@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@privy-io/ethereum@npm:0.0.1"
+"@privy-io/ethereum@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@privy-io/ethereum@npm:0.0.2"
   peerDependencies:
     viem: ^2.21.36
-  checksum: 10c0/0d5e274688f4d22603677bd7c406dc7b491c4449cfdb18f75ced1418ef6299a468f7fb59d5700ac64dd25f3d3917c3fe206e8200d8cb6d53995195ab26ba9309
+  checksum: 10c0/c38dbc312e6a850691b5707045528632a57c3a90a12270c55a8390a89032104d1e73f8949c2fb715cd8e66a13cf0de7bc1c3141dddd2c21b088cae395e8cceaa
   languageName: node
   linkType: hard
 
-"@privy-io/js-sdk-core@npm:0.50.9":
-  version: 0.50.9
-  resolution: "@privy-io/js-sdk-core@npm:0.50.9"
+"@privy-io/js-sdk-core@npm:0.52.5":
+  version: 0.52.5
+  resolution: "@privy-io/js-sdk-core@npm:0.52.5"
   dependencies:
     "@ethersproject/abstract-signer": "npm:^5.7.0"
     "@ethersproject/bignumber": "npm:^5.7.0"
@@ -4322,9 +4321,9 @@ __metadata:
     "@ethersproject/providers": "npm:^5.7.2"
     "@ethersproject/transactions": "npm:^5.7.0"
     "@ethersproject/units": "npm:^5.7.0"
-    "@privy-io/api-base": "npm:1.5.1"
-    "@privy-io/chains": "npm:0.0.1"
-    "@privy-io/public-api": "npm:2.33.0"
+    "@privy-io/api-base": "npm:1.5.2"
+    "@privy-io/chains": "npm:0.0.2"
+    "@privy-io/public-api": "npm:2.38.0"
     canonicalize: "npm:^2.0.0"
     eventemitter3: "npm:^5.0.1"
     fetch-retry: "npm:^6.0.0"
@@ -4334,49 +4333,52 @@ __metadata:
     set-cookie-parser: "npm:^2.6.0"
     uuid: "npm:>=8 <10"
   peerDependencies:
-    permissionless: ^0.2.10
-    viem: ^2.21.36
+    permissionless: ^0.2.47
+    viem: ^2.30.6
   peerDependenciesMeta:
     permissionless:
       optional: true
     viem:
       optional: true
-  checksum: 10c0/1aa4305de1f0629f779ef3d0fb460e2b7f99bb82fba011a7623b8bd1a928fa4bbca94a4d260574f19d8fa5a4ec3dcdad8ea2fe475b4eb79ef6ec6d22334573ed
+  checksum: 10c0/b7f2d1e086de1c7621d50479c9bdbde65edf6c571a60d9f6e7e30c8f65da09e8923d5833b3f99be6f7fac054a2c19c69da24503c79b283f89622d9ba9bc7801c
   languageName: node
   linkType: hard
 
-"@privy-io/public-api@npm:2.33.0":
-  version: 2.33.0
-  resolution: "@privy-io/public-api@npm:2.33.0"
+"@privy-io/public-api@npm:2.38.0":
+  version: 2.38.0
+  resolution: "@privy-io/public-api@npm:2.38.0"
   dependencies:
-    "@privy-io/api-base": "npm:1.5.1"
+    "@privy-io/api-base": "npm:1.5.2"
     bs58: "npm:^5.0.0"
     libphonenumber-js: "npm:^1.10.31"
     viem: "npm:^2"
     zod: "npm:^3.24.3"
-  checksum: 10c0/155f9df49c1745ef1ae65ab73f3079b0b467c36fe7ca53e3ce81428177a4c726a3230d078f7d178aae27657f91615a6f3a3876bd2f29d8af31d070c737d2b845
+  checksum: 10c0/5c6feca2d025b5af982faa7c6b86ff7172a9cffafdd2d7e89c32cb0b32659f5d2ce6813a0ee40444d7793c9a2528a5bdd5cedfcda522c1bb8e9a5b57fb141186
   languageName: node
   linkType: hard
 
-"@privy-io/react-auth@npm:2.14.0":
-  version: 2.14.0
-  resolution: "@privy-io/react-auth@npm:2.14.0"
+"@privy-io/react-auth@npm:2.18.0":
+  version: 2.18.0
+  resolution: "@privy-io/react-auth@npm:2.18.0"
   dependencies:
-    "@coinbase/wallet-sdk": "npm:^4.3.2"
+    "@coinbase/wallet-sdk": "npm:4.3.2"
     "@floating-ui/react": "npm:^0.26.22"
     "@headlessui/react": "npm:^2.2.0"
     "@heroicons/react": "npm:^2.1.1"
     "@marsidev/react-turnstile": "npm:^0.4.1"
     "@metamask/eth-sig-util": "npm:^6.0.0"
-    "@privy-io/chains": "npm:0.0.1"
-    "@privy-io/ethereum": "npm:0.0.1"
-    "@privy-io/js-sdk-core": "npm:0.50.9"
-    "@reown/appkit": "npm:^1.7.4"
+    "@privy-io/api-base": "npm:1.5.2"
+    "@privy-io/chains": "npm:0.0.2"
+    "@privy-io/ethereum": "npm:0.0.2"
+    "@privy-io/js-sdk-core": "npm:0.52.5"
+    "@privy-io/public-api": "npm:2.38.0"
+    "@reown/appkit": "npm:^1.7.11"
     "@scure/base": "npm:^1.2.5"
     "@simplewebauthn/browser": "npm:^9.0.1"
     "@solana/wallet-adapter-base": "npm:0.9.23"
     "@solana/wallet-standard-wallet-adapter-base": "npm:^1.1.2"
     "@solana/wallet-standard-wallet-adapter-react": "npm:^1.1.2"
+    "@tanstack/react-virtual": "npm:^3.13.10"
     "@wallet-standard/app": "npm:^1.0.1"
     "@walletconnect/ethereum-provider": "npm:2.19.2"
     base64-js: "npm:^1.5.1"
@@ -4398,13 +4400,13 @@ __metadata:
     stylis: "npm:^4.3.4"
     tinycolor2: "npm:^1.6.0"
     uuid: "npm:>=8 <10"
-    viem: "npm:^2.24.1"
+    viem: "npm:^2.30.6"
     zustand: "npm:^5.0.0"
   peerDependencies:
     "@abstract-foundation/agw-client": ^1.0.0
     "@solana/spl-token": ^0.4.9
     "@solana/web3.js": ^1.95.8
-    permissionless: ^0.2.10
+    permissionless: ^0.2.47
     react: ^18 || ^19
     react-dom: ^18 || ^19
   peerDependenciesMeta:
@@ -4416,7 +4418,7 @@ __metadata:
       optional: true
     permissionless:
       optional: true
-  checksum: 10c0/72214aa5c15472a1c73d7a1a087e85259d1787992c2f5d5e0a6ac0ab0057f9af969eecb0dd220fda39aa5cbb0496eea80f6a5c238e8102ea60376ed58383b401
+  checksum: 10c0/9497404bef72bc25237c3f4430ce8de0e2702e179e7756e8bd7a2bea339e024827947aa7bca109fd93cd09c52d63fe3657ac5f6015edea80df6d9ae8abdc8a17
   languageName: node
   linkType: hard
 
@@ -4764,7 +4766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reown/appkit@npm:^1.7.4":
+"@reown/appkit@npm:^1.7.11":
   version: 1.7.17
   resolution: "@reown/appkit@npm:1.7.17"
   dependencies:
@@ -5492,6 +5494,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-virtual@npm:^3.13.10":
+  version: 3.13.12
+  resolution: "@tanstack/react-virtual@npm:3.13.12"
+  dependencies:
+    "@tanstack/virtual-core": "npm:3.13.12"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/0eda3d5691ec3bf93a1cdaa955f4972c7aa9a5026179622824bb52ff8c47e59ee4634208e52d77f43ffb3ce435ee39a0899d6a81f6316918ce89d68122490371
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-virtual@npm:^3.13.9":
   version: 3.13.9
   resolution: "@tanstack/react-virtual@npm:3.13.9"
@@ -5501,6 +5515,13 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10c0/aa05fb24e30686516e74ccdec94a83d195615a4f29bc866a53ee6b0107e466c6d6e3e947b3fb0613b907b0f982d74b00367868cf6b1ac956562d0e7c24d6764b
+  languageName: node
+  linkType: hard
+
+"@tanstack/virtual-core@npm:3.13.12":
+  version: 3.13.12
+  resolution: "@tanstack/virtual-core@npm:3.13.12"
+  checksum: 10c0/483f38761b73db05c181c10181f0781c1051be3350ae5c378e65057e5f1fdd6606e06e17dbaad8a5e36c04b208ea1a1344cacd4eca0dcde60f335cf398e4d698
   languageName: node
   linkType: hard
 
@@ -6420,7 +6441,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@choc-ui/chakra-autocomplete": "npm:^5.3.0"
     "@privy-io/cross-app-connect": "npm:0.2.2"
-    "@privy-io/react-auth": "npm:2.14.0"
+    "@privy-io/react-auth": "npm:2.18.0"
     "@rainbow-me/rainbowkit": "npm:^2.1.5"
     "@solana/web3.js": "npm:^1.98.0"
     "@tanstack/react-query": "npm:^5.64.2"
@@ -17150,7 +17171,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:>=2.23.11, viem@npm:^2, viem@npm:^2.1.1, viem@npm:^2.21.14, viem@npm:^2.21.45, viem@npm:^2.24.1, viem@npm:^2.29.3":
+"viem@npm:>=2.23.11, viem@npm:^2, viem@npm:^2.1.1, viem@npm:^2.21.14, viem@npm:^2.21.45, viem@npm:^2.29.3":
   version: 2.30.1
   resolution: "viem@npm:2.30.1"
   dependencies:
@@ -17171,7 +17192,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:>=2.32.0, viem@npm:^2.27.2":
+"viem@npm:>=2.32.0, viem@npm:^2.30.6":
   version: 2.33.2
   resolution: "viem@npm:2.33.2"
   dependencies:
