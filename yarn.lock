@@ -4717,13 +4717,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/cross-app-connect@npm:0.1.8":
-  version: 0.1.8
-  resolution: "@privy-io/cross-app-connect@npm:0.1.8"
+"@privy-io/cross-app-connect@npm:0.2.2":
+  version: 0.2.2
+  resolution: "@privy-io/cross-app-connect@npm:0.2.2"
   dependencies:
     "@noble/curves": "npm:^1.5.0"
     "@noble/hashes": "npm:1.3.2"
     "@scure/base": "npm:~1.1.2"
+    fflate: "npm:0.8.2"
   peerDependencies:
     "@rainbow-me/rainbowkit": ^2.2.3
     "@wagmi/core": ^2.16.4
@@ -4733,7 +4734,7 @@ __metadata:
       optional: true
     "@wagmi/core":
       optional: true
-  checksum: 10c0/28bfa630d149a0e7b1e2b1998549629225b4d5511aecfec81623be6c9982bb8edc3c90041e653389bc2efa9ba833bba75543b3b7c05d4ac6d7346b8c2b10ad82
+  checksum: 10c0/0270d68509a9ebfd3e5bd7767b2292f31c8f5ce651d9dde0916a1e77649037ddd3b06448bfd49e409ce37268858e231e22a693c7ebdf4058532d45da8ca9c804
   languageName: node
   linkType: hard
 
@@ -6563,7 +6564,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@choc-ui/chakra-autocomplete": "npm:^5.3.0"
     "@emotion/styled": "npm:^11.14.1"
-    "@privy-io/cross-app-connect": "npm:0.1.8"
+    "@privy-io/cross-app-connect": "npm:0.2.2"
     "@privy-io/react-auth": "npm:2.8.0"
     "@rainbow-me/rainbowkit": "npm:^2.1.5"
     "@solana/web3.js": "npm:^1.98.0"
@@ -10908,6 +10909,13 @@ __metadata:
   version: 6.0.0
   resolution: "fetch-retry@npm:6.0.0"
   checksum: 10c0/8e275b042ff98041236d30b71966f24c34ff19f957bb0f00e664754bd63d0dfb5122d091e7d5bca21f6370d88a1713d22421b33471305d7b86d6799427278802
+  languageName: node
+  linkType: hard
+
+"fflate@npm:0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 10c0/03448d630c0a583abea594835a9fdb2aaf7d67787055a761515bf4ed862913cfd693b4c4ffd5c3f3b355a70cf1e19033e9ae5aedcca103188aaff91b8bd6e293
   languageName: node
   linkType: hard
 
