@@ -10,6 +10,7 @@ type LoginModalContentConfig = {
     showDappKit: boolean;
     showEcosystem: boolean;
     showMoreLogin: boolean;
+    showGithubLogin: boolean;
     isOfficialVeChainApp: boolean;
 };
 
@@ -59,6 +60,10 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         () => isLoginMethodEnabled('more'),
         [loginMethods],
     );
+    const showLoginWithGithub = useMemo(
+        () => isLoginMethodEnabled('github'),
+        [loginMethods],
+    );
 
     // Base configuration that's common across all cases
     const baseConfig: LoginModalContentConfig = {
@@ -69,6 +74,7 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         showDappKit: showLoginWithDappKit,
         showEcosystem: showEcosystemLogin,
         showMoreLogin: showMoreLogin,
+        showGithubLogin: showLoginWithGithub,
         isOfficialVeChainApp: false,
     };
 

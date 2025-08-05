@@ -7,3 +7,4 @@ export * from './LoginWithGoogleButton';
 export * from './PasskeyLoginButton';
 export * from './DappKitButton';
 export * from './VeChainWithPrivyLoginButton';
+export * from './LoginWithGithubButton';
