@@ -34,11 +34,16 @@ export interface TransactionCost {
 }
 
 export interface EstimationResponse {
-    vthoPerGasAtSpeed: VthoPerGasAtSpeed;
-    estimatedGas: EstimatedGas;
-    rate: Rate;
-    transactionCost: TransactionCost;
-    serviceFee: number;
+    vthoPerGasAtSpeed?: number;
+    estimatedGas?: number;
+    rate?: number;
+    transactionCost?: number;
+    serviceFee?: number;
+    totalGasUsed?: number;
+}
+
+export interface DepositAccount {
+    depositAccount: string;
 }
 
 export function calculateTotalCost(

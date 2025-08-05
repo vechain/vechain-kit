@@ -1,11 +1,13 @@
+import { getConfig } from "@/config";
 export type GasTokenType = 'VTHO' | 'B3TR' | 'VET';
+
+export type TransactionSpeed = 'regular' | 'medium' | 'high';
 
 export interface GasTokenInfo {
     type: GasTokenType;
     name: string;
     symbol: string;
     address?: string;
-    isNative: boolean;
     description: string;
 }
 
@@ -41,22 +43,20 @@ export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {
         type: 'VTHO',
         name: 'VTHO Token',
         symbol: 'VTHO',
-        isNative: true,
+        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').vthoContractAddress,
         description: 'Native gas token',
     },
     B3TR: {
         type: 'B3TR',
         name: 'B3TR Token',
         symbol: 'B3TR',
-        address: '0x5ef79995FE8a89e0812330E4378eB2660ceDe699',
-        isNative: false,
+        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').b3trContractAddress,
         description: 'Pay gas with B3TR',
     },
     VET: {
         type: 'VET',
         name: 'VET Token',
         symbol: 'VET',
-        isNative: false,
         description: 'Pay gas with VET',
     },
 };

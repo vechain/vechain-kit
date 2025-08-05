@@ -11,6 +11,7 @@ import {
     encodeTransactionBody,
 } from '@/utils/paymentClauseBuilder';
 import { GENERIC_DELEGATOR_URL } from '@/utils/Constants';
+import { useClauseBuilder } from '../utils/useClauseBuilder';
 
 export type BuildTransactionProps<ClausesParams> = {
     clauseBuilder: (props: ClausesParams) => EnhancedClause[];
@@ -46,9 +47,9 @@ export const useBuildTransaction = <ClausesParams>({
     const { account, connection } = useWallet();
     const queryClient = useQueryClient();
     const config = useVeChainKitConfig();
-    const { selectOptimalGasToken, checkPreferredTokenAvailability } =
+    const { selectOptimalGasToken, checkPreferredTokenAvailability, preferences } =
         useGasTokenSelection();
-
+    const { buildClausesWithAuth } = useClauseBuilder();
     /**
      * Callback function to be called when the transaction is successfully confirmed.
      * It cancels and refetches the specified queries if `invalidateCache` is `true`.
@@ -123,15 +124,21 @@ export const useBuildTransaction = <ClausesParams>({
                 try {
                     // Step 1: Create delegator service and estimate gas fees
                     const delegatorService = createGasEstimationService(
-                        GENERIC_DELEGATOR_URL,
-                        true, // TODO: Use mock for now until real URL is configured
+                        config?.genericDelegator?.delegatorUrl ?? GENERIC_DELEGATOR_URL,
+                        {
+                            buildClausesWithAuth: async (clauses) => {
+                                const result = await buildClausesWithAuth(clauses);
+                                return result as unknown as EnhancedClause[];
+                            }
+                        }
                     );
 
                     // Estimate gas costs for the transaction
                     const gasEstimation = await delegatorService.estimateGas(
+                        preferences.tokenPriority[0],
                         clauses,
+                        'medium',
                     );
-                    console.info('Gas estimation received:', gasEstimation);
 
                     // Step 2: Check token availability based on estimated costs
                     const {

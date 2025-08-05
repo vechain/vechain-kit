@@ -1,3 +1,4 @@
+import { getConfig } from '@/config';
 import { EnhancedClause } from '@/types';
 import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/GasToken';
 import { Transaction, TransactionBody } from '@vechain/sdk-core';
@@ -12,7 +13,7 @@ export function createPaymentClause(
 ): EnhancedClause {
     const tokenInfo = SUPPORTED_GAS_TOKENS[gasToken];
 
-    if (tokenInfo.isNative) {
+    if (tokenInfo.address === getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').vthoContractAddress) {
         // VTHO
         return {
             to: depositAccount,

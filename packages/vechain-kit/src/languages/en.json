@@ -372,6 +372,7 @@
     "Profile Updated": "Profile Updated",
     "Profile updated": "Profile updated",
     "Quick actions": "Quick actions",
+    "Rate from VTHO to {{token}}": "Rate from VTHO to {{token}}",
     "Read More": "Read More",
     "Read less": "Read less",
     "Read more": "Read more",
@@ -473,7 +474,9 @@
     "Tokens transferred successfully.": "Tokens transferred successfully.",
     "Tools": "Tools",
     "Total balance": "Total balance",
+    "Total gas fee in {{token}}": "Total gas fee in {{token}}",
     "Transaction completed!": "Transaction completed!",
+    "Transaction Cost (In VTHO)": "Transaction Cost (In VTHO)",
     "Transaction failed": "Transaction failed",
     "Transaction failed:": "Transaction failed:",
     "Transaction is being processed, it can take up to 15 seconds.": "Transaction is being processed, it can take up to 15 seconds.",
@@ -663,5 +666,6 @@
     "Sponsored by: {{sponsorName}}": "Sponsored by: {{sponsorName}}",
     "This transaction is covered by the app developer": "This transaction is covered by the app developer",
     "Processing...": "Processing...",
-    "Confirming Payment...": "Confirming Payment..."
+    "Confirming Payment...": "Confirming Payment...",
+    "VTHO": "VTHO"
 }

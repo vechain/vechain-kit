@@ -32,9 +32,38 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            feeDelegation={{
-                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                delegateAllTransactions: false,
+            privy={{
+                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+                loginMethods: [
+                    'google',
+                    'apple',
+                    'twitter',
+                    'farcaster',
+                    'email',
+                    'discord',
+                    'tiktok',
+                    // 'rabby_wallet',
+                    // 'coinbase_wallet',
+                    // 'rainbow',
+                    // 'phantom',
+                    // 'metamask',
+                ],
+                appearance: {
+                    loginMessage: 'Select a login method',
+                    logo: coloredLogo,
+                },
+                embeddedWallets: {
+                    createOnLogin: 'all-users',
+                },
+            }}
+            // feeDelegation={{
+            //     delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
+            //     delegateAllTransactions: false,
+            // }}
+            genericDelegator={{
+                enabled: true,
+                // delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
             }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect', 'sync2'],

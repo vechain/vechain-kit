@@ -11,9 +11,7 @@ import {
 import { FiInfo } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useGasTokenSelection } from '@/hooks/transactions';
-import { useMemo } from 'react';
-import { SUPPORTED_GAS_TOKENS, GasTokenType } from '@/types/GasToken';
+import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/GasToken';
 import { formatGasCost } from '@/types/GasEstimation';
 import { useWallet } from '@/hooks';
 import { useGasEstimation } from '@/hooks/api/useGasEstimation';
@@ -21,13 +19,13 @@ import { EnhancedClause } from '@/types';
 
 interface GasFeeSummaryProps {
     clauses?: EnhancedClause[];
+    gasToken: string;
 }
 
-export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
+export const GasFeeSummary = ({ clauses, gasToken }: GasFeeSummaryProps) => {
     const { t } = useTranslation();
     const config = useVeChainKitConfig();
     const { connection } = useWallet();
-    const { preferences } = useGasTokenSelection();
 
     if (config?.feeDelegation?.delegatorUrl) {
         return null;
@@ -37,18 +35,13 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
         return null;
     }
 
-    const estimationClauses = useMemo(() => {
-        if (!clauses || clauses.length === 0) {
-            return [
-                {
-                    to: '0x0000000000000000000000000000000000000000',
-                    value: '0',
-                    data: '0x',
-                },
-            ] as EnhancedClause[];
-        }
-        return clauses;
-    }, [clauses]);
+    const estimationClauses = clauses ? clauses : [
+        {
+            to: '0x0000000000000000000000000000000000000000',
+            value: '0',
+            data: '0x',
+        },
+    ];
 
     const {
         data: estimation,
@@ -56,37 +49,18 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
         error,
     } = useGasEstimation({
         clauses: estimationClauses,
+        token: gasToken,
     });
 
-    const primaryToken = preferences.tokenPriority[0];
-    const tokenInfo = SUPPORTED_GAS_TOKENS[primaryToken];
+    const tokenInfo = SUPPORTED_GAS_TOKENS[gasToken as GasTokenType];
 
-    const getCostForToken = (token: GasTokenType): number => {
-        if (!estimation) return 0;
+    let rate = 1;
+    let transactionCostVTHO = 0;
+    let totalCost = 0;
 
-        // regular speed by default
-        const speedCost = estimation.transactionCost.regular;
-        const isSmartAccount = connection.isConnectedWithPrivy;
-
-        switch (token) {
-            case 'VTHO':
-                return speedCost.vtho;
-            case 'VET':
-                return isSmartAccount
-                    ? speedCost.vetWithSmartAccount
-                    : speedCost.vet;
-            case 'B3TR':
-                return isSmartAccount
-                    ? speedCost.b3trWithSmartAccount
-                    : speedCost.b3tr;
-            default:
-                return 0;
-        }
-    };
-
-    const baseCost = getCostForToken(primaryToken);
-    const serviceFeeAmount = baseCost * (estimation?.serviceFee || 0.1);
-    const totalCost = baseCost + serviceFeeAmount;
+    rate = estimation?.rate || 1;
+    transactionCostVTHO = (estimation?.vthoPerGasAtSpeed || 0) * (estimation?.estimatedGas || 0);
+    totalCost = estimation?.transactionCost || 0;
 
     return (
         <>
@@ -124,19 +98,19 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
 
                         <HStack justify="space-between" w="full">
                             <Text fontSize="xs" color="gray.600">
-                                {t('Transaction cost')}
+                                {t('Transaction Cost (In VTHO)')}
                             </Text>
                             <Text fontSize="xs">
-                                {formatGasCost(baseCost)} {tokenInfo.symbol}
+                                {formatGasCost(transactionCostVTHO)}{' '}
                             </Text>
                         </HStack>
 
                         <HStack justify="space-between" w="full">
                             <Text fontSize="xs" color="gray.600">
-                                {t('Service fee (10%)')}
+                                {t('Rate from VTHO to {{token}}', { token: tokenInfo.symbol })}
                             </Text>
                             <Text fontSize="xs">
-                                {formatGasCost(serviceFeeAmount)}{' '}
+                                {formatGasCost(rate)}{' '}
                                 {tokenInfo.symbol}
                             </Text>
                         </HStack>
@@ -149,7 +123,7 @@ export const GasFeeSummary = ({ clauses }: GasFeeSummaryProps) => {
                         >
                             <HStack justify="space-between" w="full">
                                 <Text fontSize="xs" fontWeight="semibold">
-                                    {t('Total gas fee')}
+                                    {t('Total gas fee in {{token}}', { token: tokenInfo.symbol })}
                                 </Text>
                                 <Text fontSize="xs" fontWeight="semibold">
                                     {formatGasCost(totalCost)}{' '}

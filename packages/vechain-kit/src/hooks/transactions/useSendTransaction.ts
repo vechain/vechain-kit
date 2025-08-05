@@ -9,7 +9,7 @@ import {
     TransactionStatus,
     TransactionStatusErrorType,
 } from '@/types';
-import { useGetNodeUrl, useWallet, useTxReceipt } from '@/hooks';
+import { useGetNodeUrl, useWallet, useTxReceipt, useGasTokenSelection } from '@/hooks';
 
 const estimateTxGasWithNext = async (
     clauses: Connex.VM.Clause[],
@@ -144,11 +144,11 @@ export const useSendTransaction = ({
     privyUIOptions,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const { vendor, thor } = useConnex();
-    const { feeDelegation } = useVeChainKitConfig();
+    const { feeDelegation, genericDelegator } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
-
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
+    const { preferences } = useGasTokenSelection(); // Move hook call here
 
     /**
      * Convert the clauses to the format expected by the vendor
@@ -191,18 +191,33 @@ export const useSendTransaction = ({
             },
         ) => {
             if (connection.isConnectedWithPrivy) {
-                return await privyWalletProvider.sendTransaction({
-                    txClauses: clauses,
-                    ...privyUIOptions,
-                    ...options,
-                    suggestedMaxGas,
-                });
+                if (genericDelegator?.enabled) {
+                    let currentGasToken = preferences.tokenPriority[0];
+                    for (let i = 0; i < preferences.tokenPriority.length; i++) {
+                        try {
+                            const txID = await privyWalletProvider.sendTransaction({
+                                txClauses: clauses,
+                                ...privyUIOptions,
+                                ...options,
+                                suggestedMaxGas,
+                                currentGasToken,
+                            });
+                            if (txID) {
+                                return txID;
+                            }
+                        } catch (error) {
+                            console.error('Gas estimation failed for token', currentGasToken, error);
+                        }
+                        currentGasToken = preferences.tokenPriority[i + 1];
+                    }
+                    throw new Error("No sufficient gas found for any token");
+                }
             }
 
             let transaction = vendor.sign('tx', clauses);
 
-            if (feeDelegation?.delegateAllTransactions) {
-                transaction = transaction.delegate(feeDelegation.delegatorUrl);
+            if (feeDelegation?.delegateAllTransactions || genericDelegator?.enabled) {
+                transaction = transaction.delegate((feeDelegation?.delegatorUrl || genericDelegator?.delegatorUrl) ?? '');
             }
 
             if (signerAccountAddress) {
@@ -239,6 +254,12 @@ export const useSendTransaction = ({
             nodeUrl,
             privyWalletProvider,
             privyUIOptions,
+            connection.isConnectedWithPrivy,
+            genericDelegator?.enabled,
+            preferences.tokenPriority, // Add preferences to dependencies
+            feeDelegation?.delegateAllTransactions,
+            feeDelegation?.delegatorUrl,
+            genericDelegator?.delegatorUrl,
         ],
     );
 

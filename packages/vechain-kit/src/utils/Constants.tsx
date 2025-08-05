@@ -19,7 +19,7 @@ export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {
     VOT3: <VOT3Logo />,
 };
 
-export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
+export const VECHAIN_PRIVY_APP_ID = 'cm78y5zu102duiamtf6vruf3t'; // cm4wxxujb022fyujl7g0thb21
 
 export const notFoundImage =
     'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';
@@ -43,8 +43,9 @@ export const ENV = {
         localStorage.getItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK) === 'main',
 };
 
-export const GENERIC_DELEGATOR_URL =
-    'https://testnet.delegator.vechain.org/api';
+export const GENERIC_DELEGATOR_URL = ENV.isProduction
+    ? 'https://mainnet.delegator.vechain.org/api/v1/'
+    : 'https://testnet.delegator.vechain.org/api/v1/'; // or url to your delegator
 
 export const VECHAIN_KIT_MIXPANEL_TOKENS = {
     development: 'e9627dff3f9ac07c28c28615fa86b181',

@@ -4,6 +4,7 @@ import { CURRENCY, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
 import {
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
+    GENERIC_DELEGATOR_URL,
     VECHAIN_KIT_STORAGE_KEYS,
 } from '@/utils/Constants';
 import { initializeI18n } from '@/utils/i18n';
@@ -83,6 +84,10 @@ export type VechainKitProviderProps = {
         delegatorUrl: string;
         delegateAllTransactions: boolean;
     };
+    genericDelegator?: {
+        enabled: boolean;
+        delegatorUrl?: string;
+    };
     dappKit: {
         allowedWallets?: DAppKitWalletSource[];
         walletConnectOptions?: WalletConnectOptions;
@@ -119,6 +124,7 @@ type VeChainKitConfig = {
     privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
     feeDelegation?: VechainKitProviderProps['feeDelegation'];
+    genericDelegator?: VechainKitProviderProps['genericDelegator'];
     dappKit: VechainKitProviderProps['dappKit'];
     loginModalUI?: VechainKitProviderProps['loginModalUI'];
     loginMethods?: VechainKitProviderProps['loginMethods'];
@@ -154,12 +160,27 @@ const validateConfig = (
 
     // Fee delegation is now optional - Generic Delegator can be used as fallback
     // Only validate if feeDelegation is provided
+
+    if (props.genericDelegator && props.feeDelegation) {
+        errors.push('Can only configure one of feeDelegation or genericDelegator');
+    }
+
+    if (props.genericDelegator) {
+        if (!props.genericDelegator.enabled) {
+            errors.push('genericDelegator.enabled is required when genericDelegator is configured');
+        }
+    }
+
     if (props.feeDelegation) {
         if (!props.feeDelegation.delegatorUrl) {
             errors.push(
                 'feeDelegation.delegatorUrl is required when feeDelegation is configured',
             );
         }
+    }
+
+    if (!props.genericDelegator && !props.feeDelegation) {
+        errors.push('Must configure one of feeDelegation or genericDelegator');
     }
 
     // Validate network
@@ -243,6 +264,7 @@ export const VeChainKitProvider = (
         children,
         privy,
         feeDelegation,
+        genericDelegator,
         dappKit,
         loginModalUI,
         loginMethods,
@@ -276,6 +298,13 @@ export const VeChainKitProvider = (
     } else {
         privyAppId = privy.appId;
         privyClientId = privy.clientId;
+    }
+    if (genericDelegator) {
+        if (genericDelegator.enabled) {
+            if (!genericDelegator.delegatorUrl) {
+                genericDelegator.delegatorUrl = GENERIC_DELEGATOR_URL;
+            }
+        }
     }
 
     // Initialize i18n with the provided language and merge translations
@@ -314,6 +343,7 @@ export const VeChainKitProvider = (
                         privy,
                         privyEcosystemAppIDS: allowedEcosystemApps,
                         feeDelegation,
+                        genericDelegator,
                         dappKit,
                         loginModalUI,
                         loginMethods: validatedLoginMethods,
@@ -414,9 +444,10 @@ export const VeChainKitProvider = (
                                     network.nodeUrl ??
                                     getConfig(network.type).nodeUrl
                                 }
-                                delegatorUrl={feeDelegation?.delegatorUrl ?? ''}
+                                delegatorUrl={feeDelegation?.delegatorUrl ?? genericDelegator?.delegatorUrl ?? ''}
                                 delegateAllTransactions={
                                     feeDelegation?.delegateAllTransactions ??
+                                    genericDelegator?.enabled ??
                                     false
                                 }
                             >

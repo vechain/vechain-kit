@@ -24,3 +24,8 @@ export const b3trAbi = [
         type: 'function',
     },
 ] as const;
+
+export const ENV = {
+    isDevelopment: process.env.NEXT_PUBLIC_NETWORK_TYPE === 'test',
+    isProduction: process.env.NEXT_PUBLIC_NETWORK_TYPE === 'main',
+};

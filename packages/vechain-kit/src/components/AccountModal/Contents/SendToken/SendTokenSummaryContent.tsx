@@ -24,6 +24,7 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
     TokenWithValue,
+    useGasTokenSelection,
 } from '@/hooks';
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -63,7 +64,7 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
-    const { network } = useVeChainKitConfig();
+    const { network, genericDelegator } = useVeChainKitConfig();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -72,6 +73,16 @@ export const SendTokenSummaryContent = ({
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
     const { currentCurrency } = useCurrency();
+    const { preferences } = useGasTokenSelection();
+
+    let activeGasToken = 'VTHO';
+    for (const token of preferences.tokenPriority) {
+        if (!preferences.excludedTokens.includes(token)) {
+            activeGasToken = token;
+            break;
+        }
+    }
+
 
     // Get the final image URL
     const toImageSrc = useMemo(() => {
@@ -145,6 +156,7 @@ export const SendTokenSummaryContent = ({
         isWaitingForWalletConfirmation:
             transferERC20WaitingForWalletConfirmation,
         isTransactionPending: transferERC20Pending,
+        clauses: erc20Clauses,
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -165,6 +177,7 @@ export const SendTokenSummaryContent = ({
         error: transferVETError,
         isWaitingForWalletConfirmation: transferVETWaitingForWalletConfirmation,
         isTransactionPending: transferVETPending,
+        clauses: vetClauses,
     } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -315,8 +328,12 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
-
-                        <GasFeeSummary />
+                        {genericDelegator?.enabled && (
+                            <GasFeeSummary 
+                                clauses={selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses} 
+                                gasToken={activeGasToken} 
+                            />
+                        )}
                     </VStack>
                 </VStack>
             </ModalBody>
