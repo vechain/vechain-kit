@@ -39,6 +39,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     'google',
                     'apple',
                     'twitter',
+                    'github',
                     'farcaster',
                     // 'email',
                     'discord',
@@ -81,6 +82,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             loginMethods={[
                 // { method: 'email', gridColumn: 4 },
                 // { method: 'google', gridColumn: 4 },
+                // { method: 'github', gridColumn: 4 },
                 { method: 'vechain', gridColumn: 4 },
                 { method: 'dappkit', gridColumn: 4 },
                 { method: 'ecosystem', gridColumn: 4 },

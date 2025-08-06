@@ -1,6 +1,7 @@
 import { Grid, Stack } from '@chakra-ui/react';
 import { EmailLoginButton } from './EmailLoginButton';
 import { LoginWithGoogleButton } from './LoginWithGoogleButton';
+import { LoginWithGithubButton } from './LoginWithGithubButton';
 import { VeChainWithPrivyLoginButton } from './VeChainWithPrivyLoginButton';
 import { VeChainLoginButton } from './VeChainLoginButton';
 import { PasskeyLoginButton } from './PasskeyLoginButton';
@@ -22,6 +23,7 @@ export const ConnectionOptionsStack = () => {
         showVeChainLogin,
         showDappKit,
         showMoreLogin,
+        showGithubLogin,
         isOfficialVeChainApp,
     } = useLoginModalContent();
 
@@ -41,6 +43,16 @@ export const ConnectionOptionsStack = () => {
                                 showGoogleLogin && (
                                     <LoginWithGoogleButton
                                         key="google"
+                                        isDark={isDark}
+                                        gridColumn={gridColumn}
+                                    />
+                                )
+                            );
+                        case 'github':
+                            return (
+                                showGithubLogin && (
+                                    <LoginWithGithubButton
+                                        key="github"
                                         isDark={isDark}
                                         gridColumn={gridColumn}
                                     />
