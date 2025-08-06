@@ -15,22 +15,19 @@ export function TransactionWithSDKExample() {
     const [error, setError] = useState<any>(null);
     const [isTransactionPending, setIsTransactionPending] = useState(false);
 
-    const clauses = useMemo(() => {
-        if (!account?.address) return [];
+    const b3trContract = useMemo(() => {
+        if (!signer) return null;
 
-        return [
-            {
-                ...thor.contracts
-                    .load(b3trMainnetAddress, IB3TR__factory.abi)
-                    .clause.transfer(account.address, '0').clause,
-                comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
-            },
-        ];
-    }, [account?.address, thor]);
+        return thor.contracts.load(
+            b3trMainnetAddress,
+            IB3TR__factory.abi,
+            signer,
+        );
+    }, [thor, signer]);
 
     // SDK-based transaction sending
     const sendTransactionWithSDK = useCallback(async () => {
-        if (!account || !signer || !clauses.length) {
+        if (!account || !signer || !b3trContract) {
             setError({ reason: 'Signer or clauses missing' });
             setStatus('error');
             return;
@@ -41,27 +38,12 @@ export function TransactionWithSDKExample() {
         setTxReceipt(null);
 
         try {
-            // Estimate gas
-            const gasResult = await thor.transactions.estimateGas(
-                clauses,
+            const receipt = await b3trContract.transact.transfer(
                 account.address,
-            );
-            // Build transaction body
-            const txBody = await thor.transactions.buildTransactionBody(
-                clauses,
-                gasResult.totalGas,
-            );
-            // Sign transaction
-            const rawSignedTransaction = await signer.signTransaction(txBody);
-            // Send transaction
-            const sendResult = await thor.transactions.sendTransaction(
-                rawSignedTransaction,
-            );
-            // Wait for receipt
-            const receipt = await thor.transactions.waitForTransaction(
-                sendResult.id,
+                '0',
             );
             setTxReceipt(receipt);
+            await receipt.wait();
             setStatus('success');
         } catch (err) {
             setError(err);
@@ -69,7 +51,7 @@ export function TransactionWithSDKExample() {
         } finally {
             setIsTransactionPending(false);
         }
-    }, [signer, clauses, thor, account?.address]);
+    }, [signer, b3trContract, account?.address]);
 
     const handleTransaction = useCallback(async () => {
         await sendTransactionWithSDK();
