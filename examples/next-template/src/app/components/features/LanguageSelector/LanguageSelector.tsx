@@ -10,7 +10,7 @@ export function LanguageSelector() {
     return (
         <Box>
             <Heading size={'md'}>
-                <b>Multilanguage</b> (currently disabled)
+                <b>Multilanguage</b>
             </Heading>
             <VStack mt={4} spacing={4} alignItems="flex-start">
                 <Text>
