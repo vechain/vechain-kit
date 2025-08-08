@@ -408,7 +408,6 @@ export const VeChainKitProvider = (
                                 '--vdk-color-light-primary-hover': '#f8f8f8',
                                 '--vdk-color-light-primary-active': '#f0f0f0',
                                 '--vdk-color-light-secondary': 'white',
-                                    'rgba(255, 255, 255, 0.6)',
 
                                 // Font settings
                                 '--vdk-font-family': 'var(--chakra-fonts-body)',
