@@ -1,7 +1,7 @@
 import { useUpgradeRequired, useWallet } from '@/hooks';
 import { IconButton, IconButtonProps, Box } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { IoMdSettings } from 'react-icons/io';
+import { LiaCogSolid } from 'react-icons/lia';
 
 type ModalSettingsButtonProps = {
     onClick: () => void;
@@ -24,8 +24,7 @@ export const ModalSettingsButton = ({
         connectedWallet?.address ?? '',
         3,
     );
-    const showRedDot =
-        (connection.isConnectedWithPrivy && upgradeRequired) || isFirstVisit;
+    const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
 
     const handleOnClick = () => {
         if (isFirstVisit) {
@@ -50,7 +49,7 @@ export const ModalSettingsButton = ({
             onClick={handleOnClick}
             icon={
                 <Box position="relative">
-                    <IoMdSettings fontSize={'20px'} />
+                    <LiaCogSolid fontSize={'20px'} />
                     {showRedDot && (
                         <Box
                             position="absolute"
