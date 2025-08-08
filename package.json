@@ -44,6 +44,8 @@
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@changesets/cli": "^2.27.1",
         "@commitlint/config-conventional": "^18.0.0",
+        "@vechain/sdk-core": "1.2.0",
+        "@vechain/sdk-network": "1.2.0",
         "commitlint": "^18.0.0",
         "eslint": "^9.12.0",
         "eslint-plugin-prefer-arrow": "1.2.3",

@@ -391,29 +391,23 @@ export const VeChainKitProvider = (
                             themeVariables={{
                                 '--vdk-modal-z-index': '10000',
                                 '--vdk-modal-width': '22rem',
-                                '--vdk-modal-backdrop-filter': 'blur(15px)',
+                                '--vdk-modal-backdrop-filter': 'blur(3px)',
                                 '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
                                 '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
 
                                 // Dark mode colors
-                                '--vdk-color-dark-primary':
-                                    'rgba(21, 21, 21, 0.4)',
+                                '--vdk-color-dark-primary': 'transparent',
                                 '--vdk-color-dark-primary-hover':
                                     'rgba(255, 255, 255, 0.05)',
                                 '--vdk-color-dark-primary-active':
                                     'rgba(255, 255, 255, 0.1)',
-                                '--vdk-color-dark-secondary':
-                                    'rgba(21, 21, 21, 0.6)',
+                                '--vdk-color-dark-secondary': '#1f1f1e',
 
                                 // Light mode colors
-                                '--vdk-color-light-primary':
-                                    'rgba(255, 255, 255, 0.4)',
-                                '--vdk-color-light-primary-hover':
-                                    'rgba(248, 248, 248, 0.5)',
-                                '--vdk-color-light-primary-active':
-                                    'rgba(240, 240, 240, 0.6)',
-                                '--vdk-color-light-secondary':
-                                    'rgba(255, 255, 255, 0.6)',
+                                '--vdk-color-light-primary': '#ffffff',
+                                '--vdk-color-light-primary-hover': '#f8f8f8',
+                                '--vdk-color-light-primary-active': '#f0f0f0',
+                                '--vdk-color-light-secondary': 'white',
 
                                 // Font settings
                                 '--vdk-font-family': 'var(--chakra-fonts-body)',

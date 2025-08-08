@@ -2167,6 +2167,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/styled@npm:^11.14.1":
+  version: 11.14.1
+  resolution: "@emotion/styled@npm:11.14.1"
+  dependencies:
+    "@babel/runtime": "npm:^7.18.3"
+    "@emotion/babel-plugin": "npm:^11.13.5"
+    "@emotion/is-prop-valid": "npm:^1.3.0"
+    "@emotion/serialize": "npm:^1.3.3"
+    "@emotion/use-insertion-effect-with-fallbacks": "npm:^1.2.0"
+    "@emotion/utils": "npm:^1.4.2"
+  peerDependencies:
+    "@emotion/react": ^11.0.0-rc.0
+    react: ">=16.8.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/2bbf8451df49c967e41fbcf8111a7f6dafe6757f0cc113f2f6e287206c45ac1d54dc8a95a483b7c0cee8614b8a8d08155bded6453d6721de1f8cc8d5b9216963
+  languageName: node
+  linkType: hard
+
 "@emotion/unitless@npm:0.8.1":
   version: 0.8.1
   resolution: "@emotion/unitless@npm:0.8.1"
@@ -6354,9 +6374,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-core@npm:1.2.0-rc.3, @vechain/sdk-core@npm:^1.2.0-rc.3":
-  version: 1.2.0-rc.3
-  resolution: "@vechain/sdk-core@npm:1.2.0-rc.3"
+"@vechain/sdk-core@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-core@npm:1.2.0"
   dependencies:
     "@ethereumjs/rlp": "npm:^5.0.2"
     "@noble/ciphers": "npm:^1.1.1"
@@ -6365,13 +6385,13 @@ __metadata:
     "@scure/base": "npm:^1.2.4"
     "@scure/bip32": "npm:^1.4.0"
     "@scure/bip39": "npm:^1.5.1"
-    "@vechain/sdk-errors": "npm:1.2.0-rc.3"
-    "@vechain/sdk-logging": "npm:1.2.0-rc.3"
+    "@vechain/sdk-errors": "npm:1.2.0"
+    "@vechain/sdk-logging": "npm:1.2.0"
     abitype: "npm:^1.0.6"
     ethers: "npm:6.13.4"
     fast-json-stable-stringify: "npm:^2.1.0"
     viem: "npm:^2.21.45"
-  checksum: 10c0/df9aba81e5eab3e50c9ea36aeb382a1adcbe6fb93da194f6c29ebfe069a5f5427c388722bf5e6bd3014cf13eec7c2f3cab7d760e0d3dce07bb8b007b2d9530b5
+  checksum: 10c0/4b4f588f54e896e58e80d767dac5b19a22c1db57c30e3f709a7f3cbc0487b8f4187620ef59f0b7ce96b91f484960f14da138c1fcc65ed5a4866f655f3b8344ec
   languageName: node
   linkType: hard
 
@@ -6382,10 +6402,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-errors@npm:1.2.0-rc.3":
-  version: 1.2.0-rc.3
-  resolution: "@vechain/sdk-errors@npm:1.2.0-rc.3"
-  checksum: 10c0/c8aef41526f3d7e9e7bf1b32788e524b64bd95f6dff5eee12f07a2d07822c77d4a776ceb09d247e3c6ccc1903116266a779b4810a34154ba35616c0fc84b8361
+"@vechain/sdk-errors@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-errors@npm:1.2.0"
+  checksum: 10c0/2d4adcfc2c8af27bd55246ebcbf2f945402c4c20887a2ac67a35aad39d45f85dd70890d25305a8de9b0d4f1fc9cb74758d1f9ed172bbc614511a3dda14ed1ab2
   languageName: node
   linkType: hard
 
@@ -6398,27 +6418,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-logging@npm:1.2.0-rc.3":
-  version: 1.2.0-rc.3
-  resolution: "@vechain/sdk-logging@npm:1.2.0-rc.3"
+"@vechain/sdk-logging@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-logging@npm:1.2.0"
   dependencies:
-    "@vechain/sdk-errors": "npm:1.2.0-rc.3"
-  checksum: 10c0/7a98078729b68486e5257aa2559af5cbbb0c1ab8a36dde0878b6a2384d3c633ed40ea90c4e763395b9cce9f1da0f15d45ce07c27b9bbd228132ee0289dbb1de2
+    "@vechain/sdk-errors": "npm:1.2.0"
+  checksum: 10c0/8d79cdc73fcf69793abf75ed8c23e73c77d9c727cfbb78619c1434e43d7f8e7922a2d8f0023bce4541415a2df63645cf0f2eb742c17e9df12b41ab4b060883ae
   languageName: node
   linkType: hard
 
-"@vechain/sdk-network@npm:^1.2.0-rc.3":
-  version: 1.2.0-rc.3
-  resolution: "@vechain/sdk-network@npm:1.2.0-rc.3"
+"@vechain/sdk-network@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@vechain/sdk-network@npm:1.2.0"
   dependencies:
     "@noble/curves": "npm:^1.6.0"
-    "@vechain/sdk-core": "npm:1.2.0-rc.3"
-    "@vechain/sdk-errors": "npm:1.2.0-rc.3"
-    "@vechain/sdk-logging": "npm:1.2.0-rc.3"
+    "@vechain/sdk-core": "npm:1.2.0"
+    "@vechain/sdk-errors": "npm:1.2.0"
+    "@vechain/sdk-logging": "npm:1.2.0"
     abitype: "npm:^1.0.6"
     ethers: "npm:6.13.4"
     viem: "npm:^2.21.45"
-  checksum: 10c0/78f165d47b09b91b330862377a37e3ec4ce9ae15861ff0cf9d6379b5770016731d63d4e9f9f0e2714bc454fb8693c389b23551ea264bdafbd3055fa175711ccd
+  checksum: 10c0/977f8ac523691ffa65db012bd0574dc04bdd355b5009a4b0562f406ec98e365db71c7c4db46603e552524a218944fab7b5759008eb1ecaf507f10412a26405d5
   languageName: node
   linkType: hard
 
@@ -6433,6 +6453,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/vechain-contract-types@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@vechain/vechain-contract-types@npm:1.0.0"
+  dependencies:
+    ethers: "npm:^6.13.5"
+  peerDependencies:
+    ethers: ^6.0.0
+  checksum: 10c0/e21a72135bc2577cc0ced776cd59968ff9fc805696305003acb91df9594fff04d1ee815a9788ccf69275809453df7bdf4998422e4cffcfdd82b08e8a90d0d9b9
+  languageName: node
+  linkType: hard
+
 "@vechain/vechain-kit@workspace:*, @vechain/vechain-kit@workspace:packages/vechain-kit":
   version: 0.0.0-use.local
   resolution: "@vechain/vechain-kit@workspace:packages/vechain-kit"
@@ -6440,6 +6471,7 @@ __metadata:
     "@adraffy/ens-normalize": "npm:^1.11.0"
     "@chakra-ui/react": "npm:^2.8.2"
     "@choc-ui/chakra-autocomplete": "npm:^5.3.0"
+    "@emotion/styled": "npm:^11.14.1"
     "@privy-io/cross-app-connect": "npm:0.2.2"
     "@privy-io/react-auth": "npm:2.18.0"
     "@rainbow-me/rainbowkit": "npm:^2.1.5"
@@ -6451,10 +6483,10 @@ __metadata:
     "@types/react-dom": "npm:^18.2.13"
     "@vechain/dapp-kit-react": "npm:1.5.1"
     "@vechain/picasso": "npm:^2.1.1"
-    "@vechain/sdk-core": "npm:^1.2.0-rc.3"
-    "@vechain/sdk-network": "npm:^1.2.0-rc.3"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
+    "@vechain/vechain-contract-types": "npm:^1.0.0"
     "@wagmi/core": "npm:^2.17.2"
+    axios: "npm:^1.10.0"
     bignumber.js: "npm:^9.1.2"
     browser-image-compression: "npm:^2.0.2"
     buffer: "npm:^6.0.3"
@@ -7873,6 +7905,17 @@ __metadata:
   dependencies:
     follow-redirects: "npm:^1.14.0"
   checksum: 10c0/fbcff55ec68f71f02d3773d467db2fcecdf04e749826c82c2427a232f9eba63242150a05f15af9ef15818352b814257541155de0281f8fb2b7e8a5b79f7f2142
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.10.0":
+  version: 1.11.0
+  resolution: "axios@npm:1.11.0"
+  dependencies:
+    follow-redirects: "npm:^1.15.6"
+    form-data: "npm:^4.0.4"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/5de273d33d43058610e4d252f0963cc4f10714da0bfe872e8ef2cbc23c2c999acc300fd357b6bce0fc84a2ca9bd45740fa6bb28199ce2c1266c8b1a393f2b36e
   languageName: node
   linkType: hard
 
@@ -10750,6 +10793,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.15.6":
+  version: 1.15.11
+  resolution: "follow-redirects@npm:1.15.11"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 10c0/d301f430542520a54058d4aeeb453233c564aaccac835d29d15e050beb33f339ad67d9bddbce01739c5dc46a6716dbe3d9d0d5134b1ca203effa11a7ef092343
+  languageName: node
+  linkType: hard
+
 "for-each@npm:^0.3.3, for-each@npm:^0.3.5":
   version: 0.3.5
   resolution: "for-each@npm:0.3.5"
@@ -10785,6 +10838,19 @@ __metadata:
     es-set-tostringtag: "npm:^2.1.0"
     mime-types: "npm:^2.1.12"
   checksum: 10c0/e534b0cf025c831a0929bf4b9bbe1a9a6b03e273a8161f9947286b9b13bf8fb279c6944aae0070c4c311100c6d6dbb815cd955dc217728caf73fad8dc5b8ee9c
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "form-data@npm:4.0.4"
+  dependencies:
+    asynckit: "npm:^0.4.0"
+    combined-stream: "npm:^1.0.8"
+    es-set-tostringtag: "npm:^2.1.0"
+    hasown: "npm:^2.0.2"
+    mime-types: "npm:^2.1.12"
+  checksum: 10c0/373525a9a034b9d57073e55eab79e501a714ffac02e7a9b01be1c820780652b16e4101819785e1e18f8d98f0aee866cc654d660a435c378e16a72f2e7cac9695
   languageName: node
   linkType: hard
 
@@ -14156,6 +14222,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-from-env@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "proxy-from-env@npm:1.1.0"
+  checksum: 10c0/fe7dd8b1bdbbbea18d1459107729c3e4a2243ca870d26d34c2c1bcd3e4425b7bcc5112362df2d93cc7fb9746f6142b5e272fd1cc5c86ddf8580175186f6ad42b
+  languageName: node
+  linkType: hard
+
 "public-encrypt@npm:^4.0.3":
   version: 4.0.3
   resolution: "public-encrypt@npm:4.0.3"
@@ -17094,6 +17167,8 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": "npm:^7.21.11"
     "@changesets/cli": "npm:^2.27.1"
     "@commitlint/config-conventional": "npm:^18.0.0"
+    "@vechain/sdk-core": "npm:1.2.0"
+    "@vechain/sdk-network": "npm:1.2.0"
     commitlint: "npm:^18.0.0"
     eslint: "npm:^9.12.0"
     eslint-plugin-prefer-arrow: "npm:1.2.3"

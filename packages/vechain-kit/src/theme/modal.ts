@@ -17,10 +17,8 @@ const variants = {
                 maxHeight: '550px',
                 borderRadius: '24px',
                 backgroundColor:
-                    props.colorMode === 'dark'
-                        ? 'rgba(21, 21, 21, 0.4)'
-                        : 'rgba(255, 255, 255, 0.4)',
-                backdropFilter: 'blur(15px)',
+                    props.colorMode === 'dark' ? '#1f1f1e' : 'white',
+                // backdropFilter: 'blur(15px)',
             },
             closeButton: {
                 borderRadius: '50%',
@@ -32,10 +30,10 @@ const variants = {
                 fontWeight: '700',
                 textAlign: 'center',
             },
-            overlay: {
-                backgroundColor:
-                    props.colorMode === 'dark' ? '#00000026' : '#00000024',
-            },
+            // overlay: {
+            //     backgroundColor:
+            //         props.colorMode === 'dark' ? '#00000026' : '#00000024',
+            // },
         }),
     vechainKitTransactionToast: (props: StyleFunctionProps) =>
         definePartsStyle({
