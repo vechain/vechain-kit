@@ -53,7 +53,7 @@ export const SendTokenContent = ({
     onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
     const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
         preselectedToken ?? null,
@@ -168,6 +168,38 @@ export const SendTokenContent = ({
         // Validate amount
         if (selectedToken) {
             const numericAmount = parseEther(data.amount);
+
+            // Enforce minimum for B3TR (precise wei comparison)
+            const minB3tr = feeDelegation?.b3trTransfers?.minAmountInEther;
+            if (
+                selectedToken.symbol === 'B3TR' &&
+                typeof minB3tr === 'number' &&
+                minB3tr > 0
+            ) {
+                try {
+                    const minWei = parseEther(String(minB3tr));
+                    if (numericAmount < minWei) {
+                        setError('amount', {
+                            type: 'manual',
+                            message: t(
+                                'Minimum {{symbol}} transfer is {{min}}',
+                                {
+                                    symbol: selectedToken.symbol,
+                                    min: minB3tr,
+                                },
+                            ),
+                        });
+                        Analytics.send.flow('review', {
+                            tokenSymbol: selectedToken.symbol,
+                            error: 'Below minimum amount',
+                        });
+                        return;
+                    }
+                } catch {
+                    // ignore parse error and continue
+                }
+            }
+
             if (numericAmount > parseEther(selectedToken.balance)) {
                 setError('amount', {
                     type: 'manual',
@@ -266,14 +298,39 @@ export const SendTokenContent = ({
                                             },
                                             validate: (value) => {
                                                 if (!value) return true;
-                                                const numericValue =
-                                                    parseFloat(value);
-                                                return (
-                                                    !isNaN(numericValue) ||
-                                                    t(
-                                                        'Please enter a valid number',
-                                                    )
+                                                const numericValue = parseFloat(
+                                                    value,
                                                 );
+                                                if (isNaN(numericValue)) {
+                                                    return t(
+                                                        'Please enter a valid number',
+                                                    );
+                                                }
+
+                                                // Enforce minimum amount for B3TR (in ether units)
+                                                const minB3tr =
+                                                    feeDelegation?.
+                                                        b3trTransfers?.
+                                                        minAmountInEther;
+                                                if (
+                                                    selectedToken?.symbol ===
+                                                        'B3TR' &&
+                                                    typeof minB3tr ===
+                                                        'number' &&
+                                                    minB3tr > 0 &&
+                                                    numericValue < minB3tr
+                                                ) {
+                                                    return t(
+                                                        'Minimum {{symbol}} transfer is {{min}}',
+                                                        {
+                                                            symbol:
+                                                                selectedToken.symbol,
+                                                            min: minB3tr,
+                                                        },
+                                                    );
+                                                }
+
+                                                return true;
                                             },
                                         })}
                                         onChange={(e) => {
