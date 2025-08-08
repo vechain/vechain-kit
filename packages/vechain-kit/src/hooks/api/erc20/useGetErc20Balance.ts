@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { IERC20__factory } from '../../../contracts/typechain-types';
+import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
 

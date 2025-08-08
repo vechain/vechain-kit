@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
-import { X2EarnRewardsPool__factory } from '@/contracts';
+import { X2EarnRewardsPool__factory } from '@vechain/vechain-contract-types';
 import { humanNumber } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { TokenBalance } from '../../useGetB3trBalance';

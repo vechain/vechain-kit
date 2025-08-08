@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
+import { X2EarnApps__factory as X2EarnApps } from '@vechain/vechain-contract-types';
 import { abi } from 'thor-devkit';
 
 const unendorsedAppsFragment = X2EarnApps.createInterface()

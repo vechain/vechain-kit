@@ -3,7 +3,7 @@ import { useConnex } from '@vechain/dapp-kit-react';
 import { abi } from 'thor-devkit';
 import { getAllEvents } from '@/hooks';
 import { getConfig } from '@/config';
-import { XAllocationVoting__factory } from '@/contracts';
+import { XAllocationVoting__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 

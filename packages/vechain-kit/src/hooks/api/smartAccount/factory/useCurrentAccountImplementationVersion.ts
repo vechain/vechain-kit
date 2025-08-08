@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@/contracts';
+import { SimpleAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';

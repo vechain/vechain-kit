@@ -1,6 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
-import { X2EarnApps__factory } from '@/contracts';
+import { X2EarnApps__factory } from '@vechain/vechain-contract-types';
 import { UseQueryResult } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 

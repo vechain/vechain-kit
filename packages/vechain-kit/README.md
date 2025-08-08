@@ -227,7 +227,7 @@ import {
     useSendTransaction,
     getConfig
 } from '@vechain/vechain-kit';
-import { IB3TR__factory } from '@vechain/vechain-kit/contracts';
+import { IB3TR__factory } from '@vechain/vechain-contract-types';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { useMemo, useCallback } from 'react';
 

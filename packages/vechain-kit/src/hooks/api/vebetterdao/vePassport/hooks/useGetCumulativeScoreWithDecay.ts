@@ -1,6 +1,6 @@
 import { getCallKey, useCall } from '@/hooks';
 import { getConfig } from '@/config';
-import { VeBetterPassport__factory } from '@/contracts';
+import { VeBetterPassport__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 
 const vePassportInterface = VeBetterPassport__factory.createInterface();

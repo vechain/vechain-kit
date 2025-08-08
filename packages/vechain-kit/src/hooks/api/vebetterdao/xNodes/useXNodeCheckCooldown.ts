@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { X2EarnApps__factory } from '@/contracts';
+import { X2EarnApps__factory } from '@vechain/vechain-contract-types';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 

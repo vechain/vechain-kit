@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
-import { Emissions__factory } from '@/contracts';
+import { Emissions__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { formatEther } from 'viem';

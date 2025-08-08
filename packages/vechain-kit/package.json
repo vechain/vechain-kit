@@ -99,10 +99,6 @@
             "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
         },
-        "./contracts": {
-            "types": "./dist/contracts/index.d.ts",
-            "default": "./dist/contracts/index.js"
-        },
         "./utils": {
             "types": "./dist/utils/index.d.ts",
             "default": "./dist/utils/index.js"

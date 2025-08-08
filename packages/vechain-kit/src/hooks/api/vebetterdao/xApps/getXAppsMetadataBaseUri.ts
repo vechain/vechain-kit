@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
+import { X2EarnApps__factory as X2EarnApps } from '@vechain/vechain-contract-types';
 import { XApp } from './getXApps';
 import { NETWORK_TYPE } from '@/config/network';
 

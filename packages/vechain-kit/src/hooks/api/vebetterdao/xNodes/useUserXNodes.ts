@@ -3,7 +3,7 @@ import {
     NodeStrengthLevelToImage,
 } from '@/utils/XNode';
 import { getConfig } from '@/config';
-import { NodeManagement__factory } from '@/contracts';
+import { NodeManagement__factory } from '@vechain/vechain-contract-types';
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { abi } from 'thor-devkit';

@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { XAllocationVotingGovernor__factory } from '@/contracts';
+import { XAllocationVotingGovernor__factory } from '@vechain/vechain-contract-types';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';

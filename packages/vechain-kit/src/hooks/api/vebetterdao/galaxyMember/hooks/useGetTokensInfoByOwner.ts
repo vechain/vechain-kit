@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { GalaxyMember__factory } from '@/contracts';
+import { GalaxyMember__factory } from '@vechain/vechain-contract-types';
 import { getCallKey } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { useInfiniteQuery } from '@tanstack/react-query';

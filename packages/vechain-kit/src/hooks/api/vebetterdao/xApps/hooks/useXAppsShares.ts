@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { XAllocationPool__factory } from '@/contracts';
+import { XAllocationPool__factory } from '@vechain/vechain-contract-types';
 import { getConfig } from '@/config';
 import { abi } from 'thor-devkit';
 import { getCallKey } from '@/hooks';

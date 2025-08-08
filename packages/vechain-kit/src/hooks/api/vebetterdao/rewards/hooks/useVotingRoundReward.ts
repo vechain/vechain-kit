@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
-import { VoterRewards__factory } from '@/contracts';
+import { VoterRewards__factory } from '@vechain/vechain-contract-types';
 import { RoundReward } from '../utils';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';

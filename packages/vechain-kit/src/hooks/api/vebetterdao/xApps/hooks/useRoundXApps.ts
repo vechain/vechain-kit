@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
-import { XAllocationVoting__factory as XAllocationVoting } from '@/contracts';
+import { XAllocationVoting__factory as XAllocationVoting } from '@vechain/vechain-contract-types';
 import { XApp } from '../getXApps';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';

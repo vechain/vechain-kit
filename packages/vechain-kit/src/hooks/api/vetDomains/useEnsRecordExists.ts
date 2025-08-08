@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { MockENS__factory } from '@/contracts/typechain-types/factories/contracts/mocks/MockENS__factory';
+import { MockENS__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
