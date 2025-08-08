@@ -1,6 +1,6 @@
 import { EnhancedClause } from '@/types';
 import { getConfig } from '@/config';
-import { VoterRewards__factory } from '@/contracts';
+import { VoterRewards__factory } from '@vechain/vechain-contract-types';
 import { NETWORK_TYPE } from '@/config/network';
 
 const voterRewardsInterface = VoterRewards__factory.createInterface();

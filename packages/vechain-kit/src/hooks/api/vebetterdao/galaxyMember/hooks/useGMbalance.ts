@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useConnex } from '@vechain/dapp-kit-react';
-import { GalaxyMember__factory } from '@/contracts';
+import { GalaxyMember__factory } from '@vechain/vechain-contract-types';
 import { NETWORK_TYPE } from '@/config/network';
 
 /**

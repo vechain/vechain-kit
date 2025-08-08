@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getConfig } from '@/config';
-import { X2EarnApps__factory as X2EarnApps } from '@/contracts';
+import { X2EarnApps__factory as X2EarnApps } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { abi } from 'thor-devkit';
 import { getAllEvents } from '@/hooks/api/blockchain';
-import { XAllocationVoting__factory } from '@/contracts';
+import { XAllocationVoting__factory } from '@vechain/vechain-contract-types';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { useVeChainKitConfig } from '@/providers';

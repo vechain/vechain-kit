@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { VeBetterPassport__factory } from '@/contracts/typechain-types';
+import { VeBetterPassport__factory } from '@vechain/vechain-contract-types';
 import { getCallKey, useCall } from '@/hooks';
 import { TogglePassportCheck } from '@/utils/Constants';
 import { useVeChainKitConfig } from '@/providers';

@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { GalaxyMember__factory } from '@/contracts';
+import { GalaxyMember__factory } from '@vechain/vechain-contract-types';
 import { getCallKey, useCall } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';

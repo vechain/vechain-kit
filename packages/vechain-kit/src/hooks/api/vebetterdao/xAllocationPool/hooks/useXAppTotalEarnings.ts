@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { getXAppRoundEarningsQueryKey } from './useXAppRoundEarnings';
 import { getConfig } from '@/config';
-import { XAllocationPool__factory } from '@/contracts';
+import { XAllocationPool__factory } from '@vechain/vechain-contract-types';
 import { abi } from 'thor-devkit';
 import { getOrCreateQueryClient } from '@/providers/EnsureQueryClient';
 import { useVeChainKitConfig } from '@/providers';

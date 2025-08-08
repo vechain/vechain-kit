@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { useMemo } from 'react';
 import { getRoundRewardQueryKey } from './useVotingRoundReward';
-import { VoterRewards__factory } from '@/contracts';
+import { VoterRewards__factory } from '@vechain/vechain-contract-types';
 import { abi } from 'thor-devkit';
 import { getConfig } from '@/config';
 import { BigNumber } from 'bignumber.js';
