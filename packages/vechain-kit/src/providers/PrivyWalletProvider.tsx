@@ -27,14 +27,13 @@ import {
     useHasV1SmartAccount,
     useSmartAccount,
     useSmartAccountVersion,
+    useWallet,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
 import { ethers } from 'ethers';
-import { useAccount } from 'wagmi';
-import { Wallet as PrivyWallet } from '@privy-io/react-auth';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
@@ -82,40 +81,29 @@ export const PrivyWalletProvider = ({
         signTypedData: signTypedDataPrivy,
         exportWallet,
         signMessage: signMessagePrivy,
-        user,
     } = usePrivy();
     const {
         signTypedData: signTypedDataWithCrossApp,
         signMessage: signMessageWithCrossApp,
     } = usePrivyCrossAppSdk();
-
-    const { address: addressCrossApp, isConnected: isConnectedWithCrossApp } =
-        useAccount();
-
-    // Get embedded wallet
-    const privyEmbeddedWallet = user?.linkedAccounts?.find(
-        (account) =>
-            account.type === 'wallet' && account.connectorType === 'embedded',
-    ) as PrivyWallet;
-
-    const privyEmbeddedWalletAddress = privyEmbeddedWallet?.address;
-
-    const address = isConnectedWithCrossApp
-        ? addressCrossApp
-        : privyEmbeddedWalletAddress;
+    const { connection, connectedWallet } = useWallet();
 
     const { network } = useVeChainKitConfig();
     const { data: chainId } = useGetChainId();
 
     const thor = ThorClient.at(nodeUrl);
 
-    const { data: smartAccount } = useSmartAccount(address ?? '');
+    const { data: smartAccount } = useSmartAccount(
+        connectedWallet?.address ?? '',
+    );
 
     const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
     );
 
-    const { data: hasV1SmartAccount } = useHasV1SmartAccount(address ?? '');
+    const { data: hasV1SmartAccount } = useHasV1SmartAccount(
+        connectedWallet?.address ?? '',
+    );
 
     /**
      * Build the typed data structure for executeBatchWithAuthorization
@@ -265,8 +253,8 @@ export const PrivyWalletProvider = ({
         if (
             !smartAccount ||
             (smartAccount && !smartAccount.address) ||
-            !address ||
-            (address && !address)
+            !connectedWallet ||
+            (connectedWallet && !connectedWallet.address)
         ) {
             throw new Error('Address or embedded wallet is missing');
         }
@@ -286,10 +274,10 @@ export const PrivyWalletProvider = ({
             });
 
             // Sign the typed data (either cross-app or traditional Privy)
-            const signature = isConnectedWithCrossApp
+            const signature = connection.isConnectedWithCrossApp
                 ? await signTypedDataWithCrossApp({
                       ...typedData,
-                      address: address as `0x${string}`,
+                      address: connectedWallet.address as `0x${string}`,
                   } as SignTypedDataParameters)
                 : (
                       await signTypedDataPrivy(typedData, {
@@ -311,7 +299,7 @@ export const PrivyWalletProvider = ({
                         ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
                             'createAccount',
                         ),
-                        [address ?? ''],
+                        [connectedWallet.address ?? ''],
                     ),
                 );
             }
@@ -356,10 +344,10 @@ export const PrivyWalletProvider = ({
                     );
                 }
 
-                if (isConnectedWithCrossApp) {
+                if (connection.isConnectedWithCrossApp) {
                     const mutableData = {
                         ...data,
-                        address: address as `0x${string}`,
+                        address: connectedWallet.address as `0x${string}`,
                         types: Object.fromEntries(
                             Object.entries(data.types).map(([k, v]) => [
                                 k,
@@ -410,7 +398,7 @@ export const PrivyWalletProvider = ({
                         ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
                             'createAccount',
                         ),
-                        [address ?? ''], // set the Privy wallet address as the owner of the smart account
+                        [connectedWallet.address ?? ''], // set the Privy wallet address as the owner of the smart account
                     ),
                 );
             }
@@ -438,9 +426,13 @@ export const PrivyWalletProvider = ({
         // Now we can broadcast the transaction to the network by using our random transaction user
 
         // estimate the gas fees for the transaction
-        const gasResult = await thor.gas.estimateGas(clauses, address ?? '', {
-            gasPadding: 1,
-        });
+        const gasResult = await thor.gas.estimateGas(
+            clauses,
+            connectedWallet.address ?? '',
+            {
+                gasPadding: 1,
+            },
+        );
 
         const parsedGasLimit = Math.max(
             gasResult.totalGas,
@@ -501,7 +493,7 @@ export const PrivyWalletProvider = ({
      * @returns The signature of the message
      */
     const signMessage = async (message: string): Promise<string> => {
-        if (isConnectedWithCrossApp) {
+        if (connection.isConnectedWithCrossApp) {
             return await signMessageWithCrossApp(message);
         }
 
@@ -520,10 +512,10 @@ export const PrivyWalletProvider = ({
     const signTypedData = async (
         data: SignTypedDataParams,
     ): Promise<string> => {
-        if (isConnectedWithCrossApp) {
+        if (connection.isConnectedWithCrossApp) {
             const mutableData = {
                 ...data,
-                address: address as `0x${string}`,
+                address: connectedWallet?.address as `0x${string}`,
                 types: Object.fromEntries(
                     Object.entries(data.types).map(([k, v]) => [k, [...v]]),
                 ),
