@@ -7,6 +7,7 @@ export enum VeLoginMethod {
     PASSKEY = 'passkey',
     OAUTH = 'oauth',
     MORE = 'more',
+    GITHUB = 'github',
 }
 
 export enum VePrivySocialLoginMethod {
