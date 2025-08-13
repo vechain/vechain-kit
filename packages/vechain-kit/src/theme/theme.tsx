@@ -1,20 +1,22 @@
 import { ThemeConfig, extendTheme } from '@chakra-ui/react';
-import { modalTheme } from './modal';
-import { cardTheme } from './card';
+import { getModalTheme } from './modal';
+import { getCardTheme } from './card';
 import { buttonTheme } from './button';
-import { popoverTheme } from './popover';
+import { getPopoverTheme } from './popover';
 
-const themeConfig: ThemeConfig = {
+const getThemeConfig = (darkMode: boolean): ThemeConfig => ({
     useSystemColorMode: false,
     disableTransitionOnChange: false,
 
     // @ts-ignore
     components: {
-        Modal: modalTheme,
-        Card: cardTheme,
+        Modal: getModalTheme(darkMode),
+        Card: getCardTheme(darkMode),
         Button: buttonTheme,
-        Popover: popoverTheme,
+        Popover: getPopoverTheme(darkMode),
     },
     cssVarPrefix: 'vechainKit',
-};
-export const VechainKitTheme = extendTheme(themeConfig);
+});
+
+export const getVechainKitTheme = (darkMode: boolean) =>
+    extendTheme(getThemeConfig(darkMode));

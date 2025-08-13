@@ -4,7 +4,7 @@ import {
     ColorModeScript,
 } from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
-import { VechainKitTheme } from '@/theme';
+import { getVechainKitTheme } from '@/theme';
 
 type Props = {
     children: ReactNode;
@@ -71,9 +71,9 @@ export const VechainKitThemeProvider = ({
 }: Props) => {
     const theme = useMemo(
         () => ({
-            ...VechainKitTheme,
+            ...getVechainKitTheme(darkMode),
             config: {
-                ...VechainKitTheme.config,
+                ...getVechainKitTheme(darkMode).config,
                 initialColorMode: darkMode ? 'dark' : 'light',
             },
         }),
