@@ -6,7 +6,7 @@ import {
 import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { ReactNode, useMemo } from 'react';
-import { VechainKitTheme } from '@/theme';
+import { getVechainKitTheme } from '@/theme';
 import { safeQuerySelector } from '@/utils/ssrUtils';
 
 type Props = {
@@ -95,9 +95,9 @@ export const VechainKitThemeProvider = ({
 }: Props) => {
     const theme = useMemo(
         () => ({
-            ...VechainKitTheme,
+            ...getVechainKitTheme(darkMode),
             config: {
-                ...VechainKitTheme.config,
+                ...getVechainKitTheme(darkMode).config,
                 initialColorMode: darkMode ? 'dark' : 'light',
             },
         }),
