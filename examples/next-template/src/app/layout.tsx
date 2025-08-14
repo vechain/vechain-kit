@@ -27,9 +27,9 @@ export default function RootLayout({
                     content="width=device-width, initial-scale=1"
                 />
             </head>
-            <body id="next-template">
+            <body>
                 {/* Chakra UI Provider */}
-                <ChakraProvider cssVarsRoot="#next-template" theme={darkTheme}>
+                <ChakraProvider theme={darkTheme}>
                     {/* VechainKit Provider */}
                     <VechainKitProviderWrapper>
                         {children}

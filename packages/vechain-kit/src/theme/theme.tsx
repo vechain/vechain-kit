@@ -16,7 +16,9 @@ const themeConfig: ThemeConfig = {
         Button: buttonTheme,
         Popover: popoverTheme,
     },
-    cssVarPrefix: 'vechain-kit', // consistent naming across all components
+    config: {
+        cssVarPrefix: 'vechain-kit', // consistent naming across all components
+    },
 
     // COMPLETELY disable global styles to prevent any conflicts
     styles: {

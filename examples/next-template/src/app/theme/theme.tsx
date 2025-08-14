@@ -10,13 +10,6 @@ const exampleTheme = {
         Button: ButtonStyle,
         Modal: modalTheme,
     },
-    cssVarPrefix: 'example',
-    addPrefix: true,
-    prefix: 'example',
-
-    // Color mode configuration
-    initialColorMode: 'dark',
-    useSystemColorMode: false,
 
     semanticTokens: {
         colors: {
@@ -49,9 +42,8 @@ export const darkTheme = extendTheme({
     config: {
         initialColorMode: 'dark',
         useSystemColorMode: false,
+        cssVarPrefix: 'example',
     },
-    prefix: 'example',
+
     colors: themeColors,
-    addPrefix: true,
-    cssVarPrefix: 'example',
 });

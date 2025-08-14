@@ -92,13 +92,12 @@ export default function RootLayout({
                 <meta name="twitter:image:alt" content="VeChain Kit" />
             </head>
             <body
-                id="example-app"
                 style={{
                     width: '100%',
                     height: '100%',
                 }}
             >
-                <ChakraProvider cssVarsRoot="#example-app" theme={darkTheme}>
+                <ChakraProvider theme={darkTheme}>
                     <AppContent>{children}</AppContent>
                 </ChakraProvider>
             </body>

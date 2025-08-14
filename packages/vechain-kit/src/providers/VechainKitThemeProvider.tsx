@@ -68,7 +68,6 @@ const EnsureChakraProvider = ({
                 // Undefined portal z-index allows host apps to control their own z-index hierarchy
                 // instead of Chakra forcing high values (1500+) that might conflict
                 portalZIndex={undefined}
-                cssVarsRoot="#vechain-kit-root"
             >
                 {children}
             </ChakraProvider>
