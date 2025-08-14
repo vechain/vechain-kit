@@ -33,7 +33,7 @@
         "**/*.tsx",
         ".next/types/**/*.ts",
         "dist/types/**/*.ts",
-        "src/lib/mixpanelClient.js"
+        //"src/lib/mixpanelClient.js"
     ],
     "exclude": ["node_modules", ".next", "dist"],
     "ts-node": {

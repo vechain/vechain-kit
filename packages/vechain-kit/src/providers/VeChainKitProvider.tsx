@@ -36,6 +36,7 @@ import {
 import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
+import { useDisclosure } from '@chakra-ui/react';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
@@ -131,6 +132,12 @@ type VeChainKitConfig = {
     allowCustomTokens?: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
+    modalController: {
+        connectModal: ReturnType<typeof useDisclosure>;
+        accountModal: ReturnType<typeof useDisclosure>;
+        upgradeSmartAccountModal: ReturnType<typeof useDisclosure>;
+        legalDocumentsModal: ReturnType<typeof useDisclosure>;
+    };
 };
 
 /**
@@ -270,6 +277,11 @@ export const VeChainKitProvider = (
         defaultCurrency = 'usd',
     } = validatedProps;
 
+    const connectModal = useDisclosure();
+    const accountModal = useDisclosure();
+    const upgradeSmartAccountModal = useDisclosure();
+    const legalDocumentsModal = useDisclosure();
+
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
 
@@ -339,6 +351,12 @@ export const VeChainKitProvider = (
                         allowCustomTokens,
                         legalDocuments,
                         defaultCurrency,
+                        modalController: {
+                            connectModal,
+                            accountModal,
+                            upgradeSmartAccountModal,
+                            legalDocumentsModal,
+                        },
                     }}
                 >
                     <PrivyProvider
