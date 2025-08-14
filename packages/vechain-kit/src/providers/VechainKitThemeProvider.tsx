@@ -2,10 +2,11 @@ import {
     ChakraProvider,
     createStandaloneToast,
     ColorModeScript,
+    Box,
 } from '@chakra-ui/react';
 import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
-import { ReactNode, useMemo } from 'react';
+import { createContext, ReactNode, useContext, useMemo, useRef } from 'react';
 import { VechainKitTheme } from '@/theme';
 import { safeQuerySelector } from '@/utils/ssrUtils';
 
@@ -67,8 +68,9 @@ const EnsureChakraProvider = ({
                 // Undefined portal z-index allows host apps to control their own z-index hierarchy
                 // instead of Chakra forcing high values (1500+) that might conflict
                 portalZIndex={undefined}
+                cssVarsRoot="#vechain-kit-root"
             >
-                <div className="vechain-kit-root">{children}</div>
+                {children}
             </ChakraProvider>
         </CacheProvider>
     );
@@ -89,10 +91,27 @@ const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
     return <ColorModeScript initialColorMode={darkMode ? 'dark' : 'light'} />;
 };
 
+const VechainKitThemeContext = createContext<{
+    portalRootRef?: React.RefObject<HTMLDivElement | null>;
+}>({
+    portalRootRef: undefined,
+});
+
+export const useVechainKitThemeConfig = () => {
+    const context = useContext(VechainKitThemeContext);
+    if (!context) {
+        throw new Error(
+            'useVechainKitTheme must be used within a VechainKitThemeProvider',
+        );
+    }
+    return context;
+};
+
 export const VechainKitThemeProvider = ({
     children,
     darkMode = false,
 }: Props) => {
+    const portalRootRef = useRef<HTMLDivElement | null>(null);
     const theme = useMemo(
         () => ({
             ...VechainKitTheme,
@@ -105,12 +124,27 @@ export const VechainKitThemeProvider = ({
     );
 
     return (
-        <>
+        <VechainKitThemeContext.Provider value={{ portalRootRef }}>
             <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider theme={theme}>
-                {children}
+                <Box
+                    id="vechain-kit-root"
+                    ref={portalRootRef}
+                    bg="transparent"
+                    borderRadius="12px"
+                    sx={{
+                        bg: darkMode ? '#1A202C' : '#FFFFFF',
+                        color: darkMode ? '#F7FAFC' : '#1A202C',
+                        borderColor: darkMode ? '#2D3748' : '#E2E8F0',
+                        'input::placeholder': {
+                            color: darkMode ? '#718096' : '#A0AEC0',
+                        },
+                    }}
+                >
+                    {children}
+                </Box>
             </EnsureChakraProvider>
             <ToastContainer />
-        </>
+        </VechainKitThemeContext.Provider>
     );
 };

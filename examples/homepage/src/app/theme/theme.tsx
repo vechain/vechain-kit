@@ -21,12 +21,12 @@ const exampleTheme = {
     semanticTokens: {
         colors: {
             'chakra-body-text': {
-                _dark: '#FFFFFF', // Added dark mode text color
-                _light: '#1E1E1E',
+                _light: '#1A202C',
+                _dark: '#F7FAFC', // Added dark mode text color
             },
             'chakra-body-bg': {
-                _dark: '#1A1A1A', // Added dark mode background color
                 _light: '#FFFFFF',
+                _dark: '#1A202C', // Added dark mode background color
             },
         },
     },

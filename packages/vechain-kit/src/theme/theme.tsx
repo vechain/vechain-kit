@@ -23,28 +23,6 @@ const themeConfig: ThemeConfig = {
         global: () => ({}), // empty object = no global styles injected
     },
 
-    // only defining the semantic tokens we need, scoped to our components
-    semanticTokens: {
-        colors: {
-            'chakra-body-text': {
-                _light: '#1A202C',
-                _dark: '#F7FAFC',
-            },
-            'chakra-body-bg': {
-                _light: '#FFFFFF',
-                _dark: '#1A202C',
-            },
-            'chakra-border-color': {
-                _light: '#E2E8F0',
-                _dark: '#2D3748',
-            },
-            'chakra-placeholder-color': {
-                _light: '#A0AEC0',
-                _dark: '#718096',
-            },
-        },
-    },
-
     // minimal foundations to prevent global style injection
     fonts: baseTheme.fonts,
     colors: baseTheme.colors,

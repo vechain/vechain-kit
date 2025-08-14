@@ -14,6 +14,8 @@ import {
 } from '../components';
 import { useDAppKitWallet } from '@/hooks';
 import { isBrowser } from '@/utils/ssrUtils';
+import { VechainKitThemeProvider } from './VechainKitThemeProvider';
+import { useVeChainKitConfig } from './VeChainKitProvider';
 
 type ModalContextType = {
     // Connect Modal
@@ -56,6 +58,7 @@ export const useModal = () => {
 };
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
+    const { darkMode } = useVeChainKitConfig();
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const { setSource, connect } = useDAppKitWallet();
     const openConnectModal = useCallback(() => {
@@ -146,20 +149,22 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             }}
         >
             {children}
-            <ConnectModal
-                isOpen={isConnectModalOpen}
-                onClose={closeConnectModal}
-            />
-            <AccountModal
-                isOpen={isAccountModalOpen}
-                onClose={closeAccountModal}
-                initialContent={accountModalContent}
-            />
-            <UpgradeSmartAccountModal
-                isOpen={isUpgradeSmartAccountModalOpen}
-                onClose={closeUpgradeSmartAccountModal}
-                style={upgradeSmartAccountModalStyle}
-            />
+            <VechainKitThemeProvider darkMode={darkMode}>
+                <ConnectModal
+                    isOpen={isConnectModalOpen}
+                    onClose={closeConnectModal}
+                />
+                <AccountModal
+                    isOpen={isAccountModalOpen}
+                    onClose={closeAccountModal}
+                    initialContent={accountModalContent}
+                />
+                <UpgradeSmartAccountModal
+                    isOpen={isUpgradeSmartAccountModalOpen}
+                    onClose={closeUpgradeSmartAccountModal}
+                    style={upgradeSmartAccountModalStyle}
+                />
+            </VechainKitThemeProvider>
         </ModalContext.Provider>
     );
 };
