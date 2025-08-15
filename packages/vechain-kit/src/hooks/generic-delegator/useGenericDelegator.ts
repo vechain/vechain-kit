@@ -8,15 +8,15 @@ import * as nc_utils from '@noble/curves/abstract/utils';
 import { GasTokenType, TransactionSpeed } from '@/types';
 import { DepositAccount } from '@/types/GasEstimation';
 
-export const estimateGas = async (smartAccountAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed) => {
-    const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed, {
+export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed, smartAccountVersion: number) => {
+    const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed + '&version=' + 'v' + smartAccountVersion, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             clauses: clauses,
-            signer: smartAccountAddress,
+            signer: signerAddress,
         }),
     });
     const data = await response.json();

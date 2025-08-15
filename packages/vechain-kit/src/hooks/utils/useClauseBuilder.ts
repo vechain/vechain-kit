@@ -23,6 +23,7 @@ export const useClauseBuilder = () => {
     const { data: chainId } = useGetChainId();
     const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
     );
     const clauseBuilderDeps = useBuildExecWithAuthClauses();
     const params = {

@@ -211,6 +211,13 @@ export const useSendTransaction = ({
                         currentGasToken = preferences.tokenPriority[i + 1];
                     }
                     throw new Error("No sufficient gas found for any token");
+                } else {
+                    return await privyWalletProvider.sendTransaction({
+                        txClauses: clauses,
+                        ...privyUIOptions,
+                        ...options,
+                        suggestedMaxGas,
+                    });
                 }
             }
 

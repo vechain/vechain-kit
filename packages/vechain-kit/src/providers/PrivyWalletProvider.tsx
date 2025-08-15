@@ -29,6 +29,7 @@ import {
     delegateAuthorized,
     signVip191Transaction,
     useBuildExecWithAuthClauses,
+    useHasV1SmartAccount,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
@@ -217,6 +218,10 @@ export const PrivyWalletProvider = ({
     const { data: chainId } = useGetChainId();
     const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
+    );
+    const { data: hasV1SmartAccount } = useHasV1SmartAccount(
+        connectedWallet?.address ?? '',
     );
     const clauseBuilderDeps = useBuildExecWithAuthClauses();
 
@@ -341,7 +346,7 @@ export const PrivyWalletProvider = ({
             clauses: txClauses,
             chainId: chainId as unknown as number,
             verifyingContract: smartAccount.address,
-            version: smartAccountVersion as unknown as number,
+            version: !hasV1SmartAccount ? smartAccountVersion : 1,
             title,
             isEstimation: false,
             description,
@@ -350,7 +355,7 @@ export const PrivyWalletProvider = ({
         });
 
         if (currentGasToken) {
-            const gasEstimationResponse: EstimationResponse = await estimateGas(randomTransactionUser.address, delegatorUrl, clauses, currentGasToken, speed);
+            const gasEstimationResponse: EstimationResponse = await estimateGas(randomTransactionUser.address, delegatorUrl, clauses, currentGasToken, speed, smartAccountVersion ?? 3);
 
             const depositAccount: DepositAccount = await getDepositAccount(delegatorUrl);
 
@@ -369,7 +374,7 @@ export const PrivyWalletProvider = ({
                 clauses: [...txClauses, transferToGenericDelegatorClause as EnhancedClause],
                 chainId: chainId as unknown as number,
                 verifyingContract: smartAccount.address,
-                version: smartAccountVersion as unknown as number,
+                version: !hasV1SmartAccount ? smartAccountVersion : 1,
                 title,
                 isEstimation: false,
                 dontAddCreateAccountClause: true,
@@ -385,6 +390,10 @@ export const PrivyWalletProvider = ({
                 suggestedMaxGas,
                 true
             );
+
+            if (smartAccountVersion === 1) {
+                txBody.gas = Number(txBody.gas) * 2;
+            }
 
             const rawUnsignedTx = Hex.of(Transaction.of(txBody).encoded).toString();
 
@@ -416,8 +425,7 @@ export const PrivyWalletProvider = ({
             );
 
             for (let i = 0; i < simulatedTx1.length; i++) {
-                if (!simulatedTx1[i].reverted) {
-                } else {
+                if (simulatedTx1[i].reverted) {
                     throw new Error(simulatedTx1[i].vmError);
                 }
             }
@@ -442,8 +450,7 @@ export const PrivyWalletProvider = ({
         );
 
         for (let i = 0; i < simulatedTx1.length; i++) {
-            if (!simulatedTx1[i].reverted) {
-            } else {
+            if (simulatedTx1[i].reverted) {
                 return simulatedTx1[i].vmError;
             }
         }
