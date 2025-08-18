@@ -8,7 +8,7 @@ on:
 permissions:
     contents: read
     packages: write
-    id-token: write  # Required for OIDC
+    id-token: write # Required for OIDC
 
 jobs:
     publish:
@@ -28,5 +28,5 @@ jobs:
             - name: Publish VeChain-Kit
               run: |
                   cd packages/vechain-kit
-                  yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
+                  yarn version --immediate ${{ github.ref_name }}
                   yarn publish
