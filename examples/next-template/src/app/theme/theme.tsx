@@ -10,22 +10,15 @@ const exampleTheme = {
         Button: ButtonStyle,
         Modal: modalTheme,
     },
-    cssVarPrefix: 'example',
-    addPrefix: true,
-    prefix: 'example',
-
-    // Color mode configuration
-    initialColorMode: 'dark',
-    useSystemColorMode: false,
 
     semanticTokens: {
         colors: {
             'chakra-body-text': {
-                _dark: '#FFFFFF', // Added dark mode text color
-                _light: '#1E1E1E',
+                _dark: '#7F7FAC', // Added dark mode text color
+                _light: '#1A202C',
             },
             'chakra-body-bg': {
-                _dark: '#1A1A1A', // Added dark mode background color
+                _dark: '#1A202C', // Added dark mode background color
                 _light: '#FFFFFF',
             },
         },
@@ -49,9 +42,8 @@ export const darkTheme = extendTheme({
     config: {
         initialColorMode: 'dark',
         useSystemColorMode: false,
+        cssVarPrefix: 'example',
     },
-    prefix: 'example',
+
     colors: themeColors,
-    addPrefix: true,
-    cssVarPrefix: 'example',
 });

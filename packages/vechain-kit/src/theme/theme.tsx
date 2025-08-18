@@ -16,8 +16,6 @@ const getThemeConfig = (darkMode: boolean): ThemeConfig => ({
     Button: buttonTheme,
     Popover: getPopoverTheme(darkMode),
   },
-  cssVarPrefix: 'vechain-kit', // consistent naming across all components
-
   // COMPLETELY disable global styles to prevent any conflicts
   styles: {
     global: () => ({}), // empty object = no global styles injected
@@ -43,7 +41,13 @@ const getThemeConfig = (darkMode: boolean): ThemeConfig => ({
         _dark: '#718096',
       },
     },
+
+    config: {
+      cssVarPrefix: 'vechain-kit', // consistent naming across all components
+    },
+
   },
+
 
   // minimal foundations to prevent global style injection
   fonts: baseTheme.fonts,

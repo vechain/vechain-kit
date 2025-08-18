@@ -29,6 +29,7 @@ import {
     useMemo,
     useState,
 } from 'react';
+import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 
 type Props = {
     children: Readonly<ReactNode>;
@@ -63,7 +64,7 @@ export const useLegalDocuments = () => {
 
 export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
-    const { legalDocuments } = useVeChainKitConfig();
+    const { darkMode, legalDocuments } = useVeChainKitConfig();
 
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         LegalDocumentAgreement[]
@@ -328,12 +329,16 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             }}
         >
             {children}
-            <LegalDocumentsModal
-                isOpen={showTermsModal}
-                onAgree={handleAgree}
-                handleLogout={onlyOptionalDocuments ? () => {} : handleLogout}
-                onlyOptionalDocuments={onlyOptionalDocuments}
-            />
+            <VechainKitThemeProvider darkMode={darkMode}>
+                <LegalDocumentsModal
+                    isOpen={showTermsModal}
+                    onAgree={handleAgree}
+                    handleLogout={
+                        onlyOptionalDocuments ? () => {} : handleLogout
+                    }
+                    onlyOptionalDocuments={onlyOptionalDocuments}
+                />
+            </VechainKitThemeProvider>
         </LegalDocumentsContext.Provider>
     );
 };
