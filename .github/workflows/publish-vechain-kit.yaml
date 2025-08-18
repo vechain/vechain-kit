@@ -8,19 +8,18 @@ on:
 permissions:
     contents: read
     packages: write
+    id-token: write  # Required for OIDC
 
 jobs:
     publish:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
                   node-version: 20
                   registry-url: https://npm.pkg.github.com/
+            - run: npm install -g npm@latest
             - run: yarn && yarn install:all
             - run: yarn build
               env:
@@ -31,5 +30,3 @@ jobs:
                   cd packages/vechain-kit
                   yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
                   yarn publish
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
