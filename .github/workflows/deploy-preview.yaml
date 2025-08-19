@@ -22,6 +22,7 @@ jobs:
             NEXT_PUBLIC_MIXPANEL_TOKEN: 'f53d48e696601c813b128d6f91e8bc88'
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
             AWS_REGION: eu-west-1
+            BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -29,7 +30,7 @@ jobs:
             - name: Process Branch Name
               id: process-branch-name
               run: |
-                  sanitized_branch_name=$(echo "${{ github.event.pull_request.head.ref }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
+                  sanitized_branch_name=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
                   echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
                   echo "NEXT_PUBLIC_BASE_PATH=/$sanitized_branch_name" >> $GITHUB_ENV
 
