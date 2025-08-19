@@ -14,13 +14,20 @@ jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v4
               with:
                   node-version: 20
                   registry-url: https://npm.pkg.github.com/
+                  cache: 'yarn'
+
             - run: npm install -g npm@latest
+
             - run: yarn && yarn install:all
+
             - run: yarn build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
@@ -29,4 +36,4 @@ jobs:
               run: |
                   cd packages/vechain-kit
                   yarn version --immediate ${{ github.ref_name }}
-                  yarn publish
+                  npm publish
