@@ -1,14 +1,8 @@
-import {
-    ChakraProvider,
-    createStandaloneToast,
-    ColorModeScript,
-    Box,
-} from '@chakra-ui/react';
+import { ChakraProvider, createStandaloneToast, Box } from '@chakra-ui/react';
 import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { createContext, ReactNode, useContext, useMemo, useRef } from 'react';
 import { getVechainKitTheme } from '@/theme';
-import { safeQuerySelector } from '@/utils/ssrUtils';
 
 type Props = {
     children: ReactNode;
@@ -75,21 +69,6 @@ const EnsureChakraProvider = ({
     );
 };
 
-const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
-    try {
-        // Check if ColorModeScript already exists by looking for its data attribute
-        const existingScript = safeQuerySelector('[data-chakra-color-mode]');
-        if (existingScript) {
-            return null; // Don't render another one if it exists
-        }
-    } catch (e) {
-        console.error(e);
-    }
-
-    // If no ColorModeScript exists, provide one
-    return <ColorModeScript initialColorMode={darkMode ? 'dark' : 'light'} />;
-};
-
 const VechainKitThemeContext = createContext<{
     portalRootRef?: React.RefObject<HTMLDivElement | null>;
 }>({
@@ -124,7 +103,6 @@ export const VechainKitThemeProvider = ({
 
     return (
         <VechainKitThemeContext.Provider value={{ portalRootRef }}>
-            <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider theme={theme}>
                 <Box
                     id="vechain-kit-root"
