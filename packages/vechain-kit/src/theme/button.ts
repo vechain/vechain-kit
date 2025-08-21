@@ -15,7 +15,7 @@ const getVariants = (darkMode: boolean) => ({
         px: 3,
         borderRadius: 16,
         _hover: {
-            bg: darkMode ? 'whiteAlpha.100' : '#eaeaea',
+            bg: darkMode ? '#2a2a2a' : '#eaeaea',
         },
     })),
     loginWithVechain: defineStyle(() => ({
@@ -38,7 +38,7 @@ const getVariants = (darkMode: boolean) => ({
         width: 'full',
         height: '60px',
         borderRadius: 'xl',
-        bg: darkMode ? '#3182CE' : '#2C5282',
+        bg: darkMode ? '#3182CE' : '#2B6CB0',
         color: 'white',
         _hover: {
             bg: darkMode ? '#2B6CB0' : '#2C5282',
