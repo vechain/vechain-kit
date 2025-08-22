@@ -24,7 +24,7 @@ jobs:
                   registry-url: https://npm.pkg.github.com/
                   cache: 'yarn'
 
-            - run: npm install -g npm@latest
+            - run: npm install -g npm@11.5.1
 
             - run: yarn && yarn install:all
 
