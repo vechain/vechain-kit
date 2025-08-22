@@ -1,3 +1,4 @@
+import { useVeChainKitConfig } from '@/providers';
 import { IconButton, IconButtonProps, Box } from '@chakra-ui/react';
 import { BiBell } from 'react-icons/bi';
 
@@ -11,13 +12,13 @@ export const ModalNotificationButton = ({
     hasUnreadNotifications,
     ...props
 }: NotificationButtonProps) => {
+    const { darkMode: isDark } = useVeChainKitConfig();
     return (
         <IconButton
             aria-label="Notifications"
             size="sm"
             variant="ghost"
-            _hover={{ bg: 'blackAlpha.100' }}
-            _dark={{ _hover: { bg: 'whiteAlpha.100' } }}
+            _hover={{ bg: isDark ? 'whiteAlpha.100' : 'blackAlpha.100' }}
             position="absolute"
             borderRadius={'50%'}
             left="10px"
