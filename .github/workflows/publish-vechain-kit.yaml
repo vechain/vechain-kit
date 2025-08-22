@@ -8,20 +8,26 @@ on:
 permissions:
     contents: read
     packages: write
+    id-token: write # Required for OIDC
 
 jobs:
     publish:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - uses: actions/setup-node@v4
               with:
                   node-version: 20
                   registry-url: https://npm.pkg.github.com/
+                  cache: 'yarn'
+
+            - run: npm install -g npm@11.5.1
+
             - run: yarn && yarn install:all
+
             - run: yarn build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
@@ -29,7 +35,5 @@ jobs:
             - name: Publish VeChain-Kit
               run: |
                   cd packages/vechain-kit
-                  yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
-                  yarn publish
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                  yarn version --immediate ${{ github.ref_name }}
+                  npm publish
