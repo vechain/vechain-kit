@@ -2,38 +2,44 @@
 
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
-import { encodeFunctionData } from 'viem';
-import {
-    ABIContract,
-    Address,
-    Clause,
-    TransactionClause,
-} from '@vechain/sdk-core';
+import { encodeFunctionData, parseEther } from 'viem';
+import { Transaction, Hex, HexUInt, TransactionClause } from '@vechain/sdk-core';
 import {
     ThorClient,
     VeChainProvider,
     ProviderInternalBaseWallet,
     signerUtils,
 } from '@vechain/sdk-network';
-import { SimpleAccountABI, SimpleAccountFactoryABI } from '../assets';
 import { randomTransactionUser } from '../utils';
 import {
     EnhancedClause,
     ExecuteBatchWithAuthorizationSignData,
     ExecuteWithAuthorizationSignData,
+    GasTokenType,
+    TransactionSpeed,
+    DepositAccount,
+    EstimationResponse,
+    SUPPORTED_GAS_TOKENS
 } from '@/types';
 import {
-    useGetChainId,
-    useHasV1SmartAccount,
     useSmartAccount,
-    useSmartAccountVersion,
     useWallet,
+    estimateGas,
+    getDepositAccount,
+    delegateAuthorized,
+    signVip191Transaction,
+    useBuildExecWithAuthClauses,
+    useHasV1SmartAccount,
+    useGetChainId,
+    useSmartAccountVersion,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
 import { ethers } from 'ethers';
+import { ERC20__factory } from '@vechain/vechain-contract-types';
+import { buildClauses } from '@/utils/clauseBuilder';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
@@ -44,6 +50,7 @@ export interface PrivyWalletProviderContextType {
         description?: string;
         buttonText?: string;
         suggestedMaxGas?: number;
+        currentGasToken?: GasTokenType;
     }) => Promise<string>;
     signTypedData: (data: SignTypedDataParams) => Promise<string>;
     signMessage: (message: string) => Promise<string>;
@@ -52,6 +59,123 @@ export interface PrivyWalletProviderContextType {
 
 const PrivyWalletProviderContext =
     createContext<PrivyWalletProviderContextType | null>(null);
+
+/**
+ * Build the typed data structure for executeBatchWithAuthorization
+ * @param clauses - The clauses to sign
+ * @param chainId - The chain id
+ * @param verifyingContract - The address of the smart account
+ * @returns The typed data structure for executeBatchWithAuthorization
+ */
+export function buildBatchAuthorizationTypedData({
+    clauses,
+    chainId,
+    verifyingContract,
+}: {
+    clauses: TransactionClause[];
+    chainId: number;
+    verifyingContract: string;
+}): ExecuteBatchWithAuthorizationSignData {
+    const toArray: string[] = [];
+    const valueArray: string[] = [];
+    const dataArray: string[] = [];
+
+    clauses.forEach((clause) => {
+        toArray.push(clause.to ?? '');
+        valueArray.push(String(clause.value));
+        if (typeof clause.data === 'object' && 'abi' in clause.data) {
+            dataArray.push(encodeFunctionData(clause.data));
+        } else {
+            dataArray.push(clause.data || '0x');
+        }
+    });
+
+    return {
+        domain: {
+            name: 'Wallet',
+            version: '1',
+            chainId,
+            verifyingContract,
+        },
+        types: {
+            ExecuteBatchWithAuthorization: [
+                { name: 'to', type: 'address[]' },
+                { name: 'value', type: 'uint256[]' },
+                { name: 'data', type: 'bytes[]' },
+                { name: 'validAfter', type: 'uint256' },
+                { name: 'validBefore', type: 'uint256' },
+                { name: 'nonce', type: 'bytes32' },
+            ],
+            EIP712Domain: [
+                { name: 'name', type: 'string' },
+                { name: 'version', type: 'string' },
+                { name: 'chainId', type: 'uint256' },
+                { name: 'verifyingContract', type: 'address' },
+            ],
+        },
+        primaryType: 'ExecuteBatchWithAuthorization',
+        message: {
+            to: toArray,
+            value: valueArray,
+            data: dataArray,
+            validAfter: 0,
+            validBefore: Math.floor(Date.now() / 1000) + 300, // e.g. 5 minutes from now
+            nonce: ethers.hexlify(ethers.randomBytes(32)),
+        },
+    };
+};
+
+/**
+ * Build the typed data structure for executeWithAuthorization
+ * @param clause - The clause to sign
+ * @param chainId - The chain id
+ * @param verifyingContract - The address of the smart account
+ * @returns The typed data structure for executeWithAuthorization
+ */
+export function buildSingleAuthorizationTypedData({
+    clause,
+    chainId,
+    verifyingContract,
+}: {
+    clause: TransactionClause;
+    chainId: number;
+    verifyingContract: string;
+}): ExecuteWithAuthorizationSignData {
+    return {
+        domain: {
+            name: 'Wallet',
+            version: '1',
+            chainId: chainId as unknown as number, // convert chainId to a number
+            verifyingContract: verifyingContract,
+        },
+        types: {
+            ExecuteWithAuthorization: [
+                { name: 'to', type: 'address' },
+                { name: 'value', type: 'uint256' },
+                { name: 'data', type: 'bytes' },
+                { name: 'validAfter', type: 'uint256' },
+                { name: 'validBefore', type: 'uint256' },
+            ],
+            EIP712Domain: [
+                { name: 'name', type: 'string' },
+                { name: 'version', type: 'string' },
+                { name: 'chainId', type: 'uint256' },
+                { name: 'verifyingContract', type: 'address' },
+            ],
+        },
+        primaryType: 'ExecuteWithAuthorization',
+        message: {
+            validAfter: 0,
+            validBefore: Math.floor(Date.now() / 1000) + 60, // 1 minute
+            to: clause.to,
+            value: String(clause.value),
+            data:
+                (typeof clause.data === 'object' && 'abi' in clause.data
+                    ? encodeFunctionData(clause.data)
+                    : clause.data) || '0x',
+        },
+    };
+};
 
 /**
  * This provider is responsible for retrieving the smart account address
@@ -87,367 +211,72 @@ export const PrivyWalletProvider = ({
         signMessage: signMessageWithCrossApp,
     } = usePrivyCrossAppSdk();
     const { connection, connectedWallet } = useWallet();
-
     const { network } = useVeChainKitConfig();
-    const { data: chainId } = useGetChainId();
-
-    const thor = ThorClient.at(nodeUrl);
-
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-
+    const { data: chainId } = useGetChainId();
     const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
     );
-
     const { data: hasV1SmartAccount } = useHasV1SmartAccount(
         connectedWallet?.address ?? '',
     );
+    const clauseBuilderDeps = useBuildExecWithAuthClauses();
 
-    /**
-     * Build the typed data structure for executeBatchWithAuthorization
-     * @param clauses - The clauses to sign
-     * @param chainId - The chain id
-     * @param verifyingContract - The address of the smart account
-     * @returns The typed data structure for executeBatchWithAuthorization
-     */
-    function buildBatchAuthorizationTypedData({
-        clauses,
-        chainId,
-        verifyingContract,
-    }: {
-        clauses: TransactionClause[];
-        chainId: number;
-        verifyingContract: string;
-    }): ExecuteBatchWithAuthorizationSignData {
-        const toArray: string[] = [];
-        const valueArray: string[] = [];
-        const dataArray: string[] = [];
+    const thor = ThorClient.at(nodeUrl);
 
-        clauses.forEach((clause) => {
-            toArray.push(clause.to ?? '');
-            valueArray.push(String(clause.value));
-            if (typeof clause.data === 'object' && 'abi' in clause.data) {
-                dataArray.push(encodeFunctionData(clause.data));
-            } else {
-                dataArray.push(clause.data || '0x');
-            }
-        });
+    const ERC20Interface = ERC20__factory.createInterface();
 
-        return {
-            domain: {
-                name: 'Wallet',
-                version: '1',
-                chainId,
-                verifyingContract,
-            },
-            types: {
-                ExecuteBatchWithAuthorization: [
-                    { name: 'to', type: 'address[]' },
-                    { name: 'value', type: 'uint256[]' },
-                    { name: 'data', type: 'bytes[]' },
-                    { name: 'validAfter', type: 'uint256' },
-                    { name: 'validBefore', type: 'uint256' },
-                    { name: 'nonce', type: 'bytes32' },
-                ],
-                EIP712Domain: [
-                    { name: 'name', type: 'string' },
-                    { name: 'version', type: 'string' },
-                    { name: 'chainId', type: 'uint256' },
-                    { name: 'verifyingContract', type: 'address' },
-                ],
-            },
-            primaryType: 'ExecuteBatchWithAuthorization',
-            message: {
-                to: toArray,
-                value: valueArray,
-                data: dataArray,
-                validAfter: 0,
-                validBefore: Math.floor(Date.now() / 1000) + 300, // e.g. 5 minutes from now
-                nonce: ethers.hexlify(ethers.randomBytes(32)),
-            },
-        };
+    function decodeRawTx(raw: any, isSigned: boolean) {
+        return Transaction.decode(
+            HexUInt.of(raw.slice(2)).bytes,
+            isSigned
+        );
     }
 
-    /**
-     * Build the typed data structure for executeWithAuthorization
-     * @param clause - The clause to sign
-     * @param chainId - The chain id
-     * @param verifyingContract - The address of the smart account
-     * @returns The typed data structure for executeWithAuthorization
-     */
-    function buildSingleAuthorizationTypedData({
-        clause,
-        chainId,
-        verifyingContract,
-    }: {
-        clause: TransactionClause;
-        chainId: number;
-        verifyingContract: string;
-    }): ExecuteWithAuthorizationSignData {
-        return {
-            domain: {
-                name: 'Wallet',
-                version: '1',
-                chainId: chainId as unknown as number, // convert chainId to a number
-                verifyingContract: verifyingContract,
-            },
-            types: {
-                ExecuteWithAuthorization: [
-                    { name: 'to', type: 'address' },
-                    { name: 'value', type: 'uint256' },
-                    { name: 'data', type: 'bytes' },
-                    { name: 'validAfter', type: 'uint256' },
-                    { name: 'validBefore', type: 'uint256' },
-                ],
-                EIP712Domain: [
-                    { name: 'name', type: 'string' },
-                    { name: 'version', type: 'string' },
-                    { name: 'chainId', type: 'uint256' },
-                    { name: 'verifyingContract', type: 'address' },
-                ],
-            },
-            primaryType: 'ExecuteWithAuthorization',
-            message: {
-                validAfter: 0,
-                validBefore: Math.floor(Date.now() / 1000) + 60, // 1 minute
-                to: clause.to,
-                value: String(clause.value),
-                data:
-                    (typeof clause.data === 'object' && 'abi' in clause.data
-                        ? encodeFunctionData(clause.data)
-                        : clause.data) || '0x',
-            },
-        };
-    }
-
-    /**
-     * Send a transaction on vechain by asking the privy wallet to sign a typed data content
-     * that will allow us the execute the action with his smart account through the executeWithAuthorization
-     * function of the smart account.
-     *
-     * This function will do 3 things:
-     * 1) Ask signature to the owner of the smart account (distinguishing between if smart account is v1 or v3)
-     * - With v1 we will ask 1 signature request for each clause
-     * - With v3 we will ask 1 signature request for the batch execution of all clauses
-     * 2) After getting the signatures we rebuild the clauses to be broadcasted to the network
-     * - If the smart account is not deployed, we add a clause to deploy it
-     * 3) We then estimate the gas fees for the transaction and build the transaction body
-     * 4) We sign the transaction with a random transaction user and request the fee delegator to pay the gas fees in the process
-     * 5) We broadcast the transaction to the network
-     */
-    const sendTransaction = async ({
-        txClauses = [],
-        title = 'Sign Transaction',
-        description,
-        buttonText = 'Sign',
-        suggestedMaxGas,
-    }: {
-        txClauses: TransactionClause[];
-        title?: string;
-        description?: string;
-        buttonText?: string;
-        suggestedMaxGas?: number;
-    }): Promise<string> => {
-        if (
-            !smartAccount ||
-            (smartAccount && !smartAccount.address) ||
-            !connectedWallet ||
-            (connectedWallet && !connectedWallet.address)
-        ) {
-            throw new Error('Address or embedded wallet is missing');
-        }
-
-        // Clauses for the transaction
-        const clauses = [];
-
-        // If the smart account was never deployed or the version is >= 3 and we have multiple clauses, we can batch them
-        if (
-            !hasV1SmartAccount ||
-            (smartAccountVersion && smartAccountVersion >= 3)
-        ) {
-            const typedData = buildBatchAuthorizationTypedData({
-                clauses: txClauses,
-                chainId: chainId as unknown as number,
-                verifyingContract: smartAccount.address,
-            });
-
-            // Sign the typed data (either cross-app or traditional Privy)
-            const signature = connection.isConnectedWithCrossApp
-                ? await signTypedDataWithCrossApp({
-                      ...typedData,
-                      address: connectedWallet.address as `0x${string}`,
-                  } as SignTypedDataParameters)
-                : (
-                      await signTypedDataPrivy(typedData, {
-                          uiOptions: {
-                              title,
-                              description,
-                              buttonText,
-                          },
-                      })
-                  ).signature;
-
-            // If the smart account is not deployed, deploy it first
-            if (!smartAccount.isDeployed) {
-                clauses.push(
-                    Clause.callFunction(
-                        Address.of(
-                            getConfig(network.type).accountFactoryAddress,
-                        ),
-                        ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
-                            'createAccount',
-                        ),
-                        [connectedWallet.address ?? ''],
-                    ),
-                );
-            }
-
-            // Now the single batch execution call
-            clauses.push(
-                Clause.callFunction(
-                    Address.of(smartAccount.address),
-                    ABIContract.ofAbi(SimpleAccountABI).getFunction(
-                        'executeBatchWithAuthorization',
-                    ),
-                    [
-                        typedData.message.to,
-                        typedData.message.value?.map((val) => BigInt(val)) ?? 0,
-                        typedData.message.data,
-                        BigInt(typedData.message.validAfter),
-                        BigInt(typedData.message.validBefore),
-                        typedData.message.nonce, // If your contract expects bytes32
-                        signature as `0x${string}`,
-                    ],
-                ),
-            );
-        } else {
-            // Else, if it is a v1 smart account, we need to sign each clause individually
-            const dataToSign: ExecuteWithAuthorizationSignData[] =
-                txClauses.map((txData) =>
-                    buildSingleAuthorizationTypedData({
-                        clause: txData,
-                        chainId: chainId as unknown as number,
-                        verifyingContract: smartAccount.address,
-                    }),
-                );
-
-            // request signatures using privy
-            const signatures: string[] = [];
-            for (let index = 0; index < dataToSign.length; index++) {
-                const data = dataToSign[index];
-                const txClause = txClauses[index];
-                if (!txClause) {
-                    throw new Error(
-                        `Transaction clause at index ${index} is undefined`,
-                    );
-                }
-
-                if (connection.isConnectedWithCrossApp) {
-                    const mutableData = {
-                        ...data,
-                        address: connectedWallet.address as `0x${string}`,
-                        types: Object.fromEntries(
-                            Object.entries(data.types).map(([k, v]) => [
-                                k,
-                                [...v],
-                            ]),
-                        ),
-                    } as unknown as SignTypedDataParameters & {
-                        address: `0x${string}`;
-                    };
-                    const signature = await signTypedDataWithCrossApp(
-                        mutableData,
-                    );
-                    signatures.push(signature);
-                    continue;
-                }
-
-                const funcData = txClause.data;
-                const signature = (
-                    await signTypedDataPrivy(data, {
-                        uiOptions: {
-                            title,
-                            description:
-                                description ??
-                                ((txClauses[index] as EnhancedClause).comment ||
-                                    (typeof funcData === 'object' &&
-                                    funcData !== null &&
-                                    'functionName' in funcData
-                                        ? (
-                                              funcData as {
-                                                  functionName: string;
-                                              }
-                                          ).functionName
-                                        : ' ')),
-                            buttonText,
-                        },
-                    })
-                ).signature;
-                signatures.push(signature);
-            }
-
-            // if the account smartAccountAddress has no code yet, it's not been deployed/created yet
-            if (!smartAccount.isDeployed) {
-                clauses.push(
-                    Clause.callFunction(
-                        Address.of(
-                            getConfig(network.type).accountFactoryAddress,
-                        ),
-                        ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
-                            'createAccount',
-                        ),
-                        [connectedWallet.address ?? ''], // set the Privy wallet address as the owner of the smart account
-                    ),
-                );
-            }
-
-            dataToSign.forEach((data, index) => {
-                clauses.push(
-                    Clause.callFunction(
-                        Address.of(smartAccount.address ?? ''),
-                        ABIContract.ofAbi(SimpleAccountABI).getFunction(
-                            'executeWithAuthorization',
-                        ),
-                        [
-                            data.message.to as `0x${string}`,
-                            BigInt(data.message.value),
-                            data.message.data as `0x${string}`,
-                            BigInt(data.message.validAfter),
-                            BigInt(data.message.validBefore),
-                            signatures[index] as `0x${string}`,
-                        ],
-                    ),
-                );
-            });
-        }
-
-        // Now we can broadcast the transaction to the network by using our random transaction user
-
-        // estimate the gas fees for the transaction
+    // Helper to estimate gas and build transaction body
+    const estimateAndBuildTxBody = async (
+        clauses: any[],
+        suggestedMaxGas: number | undefined,
+        isDelegated: boolean
+    ) => {
         const gasResult = await thor.gas.estimateGas(
             clauses,
-            connectedWallet.address ?? '',
-            {
-                gasPadding: 1,
-            },
+            connectedWallet?.address ?? '',
+            { gasPadding: 1 }
         );
-
         const parsedGasLimit = Math.max(
             gasResult.totalGas,
             suggestedMaxGas ?? 0,
         );
 
-        // build the transaction in VeChain format, with delegation enabled
-        const txBody = await thor.transactions.buildTransactionBody(
+        if (!isDelegated) {
+            return await thor.transactions.buildTransactionBody(
+                clauses,
+                parsedGasLimit,
+            );
+        }
+
+        return await thor.transactions.buildTransactionBody(
             clauses,
             parsedGasLimit,
-            { isDelegated: true },
+            { isDelegated: isDelegated }
         );
+    };
 
-        // sign the transaction and request the fee delegator to pay the gas fees in the process
-        const wallet = new ProviderInternalBaseWallet(
+    // Helper to sign and publish transaction
+    const signAndPublish = async (
+        txBody: any,
+        walletOverride?: any,
+        signerOverride?: any
+    ) => {
+        if (!smartAccount?.address) {
+            throw new Error('Smart account address is not set');
+        }
+
+        const walletToUse = walletOverride ?? new ProviderInternalBaseWallet(
             [
                 {
                     privateKey: Buffer.from(
@@ -459,19 +288,19 @@ export const PrivyWalletProvider = ({
             ],
             { gasPayer: { gasPayerServiceUrl: delegatorUrl } },
         );
-        const providerWithDelegationEnabled = new VeChainProvider(
+        const provider = new VeChainProvider(
             thor,
-            wallet,
-            true,
+            walletToUse,
+            true
         );
-        const signer = await providerWithDelegationEnabled.getSigner(
+        const signer = signerOverride ?? await provider.getSigner(
             randomTransactionUser.address,
         );
         const txInput = signerUtils.transactionBodyToTransactionRequestInput(
             txBody,
             randomTransactionUser.address,
         );
-        const rawDelegateSigned = await signer!.signTransaction(txInput);
+        const rawDelegateSigned = await signer.signTransaction(txInput);
 
         // publish the hexlified signed transaction directly on the node api
         const { id } = (await fetch(`${nodeUrl}/transactions`, {
@@ -485,6 +314,158 @@ export const PrivyWalletProvider = ({
         }).then((res) => res.json())) as { id: string };
 
         return id;
+    };
+
+    const sendTransaction = async ({
+        txClauses = [],
+        title = 'Sign Transaction',
+        description,
+        buttonText = 'Sign',
+        suggestedMaxGas,
+        currentGasToken,
+        speed = 'regular',
+    }: {
+        txClauses: TransactionClause[];
+        title?: string;
+        description?: string;
+        buttonText?: string;
+        suggestedMaxGas?: number;
+        currentGasToken?: GasTokenType;
+        speed?: TransactionSpeed;
+    }): Promise<string> => {
+        if (
+            !smartAccount ||
+            (smartAccount && !smartAccount.address) ||
+            !connectedWallet ||
+            (connectedWallet && !connectedWallet.address)
+        ) {
+            throw new Error('Address or embedded wallet is missing');
+        }
+
+        let clauses = await buildClauses({ // initial transfer to chosen address clause
+            clauses: txClauses,
+            chainId: chainId as unknown as number,
+            verifyingContract: smartAccount.address,
+            version: !hasV1SmartAccount ? smartAccountVersion : 1,
+            title,
+            isEstimation: false,
+            description,
+            buttonText,
+            dependencies: clauseBuilderDeps,
+        });
+
+        if (currentGasToken) {
+            console.log(`smartAccountVersion: ${smartAccountVersion}`);
+            const gasEstimationResponse: EstimationResponse = await estimateGas(randomTransactionUser.address, delegatorUrl, clauses, currentGasToken, speed, smartAccountVersion ?? 3);
+
+            const depositAccount: DepositAccount = await getDepositAccount(delegatorUrl);
+
+            const transferToGenericDelegatorClause = {
+                to: currentGasToken === 'VET' ? depositAccount.depositAccount : SUPPORTED_GAS_TOKENS[currentGasToken as GasTokenType].address,
+                value: currentGasToken === 'VET' ? parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0').toString() : '0x0',
+                data: currentGasToken === 'VET' ? '0x' : ERC20Interface.encodeFunctionData('transfer', [
+                    depositAccount.depositAccount,
+                    parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0'),
+                ]),
+                comment: `Transfer ${gasEstimationResponse.transactionCost} ${currentGasToken} to ${depositAccount.depositAccount}`,
+                abi: currentGasToken === 'VET' ? undefined : ERC20Interface.getFunction('transfer'),
+            };
+
+            const finalExecuteWithAuthorizationClauses = await buildClauses({
+                clauses: [...txClauses, transferToGenericDelegatorClause as EnhancedClause],
+                chainId: chainId as unknown as number,
+                verifyingContract: smartAccount.address,
+                version: !hasV1SmartAccount ? smartAccountVersion : 1,
+                title,
+                isEstimation: false,
+                dontAddCreateAccountClause: true,
+                description,
+                buttonText,
+                dependencies: clauseBuilderDeps,
+            });
+
+            clauses = [...finalExecuteWithAuthorizationClauses];
+
+            const txBody = await estimateAndBuildTxBody(
+                clauses,
+                suggestedMaxGas,
+                true
+            );
+
+            if (smartAccountVersion === 1) {
+                txBody.gas = Number(txBody.gas) * 2;
+            }
+
+            const rawUnsignedTx = Hex.of(Transaction.of(txBody).encoded).toString();
+
+            const gasPayerResponse: {
+                signature: string;
+                address: string;
+                raw: string;
+                origin: string;
+            } = await delegateAuthorized(rawUnsignedTx, randomTransactionUser.address, currentGasToken, delegatorUrl);
+
+
+            const decodedTx = decodeRawTx(gasPayerResponse.raw, false);
+
+            const finalTxSigned = signVip191Transaction(decodedTx, randomTransactionUser.privateKey, gasPayerResponse.signature);
+
+            const simulatedTransaction = {
+                clauses: clauses,
+                simulateTransactionOptions: {
+                    caller: smartAccount.address,
+                    gasPayer: gasPayerResponse.address,
+                }
+            };
+
+            const simulatedTx1 = await thor.transactions.simulateTransaction(
+                simulatedTransaction.clauses,
+                {
+                    ...simulatedTransaction.simulateTransactionOptions
+                }
+            );
+
+            for (let i = 0; i < simulatedTx1.length; i++) {
+                if (simulatedTx1[i].reverted) {
+                    throw new Error(simulatedTx1[i].vmError);
+                }
+            }
+            // Send the transaction
+            const sendTransactionResult = await thor.transactions.sendTransaction(finalTxSigned);
+    
+            return sendTransactionResult.id;
+        }
+
+        const simulatedTransaction = {
+            clauses: clauses,
+            simulateTransactionOptions: {
+                caller:  randomTransactionUser.address
+            }
+        };
+
+        const simulatedTx1 = await thor.transactions.simulateTransaction(
+            simulatedTransaction.clauses,
+            {
+                ...simulatedTransaction.simulateTransactionOptions
+            }
+        );
+
+        for (let i = 0; i < simulatedTx1.length; i++) {
+            if (simulatedTx1[i].reverted) {
+                return simulatedTx1[i].vmError;
+            }
+        }
+        
+         // For VTHO or no gas token specified
+         const txBody = await estimateAndBuildTxBody(
+            clauses,
+            suggestedMaxGas,
+            true
+        );
+
+        return await signAndPublish(
+            txBody,
+        );
     };
 
     /**
