@@ -36,4 +36,4 @@ jobs:
               run: |
                   cd packages/vechain-kit
                   yarn version --immediate ${{ github.ref_name }}
-                  npm publish
+                  npm publish --tag latest
