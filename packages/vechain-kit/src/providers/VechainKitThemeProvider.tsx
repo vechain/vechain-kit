@@ -3,10 +3,18 @@ import {
     createStandaloneToast,
     ColorModeScript,
     Box,
+    useColorMode,
 } from '@chakra-ui/react';
 import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
-import { createContext, ReactNode, useContext, useMemo, useRef } from 'react';
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+} from 'react';
 import { getVechainKitTheme } from '@/theme';
 import { safeQuerySelector } from '@/utils/ssrUtils';
 
@@ -106,6 +114,18 @@ export const useVechainKitThemeConfig = () => {
     return context;
 };
 
+export const ColorModeSync = ({ darkMode = false }: { darkMode: boolean }) => {
+    const { setColorMode, colorMode: currentColorMode } = useColorMode();
+
+    useEffect(() => {
+        const colorMode = darkMode ? 'dark' : 'light';
+
+        if (currentColorMode !== colorMode) setColorMode(colorMode);
+    }, [darkMode]);
+
+    return <></>;
+};
+
 export const VechainKitThemeProvider = ({
     children,
     darkMode = false,
@@ -126,6 +146,7 @@ export const VechainKitThemeProvider = ({
         <VechainKitThemeContext.Provider value={{ portalRootRef }}>
             <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider theme={theme}>
+                <ColorModeSync darkMode={darkMode} />
                 <Box
                     id="vechain-kit-root"
                     ref={portalRootRef}
