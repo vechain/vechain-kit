@@ -39,4 +39,4 @@ export const HOMEPAGE_MIXPANEL_PROJECT_TOKEN = ENV.isProduction
     ? PROJECT_TOKENS.production
     : PROJECT_TOKENS.development;
 
-export const HOMEPAGE_MIXPANEL_PROJECT_NAME = 'homepage';
+export const HOMEPAGE_MIXPANEL_PROJECT_NAME = 'next-template';
