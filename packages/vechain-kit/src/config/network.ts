@@ -144,6 +144,27 @@ export const genesises = {
     },
 };
 
+/**
+ * Helper function to get genesis block from genesis ID
+ */
+export const getGenesisFromId = (
+    genesisId: string,
+): Connex.Thor.Block | null => {
+    const networkType = genesises.which(genesisId);
+    if (!networkType) return null;
+
+    switch (networkType) {
+        case 'main':
+            return genesises.main;
+        case 'test':
+            return genesises.test;
+        case 'solo':
+            return genesises.solo;
+        default:
+            return null;
+    }
+};
+
 export const DEFAULT_GAS_COEFFICIENT = 0;
 
 export const BASE_GAS_PRICE =
