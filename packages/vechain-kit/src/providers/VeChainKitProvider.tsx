@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE, getGenesisFromId } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
 import {
@@ -107,6 +107,7 @@ export type VechainKitProviderProps = {
     network: {
         type: NETWORK_TYPE;
         nodeUrl?: string;
+        genesisId?: string;
         requireCertificate?: boolean;
         connectionCertificate?: {
             message?: Connex.Vendor.CertMessage;
@@ -381,7 +382,12 @@ export const VeChainKitProvider = (
                                 network.nodeUrl ??
                                 getConfig(network.type).nodeUrl
                             }
-                            genesis={getConfig(network.type).network.genesis}
+                            genesis={
+                                network.genesisId
+                                    ? getGenesisFromId(network.genesisId) ??
+                                      getConfig(network.type).network.genesis
+                                    : getConfig(network.type).network.genesis
+                            }
                             i18n={i18nConfig}
                             language={language}
                             logLevel={dappKit.logLevel}
