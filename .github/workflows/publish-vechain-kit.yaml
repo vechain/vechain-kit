@@ -11,7 +11,7 @@ permissions:
     id-token: write # Required for OIDC
 
 jobs:
-    publish:
+    publish-to-github-packages:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -41,12 +41,27 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    publish-to-npmjs:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
             - name: Setup Node.js for npmjs.org
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   registry-url: https://registry.npmjs.org
                   cache: 'yarn'
+
+            - run: npm install -g npm@11.5.1
+
+            - run: yarn && yarn install:all
+
+            - run: yarn build
+              env:
+                NODE_OPTIONS: '--max-old-space-size=4096'
 
             - name: Publish VeChain-Kit to npmjs.org
               run: |
