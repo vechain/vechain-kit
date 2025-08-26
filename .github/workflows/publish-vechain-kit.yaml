@@ -21,7 +21,7 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  registry-url: https://npm.pkg.github.com/
+                  registry-url: https://npm.pkg.github.com
                   cache: 'yarn'
 
             - run: npm install -g npm@11.5.1
@@ -37,3 +37,5 @@ jobs:
                   cd packages/vechain-kit
                   yarn version --immediate ${{ github.ref_name }}
                   npm publish --tag latest
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
