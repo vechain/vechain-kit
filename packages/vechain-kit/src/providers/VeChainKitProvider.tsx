@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { NETWORK_TYPE, getGenesisFromId } from '@/config/network';
+import { NETWORK_TYPE } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
 import {
@@ -381,8 +381,11 @@ export const VeChainKitProvider = (
                             }
                             genesis={
                                 network.genesisId
-                                    ? getGenesisFromId(network.genesisId) ??
-                                      getConfig(network.type).network.genesis
+                                    ? {
+                                          ...getConfig(network.type).network
+                                              .genesis,
+                                          id: network.genesisId,
+                                      }
                                     : getConfig(network.type).network.genesis
                             }
                             i18n={i18nConfig}
