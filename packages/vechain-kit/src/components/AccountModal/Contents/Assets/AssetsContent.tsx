@@ -1,15 +1,14 @@
 import {
-    Button,
     Container,
-    Icon,
     Input,
     InputGroup,
     InputLeftElement,
     ModalBody,
     ModalCloseButton,
-    ModalFooter,
     ModalHeader,
     VStack,
+    Text,
+    IconButton,
 } from '@chakra-ui/react';
 import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
 import {
@@ -65,9 +64,30 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
-            <Container h={['540px', 'auto']} p={0}>
-                <ModalBody>
-                    <InputGroup size="lg">
+            <Container
+                h={['540px', 'auto']}
+                p={0}
+                display="flex"
+                flexDirection="column"
+                position="relative"
+            >
+                <ModalBody pb={0}>
+                    <Text
+                        fontSize="xs"
+                        color={darkMode ? 'whiteAlpha.500' : 'blackAlpha.500'}
+                        mb={2}
+                        textAlign="center"
+                    >
+                        All tokens are VIP-180 compatible on VeChain
+                    </Text>
+                    <InputGroup
+                        size="lg"
+                        position="sticky"
+                        top={0}
+                        bg={darkMode ? 'gray.800' : 'white'}
+                        zIndex={1}
+                        mb={3}
+                    >
                         <Input
                             placeholder="Search token"
                             bg={darkMode ? '#00000038' : 'gray.50'}
@@ -85,7 +105,25 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                         </InputLeftElement>
                     </InputGroup>
 
-                    <VStack spacing={2} align="stretch" mt={2}>
+                    <VStack
+                        spacing={2}
+                        align="stretch"
+                        overflowY="auto"
+                        maxH="350px"
+                        pr={2}
+                        css={{
+                            '&::-webkit-scrollbar': {
+                                width: '4px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                background: darkMode ? '#1a202c' : '#f1f1f1',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: darkMode ? '#4a5568' : '#888',
+                                borderRadius: '4px',
+                            },
+                        }}
+                    >
                         {filteredTokens.map((token) => {
                             const hasBalance = Number(token.balance) > 0;
 
@@ -93,6 +131,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                                 <AssetButton
                                     key={token.address}
                                     symbol={token.symbol}
+                                    address={token.address}
                                     amount={Number(token.balance)}
                                     currencyValue={token.valueInCurrency}
                                     currentCurrency={
@@ -105,19 +144,25 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                         })}
                     </VStack>
                 </ModalBody>
-                <ModalFooter>
-                    {allowCustomTokens && (
-                        <Button
-                            variant="vechainKitSecondary"
-                            leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
-                            onClick={() =>
-                                setCurrentContent('add-custom-token')
-                            }
-                        >
-                            {t('Manage Custom Tokens')}
-                        </Button>
-                    )}
-                </ModalFooter>
+                {allowCustomTokens && (
+                    <IconButton
+                        aria-label={t('Manage Custom Tokens')}
+                        icon={<RiEdit2Line />}
+                        position="absolute"
+                        bottom={4}
+                        right={4}
+                        size="lg"
+                        borderRadius="full"
+                        bg={darkMode ? 'blue.500' : 'blue.500'}
+                        color="white"
+                        _hover={{
+                            bg: darkMode ? 'blue.600' : 'blue.600',
+                            transform: 'scale(1.05)',
+                        }}
+                        boxShadow="lg"
+                        onClick={() => setCurrentContent('add-custom-token')}
+                    />
+                )}
             </Container>
         </>
     );

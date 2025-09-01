@@ -1,23 +1,15 @@
-import {
-    Button,
-    HStack,
-    Image,
-    Text,
-    Box,
-    VStack,
-    ButtonProps,
-} from '@chakra-ui/react';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
-import React from 'react';
+import { Button, HStack, Text, VStack, ButtonProps } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '@/providers';
 import { CURRENCY } from '@/types';
 import {
     formatCompactCurrency,
     SupportedCurrency,
 } from '@/utils/currencyUtils';
+import { TokenIcon } from './TokenIcon';
 
 type AssetButtonProps = ButtonProps & {
     symbol: string;
+    address?: string;
     amount: number;
     currencyValue: number;
     currentCurrency: CURRENCY;
@@ -27,6 +19,7 @@ type AssetButtonProps = ButtonProps & {
 
 export const AssetButton = ({
     symbol,
+    address,
     amount,
     currencyValue,
     currentCurrency,
@@ -53,49 +46,23 @@ export const AssetButton = ({
             {...buttonProps}
         >
             <HStack>
-                {TOKEN_LOGO_COMPONENTS[symbol] ? (
-                    React.cloneElement(TOKEN_LOGO_COMPONENTS[symbol], {
-                        boxSize: '24px',
-                        borderRadius: 'full',
-                    })
-                ) : (
-                    <Image
-                        src={TOKEN_LOGOS[symbol]}
-                        alt={`${symbol} logo`}
-                        boxSize="24px"
-                        borderRadius="full"
-                        fallback={
-                            <Box
-                                boxSize="24px"
-                                borderRadius="full"
-                                bg="whiteAlpha.200"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                            >
-                                <Text fontSize="10px" fontWeight="bold">
-                                    {symbol.slice(0, 3)}
-                                </Text>
-                            </Box>
-                        }
-                    />
-                )}
+                <TokenIcon address={address} symbol={symbol} size={24} />
                 <Text>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
                 <Text>
                     {amount.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
-                    })}{' '}</Text>
+                    })}{' '}
+                </Text>
                 <Text
                     fontSize="sm"
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                     data-testid={`${symbol}-balance`}
                 >
-                    {formatCompactCurrency(
-                        currencyValue,
-                        { currency: currentCurrency as SupportedCurrency },
-                    )}
+                    {formatCompactCurrency(currencyValue, {
+                        currency: currentCurrency as SupportedCurrency,
+                    })}
                 </Text>
             </VStack>
         </Button>
