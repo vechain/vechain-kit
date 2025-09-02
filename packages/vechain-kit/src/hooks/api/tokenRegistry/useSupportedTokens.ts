@@ -3,7 +3,7 @@ import { useTokenRegistry } from './useTokenRegistry';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { tokenRegistryService } from '@/services/tokenRegistry';
-import { TOKEN_LOGOS } from '@/utils/constants';
+import { TOKEN_LOGOS } from '@/utils/Constants';
 
 export interface TokenWithInfo {
     address: string;
@@ -12,7 +12,7 @@ export interface TokenWithInfo {
     decimals: number;
     icon?: string;
     iconUrl?: string;
-    isCore?: boolean; // Core tokens are always shown (VET, VTHO, B3TR, etc.)
+    isCore?: boolean;
 }
 
 export const useSupportedTokens = () => {
@@ -20,123 +20,89 @@ export const useSupportedTokens = () => {
     const { data: registry, isLoading, error } = useTokenRegistry();
 
     const supportedTokens = useMemo(() => {
-        const config = getConfig(network.type);
-        // console.log('[SupportedTokens] Building token list for network:', network.type);
-        // console.log('[SupportedTokens] Registry available:', !!registry);
         const tokens: TokenWithInfo[] = [];
 
-        // Core tokens that are always included
-        const coreTokens: TokenWithInfo[] = [
-            {
-                address: '0x', // Native VET
+        // process registry tokens if available
+        if (registry?.tokens) {
+            // priority tokens to appear first
+            const prioritySymbols = [
+                'VET',
+                'VTHO',
+                'B3TR',
+                'VOT3',
+                'veDelegate',
+                'USDGLO',
+            ];
+
+            const tokenMap = new Map<string, TokenWithInfo>();
+
+            for (const registryToken of registry.tokens) {
+                tokenMap.set(registryToken.symbol, {
+                    address: registryToken.address,
+                    symbol: registryToken.symbol,
+                    name: registryToken.name,
+                    decimals: registryToken.decimals,
+                    icon: registryToken.icon,
+                    iconUrl: tokenRegistryService.getTokenIconUrl(
+                        registryToken.icon,
+                    ),
+                    isCore: prioritySymbols.includes(registryToken.symbol),
+                });
+            }
+
+            // priority tokens first (in order)
+            for (const symbol of prioritySymbols) {
+                const token = tokenMap.get(symbol);
+                if (token) {
+                    tokens.push(token);
+                    tokenMap.delete(symbol);
+                }
+            }
+
+            tokens.push(...tokenMap.values());
+        } else {
+            // fallback: minimal core tokens when registry is not available
+            const config = getConfig(network.type);
+
+            tokens.push({
+                address: '0x',
                 symbol: 'VET',
                 name: 'VeChain',
                 decimals: 18,
                 isCore: true,
-            },
-            {
+            });
+
+            tokens.push({
                 address: config.vthoContractAddress,
                 symbol: 'VTHO',
                 name: 'VeThor',
                 decimals: 18,
                 isCore: true,
-            },
-        ];
-
-        // Add B3TR if configured
-        if (config.b3trContractAddress) {
-            coreTokens.push({
-                address: config.b3trContractAddress,
-                symbol: 'B3TR',
-                name: 'B3TR',
-                decimals: 18,
-                isCore: true,
             });
-        }
 
-        // Add VOT3 if configured
-        if (config.vot3ContractAddress) {
-            coreTokens.push({
-                address: config.vot3ContractAddress,
-                symbol: 'VOT3',
-                name: 'VOT3',
-                decimals: 18,
-                isCore: true,
-            });
-        }
-
-        // Add veDelegate if configured
-        if (config.veDelegateTokenContractAddress) {
-            coreTokens.push({
-                address: config.veDelegateTokenContractAddress,
-                symbol: 'veDelegate',
-                name: 'veDelegate',
-                decimals: 18,
-                isCore: true,
-                iconUrl: TOKEN_LOGOS.veDelegate,
-            });
-        }
-
-        // Add GloDollar if configured
-        if (config.gloDollarContractAddress) {
-            coreTokens.push({
-                address: config.gloDollarContractAddress,
-                symbol: 'USDGLO',
-                name: 'Glo Dollar',
-                decimals: 18,
-                isCore: true,
-                iconUrl: TOKEN_LOGOS.USDGLO,
-            });
-        }
-
-        // Start with core tokens
-        tokens.push(...coreTokens);
-        // console.log('[SupportedTokens] Added', coreTokens.length, 'core tokens');
-
-        // If registry is available, merge with registry tokens
-        if (registry?.tokens) {
-            // console.log('[SupportedTokens] Processing', registry.tokens.length, 'registry tokens');
-            let enrichedCount = 0;
-            let addedCount = 0;
-            
-            // Add registry tokens, enriching core tokens with registry data
-            for (const registryToken of registry.tokens) {
-                const addressLower = registryToken.address.toLowerCase();
-                
-                // Find if this is a core token
-                const coreTokenIndex = tokens.findIndex(
-                    t => t.address.toLowerCase() === addressLower
-                );
-
-                if (coreTokenIndex >= 0) {
-                    // Enrich core token with registry data
-                    tokens[coreTokenIndex] = {
-                        ...tokens[coreTokenIndex],
-                        name: registryToken.name,
-                        decimals: registryToken.decimals,
-                        icon: registryToken.icon,
-                        iconUrl: tokenRegistryService.getTokenIconUrl(registryToken.icon),
-                    };
-                    enrichedCount++;
-                } else {
-                    // Add non-core token from registry
-                    tokens.push({
-                        address: registryToken.address,
-                        symbol: registryToken.symbol,
-                        name: registryToken.name,
-                        decimals: registryToken.decimals,
-                        icon: registryToken.icon,
-                        iconUrl: tokenRegistryService.getTokenIconUrl(registryToken.icon),
-                        isCore: false,
-                    });
-                    addedCount++;
-                }
+            // hardcoded icons for tokens not in registry
+            if (config.veDelegateTokenContractAddress) {
+                tokens.push({
+                    address: config.veDelegateTokenContractAddress,
+                    symbol: 'veDelegate',
+                    name: 'veDelegate',
+                    decimals: 18,
+                    isCore: true,
+                    iconUrl: TOKEN_LOGOS.veDelegate,
+                });
             }
-            // console.log('[SupportedTokens] Enriched', enrichedCount, 'core tokens with registry data');
-            // console.log('[SupportedTokens] Added', addedCount, 'new tokens from registry');
+
+            if (config.gloDollarContractAddress) {
+                tokens.push({
+                    address: config.gloDollarContractAddress,
+                    symbol: 'USDGLO',
+                    name: 'Glo Dollar',
+                    decimals: 18,
+                    isCore: true,
+                    iconUrl: TOKEN_LOGOS.USDGLO,
+                });
+            }
         }
-        
-        // console.log('[SupportedTokens] Total tokens:', tokens.length);
 
         return tokens;
     }, [registry, network.type]);
@@ -150,22 +116,22 @@ export const useSupportedTokens = () => {
 
 export const useTokenByAddress = (address?: string) => {
     const { tokens } = useSupportedTokens();
-    
+
     return useMemo(() => {
         if (!address) return undefined;
         return tokens.find(
-            token => token.address.toLowerCase() === address.toLowerCase()
+            (token) => token.address.toLowerCase() === address.toLowerCase(),
         );
     }, [tokens, address]);
 };
 
 export const useTokenBySymbol = (symbol?: string) => {
     const { tokens } = useSupportedTokens();
-    
+
     return useMemo(() => {
         if (!symbol) return undefined;
         return tokens.find(
-            token => token.symbol.toUpperCase() === symbol.toUpperCase()
+            (token) => token.symbol.toUpperCase() === symbol.toUpperCase(),
         );
     }, [tokens, symbol]);
 };
