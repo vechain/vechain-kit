@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useSupportedTokens } from './useSupportedTokens';
-import { useCustomTokens } from '@/hooks/api/wallet';
+import { useCustomTokens, CustomTokenInfo } from '@/hooks/api/wallet';
 
 export interface RegistryToken {
     address: string;
@@ -34,7 +34,7 @@ export const useRegistryTokens = () => {
         });
 
         // custom tokens (won't override registry tokens)
-        customTokens.forEach((customToken) => {
+        customTokens.forEach((customToken: CustomTokenInfo) => {
             const addressLower = customToken.address.toLowerCase();
             if (!tokenMap.has(addressLower)) {
                 tokenMap.set(addressLower, {

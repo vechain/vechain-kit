@@ -34,7 +34,14 @@ import {
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 import { ENV, getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
-import { getDocumentTitle, getWindowOrigin, isBrowser, isOnline, getLocalStorageItem, setLocalStorageItem } from './ssrUtils';
+import {
+    getDocumentTitle,
+    getWindowOrigin,
+    isBrowser,
+    isOnline,
+    getLocalStorageItem,
+    setLocalStorageItem,
+} from './ssrUtils';
 
 // Use SSR-safe getter functions instead of evaluating at module load time
 const getAppSource = (): string => getDocumentTitle();

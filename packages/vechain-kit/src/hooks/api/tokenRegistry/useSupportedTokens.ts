@@ -3,7 +3,7 @@ import { useTokenRegistry } from './useTokenRegistry';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { tokenRegistryService } from '@/services/tokenRegistry';
-import { TOKEN_LOGOS } from '@/utils/Constants';
+import { TOKEN_LOGOS } from '@/utils/constants';
 
 export interface TokenWithInfo {
     address: string;
