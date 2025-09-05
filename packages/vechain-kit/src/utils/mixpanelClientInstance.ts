@@ -34,22 +34,49 @@ import {
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
 
-import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
+import { ENV, getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
+import { getDocumentTitle, getWindowOrigin, isBrowser, isOnline, getLocalStorageItem, setLocalStorageItem } from './ssrUtils';
 
-const APP_SOURCE: string = document.title || '';
-const PAGE_SOURCE: string = window?.location?.origin || '';
+// Use SSR-safe getter functions instead of evaluating at module load time
+const getAppSource = (): string => getDocumentTitle();
+const getPageSource = (): string => getWindowOrigin();
 
 let hasTrackingConsent = false;
 
 // Initialize Mixpanel with basic config, but control actual tracking with consent checks
-if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
-    VeChainKitMixpanel.init(VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN, {
-        debug: !ENV.isProduction,
-    });
+// Use a named instance to avoid conflicts with user's Mixpanel
 
-    // Development-only warning
-    if (ENV.isDevelopment) {
-        console.info('Analytics initialized in DEVELOPMENT mode');
+
+let VeChainKitMixpanelInstance: any = null;
+
+
+
+
+
+if (isBrowser()) {
+    const token = getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN();
+    if (token) {
+        // named instance to avoid conflicts
+        const instanceName = '__vechain_kit__';
+        VeChainKitMixpanelInstance = VeChainKitMixpanel.init(
+            token,
+            {
+                debug: !ENV.isProduction,
+                persistence_name: '__vck_mp',
+                // Disable automatic tracking to avoid conflicts
+                track_pageview: false,
+                track_links_timeout: 0,
+                disable_persistence: false,
+            },
+            instanceName,
+        );
+
+        // Development-only warning
+        if (ENV.isDevelopment) {
+            console.info(
+                'VeChain Kit Analytics initialized in DEVELOPMENT mode',
+            );
+        }
     }
 }
 
@@ -87,14 +114,14 @@ const storeUserData = (userId: string, properties: UserProperties): void => {
         }
 
         const userDataKey = `user_data_${userId}`;
-        const existingData = localStorage.getItem(userDataKey);
+        const existingData = getLocalStorageItem(userDataKey);
         let userData = properties;
 
         if (existingData) {
             userData = { ...JSON.parse(existingData), ...properties };
         }
 
-        localStorage.setItem(userDataKey, JSON.stringify(userData));
+        setLocalStorageItem(userDataKey, JSON.stringify(userData));
     } catch (e) {
         console.warn('Error storing user data', e);
     }
@@ -106,13 +133,14 @@ const trackEvent = <E extends EventName>(
     properties: EventPropertiesMap[E] = {} as EventPropertiesMap[E],
 ): void => {
     try {
-        if (!VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
+        const token = getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN();
+        if (!token) {
             console.warn('No project token found');
             return;
         }
 
         // Check if we're offline
-        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        if (!isOnline()) {
             return;
         }
 
@@ -121,11 +149,13 @@ const trackEvent = <E extends EventName>(
             return;
         }
 
-        VeChainKitMixpanel.track(event, {
-            ...properties,
-            source: APP_SOURCE,
-            page: PAGE_SOURCE,
-        });
+        if (VeChainKitMixpanelInstance) {
+            VeChainKitMixpanelInstance.track(event, {
+                ...properties,
+                source: getAppSource(),
+                page: getPageSource(),
+            });
+        }
     } catch (error) {
         console.error(`Analytics error when tracking "${event}":`, error);
     }
@@ -144,11 +174,13 @@ const setUserProperties = (
         // Use either provided userId or the connected wallet address
         const effectiveUserId = userId;
 
-        VeChainKitMixpanel.people.set({
-            ...properties,
-            source: APP_SOURCE,
-            page: PAGE_SOURCE,
-        });
+        if (VeChainKitMixpanelInstance) {
+            VeChainKitMixpanelInstance.people.set({
+                ...properties,
+                source: getAppSource(),
+                page: getPageSource(),
+            });
+        }
 
         // Store in localStorage if userId is provided
         if (effectiveUserId) {
@@ -166,7 +198,9 @@ const identifyUser = (userId: string): void => {
         }
 
         // Always identify the user (needed for terms acceptance flow)
-        VeChainKitMixpanel.identify(userId);
+        if (VeChainKitMixpanelInstance) {
+            VeChainKitMixpanelInstance.identify(userId);
+        }
     } catch (error) {
         console.error('Error identifying user:', error);
     }
@@ -179,7 +213,9 @@ const incrementUserProperty = (property: string, value: number = 1): void => {
             return;
         }
 
-        VeChainKitMixpanel.people.increment(property, value);
+        if (VeChainKitMixpanelInstance) {
+            VeChainKitMixpanelInstance.people.increment(property, value);
+        }
     } catch (error) {
         console.error(`Error incrementing property ${property}:`, error);
     }
@@ -192,7 +228,9 @@ const resetUser = (): void => {
             return;
         }
 
-        VeChainKitMixpanel.reset();
+        if (VeChainKitMixpanelInstance) {
+            VeChainKitMixpanelInstance.reset();
+        }
     } catch (error) {
         console.error('Error resetting user:', error);
     }
