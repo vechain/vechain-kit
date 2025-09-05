@@ -1,61 +1,61 @@
 {
-    "name": "vechain-kit",
-    "private": true,
-    "description": "A TypeScript library that facilitates seamless interaction between vechain wallets (veworld, sync2) and dApps.",
-    "license": "MIT",
-    "workspaces": [
-        "examples/*",
-        "packages/*",
-        "tests/e2e"
-    ],
-    "scripts": {
-        "install:all": "yarn && yarn run build:deps",
-        "build": "turbo run build",
-        "build-react-kit": "turbo run build  --filter='@vechain/dapp-kit-react'",
-        "build:deps": "turbo build --no-daemon --filter='@vechain/*'",
-        "prepare:release": "ts-node scripts/prepare-packages.ts",
-        "publish:release": "ts-node scripts/publish-packages.ts",
-        "clean": "rm -rf .turbo .parcel-cache .reports build && npx turbo@latest run clean",
-        "dev": "turbo run dev --filter='@vechain/*'",
-        "gh-pages-build": "turbo run gh-pages-build",
-        "lint": "turbo run lint",
-        "prepare": "husky install",
-        "preview": "turbo run preview",
-        "purge": "npx turbo@latest run purge && rm -rf node_modules",
-        "reinstall": "yarn clean && yarn purge && yarn && yarn run build:deps",
-        "stop-preview": "kill -2 $(ps aux | grep '[t]urbo run preview' | awk '{print $2}')",
-        "kit:build": "yarn workspace @vechain/vechain-kit build",
-        "kit:typecheck": "yarn workspace @vechain/vechain-kit typecheck"
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
-    "lint-staged": {
-        "*.{js,jsx,ts,tsx,json,md}": [
-            "prettier --write",
-            "git add"
-        ],
-        "*.{js,jsx,ts,tsx}": [
-            "eslint"
-        ]
-    },
-    "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-        "@changesets/cli": "^2.27.1",
-        "@commitlint/config-conventional": "^18.0.0",
-        "commitlint": "^18.0.0",
-        "eslint": "^9.12.0",
-        "eslint-plugin-prefer-arrow": "1.2.3",
-        "husky": "^8.0.0",
-        "lint-staged": "^15.0.2",
-        "prettier": "^2.5.1",
-        "punycode": "^1.4.1",
-        "ts-node": "^10.9.2",
-        "turbo": "latest",
-        "typescript": "4.9.5",
-        "typescript-eslint": "^8.11.0"
-    },
-    "packageManager": "yarn@4.5.1"
+  "name": "vechain-kit",
+  "private": true,
+  "description": "A TypeScript library that facilitates seamless interaction between vechain wallets (veworld, sync2) and dApps.",
+  "license": "MIT",
+  "workspaces": [
+      "examples/*",
+      "packages/*",
+      "tests/e2e"
+  ],
+  "scripts": {
+      "install:all": "yarn && yarn run build:deps",
+      "build": "turbo run build",
+      "build-react-kit": "turbo run build  --filter='@vechain/dapp-kit-react'",
+      "build:deps": "turbo build --no-daemon --filter='@vechain/*'",
+      "prepare:release": "ts-node scripts/prepare-packages.ts",
+      "publish:release": "ts-node scripts/publish-packages.ts",
+      "clean": "rm -rf .turbo .parcel-cache .reports build && npx turbo@latest run clean",
+      "dev": "turbo run dev --filter='@vechain/*'",
+      "gh-pages-build": "turbo run gh-pages-build",
+      "lint": "turbo run lint",
+      "prepare": "husky install",
+      "preview": "turbo run preview",
+      "purge": "npx turbo@latest run purge && rm -rf node_modules",
+      "reinstall": "yarn clean && yarn purge && yarn && yarn run build:deps",
+      "stop-preview": "kill -2 $(ps aux | grep '[t]urbo run preview' | awk '{print $2}')",
+      "kit:build": "yarn workspace @vechain/vechain-kit build",
+      "kit:typecheck": "yarn workspace @vechain/vechain-kit typecheck"
+  },
+  "husky": {
+      "hooks": {
+          "pre-commit": "lint-staged"
+      }
+  },
+  "lint-staged": {
+      "*.{js,jsx,ts,tsx,json,md}": [
+          "prettier --write",
+          "git add"
+      ],
+      "*.{js,jsx,ts,tsx}": [
+          "eslint"
+      ]
+  },
+  "devDependencies": {
+      "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+      "@changesets/cli": "^2.27.1",
+      "@commitlint/config-conventional": "^18.0.0",
+      "commitlint": "^18.0.0",
+      "eslint": "^9.12.0",
+      "eslint-plugin-prefer-arrow": "1.2.3",
+      "husky": "^8.0.0",
+      "lint-staged": "^15.0.2",
+      "prettier": "^2.5.1",
+      "punycode": "^1.4.1",
+      "ts-node": "^10.9.2",
+      "turbo": "latest",
+      "typescript": "4.9.5",
+      "typescript-eslint": "^8.11.0"
+  },
+  "packageManager": "yarn@4.5.1"
 }
