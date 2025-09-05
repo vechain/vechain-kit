@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { EstimationResponse } from '@/types/GasEstimation';
+import { EstimationResponse } from '@/types/gasEstimation';
 import { EnhancedClause, GasTokenType } from '@/types';
-import { useClauseBuilder, useSmartAccount, useWallet, estimateGas, useSmartAccountVersion } from '@/hooks';
+import { useClauseBuilder, useSmartAccount, useWallet, estimateGas } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
 export interface UseGasEstimationParams {
@@ -17,10 +17,6 @@ export const useGasEstimation = ({
 }: UseGasEstimationParams) => {
     const { connectedWallet } = useWallet();
     const { data: smartAccount } = useSmartAccount(
-        connectedWallet?.address ?? '',
-    );
-    const { data: smartAccountVersion } = useSmartAccountVersion(
-        smartAccount?.address ?? '',
         connectedWallet?.address ?? '',
     );
     const { buildClausesWithAuth } = useClauseBuilder();
@@ -39,7 +35,6 @@ export const useGasEstimation = ({
                 clauseParams.clauses as unknown as EnhancedClause[],
                 token as GasTokenType,
                 'medium',
-                smartAccountVersion ?? 3,
             );
             return estimation;
         },

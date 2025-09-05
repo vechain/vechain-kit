@@ -240,6 +240,7 @@ export const PrivyWalletProvider = ({
     const estimateAndBuildTxBody = async (
         clauses: any[],
         suggestedMaxGas: number | undefined,
+        useGenericDelegator: boolean,
         isDelegated: boolean
     ) => {
         const gasResult = await thor.gas.estimateGas(
@@ -247,7 +248,7 @@ export const PrivyWalletProvider = ({
             connectedWallet?.address ?? '',
             { gasPadding: 1 }
         );
-        const parsedGasLimit = Math.max(
+        const parsedGasLimit = useGenericDelegator ? suggestedMaxGas ?? 0 : Math.max(
             gasResult.totalGas,
             suggestedMaxGas ?? 0,
         );
@@ -323,7 +324,7 @@ export const PrivyWalletProvider = ({
         buttonText = 'Sign',
         suggestedMaxGas,
         currentGasToken,
-        speed = 'regular',
+        speed = 'medium',
     }: {
         txClauses: Connex.VM.Clause[];
         title?: string;
@@ -355,7 +356,7 @@ export const PrivyWalletProvider = ({
         });
 
         if (currentGasToken) {
-            const gasEstimationResponse: EstimationResponse = await estimateGas(randomTransactionUser.address, delegatorUrl, clauses, currentGasToken, speed, smartAccountVersion ?? 3);
+            const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount.address, delegatorUrl, clauses, currentGasToken, speed);
 
             const depositAccount: DepositAccount = await getDepositAccount(delegatorUrl);
 
@@ -385,15 +386,14 @@ export const PrivyWalletProvider = ({
 
             clauses = [...finalExecuteWithAuthorizationClauses];
 
+            const estimatedGas = gasEstimationResponse.estimatedGas ?? 0;
+
             const txBody = await estimateAndBuildTxBody(
                 clauses,
-                suggestedMaxGas,
+                estimatedGas,
+                true,
                 true
             );
-
-            if (smartAccountVersion === 1) {
-                txBody.gas = Number(txBody.gas) * 2;
-            }
 
             const rawUnsignedTx = Hex.of(Transaction.of(txBody).encoded).toString();
 
@@ -459,6 +459,7 @@ export const PrivyWalletProvider = ({
          const txBody = await estimateAndBuildTxBody(
             clauses,
             suggestedMaxGas,
+            false,
             true
         );
 

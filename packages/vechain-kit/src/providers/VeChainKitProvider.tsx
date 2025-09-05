@@ -161,26 +161,37 @@ const validateConfig = (
     // Fee delegation is now optional - Generic Delegator can be used as fallback
     // Only validate if feeDelegation is provided
 
-    if (props.genericDelegator && props.feeDelegation) {
-        errors.push('Can only configure one of feeDelegation or genericDelegator');
-    }
+    // Check if fee delegation is required based on conditions
+    const requiresFeeDelegation =
+        props.privy !== undefined ||
+        props.loginMethods?.some(
+            (method) =>
+                method.method === 'vechain' || method.method === 'ecosystem',
+        );
 
-    if (props.genericDelegator) {
-        if (!props.genericDelegator.enabled) {
-            errors.push('genericDelegator.enabled is required when genericDelegator is configured');
+    // Validate fee delegation
+    if (requiresFeeDelegation) {
+        if (props.genericDelegator && props.feeDelegation) {
+            errors.push('Can only configure one of feeDelegation or genericDelegator');
         }
-    }
-
-    if (props.feeDelegation) {
-        if (!props.feeDelegation.delegatorUrl) {
+        else if (!props.feeDelegation && !props.genericDelegator) {
             errors.push(
-                'feeDelegation.delegatorUrl is required when feeDelegation is configured',
+                'feeDelegation or genericDelegator configuration is required when using Privy or vechain login method',
             );
+        } else {
+            if (props.genericDelegator) {
+                if (!props.genericDelegator.enabled) {
+                    errors.push('genericDelegator.enabled is required when genericDelegator is configured');
+                }
+            }
+            else if (props.feeDelegation) {
+                if (!props.feeDelegation.delegatorUrl) {
+                    errors.push(
+                        'feeDelegation.delegatorUrl is required when feeDelegation is configured',
+                    );
+                }
+            }
         }
-    }
-
-    if (!props.genericDelegator && !props.feeDelegation) {
-        errors.push('Must configure one of feeDelegation or genericDelegator');
     }
 
     // Validate network

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, HStack, VStack, Text, Switch, Icon } from '@chakra-ui/react';
 import { MdDragIndicator } from 'react-icons/md';
-import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/GasToken';
+import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/gasToken';
 
 interface DragListProps {
     tokens: GasTokenType[];

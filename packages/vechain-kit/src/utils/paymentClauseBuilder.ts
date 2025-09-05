@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { EnhancedClause } from '@/types';
-import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/GasToken';
+import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/gasToken';
 import { Transaction, TransactionBody } from '@vechain/sdk-core';
 
 /**

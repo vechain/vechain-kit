@@ -5,11 +5,10 @@ import {
     Hex
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
-import { GasTokenType, TransactionSpeed } from '@/types';
-import { DepositAccount } from '@/types/GasEstimation';
+import { GasTokenType, TransactionSpeed, DepositAccount } from '@/types';
 
-export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed, smartAccountVersion: number) => {
-    const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed + '&version=' + 'v' + smartAccountVersion, {
+export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed) => {
+    const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -43,6 +42,7 @@ export const delegateAuthorized = async (rawUnsignedTx: string, origin: string, 
         body: JSON.stringify({
             raw: rawUnsignedTx,
             origin: origin,
+            token: token.toLowerCase()
         }),
     });
     const data = await response.json();

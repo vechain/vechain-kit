@@ -12,7 +12,6 @@ import { TransactionExamples } from '@/app/components/features/TransactionExampl
 import { SigningExample } from '@/app/components/features/SigningExample/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
 import mixpanelClient from '@/lib/mixpanelClient';
-import { ProfileCardDisplay } from '@/app/components/features/ProfileCard/ProfileCardDisplay';
 
 export default function Home(): ReactElement {
     const { account, connection } = useWallet();
@@ -50,7 +49,6 @@ export default function Home(): ReactElement {
                 <LanguageSelector />
                 <TransactionExamples />
                 <SigningExample />
-                <ProfileCardDisplay />
             </VStack>
         </Container>
     );

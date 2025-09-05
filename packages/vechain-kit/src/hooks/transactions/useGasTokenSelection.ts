@@ -7,7 +7,7 @@ import {
     GasTokenSelection,
     DEFAULT_GAS_TOKEN_PREFERENCES,
     SUPPORTED_GAS_TOKENS,
-} from '@/types/GasToken';
+} from '@/types/gasToken';
 import { EnhancedClause } from '@/types';
 
 // Mock API calls - to be replaced with actual delegator service calls

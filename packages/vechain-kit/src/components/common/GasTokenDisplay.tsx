@@ -4,7 +4,7 @@ import {
     GasTokenSelection,
     SUPPORTED_GAS_TOKENS,
     GasTokenType,
-} from '@/types/GasToken';
+} from '@/types/gasToken';
 
 interface GasTokenDisplayProps {
     selection: GasTokenSelection;

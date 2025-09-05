@@ -1,7 +1,7 @@
 import { ApiClient } from './api-client';
-import { EstimationResponse } from '@/types/GasEstimation';
+import { EstimationResponse } from '@/types/gasEstimation';
 import { EnhancedClause } from '@/types';
-import { GasTokenType, TransactionSpeed } from '@/types/GasToken';
+import { GasTokenType, TransactionSpeed } from '@/types/gasToken';
 
 export interface ClauseBuilderDependencies {
     buildClausesWithAuth: (clauses: Connex.VM.Clause[]) => Promise<EnhancedClause[]>;

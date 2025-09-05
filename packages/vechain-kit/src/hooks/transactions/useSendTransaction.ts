@@ -148,7 +148,7 @@ export const useSendTransaction = ({
     const nodeUrl = useGetNodeUrl();
     const { connection } = useWallet();
     const privyWalletProvider = usePrivyWalletProvider();
-    const { preferences } = useGasTokenSelection(); // Move hook call here
+    const { availableTokens } = useGasTokenSelection(); // Move hook call here
 
     /**
      * Convert the clauses to the format expected by the vendor
@@ -192,25 +192,23 @@ export const useSendTransaction = ({
         ) => {
             if (connection.isConnectedWithPrivy) {
                 if (genericDelegator?.enabled) {
-                    let currentGasToken = preferences.tokenPriority[0];
-                    for (let i = 0; i < preferences.tokenPriority.length; i++) {
+                    for (let i = 0; i < availableTokens.length; i++) {
                         try {
                             const txID = await privyWalletProvider.sendTransaction({
                                 txClauses: clauses,
                                 ...privyUIOptions,
                                 ...options,
                                 suggestedMaxGas,
-                                currentGasToken,
+                                currentGasToken: availableTokens[i],
                             });
                             if (txID) {
                                 return txID;
                             }
                         } catch (error) {
-                            console.error('Gas estimation failed for token', currentGasToken, error);
+                            console.error('Gas estimation failed for token', availableTokens[i], error);
                         }
-                        currentGasToken = preferences.tokenPriority[i + 1];
                     }
-                    throw new Error("No sufficient gas found for any token");
+                    throw new Error("No sufficient gas found for any token, please make sure you have enough balance in your wallet or check your gas token preferences");
                 } else {
                     return await privyWalletProvider.sendTransaction({
                         txClauses: clauses,
@@ -263,7 +261,7 @@ export const useSendTransaction = ({
             privyUIOptions,
             connection.isConnectedWithPrivy,
             genericDelegator?.enabled,
-            preferences.tokenPriority, // Add preferences to dependencies
+            availableTokens,
             feeDelegation?.delegateAllTransactions,
             feeDelegation?.delegatorUrl,
             genericDelegator?.delegatorUrl,
