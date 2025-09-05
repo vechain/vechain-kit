@@ -199,6 +199,7 @@
   "Frequently asked questions": "Frequently asked questions",
   "From": "From",
   "Gas Payment": "Gas Payment",
+  "Gas Token Preferences": "Gas Token Preferences",
   "General": "General",
   "Generic Delegator": "Generic Delegator",
   "Github": "Github",
@@ -573,5 +574,16 @@
   "vebetter": "VeBetter",
   "your@email.com": "your@email.com",
   "{{element}} website": "{{element}} website",
-  "{{name}}": "{{name}}"
+  "{{name}}": "{{name}}",
+  "Settings Reset": "Settings Reset",
+  "Gas token preferences have been reset to defaults": "Gas token preferences have been reset to defaults",
+  "Configure your preferred tokens for gas fee payments when developer delegation is unavailable.": "Configure your preferred tokens for gas fee payments when developer delegation is unavailable.",
+  "Token Priority Order": "Token Priority Order",
+  "Drag to reorder. The system will automatically use the highest priority token with sufficient balance.": "Drag to reorder. The system will automatically use the highest priority token with sufficient balance.",
+  "Note: Only tokens supported by the Generic Delegator will be available for use.": "Note: Only tokens supported by the Generic Delegator will be available for use.",
+  "Show gas cost breakdown": "Show gas cost breakdown",
+  "Display detailed cost information including service fees": "Display detailed cost information including service fees",
+  "Reset to Defaults": "Reset to Defaults",
+  "Transaction Preferences": "Transaction Preferences",
+  "No sufficient gas found for any token, please make sure you have enough balance in your wallet or check your gas token preferences": "No sufficient gas found for any token, please make sure you have enough balance in your wallet or check your gas token preferences"
 }

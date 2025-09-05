@@ -33,43 +33,23 @@ import {
     WalletProperties,
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
-import { ENV, getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
-import { getDocumentTitle, getWindowOrigin, isBrowser, isOnline, getLocalStorageItem, setLocalStorageItem } from './ssrUtils';
 
-// Use SSR-safe getter functions instead of evaluating at module load time
-const getAppSource = (): string => getDocumentTitle();
-const getPageSource = (): string => getWindowOrigin();
+import { ENV, VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
+
+const APP_SOURCE: string = document.title || '';
+const PAGE_SOURCE: string = window?.location?.origin || '';
 
 let hasTrackingConsent = false;
 
 // Initialize Mixpanel with basic config, but control actual tracking with consent checks
-// Use a named instance to avoid conflicts with user's Mixpanel
-let VeChainKitMixpanelInstance: any = null;
+if (typeof window !== 'undefined' && VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
+    VeChainKitMixpanel.init(VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN, {
+        debug: !ENV.isProduction,
+    });
 
-if (isBrowser()) {
-    const token = getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN();
-    if (token) {
-        // named instance to avoid conflicts
-        const instanceName = '__vechain_kit__';
-        VeChainKitMixpanelInstance = VeChainKitMixpanel.init(
-            token,
-            {
-                debug: !ENV.isProduction,
-                persistence_name: '__vck_mp',
-                // Disable automatic tracking to avoid conflicts
-                track_pageview: false,
-                track_links_timeout: 0,
-                disable_persistence: false,
-            },
-            instanceName,
-        );
-
-        // Development-only warning
-        if (ENV.isDevelopment) {
-            console.info(
-                'VeChain Kit Analytics initialized in DEVELOPMENT mode',
-            );
-        }
+    // Development-only warning
+    if (ENV.isDevelopment) {
+        console.info('Analytics initialized in DEVELOPMENT mode');
     }
 }
 
@@ -86,7 +66,7 @@ const isFirstLogin = (userId: string): boolean => {
         }
 
         const userDataKey = `user_data_${userId}`;
-        const userData = getLocalStorageItem(userDataKey);
+        const userData = localStorage.getItem(userDataKey);
         if (userData) {
             const parsedData = JSON.parse(userData);
             return !parsedData.first_login_date;
@@ -107,14 +87,14 @@ const storeUserData = (userId: string, properties: UserProperties): void => {
         }
 
         const userDataKey = `user_data_${userId}`;
-        const existingData = getLocalStorageItem(userDataKey);
+        const existingData = localStorage.getItem(userDataKey);
         let userData = properties;
 
         if (existingData) {
             userData = { ...JSON.parse(existingData), ...properties };
         }
 
-        setLocalStorageItem(userDataKey, JSON.stringify(userData));
+        localStorage.setItem(userDataKey, JSON.stringify(userData));
     } catch (e) {
         console.warn('Error storing user data', e);
     }
@@ -126,14 +106,13 @@ const trackEvent = <E extends EventName>(
     properties: EventPropertiesMap[E] = {} as EventPropertiesMap[E],
 ): void => {
     try {
-        const token = getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN();
-        if (!token) {
+        if (!VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN) {
             console.warn('No project token found');
             return;
         }
 
         // Check if we're offline
-        if (!isOnline()) {
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
             return;
         }
 
@@ -142,13 +121,11 @@ const trackEvent = <E extends EventName>(
             return;
         }
 
-        if (VeChainKitMixpanelInstance) {
-            VeChainKitMixpanelInstance.track(event, {
-                ...properties,
-                source: getAppSource(),
-                page: getPageSource(),
-            });
-        }
+        VeChainKitMixpanel.track(event, {
+            ...properties,
+            source: APP_SOURCE,
+            page: PAGE_SOURCE,
+        });
     } catch (error) {
         console.error(`Analytics error when tracking "${event}":`, error);
     }
@@ -167,13 +144,11 @@ const setUserProperties = (
         // Use either provided userId or the connected wallet address
         const effectiveUserId = userId;
 
-        if (VeChainKitMixpanelInstance) {
-            VeChainKitMixpanelInstance.people.set({
-                ...properties,
-                source: getAppSource(),
-                page: getPageSource(),
-            });
-        }
+        VeChainKitMixpanel.people.set({
+            ...properties,
+            source: APP_SOURCE,
+            page: PAGE_SOURCE,
+        });
 
         // Store in localStorage if userId is provided
         if (effectiveUserId) {
@@ -191,9 +166,7 @@ const identifyUser = (userId: string): void => {
         }
 
         // Always identify the user (needed for terms acceptance flow)
-        if (VeChainKitMixpanelInstance) {
-            VeChainKitMixpanelInstance.identify(userId);
-        }
+        VeChainKitMixpanel.identify(userId);
     } catch (error) {
         console.error('Error identifying user:', error);
     }
@@ -206,9 +179,7 @@ const incrementUserProperty = (property: string, value: number = 1): void => {
             return;
         }
 
-        if (VeChainKitMixpanelInstance) {
-            VeChainKitMixpanelInstance.people.increment(property, value);
-        }
+        VeChainKitMixpanel.people.increment(property, value);
     } catch (error) {
         console.error(`Error incrementing property ${property}:`, error);
     }
@@ -221,9 +192,7 @@ const resetUser = (): void => {
             return;
         }
 
-        if (VeChainKitMixpanelInstance) {
-            VeChainKitMixpanelInstance.reset();
-        }
+        VeChainKitMixpanel.reset();
     } catch (error) {
         console.error('Error resetting user:', error);
     }
@@ -618,6 +587,21 @@ const Analytics = {
 
         appearanceSettingsViewed: () =>
             Analytics.settings.trackSettings('appearance_settings_view'),
+
+        gasTokenSettingsViewed: () =>
+            Analytics.settings.trackSettings('gas_token_settings_view'),
+
+        gasTokenReordered: () =>
+            Analytics.settings.trackSettings('gas_token_reordered'),
+
+        gasTokenConfirmationToggled: (enabled: boolean) =>
+            Analytics.settings.trackSettings('gas_token_confirmation_toggled', { enabled } as any),
+
+        gasTokenCostBreakdownToggled: (enabled: boolean) =>
+            Analytics.settings.trackSettings('gas_token_cost_breakdown_toggled', { enabled } as any),
+
+        gasTokenSettingsReset: () =>
+            Analytics.settings.trackSettings('gas_token_settings_reset'),
 
         manageSecuritySettings: () =>
             Analytics.settings.trackSettings('manage_security_settings'),

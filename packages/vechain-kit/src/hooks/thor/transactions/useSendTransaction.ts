@@ -11,6 +11,7 @@ import { useGetNodeUrl, useTxReceipt, useWallet, useGasTokenSelection } from '@/
 import { estimateTxGas } from './transactionUtils';
 import { signerUtils, TransactionReceipt } from '@vechain/sdk-network';
 import { TransactionClause } from '@vechain/sdk-core';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Props for the {@link useSendTransaction} hook
@@ -99,13 +100,14 @@ export const useSendTransaction = ({
     privyUIOptions,
     gasPadding,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
+    const { t } = useTranslation();
     const thor = useThor();
     const { signer } = useDAppKitWallet();
     const { connection } = useWallet();
     const { feeDelegation, genericDelegator } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
     const privyWalletProvider = usePrivyWalletProvider();
-    const { preferences } = useGasTokenSelection();
+    const { availableTokens } = useGasTokenSelection();
 
     /**
      * Send a transaction with the given clauses (in case you need to pass data to build the clauses to mutate directly)
@@ -128,25 +130,23 @@ export const useSendTransaction = ({
                 typeof clauses === 'function' ? await clauses() : clauses ?? [];
             if (connection.isConnectedWithPrivy) {
                 if (genericDelegator?.enabled) {
-                    let currentGasToken = preferences.tokenPriority[0];
-                    for (let i = 0; i < preferences.tokenPriority.length; i++) {
+                    for (let i = 0; i < availableTokens.length; i++) {
                         try {
                             const txID = await privyWalletProvider.sendTransaction({
                                 txClauses: _clauses,
                                 ...privyUIOptions,
                                 ...options,
                                 suggestedMaxGas,
-                                currentGasToken,
+                                currentGasToken: availableTokens[i],
                             });
                             if (txID) {
                                 return txID;
                             }
                         } catch (error) {
-                            console.error('Gas estimation failed for token', currentGasToken, error);
+                            console.error('Gas estimation failed for token', availableTokens[i], error);
                         }
-                        currentGasToken = preferences.tokenPriority[i + 1];
                     }
-                    throw new Error("No sufficient gas found for any token");
+                    throw new Error(t("No sufficient gas found for any token, please make sure you have enough balance in your wallet or check your gas token preferences"));
                 } else {
                     return await privyWalletProvider.sendTransaction({
                         txClauses: _clauses,

@@ -273,6 +273,11 @@ export type SettingsAction =
     | 'currency_settings_view'
     | 'language_settings_view'
     | 'appearance_settings_view'
+    | 'gas_token_settings_view'
+    | 'gas_token_reordered'
+    | 'gas_token_confirmation_toggled'
+    | 'gas_token_cost_breakdown_toggled'
+    | 'gas_token_settings_reset'
     | 'terms_and_policy_view';
 
 export type SettingsProperties = {
@@ -281,6 +286,7 @@ export type SettingsProperties = {
     stage?: NameSelectionDropOffStage;
     language?: string;
     previousLanguage?: string;
+    enabled?: boolean;
     error?: string;
     isError?: boolean;
 };
