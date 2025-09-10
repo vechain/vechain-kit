@@ -201,6 +201,7 @@ export const useWallet = (): UseWalletReturnType => {
     // Get smart account version
     const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
     );
 
     const hasActiveSmartAccount =

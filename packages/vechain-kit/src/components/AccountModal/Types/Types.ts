@@ -35,6 +35,7 @@ export type AccountModalContentTypes =
     | 'general-settings'
     | 'change-language'
     | 'appearance-settings'
+    | 'gas-token-settings'
     | {
           type: 'account-customization';
           props: AccountCustomizationContentProps;
