@@ -272,6 +272,7 @@
   "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.": "埋め込みウォレットのセキュリティ設定を管理します: ログイン方法を処理したり、パスキーを追加したり、資産へのアクセスを失わないようにウォレットをバックアップしたりします。",
   "Manage your login methods and passkeys": "ログイン方法とパスキーを管理する",
   "Manage your preferences for currency, language, and appearance.": "通貨、言語、外観の設定を管理します。",
+  "Minimum {{symbol}} transfer is {{min}}": "最小{{symbol}}転送量は{{min}}です",
   "Mobile browser may block the login window.": "モバイルブラウザはログインウィンドウをブロックする可能性があります。",
   "More": "もっと見る",
   "Multiclause Transaction temporary disabled": "複数条項のトランザクションは一時的に無効化されています。",

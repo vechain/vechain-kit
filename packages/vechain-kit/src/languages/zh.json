@@ -272,6 +272,7 @@
   "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.": "管理您的嵌入式钱包的安全设置：处理您的登录方法，添加密码钥匙或备份您的钱包，以免失去对资产的访问。",
   "Manage your login methods and passkeys": "管理您的登录方式和通行密钥",
   "Manage your preferences for currency, language, and appearance.": "管理您对货币、语言和外观的偏好。",
+  "Minimum {{symbol}} transfer is {{min}}": "{{symbol}}的最小转账金额为{{min}}",
   "Mobile browser may block the login window.": "移动浏览器可能会阻止登录窗口。",
   "More": "更多",
   "Multiclause Transaction temporary disabled": "多条款交易暂时禁用",

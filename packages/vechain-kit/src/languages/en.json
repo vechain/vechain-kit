@@ -272,6 +272,7 @@
   "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.": "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.",
   "Manage your login methods and passkeys": "Manage your login methods and passkeys",
   "Manage your preferences for currency, language, and appearance.": "Manage your preferences for currency, language, and appearance.",
+  "Minimum {{symbol}} transfer is {{min}}": "Minimum {{symbol}} transfer is {{min}}",
   "Mobile browser may block the login window.": "Mobile browser may block the login window.",
   "More": "More",
   "Multiclause Transaction temporary disabled": "Multiclause Transaction temporary disabled",

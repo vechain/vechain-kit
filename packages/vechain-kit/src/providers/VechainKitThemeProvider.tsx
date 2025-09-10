@@ -2,11 +2,20 @@ import {
     ChakraProvider,
     createStandaloneToast,
     ColorModeScript,
+    Box,
+    useColorMode,
 } from '@chakra-ui/react';
 import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
-import { ReactNode, useMemo } from 'react';
-import { VechainKitTheme } from '@/theme';
+import {
+    createContext,
+    ReactNode,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+} from 'react';
+import { getVechainKitTheme } from '@/theme';
 import { safeQuerySelector } from '@/utils/ssrUtils';
 
 type Props = {
@@ -68,7 +77,7 @@ const EnsureChakraProvider = ({
                 // instead of Chakra forcing high values (1500+) that might conflict
                 portalZIndex={undefined}
             >
-                <div className="vechain-kit-root">{children}</div>
+                {children}
             </ChakraProvider>
         </CacheProvider>
     );
@@ -89,15 +98,44 @@ const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
     return <ColorModeScript initialColorMode={darkMode ? 'dark' : 'light'} />;
 };
 
+const VechainKitThemeContext = createContext<{
+    portalRootRef?: React.RefObject<HTMLDivElement | null>;
+}>({
+    portalRootRef: undefined,
+});
+
+export const useVechainKitThemeConfig = () => {
+    const context = useContext(VechainKitThemeContext);
+    if (!context) {
+        throw new Error(
+            'useVechainKitTheme must be used within a VechainKitThemeProvider',
+        );
+    }
+    return context;
+};
+
+export const ColorModeSync = ({ darkMode = false }: { darkMode: boolean }) => {
+    const { setColorMode, colorMode: currentColorMode } = useColorMode();
+
+    useEffect(() => {
+        const colorMode = darkMode ? 'dark' : 'light';
+
+        if (currentColorMode !== colorMode) setColorMode(colorMode);
+    }, [darkMode]);
+
+    return <></>;
+};
+
 export const VechainKitThemeProvider = ({
     children,
     darkMode = false,
 }: Props) => {
+    const portalRootRef = useRef<HTMLDivElement | null>(null);
     const theme = useMemo(
         () => ({
-            ...VechainKitTheme,
+            ...getVechainKitTheme(darkMode),
             config: {
-                ...VechainKitTheme.config,
+                ...getVechainKitTheme(darkMode).config,
                 initialColorMode: darkMode ? 'dark' : 'light',
             },
         }),
@@ -105,12 +143,20 @@ export const VechainKitThemeProvider = ({
     );
 
     return (
-        <>
+        <VechainKitThemeContext.Provider value={{ portalRootRef }}>
             <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider theme={theme}>
-                {children}
+                <ColorModeSync darkMode={darkMode} />
+                <Box
+                    id="vechain-kit-root"
+                    ref={portalRootRef}
+                    bg="transparent"
+                    borderRadius="12px"
+                >
+                    {children}
+                </Box>
             </EnsureChakraProvider>
             <ToastContainer />
-        </>
+        </VechainKitThemeContext.Provider>
     );
 };

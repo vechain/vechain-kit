@@ -53,7 +53,6 @@ export const CrossAppConnectionSecurityCard = () => {
                             p={2}
                             borderRadius="full"
                             bg="blackAlpha.100"
-                            _dark={{ bg: 'blackAlpha.100' }}
                             flexShrink={0}
                         >
                             <Icon as={GrUserAdmin} />
@@ -83,7 +82,6 @@ export const CrossAppConnectionSecurityCard = () => {
                             p={2}
                             borderRadius="full"
                             bg="blackAlpha.100"
-                            _dark={{ bg: 'blackAlpha.100' }}
                             flexShrink={0}
                         >
                             <Icon as={HiOutlineShieldCheck} />

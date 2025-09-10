@@ -272,6 +272,7 @@
   "Manage your embedded wallet security settings: handle your login methods, add a passkey or back up your wallet to never lose access to your assets.": "Gérez les paramètres de sécurité de votre portefeuille intégré : gérez vos méthodes de connexion, ajoutez une clé d'accès ou sauvegardez votre portefeuille pour ne jamais perdre l'accès à vos actifs.",
   "Manage your login methods and passkeys": "Gérez vos méthodes de connexion et clés d'accès",
   "Manage your preferences for currency, language, and appearance.": "Gérez vos préférences de devise, de langue et d'apparence.",
+  "Minimum {{symbol}} transfer is {{min}}": "Le transfert minimum {{symbol}} est {{min}}",
   "Mobile browser may block the login window.": "Le navigateur mobile peut bloquer la fenêtre de connexion.",
   "More": "Plus",
   "Multiclause Transaction temporary disabled": "Transaction à clauses multiples temporairement désactivée",

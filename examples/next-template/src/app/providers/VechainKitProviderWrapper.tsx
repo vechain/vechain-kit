@@ -35,6 +35,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
                 delegateAllTransactions: false,
+                b3trTransfers: {
+                    minAmountInEther: 1,
+                },
             }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
