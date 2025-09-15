@@ -6654,6 +6654,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/contract-getters@npm:^1.0.0-beta.0":
+  version: 1.0.0-beta.0
+  resolution: "@vechain/contract-getters@npm:1.0.0-beta.0"
+  peerDependencies:
+    "@vechain/sdk-network": ^2.0.3
+    "@vechain/vebetterdao-contracts": ^7.0.2
+    ethers: ^6.0.0
+  checksum: 10c0/395ba76894b684b9c6ce1c75021c8238ac7e6f16ecbcbcfdfe2b38253201e4cd72a32ddeccb2cf9535657492f8b9d627996fc4529c85191334e82b5bca94c5a8
+  languageName: node
+  linkType: hard
+
 "@vechain/dapp-kit-react@npm:2.0.4":
   version: 2.0.4
   resolution: "@vechain/dapp-kit-react@npm:2.0.4"
@@ -6801,6 +6812,7 @@ __metadata:
     "@types/mixpanel-browser": "npm:^2.51.0"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
+    "@vechain/contract-getters": "npm:^1.0.0-beta.0"
     "@vechain/dapp-kit-react": "npm:2.0.4"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
