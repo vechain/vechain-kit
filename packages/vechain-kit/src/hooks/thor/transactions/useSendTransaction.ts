@@ -7,11 +7,10 @@ import {
 } from '@vechain/dapp-kit-react';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { useGetNodeUrl, useTxReceipt, useWallet, useGasTokenSelection } from '@/hooks';
+import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
 import { estimateTxGas } from './transactionUtils';
 import { signerUtils, TransactionReceipt } from '@vechain/sdk-network';
 import { TransactionClause } from '@vechain/sdk-core';
-import { useTranslation } from 'react-i18next';
 
 /**
  * Props for the {@link useSendTransaction} hook
@@ -100,14 +99,12 @@ export const useSendTransaction = ({
     privyUIOptions,
     gasPadding,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
-    const { t } = useTranslation();
     const thor = useThor();
     const { signer } = useDAppKitWallet();
     const { connection } = useWallet();
-    const { feeDelegation, genericDelegator } = useVeChainKitConfig();
+    const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
     const privyWalletProvider = usePrivyWalletProvider();
-    const { availableTokens } = useGasTokenSelection();
 
     /**
      * Send a transaction with the given clauses (in case you need to pass data to build the clauses to mutate directly)
@@ -129,32 +126,12 @@ export const useSendTransaction = ({
             const _clauses =
                 typeof clauses === 'function' ? await clauses() : clauses ?? [];
             if (connection.isConnectedWithPrivy) {
-                if (genericDelegator?.enabled) {
-                    for (let i = 0; i < availableTokens.length; i++) {
-                        try {
-                            const txID = await privyWalletProvider.sendTransaction({
-                                txClauses: _clauses,
-                                ...privyUIOptions,
-                                ...options,
-                                suggestedMaxGas,
-                                currentGasToken: availableTokens[i],
-                            });
-                            if (txID) {
-                                return txID;
-                            }
-                        } catch (error) {
-                            console.error('Gas estimation failed for token', availableTokens[i], error);
-                        }
-                    }
-                    throw new Error(t("No sufficient gas found for any token, please make sure you have enough balance in your wallet or check your gas token preferences"));
-                } else {
-                    return await privyWalletProvider.sendTransaction({
-                        txClauses: _clauses,
-                        ...privyUIOptions,
-                        ...options,
-                        suggestedMaxGas,
-                    });
-                }
+                return await privyWalletProvider.sendTransaction({
+                    txClauses: _clauses,
+                    ...privyUIOptions,
+                    ...options,
+                    suggestedMaxGas,
+                });
             }
 
             if (!signerAccountAddress) {
@@ -181,7 +158,7 @@ export const useSendTransaction = ({
                 suggestedMaxGas ?? estimatedGas, //Provide either the suggested max gas (gas Limit) or the estimated gas
                 {
                     // TODO: kit-migration check how to pass the delegator url
-                    isDelegated: feeDelegation?.delegateAllTransactions ?? genericDelegator?.enabled,
+                    isDelegated: feeDelegation?.delegatorUrl ? true : false,
                 },
             );
 

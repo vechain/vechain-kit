@@ -26,6 +26,8 @@ import { ActionButton } from '../../Components';
 import { AccountModalContentTypes } from '../../Types';
 import { useEffect, useState } from 'react';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
+import { useWallet } from '@/hooks';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -34,7 +36,9 @@ type Props = {
 };
 
 export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
+    const { connection } = useWallet();
     const { t } = useTranslation();
+    const { feeDelegation } = useVeChainKitConfig();
     const [showCurrencyRedDot, setShowCurrencyRedDot] = useState(false);
 
     useEffect(() => {
@@ -110,6 +114,9 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             title={t('Language')}
                             style={{
                                 borderTopRadius: '0px',
+                                ...(connection.isConnectedWithPrivy
+                                    ? { borderBottomRadius: '0px' } // middle item when gas token is shown
+                                    : {}),
                             }}
                             onClick={() => {
                                 Analytics.settings.languageSettingsViewed();
@@ -118,19 +125,19 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             leftIcon={IoLanguage}
                             rightIcon={MdOutlineNavigateNext}
                         />
-
-                    <ActionButton
-                        title={t('Gas Token Preferences')}
-                        style={{
-                            borderTopRadius: '0px',
-                        }}
-                        onClick={() => {
-                            Analytics.settings.gasTokenSettingsViewed();
-                            setCurrentContent('gas-token-settings');
-                        }}
-                        leftIcon={MdLocalGasStation}
-                        rightIcon={MdOutlineNavigateNext}
-                    />
+                        
+                        {connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl && <ActionButton
+                            title={t('Gas Token Preferences')}
+                            style={{
+                                borderTopRadius: '0px', // last item in the group
+                            }}
+                            onClick={() => {
+                                Analytics.settings.gasTokenSettingsViewed();
+                                setCurrentContent('gas-token-settings');
+                            }}
+                            leftIcon={MdLocalGasStation}
+                            rightIcon={MdOutlineNavigateNext}
+                        />}
                     </VStack>
                     <ActionButton
                         title={t('Terms and Policies')}

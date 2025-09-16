@@ -1,5 +1,5 @@
 import { getConfig } from "@/config";
-export type GasTokenType = 'VTHO' | 'B3TR' | 'VET';
+export type GasTokenType = 'B3TR' | 'VET';
 
 export type TransactionSpeed = 'regular' | 'medium' | 'high';
 
@@ -13,6 +13,7 @@ export interface GasTokenInfo {
 
 export interface GasTokenPreferences {
     tokenPriority: GasTokenType[];
+    availableGasTokens: GasTokenType[];
     excludedTokens: GasTokenType[];
     alwaysConfirm: boolean;
     showCostBreakdown: boolean;
@@ -32,20 +33,14 @@ export interface GasTokenSelection {
 }
 
 export const DEFAULT_GAS_TOKEN_PREFERENCES: GasTokenPreferences = {
-    tokenPriority: ['VTHO', 'B3TR', 'VET'],
+    tokenPriority: ['VET', 'B3TR'],
+    availableGasTokens: ['VET', 'B3TR'],
     excludedTokens: [],
     alwaysConfirm: false,
     showCostBreakdown: false,
 };
 
 export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {
-    VTHO: {
-        type: 'VTHO',
-        name: 'VTHO Token',
-        symbol: 'VTHO',
-        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').vthoContractAddress,
-        description: 'Native gas token',
-    },
     B3TR: {
         type: 'B3TR',
         name: 'B3TR Token',

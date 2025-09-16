@@ -58,7 +58,7 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
-    const { network, genericDelegator } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -66,8 +66,12 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-    const { preferences } = useGasTokenSelection();
-    const activeGasToken = preferences.tokenPriority[0];
+    
+    let activeGasToken = 'VET';
+    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
+        const { preferences } = useGasTokenSelection();
+        activeGasToken = preferences.availableGasTokens[0];
+    }
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -312,10 +316,10 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
-                        {genericDelegator?.enabled && (
+                        {feeDelegation?.genericDelegatorUrl && (
                             <GasFeeSummary 
                                 clauses={selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses} 
-                                gasToken={activeGasToken} 
+                                gasToken={activeGasToken ?? 'VET'} 
                             />
                         )}
                     </VStack>

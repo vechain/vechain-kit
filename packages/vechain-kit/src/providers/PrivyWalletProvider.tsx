@@ -2,48 +2,35 @@
 
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
-import { encodeFunctionData, parseEther } from 'viem';
-import { Transaction, Hex, HexUInt, TransactionClause } from '@vechain/sdk-core';
+import { TransactionBody, TransactionClause } from '@vechain/sdk-core';
 import {
     ThorClient,
     VeChainProvider,
     ProviderInternalBaseWallet,
     signerUtils,
 } from '@vechain/sdk-network';
-import { randomTransactionUser } from '../utils';
+import { getGenericDelegatorUrl, randomTransactionUser } from '../utils';
 import {
-    EnhancedClause,
-    ExecuteBatchWithAuthorizationSignData,
-    ExecuteWithAuthorizationSignData,
     GasTokenType,
     TransactionSpeed,
-    DepositAccount,
-    EstimationResponse,
-    SUPPORTED_GAS_TOKENS
 } from '@/types';
 import {
     useSmartAccount,
     useWallet,
-    estimateGas,
-    getDepositAccount,
-    delegateAuthorized,
-    signVip191Transaction,
-    useBuildExecWithAuthClauses,
+    useGenericDelegator,
     useHasV1SmartAccount,
-    useGetChainId,
     useSmartAccountVersion,
+    SmartAccountReturnType,
+    estimateAndBuildTxBody,
+    useBuildClauses,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
-import { ethers } from 'ethers';
-import { ERC20__factory } from '@vechain/vechain-contract-types';
-import { buildClauses } from '@/utils/clauseBuilder';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
-    delegateAllTransactions: boolean;
     sendTransaction: (tx: {
         txClauses: TransactionClause[];
         title?: string;
@@ -61,123 +48,6 @@ const PrivyWalletProviderContext =
     createContext<PrivyWalletProviderContextType | null>(null);
 
 /**
- * Build the typed data structure for executeBatchWithAuthorization
- * @param clauses - The clauses to sign
- * @param chainId - The chain id
- * @param verifyingContract - The address of the smart account
- * @returns The typed data structure for executeBatchWithAuthorization
- */
-export function buildBatchAuthorizationTypedData({
-    clauses,
-    chainId,
-    verifyingContract,
-}: {
-    clauses: TransactionClause[];
-    chainId: number;
-    verifyingContract: string;
-}): ExecuteBatchWithAuthorizationSignData {
-    const toArray: string[] = [];
-    const valueArray: string[] = [];
-    const dataArray: string[] = [];
-
-    clauses.forEach((clause) => {
-        toArray.push(clause.to ?? '');
-        valueArray.push(String(clause.value));
-        if (typeof clause.data === 'object' && 'abi' in clause.data) {
-            dataArray.push(encodeFunctionData(clause.data));
-        } else {
-            dataArray.push(clause.data || '0x');
-        }
-    });
-
-    return {
-        domain: {
-            name: 'Wallet',
-            version: '1',
-            chainId,
-            verifyingContract,
-        },
-        types: {
-            ExecuteBatchWithAuthorization: [
-                { name: 'to', type: 'address[]' },
-                { name: 'value', type: 'uint256[]' },
-                { name: 'data', type: 'bytes[]' },
-                { name: 'validAfter', type: 'uint256' },
-                { name: 'validBefore', type: 'uint256' },
-                { name: 'nonce', type: 'bytes32' },
-            ],
-            EIP712Domain: [
-                { name: 'name', type: 'string' },
-                { name: 'version', type: 'string' },
-                { name: 'chainId', type: 'uint256' },
-                { name: 'verifyingContract', type: 'address' },
-            ],
-        },
-        primaryType: 'ExecuteBatchWithAuthorization',
-        message: {
-            to: toArray,
-            value: valueArray,
-            data: dataArray,
-            validAfter: 0,
-            validBefore: Math.floor(Date.now() / 1000) + 300, // e.g. 5 minutes from now
-            nonce: ethers.hexlify(ethers.randomBytes(32)),
-        },
-    };
-};
-
-/**
- * Build the typed data structure for executeWithAuthorization
- * @param clause - The clause to sign
- * @param chainId - The chain id
- * @param verifyingContract - The address of the smart account
- * @returns The typed data structure for executeWithAuthorization
- */
-export function buildSingleAuthorizationTypedData({
-    clause,
-    chainId,
-    verifyingContract,
-}: {
-    clause: TransactionClause;
-    chainId: number;
-    verifyingContract: string;
-}): ExecuteWithAuthorizationSignData {
-    return {
-        domain: {
-            name: 'Wallet',
-            version: '1',
-            chainId: chainId as unknown as number, // convert chainId to a number
-            verifyingContract: verifyingContract,
-        },
-        types: {
-            ExecuteWithAuthorization: [
-                { name: 'to', type: 'address' },
-                { name: 'value', type: 'uint256' },
-                { name: 'data', type: 'bytes' },
-                { name: 'validAfter', type: 'uint256' },
-                { name: 'validBefore', type: 'uint256' },
-            ],
-            EIP712Domain: [
-                { name: 'name', type: 'string' },
-                { name: 'version', type: 'string' },
-                { name: 'chainId', type: 'uint256' },
-                { name: 'verifyingContract', type: 'address' },
-            ],
-        },
-        primaryType: 'ExecuteWithAuthorization',
-        message: {
-            validAfter: 0,
-            validBefore: Math.floor(Date.now() / 1000) + 60, // 1 minute
-            to: clause.to,
-            value: String(clause.value),
-            data:
-                (typeof clause.data === 'object' && 'abi' in clause.data
-                    ? encodeFunctionData(clause.data)
-                    : clause.data) || '0x',
-        },
-    };
-};
-
-/**
  * This provider is responsible for retrieving the smart account address
  * of a Privy wallet and providing the necessary context for the smart account.
  * Upon initialization this provider will execute a few useEffect hooks to:
@@ -193,13 +63,13 @@ export function buildSingleAuthorizationTypedData({
 export const PrivyWalletProvider = ({
     children,
     nodeUrl,
-    delegatorUrl,
-    delegateAllTransactions,
+    delegatorUrl = getGenericDelegatorUrl(),
+    genericDelegator,
 }: {
     children: React.ReactNode;
     nodeUrl: string;
-    delegatorUrl: string;
-    delegateAllTransactions: boolean;
+    delegatorUrl?: string;
+    genericDelegator?: boolean;
 }) => {
     const {
         signTypedData: signTypedDataPrivy,
@@ -215,7 +85,6 @@ export const PrivyWalletProvider = ({
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { data: chainId } = useGetChainId();
     const { data: smartAccountVersion } = useSmartAccountVersion(
         smartAccount?.address ?? '',
         connectedWallet?.address ?? '',
@@ -223,53 +92,14 @@ export const PrivyWalletProvider = ({
     const { data: hasV1SmartAccount } = useHasV1SmartAccount(
         connectedWallet?.address ?? '',
     );
-    const clauseBuilderDeps = useBuildExecWithAuthClauses();
+    const { buildClausesWithAuth } = useBuildClauses();
+    const { sendTransactionUsingGenericDelegator } = useGenericDelegator();
 
     const thor = ThorClient.at(nodeUrl);
 
-    const ERC20Interface = ERC20__factory.createInterface();
-
-    function decodeRawTx(raw: any, isSigned: boolean) {
-        return Transaction.decode(
-            HexUInt.of(raw.slice(2)).bytes,
-            isSigned
-        );
-    }
-
-    // Helper to estimate gas and build transaction body
-    const estimateAndBuildTxBody = async (
-        clauses: any[],
-        suggestedMaxGas: number | undefined,
-        useGenericDelegator: boolean,
-        isDelegated: boolean
-    ) => {
-        const gasResult = await thor.gas.estimateGas(
-            clauses,
-            connectedWallet?.address ?? '',
-            { gasPadding: 1 }
-        );
-        const parsedGasLimit = useGenericDelegator ? suggestedMaxGas ?? 0 : Math.max(
-            gasResult.totalGas,
-            suggestedMaxGas ?? 0,
-        );
-
-        if (!isDelegated) {
-            return await thor.transactions.buildTransactionBody(
-                clauses,
-                parsedGasLimit,
-            );
-        }
-
-        return await thor.transactions.buildTransactionBody(
-            clauses,
-            parsedGasLimit,
-            { isDelegated: isDelegated }
-        );
-    };
-
-    // Helper to sign and publish transaction
-    const signAndPublish = async (
-        txBody: any,
+    // Helper to sign and send transaction for regular fee delegation transactions
+    const signAndSend = async (
+        txBody: TransactionBody,
         walletOverride?: any,
         signerOverride?: any
     ) => {
@@ -317,14 +147,24 @@ export const PrivyWalletProvider = ({
         return id;
     };
 
+    /**
+     * Sends a transaction on behalf of a smart account using either feeDelegation or genericDelegator
+     * @param txClauses - The clauses to send in the transaction
+     * @param title - The title of the transaction (used for the UI)
+     * @param description - The description of the transaction
+     * @param buttonText - The button text of the transaction (used for the UI)
+     * @param suggestedMaxGas - The suggested max gas for the transaction
+     * @param currentGasToken - The current gas token for the transaction
+     * @param speed - The speed of the transaction
+     * @returns The id of the transaction
+     **/
+
     const sendTransaction = async ({
         txClauses = [],
         title = 'Sign Transaction',
         description,
         buttonText = 'Sign',
         suggestedMaxGas,
-        currentGasToken,
-        speed = 'medium',
     }: {
         txClauses: TransactionClause[];
         title?: string;
@@ -343,98 +183,25 @@ export const PrivyWalletProvider = ({
             throw new Error('Address or embedded wallet is missing');
         }
 
-        let clauses = await buildClauses({ // initial transfer to chosen address clause
-            clauses: txClauses,
-            chainId: chainId as unknown as number,
-            verifyingContract: smartAccount.address,
-            version: !hasV1SmartAccount ? smartAccountVersion : 1,
-            title,
-            isEstimation: false,
-            description,
-            buttonText,
-            dependencies: clauseBuilderDeps,
-        });
-
-        if (currentGasToken) {
-            const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount.address, delegatorUrl, clauses, currentGasToken, speed);
-
-            const depositAccount: DepositAccount = await getDepositAccount(delegatorUrl);
-
-            const transferToGenericDelegatorClause = {
-                to: currentGasToken === 'VET' ? depositAccount.depositAccount : SUPPORTED_GAS_TOKENS[currentGasToken as GasTokenType].address,
-                value: currentGasToken === 'VET' ? parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0').toString() : '0x0',
-                data: currentGasToken === 'VET' ? '0x' : ERC20Interface.encodeFunctionData('transfer', [
-                    depositAccount.depositAccount,
-                    parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0'),
-                ]),
-                comment: `Transfer ${gasEstimationResponse.transactionCost} ${currentGasToken} to ${depositAccount.depositAccount}`,
-                abi: currentGasToken === 'VET' ? undefined : ERC20Interface.getFunction('transfer'),
-            };
-
-            const finalExecuteWithAuthorizationClauses = await buildClauses({
-                clauses: [...txClauses, transferToGenericDelegatorClause as EnhancedClause],
-                chainId: chainId as unknown as number,
-                verifyingContract: smartAccount.address,
-                version: !hasV1SmartAccount ? smartAccountVersion : 1,
-                title,
-                isEstimation: false,
-                dontAddCreateAccountClause: true,
-                description,
-                buttonText,
-                dependencies: clauseBuilderDeps,
+        // if using generic delegator, use the useGenericDelegator hook, build the clauses, estimate the gas, build the tx body, sign and send
+        if (genericDelegator) {
+            return await sendTransactionUsingGenericDelegator({
+                clauses: txClauses,
+                genericDelegatorUrl: delegatorUrl ?? '',
             });
-
-            clauses = [...finalExecuteWithAuthorizationClauses];
-
-            const estimatedGas = gasEstimationResponse.estimatedGas ?? 0;
-
-            const txBody = await estimateAndBuildTxBody(
-                clauses,
-                estimatedGas,
-                true,
-                true
-            );
-
-            const rawUnsignedTx = Hex.of(Transaction.of(txBody).encoded).toString();
-
-            const gasPayerResponse: {
-                signature: string;
-                address: string;
-                raw: string;
-                origin: string;
-            } = await delegateAuthorized(rawUnsignedTx, randomTransactionUser.address, currentGasToken, delegatorUrl);
-
-            const decodedTx = decodeRawTx(gasPayerResponse.raw, false);
-
-            const finalTxSigned = signVip191Transaction(decodedTx, randomTransactionUser.privateKey, gasPayerResponse.signature);
-
-            const simulatedTransaction = {
-                clauses: clauses,
-                simulateTransactionOptions: {
-                    caller: smartAccount.address,
-                    gasPayer: gasPayerResponse.address,
-                }
-            };
-
-            const simulatedTx1 = await thor.transactions.simulateTransaction(
-                simulatedTransaction.clauses,
-                {
-                    ...simulatedTransaction.simulateTransactionOptions
-                }
-            );
-
-            for (let i = 0; i < simulatedTx1.length; i++) {
-                if (simulatedTx1[i].reverted) {
-                    console.error(`simulatedTx1[i].vmError: ${simulatedTx1[i].vmError}`);
-                    throw new Error(simulatedTx1[i].vmError);
-                }
-            }
-            // Send the transaction
-            const sendTransactionResult = await thor.transactions.sendTransaction(finalTxSigned);
-    
-            return sendTransactionResult.id;
         }
 
+        // else send a regular delegated transaction using the feeDelegationUrl
+        const clauses = await buildClausesWithAuth({
+            clauses: txClauses,
+            smartAccount: smartAccount as SmartAccountReturnType,
+            version: !hasV1SmartAccount ? smartAccountVersion : 1,
+            title,
+            description,
+            buttonText,
+        });
+
+        // set the simulated transaction options
         const simulatedTransaction = {
             clauses: clauses,
             simulateTransactionOptions: {
@@ -449,6 +216,7 @@ export const PrivyWalletProvider = ({
             }
         );
 
+        // check if the simulated transaction reverted
         for (let i = 0; i < simulatedTx1.length; i++) {
             if (simulatedTx1[i].reverted) {
                 console.error(`simulatedTx1[i].vmError: ${simulatedTx1[i].vmError}`);
@@ -456,15 +224,16 @@ export const PrivyWalletProvider = ({
             }
         }
         
-         // For VTHO or no gas token specified
          const txBody = await estimateAndBuildTxBody(
             clauses,
+            thor,
+            connectedWallet,
             suggestedMaxGas,
             false,
             true
         );
 
-        return await signAndPublish(
+        return await signAndSend(
             txBody,
         );
     };
@@ -518,7 +287,6 @@ export const PrivyWalletProvider = ({
                 signMessage,
                 signTypedData,
                 exportWallet,
-                delegateAllTransactions,
             }}
         >
             {children}

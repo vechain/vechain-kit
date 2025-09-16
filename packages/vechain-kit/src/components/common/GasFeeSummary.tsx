@@ -13,8 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/gasToken';
 import { formatGasCost } from '@/types/gasEstimation';
-import { useWallet } from '@/hooks';
-import { useGasEstimation } from '@/hooks/api';
+import { useWallet, useGasEstimation } from '@/hooks';
 import { TransactionClause } from '@vechain/sdk-core';
 
 interface GasFeeSummaryProps {
@@ -24,10 +23,10 @@ interface GasFeeSummaryProps {
 
 export const GasFeeSummary = ({ clauses, gasToken }: GasFeeSummaryProps) => {
     const { t } = useTranslation();
-    const config = useVeChainKitConfig();
+    const { feeDelegation} = useVeChainKitConfig();
     const { connection } = useWallet();
 
-    if (config?.feeDelegation?.delegatorUrl) {
+    if (feeDelegation?.delegatorUrl) {
         return null;
     }
 
