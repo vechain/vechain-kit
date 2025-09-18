@@ -36,7 +36,6 @@ export interface PrivyWalletProviderContextType {
         title?: string;
         description?: string;
         buttonText?: string;
-        suggestedMaxGas?: number;
         currentGasToken?: GasTokenType;
     }) => Promise<string>;
     signTypedData: (data: SignTypedDataParams) => Promise<string>;
@@ -153,7 +152,6 @@ export const PrivyWalletProvider = ({
      * @param title - The title of the transaction (used for the UI)
      * @param description - The description of the transaction
      * @param buttonText - The button text of the transaction (used for the UI)
-     * @param suggestedMaxGas - The suggested max gas for the transaction
      * @param currentGasToken - The current gas token for the transaction
      * @param speed - The speed of the transaction
      * @returns The id of the transaction
@@ -164,13 +162,11 @@ export const PrivyWalletProvider = ({
         title = 'Sign Transaction',
         description,
         buttonText = 'Sign',
-        suggestedMaxGas,
     }: {
         txClauses: TransactionClause[];
         title?: string;
         description?: string;
         buttonText?: string;
-        suggestedMaxGas?: number;
         currentGasToken?: GasTokenType;
         speed?: TransactionSpeed;
     }): Promise<string> => {
@@ -227,9 +223,7 @@ export const PrivyWalletProvider = ({
          const txBody = await estimateAndBuildTxBody(
             clauses,
             thor,
-            connectedWallet,
-            suggestedMaxGas,
-            false,
+            randomTransactionUser,
             true
         );
 

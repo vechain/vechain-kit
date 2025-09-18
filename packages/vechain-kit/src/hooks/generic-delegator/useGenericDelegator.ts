@@ -1,8 +1,6 @@
 import {
     Transaction,
     HexUInt,
-    Secp256k1,
-    Hex,
     TransactionClause
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
@@ -42,14 +40,14 @@ export const getDepositAccount = async (genericDelegatorUrl: string): Promise<De
     return data;
 }
 
-export const delegateAuthorized = async (rawUnsignedTx: string, origin: string, token: GasTokenType, genericDelegatorUrl: string) => {
+export const delegateAuthorized = async (encodedSignedTx: string, origin: string, token: GasTokenType, genericDelegatorUrl: string) => {
     const response = await fetch(genericDelegatorUrl + 'sign/transaction/authorized/' + token.toLowerCase(), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            raw: rawUnsignedTx,
+            raw: encodedSignedTx,
             origin: origin,
             token: token.toLowerCase()
         }),
@@ -62,19 +60,16 @@ export const delegateAuthorized = async (rawUnsignedTx: string, origin: string, 
 export const estimateAndBuildTxBody = async (
     clauses: TransactionClause[],
     thor: ThorClient,
-    connectedWallet: Wallet,
-    suggestedMaxGas: number | undefined,
-    useGenericDelegator: boolean,
+    randomTransactionUser: Wallet,
     isDelegated: boolean
 ) => {
     const gasResult = await thor.gas.estimateGas(
         clauses,
-        connectedWallet?.address ?? '',
-        { gasPadding: 1 }
+        randomTransactionUser?.address ?? '',
     );
-    const parsedGasLimit = useGenericDelegator ? suggestedMaxGas ?? 0 : Math.max(
+    const parsedGasLimit = Math.max(
         gasResult.totalGas,
-        suggestedMaxGas ?? 0,
+        0,
     );
 
     if (!isDelegated) {
@@ -95,17 +90,14 @@ export const estimateAndBuildTxBody = async (
  * Sign the final transaction with the given private key and signature
  * returned by the generic delegator.
  * @param decodedTx The decoded transaction returned by the generic delegator.
- * @param senderPrivateKey The private key of the origin/sender of the transaction.
  * @param gasPayerSignature The signature returned by the generic delegator.
  * @returns The signed final transaction.
  */
-export function signVip191Transaction(decodedTx: Transaction, senderPrivateKey: string, gasPayerSignature: string) {
-    const txHash = Transaction.of(decodedTx.body).getTransactionHash();
-    const convertedPrivateKey = Hex.of(senderPrivateKey).bytes;
+export function signVip191Transaction(decodedTx: Transaction, gasPayerSignature: string) {
     return Transaction.of( 
         decodedTx.body, 
         nc_utils.concatBytes(
-            Secp256k1.sign(txHash.bytes, convertedPrivateKey),
+            decodedTx.signature ?? new Uint8Array(),
             HexUInt.of(gasPayerSignature.slice(2)).bytes
         )
     )
@@ -177,29 +169,25 @@ export const useGenericDelegator = () => {
                     version: smartAccountVersion,
                 });
 
-                const estimatedGas = gasEstimationResponse.estimatedGas ?? 0;
-
                 const txBody = await estimateAndBuildTxBody(
                     finalExecuteWithAuthorizationClauses as TransactionClause[],
                     thor,
-                    connectedWallet,
-                    estimatedGas,
-                    true,
+                    randomTransactionUser,
                     true
                 );
 
-                const rawUnsignedTx = Hex.of(Transaction.of(txBody).encoded).toString();
+                const rawSignedTx = await Transaction.of(txBody).signAsSender(HexUInt.of(randomTransactionUser.privateKey).bytes);
+
+                const encodedSignedTx = HexUInt.of(rawSignedTx.encoded).toString()
 
                 const gasPayerResponse: {
                     signature: string;
                     address: string;
                     raw: string;
                     origin: string;
-                } = await delegateAuthorized(rawUnsignedTx, randomTransactionUser.address, preferences.availableGasTokens[i], genericDelegatorUrl);
+                } = await delegateAuthorized(encodedSignedTx, randomTransactionUser.address, preferences.availableGasTokens[i], genericDelegatorUrl);
 
-                const decodedTx = decodeRawTx(gasPayerResponse.raw, false);
-
-                const finalTxSigned = signVip191Transaction(decodedTx, randomTransactionUser.privateKey, gasPayerResponse.signature);
+                const finalTxSigned = signVip191Transaction(rawSignedTx, gasPayerResponse.signature);
 
                 const simulatedTransaction = {
                     clauses: finalExecuteWithAuthorizationClauses as TransactionClause[],
@@ -218,7 +206,6 @@ export const useGenericDelegator = () => {
 
                 for (let i = 0; i < simulatedTx1.length; i++) {
                     if (simulatedTx1[i].reverted) {
-                        console.error(`simulatedTx1[i].vmError: ${simulatedTx1[i].vmError}`);
                         throw new Error(simulatedTx1[i].vmError);
                     }
                 }
