@@ -96,6 +96,9 @@ export type VechainKitProviderProps = {
         themeVariables?: CustomizedStyle;
         modalParent?: HTMLElement;
         onSourceClick?: (source?: SourceInfo) => void;
+        v2Api?: {
+            enabled?: boolean;
+        };
     };
     loginModalUI?: {
         logo?: string;
@@ -383,6 +386,9 @@ export const VeChainKitProvider = (
                                 network.nodeUrl ??
                                 getConfig(network.type).nodeUrl
                             }
+                            v2Api={{
+                                enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
+                            }}
                             i18n={i18nConfig}
                             language={language}
                             logLevel={dappKit.logLevel}
