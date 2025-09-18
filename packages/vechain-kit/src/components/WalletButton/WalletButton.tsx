@@ -32,7 +32,7 @@ export const WalletButton = ({
         loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
 
     const { connection, account } = useWallet();
-    const { setSource, connect } = useDAppKitWallet();
+    const { setSource, connectV2 } = useDAppKitWallet();
 
     const [isMobile] = useMediaQuery('(max-width: 768px)');
 
@@ -43,7 +43,7 @@ export const WalletButton = ({
     const handleConnect = () => {
         if (connection.isInAppBrowser) {
             setSource('veworld');
-            connect();
+            connectV2(null);
         } else if (hasOnlyDappKit) {
             openDappKit();
         } else {
