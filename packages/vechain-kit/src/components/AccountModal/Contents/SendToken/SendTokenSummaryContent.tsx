@@ -23,6 +23,7 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
     TokenWithValue,
+    useGasTokenSelection,
 } from '@/hooks';
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +32,7 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
+import { GasFeeSummary } from '@/components/common/GasFeeSummary';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -56,7 +58,8 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
-    const { network } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
+    const { preferences } = useGasTokenSelection();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -64,7 +67,11 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-
+    
+    let showCostBreakdown = false;
+    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
+        showCostBreakdown = preferences.showCostBreakdown;
+    }
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -137,6 +144,7 @@ export const SendTokenSummaryContent = ({
         isWaitingForWalletConfirmation:
             transferERC20WaitingForWalletConfirmation,
         isTransactionPending: transferERC20Pending,
+        clauses: erc20Clauses,
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -157,6 +165,7 @@ export const SendTokenSummaryContent = ({
         error: transferVETError,
         isWaitingForWalletConfirmation: transferVETWaitingForWalletConfirmation,
         isTransactionPending: transferVETPending,
+        clauses: vetClauses,
     } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -307,6 +316,12 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
+                        {feeDelegation?.genericDelegatorUrl && showCostBreakdown && (
+                            <GasFeeSummary 
+                                clauses={selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses} 
+                                gasToken={preferences.availableGasTokens[0] ?? 'VET'} 
+                            />
+                        )}
                     </VStack>
                 </VStack>
             </ModalBody>
