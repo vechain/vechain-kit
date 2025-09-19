@@ -1,17 +1,21 @@
 'use client';
 
-import { VStack, Text, Box, Grid, Button } from '@chakra-ui/react';
+import { VStack, Text, Box, Grid, Button, Icon } from '@chakra-ui/react';
 import {
     WalletButton,
     useConnectModal,
     useDAppKitWalletModal,
+    useLoginWithOAuth,
 } from '@vechain/vechain-kit';
 import { MdLogin } from 'react-icons/md';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 
 export const LoginUIControl = () => {
     const { open } = useConnectModal();
     const { open: openWalletModal } = useDAppKitWalletModal();
+    const { initOAuth } = useLoginWithOAuth();
 
     return (
         <CollapsibleCard
@@ -161,6 +165,100 @@ export const LoginUIControl = () => {
                         variant. You can pass an additional description and
                         Image to the modal when configuring you the
                         VeChainKitProvider.
+                    </Text>
+                </VStack>
+
+                <VStack
+                    w={'full'}
+                    spacing={6}
+                    p={6}
+                    borderRadius="md"
+                    bg="whiteAlpha.50"
+                >
+                    <Text fontWeight="bold">OAuth Login Examples</Text>
+                    <Grid
+                        templateColumns={{
+                            base: '1fr',
+                            md: 'repeat(2, 1fr)',
+                        }}
+                        gap={8}
+                        w="full"
+                        justifyContent="space-between"
+                    >
+                        {/* Google OAuth Button */}
+                        <VStack alignItems="flex-start" spacing={2}>
+                            <Box w={'fit-content'}>
+                                <Button
+                                    onClick={() =>
+                                        initOAuth({ provider: 'google' })
+                                    }
+                                    leftIcon={
+                                        <Icon as={FcGoogle} boxSize="20px" />
+                                    }
+                                    colorScheme="gray"
+                                    variant="outline"
+                                    size="md"
+                                    _hover={{
+                                        bg: 'whiteAlpha.200',
+                                        borderColor: 'gray.400',
+                                    }}
+                                >
+                                    Login with Google
+                                </Button>
+                            </Box>
+                            <Text
+                                fontSize="sm"
+                                fontWeight="medium"
+                                color="blue.300"
+                                bg="whiteAlpha.100"
+                                px={3}
+                                py={1}
+                                borderRadius="full"
+                            >
+                                OAuth: Google
+                            </Text>
+                        </VStack>
+
+                        {/* GitHub OAuth Button */}
+                        <VStack alignItems="flex-start" spacing={2}>
+                            <Box w={'fit-content'}>
+                                <Button
+                                    onClick={() =>
+                                        initOAuth({ provider: 'github' })
+                                    }
+                                    leftIcon={
+                                        <Icon as={FaGithub} boxSize="20px" />
+                                    }
+                                    colorScheme="gray"
+                                    variant="outline"
+                                    size="md"
+                                    _hover={{
+                                        bg: 'whiteAlpha.200',
+                                        borderColor: 'gray.400',
+                                    }}
+                                >
+                                    Login with GitHub
+                                </Button>
+                            </Box>
+                            <Text
+                                fontSize="sm"
+                                fontWeight="medium"
+                                color="blue.300"
+                                bg="whiteAlpha.100"
+                                px={3}
+                                py={1}
+                                borderRadius="full"
+                            >
+                                OAuth: GitHub
+                            </Text>
+                        </VStack>
+                    </Grid>
+
+                    <Text fontSize="sm" fontWeight="medium" color="blue.300">
+                        Note: These buttons use the useLoginWithOAuth hook to
+                        initiate OAuth authentication flows with social
+                        providers. Make sure the providers are configured in
+                        your Privy dashboard.
                     </Text>
                 </VStack>
             </VStack>

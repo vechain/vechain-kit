@@ -7,6 +7,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VeLoginMethod } from '@/types/mixPanel';
 import { usePrivy } from '@privy-io/react-auth';
 import { isRejectionError } from '@/utils/stringUtils';
+import { useCallback } from 'react';
 
 interface OAuthOptions {
     provider: OAuthProviderType;
@@ -14,14 +15,21 @@ interface OAuthOptions {
 
 export const useLoginWithOAuth = () => {
     const { createWallet } = useCreateWallet();
-    const { initOAuth: privyInitOAuth } = usePrivyLoginWithOAuth({
-        onComplete: async ({ isNewUser }) => {
+
+    // Memoize the onComplete callback to prevent recreation on every render
+    const handleComplete = useCallback(
+        async ({ isNewUser }: { isNewUser: boolean }) => {
             // When using initOAuth Privy does not create an embedded wallet automatically.
             // So we need to create a wallet manually.
             if (isNewUser) {
                 await createWallet();
             }
         },
+        [createWallet],
+    );
+
+    const { initOAuth: privyInitOAuth } = usePrivyLoginWithOAuth({
+        onComplete: handleComplete,
     });
     const { user } = usePrivy();
 
