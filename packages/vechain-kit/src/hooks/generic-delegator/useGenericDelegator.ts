@@ -129,7 +129,7 @@ export const useGenericDelegator = () => {
     const { preferences } = useGasTokenSelection();
     const ERC20Interface = ERC20__factory.createInterface();
     const { network } = useVeChainKitConfig();
-    const { buildClausesWithAuth } = useBuildClauses();
+    //const { buildClausesWithAuth } = useBuildClauses();
     const thor = ThorClient.at(getConfig(network.type).nodeUrl);
 
     const sendTransactionUsingGenericDelegator = async ({
@@ -139,16 +139,12 @@ export const useGenericDelegator = () => {
         clauses: TransactionClause[];
         genericDelegatorUrl: string;
     }): Promise<string> => {
-        // Build the clause with authorization to be estimated by the generic delegator
-        const clausesWithAuthorization = await buildClausesWithAuth({
-            clauses: clauses,
-            smartAccount: smartAccount as SmartAccountReturnType,
-            version: smartAccountVersion,
-        });
-
+        console.info(clauses)
+        console.info('Available gas tokens', preferences.availableGasTokens);
+        console.info('URL Generic delegator', genericDelegatorUrl);
         for (let i = 0; i < preferences.availableGasTokens.length; i++) {
             try {
-                const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount?.address ?? '', genericDelegatorUrl, clausesWithAuthorization as TransactionClause[], preferences.availableGasTokens[i], 'medium');
+                const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount?.address ?? '', genericDelegatorUrl, clauses as TransactionClause[], preferences.availableGasTokens[i], 'medium');
 
                 const depositAccount: DepositAccount = await getDepositAccount(genericDelegatorUrl);
 
@@ -189,6 +185,7 @@ export const useGenericDelegator = () => {
 
                 const finalTxSigned = signVip191Transaction(rawSignedTx, gasPayerResponse.signature);
 
+                // TODO: Simulate the transaction first, not here....
                 const simulatedTransaction = {
                     clauses: finalExecuteWithAuthorizationClauses as TransactionClause[],
                     simulateTransactionOptions: {
