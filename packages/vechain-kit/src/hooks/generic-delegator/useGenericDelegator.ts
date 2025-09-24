@@ -1,7 +1,8 @@
 import {
     Transaction,
     HexUInt,
-    TransactionClause
+    TransactionClause,
+    Clause
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
 import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, SUPPORTED_GAS_TOKENS, Wallet } from '@/types';
@@ -129,7 +130,7 @@ export const useGenericDelegator = () => {
     const { preferences } = useGasTokenSelection();
     const ERC20Interface = ERC20__factory.createInterface();
     const { network } = useVeChainKitConfig();
-    //const { buildClausesWithAuth } = useBuildClauses();
+    const { buildClausesWithAuth } = useBuildClauses();
     const thor = ThorClient.at(getConfig(network.type).nodeUrl);
 
     const sendTransactionUsingGenericDelegator = async ({
@@ -154,19 +155,19 @@ export const useGenericDelegator = () => {
                     data: preferences.availableGasTokens[i] === 'VET' ? '0x' : ERC20Interface.encodeFunctionData('transfer', [
                         depositAccount.depositAccount,
                         parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0'),
-                    ]),
+                    ]) ,
                     comment: `Transfer ${gasEstimationResponse.transactionCost} ${preferences.availableGasTokens[i]} to ${depositAccount.depositAccount}`,
                     abi: preferences.availableGasTokens[i] === 'VET' ? undefined : ERC20Interface.getFunction('transfer'),
-                };
+                } as TransactionClause;
 
-                const finalExecuteWithAuthorizationClauses = await buildClausesWithAuth({
-                    clauses: [...clauses, transferToGenericDelegatorClause as TransactionClause],
+                const finalExecuteWithAuthorizationClauses = buildClausesWithAuth({
+                    clauses: [...clauses, transferToGenericDelegatorClause],
                     smartAccount: smartAccount as SmartAccountReturnType,
                     version: smartAccountVersion,
                 });
 
                 const txBody = await estimateAndBuildTxBody(
-                    finalExecuteWithAuthorizationClauses as TransactionClause[],
+                    finalExecuteWithAuthorizationClauses as unknown as Clause[],
                     thor,
                     randomTransactionUser,
                     true
@@ -187,7 +188,7 @@ export const useGenericDelegator = () => {
 
                 // TODO: Simulate the transaction first, not here....
                 const simulatedTransaction = {
-                    clauses: finalExecuteWithAuthorizationClauses as TransactionClause[],
+                    clauses: finalExecuteWithAuthorizationClauses as unknown as Clause[],
                     simulateTransactionOptions: {
                         caller: randomTransactionUser.address ?? '',
                         gasPayer: gasPayerResponse.address,
