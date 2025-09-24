@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { EstimationResponse } from '@/types/gasEstimation';
 import { EnhancedClause, GasTokenType } from '@/types';
-import { useSmartAccount, useWallet, estimateGas, useSmartAccountVersion, SmartAccountReturnType, useBuildClauses } from '@/hooks';
+import { useSmartAccount, useWallet, useSmartAccountVersion, SmartAccountReturnType, useBuildClauses } from '@/hooks';
+import { callEstimateClauses } from '@/hooks/generic-delegator/useGenericDelegator'; 
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
 
@@ -37,15 +38,14 @@ export const useGasEstimation = ({
     return useQuery<EstimationResponse, Error>({
         queryKey,
         queryFn: async () => {
-            const clausesWithAuth = await buildClausesWithAuth(params);
+            //const clausesWithAuth = await buildClausesWithAuth(params);
             // Then estimate gas using the newly built clauses with authorization
-            const estimation = await estimateGas(
-                smartAccount?.address ?? '',
+            const estimation = await callEstimateClauses(
                 feeDelegation?.genericDelegatorUrl ?? '',
-                clausesWithAuth as TransactionClause[],
+                clauses as TransactionClause[],
+                smartAccount?.address ?? '',
                 token as GasTokenType,
-                'medium',
-            );
+            )
             return estimation;
         },
         enabled: enabled && clauses.length > 0 && !!smartAccount?.address && !!feeDelegation?.genericDelegatorUrl,

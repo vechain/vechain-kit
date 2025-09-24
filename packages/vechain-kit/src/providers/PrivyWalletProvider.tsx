@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
-import { TransactionBody, TransactionClause } from '@vechain/sdk-core';
+import { Clause, TransactionBody, TransactionClause } from '@vechain/sdk-core';
 import {
     ThorClient,
     VeChainProvider,
@@ -13,6 +13,7 @@ import { getGenericDelegatorUrl, randomTransactionUser } from '../utils';
 import {
     GasTokenType,
     TransactionSpeed,
+    Wallet,
 } from '@/types';
 import {
     useSmartAccount,
@@ -21,13 +22,13 @@ import {
     useHasV1SmartAccount,
     useSmartAccountVersion,
     SmartAccountReturnType,
-    estimateAndBuildTxBody,
     useBuildClauses,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';
+import { Account } from 'viem';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
@@ -183,53 +184,54 @@ export const PrivyWalletProvider = ({
         if (genericDelegator) {
             return await sendTransactionUsingGenericDelegator({
                 clauses: txClauses,
-                genericDelegatorUrl: delegatorUrl ?? '',
+                genericDelegatorUrl: 'http://localhost:3000/api/v1/',
             });
+        } else {
+            
+            // else send a regular delegated transaction using the feeDelegationUrl
+            const clauses = await buildClausesWithAuth({
+                clauses: txClauses,
+                smartAccount: smartAccount as SmartAccountReturnType,
+                version: !hasV1SmartAccount ? smartAccountVersion : 1,
+                title,
+                description,
+                buttonText,
+            });
+
+            // set the simulated transaction options
+            const simulatedTransaction = {
+                clauses: clauses,
+                simulateTransactionOptions: {
+                    caller:  randomTransactionUser.address
+                }
+            };
+
+            const simulatedTx1 = await thor.transactions.simulateTransaction(
+                simulatedTransaction.clauses,
+                {
+                    ...simulatedTransaction.simulateTransactionOptions
+                }
+            );
+
+            // check if the simulated transaction reverted
+            for (let i = 0; i < simulatedTx1.length; i++) {
+                if (simulatedTx1[i].reverted) {
+                    console.error(`simulatedTx1[i].vmError: ${simulatedTx1[i].vmError}`);
+                    return simulatedTx1[i].vmError;
+                }
+            }
+            
+            const txBody = await estimateAndBuildTxBody(
+                clauses,
+                thor,
+                randomTransactionUser,
+                true
+            );
+
+            return await signAndSend(
+                txBody,
+            );
         }
-
-        // else send a regular delegated transaction using the feeDelegationUrl
-        const clauses = await buildClausesWithAuth({
-            clauses: txClauses,
-            smartAccount: smartAccount as SmartAccountReturnType,
-            version: !hasV1SmartAccount ? smartAccountVersion : 1,
-            title,
-            description,
-            buttonText,
-        });
-
-        // set the simulated transaction options
-        const simulatedTransaction = {
-            clauses: clauses,
-            simulateTransactionOptions: {
-                caller:  randomTransactionUser.address
-            }
-        };
-
-        const simulatedTx1 = await thor.transactions.simulateTransaction(
-            simulatedTransaction.clauses,
-            {
-                ...simulatedTransaction.simulateTransactionOptions
-            }
-        );
-
-        // check if the simulated transaction reverted
-        for (let i = 0; i < simulatedTx1.length; i++) {
-            if (simulatedTx1[i].reverted) {
-                console.error(`simulatedTx1[i].vmError: ${simulatedTx1[i].vmError}`);
-                return simulatedTx1[i].vmError;
-            }
-        }
-        
-         const txBody = await estimateAndBuildTxBody(
-            clauses,
-            thor,
-            randomTransactionUser,
-            true
-        );
-
-        return await signAndSend(
-            txBody,
-        );
     };
 
     /**
@@ -296,4 +298,33 @@ export const usePrivyWalletProvider = () => {
         );
     }
     return context;
+};
+
+const estimateAndBuildTxBody = async (
+    clauses: TransactionClause[],
+    thor: ThorClient,
+    randomTransactionUser: Wallet,
+    isDelegated: boolean
+) => {
+    const gasResult = await thor.gas.estimateGas(
+        clauses,
+        randomTransactionUser?.address ?? '',
+    );
+    const parsedGasLimit = Math.max(
+        gasResult.totalGas,
+        0,
+    );
+
+    if (!isDelegated) {
+        return await thor.transactions.buildTransactionBody(
+            clauses,
+            parsedGasLimit,
+        );
+    }
+
+    return await thor.transactions.buildTransactionBody(
+        clauses,
+        parsedGasLimit,
+        { isDelegated: isDelegated }
+    );
 };

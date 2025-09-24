@@ -2,59 +2,44 @@ import {
     Transaction,
     HexUInt,
     TransactionClause,
-    Clause
+    Clause, 
+    Address,
+    VET,
+    VTHO,
+    Token,
+    Units,
 } from '@vechain/sdk-core';
-import * as nc_utils from '@noble/curves/abstract/utils';
-import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, SUPPORTED_GAS_TOKENS, Wallet } from '@/types';
+import * as nc_utils from '@noble/curves/utils.js';
+import { GasTokenType, SUPPORTED_GAS_TOKENS, Wallet } from '@/types';
 import { SmartAccountReturnType, useGasTokenSelection, useSmartAccountVersion, useWallet, useSmartAccount, useBuildClauses } from '@/hooks';
 import { ERC20__factory } from '@vechain/vechain-contract-types';
-import { parseEther } from 'viem';
 import { randomTransactionUser } from '@/utils';
 import { ThorClient } from '@vechain/sdk-network';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 
-
-export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed) => {
-    const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            clauses: clauses,
-            signer: signerAddress,
-        }),
-    });
-    const data = await response.json();
-    return data;
+/**
+ * Sign the final transaction with the given private key and signature
+ * returned by the generic delegator.
+ * @param decodedTx The decoded transaction returned by the generic delegator.
+ * @param gasPayerSignature The signature returned by the generic delegator.
+ * @returns The signed final transaction.
+ */
+function signVip191Transaction(SignedTx: Transaction, gasPayerSignature: string) {
+        return Transaction.of( 
+            SignedTx.body, 
+            nc_utils.concatBytes(
+                SignedTx.signature ?? new Uint8Array(),
+                HexUInt.of(gasPayerSignature.slice(2)).bytes
+            )
+        )
 }
 
-export const getDepositAccount = async (genericDelegatorUrl: string): Promise<DepositAccount> => {
-    const response = await fetch(genericDelegatorUrl + 'deposit/account', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    const data = await response.json();
-    return data;
-}
-
-export const delegateAuthorized = async (encodedSignedTx: string, origin: string, token: GasTokenType, genericDelegatorUrl: string) => {
-    const response = await fetch(genericDelegatorUrl + 'sign/transaction/authorized/' + token.toLowerCase(), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            raw: encodedSignedTx,
-            origin: origin,
-            token: token.toLowerCase()
-        }),
-    });
-    const data = await response.json();
-    return data;
+export function decodeRawTx(raw: any, isSigned: boolean) {
+    return Transaction.decode(
+        HexUInt.of(raw.slice(2)).bytes,
+        isSigned
+    );
 }
 
 // Helper to estimate gas and build transaction body
@@ -88,30 +73,6 @@ export const estimateAndBuildTxBody = async (
 };
 
 /**
- * Sign the final transaction with the given private key and signature
- * returned by the generic delegator.
- * @param decodedTx The decoded transaction returned by the generic delegator.
- * @param gasPayerSignature The signature returned by the generic delegator.
- * @returns The signed final transaction.
- */
-export function signVip191Transaction(decodedTx: Transaction, gasPayerSignature: string) {
-    return Transaction.of( 
-        decodedTx.body, 
-        nc_utils.concatBytes(
-            decodedTx.signature ?? new Uint8Array(),
-            HexUInt.of(gasPayerSignature.slice(2)).bytes
-        )
-    )
-}
-
-export function decodeRawTx(raw: any, isSigned: boolean) {
-    return Transaction.decode(
-        HexUInt.of(raw.slice(2)).bytes,
-        isSigned
-    );
-}
-
-/**
  * This function is used to send a transaction using the generic delegator.
  * It will build the necessary clauses, estimate the gas, and send the transaction.
  * @param clauses The clauses to send in the transaction.
@@ -133,91 +94,327 @@ export const useGenericDelegator = () => {
     const { buildClausesWithAuth } = useBuildClauses();
     const thor = ThorClient.at(getConfig(network.type).nodeUrl);
 
+    class B3trToken extends Token {
+        readonly tokenAddress: Address = Address.of(SUPPORTED_GAS_TOKENS[preferences.availableGasTokens[0] as GasTokenType].address ?? '')
+        // 18 decimals
+        readonly units: Units = Units.wei
+        readonly name = 'B3TR'
+        constructor(value: bigint) {
+            super() // Pass a default value
+            this.initialize(value) // Call the initialization method
+        }
+    }
     const sendTransactionUsingGenericDelegator = async ({
         clauses,
-        genericDelegatorUrl
+        genericDelegatorUrl,
     }: {
         clauses: TransactionClause[];
         genericDelegatorUrl: string;
     }): Promise<string> => {
-        console.info(clauses)
-        console.info('Available gas tokens', preferences.availableGasTokens);
-        console.info('URL Generic delegator', genericDelegatorUrl);
-        for (let i = 0; i < preferences.availableGasTokens.length; i++) {
-            try {
-                const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount?.address ?? '', genericDelegatorUrl, clauses as TransactionClause[], preferences.availableGasTokens[i], 'medium');
+        const i = 0
+        try {
+            const deposit = await callDeposit(genericDelegatorUrl);
+            const symbol = preferences.availableGasTokens[0];
+            const estimate = await callEstimateClauses(genericDelegatorUrl, clauses, randomTransactionUser?.address ?? '', symbol);
 
-                const depositAccount: DepositAccount = await getDepositAccount(genericDelegatorUrl);
+            let extraClause;
+            switch (symbol) {
+                  case 'VET':
+                        extraClause = Clause.transferVET(Address.of(deposit.depositAccount), VET.of(estimate.transactionCost))
+                        break;
+                  case 'B3TR':
+                        const tokenAndAmount = new B3trToken(BigInt(estimate.transactionCost * 10 ** 18))
+                        extraClause = Clause.transferToken(Address.of(deposit.depositAccount), tokenAndAmount) // will require '.clause' when upgrading the SDK to ^2.0
+                        break;
+                  /*case 'VTHO':
+                        extraClause = Clause.transferVTHOToken(Address.of(deposit.depositAccount), VTHO.of(estimate.transactionCost)).clause
+                        break;*/
+              }
 
-                const transferToGenericDelegatorClause = {
-                    to: preferences.availableGasTokens[i] === 'VET' ? depositAccount.depositAccount : SUPPORTED_GAS_TOKENS[preferences.availableGasTokens[i] as GasTokenType].address,
-                    value: preferences.availableGasTokens[i] === 'VET' ? parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0').toString() : '0x0',
-                    data: preferences.availableGasTokens[i] === 'VET' ? '0x' : ERC20Interface.encodeFunctionData('transfer', [
-                        depositAccount.depositAccount,
-                        parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0'),
-                    ]) ,
-                    comment: `Transfer ${gasEstimationResponse.transactionCost} ${preferences.availableGasTokens[i]} to ${depositAccount.depositAccount}`,
-                    abi: preferences.availableGasTokens[i] === 'VET' ? undefined : ERC20Interface.getFunction('transfer'),
-                } as TransactionClause;
+              const convertedClauses = await buildClausesWithAuth({
+                clauses: clauses.concat(extraClause),
+                smartAccount: smartAccount as SmartAccountReturnType,
+                version: smartAccountVersion,
+              });
 
-                const finalExecuteWithAuthorizationClauses = buildClausesWithAuth({
-                    clauses: [...clauses, transferToGenericDelegatorClause],
-                    smartAccount: smartAccount as SmartAccountReturnType,
-                    version: smartAccountVersion,
-                });
+              const estimateTransaction = await thor.gas.estimateGas(convertedClauses, randomTransactionUser.address);
 
-                const txBody = await estimateAndBuildTxBody(
-                    finalExecuteWithAuthorizationClauses as unknown as Clause[],
-                    thor,
-                    randomTransactionUser,
-                    true
-                );
+              const rawBody = await thor.transactions.buildTransactionBody(convertedClauses, estimateTransaction.totalGas, {isDelegated: true});
+              
+              const rawSignedTx = await Transaction.of(rawBody).signAsSender(HexUInt.of(randomTransactionUser.privateKey).bytes)
+              const encodedSignedTx = HexUInt.of(rawSignedTx.encoded).toString()
+              const gasPayerResponse = await callDelegateAuthorized(genericDelegatorUrl, encodedSignedTx, randomTransactionUser.address, symbol);
+              
+              if (gasPayerResponse.statusCode !== 500) {
+                //decodeSignedRawTx(rawSignedTx)
+                const validTx = signVip191Transaction(rawSignedTx, gasPayerResponse.signature);
+                const sendTransactionResult = await thor.transactions.sendTransaction(validTx);
+                const tx = await sendTransactionResult.wait();
+                // 👇 short delay to avoid hitting rate limits
+                await new Promise((r) => setTimeout(r, 100));
 
-                const rawSignedTx = await Transaction.of(txBody).signAsSender(HexUInt.of(randomTransactionUser.privateKey).bytes);
+                return tx?.meta?.txID ?? '';
+              } else {
+                throw new Error('Error from generic delegator: ' + gasPayerResponse.message);
+              }
 
-                const encodedSignedTx = HexUInt.of(rawSignedTx.encoded).toString()
-
-                const gasPayerResponse: {
-                    signature: string;
-                    address: string;
-                    raw: string;
-                    origin: string;
-                } = await delegateAuthorized(encodedSignedTx, randomTransactionUser.address, preferences.availableGasTokens[i], genericDelegatorUrl);
-
-                const finalTxSigned = signVip191Transaction(rawSignedTx, gasPayerResponse.signature);
-
-                // TODO: Simulate the transaction first, not here....
-                const simulatedTransaction = {
-                    clauses: finalExecuteWithAuthorizationClauses as unknown as Clause[],
-                    simulateTransactionOptions: {
-                        caller: randomTransactionUser.address ?? '',
-                        gasPayer: gasPayerResponse.address,
-                    }
-                };
-
-                const simulatedTx1 = await thor.transactions.simulateTransaction(
-                    simulatedTransaction.clauses,
-                    {
-                        ...simulatedTransaction.simulateTransactionOptions
-                    }
-                );
-
-                for (let i = 0; i < simulatedTx1.length; i++) {
-                    if (simulatedTx1[i].reverted) {
-                        throw new Error(simulatedTx1[i].vmError);
-                    }
-                }
-                // Send the transaction
-                const sendTransactionResult = await thor.transactions.sendTransaction(finalTxSigned);
-
-                return sendTransactionResult.id;
-            } catch (error) {
-                console.error('Error sending transaction using generic delegator', error);
-            }
-        }
-        throw new Error('No gas token found');
+          } catch (error) {
+              console.error('Error sending transaction using generic delegator', error);
+          }
+          return '';
     }
     return {
         sendTransactionUsingGenericDelegator,
     };
 }
+
+export async function callEstimateClauses(genericDelegatorUrl: string, clauses: TransactionClause[], signer: string, tokenSymbol: string) {
+    
+      const requestBody = {
+          clauses,
+          signer,
+      }
+    
+      const requestOptions = {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(requestBody),
+          redirect: 'follow' as RequestRedirect
+      };
+      
+      try {
+          const response = await fetch(genericDelegatorUrl + "estimate/clauses/" + tokenSymbol + "?type=smartaccount&speed=medium" , requestOptions);
+          return await response.json();
+      } catch (error) {
+          console.error("Fetch error:", error);
+      }
+    }
+
+    // Request the generic delegator to pay that with B3TR
+     /**
+       * Send a request to the generic delegator to sponsor the gas cost of a transaction in exchange
+       * of a token payment.
+       * @param rawUnsignedTx The raw transaction to delegate.
+       * @param senderAddress The address of the origin/sender of the transaction.
+       * @param tokenSymbol The symbol of the token to use to pay for the gas.
+       * @returns The response from the generic delegator (raw, signature, address).
+       */
+    async function callDelegateAuthorized (genericDelegatorUrl: string, rawSignedTx: string, senderAddress: string, tokenSymbol: string) {
+
+      const requestBody = {
+          raw: rawSignedTx ,
+          origin: senderAddress
+      }
+    
+      const requestOptions = {
+          method: "POST",
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(requestBody),
+          redirect: 'follow' as RequestRedirect
+      };
+      
+      try {
+          const response = await fetch(genericDelegatorUrl + "sign/transaction/authorized/" + tokenSymbol, requestOptions);
+          return await response.json();
+      } catch (error) {
+          console.error("Fetch error:", error);
+      }
+    }
+
+    async function callDeposit( genericDelegatorUrl: string)  {
+      const requestOptions = {
+          method: "GET",
+          headers: {'Content-Type': 'application/json'},
+          redirect: 'follow' as RequestRedirect
+      };
+      
+      try {
+          const response = await fetch(genericDelegatorUrl + "deposit/account", requestOptions);
+          return await response.json();
+      } catch (error) {
+          console.error("Fetch error:", error);
+      }
+      throw new Error("Failed to fetch deposit account");
+    }
+
+    /*
+    async function convertClausesForSmartAccounts(clauses: Clause[], version: number, signer: VeChainSigner, simpleAccount: Address): Promise<Clause[]> {
+      const thorClient = await ThorClient.at(THOR_URL)
+      const genesis = await thorClient.blocks.getGenesisBlock();
+
+      let newClauses = []
+    
+      if (version !== 3) {
+        for (let index = 0; index < clauses.length; index++) {
+          newClauses.push(
+            await createExecuteWithAuthorizationClauses(
+              simpleAccount,
+              clauses[index].to.toString(),
+              clauses[index].value.toString(),
+              clauses[index].data.toString(),
+              signer,
+              genesis.id,
+            ),
+          )
+        }
+      } else {
+        newClauses = [await createExecuteBatchWithAuthorizationClauses(simpleAccount, clauses, signer, genesis.id)]
+      }
+    
+      // Estimate gas and return the VTHO value as required by the function signature
+      return newClauses
+    }
+
+    
+    async function createExecuteWithAuthorizationClauses(
+      simpleAccount: Address,
+      to: string,
+      value: string,
+      data: string,
+      signer: VeChainSigner,
+      chainId: string,
+    ): Promise<Clause> {
+      const signatureExecute = new ABIFunction(
+        'function executeWithAuthorization(address,uint256,bytes,uint256,uint256,bytes) public payable',
+      )
+      const nowString = Math.floor(Date.now() / 1000) - 100
+
+      const typedData = [
+        {
+          name: 'Wallet',
+          version: '1',
+          chainId: BigInt(chainId),
+          verifyingContract: simpleAccount.toString(),
+        },
+        {
+          ExecuteWithAuthorization: [
+            { name: 'to', type: 'address' },
+            { name: 'value', type: 'uint256' },
+            { name: 'data', type: 'bytes' },
+            { name: 'validAfter', type: 'uint256' },
+            { name: 'validBefore', type: 'uint256' },
+          ],
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' },
+          ],
+        },
+        {
+          validAfter: nowString.toString(),
+          validBefore: (nowString + 300).toString(),
+          to,
+          value,
+          data,
+        },
+        'ExecuteWithAuthorization',
+      ]
+      // Sign the typed data (either cross-app or traditional Privy)
+              let signature = undefined;
+              signature = connection.isConnectedWithCrossApp
+                  ? await signTypedDataWithCrossApp({
+                      ...typedData,
+                      address: connectedWallet?.address as `0x${string}`,
+                  } as SignTypedDataParameters)
+                  : (
+                      await signTypedDataPrivy(typedData, {
+                          uiOptions: {
+                              title,
+                              description,
+                              buttonText,
+                          },
+                      })
+                  ).signature;    
+      // Return the converted clause
+      // eslint-disable-next-line prefer-const, prettier/prettier
+        return Clause.callFunction(
+        Address.of(simpleAccount),
+        signatureExecute,
+        // eslint-disable-next-line prettier/prettier
+        [to, value, data, nowString, nowString + 300, signature]
+      )
+    }
+    
+    async function createExecuteBatchWithAuthorizationClauses(
+      simpleAccount: Address,
+      clauses: Clause[],
+      signer: VeChainSigner,
+      chainId: string,
+    ): Promise<Clause> {
+      const signatureExecuteBatch = new ABIFunction(
+        'function executeBatchWithAuthorization(address[],uint256[],bytes[],uint256,uint256,bytes32,bytes) public payable',
+      )
+      const nowString = Math.floor(Date.now() / 1000) - 100
+
+      const toArray: string[] = []
+      const valueArray: string[] = []
+      const dataArray: string[] = []
+    
+      clauses.forEach(clause => {
+        toArray.push(clause.to ?? '')
+        valueArray.push(String(clause.value))
+        dataArray.push(clause.data || '0x')
+      })
+    
+      const nonce = '0x' + randomBytes(32).toString('hex')
+    
+      
+      const typedData = [
+        {
+          name: 'Wallet',
+          version: '1',
+          chainId: BigInt(chainId),
+          verifyingContract: simpleAccount.toString(),
+        },
+        {
+          ExecuteBatchWithAuthorization: [
+            { name: 'to', type: 'address[]' },
+            { name: 'value', type: 'uint256[]' },
+            { name: 'data', type: 'bytes[]' },
+            { name: 'validAfter', type: 'uint256' },
+            { name: 'validBefore', type: 'uint256' },
+            { name: 'nonce', type: 'bytes32' },
+          ],
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' },
+          ],
+        },
+        {
+          to: toArray,
+          value: valueArray,
+          data: dataArray,
+          validAfter: nowString.toString(),
+          validBefore: (nowString + 300).toString(),
+          nonce,
+        },
+        'ExecuteBatchWithAuthorization',
+      ]
+      // Sign the typed data (either cross-app or traditional Privy)
+              let signature = undefined;
+              signature = connection.isConnectedWithCrossApp
+                  ? await signTypedDataWithCrossApp({
+                      ...typedData,
+                      address: connectedWallet?.address as `0x${string}`,
+                  } as SignTypedDataParameters)
+                  : (
+                      await signTypedDataPrivy(typedData, {
+                          uiOptions: {
+                              title,
+                              description,
+                              buttonText,
+                          },
+                      })
+                  ).signature;
+      // Return the converted clause
+      // eslint-disable-next-line prefer-const, prettier/prettier
+        return Clause.callFunction(
+        Address.of(simpleAccount),
+        signatureExecuteBatch,
+        // eslint-disable-next-line prettier/prettier
+        [toArray, valueArray, dataArray, nowString, nowString + 300, nonce, signature]
+      )
+    }*/
