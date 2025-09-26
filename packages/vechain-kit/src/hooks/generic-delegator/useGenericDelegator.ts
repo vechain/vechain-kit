@@ -137,9 +137,7 @@ export const useGenericDelegator = () => {
                 version: smartAccountVersion,
               });
 
-              const estimateTransaction = await thor.gas.estimateGas(convertedClauses, randomTransactionUser.address);
-
-              const rawBody = await thor.transactions.buildTransactionBody(convertedClauses, estimateTransaction.totalGas, {isDelegated: true});
+              const rawBody = await thor.transactions.buildTransactionBody(convertedClauses, estimate.estimatedGas, {isDelegated: true});
               
               const rawSignedTx = await Transaction.of(rawBody).signAsSender(HexUInt.of(randomTransactionUser.privateKey).bytes)
               const encodedSignedTx = HexUInt.of(rawSignedTx.encoded).toString()
