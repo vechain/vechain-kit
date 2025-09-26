@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { EstimationResponse } from '@/types/gasEstimation';
 import { EnhancedClause, GasTokenType } from '@/types';
-import { useSmartAccount, useWallet, estimateGas, useSmartAccountVersion, SmartAccountReturnType, useBuildClauses } from '@/hooks';
+import { useSmartAccount, useWallet, estimateGas } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
 
@@ -20,29 +20,16 @@ export const useGasEstimation = ({
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { data: smartAccountVersion } = useSmartAccountVersion(
-        smartAccount?.address ?? '',
-        connectedWallet?.address ?? '',
-    );
     const { feeDelegation } = useVeChainKitConfig();
-    const { buildClausesWithAuth } = useBuildClauses();
-
-    // Setup parmameters to pass to the useBuildClauses hook, this will build the executeWithAuthorization or executeBatchWithAuthorization clauses
-    const params = {
-        clauses,
-        smartAccount: smartAccount as SmartAccountReturnType,
-        version: smartAccountVersion,
-    }
     const queryKey = ['gas-estimation', JSON.stringify(clauses)];
     return useQuery<EstimationResponse, Error>({
         queryKey,
         queryFn: async () => {
-            const clausesWithAuth = await buildClausesWithAuth(params);
             // Then estimate gas using the newly built clauses with authorization
             const estimation = await estimateGas(
                 smartAccount?.address ?? '',
                 feeDelegation?.genericDelegatorUrl ?? '',
-                clausesWithAuth as TransactionClause[],
+                clauses as TransactionClause[],
                 token as GasTokenType,
                 'medium',
             );
