@@ -23,6 +23,7 @@ import {
     LanguageSettingsContent,
     AppearanceSettingsContent,
     TermsAndPrivacyContent,
+    GasTokenSettingsContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -233,6 +234,12 @@ export const AccountModal = ({
             case 'appearance-settings':
                 return (
                     <AppearanceSettingsContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'gas-token-settings':
+                return (
+                    <GasTokenSettingsContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
