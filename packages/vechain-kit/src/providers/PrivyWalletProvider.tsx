@@ -184,7 +184,7 @@ export const PrivyWalletProvider = ({
         if (genericDelegator) {
             return await sendTransactionUsingGenericDelegator({
                 clauses: txClauses,
-                genericDelegatorUrl: 'http://localhost:3000/api/v1/',
+                genericDelegatorUrl: delegatorUrl ?? '',
             });
         } else {
             
