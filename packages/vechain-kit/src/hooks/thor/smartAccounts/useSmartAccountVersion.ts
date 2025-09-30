@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@vechain/vechain-contract-types';
+import { SimpleAccountFactory__factory } from '@hooks/contracts';
 import { ThorClient } from '@vechain/sdk-network';
 import { executeCallClause, useThor } from '@/hooks';
 

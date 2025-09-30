@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { X2EarnApps__factory } from '@vechain/vechain-contract-types';
+import { X2EarnApps__factory } from '@hooks/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useThor } from '@vechain/dapp-kit-react';
 import { convertUriToUrl } from '@/utils';
