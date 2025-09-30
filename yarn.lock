@@ -4101,34 +4101,34 @@ __metadata:
   linkType: hard
 
 "@mixpanel/rrdom@npm:^2.0.0-alpha.18":
-  version: 2.0.0-alpha.18.1
-  resolution: "@mixpanel/rrdom@npm:2.0.0-alpha.18.1"
+  version: 2.0.0-alpha.18.2
+  resolution: "@mixpanel/rrdom@npm:2.0.0-alpha.18.2"
   dependencies:
     "@mixpanel/rrweb-snapshot": "npm:^2.0.0-alpha.18"
-  checksum: 10c0/1b403e38ae1948b9b1bdda8b62a6eaafbe75791c6c043494ea5142fa8d9a353cef7e85be3ca504efdcc25ef9aef0b0de43a3852348d291754e107302c254e84d
+  checksum: 10c0/0b608d965d019026417359a7e341be798e664a1ed20cfe7cd278ec355465482bd55faadfc919764e821efde815935320a47ea246efe3da4a8a813c2ac5566f19
   languageName: node
   linkType: hard
 
 "@mixpanel/rrweb-snapshot@npm:^2.0.0-alpha.18":
-  version: 2.0.0-alpha.18.1
-  resolution: "@mixpanel/rrweb-snapshot@npm:2.0.0-alpha.18.1"
+  version: 2.0.0-alpha.18.2
+  resolution: "@mixpanel/rrweb-snapshot@npm:2.0.0-alpha.18.2"
   dependencies:
     postcss: "npm:^8.4.38"
-  checksum: 10c0/09af33442d80516e48d48204694d37886bc3fb0ee66f639763658fe94d008684244909c8a17f7944df908abd7d59df82c518bddf6234851c4ffb28db9d1b1035
+  checksum: 10c0/8b9c6853aa97817ea2993679c1108a5f02251c4f52542727b47022f1750d58364fe2ee7e3babf337137734969dd37316ca52ff25bfbd0e60dea02fdecd086c02
   languageName: node
   linkType: hard
 
 "@mixpanel/rrweb-types@npm:^2.0.0-alpha.18":
-  version: 2.0.0-alpha.18.1
-  resolution: "@mixpanel/rrweb-types@npm:2.0.0-alpha.18.1"
-  checksum: 10c0/df66fee7a424e92b7dda3bda749a159ce21073baaeb1224e48ebc216eb95dd9a783608710a80148a518312c76c52405b58ac0f8a2abc36897115649933f0077f
+  version: 2.0.0-alpha.18.2
+  resolution: "@mixpanel/rrweb-types@npm:2.0.0-alpha.18.2"
+  checksum: 10c0/5d24c27d78219431e3f0303cbaa3d4ea6740a5310ae10acc1bfd8727b18f545a4596ba33cd89b375782636c9cf16d322ea4242b670fcdd86ce4b8f0ad84bb45b
   languageName: node
   linkType: hard
 
 "@mixpanel/rrweb-utils@npm:^2.0.0-alpha.18":
-  version: 2.0.0-alpha.18.1
-  resolution: "@mixpanel/rrweb-utils@npm:2.0.0-alpha.18.1"
-  checksum: 10c0/a0e25cd5b4ed8030711f39b28b2566d73dae06b1b5473a0a6a1a9cfb8d600c9f8656c4c5e6fa6897e8ff14d03aa0eee08f0be645a19b194e277bbc2cf05cc68f
+  version: 2.0.0-alpha.18.2
+  resolution: "@mixpanel/rrweb-utils@npm:2.0.0-alpha.18.2"
+  checksum: 10c0/8c5af15df6e8e4a04a868cef4b0870e7cab5731ea0078351cffe4646be83129db21fee83d882eee2e583a055e7762340cdc5aa45eefa247be3b0711763e2edf3
   languageName: node
   linkType: hard
 
@@ -6231,12 +6231,12 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:^18, @types/react@npm:^18.2.28":
-  version: 18.3.24
-  resolution: "@types/react@npm:18.3.24"
+  version: 18.3.25
+  resolution: "@types/react@npm:18.3.25"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/9e188fa8e50f172cf647fc48fea2e04d88602afff47190b697de281a8ac88df9ee059864757a2a438ff599eaf9276d9a9e0e60585e88f7d57f01a2e4877d37ec
+  checksum: 10c0/ef4fad7c845ce44cb454e47e826d1b04ff5081bccdac06d0260fc6e47de730268f8f9ff2ffc5085ee793d7466493c1175b2309b3d71c20916efefac0fd7612f1
   languageName: node
   linkType: hard
 
@@ -6798,25 +6798,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/vechain-contract-types@file:../../../contract-types::locator=%40vechain%2Fvechain-kit%40workspace%3Apackages%2Fvechain-kit":
-  version: 1.0.0
-  resolution: "@vechain/vechain-contract-types@file:../../../contract-types#../../../contract-types::hash=9dd4e8&locator=%40vechain%2Fvechain-kit%40workspace%3Apackages%2Fvechain-kit"
+"@vechain/vechain-contract-types@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@vechain/vechain-contract-types@npm:1.0.3"
   dependencies:
     ethers: "npm:^6.13.5"
   peerDependencies:
     ethers: ^6.0.0
-  checksum: 10c0/db22460165a33ac651eb017812d7575a5b8cd29042c88b33cf40b026c0dd059d40f966921fc84e2d2a23ef8032e0cc031d483a045c2cfd85d51ab8cfd6058d53
-  languageName: node
-  linkType: hard
-
-"@vechain/vechain-contract-types@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@vechain/vechain-contract-types@npm:1.0.0"
-  dependencies:
-    ethers: "npm:^6.13.5"
-  peerDependencies:
-    ethers: ^6.0.0
-  checksum: 10c0/e21a72135bc2577cc0ced776cd59968ff9fc805696305003acb91df9594fff04d1ee815a9788ccf69275809453df7bdf4998422e4cffcfdd82b08e8a90d0d9b9
+  checksum: 10c0/b8ae7576feae1dbecf360662c7c7877b96284a2595f72c0d0414a895e08a5ea09fb76f0fe0ef0bdfbe99b585f0d40af508d3878200f43d2b0c16d0f58f851e16
   languageName: node
   linkType: hard
 
@@ -6840,7 +6829,7 @@ __metadata:
     "@vechain/dapp-kit-react": "npm:2.0.4"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
-    "@vechain/vechain-contract-types": "file:../../../contract-types"
+    "@vechain/vechain-contract-types": "npm:1.0.3"
     "@wagmi/core": "npm:^2.17.2"
     axios: "npm:^1.10.0"
     bignumber.js: "npm:^9.1.2"
@@ -8200,6 +8189,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async-generator-function@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "async-generator-function@npm:1.0.0"
+  checksum: 10c0/2c50ef856c543ad500d8d8777d347e3c1ba623b93e99c9263ecc5f965c1b12d2a140e2ab6e43c3d0b85366110696f28114649411cbcd10b452a92a2318394186
+  languageName: node
+  linkType: hard
+
 "async-mutex@npm:^0.2.6":
   version: 0.2.6
   resolution: "async-mutex@npm:0.2.6"
@@ -8719,9 +8715,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001579":
-  version: 1.0.30001745
-  resolution: "caniuse-lite@npm:1.0.30001745"
-  checksum: 10c0/646ca4b57baaa7a835cf7204c8a257490ee8e36364c04638212e3750c5e8ef45c39f352307e6205114487bcc179d42f5216f6dac146641b16a60b20b29d6f2a6
+  version: 1.0.30001746
+  resolution: "caniuse-lite@npm:1.0.30001746"
+  checksum: 10c0/e656a9dc811be2316e3b6dbd3bf25d0e32dbce645b1284821b4ec93fb81dc3e3f73b9473e2f66c921b620ea8b25ebbae9ee70c3d13dad85f8dd69d6bb2c91d46
   languageName: node
   linkType: hard
 
@@ -11415,20 +11411,23 @@ __metadata:
   linkType: hard
 
 "get-intrinsic@npm:^1.2.4, get-intrinsic@npm:^1.2.5, get-intrinsic@npm:^1.2.6, get-intrinsic@npm:^1.2.7, get-intrinsic@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "get-intrinsic@npm:1.3.0"
+  version: 1.3.1
+  resolution: "get-intrinsic@npm:1.3.1"
   dependencies:
+    async-function: "npm:^1.0.0"
+    async-generator-function: "npm:^1.0.0"
     call-bind-apply-helpers: "npm:^1.0.2"
     es-define-property: "npm:^1.0.1"
     es-errors: "npm:^1.3.0"
     es-object-atoms: "npm:^1.1.1"
     function-bind: "npm:^1.1.2"
+    generator-function: "npm:^2.0.0"
     get-proto: "npm:^1.0.1"
     gopd: "npm:^1.2.0"
     has-symbols: "npm:^1.1.0"
     hasown: "npm:^2.0.2"
     math-intrinsics: "npm:^1.1.0"
-  checksum: 10c0/52c81808af9a8130f581e6a6a83e1ba4a9f703359e7a438d1369a5267a25412322f03dcbd7c549edaef0b6214a0630a28511d7df0130c93cfd380f4fa0b5b66a
+  checksum: 10c0/9f4ab0cf7efe0fd2c8185f52e6f637e708f3a112610c88869f8f041bb9ecc2ce44bf285dfdbdc6f4f7c277a5b88d8e94a432374d97cca22f3de7fc63795deb5d
   languageName: node
   linkType: hard
 
@@ -13923,7 +13922,7 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
-    "@vechain/vechain-contract-types": "npm:^1.0.0"
+    "@vechain/vechain-contract-types": "npm:1.0.3"
     "@vechain/vechain-kit": "workspace:*"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
@@ -14295,8 +14294,8 @@ __metadata:
   linkType: hard
 
 "openai@npm:^5.15.0":
-  version: 5.23.1
-  resolution: "openai@npm:5.23.1"
+  version: 5.23.2
+  resolution: "openai@npm:5.23.2"
   peerDependencies:
     ws: ^8.18.0
     zod: ^3.23.8
@@ -14307,7 +14306,7 @@ __metadata:
       optional: true
   bin:
     openai: bin/cli
-  checksum: 10c0/c7902980306cab2fecc3ba089169c153fe89f78c99ea638dd7ba664f9ab21563d5916209f4b68e6c9df6595fcd85fecc41e8a248526b9aaac8806b0b163376cd
+  checksum: 10c0/8ee37f37c64fd04a61622c4782d231e8f0245e2d85956d833e43d30946edbf07d5276cd74e09aa5d23006de8da43dad312246a9dd7ca6ca6d65d983fc976ffa6
   languageName: node
   linkType: hard
 
@@ -18096,7 +18095,7 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
-    "@vechain/vechain-contract-types": "npm:^1.0.0"
+    "@vechain/vechain-contract-types": "npm:1.0.3"
     "@vechain/vechain-kit": "workspace:*"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
