@@ -4,7 +4,7 @@ import {
     useSendTransaction,
 } from '@/hooks';
 import { useCallback } from 'react';
-import { ERC20__factory } from '@vechain/vechain-contract-types';
+import { ERC20__factory } from '@hooks/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';

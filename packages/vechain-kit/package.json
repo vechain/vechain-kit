@@ -1,6 +1,6 @@
 {
   "name": "@vechain/vechain-kit",
-  "version": "2.0.0-rc.15",
+  "version": "2.0.0-rc.16",
   "homepage": "https://github.com/vechain/vechain-kit",
   "repository": "github:vechain/vechain-kit",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "@vechain/dapp-kit-react": "2.0.4",
     "@vechain/picasso": "^2.1.1",
     "@vechain/vebetterdao-contracts": "^4.1.0",
-    "@vechain/vechain-contract-types": "^1.0.0",
+    "@vechain/vechain-contract-types": "1.0.3",
     "@wagmi/core": "^2.17.2",
     "axios": "^1.10.0",
     "bignumber.js": "^9.1.2",
