@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { IERC20__factory } from '@vechain/vechain-contract-types';
+import { ERC20__factory } from '@hooks/contracts';
 import { formatEther } from 'ethers';
 import { humanNumber } from '@/utils';
 import { ThorClient } from '@vechain/sdk-network';
@@ -15,7 +15,7 @@ export const getErc20Balance = async (
     }
 
     const res = await thor.contracts
-        .load(tokenAddress, IERC20__factory.abi)
+        .load(tokenAddress, ERC20__factory.abi)
         .read.balanceOf(address);
 
     if (!res) throw new Error(`Failed to get balance of ${tokenAddress}`);

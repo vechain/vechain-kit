@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { VeBetterPassport__factory } from '@vechain/vechain-contract-types';
+import { VeBetterPassport__factory } from '@hooks/contracts';
 import { useCallClause, getCallClauseQueryKeyWithArgs } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
