@@ -338,7 +338,10 @@ export const VeChainKitProvider = (
                         darkMode,
                         i18n: i18nConfig,
                         language,
-                        network,
+                        network:{
+                            ...network,
+                            nodeUrl: network.nodeUrl ?? getConfig(network?.type)?.nodeUrl,
+                        },
                         allowCustomTokens,
                         legalDocuments,
                         defaultCurrency,
