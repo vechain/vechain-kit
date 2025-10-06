@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 
-import { getErc20Balance, getVot3Balance } from '@vechain/contract-getters';
+import { getErc20Balance } from '@vechain/contract-getters';
 import { formatTokenBalance } from '@/utils';
 
 export const getErc20BalanceQueryKey = (
