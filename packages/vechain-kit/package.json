@@ -87,6 +87,11 @@
   "peerDependenciesMeta": {
     "@chakra-ui/react": {
       "optional": true
+    }, "@tanstack/react-query": {
+      "optional": true
+    },
+    "@vechain/dapp-kit-react": {
+      "optional": true
     },
     "dependencies": {},
     "devDependencies": {},
