@@ -29,9 +29,11 @@ export const useGetAvatarOfAddress = (address?: string) => {
             });
             if (!addressDomain) return getPicassoImage(address ?? '');
 
-            return getAvatar(address, {
+            const avatar = await getAvatar(address, {
                 networkUrl: network.nodeUrl,
             });
+            if (!avatar) return getPicassoImage(address ?? '');
+            return avatar;
 
         },
         enabled:

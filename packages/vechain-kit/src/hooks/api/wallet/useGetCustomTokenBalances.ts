@@ -3,6 +3,7 @@ import { useCustomTokens } from '@/hooks';
 import { type CustomTokenInfo, getErc20Balance } from '@vechain/contract-getters';
 import { TokenBalance } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
+import { formatTokenBalance } from '@/utils';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;
 
@@ -23,9 +24,15 @@ export const useGetCustomTokenBalances = (address?: string) => {
                 if (!token.address) throw new Error('Token address is required');
                 if (!address) throw new Error('Address is required');
                 if (!network.nodeUrl) throw new Error('Network node URL is required');
-                return await getErc20Balance(token.address, address, {
+                const tokenBalanceOriginal = await getErc20Balance(token.address, address, {
                     networkUrl: network.nodeUrl,
                 });
+                if (!tokenBalanceOriginal) throw new Error('Failed to get token balance');
+                const formattedTokenBalance = formatTokenBalance(tokenBalanceOriginal[0]);
+                return {
+                    ...token,
+                    ...formattedTokenBalance,
+                };
             },
         })),
     });
