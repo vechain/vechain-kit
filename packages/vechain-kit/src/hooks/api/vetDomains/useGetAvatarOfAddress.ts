@@ -18,7 +18,6 @@ export const getAvatarOfAddressQueryKey = (address?: string) => [
  */
 export const useGetAvatarOfAddress = (address?: string) => {
     const { network } = useVeChainKitConfig();
-
     return useQuery({
         queryKey: getAvatarOfAddressQueryKey(address),
         queryFn: async () => {
@@ -29,7 +28,7 @@ export const useGetAvatarOfAddress = (address?: string) => {
             });
             if (!addressDomain) return getPicassoImage(address ?? '');
 
-            const avatar = await getAvatar(address, {
+            const avatar = await getAvatar(addressDomain, {
                 networkUrl: network.nodeUrl,
             });
             if (!avatar) return getPicassoImage(address ?? '');
