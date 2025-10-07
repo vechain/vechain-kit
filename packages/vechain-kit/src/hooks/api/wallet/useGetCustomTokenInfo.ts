@@ -1,57 +1,28 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
-import { ERC20__factory } from '@hooks/contracts';
 import { useVeChainKitConfig } from '@/providers';
-import { ThorClient } from '@vechain/sdk-network';
+import { getTokenInfo as getTokenInfoFromContract, type CustomTokenInfo } from '@vechain/contract-getters';
 
-export type CustomTokenInfo = {
-    name: string;
-    address: string;
-    decimals: string;
-    symbol: string;
-};
-
-export const getTokenInfo = async (
-    thor: ThorClient,
-    tokenAddress: string,
-): Promise<CustomTokenInfo> => {
-    if (!tokenAddress) throw new Error('Token address is required');
-
-    const contract = thor.contracts.load(tokenAddress, ERC20__factory.abi);
-    const response = await thor.contracts.executeMultipleClausesCall([
-        contract.clause.name(),
-        contract.clause.symbol(),
-        contract.clause.decimals(),
-    ]);
-
-    if (response.every((r) => r.success) === false) {
-        throw new Error(`Failed to get token info of ${tokenAddress}`);
-    }
-
-    const [name, symbol, decimals] = response.map((res) => {
-        return res.result.array?.[0] as string;
+export const getTokenInfo = async (tokenAddress: string, networkUrl: string): Promise<CustomTokenInfo> => {
+    return getTokenInfoFromContract(tokenAddress, {
+        networkUrl,
     });
-
-    return {
-        name,
-        address: tokenAddress,
-        decimals,
-        symbol,
-    };
 };
 
-export const getCustomTokenInfo = (tokenAddress: string) => [
-    'VECHAIN_KIT_CUSTOM_TOKEN_BALANCE',
+export const getCustomTokenInfoQueryKey = (tokenAddress: string) => [
+    'VECHAIN_KIT_CUSTOM_TOKEN_INFO',
     tokenAddress,
 ];
 
 export const useGetCustomTokenInfo = (tokenAddress: string) => {
-    const thor = useThor();
     const { network } = useVeChainKitConfig();
 
-    return useQuery({
-        queryKey: getCustomTokenInfo(tokenAddress),
-        queryFn: async () => getTokenInfo(thor, tokenAddress),
-        enabled: !!thor && !!network.type && !!tokenAddress,
+    return useQuery<CustomTokenInfo>({
+        queryKey: getCustomTokenInfoQueryKey(tokenAddress),
+        queryFn: async () => {
+            if (!tokenAddress) throw new Error('Token address is required');
+            if (!network.nodeUrl) throw new Error('Network node URL is required');
+            return getTokenInfo(tokenAddress, network.nodeUrl);
+        },
+        enabled: !!network.type && !!tokenAddress,
     });
 };

@@ -1,28 +1,20 @@
-import { getConfig } from '@/config';
+import { useQuery } from '@tanstack/react-query';
 import { NETWORK_TYPE } from '@/config/network';
-import { VeBetterPassport__factory } from '@hooks/contracts';
-import { useCallClause, getCallClauseQueryKeyWithArgs } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-
-const abi = VeBetterPassport__factory.abi;
-const method = 'isPerson' as const;
+import { getIsPerson } from '@vechain/contract-getters';
 
 /**
  * Returns the query key for fetching the isPerson status.
  * @param user - The user address.
+ * @param networkType - The network type.
  * @returns The query key for fetching the isPerson status.
  */
-export const getIsPersonQueryKey = (user: string, network: NETWORK_TYPE) => {
-    const address = getConfig(network)
-        .veBetterPassportContractAddress as `0x${string}`;
-
-    return getCallClauseQueryKeyWithArgs({
-        abi,
-        address,
-        method,
-        args: [user as `0x${string}`],
-    });
-};
+export const getIsPersonQueryKey = (user: string, networkType: NETWORK_TYPE) => [
+    'VECHAIN_KIT',
+    'IS_PERSON',
+    user,
+    networkType,
+];
 
 /**
  * Hook to get the isPerson status from the VeBetterPassport contract.
@@ -32,17 +24,15 @@ export const getIsPersonQueryKey = (user: string, network: NETWORK_TYPE) => {
 export const useIsPerson = (user?: string | null) => {
     const { network } = useVeChainKitConfig();
 
-    const address = getConfig(network.type)
-        .veBetterPassportContractAddress as `0x${string}`;
+    return useQuery<boolean>({
+        queryKey: getIsPersonQueryKey(user ?? '', network.type),
+        queryFn: async () => {
+            if (!user) throw new Error('User address is required');
 
-    return useCallClause({
-        abi,
-        address,
-        method,
-        args: [(user ?? '0x') as `0x${string}`],
-        queryOptions: {
-            enabled: !!user,
-            select: (data) => data[0],
+            return getIsPerson(user, {
+                networkUrl: network.nodeUrl,
+            });
         },
+        enabled: !!user && !!network.type,
     });
 };

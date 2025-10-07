@@ -2,9 +2,9 @@ import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { useThor } from '@vechain/dapp-kit-react';
+import { type CustomTokenInfo } from '@vechain/contract-getters';
 
-import { CustomTokenInfo, getTokenInfo } from './useGetCustomTokenInfo';
+import {  getTokenInfo } from './useGetCustomTokenInfo';
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(
@@ -12,11 +12,11 @@ export const useCustomTokens = () => {
         [],
     );
     const { network } = useVeChainKitConfig();
-    const thor = useThor();
 
     const addToken = async (address: CustomTokenInfo['address']) => {
         if (!isTokenIncluded(address) && !isDefaultToken(address)) {
-            const tokenInfo = await getTokenInfo(thor, address);
+            if (!network.nodeUrl) throw new Error('Network node URL is required');
+            const tokenInfo = await getTokenInfo( address, network.nodeUrl);
 
             const token: CustomTokenInfo = {
                 ...tokenInfo,
