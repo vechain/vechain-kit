@@ -288,16 +288,22 @@ export function TransactionExamples() {
 
 The kit provides hooks for developers to interact with smart contracts like VeBetterDAO, VePassport, veDelegate, and price oracles. These hooks work with react-query, improving query capabilities by caching responses and offering real-time states like isLoading and isError. This helps developers manage and update user interfaces effectively, ensuring a responsive experience.
 
+
 ### Contract Getters Package
 
-VeChain Kit now utilizes and maintains an external package called [`contract-getters`](https://www.npmjs.com/package/@vechain/contract-getters) which provides standardized getter methods for fetching various blockchain data that the kit uses behind the scenes. This package offers efficient methods for:
+VeChain Kit now makes use of and maintains two external packages:
 
-- **Avatar Management**: Retrieve user avatars and profile information
-- **Token Balances**: Fetch user B3TR and VOT3 balances
-- **Domain Services**: Get user domains or resolve domain addresses
-- **Smart Contract Data**: Access various VeChain ecosystem contract information
+* [`contract-getters`](https://www.npmjs.com/package/@vechain/contract-getters) — standardized methods for fetching blockchain data
+* [`contracts-types`](https://www.npmjs.com/package/@vechain/vechain-contract-types) — TypeScript contract interfaces and type definitions
 
-The `contract-getters` package ensures consistent data fetching patterns across the VeChain ecosystem and provides optimized queries for better performance.
+The `contract-getters` package provides efficient methods for:
+
+* **Avatar Management**: Retrieve user avatars and profile information
+* **Token Balances**: Fetch B3TR and VOT3 balances
+* **Domain Services**: Resolve domain addresses or get user-owned domains
+* **Smart Contract Data**: Access information from core VeChain ecosystem contracts
+
+Together, these packages ensure consistent data-fetching patterns across the ecosystem and deliver optimized queries for better performance.
 
 ### Usage Example
 
