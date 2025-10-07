@@ -3,9 +3,8 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ERC20__factory } from '@vechain/vechain-contract-types';
-import { useQueryClient } from '@tanstack/react-query';
 import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';
 import { EnhancedClause } from '@/types';
@@ -56,17 +55,10 @@ export const useTransferERC20 = ({
     onSuccess,
     onError,
 }: useTransferERC20Props): useTransferERC20ReturnValue => {
-    const queryClient = useQueryClient();
     const { refresh } = useRefreshBalances();
 
     // Memoize the clauses
     const clauses = useMemo(() => buildERC20Clauses(receiverAddress, amount, tokenAddress, tokenName), [receiverAddress, amount, tokenAddress, tokenName]);
-
-    //Refetch queries to update ui after the tx is confirmed
-    const handleOnSuccess = useCallback(async () => {
-        refresh();
-        onSuccess?.();
-    }, [onSuccess, fromAddress, queryClient]);
 
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,
@@ -77,7 +69,10 @@ export const useTransferERC20 = ({
             )}`,
             buttonText: 'Sign to continue',
         },
-        onTxConfirmed: handleOnSuccess,
+        onTxConfirmed: async () => {
+            refresh();
+            onSuccess?.();
+        },
         onTxFailedOrCancelled: async (error) => {
             onError?.(error instanceof Error ? error.message : String(error));
         },
