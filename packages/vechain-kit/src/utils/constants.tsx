@@ -3,6 +3,9 @@ import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
 
+// Hardcoded token logo URLs - kept for backward compatibility
+// The token registry should be the primary source for token icons
+// These are only used as ultimate fallbacks if registry is unavailable
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: 'https://cryptologos.cc/logos/vechain-vet-logo.png',
     VTHO: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3012.png',
@@ -13,6 +16,7 @@ export const TOKEN_LOGOS: Record<string, string> = {
     USDGLO: 'https://raw.githubusercontent.com/vechain/app-hub/439fba60c80ba2521d435981102d88c4aec050d6/apps/org.glodollar.app/logo.png',
 };
 
+// SVG components as fallback for core tokens when registry is unavailable
 export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {
     VET: <VETLogo />,
     VTHO: <VTHOLogo />,
@@ -46,7 +50,7 @@ export const getENV = () => {
             isProduction: true,
         };
     }
-    
+
     // In browser, check localStorage using SSR-safe utility
     const network = getLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK);
     return {
@@ -79,7 +83,8 @@ export const getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN = () => {
 };
 
 // Default to development token for SSR compatibility
-export const VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN = VECHAIN_KIT_MIXPANEL_TOKENS.development;
+export const VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN =
+    VECHAIN_KIT_MIXPANEL_TOKENS.development;
 
 export const VECHAIN_KIT_MIXPANEL_PROJECT_NAME = 'vechain-kit';
 
