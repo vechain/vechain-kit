@@ -13,15 +13,22 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/gasToken';
 import { formatGasCost } from '@/types/gasEstimation';
-import { useWallet, useGasEstimation } from '@/hooks';
-import { TransactionClause } from '@vechain/sdk-core';
+import { useWallet } from '@/hooks';
+import { EstimationResponse } from '@/types/gasEstimation';
 
 interface GasFeeSummaryProps {
-    clauses?: TransactionClause[];
     gasToken: string;
+    estimation: EstimationResponse | undefined;
+    error: Error | null | undefined;
+    isLoading: boolean | undefined;
 }
 
-export const GasFeeSummary = ({ clauses, gasToken }: GasFeeSummaryProps) => {
+export const GasFeeSummary = ({ 
+    gasToken,
+    estimation,
+    error,
+    isLoading,
+}: GasFeeSummaryProps) => {
     const { t } = useTranslation();
     const { feeDelegation} = useVeChainKitConfig();
     const { connection } = useWallet();
@@ -34,32 +41,11 @@ export const GasFeeSummary = ({ clauses, gasToken }: GasFeeSummaryProps) => {
         return null;
     }
 
-    const estimationClauses = clauses ? clauses : [
-        {
-            to: '0x0000000000000000000000000000000000000000',
-            value: '0',
-            data: '0x',
-        },
-    ];
-
-    const {
-        data: estimation,
-        isLoading,
-        error,
-    } = useGasEstimation({
-        clauses: estimationClauses,
-        token: gasToken,
-    });
-
     const tokenInfo = SUPPORTED_GAS_TOKENS[gasToken as GasTokenType];
 
-    let rate = 1;
-    let transactionCostVTHO = 0;
-    let totalCost = 0;
-
-    rate = estimation?.rate || 1;
-    transactionCostVTHO = (estimation?.vthoPerGasAtSpeed || 0) * (estimation?.estimatedGas || 0);
-    totalCost = estimation?.transactionCost || 0;
+    const rate = estimation?.rate || 1;
+    const transactionCostVTHO = (estimation?.vthoPerGasAtSpeed || 0) * (estimation?.estimatedGas || 0);
+    const totalCost = estimation?.transactionCost || 0;
 
     return (
         <>

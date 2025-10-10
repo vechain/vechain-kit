@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { LocalStorageKey, useLocalStorage } from '../cache';
+import { LocalStorageKey, useSyncableLocalStorage } from '../cache';
 import {
     GasTokenPreferences,
     GasTokenType,
@@ -8,7 +8,7 @@ import {
 } from '@/types/gasToken';
 
 export const useGasTokenSelection = () => {
-    const [preferences, setPreferences] = useLocalStorage<GasTokenPreferences>(
+    const [preferences, setPreferences] = useSyncableLocalStorage<GasTokenPreferences>(
         LocalStorageKey.GAS_TOKEN_PREFERENCES,
         DEFAULT_GAS_TOKEN_PREFERENCES,
     );

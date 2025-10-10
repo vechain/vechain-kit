@@ -12,6 +12,7 @@ import { randomTransactionUser } from '@/utils';
 import { ThorClient } from '@vechain/sdk-network';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
+import { useCallback } from 'react';
 
 
 export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed) => {
@@ -132,7 +133,7 @@ export const useGenericDelegator = () => {
     const { buildClausesWithAuth } = useBuildClauses();
     const thor = ThorClient.at(getConfig(network.type).nodeUrl);
 
-    const sendTransactionUsingGenericDelegator = async ({
+    const sendTransactionUsingGenericDelegator = useCallback(async ({
         clauses,
         genericDelegatorUrl
     }: {
@@ -211,7 +212,14 @@ export const useGenericDelegator = () => {
             }
         }
         throw new Error('No gas token found');
-    }
+    }, [
+        preferences,
+        smartAccount,
+        smartAccountVersion,
+        buildClausesWithAuth,
+        thor,
+        randomTransactionUser,
+    ]);
     return {
         sendTransactionUsingGenericDelegator,
     };

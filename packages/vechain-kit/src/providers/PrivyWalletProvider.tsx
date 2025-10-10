@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
 import { SignTypedDataParams, usePrivy } from '@privy-io/react-auth';
 import { TransactionBody, TransactionClause } from '@vechain/sdk-core';
 import {
@@ -157,7 +157,7 @@ export const PrivyWalletProvider = ({
      * @returns The id of the transaction
      **/
 
-    const sendTransaction = async ({
+    const sendTransaction = useCallback(async ({
         txClauses = [],
         title = 'Sign Transaction',
         description,
@@ -230,7 +230,17 @@ export const PrivyWalletProvider = ({
         return await signAndSend(
             txBody,
         );
-    };
+    }, [
+        sendTransactionUsingGenericDelegator,
+        genericDelegator,
+        smartAccount,
+        connectedWallet,
+        delegatorUrl,
+        buildClausesWithAuth,
+        hasV1SmartAccount,
+        smartAccountVersion,
+        thor,
+    ]);
 
     /**
      * Sign a message using the VechainKit wallet
