@@ -7633,6 +7633,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/connex-wallet-buddy@npm:^0.1.11":
+  version: 0.1.11
+  resolution: "@vechain/connex-wallet-buddy@npm:0.1.11"
+  dependencies:
+    detect-browser: "npm:^5.2.0"
+  checksum: 10c0/dfb782226b421f1234452f532cd8eaaa861d2c42b3574d3aa544f088887faea836800b5420ce0546a27f1ade5765123176596f4d6072fb0d2be41405ef3f476a
+  languageName: node
+  linkType: hard
+
 "@vechain/contract-getters@npm:1.0.0-beta.3":
   version: 1.0.0-beta.3
   resolution: "@vechain/contract-getters@npm:1.0.0-beta.3"
@@ -7644,24 +7653,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-react@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vechain/dapp-kit-react@npm:2.0.4"
+"@vechain/dapp-kit-react@npm:2.1.0-rc.1":
+  version: 2.1.0-rc.1
+  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.1"
   dependencies:
     "@lit/react": "npm:^1.0.7"
-    "@vechain/dapp-kit": "npm:2.0.4"
-    "@vechain/dapp-kit-ui": "npm:2.0.4"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.1"
+    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.1"
     "@vechain/sdk-core": "npm:1.2.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/b1be9d6bd26f02578d68b220e7b30e7bb73c83906301c75938c90bb2dc1f87d3e539c8e423a0e21e43c83c4f801768d593ad54d119c018adf36a34d68aecf1b0
+  checksum: 10c0/f1bd40dfa34312c514b37bc3da863cfbbab9829ff4c2641f8c63bd77a62f60ed5e37536b30c9f79c0dc1edbd8335f3ce5112edbf15ea8c2168a0822609194d63
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-ui@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vechain/dapp-kit-ui@npm:2.0.4"
+"@vechain/dapp-kit-ui@npm:2.1.0-rc.1":
+  version: 2.1.0-rc.1
+  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.1"
   dependencies:
-    "@vechain/dapp-kit": "npm:2.0.4"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.1"
     "@vechain/picasso": "npm:2.1.1"
     "@vechain/sdk-core": "npm:1.2.0"
     "@vechain/sdk-network": "npm:1.2.0"
@@ -7671,14 +7680,15 @@ __metadata:
     lit: "npm:3.2.1"
     qrcode: "npm:1.5.4"
     valtio: "npm:1.13.2"
-  checksum: 10c0/71a7abc1c8c19cf343eb88d5b2718d85c71f7cc95b6f4ef9be221f4a133d7827c5a7837c4548f9d33020ffc24cbce35b7d5a5f27fdf4417228ecca69d66fd6ec
+  checksum: 10c0/9b4eb7cf6561c2ccac77f265236d3d3003e9e46d659c334621ce3ed3996ec9af48c2db3c5edb4263e027719ac75ea736b3f600604777c1f6a7b89d08a38ae9cd
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@vechain/dapp-kit@npm:2.0.4"
+"@vechain/dapp-kit@npm:2.1.0-rc.1":
+  version: 2.1.0-rc.1
+  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.1"
   dependencies:
+    "@vechain/connex-wallet-buddy": "npm:^0.1.11"
     "@vechain/sdk-core": "npm:1.2.0"
     "@vechain/sdk-errors": "npm:1.2.0"
     "@vechain/sdk-network": "npm:1.2.0"
@@ -7687,7 +7697,8 @@ __metadata:
     "@walletconnect/utils": "npm:2.19.2"
     events: "npm:^3.3.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/4e922c914c14c3f032da9f68bd905e3afba4082db143b5866c0a9fba7f90c33f6d3783f2b029a4ae6a1a03a689bb739061fdfc1bd74ff2ad36bc7c22abb78a68
+    viem: "npm:2.23.2"
+  checksum: 10c0/d984e0689ce9e00677520fceacd5cfd8b55725d267e13b736d1ad6107f6f9b2a7b73782ad60c3f2ecb2f54695a094f72196c971a930edbf18e0de70f50e69341
   languageName: node
   linkType: hard
 
@@ -7901,7 +7912,7 @@ __metadata:
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
     "@vechain/contract-getters": "npm:1.0.0-beta.3"
-    "@vechain/dapp-kit-react": "npm:2.0.4"
+    "@vechain/dapp-kit-react": "npm:2.1.0-rc.1"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vebetterdao-contracts": "npm:^7.0.2"
     "@vechain/vechain-contract-types": "npm:1.0.3"
@@ -7942,7 +7953,7 @@ __metadata:
   peerDependencies:
     "@chakra-ui/react": ^2.8.2
     "@tanstack/react-query": ^5.64.2
-    "@vechain/dapp-kit-react": 2.0.4
+    "@vechain/dapp-kit-react": 2.1.0-rc.1
   peerDependenciesMeta:
     "@chakra-ui/react":
       optional: true
@@ -10196,14 +10207,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001579":
-  version: 1.0.30001746
-  resolution: "caniuse-lite@npm:1.0.30001746"
-  checksum: 10c0/e656a9dc811be2316e3b6dbd3bf25d0e32dbce645b1284821b4ec93fb81dc3e3f73b9473e2f66c921b620ea8b25ebbae9ee70c3d13dad85f8dd69d6bb2c91d46
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001746":
+"caniuse-lite@npm:^1.0.30001579, caniuse-lite@npm:^1.0.30001746":
   version: 1.0.30001748
   resolution: "caniuse-lite@npm:1.0.30001748"
   checksum: 10c0/4a6e4495560519d6db73a62804cceafed108cfdda1ab78bcc0d588a921ed54554254647b8f4a410e97f8843eb020ec01dfcead7fd504a43b120b8f1a06dc7647
@@ -22628,13 +22632,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:*":
-  version: 5.9.2
-  resolution: "typescript@npm:5.9.2"
+"typescript@npm:*, typescript@npm:>=4.5.0":
+  version: 5.9.3
+  resolution: "typescript@npm:5.9.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/cd635d50f02d6cf98ed42de2f76289701c1ec587a363369255f01ed15aaf22be0813226bff3c53e99d971f9b540e0b3cc7583dbe05faded49b1b0bed2f638a18
+  checksum: 10c0/6bd7552ce39f97e711db5aa048f6f9995b53f1c52f7d8667c1abdc1700c68a76a308f579cd309ce6b53646deb4e9a1be7c813a93baaf0a28ccd536a30270e1c5
   languageName: node
   linkType: hard
 
@@ -22658,23 +22662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=4.5.0":
+"typescript@patch:typescript@npm%3A*#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A>=4.5.0#optional!builtin<compat/typescript>":
   version: 5.9.3
-  resolution: "typescript@npm:5.9.3"
+  resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=cef18b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/6bd7552ce39f97e711db5aa048f6f9995b53f1c52f7d8667c1abdc1700c68a76a308f579cd309ce6b53646deb4e9a1be7c813a93baaf0a28ccd536a30270e1c5
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A*#optional!builtin<compat/typescript>":
-  version: 5.9.2
-  resolution: "typescript@patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=cef18b"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/66fc07779427a7c3fa97da0cf2e62595eaff2cea4594d45497d294bfa7cb514d164f0b6ce7a5121652cf44c0822af74e29ee579c771c405e002d1f23cf06bfde
+  checksum: 10c0/6f7e53bf0d9702350deeb6f35e08b69cbc8b958c33e0ec77bdc0ad6a6c8e280f3959dcbfde6f5b0848bece57810696489deaaa53d75de3578ff255d168c1efbd
   languageName: node
   linkType: hard
 
@@ -22695,16 +22689,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/1d0a5f4ce496c42caa9a30e659c467c5686eae15d54b027ee7866744952547f1be1262f2d40de911618c242b510029d51d43ff605dba8fb740ec85ca2d3f9500
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A>=4.5.0#optional!builtin<compat/typescript>":
-  version: 5.9.3
-  resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=cef18b"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/6f7e53bf0d9702350deeb6f35e08b69cbc8b958c33e0ec77bdc0ad6a6c8e280f3959dcbfde6f5b0848bece57810696489deaaa53d75de3578ff255d168c1efbd
   languageName: node
   linkType: hard
 
