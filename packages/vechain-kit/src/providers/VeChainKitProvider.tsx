@@ -394,6 +394,8 @@ export const VeChainKitProvider = (
                             usePersistence={dappKit.usePersistence ?? true}
                             allowedWallets={dappKit.allowedWallets}
                             walletConnectOptions={dappKit.walletConnectOptions}
+                            //TODO: Confirm when this should be enabled
+                            v2Api={{ enabled: true }}
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={{
                                 '--vdk-modal-z-index': '10000',
