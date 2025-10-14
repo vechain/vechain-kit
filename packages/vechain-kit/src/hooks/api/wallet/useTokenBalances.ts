@@ -8,16 +8,22 @@ import {
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
+import { useSupportedTokens } from '../tokenRegistry';
 
 export type WalletTokenBalance = {
     address: string;
     symbol: string;
     balance: string;
+    name?: string;
+    decimals?: number;
+    iconUrl?: string;
+    isCore?: boolean;
 };
 
 export const useTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();
     const config = getConfig(network.type);
+    const { tokens: registryTokens, isLoading: registryLoading } = useSupportedTokens();
 
     // Base token balances
     const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);
@@ -43,49 +49,27 @@ export const useTokenBalances = (address?: string) => {
     const balances = useMemo(() => {
         if (!address) return [];
 
-        // Get contract addresses from config
-        const contractAddresses = {
-            vet: '0x',
-            vtho: config.vthoContractAddress,
-            b3tr: config.b3trContractAddress,
-            vot3: config.vot3ContractAddress,
-            veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
+        // Create a map of fetched balances for quick lookup
+        const fetchedBalances: Record<string, string> = {
+            'VET': vetData?.balance || '0',
+            'VTHO': vetData?.energy || '0',
+            'B3TR': b3trBalance?.scaled ?? '0',
+            'VOT3': vot3Balance?.scaled ?? '0',
+            'veDelegate': veDelegateBalance?.scaled ?? '0',
+            'USDGLO': gloDollarBalance?.scaled ?? '0',
         };
 
-        // Base tokens
-        const baseTokens: WalletTokenBalance[] = [
-            {
-                address: contractAddresses.vet,
-                symbol: 'VET',
-                balance: vetData?.balance || '0',
-            },
-            {
-                address: contractAddresses.vtho,
-                symbol: 'VTHO',
-                balance: vetData?.energy || '0',
-            },
-            {
-                address: contractAddresses.b3tr,
-                symbol: 'B3TR',
-                balance: b3trBalance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.vot3,
-                symbol: 'VOT3',
-                balance: vot3Balance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.veDelegate,
-                symbol: 'veDelegate',
-                balance: veDelegateBalance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.USDGLO,
-                symbol: 'USDGLO',
-                balance: gloDollarBalance?.scaled ?? '0',
-            },
-        ];
+        // Use all tokens from registry
+        const baseTokens: WalletTokenBalance[] = registryTokens.map(token => ({
+            address: token.address,
+            symbol: token.symbol,
+            // Use fetched balance if available, otherwise 0
+            balance: fetchedBalances[token.symbol] || '0',
+            name: token.name,
+            decimals: token.decimals,
+            iconUrl: token.iconUrl,
+            isCore: token.isCore,
+        }));
 
         // Add custom tokens
         const customTokens: WalletTokenBalance[] = customTokenBalances.map(
@@ -105,6 +89,7 @@ export const useTokenBalances = (address?: string) => {
         veDelegateBalance,
         gloDollarBalance,
         customTokenBalances,
+        registryTokens,
         network.type,
     ]);
 
@@ -114,6 +99,7 @@ export const useTokenBalances = (address?: string) => {
         vot3Loading ||
         veDelegateLoading ||
         gloDollarLoading ||
+        registryLoading ||
         customTokensLoading;
 
     return {
