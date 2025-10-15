@@ -46,12 +46,7 @@ let hasTrackingConsent = false;
 // Initialize Mixpanel with basic config, but control actual tracking with consent checks
 // Use a named instance to avoid conflicts with user's Mixpanel
 
-
 let VeChainKitMixpanelInstance: any = null;
-
-
-
-
 
 if (isBrowser()) {
     const token = getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN();
@@ -93,7 +88,7 @@ const isFirstLogin = (userId: string): boolean => {
         }
 
         const userDataKey = `user_data_${userId}`;
-        const userData = localStorage.getItem(userDataKey);
+        const userData = getLocalStorageItem(userDataKey);
         if (userData) {
             const parsedData = JSON.parse(userData);
             return !parsedData.first_login_date;

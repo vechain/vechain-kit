@@ -211,7 +211,7 @@ export const useGenericDelegator = () => {
                 console.error('Error sending transaction using generic delegator', error);
             }
         }
-        throw new Error('No gas token found');
+        throw new Error('Failed to send transaction using generic delegator, no gas tokens have sufficient balance or are enabled in Gas Token Preferences');
     }, [
         preferences,
         smartAccount,
