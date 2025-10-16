@@ -26,6 +26,8 @@ jobs:
 
       - name: Process Branch Name
         id: process-branch-name
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         run: |
           sanitized_branch_name=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
           echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
