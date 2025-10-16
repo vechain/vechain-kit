@@ -244,7 +244,7 @@ export const SendTokenSummaryContent = ({
     };
 
     let gasEstimation, gasEstimationLoading, gasEstimationError, totalCost, hasEnoughBalance;
-    if (preferences.availableGasTokens.length > 0) {
+    if (preferences.availableGasTokens.length > 0 && connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
         ({
             data: gasEstimation,
             isLoading: gasEstimationLoading,
@@ -349,7 +349,7 @@ export const SendTokenSummaryContent = ({
             </ModalBody>
 
             <ModalFooter>
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || (feeDelegation?.delegatorUrl)) && (
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
                     <TransactionButtonAndStatus
                         transactionError={
                             selectedToken.symbol === 'VET'
@@ -365,7 +365,7 @@ export const SendTokenSummaryContent = ({
                         isDisabled={isSubmitting}
                     />
                 )}
-                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance) && (
+                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy) && (
                     <Text color="red.500">
                         {t('You do not have enough funds to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.')}
                     </Text>
