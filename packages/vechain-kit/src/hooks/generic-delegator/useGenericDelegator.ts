@@ -5,7 +5,7 @@ import {
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
 import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, SUPPORTED_GAS_TOKENS, Wallet } from '@/types';
-import { SmartAccountReturnType, useGasTokenSelection, useSmartAccountVersion, useWallet, useSmartAccount, useBuildClauses } from '@/hooks';
+import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '@/hooks';
 import { ERC20__factory } from '@vechain/vechain-contract-types';
 import { parseEther } from 'viem';
 import { randomTransactionUser } from '@/utils';
@@ -123,7 +123,7 @@ export const useGenericDelegator = () => {
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { data: smartAccountVersion } = useSmartAccountVersion(
+    const { data: smartAccountVersion } = useGetAccountVersion(
         smartAccount?.address ?? '',
         connectedWallet?.address ?? '',
     );
@@ -160,7 +160,7 @@ export const useGenericDelegator = () => {
                 const finalExecuteWithAuthorizationClauses = await buildClausesWithAuth({
                     clauses: [...clauses, transferToGenericDelegatorClause as TransactionClause],
                     smartAccount: smartAccount as SmartAccountReturnType,
-                    version: smartAccountVersion,
+                    version: smartAccountVersion?.version ?? 0,
                 });
 
                 const txBody = await estimateAndBuildTxBody(

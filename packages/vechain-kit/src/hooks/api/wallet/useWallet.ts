@@ -9,7 +9,7 @@ import {
 import {
     useGetChainId,
     useGetNodeUrl,
-    useSmartAccountVersion,
+    useGetAccountVersion,
     useDAppKitWallet,
 } from '@/hooks';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
@@ -199,7 +199,7 @@ export const useWallet = (): UseWalletReturnType => {
         : null;
 
     // Get smart account version
-    const { data: smartAccountVersion } = useSmartAccountVersion(
+    const { data: smartAccountVersion } = useGetAccountVersion(
         smartAccount?.address ?? '',
         connectedWallet?.address ?? '',
     );
@@ -249,7 +249,7 @@ export const useWallet = (): UseWalletReturnType => {
             image: smartAccountMetadata.image,
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
-            version: smartAccountVersion ?? null,
+            version: smartAccountVersion?.version ?? null,
             isLoadingMetadata: smartAccountMetadata.isLoading,
             metadata: smartAccountMetadata.records,
         },

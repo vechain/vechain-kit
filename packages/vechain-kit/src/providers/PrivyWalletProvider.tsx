@@ -19,10 +19,10 @@ import {
     useWallet,
     useGenericDelegator,
     useHasV1SmartAccount,
-    useSmartAccountVersion,
     SmartAccountReturnType,
     estimateAndBuildTxBody,
     useBuildClauses,
+    useGetAccountVersion,
 } from '@/hooks';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
@@ -84,7 +84,7 @@ export const PrivyWalletProvider = ({
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',
     );
-    const { data: smartAccountVersion } = useSmartAccountVersion(
+    const { data: smartAccountVersion } = useGetAccountVersion(
         smartAccount?.address ?? '',
         connectedWallet?.address ?? '',
     );
@@ -187,11 +187,11 @@ export const PrivyWalletProvider = ({
             });
         }
 
-        // else send a regular delegated transaction using the feeDelegationUrl
+        // else send a regular delegated transaction using the feeDelegationUrl, default to v3 if no version is found so we build the executeBatchWithAuthorization clauses, else we build the executeWithAuthorization clauses for v1 smart accounts
         const clauses = await buildClausesWithAuth({
             clauses: txClauses,
             smartAccount: smartAccount as SmartAccountReturnType,
-            version: !hasV1SmartAccount ? smartAccountVersion : 1,
+            version: !hasV1SmartAccount ? (smartAccountVersion?.version ?? 3) : 1,
             title,
             description,
             buttonText,
