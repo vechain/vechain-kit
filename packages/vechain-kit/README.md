@@ -288,7 +288,26 @@ export function TransactionExamples() {
 
 The kit provides hooks for developers to interact with smart contracts like VeBetterDAO, VePassport, veDelegate, and price oracles. These hooks work with react-query, improving query capabilities by caching responses and offering real-time states like isLoading and isError. This helps developers manage and update user interfaces effectively, ensuring a responsive experience.
 
-For example you can use `useGetB3trBalance` to get the balance of the user's wallet.
+
+### Contract Getters Package
+
+VeChain Kit now makes use of and maintains two external packages:
+
+* [`contract-getters`](https://www.npmjs.com/package/@vechain/contract-getters) — standardized methods for fetching blockchain data
+* [`contracts-types`](https://www.npmjs.com/package/@vechain/vechain-contract-types) — TypeScript contract interfaces and type definitions
+
+The `contract-getters` package provides efficient methods for:
+
+* **Avatar Management**: Retrieve user avatars and profile information
+* **Token Balances**: Fetch B3TR and VOT3 balances
+* **Domain Services**: Resolve domain addresses or get user-owned domains
+* **Smart Contract Data**: Access information from core VeChain ecosystem contracts
+
+Together, these packages ensure consistent data-fetching patterns across the ecosystem and deliver optimized queries for better performance.
+
+### Usage Example
+
+For example you can use `useGetB3trBalance` to get the balance of the user's wallet which is using `getB3trbalance` from `contract-getters`:
 
 ```typescript
 import { useGetB3trBalance } from '@vechain/vechain-kit';

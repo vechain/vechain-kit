@@ -13,6 +13,9 @@ interface OAuthOptions {
     provider: OAuthProviderType;
 }
 
+// Module-level variable shared across all hook instances
+let hasCreatedWallet = false;
+
 export const useLoginWithOAuth = () => {
     const { createWallet } = useCreateWallet();
 
@@ -21,8 +24,18 @@ export const useLoginWithOAuth = () => {
         async ({ isNewUser }: { isNewUser: boolean }) => {
             // When using initOAuth Privy does not create an embedded wallet automatically.
             // So we need to create a wallet manually.
-            if (isNewUser) {
-                await createWallet();
+            if (isNewUser && !hasCreatedWallet) {
+                // Set the flag BEFORE the async operation to prevent race conditions
+                hasCreatedWallet = true;
+                
+                try {
+                    await createWallet();
+                } catch (error) {
+                    // Reset flag on error so it can be retried
+                    hasCreatedWallet = false;
+                    console.error('Failed to create wallet:', error);
+                    throw error;
+                }
             }
         },
         [createWallet],

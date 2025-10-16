@@ -3,8 +3,8 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
+import { ERC20__factory } from '@hooks/contracts';
 import { useMemo } from 'react';
-import { ERC20__factory } from '@vechain/vechain-contract-types';
 import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';
 import { EnhancedClause } from '@/types';
