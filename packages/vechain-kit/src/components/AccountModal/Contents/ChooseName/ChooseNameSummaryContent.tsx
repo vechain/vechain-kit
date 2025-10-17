@@ -20,9 +20,14 @@ import {
     useUpgradeRequired,
     useUpgradeSmartAccountModal,
     useWallet,
+    useGasEstimation,
+    useGasTokenSelection,
+    useTokenBalances,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
+import { useVeChainKitConfig } from '@/providers';
+
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -43,7 +48,7 @@ export const ChooseNameSummaryContent = ({
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
-    const { account, connectedWallet } = useWallet();
+    const { account, connectedWallet, connection } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -51,6 +56,10 @@ export const ChooseNameSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+
+    const { preferences } = useGasTokenSelection();
+    const { balances } = useTokenBalances(account?.address ?? '');
+    const { feeDelegation } = useVeChainKitConfig();
 
     const handleError = (error: string) => {
         if (isRejectionError(error)) {
@@ -85,7 +94,7 @@ export const ChooseNameSummaryContent = ({
     });
 
     const vetDomainHook = useClaimVetDomain({
-        domain: fullDomain,
+        domain: !isUnsetting && !isVeWorldSubdomain ? fullDomain : '',
         alreadyOwned: isOwnDomain,
         onSuccess: () => handleSuccess(),
     });
@@ -97,6 +106,7 @@ export const ChooseNameSummaryContent = ({
         error: txError,
         isWaitingForWalletConfirmation,
         isTransactionPending,
+        clauses,
     } = isUnsetting
         ? unsetDomainHook
         : isVeWorldSubdomain
@@ -164,6 +174,25 @@ export const ChooseNameSummaryContent = ({
         });
     };
 
+    let gasEstimation, gasEstimationLoading, totalCost, hasEnoughBalance;
+    if (preferences.availableGasTokens.length > 0 && connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
+        ({
+            data: gasEstimation,
+            isLoading: gasEstimationLoading,
+        } = useGasEstimation({
+            clauses: clauses(),
+            token: preferences.availableGasTokens[0],
+            enabled: !!feeDelegation?.genericDelegatorUrl && !feeDelegation?.delegatorUrl, 
+        }));
+        totalCost = gasEstimation?.transactionCost;
+        if (!gasEstimationLoading && totalCost !== undefined) {
+            const gasTokenBalance = Number(
+                balances.find(token => token.symbol === preferences.availableGasTokens[0])?.balance || '0'
+            );
+            hasEnoughBalance = totalCost < gasTokenBalance;
+        }
+    }
+
     return (
         <>
             <StickyHeaderContainer>
@@ -207,22 +236,27 @@ export const ChooseNameSummaryContent = ({
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                <TransactionButtonAndStatus
-                    transactionError={txError}
-                    isSubmitting={isTransactionPending}
-                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    onConfirm={handleConfirm}
-                    onRetry={handleRetry}
-                    transactionPendingText={
-                        isUnsetting
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
+                    <TransactionButtonAndStatus
+                        transactionError={txError}
+                        isSubmitting={isTransactionPending}
+                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                        onConfirm={handleConfirm}
+                        onRetry={handleRetry}
+                        transactionPendingText={isUnsetting
                             ? t('Unsetting current domain...')
-                            : t('Claiming name...')
-                    }
-                    txReceipt={txReceipt}
-                    buttonText={t('Confirm')}
-                    isDisabled={isTransactionPending}
-                    onError={handleError}
-                />
+                            : t('Claiming name...')}
+                        txReceipt={txReceipt}
+                        buttonText={t('Confirm')}
+                        isDisabled={isTransactionPending}
+                        onError={handleError}
+                    />
+                )}
+                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
+                    <Text color="red.500">
+                        {t('You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.', {token: preferences.availableGasTokens[0]})}
+                    </Text>
+                )}
             </ModalFooter>
         </>
     );

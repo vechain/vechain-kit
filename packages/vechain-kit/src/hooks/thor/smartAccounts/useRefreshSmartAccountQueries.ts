@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useWallet } from '../../api/wallet/useWallet';
 import {
     getSmartAccountQueryKey,
-    getVersionQueryKey,
     getIsDeployedQueryKey,
 } from '@/hooks';
 
@@ -24,9 +23,6 @@ export const useRefreshSmartAccountQueries = () => {
                 queryKey: getSmartAccountQueryKey(smartAccountAddress),
             }),
             queryClient.cancelQueries({
-                queryKey: getVersionQueryKey(smartAccountAddress),
-            }),
-            queryClient.cancelQueries({
                 queryKey: getIsDeployedQueryKey(smartAccountAddress),
             }),
         ]);
@@ -36,9 +32,6 @@ export const useRefreshSmartAccountQueries = () => {
             // Smart account basic info
             queryClient.refetchQueries({
                 queryKey: getSmartAccountQueryKey(smartAccountAddress),
-            }),
-            queryClient.refetchQueries({
-                queryKey: getVersionQueryKey(smartAccountAddress),
             }),
             queryClient.refetchQueries({
                 queryKey: getIsDeployedQueryKey(smartAccountAddress),
