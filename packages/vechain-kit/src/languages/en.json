@@ -585,6 +585,6 @@
   "Display detailed cost information including service fees": "Display detailed cost information including service fees",
   "Reset to Defaults": "Reset to Defaults",
   "Transaction Preferences": "Transaction Preferences",
-  "You do not have enough funds to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.": "You do not have enough funds to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.",
+  "You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.": "You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.",
   "Checking gas...": "Checking gas..."
 }

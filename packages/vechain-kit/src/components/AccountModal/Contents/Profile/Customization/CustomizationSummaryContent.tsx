@@ -33,8 +33,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
-import { TransactionClause } from '@vechain/sdk-core';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -67,7 +66,7 @@ export const CustomizationSummaryContent = ({
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
-    const { account, connectedWallet } = useWallet();
+    const { account, connectedWallet, connection } = useWallet();
     const { preferences } = useGasTokenSelection();
     const { balances } = useTokenBalances(account?.address ?? '');
     const { data: upgradeRequired } = useUpgradeRequired(
@@ -191,25 +190,19 @@ export const CustomizationSummaryContent = ({
     }, [textRecordUpdates, getClauses, resolverAddress]);
 
     // Gas estimation
-    let gasEstimation, gasEstimationLoading, gasEstimationError, totalCost;
-    const shouldCheckGas = !!feeDelegation?.genericDelegatorUrl && !feeDelegation?.delegatorUrl;
+    let gasEstimation, gasEstimationLoading, totalCost, hasEnoughBalance;
 
-    // Default to true (assume enough balance unless gas check proves otherwise)
-    let hasEnoughBalance = true;
-
-    if (preferences.availableGasTokens.length > 0 && shouldCheckGas) {
+    if (preferences.availableGasTokens.length > 0 && connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
         ({
             data: gasEstimation,
             isLoading: gasEstimationLoading,
-            error: gasEstimationError,
         } = useGasEstimation({
             clauses: clauses,
             token: preferences.availableGasTokens[0],
-            enabled: clauses.length > 0 && !!resolverAddress, // Also check for resolver address
+            enabled: true,
         }));
         
         totalCost = gasEstimation?.transactionCost;
-        
         // Only set hasEnoughBalance to false if we have a result and it shows insufficient balance
         if (!gasEstimationLoading && totalCost !== undefined) {
             const gasTokenBalance = Number(
@@ -218,13 +211,6 @@ export const CustomizationSummaryContent = ({
             hasEnoughBalance = totalCost < gasTokenBalance;
         }
     }
-
-    // Show button: either not checking gas OR (checking gas and has enough balance)
-    // Also wait for resolver address to be available
-    const showConfirmButton = resolverAddress && (!shouldCheckGas || (!gasEstimationLoading && hasEnoughBalance));
-
-    // otherwise display error: checking gas AND not loading AND insufficient balance
-    const showInsufficientFunds = shouldCheckGas && !gasEstimationLoading && !hasEnoughBalance && !!resolverAddress;
 
     const setupTextRecordUpdates = (data: FormValues) => {
         const domain = account?.domain ?? '';
@@ -389,7 +375,7 @@ export const CustomizationSummaryContent = ({
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {showConfirmButton && (
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
                     <TransactionButtonAndStatus
                         transactionError={txError}
                         isSubmitting={isTransactionPending}
@@ -398,14 +384,14 @@ export const CustomizationSummaryContent = ({
                         onRetry={handleRetry}
                         transactionPendingText={t('Saving changes...')}
                         txReceipt={txReceipt}
-                        buttonText={gasEstimationLoading ? t('Checking gas...') : t('Confirm')}
-                        isDisabled={isTransactionPending || gasEstimationLoading}
+                        buttonText={t('Confirm')}
+                        isDisabled={isTransactionPending}
                     />
                 )}
                 
-                {showInsufficientFunds && (
+                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy) && (
                     <Text color="red.500" fontSize="sm">
-                        {t('You do not have enough funds to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.')}
+                        {t('You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.', {token: preferences.availableGasTokens[0]})}
                     </Text>
                 )}
             </ModalFooter>
