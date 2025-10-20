@@ -21,7 +21,7 @@ export const useGasEstimation = ({
         connectedWallet?.address ?? '',
     );
     const { feeDelegation } = useVeChainKitConfig();
-    const queryKey = ['gas-estimation', JSON.stringify(clauses)];
+    const queryKey = ['gas-estimation', JSON.stringify(clauses), token];
     return useQuery<EstimationResponse, Error>({
         queryKey,
         queryFn: async () => {

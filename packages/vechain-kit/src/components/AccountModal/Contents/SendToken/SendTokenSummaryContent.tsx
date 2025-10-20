@@ -243,23 +243,22 @@ export const SendTokenSummaryContent = ({
         }
     };
 
-    let gasEstimation, gasEstimationLoading, gasEstimationError, totalCost, hasEnoughBalance;
-    if (preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl) {
-        ({
-            data: gasEstimation,
-            isLoading: gasEstimationLoading,
-            error: gasEstimationError,
-        } = useGasEstimation({
-            clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
-            token: preferences.availableGasTokens[0],
-            enabled: !!feeDelegation?.genericDelegatorUrl && !feeDelegation?.delegatorUrl, 
-        }));
-        totalCost = gasEstimation?.transactionCost;
-        hasEnoughBalance =
-            selectedToken.symbol === preferences.availableGasTokens[0]
-                ? (typeof totalCost === 'number' && (totalCost + Number(amount)) < Number(selectedToken.balance)) // case where both token being sent and gas token are the same
-                : (typeof totalCost === 'number' && (totalCost + Number(amount)) < Number(balances.find(token => token.symbol === preferences.availableGasTokens[0])?.balance)); // case where token being sent and gas token are different
-    }
+    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+    } = useGasEstimation({
+        clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
+        token: preferences.availableGasTokens[0],
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const totalCost = gasEstimation?.transactionCost;
+    const hasEnoughBalance = shouldEstimateGas ? (
+        selectedToken.symbol === preferences.availableGasTokens[0]
+            ? (typeof totalCost === 'number' && (totalCost + Number(amount)) < Number(selectedToken.balance)) // case where both token being sent and gas token are the same
+            : (typeof totalCost === 'number' && (totalCost + Number(amount)) < Number(balances.find(token => token.symbol === preferences.availableGasTokens[0])?.balance)) // case where token being sent and gas token are different
+    ) : undefined;
 
     return (
         <>
