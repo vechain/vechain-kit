@@ -10,6 +10,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
@@ -20,9 +21,13 @@ import {
     useUpgradeRequired,
     useUpgradeSmartAccountModal,
     useWallet,
+    useGasTokenSelection,
+    useGasEstimation,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
+import { useVeChainKitConfig } from '@/providers';
+
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
@@ -43,7 +48,7 @@ export const ChooseNameSummaryContent = ({
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
-    const { account, connectedWallet } = useWallet();
+    const { account, connectedWallet, connection } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -51,6 +56,13 @@ export const ChooseNameSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+
+    const { preferences } = useGasTokenSelection();
+    const { feeDelegation } = useVeChainKitConfig();
+    let showCostBreakdown = false;
+    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
+        showCostBreakdown = preferences.showCostBreakdown;
+    }
 
     const handleError = (error: string) => {
         if (isRejectionError(error)) {
@@ -85,7 +97,7 @@ export const ChooseNameSummaryContent = ({
     });
 
     const vetDomainHook = useClaimVetDomain({
-        domain: fullDomain,
+        domain: !isUnsetting && !isVeWorldSubdomain ? fullDomain : '',
         alreadyOwned: isOwnDomain,
         onSuccess: () => handleSuccess(),
     });
@@ -97,6 +109,7 @@ export const ChooseNameSummaryContent = ({
         error: txError,
         isWaitingForWalletConfirmation,
         isTransactionPending,
+        clauses,
     } = isUnsetting
         ? unsetDomainHook
         : isVeWorldSubdomain
@@ -164,6 +177,21 @@ export const ChooseNameSummaryContent = ({
         });
     };
 
+    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+    } = useGasEstimation({
+        clauses: clauses(),
+        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const usedGasToken = gasEstimation?.usedToken;
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
     return (
         <>
             <StickyHeaderContainer>
@@ -204,25 +232,39 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     )}
                 </VStack>
+                {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
+                    <GasFeeSummary 
+                        estimation={gasEstimation}
+                        isLoading={gasEstimationLoading}
+                    />
+                )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                <TransactionButtonAndStatus
-                    transactionError={txError}
-                    isSubmitting={isTransactionPending}
-                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    onConfirm={handleConfirm}
-                    onRetry={handleRetry}
-                    transactionPendingText={
-                        isUnsetting
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
+                    <TransactionButtonAndStatus
+                        transactionError={txError}
+                        isSubmitting={isTransactionPending}
+                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                        onConfirm={handleConfirm}
+                        onRetry={handleRetry}
+                        transactionPendingText={isUnsetting
                             ? t('Unsetting current domain...')
-                            : t('Claiming name...')
-                    }
-                    txReceipt={txReceipt}
-                    buttonText={t('Confirm')}
-                    isDisabled={isTransactionPending}
-                    onError={handleError}
-                />
+                            : t('Claiming name...')}
+                        txReceipt={txReceipt}
+                        buttonText={t('Confirm')}
+                        isDisabled={isTransactionPending}
+                        onError={handleError}
+                    />
+                )}
+                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
+                    <Text color="red.500">
+                        {gasEstimationError 
+                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
+                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
+                        }
+                    </Text>
+                )}
             </ModalFooter>
         </>
     );

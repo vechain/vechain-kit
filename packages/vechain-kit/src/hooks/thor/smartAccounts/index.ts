@@ -7,7 +7,6 @@ export * from './useIsSmartAccountDeployed';
 export * from './useRefreshFactoryQueries';
 export * from './useRefreshSmartAccountQueries';
 export * from './useSmartAccount';
-export * from './useSmartAccountVersion';
 export * from './useUpgradeRequired';
 export * from './useUpgradeRequiredForAccount';
 export * from './useUpgradeSmartAccount';

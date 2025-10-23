@@ -12,3 +12,4 @@ export * from './ScrollToTopWrapper';
 export * from './AccountAvatar';
 export * from './TransactionButtonAndStatus';
 export * from './ModalNotificationButton';
+export * from './GasFeeSummary';

@@ -1,6 +1,7 @@
 import { Interface, namehash } from 'ethers';
 import { useCallback } from 'react';
 import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
+import { TransactionClause } from '@vechain/sdk-core';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',
@@ -21,8 +22,33 @@ type UseUpdateTextRecordProps = {
 };
 
 type UseUpdateTextRecordReturnValue = {
-    sendTransaction: (params: UpdateTextRecordVariables[]) => Promise<void>;
+    sendTransaction: (params: UpdateTextRecordVariables[]) => Promise<void> | undefined;
+    clauses: (params: UpdateTextRecordVariables[]) => TransactionClause[]; // Synchronous!
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
+
+export const buildClauses = (resolverAddress: string, params: UpdateTextRecordVariables[]): TransactionClause[] => {
+    const clauses = [];
+
+    for (const { domain, key, value } of params) {
+        if (!domain) throw new Error('Domain is required');
+        if (!resolverAddress)
+            throw new Error('Resolver address is required');
+
+        const node = namehash(domain);
+
+        clauses.push({
+            to: resolverAddress,
+            data: nameInterface.encodeFunctionData('setText', [
+                node,
+                key,
+                value,
+            ]),
+            value: '0',
+            comment: `Update ${key} record`,
+        });
+    }
+    return clauses;
+};
 
 export const useUpdateTextRecord = ({
     onSuccess,
@@ -30,31 +56,15 @@ export const useUpdateTextRecord = ({
     signerAccountAddress,
     resolverAddress,
 }: UseUpdateTextRecordProps = {}): UseUpdateTextRecordReturnValue => {
-    const buildClauses = useCallback(
-        async (params: UpdateTextRecordVariables[]) => {
-            const clauses = [];
-
-            for (const { domain, key, value } of params) {
-                if (!domain) throw new Error('Domain is required');
-                if (!resolverAddress)
-                    throw new Error('Resolver address is required');
-
-                const node = namehash(domain);
-
-                clauses.push({
-                    to: resolverAddress,
-                    data: nameInterface.encodeFunctionData('setText', [
-                        node,
-                        key,
-                        value,
-                    ]),
-                    value: '0',
-                    comment: `Update ${key} record`,
-                });
+    // Always call useCallback unconditionally - keep it synchronous!
+    const buildClausesCallback = useCallback(
+        (params: UpdateTextRecordVariables[]) => {
+            if (!resolverAddress) {
+                throw new Error('Resolver address is required');
             }
-            return clauses;
+            return buildClauses(resolverAddress, params);
         },
-        [resolverAddress],
+        [resolverAddress]
     );
 
     const result = useSendTransaction({
@@ -75,8 +85,9 @@ export const useUpdateTextRecord = ({
 
     return {
         ...result,
+        clauses: buildClausesCallback, // Return the callback directly
         sendTransaction: async (params: UpdateTextRecordVariables[]) => {
-            return result.sendTransaction(await buildClauses(params));
+            return result.sendTransaction(buildClausesCallback(params));
         },
     };
 };

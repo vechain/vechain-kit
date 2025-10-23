@@ -66,6 +66,13 @@ export const ENV = {
     },
 };
 
+export const getGenericDelegatorUrl = () => {
+    const env = getENV();
+    return env.isProduction
+        ? 'https://mainnet.delegator.vechain.org/api/v1/'
+        : 'https://testnet.delegator.vechain.org/api/v1/'; // or url to your delegator
+};
+
 export const VECHAIN_KIT_MIXPANEL_TOKENS = {
     development: 'e9627dff3f9ac07c28c28615fa86b181',
     production: '2c9e0d4c8a37e9f31e3d59361f48b0dc',

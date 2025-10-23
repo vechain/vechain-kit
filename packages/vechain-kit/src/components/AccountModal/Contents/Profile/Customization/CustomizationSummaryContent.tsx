@@ -11,6 +11,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,8 @@ import {
     getAvatarQueryKey,
     getAvatarOfAddressQueryKey,
     getTextRecordsQueryKey,
+    useGasTokenSelection,
+    useGasEstimation,
 } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
@@ -30,6 +33,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
+import { useMemo } from 'react';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -61,16 +65,21 @@ export const CustomizationSummaryContent = ({
     onDoneRedirectContent,
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
-    const { account, connectedWallet } = useWallet();
-
+    const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const { account, connectedWallet, connection } = useWallet();
+    const { preferences } = useGasTokenSelection();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
         3,
     );
+    let showCostBreakdown = false;
+    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
+        showCostBreakdown = preferences.showCostBreakdown;
+    }
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+        
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
             ...changes,
@@ -91,6 +100,7 @@ export const CustomizationSummaryContent = ({
         error: txError,
         isWaitingForWalletConfirmation,
         isTransactionPending,
+        clauses: getClauses,
     } = useUpdateTextRecord({
         resolverAddress, // Pass the pre-fetched resolver address
         signerAccountAddress: account?.address ?? '',
@@ -144,6 +154,85 @@ export const CustomizationSummaryContent = ({
         },
     });
 
+    // Build the text record updates immediately
+    const textRecordUpdates = useMemo(() => {
+        const domain = account?.domain ?? '';
+        const CHANGES_TO_TEXT_RECORDS = {
+            displayName: 'display',
+            description: 'description',
+            twitter: 'com.x',
+            website: 'url',
+            email: 'email',
+            avatarIpfsHash: 'avatar',
+        } as const;
+
+        return Object.entries(changes)
+            .filter(
+                (entry): entry is [string, string] =>
+                    entry[1] !== undefined && entry[1] !== null,
+            )
+            .map(([key, value]) => ({
+                domain,
+                key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
+                value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
+            }));
+    }, [changes, account?.domain]);
+
+    // Build clauses synchronously only if resolver address is available
+    const clauses = useMemo(() => {
+        try {
+            // Don't build clauses until we have a resolver address
+            if (!resolverAddress || textRecordUpdates.length === 0 || !getClauses) {
+                return [];
+            }
+            return getClauses(textRecordUpdates);
+        } catch (error) {
+            console.error('Error building clauses:', error);
+            return [];
+        }
+    }, [textRecordUpdates, getClauses, resolverAddress]);
+
+    // Gas estimation
+    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+    } = useGasEstimation({
+        clauses: clauses,
+        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const usedGasToken = gasEstimation?.usedToken;
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
+    const setupTextRecordUpdates = (data: FormValues) => {
+        const domain = account?.domain ?? '';
+        const CHANGES_TO_TEXT_RECORDS = {
+            displayName: 'display',
+            description: 'description',
+            twitter: 'com.x',
+            website: 'url',
+            email: 'email',
+            avatarIpfsHash: 'avatar',
+        } as const;
+
+        const textRecordUpdates = Object.entries(data)
+            .filter(
+                (entry): entry is [string, string] =>
+                    entry[1] !== undefined && entry[1] !== null,
+            )
+            .map(([key, value]) => ({
+                domain,
+                key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
+                value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
+            }));
+
+        return textRecordUpdates;
+    }
+
     const onSubmit = async (data: FormValues) => {
         if (upgradeRequired) {
             openUpgradeSmartAccountModal();
@@ -151,26 +240,7 @@ export const CustomizationSummaryContent = ({
         }
 
         try {
-            const domain = account?.domain ?? '';
-            const CHANGES_TO_TEXT_RECORDS = {
-                displayName: 'display',
-                description: 'description',
-                twitter: 'com.x',
-                website: 'url',
-                email: 'email',
-                avatarIpfsHash: 'avatar',
-            } as const;
-
-            const textRecordUpdates = Object.entries(data)
-                .filter(
-                    (entry): entry is [string, string] =>
-                        entry[1] !== undefined && entry[1] !== null,
-                )
-                .map(([key, value]) => ({
-                    domain,
-                    key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
-                    value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
-                }));
+            const textRecordUpdates = setupTextRecordUpdates(data);
 
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
@@ -298,20 +368,37 @@ export const CustomizationSummaryContent = ({
                         renderField(t('Website'), changes.website)}
                     {changes.email && renderField(t('Email'), changes.email)}
                 </VStack>
+                {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
+                    <GasFeeSummary 
+                        estimation={gasEstimation}
+                        isLoading={gasEstimationLoading}
+                    />
+                )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                <TransactionButtonAndStatus
-                    transactionError={txError}
-                    isSubmitting={isTransactionPending}
-                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                    onConfirm={handleSubmit(onSubmit)}
-                    onRetry={handleRetry}
-                    transactionPendingText={t('Saving changes...')}
-                    txReceipt={txReceipt}
-                    buttonText={t('Confirm')}
-                    isDisabled={isTransactionPending}
-                />
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
+                    <TransactionButtonAndStatus
+                        transactionError={txError}
+                        isSubmitting={isTransactionPending}
+                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                        onConfirm={handleSubmit(onSubmit)}
+                        onRetry={handleRetry}
+                        transactionPendingText={t('Saving changes...')}
+                        txReceipt={txReceipt}
+                        buttonText={t('Confirm')}
+                        isDisabled={isTransactionPending}
+                    />
+                )}
+                
+                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
+                    <Text color="red.500" fontSize="sm">
+                        {gasEstimationError 
+                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
+                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
+                        }
+                    </Text>
+                )}
             </ModalFooter>
         </Box>
     );
