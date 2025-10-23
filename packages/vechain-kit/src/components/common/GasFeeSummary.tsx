@@ -17,16 +17,12 @@ import { useWallet } from '@/hooks';
 import { EstimationResponse } from '@/types/gasEstimation';
 
 interface GasFeeSummaryProps {
-    gasToken: string;
-    estimation: EstimationResponse | undefined;
-    error: Error | null | undefined;
+    estimation: EstimationResponse & { usedToken: string } | undefined;
     isLoading: boolean | undefined;
 }
 
 export const GasFeeSummary = ({ 
-    gasToken,
     estimation,
-    error,
     isLoading,
 }: GasFeeSummaryProps) => {
     const { t } = useTranslation();
@@ -41,8 +37,7 @@ export const GasFeeSummary = ({
         return null;
     }
 
-    const tokenInfo = SUPPORTED_GAS_TOKENS[gasToken as GasTokenType];
-
+    const tokenInfo = SUPPORTED_GAS_TOKENS[estimation?.usedToken as GasTokenType];
     const rate = estimation?.rate || 1;
     const transactionCostVTHO = (estimation?.vthoPerGasAtSpeed || 0) * (estimation?.estimatedGas || 0);
     const totalCost = estimation?.transactionCost || 0;
@@ -66,10 +61,6 @@ export const GasFeeSummary = ({
                         <Skeleton height="16px" w="full" />
                         <Skeleton height="16px" w="full" />
                     </VStack>
-                ) : error ? (
-                    <Text fontSize="xs" color="red.500">
-                        {t('Unable to estimate gas')}: {error.message}
-                    </Text>
                 ) : estimation ? (
                     <VStack spacing={1} w="full" align="stretch">
                         <HStack justify="space-between" w="full">
@@ -117,12 +108,7 @@ export const GasFeeSummary = ({
                             </HStack>
                         </Box>
                     </VStack>
-                ) : (
-                    <Text fontSize="xs" color="gray.500">
-                        {t('Unable to estimate gas')}
-                    </Text>
-                )}
-
+                ) : null}
                 <Box
                     w="full"
                     p={2}

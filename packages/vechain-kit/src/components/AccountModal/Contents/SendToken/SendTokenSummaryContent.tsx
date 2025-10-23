@@ -13,6 +13,7 @@ import {
     StickyHeaderContainer,
     AddressDisplayCard,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
@@ -25,7 +26,6 @@ import {
     TokenWithValue,
     useGasTokenSelection,
     useGasEstimation,
-    useTokenBalances
 } from '@/hooks';
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,6 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
-import { GasFeeSummary } from '@/components/common/GasFeeSummary';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -69,7 +68,6 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-    const { balances } = useTokenBalances(account?.address ?? '');
     let showCostBreakdown = false;
     if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
         showCostBreakdown = preferences.showCostBreakdown;
@@ -250,15 +248,15 @@ export const SendTokenSummaryContent = ({
         error: gasEstimationError,
     } = useGasEstimation({
         clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
-        token: preferences.availableGasTokens[0],
+        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        sendingAmount: amount,
+        sendingTokenSymbol: selectedToken.symbol,
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
-    const totalCost = gasEstimation?.transactionCost;
-    const hasEnoughBalance = shouldEstimateGas ? (
-        selectedToken.symbol === preferences.availableGasTokens[0]
-            ? (typeof totalCost === 'number' && (totalCost + Number(amount)) < Number(selectedToken.balance)) // case where both token being sent and gas token are the same
-            : (typeof totalCost === 'number' && (totalCost + Number(amount)) < Number(balances.find(token => token.symbol === preferences.availableGasTokens[0])?.balance)) // case where token being sent and gas token are different
-    ) : undefined;
+    const usedGasToken = gasEstimation?.usedToken;
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
 
     return (
         <>
@@ -335,11 +333,9 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
-                        {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && (
+                        {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
                             <GasFeeSummary 
-                                gasToken={preferences.availableGasTokens[0]}
                                 estimation={gasEstimation}
-                                error={gasEstimationError}
                                 isLoading={gasEstimationLoading}
                             />
                         )}
@@ -366,7 +362,10 @@ export const SendTokenSummaryContent = ({
                 )}
                 {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
                     <Text color="red.500">
-                        {t('You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.', {token: preferences.availableGasTokens[0]})}
+                        {gasEstimationError 
+                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
+                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
+                        }
                     </Text>
                 )}
             </ModalFooter>

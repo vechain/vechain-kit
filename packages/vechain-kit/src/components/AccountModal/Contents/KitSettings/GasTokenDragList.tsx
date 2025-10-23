@@ -49,7 +49,7 @@ const TokenPriorityItem = ({
             }
             p={3}
             mb={2}
-            opacity={isDragging ? 0.5 : 1}
+            opacity={isDragging ? 0.5 : isExcluded ? 0.5 : 1}
             cursor="move"
             draggable
             onDragStart={() => onDragStart(index)}
@@ -68,7 +68,7 @@ const TokenPriorityItem = ({
             }}
         >
             <HStack justify="space-between">
-                <HStack>
+                <HStack opacity={isExcluded ? 0.5 : 1}>
                     <Box
                         cursor="grab"
                         _active={{ cursor: 'grabbing' }}

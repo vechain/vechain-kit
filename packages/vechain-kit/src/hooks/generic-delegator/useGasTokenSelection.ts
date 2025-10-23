@@ -24,9 +24,13 @@ export const useGasTokenSelection = () => {
     const reorderTokenPriority = useCallback(
         (newOrder: GasTokenType[]) => {
             updatePreferences({ tokenPriority: newOrder });
-            updatePreferences({ availableGasTokens: newOrder.filter((t) => preferences.availableGasTokens.includes(t) && !preferences.excludedTokens.includes(t)) });
+            const newAvailableGasTokens = newOrder.filter(
+                (t) => preferences.availableGasTokens.includes(t) && !preferences.excludedTokens.includes(t)
+            );
+            updatePreferences({ availableGasTokens: newAvailableGasTokens });
+            updatePreferences({ gasTokenToUse: newAvailableGasTokens[0] ?? '' });
         },
-        [updatePreferences, preferences.availableGasTokens, preferences.excludedTokens],
+        [updatePreferences, preferences.availableGasTokens, preferences.excludedTokens, preferences.gasTokenToUse],
     );
 
     const toggleTokenExclusion = useCallback(
@@ -42,8 +46,9 @@ export const useGasTokenSelection = () => {
                 : preferences.availableGasTokens.filter((t) => t !== token);
 
             updatePreferences({ excludedTokens: newExcluded, availableGasTokens: newAvailableTokens });
+            updatePreferences({ gasTokenToUse: newAvailableTokens[0] ?? '' });
         },
-        [preferences.excludedTokens, preferences.availableGasTokens, preferences.tokenPriority, updatePreferences],
+        [preferences.excludedTokens, preferences.availableGasTokens, preferences.tokenPriority, preferences.gasTokenToUse, updatePreferences],
     );
 
     const resetToDefaults = useCallback(() => {

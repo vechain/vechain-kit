@@ -17,6 +17,7 @@ export interface GasTokenPreferences {
     excludedTokens: GasTokenType[];
     alwaysConfirm: boolean;
     showCostBreakdown: boolean;
+    gasTokenToUse: GasTokenType;
 }
 
 export interface GasTokenEstimate {
@@ -38,6 +39,7 @@ export const DEFAULT_GAS_TOKEN_PREFERENCES: GasTokenPreferences = {
     excludedTokens: [],
     alwaysConfirm: false,
     showCostBreakdown: false,
+    gasTokenToUse: 'VET',
 };
 
 export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {

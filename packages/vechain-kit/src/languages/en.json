@@ -585,6 +585,7 @@
   "Display detailed cost information including service fees": "Display detailed cost information including service fees",
   "Reset to Defaults": "Reset to Defaults",
   "Transaction Preferences": "Transaction Preferences",
-  "You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.": "You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.",
+  "Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.": "Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.",
+  "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.": "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
   "Checking gas...": "Checking gas..."
 }

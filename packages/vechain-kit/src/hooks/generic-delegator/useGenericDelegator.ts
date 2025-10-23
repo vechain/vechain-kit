@@ -140,76 +140,75 @@ export const useGenericDelegator = () => {
         clauses: TransactionClause[];
         genericDelegatorUrl: string;
     }): Promise<string> => {
-        for (let i = 0; i < preferences.availableGasTokens.length; i++) {
-            try {
-                const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount?.address ?? '', genericDelegatorUrl, clauses as TransactionClause[], preferences.availableGasTokens[i], 'medium');
+        try {
+            const gasToken = preferences.gasTokenToUse;
+            const gasEstimationResponse: EstimationResponse = await estimateGas(smartAccount?.address ?? '', genericDelegatorUrl, clauses as TransactionClause[], gasToken, 'medium');
 
-                const depositAccount: DepositAccount = await getDepositAccount(genericDelegatorUrl);
+            const depositAccount: DepositAccount = await getDepositAccount(genericDelegatorUrl);
 
-                const transferToGenericDelegatorClause = {
-                    to: preferences.availableGasTokens[i] === 'VET' ? depositAccount.depositAccount : SUPPORTED_GAS_TOKENS[preferences.availableGasTokens[i] as GasTokenType].address,
-                    value: preferences.availableGasTokens[i] === 'VET' ? parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0').toString() : '0x0',
-                    data: preferences.availableGasTokens[i] === 'VET' ? '0x' : ERC20Interface.encodeFunctionData('transfer', [
-                        depositAccount.depositAccount,
-                        parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0'),
-                    ]),
-                    comment: `Transfer ${gasEstimationResponse.transactionCost} ${preferences.availableGasTokens[i]} to ${depositAccount.depositAccount}`,
-                    abi: preferences.availableGasTokens[i] === 'VET' ? undefined : ERC20Interface.getFunction('transfer'),
-                };
+            const transferToGenericDelegatorClause = {
+                to: gasToken === 'VET' ? depositAccount.depositAccount : SUPPORTED_GAS_TOKENS[gasToken as GasTokenType].address,
+                value: gasToken === 'VET' ? parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0').toString() : '0x0',
+                data: gasToken === 'VET' ? '0x' : ERC20Interface.encodeFunctionData('transfer', [
+                    depositAccount.depositAccount,
+                    parseEther(gasEstimationResponse.transactionCost?.toString() ?? '0'),
+                ]),
+                comment: `Transfer ${gasEstimationResponse.transactionCost} ${gasToken} to ${depositAccount.depositAccount}`,
+                abi: gasToken === 'VET' ? undefined : ERC20Interface.getFunction('transfer'),
+            };
 
-                const finalExecuteWithAuthorizationClauses = await buildClausesWithAuth({
-                    clauses: [...clauses, transferToGenericDelegatorClause as TransactionClause],
-                    smartAccount: smartAccount as SmartAccountReturnType,
-                    version: smartAccountVersion?.version ?? 0,
-                });
+            const finalExecuteWithAuthorizationClauses = await buildClausesWithAuth({
+                clauses: [...clauses, transferToGenericDelegatorClause as TransactionClause],
+                smartAccount: smartAccount as SmartAccountReturnType,
+                version: smartAccountVersion?.version ?? 0,
+            });
 
-                const txBody = await estimateAndBuildTxBody(
-                    finalExecuteWithAuthorizationClauses as TransactionClause[],
-                    thor,
-                    randomTransactionUser,
-                    true
-                );
+            const txBody = await estimateAndBuildTxBody(
+                finalExecuteWithAuthorizationClauses as TransactionClause[],
+                thor,
+                randomTransactionUser,
+                true
+            );
 
-                const rawSignedTx = await Transaction.of(txBody).signAsSender(HexUInt.of(randomTransactionUser.privateKey).bytes);
+            const rawSignedTx = await Transaction.of(txBody).signAsSender(HexUInt.of(randomTransactionUser.privateKey).bytes);
 
-                const encodedSignedTx = HexUInt.of(rawSignedTx.encoded).toString()
+            const encodedSignedTx = HexUInt.of(rawSignedTx.encoded).toString()
 
-                const gasPayerResponse: {
-                    signature: string;
-                    address: string;
-                    raw: string;
-                    origin: string;
-                } = await delegateAuthorized(encodedSignedTx, randomTransactionUser.address, preferences.availableGasTokens[i], genericDelegatorUrl);
+            const gasPayerResponse: {
+                signature: string;
+                address: string;
+                raw: string;
+                origin: string;
+            } = await delegateAuthorized(encodedSignedTx, randomTransactionUser.address, gasToken, genericDelegatorUrl);
 
-                const finalTxSigned = signVip191Transaction(rawSignedTx, gasPayerResponse.signature);
+            const finalTxSigned = signVip191Transaction(rawSignedTx, gasPayerResponse.signature);
 
-                const simulatedTransaction = {
-                    clauses: finalExecuteWithAuthorizationClauses as TransactionClause[],
-                    simulateTransactionOptions: {
-                        caller: randomTransactionUser.address ?? '',
-                        gasPayer: gasPayerResponse.address,
-                    }
-                };
-
-                const simulatedTx1 = await thor.transactions.simulateTransaction(
-                    simulatedTransaction.clauses,
-                    {
-                        ...simulatedTransaction.simulateTransactionOptions
-                    }
-                );
-
-                for (let i = 0; i < simulatedTx1.length; i++) {
-                    if (simulatedTx1[i].reverted) {
-                        throw new Error(simulatedTx1[i].vmError);
-                    }
+            const simulatedTransaction = {
+                clauses: finalExecuteWithAuthorizationClauses as TransactionClause[],
+                simulateTransactionOptions: {
+                    caller: randomTransactionUser.address ?? '',
+                    gasPayer: gasPayerResponse.address,
                 }
-                // Send the transaction
-                const sendTransactionResult = await thor.transactions.sendTransaction(finalTxSigned);
+            };
 
-                return sendTransactionResult.id;
-            } catch (error) {
-                console.error('Error sending transaction using generic delegator', error);
+            const simulatedTx1 = await thor.transactions.simulateTransaction(
+                simulatedTransaction.clauses,
+                {
+                    ...simulatedTransaction.simulateTransactionOptions
+                }
+            );
+
+            for (let i = 0; i < simulatedTx1.length; i++) {
+                if (simulatedTx1[i].reverted) {
+                    throw new Error(simulatedTx1[i].vmError);
+                }
             }
+            // Send the transaction
+            const sendTransactionResult = await thor.transactions.sendTransaction(finalTxSigned);
+
+            return sendTransactionResult.id;
+        } catch (error) {
+            console.error('Error sending transaction using generic delegator', error);
         }
         throw new Error('Failed to send transaction using generic delegator, no gas tokens have sufficient balance or are enabled in Gas Token Preferences');
     }, [

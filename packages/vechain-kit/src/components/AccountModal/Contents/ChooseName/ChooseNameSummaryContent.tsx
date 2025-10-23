@@ -10,6 +10,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
@@ -20,9 +21,8 @@ import {
     useUpgradeRequired,
     useUpgradeSmartAccountModal,
     useWallet,
-    useGasEstimation,
     useGasTokenSelection,
-    useTokenBalances,
+    useGasEstimation,
 } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
@@ -58,8 +58,11 @@ export const ChooseNameSummaryContent = ({
         useUpgradeSmartAccountModal();
 
     const { preferences } = useGasTokenSelection();
-    const { balances } = useTokenBalances(account?.address ?? '');
     const { feeDelegation } = useVeChainKitConfig();
+    let showCostBreakdown = false;
+    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
+        showCostBreakdown = preferences.showCostBreakdown;
+    }
 
     const handleError = (error: string) => {
         if (isRejectionError(error)) {
@@ -174,24 +177,20 @@ export const ChooseNameSummaryContent = ({
         });
     };
 
-    let gasEstimation, gasEstimationLoading, totalCost, hasEnoughBalance;
-    if (preferences.availableGasTokens.length > 0 && connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
-        ({
-            data: gasEstimation,
-            isLoading: gasEstimationLoading,
-        } = useGasEstimation({
-            clauses: clauses(),
-            token: preferences.availableGasTokens[0],
-            enabled: !!feeDelegation?.genericDelegatorUrl && !feeDelegation?.delegatorUrl, 
-        }));
-        totalCost = gasEstimation?.transactionCost;
-        if (!gasEstimationLoading && totalCost !== undefined) {
-            const gasTokenBalance = Number(
-                balances.find(token => token.symbol === preferences.availableGasTokens[0])?.balance || '0'
-            );
-            hasEnoughBalance = totalCost < gasTokenBalance;
-        }
-    }
+    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+    } = useGasEstimation({
+        clauses: clauses(),
+        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const usedGasToken = gasEstimation?.usedToken;
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
 
     return (
         <>
@@ -233,6 +232,12 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     )}
                 </VStack>
+                {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
+                    <GasFeeSummary 
+                        estimation={gasEstimation}
+                        isLoading={gasEstimationLoading}
+                    />
+                )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
@@ -254,7 +259,10 @@ export const ChooseNameSummaryContent = ({
                 )}
                 {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
                     <Text color="red.500">
-                        {t('You do not have enough {{token}} to cover the gas fee and the transaction. Please check to see that you have gas tokens enabled in Gas Token Preferences or add more funds to your wallet and try again.', {token: preferences.availableGasTokens[0]})}
+                        {gasEstimationError 
+                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
+                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
+                        }
                     </Text>
                 )}
             </ModalFooter>

@@ -88,7 +88,7 @@ const isFirstLogin = (userId: string): boolean => {
         }
 
         const userDataKey = `user_data_${userId}`;
-        const userData = getLocalStorageItem(userDataKey);
+        const userData = localStorage.getItem(userDataKey);
         if (userData) {
             const parsedData = JSON.parse(userData);
             return !parsedData.first_login_date;
