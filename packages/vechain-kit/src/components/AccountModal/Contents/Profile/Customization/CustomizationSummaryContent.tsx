@@ -34,6 +34,7 @@ import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
 import { useMemo } from 'react';
+import { showGasFees } from '@/utils/constants';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -68,15 +69,16 @@ export const CustomizationSummaryContent = ({
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
     const { account, connectedWallet, connection } = useWallet();
     const { preferences } = useGasTokenSelection();
+    const showGasFeeSummary = showGasFees(
+        connection.isConnectedWithPrivy,
+        !!feeDelegation?.delegatorUrl,
+        preferences.showCostBreakdown
+    );
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
         3,
     );
-    let showCostBreakdown = false;
-    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
-        showCostBreakdown = preferences.showCostBreakdown;
-    }
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
         
@@ -341,7 +343,7 @@ export const CustomizationSummaryContent = ({
                         renderField(t('Website'), changes.website)}
                     {changes.email && renderField(t('Email'), changes.email)}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
+                {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
                     <GasFeeSummary 
                         estimation={gasEstimation}
                         isLoading={gasEstimationLoading}

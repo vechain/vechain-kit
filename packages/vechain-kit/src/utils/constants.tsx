@@ -169,3 +169,11 @@ export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {
         description: 'Pay gas with VTHO',
     },
 };
+
+export const showGasFees = (
+    isConnectedWithPrivy: boolean,
+    hasDelegatorUrl: boolean,
+    showCostBreakdown: boolean
+): boolean => {
+    return isConnectedWithPrivy && !hasDelegatorUrl && showCostBreakdown;
+};

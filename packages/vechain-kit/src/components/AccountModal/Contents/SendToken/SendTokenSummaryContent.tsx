@@ -34,6 +34,7 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
+import { showGasFees } from '@/utils/constants';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -61,6 +62,11 @@ export const SendTokenSummaryContent = ({
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
     const { network, feeDelegation } = useVeChainKitConfig();
     const { preferences } = useGasTokenSelection();
+    const showGasFeeSummary = showGasFees(
+        connection.isConnectedWithPrivy,
+        !!feeDelegation?.delegatorUrl,
+        preferences.showCostBreakdown
+    );
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -68,10 +74,6 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-    let showCostBreakdown = false;
-    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
-        showCostBreakdown = preferences.showCostBreakdown;
-    }
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -333,7 +335,7 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
-                        {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
+                        {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
                             <GasFeeSummary 
                                 estimation={gasEstimation}
                                 isLoading={gasEstimationLoading}

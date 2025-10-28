@@ -27,6 +27,7 @@ import {
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useVeChainKitConfig } from '@/providers';
+import { showGasFees } from '@/utils/constants';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -59,10 +60,11 @@ export const ChooseNameSummaryContent = ({
 
     const { preferences } = useGasTokenSelection();
     const { feeDelegation } = useVeChainKitConfig();
-    let showCostBreakdown = false;
-    if (connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl) {
-        showCostBreakdown = preferences.showCostBreakdown;
-    }
+    const showGasFeeSummary = showGasFees(
+        connection.isConnectedWithPrivy, 
+        !!feeDelegation?.delegatorUrl,
+        preferences.showCostBreakdown
+    );
 
     const handleError = (error: string) => {
         if (isRejectionError(error)) {
@@ -232,7 +234,7 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     )}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl && showCostBreakdown && gasEstimation && usedGasToken && (
+                {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
                     <GasFeeSummary 
                         estimation={gasEstimation}
                         isLoading={gasEstimationLoading}
