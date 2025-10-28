@@ -208,40 +208,13 @@ export const CustomizationSummaryContent = ({
     // hasEnoughBalance is now determined by the hook itself
     const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
 
-    const setupTextRecordUpdates = (data: FormValues) => {
-        const domain = account?.domain ?? '';
-        const CHANGES_TO_TEXT_RECORDS = {
-            displayName: 'display',
-            description: 'description',
-            twitter: 'com.x',
-            website: 'url',
-            email: 'email',
-            avatarIpfsHash: 'avatar',
-        } as const;
-
-        const textRecordUpdates = Object.entries(data)
-            .filter(
-                (entry): entry is [string, string] =>
-                    entry[1] !== undefined && entry[1] !== null,
-            )
-            .map(([key, value]) => ({
-                domain,
-                key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
-                value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
-            }));
-
-        return textRecordUpdates;
-    }
-
-    const onSubmit = async (data: FormValues) => {
+    const onSubmit = async () => {
         if (upgradeRequired) {
             openUpgradeSmartAccountModal();
             return;
         }
 
         try {
-            const textRecordUpdates = setupTextRecordUpdates(data);
-
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
             }
