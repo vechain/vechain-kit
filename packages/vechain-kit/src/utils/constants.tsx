@@ -2,6 +2,8 @@ import { VeBetterIcon, VTHOLogo } from '@/assets';
 import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
+import { GasTokenPreferences, GasTokenType, GasTokenInfo } from '@/types/gasToken';
+import { getConfig } from '@/config';
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: 'https://cryptologos.cc/logos/vechain-vet-logo.png',
@@ -134,4 +136,36 @@ export const VECHAIN_KIT_COOKIES_CONFIG = {
     version: 1,
     required: false,
     displayName: 'Vechain Kit Cookies',
+};
+
+export const DEFAULT_GAS_TOKEN_PREFERENCES: GasTokenPreferences = {
+    tokenPriority: ['VET', 'B3TR', 'VTHO'],
+    availableGasTokens: ['VET', 'B3TR', 'VTHO'],
+    excludedTokens: [],
+    alwaysConfirm: false,
+    showCostBreakdown: false,
+    gasTokenToUse: 'VET',
+};
+
+export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {
+    B3TR: {
+        type: 'B3TR',
+        name: 'B3TR Token',
+        symbol: 'B3TR',
+        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').b3trContractAddress,
+        description: 'Pay gas with B3TR',
+    },
+    VET: {
+        type: 'VET',
+        name: 'VET Token',
+        symbol: 'VET',
+        description: 'Pay gas with VET',
+    },
+    VTHO: {
+        type: 'VTHO',
+        name: 'VTHO Token',
+        symbol: 'VTHO',
+        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').vthoContractAddress,
+        description: 'Pay gas with VTHO',
+    },
 };

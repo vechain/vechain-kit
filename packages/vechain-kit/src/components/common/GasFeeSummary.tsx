@@ -11,7 +11,8 @@ import {
 import { FiInfo } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { GasTokenType, SUPPORTED_GAS_TOKENS } from '@/types/gasToken';
+import { GasTokenType } from '@/types/gasToken';
+import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
 import { formatGasCost } from '@/types/gasEstimation';
 import { useWallet } from '@/hooks';
 import { EstimationResponse } from '@/types/gasEstimation';

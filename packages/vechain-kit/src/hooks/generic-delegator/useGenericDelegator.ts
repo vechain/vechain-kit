@@ -4,16 +4,15 @@ import {
     TransactionClause
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
-import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, SUPPORTED_GAS_TOKENS, Wallet } from '@/types';
+import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, Wallet } from '@/types';
 import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '@/hooks';
 import { ERC20__factory } from '@vechain/vechain-contract-types';
 import { parseEther } from 'viem';
-import { randomTransactionUser } from '@/utils';
+import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '@/utils';
 import { ThorClient } from '@vechain/sdk-network';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallback } from 'react';
-
 
 export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed) => {
     const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed, {

@@ -3,9 +3,8 @@ import { LocalStorageKey, useSyncableLocalStorage } from '../cache';
 import {
     GasTokenPreferences,
     GasTokenType,
-    DEFAULT_GAS_TOKEN_PREFERENCES,
-    SUPPORTED_GAS_TOKENS,
 } from '@/types/gasToken';
+import { DEFAULT_GAS_TOKEN_PREFERENCES, SUPPORTED_GAS_TOKENS } from '@/utils/constants';
 
 export const useGasTokenSelection = () => {
     const [preferences, setPreferences] = useSyncableLocalStorage<GasTokenPreferences>(
