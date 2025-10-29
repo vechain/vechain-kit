@@ -81,6 +81,7 @@
         "slice-ansi": "4.0.0",
         "strip-ansi": "6.0.1",
         "supports-color": "7.2.0",
-        "wrap-ansi": "7.0.0"
+        "wrap-ansi": "7.0.0",
+        "elliptic": "6.6.1"
     }
 }
