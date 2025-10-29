@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
     ModalHeader,
     ModalBody,
     ModalFooter,
@@ -24,6 +21,8 @@ import { GasTokenType } from '@/types/gasToken';
 import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
 import { formatGasCost } from '@/types/gasEstimation';
 import { useTokenBalances } from '@/hooks';
+import { BaseModal } from './BaseModal';
+import { useVeChainKitConfig } from '@/providers';
 
 interface GasFeeTokenSelectorProps {
     isOpen: boolean;
@@ -45,6 +44,7 @@ export const GasFeeTokenSelector = ({
     walletAddress,
 }: GasFeeTokenSelectorProps) => {
     const { t } = useTranslation();
+    const { darkMode: isDark } = useVeChainKitConfig();
     const { balances } = useTokenBalances(walletAddress);
     const [tempSelectedToken, setTempSelectedToken] =
         React.useState(selectedToken);
@@ -85,203 +85,199 @@ export const GasFeeTokenSelector = ({
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered size="md">
-            <ModalOverlay />
-            <ModalContent>
-                <ModalHeader>
-                    <Text fontSize="lg" fontWeight="semibold">
-                        {t('Fee token')}
-                    </Text>
-                    <Text
-                        fontSize="sm"
-                        fontWeight="normal"
-                        color="gray.600"
-                        mt={1}
-                    >
-                        {t('Select the token to pay the fee with')}
-                    </Text>
-                </ModalHeader>
+        <BaseModal isOpen={isOpen} onClose={onClose} size="xs">
+            <ModalHeader>
+                <Text fontSize="lg" fontWeight="semibold">
+                    {t('Fee token')}
+                </Text>
+                <Text
+                    fontSize="sm"
+                    fontWeight="normal"
+                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    mt={1}
+                >
+                    {t('Select the token to pay the fee with')}
+                </Text>
+            </ModalHeader>
 
-                <ModalBody>
-                    <RadioGroup
-                        value={tempSelectedToken}
-                        onChange={(value) =>
-                            setTempSelectedToken(value as GasTokenType)
-                        }
-                    >
-                        <VStack spacing={2} align="stretch">
-                            {availableTokens.map((token) => {
-                                const tokenInfo = SUPPORTED_GAS_TOKENS[token];
-                                const isSelected = tempSelectedToken === token;
-                                const estimation = tokenEstimations[token] || {
-                                    cost: 0,
-                                    loading: true,
-                                };
-                                const insufficient =
-                                    hasInsufficientBalance(token);
+            <ModalBody>
+                <RadioGroup
+                    value={tempSelectedToken}
+                    onChange={(value) =>
+                        setTempSelectedToken(value as GasTokenType)
+                    }
+                >
+                    <VStack spacing={2} align="stretch">
+                        {availableTokens.map((token) => {
+                            const tokenInfo = SUPPORTED_GAS_TOKENS[token];
+                            const isSelected = tempSelectedToken === token;
+                            const estimation = tokenEstimations[token] || {
+                                cost: 0,
+                                loading: true,
+                            };
+                            const insufficient = hasInsufficientBalance(token);
 
-                                return (
-                                    <Box
-                                        key={token}
-                                        as="label"
-                                        cursor="pointer"
-                                        bg={isSelected ? selectedBg : bgColor}
-                                        border="2px solid"
-                                        borderColor={
-                                            isSelected
-                                                ? selectedBorder
-                                                : borderColor
-                                        }
-                                        borderRadius="lg"
-                                        p={4}
-                                        transition="all 0.2s"
-                                        _hover={{
-                                            borderColor: isSelected
-                                                ? selectedBorder
-                                                : 'gray.300',
-                                        }}
-                                        opacity={insufficient ? 0.6 : 1}
-                                        position="relative"
-                                    >
-                                        <HStack
-                                            spacing={3}
-                                            justify="space-between"
-                                        >
-                                            <HStack spacing={3} flex={1}>
-                                                <Radio
-                                                    value={token}
-                                                    isDisabled={insufficient}
-                                                />
-                                                <Box
-                                                    display="flex"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                    w="32px"
-                                                    h="32px"
-                                                >
-                                                    {
-                                                        TOKEN_LOGO_COMPONENTS[
-                                                            token
-                                                        ]
+                            return (
+                                <Box
+                                    key={token}
+                                    as="label"
+                                    cursor="pointer"
+                                    bg={isSelected ? selectedBg : bgColor}
+                                    border="2px solid"
+                                    borderColor={
+                                        isSelected
+                                            ? selectedBorder
+                                            : borderColor
+                                    }
+                                    borderRadius="lg"
+                                    p={4}
+                                    transition="all 0.2s"
+                                    _hover={{
+                                        borderColor: isSelected
+                                            ? selectedBorder
+                                            : 'gray.300',
+                                    }}
+                                    opacity={insufficient ? 0.6 : 1}
+                                    position="relative"
+                                >
+                                    <HStack spacing={3} justify="space-between">
+                                        <HStack spacing={3} flex={1}>
+                                            <Radio
+                                                value={token}
+                                                isDisabled={insufficient}
+                                            />
+                                            <Box
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="center"
+                                                w="32px"
+                                                h="32px"
+                                            >
+                                                {TOKEN_LOGO_COMPONENTS[token]}
+                                            </Box>
+                                            <VStack align="start" spacing={0}>
+                                                <Text fontWeight="medium">
+                                                    {tokenInfo.symbol}
+                                                </Text>
+                                                <Text
+                                                    fontSize="xs"
+                                                    color={
+                                                        isDark
+                                                            ? 'whiteAlpha.600'
+                                                            : 'blackAlpha.600'
                                                     }
-                                                </Box>
-                                                <VStack
-                                                    align="start"
-                                                    spacing={0}
                                                 >
-                                                    <Text fontWeight="medium">
-                                                        {tokenInfo.symbol}
-                                                    </Text>
+                                                    {getTokenBalance(token)}
+                                                </Text>
+                                                {insufficient && (
                                                     <Text
                                                         fontSize="xs"
-                                                        color="gray.600"
+                                                        color="red.500"
                                                     >
-                                                        {getTokenBalance(token)}
+                                                        {t(
+                                                            'Insufficient balance',
+                                                        )}
                                                     </Text>
-                                                    {insufficient && (
-                                                        <Text
-                                                            fontSize="xs"
-                                                            color="red.500"
-                                                        >
-                                                            {t(
-                                                                'Insufficient balance',
-                                                            )}
-                                                        </Text>
-                                                    )}
-                                                </VStack>
-                                            </HStack>
-                                            <VStack align="end" spacing={0}>
-                                                {estimation.loading ? (
-                                                    <Skeleton
-                                                        height="16px"
-                                                        width="60px"
-                                                    />
-                                                ) : (
-                                                    <>
-                                                        <Text
-                                                            fontSize="sm"
-                                                            fontWeight="semibold"
-                                                        >
-                                                            {formatGasCost(
-                                                                estimation.cost,
-                                                                2,
-                                                            )}
-                                                        </Text>
-                                                        <Text
-                                                            fontSize="xs"
-                                                            color="gray.600"
-                                                        >
-                                                            {tokenInfo.symbol}
-                                                        </Text>
-                                                    </>
                                                 )}
                                             </VStack>
                                         </HStack>
-                                    </Box>
-                                );
-                            })}
-                        </VStack>
-                    </RadioGroup>
+                                        <VStack align="end" spacing={0}>
+                                            {estimation.loading ? (
+                                                <Skeleton
+                                                    height="16px"
+                                                    width="60px"
+                                                />
+                                            ) : (
+                                                <>
+                                                    <Text
+                                                        fontSize="sm"
+                                                        fontWeight="semibold"
+                                                    >
+                                                        {formatGasCost(
+                                                            estimation.cost,
+                                                            2,
+                                                        )}
+                                                    </Text>
+                                                    <Text
+                                                        fontSize="xs"
+                                                        color={
+                                                            isDark
+                                                                ? 'whiteAlpha.600'
+                                                                : 'blackAlpha.600'
+                                                        }
+                                                    >
+                                                        {tokenInfo.symbol}
+                                                    </Text>
+                                                </>
+                                            )}
+                                        </VStack>
+                                    </HStack>
+                                </Box>
+                            );
+                        })}
+                    </VStack>
+                </RadioGroup>
 
-                    <Box
-                        mt={4}
-                        p={3}
-                        bg="gray.50"
-                        borderRadius="md"
-                        _dark={{ bg: 'gray.700' }}
+                <Box
+                    mt={4}
+                    p={3}
+                    bg="gray.50"
+                    borderRadius="md"
+                    _dark={{ bg: 'gray.700' }}
+                >
+                    <FormControl
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="space-between"
                     >
-                        <FormControl
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="space-between"
+                        <FormLabel
+                            htmlFor="remember-choice"
+                            mb="0"
+                            fontSize="sm"
                         >
-                            <FormLabel
-                                htmlFor="remember-choice"
-                                mb="0"
-                                fontSize="sm"
-                            >
-                                {t('Remember my choice')}
-                            </FormLabel>
-                            <Switch
-                                id="remember-choice"
-                                isChecked={rememberChoice}
-                                onChange={(e) =>
-                                    setRememberChoice(e.target.checked)
-                                }
-                                colorScheme="blue"
-                            />
-                        </FormControl>
-                        <Text fontSize="xs" color="gray.600" mt={2}>
-                            {t(
-                                'Set this as your preferred token for future transactions',
-                            )}
-                        </Text>
-                    </Box>
-                </ModalBody>
-
-                <ModalFooter>
-                    <HStack spacing={3} w="full">
-                        <Button
-                            variant="ghost"
-                            onClick={onClose}
-                            flex={1}
-                            colorScheme="gray"
-                        >
-                            {t('Cancel')}
-                        </Button>
-                        <Button
+                            {t('Remember my choice')}
+                        </FormLabel>
+                        <Switch
+                            id="remember-choice"
+                            isChecked={rememberChoice}
+                            onChange={(e) =>
+                                setRememberChoice(e.target.checked)
+                            }
                             colorScheme="blue"
-                            onClick={handleApply}
-                            flex={1}
-                            isDisabled={hasInsufficientBalance(
-                                tempSelectedToken,
-                            )}
-                        >
-                            {t('Apply')}
-                        </Button>
-                    </HStack>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
+                        />
+                    </FormControl>
+                    <Text
+                        fontSize="xs"
+                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                        mt={2}
+                    >
+                        {t(
+                            'Set this as your preferred token for future transactions',
+                        )}
+                    </Text>
+                </Box>
+            </ModalBody>
+
+            <ModalFooter>
+                <HStack spacing={3} w="full">
+                    <Button
+                        variant="ghost"
+                        onClick={onClose}
+                        flex={1}
+                        colorScheme="gray"
+                    >
+                        {t('Cancel')}
+                    </Button>
+                    <Button
+                        colorScheme="blue"
+                        onClick={handleApply}
+                        flex={1}
+                        isDisabled={hasInsufficientBalance(tempSelectedToken)}
+                    >
+                        {t('Apply')}
+                    </Button>
+                </HStack>
+            </ModalFooter>
+        </BaseModal>
     );
 };

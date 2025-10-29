@@ -58,7 +58,7 @@ export const GasFeeSummary = ({
 
     const bgColor = useColorModeValue('gray.50', 'gray.700');
     const hoverBgColor = useColorModeValue('gray.100', 'gray.600');
-
+    const { darkMode: isDark } = useVeChainKitConfig();
     // Fetch estimates for all available tokens when modal opens
     const { data: allTokenEstimates, isLoading: isLoadingAllEstimates } =
         useEstimateAllTokens({
@@ -179,7 +179,11 @@ export const GasFeeSummary = ({
                 borderRadius="md"
             >
                 <HStack spacing={2}>
-                    <Text fontSize="sm" color="gray.600" fontWeight="normal">
+                    <Text
+                        fontSize="sm"
+                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                        fontWeight="normal"
+                    >
                         {t('Max fee')}
                     </Text>
                 </HStack>
@@ -200,13 +204,16 @@ export const GasFeeSummary = ({
                     <Text fontSize="sm" fontWeight="semibold">
                         {tokenInfo.symbol} {formatGasCost(totalCost, 2)}
                     </Text>
-                    <Text fontSize="xs" color="gray.500">
+                    <Text
+                        fontSize="xs"
+                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    >
                         {'<'} ${(totalCost * 0.01).toFixed(2)}
                     </Text>
                     <Icon
                         as={MdKeyboardArrowDown}
                         boxSize={5}
-                        color="gray.500"
+                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                     />
                 </HStack>
             </Button>

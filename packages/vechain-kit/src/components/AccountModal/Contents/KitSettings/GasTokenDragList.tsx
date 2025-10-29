@@ -3,6 +3,7 @@ import { Box, HStack, VStack, Text, Switch, Icon } from '@chakra-ui/react';
 import { MdDragIndicator } from 'react-icons/md';
 import { GasTokenType } from '@/types/gasToken';
 import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
+import { useVeChainKitConfig } from '@/providers';
 
 interface DragListProps {
     tokens: GasTokenType[];
@@ -35,7 +36,7 @@ const TokenPriorityItem = ({
     isDraggedOver,
 }: TokenItemProps) => {
     const tokenInfo = SUPPORTED_GAS_TOKENS[token];
-
+    const { darkMode: isDark } = useVeChainKitConfig();
     return (
         <Box
             bg="white"
@@ -79,7 +80,10 @@ const TokenPriorityItem = ({
                     </Box>
                     <VStack align="start" spacing={0}>
                         <Text fontWeight="medium">{tokenInfo.name}</Text>
-                        <Text fontSize="sm" color="gray.600">
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                        >
                             {tokenInfo.description}
                         </Text>
                     </VStack>

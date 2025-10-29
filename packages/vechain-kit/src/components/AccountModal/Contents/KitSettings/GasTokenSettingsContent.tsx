@@ -24,6 +24,7 @@ import { useGasTokenSelection } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
 import { GasTokenDragList } from './GasTokenDragList';
 import { useCallback } from 'react';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -42,6 +43,8 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
         resetToDefaults,
     } = useGasTokenSelection();
 
+    const { darkMode: isDark } = useVeChainKitConfig();
+
     const handleReorder = useCallback(
         (newOrder: GasTokenType[]) => {
             reorderTokenPriority(newOrder);
@@ -49,7 +52,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
         },
         [reorderTokenPriority],
     );
-
 
     const handleToggleCostBreakdown = useCallback(
         (checked: boolean) => {
@@ -91,7 +93,7 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
                         <Text fontSize="sm" opacity={0.7} textAlign="center">
                             {t(
-                                'Configure your preferred tokens for gas fee payments when developer delegation is unavailable.',
+                                'Choose which tokens to use for transaction fees when the app is not covering them.',
                             )}
                         </Text>
                     </VStack>
@@ -101,7 +103,10 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                         <Text fontSize="md" fontWeight="semibold">
                             {t('Token Priority Order')}
                         </Text>
-                        <Text fontSize="sm" color="gray.600">
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                        >
                             {t(
                                 'Drag to reorder. The system will automatically use the highest priority token with sufficient balance.',
                             )}
@@ -113,12 +118,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                             onReorder={handleReorder}
                             onToggleExclusion={toggleTokenExclusion}
                         />
-
-                        <Text fontSize="xs" color="gray.500" fontStyle="italic">
-                            {t(
-                                'Note: Only tokens supported by the Generic Delegator will be available for use.',
-                            )}
-                        </Text>
                     </VStack>
 
                     {/* Settings Switches */}
@@ -127,12 +126,18 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                             {t('Transaction Preferences')}
                         </Text>
 
-
                         <FormControl display="flex" alignItems="center">
                             <FormLabel htmlFor="cost-breakdown" mb="0" flex="1">
                                 <VStack align="start" spacing={1}>
                                     <Text>{t('Show gas cost breakdown')}</Text>
-                                    <Text fontSize="sm" color="gray.600">
+                                    <Text
+                                        fontSize="sm"
+                                        color={
+                                            isDark
+                                                ? 'whiteAlpha.600'
+                                                : 'blackAlpha.600'
+                                        }
+                                    >
                                         {t(
                                             'Display detailed cost information including service fees',
                                         )}

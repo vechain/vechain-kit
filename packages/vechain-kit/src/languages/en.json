@@ -577,7 +577,7 @@
     "{{name}}": "{{name}}",
     "Settings Reset": "Settings Reset",
     "Gas token preferences have been reset to defaults": "Gas token preferences have been reset to defaults",
-    "Configure your preferred tokens for gas fee payments when developer delegation is unavailable.": "Configure your preferred tokens for gas fee payments when developer delegation is unavailable.",
+    "Choose which tokens to use for transaction fees when the app is not covering them.": "Choose which tokens to use for transaction fees when the app is not covering them.",
     "Token Priority Order": "Token Priority Order",
     "Drag to reorder. The system will automatically use the highest priority token with sufficient balance.": "Drag to reorder. The system will automatically use the highest priority token with sufficient balance.",
     "Note: Only tokens supported by the Generic Delegator will be available for use.": "Note: Only tokens supported by the Generic Delegator will be available for use.",
