@@ -9,18 +9,19 @@ import {
 import {
     useGetChainId,
     useGetNodeUrl,
-    useSmartAccountVersion,
+    useGetAccountVersion,
     useDAppKitWallet,
+    useSmartAccount,
+    useGasTokenSelection,
+    useCrossAppConnectionCache,
 } from '@/hooks';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { ConnectionSource, SmartAccount, Wallet } from '@/types';
-import { useSmartAccount } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useState } from 'react';
-import { useCrossAppConnectionCache } from '@/hooks';
 import { useWalletMetadata } from './useWalletMetadata';
 import { isBrowser } from '@/utils/ssrUtils';
 
@@ -72,7 +73,7 @@ export const useWallet = (): UseWalletReturnType => {
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDAppKitWallet();
-
+    const { resetToDefaults } = useGasTokenSelection();
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -199,8 +200,9 @@ export const useWallet = (): UseWalletReturnType => {
         : null;
 
     // Get smart account version
-    const { data: smartAccountVersion } = useSmartAccountVersion(
+    const { data: smartAccountVersion } = useGetAccountVersion(
         smartAccount?.address ?? '',
+        connectedWallet?.address ?? '',
     );
 
     const hasActiveSmartAccount =
@@ -218,8 +220,10 @@ export const useWallet = (): UseWalletReturnType => {
             if (isConnectedWithDappKit) {
                 dappKitDisconnect();
             } else if (isConnectedWithSocialLogin) {
+                await resetToDefaults();
                 await logout();
             } else if (isConnectedWithCrossApp) {
+                await resetToDefaults();
                 await disconnectCrossApp();
             }
 
@@ -238,6 +242,7 @@ export const useWallet = (): UseWalletReturnType => {
         isConnectedWithCrossApp,
         disconnectCrossApp,
         clearConnectionCache,
+        resetToDefaults,
     ]);
 
     return {
@@ -248,7 +253,7 @@ export const useWallet = (): UseWalletReturnType => {
             image: smartAccountMetadata.image,
             isDeployed: smartAccount?.isDeployed ?? false,
             isActive: hasActiveSmartAccount,
-            version: smartAccountVersion ?? null,
+            version: smartAccountVersion?.version ?? null,
             isLoadingMetadata: smartAccountMetadata.isLoading,
             metadata: smartAccountMetadata.records,
         },

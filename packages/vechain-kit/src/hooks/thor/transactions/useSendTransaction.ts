@@ -130,7 +130,6 @@ export const useSendTransaction = ({
                     txClauses: _clauses,
                     ...privyUIOptions,
                     ...options,
-                    suggestedMaxGas,
                 });
             }
 
@@ -158,7 +157,7 @@ export const useSendTransaction = ({
                 suggestedMaxGas ?? estimatedGas, //Provide either the suggested max gas (gas Limit) or the estimated gas
                 {
                     // TODO: kit-migration check how to pass the delegator url
-                    isDelegated: feeDelegation?.delegateAllTransactions,
+                    isDelegated: feeDelegation?.delegatorUrl ? true : false,
                 },
             );
 

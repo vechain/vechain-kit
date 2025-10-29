@@ -2,6 +2,8 @@ import { VeBetterIcon, VTHOLogo } from '@/assets';
 import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
+import { GasTokenPreferences, GasTokenType, GasTokenInfo } from '@/types/gasToken';
+import { getConfig } from '@/config';
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: 'https://cryptologos.cc/logos/vechain-vet-logo.png',
@@ -66,6 +68,13 @@ export const ENV = {
     },
 };
 
+export const getGenericDelegatorUrl = () => {
+    const env = getENV();
+    return env.isProduction
+        ? 'https://mainnet.delegator.vechain.org/api/v1/'
+        : 'https://testnet.delegator.vechain.org/api/v1/'; // or url to your delegator
+};
+
 export const VECHAIN_KIT_MIXPANEL_TOKENS = {
     development: 'e9627dff3f9ac07c28c28615fa86b181',
     production: '2c9e0d4c8a37e9f31e3d59361f48b0dc',
@@ -127,4 +136,44 @@ export const VECHAIN_KIT_COOKIES_CONFIG = {
     version: 1,
     required: false,
     displayName: 'Vechain Kit Cookies',
+};
+
+export const DEFAULT_GAS_TOKEN_PREFERENCES: GasTokenPreferences = {
+    tokenPriority: ['VET', 'B3TR', 'VTHO'],
+    availableGasTokens: ['VET', 'B3TR', 'VTHO'],
+    excludedTokens: [],
+    alwaysConfirm: false,
+    showCostBreakdown: false,
+    gasTokenToUse: 'VET',
+};
+
+export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {
+    B3TR: {
+        type: 'B3TR',
+        name: 'B3TR Token',
+        symbol: 'B3TR',
+        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').b3trContractAddress,
+        description: 'Pay gas with B3TR',
+    },
+    VET: {
+        type: 'VET',
+        name: 'VET Token',
+        symbol: 'VET',
+        description: 'Pay gas with VET',
+    },
+    VTHO: {
+        type: 'VTHO',
+        name: 'VTHO Token',
+        symbol: 'VTHO',
+        address: getConfig(process.env.NEXT_PUBLIC_NETWORK_TYPE as any || 'test').vthoContractAddress,
+        description: 'Pay gas with VTHO',
+    },
+};
+
+export const showGasFees = (
+    isConnectedWithPrivy: boolean,
+    hasDelegatorUrl: boolean,
+    showCostBreakdown: boolean
+): boolean => {
+    return isConnectedWithPrivy && !hasDelegatorUrl && showCostBreakdown;
 };

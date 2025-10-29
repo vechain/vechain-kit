@@ -13,6 +13,7 @@ import {
     StickyHeaderContainer,
     AddressDisplayCard,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
@@ -23,6 +24,8 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
     TokenWithValue,
+    useGasTokenSelection,
+    useGasEstimation,
 } from '@/hooks';
 import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +34,7 @@ import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
+import { showGasFees } from '@/utils/constants';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -56,7 +60,13 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
-    const { network } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
+    const { preferences } = useGasTokenSelection();
+    const showGasFeeSummary = showGasFees(
+        connection.isConnectedWithPrivy,
+        !!feeDelegation?.delegatorUrl,
+        preferences.showCostBreakdown
+    );
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -64,7 +74,6 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -137,6 +146,7 @@ export const SendTokenSummaryContent = ({
         isWaitingForWalletConfirmation:
             transferERC20WaitingForWalletConfirmation,
         isTransactionPending: transferERC20Pending,
+        clauses: erc20Clauses,
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -157,6 +167,7 @@ export const SendTokenSummaryContent = ({
         error: transferVETError,
         isWaitingForWalletConfirmation: transferVETWaitingForWalletConfirmation,
         isTransactionPending: transferVETPending,
+        clauses: vetClauses,
     } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -231,6 +242,23 @@ export const SendTokenSummaryContent = ({
             });
         }
     };
+
+    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+    } = useGasEstimation({
+        clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
+        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        sendingAmount: amount,
+        sendingTokenSymbol: selectedToken.symbol,
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const usedGasToken = gasEstimation?.usedToken;
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
 
     return (
         <>
@@ -307,25 +335,41 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
+                        {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
+                            <GasFeeSummary 
+                                estimation={gasEstimation}
+                                isLoading={gasEstimationLoading}
+                            />
+                        )}
                     </VStack>
                 </VStack>
             </ModalBody>
 
             <ModalFooter>
-                <TransactionButtonAndStatus
-                    transactionError={
-                        selectedToken.symbol === 'VET'
-                            ? transferVETError
-                            : transferERC20Error
-                    }
-                    isSubmitting={isSubmitting}
-                    isTxWaitingConfirmation={isTxWaitingConfirmation}
-                    onConfirm={handleSend}
-                    transactionPendingText={t('Sending...')}
-                    txReceipt={getTxReceipt()}
-                    buttonText={t('Confirm')}
-                    isDisabled={isSubmitting}
-                />
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
+                    <TransactionButtonAndStatus
+                        transactionError={
+                            selectedToken.symbol === 'VET'
+                                ? transferVETError
+                                : transferERC20Error
+                        }
+                        isSubmitting={isSubmitting}
+                        isTxWaitingConfirmation={isTxWaitingConfirmation}
+                        onConfirm={handleSend}
+                        transactionPendingText={t('Sending...')}
+                        txReceipt={getTxReceipt()}
+                        buttonText={t('Confirm')}
+                        isDisabled={isSubmitting}
+                    />
+                )}
+                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
+                    <Text color="red.500">
+                        {gasEstimationError 
+                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
+                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
+                        }
+                    </Text>
+                )}
             </ModalFooter>
         </>
     );
