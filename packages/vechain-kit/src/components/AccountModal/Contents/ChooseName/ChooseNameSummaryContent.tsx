@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -28,6 +29,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useVeChainKitConfig } from '@/providers';
 import { showGasFees } from '@/utils/constants';
+import { GasTokenType } from '@/types/gasToken';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -61,9 +63,9 @@ export const ChooseNameSummaryContent = ({
     const { preferences } = useGasTokenSelection();
     const { feeDelegation } = useVeChainKitConfig();
     const showGasFeeSummary = showGasFees(
-        connection.isConnectedWithPrivy, 
+        connection.isConnectedWithPrivy,
         !!feeDelegation?.delegatorUrl,
-        preferences.showCostBreakdown
+        preferences.showCostBreakdown,
     );
 
     const handleError = (error: string) => {
@@ -179,17 +181,35 @@ export const ChooseNameSummaryContent = ({
         });
     };
 
-    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const [selectedGasToken, setSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+
+    const shouldEstimateGas =
+        preferences.availableGasTokens.length > 0 &&
+        (connection.isConnectedWithPrivy ||
+            connection.isConnectedWithVeChain) &&
+        !feeDelegation?.delegatorUrl;
     const {
         data: gasEstimation,
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
+        refetch: refetchGasEstimation,
     } = useGasEstimation({
         clauses: clauses(),
-        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        tokens: selectedGasToken
+            ? [selectedGasToken]
+            : preferences.availableGasTokens, // Use selected token or all available
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
+
+    const handleGasTokenChange = React.useCallback(
+        (token: GasTokenType) => {
+            setSelectedGasToken(token);
+            setTimeout(() => refetchGasEstimation(), 100);
+        },
+        [refetchGasEstimation],
+    );
 
     // hasEnoughBalance is now determined by the hook itself
     const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
@@ -234,39 +254,54 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     )}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
-                    <GasFeeSummary 
-                        estimation={gasEstimation}
-                        isLoading={gasEstimationLoading}
-                    />
-                )}
+                {feeDelegation?.genericDelegatorUrl &&
+                    showGasFeeSummary &&
+                    gasEstimation &&
+                    usedGasToken && (
+                        <GasFeeSummary
+                            estimation={gasEstimation}
+                            isLoading={gasEstimationLoading}
+                            onTokenChange={handleGasTokenChange}
+                            clauses={clauses() as any}
+                        />
+                    )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
+                    feeDelegation?.delegatorUrl ||
+                    connection.isConnectedWithDappKit) && (
                     <TransactionButtonAndStatus
                         transactionError={txError}
                         isSubmitting={isTransactionPending}
                         isTxWaitingConfirmation={isWaitingForWalletConfirmation}
                         onConfirm={handleConfirm}
                         onRetry={handleRetry}
-                        transactionPendingText={isUnsetting
-                            ? t('Unsetting current domain...')
-                            : t('Claiming name...')}
+                        transactionPendingText={
+                            isUnsetting
+                                ? t('Unsetting current domain...')
+                                : t('Claiming name...')
+                        }
                         txReceipt={txReceipt}
                         buttonText={t('Confirm')}
                         isDisabled={isTransactionPending}
                         onError={handleError}
                     />
                 )}
-                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
-                    <Text color="red.500">
-                        {gasEstimationError 
-                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
-                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
-                        }
-                    </Text>
-                )}
+                {!feeDelegation?.delegatorUrl &&
+                    !hasEnoughBalance &&
+                    connection.isConnectedWithPrivy &&
+                    !gasEstimationLoading && (
+                        <Text color="red.500">
+                            {gasEstimationError
+                                ? t(
+                                      'Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.',
+                                  )
+                                : t(
+                                      "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
+                                  )}
+                        </Text>
+                    )}
             </ModalFooter>
         </>
     );

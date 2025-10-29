@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -33,8 +34,8 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
-import { useMemo } from 'react';
 import { showGasFees } from '@/utils/constants';
+import { GasTokenType } from '@/types/gasToken';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -72,7 +73,7 @@ export const CustomizationSummaryContent = ({
     const showGasFeeSummary = showGasFees(
         connection.isConnectedWithPrivy,
         !!feeDelegation?.delegatorUrl,
-        preferences.showCostBreakdown
+        preferences.showCostBreakdown,
     );
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -81,7 +82,7 @@ export const CustomizationSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-        
+
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
             ...changes,
@@ -184,7 +185,11 @@ export const CustomizationSummaryContent = ({
     const clauses = useMemo(() => {
         try {
             // Don't build clauses until we have a resolver address
-            if (!resolverAddress || textRecordUpdates.length === 0 || !getClauses) {
+            if (
+                !resolverAddress ||
+                textRecordUpdates.length === 0 ||
+                !getClauses
+            ) {
                 return [];
             }
             return getClauses(textRecordUpdates);
@@ -195,17 +200,35 @@ export const CustomizationSummaryContent = ({
     }, [textRecordUpdates, getClauses, resolverAddress]);
 
     // Gas estimation
-    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const [selectedGasToken, setSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+
+    const shouldEstimateGas =
+        preferences.availableGasTokens.length > 0 &&
+        (connection.isConnectedWithPrivy ||
+            connection.isConnectedWithVeChain) &&
+        !feeDelegation?.delegatorUrl;
     const {
         data: gasEstimation,
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
+        refetch: refetchGasEstimation,
     } = useGasEstimation({
         clauses: clauses,
-        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        tokens: selectedGasToken
+            ? [selectedGasToken]
+            : preferences.availableGasTokens, // Use selected token or all available
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
+
+    const handleGasTokenChange = React.useCallback(
+        (token: GasTokenType) => {
+            setSelectedGasToken(token);
+            setTimeout(() => refetchGasEstimation(), 100);
+        },
+        [refetchGasEstimation],
+    );
 
     // hasEnoughBalance is now determined by the hook itself
     const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
@@ -343,16 +366,23 @@ export const CustomizationSummaryContent = ({
                         renderField(t('Website'), changes.website)}
                     {changes.email && renderField(t('Email'), changes.email)}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
-                    <GasFeeSummary 
-                        estimation={gasEstimation}
-                        isLoading={gasEstimationLoading}
-                    />
-                )}
+                {feeDelegation?.genericDelegatorUrl &&
+                    showGasFeeSummary &&
+                    gasEstimation &&
+                    usedGasToken && (
+                        <GasFeeSummary
+                            estimation={gasEstimation}
+                            isLoading={gasEstimationLoading}
+                            onTokenChange={handleGasTokenChange}
+                            clauses={clauses as any}
+                        />
+                    )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
+                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
+                    feeDelegation?.delegatorUrl ||
+                    connection.isConnectedWithDappKit) && (
                     <TransactionButtonAndStatus
                         transactionError={txError}
                         isSubmitting={isTransactionPending}
@@ -365,15 +395,21 @@ export const CustomizationSummaryContent = ({
                         isDisabled={isTransactionPending}
                     />
                 )}
-                
-                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
-                    <Text color="red.500" fontSize="sm">
-                        {gasEstimationError 
-                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
-                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
-                        }
-                    </Text>
-                )}
+
+                {!feeDelegation?.delegatorUrl &&
+                    !hasEnoughBalance &&
+                    connection.isConnectedWithPrivy &&
+                    !gasEstimationLoading && (
+                        <Text color="red.500" fontSize="sm">
+                            {gasEstimationError
+                                ? t(
+                                      'Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.',
+                                  )
+                                : t(
+                                      "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
+                                  )}
+                        </Text>
+                    )}
             </ModalFooter>
         </Box>
     );

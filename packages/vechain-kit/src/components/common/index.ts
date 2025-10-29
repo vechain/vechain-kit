@@ -13,3 +13,4 @@ export * from './AccountAvatar';
 export * from './TransactionButtonAndStatus';
 export * from './ModalNotificationButton';
 export * from './GasFeeSummary';
+export * from './GasFeeTokenSelector';
