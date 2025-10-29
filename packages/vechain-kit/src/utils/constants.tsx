@@ -143,7 +143,6 @@ export const DEFAULT_GAS_TOKEN_PREFERENCES: GasTokenPreferences = {
     availableGasTokens: ['VET', 'B3TR', 'VTHO'],
     excludedTokens: [],
     alwaysConfirm: false,
-    showCostBreakdown: false,
     gasTokenToUse: 'VET',
 };
 
@@ -173,7 +172,7 @@ export const SUPPORTED_GAS_TOKENS: Record<GasTokenType, GasTokenInfo> = {
 export const showGasFees = (
     isConnectedWithPrivy: boolean,
     hasDelegatorUrl: boolean,
-    showCostBreakdown: boolean
 ): boolean => {
-    return isConnectedWithPrivy && !hasDelegatorUrl && showCostBreakdown;
+    // Always show breakdown when applicable; user preference removed
+    return isConnectedWithPrivy && !hasDelegatorUrl;
 };

@@ -5,9 +5,6 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
-    Switch,
-    FormControl,
-    FormLabel,
     Button,
     useToast,
 } from '@chakra-ui/react';
@@ -37,7 +34,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
     const toast = useToast();
     const {
         preferences,
-        updatePreferences,
         reorderTokenPriority,
         toggleTokenExclusion,
         resetToDefaults,
@@ -51,14 +47,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
             Analytics.settings.gasTokenReordered();
         },
         [reorderTokenPriority],
-    );
-
-    const handleToggleCostBreakdown = useCallback(
-        (checked: boolean) => {
-            updatePreferences({ showCostBreakdown: checked });
-            Analytics.settings.gasTokenCostBreakdownToggled(checked);
-        },
-        [updatePreferences],
     );
 
     const handleResetDefaults = useCallback(() => {
@@ -118,41 +106,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                             onReorder={handleReorder}
                             onToggleExclusion={toggleTokenExclusion}
                         />
-                    </VStack>
-
-                    {/* Settings Switches */}
-                    <VStack w="full" spacing={4} align="start">
-                        <Text fontSize="md" fontWeight="semibold">
-                            {t('Transaction Preferences')}
-                        </Text>
-
-                        <FormControl display="flex" alignItems="center">
-                            <FormLabel htmlFor="cost-breakdown" mb="0" flex="1">
-                                <VStack align="start" spacing={1}>
-                                    <Text>{t('Show gas cost breakdown')}</Text>
-                                    <Text
-                                        fontSize="sm"
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.600'
-                                                : 'blackAlpha.600'
-                                        }
-                                    >
-                                        {t(
-                                            'Display detailed cost information including service fees',
-                                        )}
-                                    </Text>
-                                </VStack>
-                            </FormLabel>
-                            <Switch
-                                id="cost-breakdown"
-                                isChecked={preferences.showCostBreakdown}
-                                onChange={(e) =>
-                                    handleToggleCostBreakdown(e.target.checked)
-                                }
-                                colorScheme="blue"
-                            />
-                        </FormControl>
                     </VStack>
                 </VStack>
             </ModalBody>

@@ -65,7 +65,6 @@ export const ChooseNameSummaryContent = ({
     const showGasFeeSummary = showGasFees(
         connection.isConnectedWithPrivy,
         !!feeDelegation?.delegatorUrl,
-        preferences.showCostBreakdown,
     );
 
     const handleError = (error: string) => {

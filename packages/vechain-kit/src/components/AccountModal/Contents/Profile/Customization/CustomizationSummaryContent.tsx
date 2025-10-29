@@ -73,7 +73,6 @@ export const CustomizationSummaryContent = ({
     const showGasFeeSummary = showGasFees(
         connection.isConnectedWithPrivy,
         !!feeDelegation?.delegatorUrl,
-        preferences.showCostBreakdown,
     );
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
