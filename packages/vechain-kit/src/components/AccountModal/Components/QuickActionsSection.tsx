@@ -17,8 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { LuArrowDownToLine } from 'react-icons/lu';
 import { RiSwap3Line } from 'react-icons/ri';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useEffect, useState } from 'react';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 type Props = {
     mt?: number;
@@ -149,12 +147,6 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
         address: account?.address ?? '',
     });
     const { t } = useTranslation();
-    const [isFirstVisit, setIsFirstVisit] = useState(false);
-
-    useEffect(() => {
-        const hasVisited = getLocalStorageItem('app-first-visit');
-        setIsFirstVisit(!hasVisited);
-    }, []);
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -162,8 +154,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
         3,
     );
 
-    const showRedDot =
-        (connection.isConnectedWithPrivy && upgradeRequired) || isFirstVisit;
+    const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
 
     return (
         <VStack w={'full'} mt={mt} spacing={4}>
@@ -176,13 +167,7 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
                         key={action.label}
                         icon={action.icon}
                         label={action.label}
-                        onClick={() => {
-                            if (isFirstVisit) {
-                                setLocalStorageItem('app-first-visit', 'true');
-                                setIsFirstVisit(false);
-                            }
-                            action.onClick(setCurrentContent);
-                        }}
+                        onClick={() => action.onClick(setCurrentContent)}
                         isDisabled={action.isDisabled?.(hasAnyBalance)}
                         showRedDot={showRedDot && action.label === 'Settings'}
                     />
