@@ -39,20 +39,27 @@ const TokenPriorityItem = ({
     const { darkMode: isDark } = useVeChainKitConfig();
     return (
         <Box
-            bg="white"
+            bg={isDark ? '#ffffff0a' : 'blackAlpha.50'}
             borderRadius="md"
             border="1px"
             borderColor={
                 isDragging
-                    ? 'blue.300'
+                    ? isDark
+                        ? 'blue.500'
+                        : 'blue.300'
                     : isDraggedOver
-                    ? 'blue.200'
+                    ? isDark
+                        ? 'blue.400'
+                        : 'blue.200'
+                    : isDark
+                    ? 'whiteAlpha.200'
                     : 'gray.200'
             }
             p={3}
             mb={2}
             opacity={isDragging ? 0.5 : isExcluded ? 0.5 : 1}
             cursor="move"
+            transition="background-color 0.2s ease, border-color 0.2s ease"
             draggable
             onDragStart={() => onDragStart(index)}
             onDragOver={(e) => {
@@ -60,13 +67,8 @@ const TokenPriorityItem = ({
                 onDragOver(index);
             }}
             onDrop={() => onDrop(index)}
-            _dark={{
-                bg: 'gray.800',
-                borderColor: isDragging
-                    ? 'blue.500'
-                    : isDraggedOver
-                    ? 'blue.400'
-                    : 'gray.600',
+            _hover={{
+                backgroundColor: isDark ? '#ffffff12' : 'blackAlpha.200',
             }}
         >
             <HStack justify="space-between">
