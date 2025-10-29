@@ -74,22 +74,11 @@ export const useGasTokenSelection = () => {
         [setPreferences],
     );
 
-    const resetToDefaults = useCallback(() => {
-        if (typeof window !== 'undefined') {
-            window.localStorage.setItem(
-                LocalStorageKey.GAS_TOKEN_PREFERENCES,
-                JSON.stringify(DEFAULT_GAS_TOKEN_PREFERENCES),
-            );
-        }
-        setPreferences(DEFAULT_GAS_TOKEN_PREFERENCES);
-    }, [setPreferences]);
-
     return {
         preferences,
         supportedTokens: SUPPORTED_GAS_TOKENS,
         updatePreferences,
         reorderTokenPriority,
         toggleTokenExclusion,
-        resetToDefaults,
     };
 };

@@ -2,11 +2,8 @@ import {
     ModalBody,
     ModalCloseButton,
     VStack,
-    ModalFooter,
     ModalHeader,
     Text,
-    Button,
-    useToast,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -15,7 +12,6 @@ import {
 } from '@/components/common';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useTranslation } from 'react-i18next';
-import { MdRefresh } from 'react-icons/md';
 import { AccountModalContentTypes } from '../../Types';
 import { useGasTokenSelection } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
@@ -31,13 +27,8 @@ type Props = {
 
 export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const toast = useToast();
-    const {
-        preferences,
-        reorderTokenPriority,
-        toggleTokenExclusion,
-        resetToDefaults,
-    } = useGasTokenSelection();
+    const { preferences, reorderTokenPriority, toggleTokenExclusion } =
+        useGasTokenSelection();
 
     const { darkMode: isDark } = useVeChainKitConfig();
 
@@ -48,18 +39,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
         },
         [reorderTokenPriority],
     );
-
-    const handleResetDefaults = useCallback(() => {
-        resetToDefaults();
-        toast({
-            title: t('Settings Reset'),
-            description: t('Gas token preferences have been reset to defaults'),
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-        });
-        Analytics.settings.gasTokenSettingsReset();
-    }, [resetToDefaults, toast, t]);
 
     return (
         <ScrollToTopWrapper>
@@ -109,17 +88,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                     </VStack>
                 </VStack>
             </ModalBody>
-
-            <ModalFooter pt={4}>
-                <Button
-                    leftIcon={<MdRefresh />}
-                    variant="outline"
-                    size="sm"
-                    onClick={handleResetDefaults}
-                >
-                    {t('Reset to Defaults')}
-                </Button>
-            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };
