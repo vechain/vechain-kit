@@ -15,7 +15,6 @@ export interface GasTokenPreferences {
     availableGasTokens: GasTokenType[];
     excludedTokens: GasTokenType[];
     alwaysConfirm: boolean;
-    showCostBreakdown: boolean;
     gasTokenToUse: GasTokenType;
 }
 

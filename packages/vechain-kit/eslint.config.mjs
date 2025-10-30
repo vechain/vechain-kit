@@ -3,12 +3,22 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
     // Global ignores configuration
     {
-        ignores: ['**/*.config.ts', 'dist/**', 'src/contracts/typechain-types/**'],
+        ignores: [
+            '**/*.config.ts',
+            'dist/**',
+            'src/contracts/typechain-types/**',
+        ],
     },
     // Main configuration
     {
         extends: [...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/ban-ts-comment': 'off',
@@ -22,5 +32,5 @@ export default tseslint.config(
                 },
             ],
         },
-    }
+    },
 );

@@ -5,7 +5,6 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
-    Box,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -24,8 +23,6 @@ import {
 
 import { ActionButton } from '../../Components';
 import { AccountModalContentTypes } from '../../Types';
-import { useEffect, useState } from 'react';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -39,19 +36,8 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
     const { connection } = useWallet();
     const { t } = useTranslation();
     const { feeDelegation } = useVeChainKitConfig();
-    const [showCurrencyRedDot, setShowCurrencyRedDot] = useState(false);
-
-    useEffect(() => {
-        // Check if user has visited currency settings before
-        const hasVisitedCurrency = getLocalStorageItem('settings-currency-visited');
-        setShowCurrencyRedDot(!hasVisitedCurrency);
-    }, []);
 
     const handleCurrencyClick = () => {
-        // Mark currency settings as visited
-        setLocalStorageItem('settings-currency-visited', 'true');
-        setShowCurrencyRedDot(false);
-
         Analytics.settings.currencySettingsViewed();
         setCurrentContent('change-currency');
     };
@@ -95,19 +81,6 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             onClick={handleCurrencyClick}
                             leftIcon={MdCurrencyExchange}
                             rightIcon={MdOutlineNavigateNext}
-                            extraContent={
-                                showCurrencyRedDot && (
-                                    <Box
-                                        minWidth="8px"
-                                        height="8px"
-                                        bg="red.500"
-                                        borderRadius="full"
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="center"
-                                    />
-                                )
-                            }
                         />
 
                         <ActionButton
@@ -125,19 +98,22 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             leftIcon={IoLanguage}
                             rightIcon={MdOutlineNavigateNext}
                         />
-                        
-                        {connection.isConnectedWithPrivy && !feeDelegation?.delegatorUrl && <ActionButton
-                            title={t('Gas Token Preferences')}
-                            style={{
-                                borderTopRadius: '0px', // last item in the group
-                            }}
-                            onClick={() => {
-                                Analytics.settings.gasTokenSettingsViewed();
-                                setCurrentContent('gas-token-settings');
-                            }}
-                            leftIcon={MdLocalGasStation}
-                            rightIcon={MdOutlineNavigateNext}
-                        />}
+
+                        {connection.isConnectedWithPrivy &&
+                            !feeDelegation?.delegatorUrl && (
+                                <ActionButton
+                                    title={t('Gas Token Preferences')}
+                                    style={{
+                                        borderTopRadius: '0px', // last item in the group
+                                    }}
+                                    onClick={() => {
+                                        Analytics.settings.gasTokenSettingsViewed();
+                                        setCurrentContent('gas-token-settings');
+                                    }}
+                                    leftIcon={MdLocalGasStation}
+                                    rightIcon={MdOutlineNavigateNext}
+                                />
+                            )}
                     </VStack>
                     <ActionButton
                         title={t('Terms and Policies')}

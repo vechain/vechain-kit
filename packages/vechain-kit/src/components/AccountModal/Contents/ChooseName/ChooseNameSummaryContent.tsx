@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -27,7 +28,7 @@ import {
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useVeChainKitConfig } from '@/providers';
-import { showGasFees } from '@/utils/constants';
+import { GasTokenType } from '@/types/gasToken';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -60,11 +61,6 @@ export const ChooseNameSummaryContent = ({
 
     const { preferences } = useGasTokenSelection();
     const { feeDelegation } = useVeChainKitConfig();
-    const showGasFeeSummary = showGasFees(
-        connection.isConnectedWithPrivy, 
-        !!feeDelegation?.delegatorUrl,
-        preferences.showCostBreakdown
-    );
 
     const handleError = (error: string) => {
         if (isRejectionError(error)) {
@@ -179,20 +175,55 @@ export const ChooseNameSummaryContent = ({
         });
     };
 
-    const shouldEstimateGas = preferences.availableGasTokens.length > 0 && (connection.isConnectedWithPrivy || connection.isConnectedWithVeChain) && !feeDelegation?.delegatorUrl;
+    const [selectedGasToken, setSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+    // Track the user's manual selection to show it during loading (before estimation completes)
+    const [userSelectedGasToken, setUserSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+
+    const shouldEstimateGas =
+        preferences.availableGasTokens.length > 0 &&
+        (connection.isConnectedWithPrivy ||
+            connection.isConnectedWithVeChain) &&
+        !feeDelegation?.delegatorUrl;
     const {
         data: gasEstimation,
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
+        refetch: refetchGasEstimation,
     } = useGasEstimation({
         clauses: clauses(),
-        tokens: preferences.availableGasTokens, // Pass all available gas tokens
+        tokens: selectedGasToken
+            ? [selectedGasToken]
+            : preferences.availableGasTokens, // Use selected token or all available
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
+    const disableConfirmButtonDuringEstimation =
+        (gasEstimationLoading || !gasEstimation) &&
+        connection.isConnectedWithPrivy &&
+        !feeDelegation?.delegatorUrl;
+
+    const handleGasTokenChange = React.useCallback(
+        (token: GasTokenType) => {
+            setSelectedGasToken(token);
+            setUserSelectedGasToken(token); // Track user's choice
+            setTimeout(() => refetchGasEstimation(), 100);
+        },
+        [refetchGasEstimation],
+    );
 
     // hasEnoughBalance is now determined by the hook itself
     const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
+    // Auto-fallback: if the selected token cannot cover fees (estimation error),
+    // clear selection to re-estimate across all available tokens
+    // Keep userSelectedGasToken to show during loading, but actual result will show the token that succeeds
+    React.useEffect(() => {
+        if (gasEstimationError && selectedGasToken) {
+            setSelectedGasToken(null);
+        }
+    }, [gasEstimationError, selectedGasToken]);
 
     return (
         <>
@@ -234,39 +265,46 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     )}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl && showGasFeeSummary && gasEstimation && usedGasToken && (
-                    <GasFeeSummary 
+                {connection.isConnectedWithPrivy && (
+                    <GasFeeSummary
                         estimation={gasEstimation}
                         isLoading={gasEstimationLoading}
+                        isLoadingTransaction={isTransactionPending}
+                        onTokenChange={handleGasTokenChange}
+                        clauses={clauses() as any}
+                        userSelectedToken={userSelectedGasToken}
                     />
                 )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) || feeDelegation?.delegatorUrl || connection.isConnectedWithDappKit) && (
-                    <TransactionButtonAndStatus
-                        transactionError={txError}
-                        isSubmitting={isTransactionPending}
-                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                        onConfirm={handleConfirm}
-                        onRetry={handleRetry}
-                        transactionPendingText={isUnsetting
+                <TransactionButtonAndStatus
+                    transactionError={txError}
+                    isSubmitting={isTransactionPending}
+                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                    onConfirm={handleConfirm}
+                    onRetry={handleRetry}
+                    transactionPendingText={
+                        isUnsetting
                             ? t('Unsetting current domain...')
-                            : t('Claiming name...')}
-                        txReceipt={txReceipt}
-                        buttonText={t('Confirm')}
-                        isDisabled={isTransactionPending}
-                        onError={handleError}
-                    />
-                )}
-                {(!feeDelegation?.delegatorUrl && !hasEnoughBalance && connection.isConnectedWithPrivy && !gasEstimationLoading) && (
-                    <Text color="red.500">
-                        {gasEstimationError 
-                            ? t('Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.')
-                            : t("You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.")
-                        }
-                    </Text>
-                )}
+                            : t('Claiming name...')
+                    }
+                    txReceipt={txReceipt}
+                    buttonText={t('Confirm')}
+                    isDisabled={
+                        isTransactionPending ||
+                        disableConfirmButtonDuringEstimation
+                    }
+                    onError={handleError}
+                    gasEstimationError={gasEstimationError}
+                    hasEnoughGasBalance={hasEnoughBalance}
+                    isLoadingGasEstimation={gasEstimationLoading}
+                    showGasEstimationError={
+                        !feeDelegation?.delegatorUrl &&
+                        connection.isConnectedWithPrivy
+                    }
+                    context="domain"
+                />
             </ModalFooter>
         </>
     );

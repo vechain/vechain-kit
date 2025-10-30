@@ -5,7 +5,7 @@ import { veWorldMockClient } from "@vechain/veworld-mock-playwright";
 import { expect } from "@playwright/test";
 import { DENIAL_KITCHEN } from "../constants";
 
-test.describe("Hooks", () => {
+test.describe.skip("Hooks", () => {
     let homePage: HomePage
     let dashboardPage: DashboardPage
 

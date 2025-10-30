@@ -2,14 +2,11 @@ import {
     ModalBody,
     ModalCloseButton,
     VStack,
-    ModalFooter,
     ModalHeader,
     Text,
-    Switch,
-    FormControl,
-    FormLabel,
-    Button,
-    useToast,
+    Alert,
+    AlertIcon,
+    AlertDescription,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -18,12 +15,12 @@ import {
 } from '@/components/common';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useTranslation } from 'react-i18next';
-import { MdRefresh } from 'react-icons/md';
 import { AccountModalContentTypes } from '../../Types';
 import { useGasTokenSelection } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
 import { GasTokenDragList } from './GasTokenDragList';
 import { useCallback } from 'react';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -33,14 +30,10 @@ type Props = {
 
 export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const toast = useToast();
-    const {
-        preferences,
-        updatePreferences,
-        reorderTokenPriority,
-        toggleTokenExclusion,
-        resetToDefaults,
-    } = useGasTokenSelection();
+    const { preferences, reorderTokenPriority, toggleTokenExclusion } =
+        useGasTokenSelection();
+
+    const { darkMode: isDark } = useVeChainKitConfig();
 
     const handleReorder = useCallback(
         (newOrder: GasTokenType[]) => {
@@ -49,27 +42,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
         },
         [reorderTokenPriority],
     );
-
-
-    const handleToggleCostBreakdown = useCallback(
-        (checked: boolean) => {
-            updatePreferences({ showCostBreakdown: checked });
-            Analytics.settings.gasTokenCostBreakdownToggled(checked);
-        },
-        [updatePreferences],
-    );
-
-    const handleResetDefaults = useCallback(() => {
-        resetToDefaults();
-        toast({
-            title: t('Settings Reset'),
-            description: t('Gas token preferences have been reset to defaults'),
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-        });
-        Analytics.settings.gasTokenSettingsReset();
-    }, [resetToDefaults, toast, t]);
 
     return (
         <ScrollToTopWrapper>
@@ -91,17 +63,32 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
                         <Text fontSize="sm" opacity={0.7} textAlign="center">
                             {t(
-                                'Configure your preferred tokens for gas fee payments when developer delegation is unavailable.',
+                                'Choose which tokens to use for transaction fees when the app is not covering them.',
                             )}
                         </Text>
                     </VStack>
+
+                    {/* Warning when all tokens are disabled */}
+                    {preferences.availableGasTokens.length === 0 && (
+                        <Alert status="warning" borderRadius="md">
+                            <AlertIcon />
+                            <AlertDescription fontSize="sm">
+                                {t(
+                                    'You must enable at least one token to perform transactions. Without any enabled tokens, you will not be able to pay for gas fees.' as any,
+                                )}
+                            </AlertDescription>
+                        </Alert>
+                    )}
 
                     {/* Token Priority List */}
                     <VStack w="full" align="start" spacing={3}>
                         <Text fontSize="md" fontWeight="semibold">
                             {t('Token Priority Order')}
                         </Text>
-                        <Text fontSize="sm" color="gray.600">
+                        <Text
+                            fontSize="sm"
+                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                        >
                             {t(
                                 'Drag to reorder. The system will automatically use the highest priority token with sufficient balance.',
                             )}
@@ -113,55 +100,9 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                             onReorder={handleReorder}
                             onToggleExclusion={toggleTokenExclusion}
                         />
-
-                        <Text fontSize="xs" color="gray.500" fontStyle="italic">
-                            {t(
-                                'Note: Only tokens supported by the Generic Delegator will be available for use.',
-                            )}
-                        </Text>
-                    </VStack>
-
-                    {/* Settings Switches */}
-                    <VStack w="full" spacing={4} align="start">
-                        <Text fontSize="md" fontWeight="semibold">
-                            {t('Transaction Preferences')}
-                        </Text>
-
-
-                        <FormControl display="flex" alignItems="center">
-                            <FormLabel htmlFor="cost-breakdown" mb="0" flex="1">
-                                <VStack align="start" spacing={1}>
-                                    <Text>{t('Show gas cost breakdown')}</Text>
-                                    <Text fontSize="sm" color="gray.600">
-                                        {t(
-                                            'Display detailed cost information including service fees',
-                                        )}
-                                    </Text>
-                                </VStack>
-                            </FormLabel>
-                            <Switch
-                                id="cost-breakdown"
-                                isChecked={preferences.showCostBreakdown}
-                                onChange={(e) =>
-                                    handleToggleCostBreakdown(e.target.checked)
-                                }
-                                colorScheme="blue"
-                            />
-                        </FormControl>
                     </VStack>
                 </VStack>
             </ModalBody>
-
-            <ModalFooter pt={4}>
-                <Button
-                    leftIcon={<MdRefresh />}
-                    variant="outline"
-                    size="sm"
-                    onClick={handleResetDefaults}
-                >
-                    {t('Reset to Defaults')}
-                </Button>
-            </ModalFooter>
         </ScrollToTopWrapper>
     );
 };

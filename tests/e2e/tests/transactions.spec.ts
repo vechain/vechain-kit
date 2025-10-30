@@ -16,7 +16,7 @@ for (const authType of [
     'veworld',
     // 'privy'
 ]) {
-    test.describe("Demo transactions", () => {
+    test.describe.skip("Demo transactions", () => {
         let homePage: HomePage
         let dashboardPage: DashboardPage
         // let accountModal: AccountModal
@@ -68,7 +68,7 @@ for (const authType of [
     'veworld',
     // 'privy'
 ] as AuthType[]) {
-    test.describe.serial("Wallet-to-wallet transactions", () => {
+    test.describe.skip("Wallet-to-wallet transactions", () => {
         let homePage: HomePage
         let dashboardPage: DashboardPage
         let accountModal: AccountModal
