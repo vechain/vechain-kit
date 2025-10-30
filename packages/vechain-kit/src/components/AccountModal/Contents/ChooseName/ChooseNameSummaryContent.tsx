@@ -177,7 +177,7 @@ export const ChooseNameSummaryContent = ({
 
     const [selectedGasToken, setSelectedGasToken] =
         React.useState<GasTokenType | null>(null);
-    // Track the user's manual selection to keep the gas fee selector UI consistent
+    // Track the user's manual selection to show it during loading (before estimation completes)
     const [userSelectedGasToken, setUserSelectedGasToken] =
         React.useState<GasTokenType | null>(null);
 
@@ -218,7 +218,7 @@ export const ChooseNameSummaryContent = ({
 
     // Auto-fallback: if the selected token cannot cover fees (estimation error),
     // clear selection to re-estimate across all available tokens
-    // But keep userSelectedGasToken so the selector UI shows what the user picked
+    // Keep userSelectedGasToken to show during loading, but actual result will show the token that succeeds
     React.useEffect(() => {
         if (gasEstimationError && selectedGasToken) {
             setSelectedGasToken(null);

@@ -159,8 +159,8 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
 
     // Determine display token and cost:
     // Priority order:
-    // 1. User's manual selection (even if it failed - for consistency with error messages)
-    // 2. The used token from successful estimation
+    // 1. Successfully used token from estimation (shows what will actually be used)
+    // 2. User's manual selection while loading (shows what they picked during estimation)
     // 3. First available token with sufficient balance
     // 4. First available token with loaded estimate
     // 5. First available token
@@ -169,13 +169,13 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
 
     let displayToken: GasTokenType | undefined;
 
-    // Priority 1: User's manual selection (shows what they picked)
-    if (userSelectedToken && availableTokens.includes(userSelectedToken)) {
-        displayToken = userSelectedToken;
-    }
-    // Priority 2: Successfully used token from estimation
-    else if (preferredToken) {
+    // Priority 1: Successfully used token from estimation (always show what will actually be used)
+    if (preferredToken) {
         displayToken = preferredToken;
+    }
+    // Priority 2: User's manual selection while loading (keeps UI stable during estimation)
+    else if (userSelectedToken && availableTokens.includes(userSelectedToken)) {
+        displayToken = userSelectedToken;
     }
     // Priority 3 & 4: Auto-select based on availability
     else {
@@ -199,13 +199,10 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
         ? tokenEstimations[displayToken]
         : undefined;
 
-    // Show cost for the displayed token to keep UI consistent
-    // If displaying user's selection or a different token, use its estimation
-    // Otherwise use the successful estimation cost
+    // Show cost for the displayed token
+    // If we have a successful estimation, use its cost; otherwise use the display token's estimation
     const totalCost =
-        displayToken && displayToken !== preferredToken && displayEstimation
-            ? displayEstimation.cost
-            : preferredToken && estimation?.transactionCost
+        preferredToken && estimation?.transactionCost
             ? estimation.transactionCost
             : displayEstimation?.cost || 0;
 
