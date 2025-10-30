@@ -8,8 +8,6 @@ import {
     HStack,
     Text,
     Box,
-    Radio,
-    RadioGroup,
     Skeleton,
     Switch,
     FormControl,
@@ -53,15 +51,15 @@ export const GasFeeTokenSelector = ({
         isDark
             ? selected
                 ? '#ffffff12'
-                : '#ffffff0a'
+                : 'transparent'
             : selected
-            ? 'blackAlpha.200'
-            : 'blackAlpha.50';
+            ? 'blackAlpha.100'
+            : 'transparent';
     const itemBorderColor = (selected: boolean) =>
         selected
             ? isDark
                 ? 'blue.400'
-                : 'blue.300'
+                : 'blue.500'
             : isDark
             ? 'whiteAlpha.200'
             : 'gray.200';
@@ -112,59 +110,99 @@ export const GasFeeTokenSelector = ({
             </ModalHeader>
 
             <ModalBody>
-                <RadioGroup
-                    value={tempSelectedToken}
-                    onChange={(value) =>
-                        setTempSelectedToken(value as GasTokenType)
-                    }
-                >
-                    <VStack spacing={2} align="stretch">
-                        {availableTokens.map((token) => {
-                            const tokenInfo = SUPPORTED_GAS_TOKENS[token];
-                            const isSelected = tempSelectedToken === token;
-                            const estimation = tokenEstimations[token] || {
-                                cost: 0,
-                                loading: true,
-                            };
-                            const insufficient = hasInsufficientBalance(token);
+                <VStack spacing={2} align="stretch">
+                    {availableTokens.map((token) => {
+                        const tokenInfo = SUPPORTED_GAS_TOKENS[token];
+                        const isSelected = tempSelectedToken === token;
+                        const estimation = tokenEstimations[token] || {
+                            cost: 0,
+                            loading: true,
+                        };
+                        const insufficient = hasInsufficientBalance(token);
 
-                            return (
-                                <Box
-                                    key={token}
-                                    as="label"
-                                    cursor="pointer"
-                                    bg={itemBg(isSelected)}
-                                    border="1px"
-                                    borderColor={itemBorderColor(isSelected)}
-                                    borderRadius="md"
-                                    p={3}
-                                    transition="background-color 0.2s ease, border-color 0.2s ease"
-                                    _hover={{
-                                        backgroundColor: isDark
-                                            ? '#ffffff12'
-                                            : 'blackAlpha.200',
-                                    }}
-                                    opacity={insufficient ? 0.6 : 1}
-                                    position="relative"
-                                >
-                                    <HStack spacing={3} justify="space-between">
-                                        <HStack spacing={3} flex={1}>
-                                            <Radio
-                                                value={token}
-                                                isDisabled={insufficient}
-                                            />
-                                            <Box
-                                                display="flex"
-                                                alignItems="center"
-                                                justifyContent="center"
-                                                w="32px"
-                                                h="32px"
+                        return (
+                            <Box
+                                key={token}
+                                cursor={
+                                    insufficient ? 'not-allowed' : 'pointer'
+                                }
+                                bg={itemBg(isSelected)}
+                                border="1px"
+                                borderColor={itemBorderColor(isSelected)}
+                                borderRadius="md"
+                                p={3}
+                                transition="all 0.2s ease"
+                                _hover={{
+                                    backgroundColor: insufficient
+                                        ? itemBg(isSelected)
+                                        : isDark
+                                        ? '#ffffff12'
+                                        : 'blackAlpha.100',
+                                    borderColor: insufficient
+                                        ? itemBorderColor(isSelected)
+                                        : isSelected
+                                        ? isDark
+                                            ? 'blue.400'
+                                            : 'blue.500'
+                                        : isDark
+                                        ? 'whiteAlpha.300'
+                                        : 'gray.300',
+                                }}
+                                opacity={insufficient ? 0.5 : 1}
+                                onClick={() =>
+                                    !insufficient && setTempSelectedToken(token)
+                                }
+                            >
+                                <HStack spacing={3} justify="space-between">
+                                    <HStack spacing={3} flex={1}>
+                                        {React.cloneElement(
+                                            TOKEN_LOGO_COMPONENTS[token],
+                                            {
+                                                boxSize: '36px',
+                                                borderRadius: 'full',
+                                            },
+                                        )}
+                                        <VStack align="start" spacing={0}>
+                                            <Text fontWeight="medium">
+                                                {tokenInfo.symbol}
+                                            </Text>
+                                            <Text
+                                                fontSize="xs"
+                                                color={
+                                                    isDark
+                                                        ? 'whiteAlpha.600'
+                                                        : 'blackAlpha.600'
+                                                }
                                             >
-                                                {TOKEN_LOGO_COMPONENTS[token]}
-                                            </Box>
-                                            <VStack align="start" spacing={0}>
-                                                <Text fontWeight="medium">
-                                                    {tokenInfo.symbol}
+                                                {t('Balance')}:{' '}
+                                                {getTokenBalance(token)}
+                                            </Text>
+                                            {insufficient && (
+                                                <Text
+                                                    fontSize="xs"
+                                                    color="red.500"
+                                                >
+                                                    {t('Insufficient balance')}
+                                                </Text>
+                                            )}
+                                        </VStack>
+                                    </HStack>
+                                    <VStack align="end" spacing={0}>
+                                        {estimation.loading ? (
+                                            <Skeleton
+                                                height="16px"
+                                                width="60px"
+                                            />
+                                        ) : (
+                                            <>
+                                                <Text
+                                                    fontSize="sm"
+                                                    fontWeight="semibold"
+                                                >
+                                                    {formatGasCost(
+                                                        estimation.cost,
+                                                        2,
+                                                    )}
                                                 </Text>
                                                 <Text
                                                     fontSize="xs"
@@ -174,65 +212,16 @@ export const GasFeeTokenSelector = ({
                                                             : 'blackAlpha.600'
                                                     }
                                                 >
-                                                    {getTokenBalance(token)}
+                                                    {tokenInfo.symbol}
                                                 </Text>
-                                                {insufficient && (
-                                                    <Text
-                                                        fontSize="xs"
-                                                        color="red.500"
-                                                    >
-                                                        {t(
-                                                            'Insufficient balance',
-                                                        )}
-                                                    </Text>
-                                                )}
-                                            </VStack>
-                                        </HStack>
-                                        <VStack align="end" spacing={0}>
-                                            {estimation.loading ? (
-                                                <Skeleton
-                                                    height="16px"
-                                                    width="60px"
-                                                />
-                                            ) : (
-                                                <>
-                                                    <Text
-                                                        fontSize="sm"
-                                                        fontWeight="semibold"
-                                                    >
-                                                        {formatGasCost(
-                                                            estimation.cost,
-                                                            2,
-                                                        )}
-                                                    </Text>
-                                                    <Text
-                                                        fontSize="xs"
-                                                        color={
-                                                            isDark
-                                                                ? 'whiteAlpha.600'
-                                                                : 'blackAlpha.600'
-                                                        }
-                                                    >
-                                                        {tokenInfo.symbol}
-                                                    </Text>
-                                                </>
-                                            )}
-                                        </VStack>
-                                    </HStack>
-                                </Box>
-                            );
-                        })}
-                    </VStack>
-                </RadioGroup>
+                                            </>
+                                        )}
+                                    </VStack>
+                                </HStack>
+                            </Box>
+                        );
+                    })}
 
-                <Box
-                    mt={4}
-                    p={3}
-                    bg={isDark ? '#ffffff0a' : 'blackAlpha.50'}
-                    borderRadius="md"
-                    border="1px"
-                    borderColor={isDark ? 'whiteAlpha.200' : 'gray.200'}
-                >
                     <FormControl
                         display="flex"
                         alignItems="center"
@@ -243,7 +232,7 @@ export const GasFeeTokenSelector = ({
                             mb="0"
                             fontSize="sm"
                         >
-                            {t('Remember my choice')}
+                            {t('Use this token for future transactions')}
                         </FormLabel>
                         <Switch
                             id="remember-choice"
@@ -254,16 +243,7 @@ export const GasFeeTokenSelector = ({
                             colorScheme="blue"
                         />
                     </FormControl>
-                    <Text
-                        fontSize="xs"
-                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                        mt={2}
-                    >
-                        {t(
-                            'Set this as your preferred token for future transactions',
-                        )}
-                    </Text>
-                </Box>
+                </VStack>
             </ModalBody>
 
             <ModalFooter>

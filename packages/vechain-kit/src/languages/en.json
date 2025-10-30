@@ -593,7 +593,7 @@
     "Select the token to pay the fee with": "Select the token to pay the fee with",
     "Insufficient balance": "Insufficient balance",
     "Remember my choice": "Remember my choice",
-    "Set this as your preferred token for future transactions": "Set this as your preferred token for future transactions",
+    "Use this token for future transactions": "Use this token for future transactions",
     "Apply": "Apply",
     "Fee": "Fee"
 }
