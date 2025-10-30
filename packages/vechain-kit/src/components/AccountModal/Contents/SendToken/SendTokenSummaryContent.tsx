@@ -380,36 +380,30 @@ export const SendTokenSummaryContent = ({
             </ModalBody>
 
             <ModalFooter>
-                <VStack spacing={4} w="full">
-                    <TransactionButtonAndStatus
-                        transactionError={
-                            selectedToken.symbol === 'VET'
-                                ? transferVETError
-                                : transferERC20Error
-                        }
-                        isSubmitting={isSubmitting}
-                        isTxWaitingConfirmation={isTxWaitingConfirmation}
-                        onConfirm={handleSend}
-                        transactionPendingText={t('Sending...')}
-                        txReceipt={getTxReceipt()}
-                        buttonText={t('Confirm')}
-                        isDisabled={
-                            isSubmitting || disableConfirmButtonDuringEstimation
-                        }
-                        gasEstimationError={gasEstimationError}
-                        hasEnoughGasBalance={hasEnoughBalance}
-                        isLoadingGasEstimation={gasEstimationLoading}
-                        showGasEstimationError={
-                            !feeDelegation?.delegatorUrl &&
-                            connection.isConnectedWithPrivy
-                        }
-                        context="send"
-                    />
-
-                    {connection.isConnectedWithPrivy && (
-                        <ExchangeWarningAlert />
-                    )}
-                </VStack>
+                <TransactionButtonAndStatus
+                    transactionError={
+                        selectedToken.symbol === 'VET'
+                            ? transferVETError
+                            : transferERC20Error
+                    }
+                    isSubmitting={isSubmitting}
+                    isTxWaitingConfirmation={isTxWaitingConfirmation}
+                    onConfirm={handleSend}
+                    transactionPendingText={t('Sending...')}
+                    txReceipt={getTxReceipt()}
+                    buttonText={t('Confirm')}
+                    isDisabled={
+                        isSubmitting || disableConfirmButtonDuringEstimation
+                    }
+                    gasEstimationError={gasEstimationError}
+                    hasEnoughGasBalance={hasEnoughBalance}
+                    isLoadingGasEstimation={gasEstimationLoading}
+                    showGasEstimationError={
+                        !feeDelegation?.delegatorUrl &&
+                        connection.isConnectedWithPrivy
+                    }
+                    context="send"
+                />
             </ModalFooter>
         </>
     );
