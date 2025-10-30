@@ -4,7 +4,6 @@ import {
     Text,
     Skeleton,
     Icon,
-    Box,
     useDisclosure,
     VStack,
     Button,
@@ -24,6 +23,7 @@ import { TransactionClause } from '@vechain/sdk-core';
 interface GasFeeSummaryProps {
     estimation: (EstimationResponse & { usedToken: string }) | undefined;
     isLoading: boolean | undefined;
+    isLoadingTransaction?: boolean;
     onTokenChange?: (token: GasTokenType) => void;
     clauses?: TransactionClause[];
 }
@@ -31,6 +31,7 @@ interface GasFeeSummaryProps {
 export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     estimation,
     isLoading,
+    isLoadingTransaction,
     onTokenChange,
     clauses = [],
 }: GasFeeSummaryProps) => {
@@ -139,36 +140,49 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
 
     if (isLoading || !estimation || !tokenInfo) {
         return (
-            <Box
-                w="full"
-                p={2}
-                borderRadius="lg"
-                // bg={isDark ? '#00000038' : 'gray.50'}
-            >
-                <Text fontSize="sm" fontWeight="bold" mb={2}>
-                    {t('Fee')}
-                </Text>
-                <HStack justify="space-between" w="full">
-                    <Skeleton height="16px" width="120px" borderRadius="md" />
-                    <HStack spacing={2}>
-                        <Skeleton
-                            height="20px"
-                            width="20px"
-                            borderRadius="full"
-                        />
-                        <Skeleton
-                            height="16px"
-                            width="100px"
-                            borderRadius="md"
-                        />
-                        <Skeleton
-                            height="16px"
-                            width="16px"
-                            borderRadius="md"
-                        />
-                    </HStack>
+            <>
+                <Divider mt={3} />
+
+                <HStack
+                    mt={3}
+                    w="full"
+                    justifyContent="start"
+                    alignItems="center"
+                >
+                    <VStack align="start" spacing={0} w="full">
+                        <Text
+                            fontSize="sm"
+                            fontWeight="light"
+                            textAlign="left"
+                            w="full"
+                        >
+                            {t('Fee')}
+                        </Text>
+
+                        <HStack
+                            align="start"
+                            justifyContent="space-between"
+                            spacing={0}
+                            w="full"
+                        >
+                            <HStack justifyContent="flex-start" w="full">
+                                <Skeleton
+                                    height="16px"
+                                    width="120px"
+                                    borderRadius="md"
+                                />
+                                <Skeleton
+                                    height="16px"
+                                    width="60px"
+                                    borderRadius="md"
+                                />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+
+                    <Skeleton height="32px" width="96px" borderRadius="full" />
                 </HStack>
-            </Box>
+            </>
         );
     }
 
@@ -210,6 +224,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                     size="sm"
                     borderRadius="full"
                     px={6}
+                    disabled={isLoadingTransaction}
                     color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
                     borderColor={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
                     _hover={{

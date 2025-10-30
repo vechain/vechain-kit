@@ -220,6 +220,10 @@ export const CustomizationSummaryContent = ({
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
+    const disableConfirmButtonDuringEstimation =
+        (gasEstimationLoading || !gasEstimation) &&
+        connection.isConnectedWithPrivy &&
+        !feeDelegation?.delegatorUrl;
 
     const handleGasTokenChange = React.useCallback(
         (token: GasTokenType) => {
@@ -372,6 +376,7 @@ export const CustomizationSummaryContent = ({
                         <GasFeeSummary
                             estimation={gasEstimation}
                             isLoading={gasEstimationLoading}
+                            isLoadingTransaction={isTransactionPending}
                             onTokenChange={handleGasTokenChange}
                             clauses={clauses as any}
                         />
@@ -391,7 +396,10 @@ export const CustomizationSummaryContent = ({
                         transactionPendingText={t('Saving changes...')}
                         txReceipt={txReceipt}
                         buttonText={t('Confirm')}
-                        isDisabled={isTransactionPending}
+                        isDisabled={
+                            isTransactionPending ||
+                            disableConfirmButtonDuringEstimation
+                        }
                     />
                 )}
 

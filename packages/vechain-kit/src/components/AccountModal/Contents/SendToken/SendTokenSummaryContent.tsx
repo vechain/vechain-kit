@@ -265,6 +265,10 @@ export const SendTokenSummaryContent = ({
         enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
+    const disableConfirmButtonDuringEstimation =
+        (gasEstimationLoading || !gasEstimation) &&
+        connection.isConnectedWithPrivy &&
+        !feeDelegation?.delegatorUrl;
 
     const handleGasTokenChange = React.useCallback(
         (token: GasTokenType) => {
@@ -323,6 +327,7 @@ export const SendTokenSummaryContent = ({
                                 <GasFeeSummary
                                     estimation={gasEstimation}
                                     isLoading={gasEstimationLoading}
+                                    isLoadingTransaction={isSubmitting}
                                     onTokenChange={handleGasTokenChange}
                                     clauses={
                                         selectedToken.symbol === 'VET'
@@ -369,9 +374,7 @@ export const SendTokenSummaryContent = ({
 
             <ModalFooter>
                 <VStack spacing={4} w="full">
-                    {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
-                        feeDelegation?.delegatorUrl ||
-                        connection.isConnectedWithDappKit) && (
+                    {
                         <TransactionButtonAndStatus
                             transactionError={
                                 selectedToken.symbol === 'VET'
@@ -384,9 +387,12 @@ export const SendTokenSummaryContent = ({
                             transactionPendingText={t('Sending...')}
                             txReceipt={getTxReceipt()}
                             buttonText={t('Confirm')}
-                            isDisabled={isSubmitting}
+                            isDisabled={
+                                isSubmitting ||
+                                disableConfirmButtonDuringEstimation
+                            }
                         />
-                    )}
+                    }
                     {!feeDelegation?.delegatorUrl &&
                         !hasEnoughBalance &&
                         connection.isConnectedWithPrivy &&

@@ -34,6 +34,7 @@ import {
     convertToSelectedCurrency,
 } from '@/utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
+import { MdKeyboardArrowDown } from 'react-icons/md';
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
@@ -442,6 +443,16 @@ export const SendTokenContent = ({
                                             }
                                         >
                                             {selectedToken.symbol}
+
+                                            <Icon
+                                                as={MdKeyboardArrowDown}
+                                                boxSize={5}
+                                                color={
+                                                    isDark
+                                                        ? 'whiteAlpha.600'
+                                                        : 'blackAlpha.600'
+                                                }
+                                            />
                                         </Button>
                                     ) : (
                                         <Button
@@ -472,6 +483,15 @@ export const SendTokenContent = ({
                                             }
                                         >
                                             {t('Select token')}
+                                            <Icon
+                                                as={MdKeyboardArrowDown}
+                                                boxSize={5}
+                                                color={
+                                                    isDark
+                                                        ? 'whiteAlpha.600'
+                                                        : 'blackAlpha.600'
+                                                }
+                                            />
                                         </Button>
                                     )}
                                 </HStack>
