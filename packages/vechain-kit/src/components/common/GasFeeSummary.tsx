@@ -15,7 +15,12 @@ import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
 import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
 import { formatGasCost } from '@/types/gasEstimation';
-import { useWallet, useGasTokenSelection, useEstimateAllTokens } from '@/hooks';
+import {
+    useWallet,
+    useGasTokenSelection,
+    useEstimateAllTokens,
+    useTokenBalances,
+} from '@/hooks';
 import { EstimationResponse } from '@/types/gasEstimation';
 import { GasFeeTokenSelector } from './GasFeeTokenSelector';
 import { TransactionClause } from '@vechain/sdk-core';
@@ -59,20 +64,22 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     });
 
     const { darkMode: isDark } = useVeChainKitConfig();
+
     // Fetch estimates for all available tokens when modal opens
     const { data: allTokenEstimates, isLoading: isLoadingAllEstimates } =
         useEstimateAllTokens({
             clauses: clauses,
             tokens: preferences.availableGasTokens,
-            enabled: isOpen && clauses.length > 0,
+            enabled: clauses.length > 0,
         });
-
-    // Initialize token estimations when modal opens
+    // Preload all token estimates to avoid re-fetching per token switch and to enable
+    // fallback display when single-token estimation is undefined.
+    // Initialize token estimations from prefetch results as soon as they are ready
     useEffect(() => {
-        if (isOpen && !isLoadingAllEstimates && allTokenEstimates) {
+        if (!isLoadingAllEstimates && allTokenEstimates) {
             setTokenEstimations(allTokenEstimates);
         }
-    }, [isOpen, allTokenEstimates, isLoadingAllEstimates]);
+    }, [allTokenEstimates, isLoadingAllEstimates]);
 
     // Update current token estimation
     useEffect(() => {
@@ -87,9 +94,9 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
         }
     }, [estimation]);
 
-    // Initialize loading states for all tokens when modal opens
+    // Initialize loading states while prefetch is loading
     useEffect(() => {
-        if (isOpen && isLoadingAllEstimates) {
+        if (isLoadingAllEstimates) {
             const loadingStates = preferences.availableGasTokens.reduce(
                 (acc, token) => {
                     acc[token] = { cost: 0, loading: true };
@@ -99,7 +106,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
             );
             setTokenEstimations(loadingStates);
         }
-    }, [isOpen, isLoadingAllEstimates, preferences.availableGasTokens]);
+    }, [isLoadingAllEstimates, preferences.availableGasTokens]);
 
     const handleTokenSelect = useCallback(
         (token: GasTokenType, rememberChoice: boolean) => {
@@ -134,57 +141,49 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
         return null;
     }
 
-    const tokenInfo =
-        SUPPORTED_GAS_TOKENS[estimation?.usedToken as GasTokenType];
-    const totalCost = estimation?.transactionCost || 0;
+    const { balances } = useTokenBalances(account?.address ?? '');
 
-    if (isLoading || !estimation || !tokenInfo) {
-        return (
-            <>
-                <Divider mt={3} />
+    const hasInsufficientBalanceForToken = (token: GasTokenType) => {
+        const balance = balances.find((b) => b.symbol === token);
+        const est = tokenEstimations[token];
+        if (!balance || !est || est.loading) return true;
+        return Number(balance.balance) < est.cost;
+    };
 
-                <HStack
-                    mt={3}
-                    w="full"
-                    justifyContent="start"
-                    alignItems="center"
-                >
-                    <VStack align="start" spacing={0} w="full">
-                        <Text
-                            fontSize="sm"
-                            fontWeight="light"
-                            textAlign="left"
-                            w="full"
-                        >
-                            {t('Fee')}
-                        </Text>
+    // Determine display token and cost:
+    // - Prefer the used token from single estimation
+    // - Otherwise, pick the first available token with a loaded estimate and sufficient balance
+    // - Fallback to the first available token if none sufficient (UI still shows cost if loaded)
+    const preferredToken = estimation?.usedToken as GasTokenType | undefined;
+    const availableTokens = preferences.availableGasTokens as GasTokenType[];
 
-                        <HStack
-                            align="start"
-                            justifyContent="space-between"
-                            spacing={0}
-                            w="full"
-                        >
-                            <HStack justifyContent="flex-start" w="full">
-                                <Skeleton
-                                    height="16px"
-                                    width="120px"
-                                    borderRadius="md"
-                                />
-                                <Skeleton
-                                    height="16px"
-                                    width="60px"
-                                    borderRadius="md"
-                                />
-                            </HStack>
-                        </HStack>
-                    </VStack>
-
-                    <Skeleton height="32px" width="96px" borderRadius="full" />
-                </HStack>
-            </>
+    let displayToken: GasTokenType | undefined = preferredToken;
+    if (!displayToken) {
+        displayToken = availableTokens.find(
+            (t) =>
+                tokenEstimations[t] &&
+                !tokenEstimations[t].loading &&
+                !hasInsufficientBalanceForToken(t),
         );
+        if (!displayToken) {
+            displayToken = availableTokens.find(
+                (t) => tokenEstimations[t] && !tokenEstimations[t].loading,
+            );
+        }
+        if (!displayToken) {
+            displayToken = availableTokens[0];
+        }
     }
+
+    const displayEstimation = displayToken
+        ? tokenEstimations[displayToken]
+        : undefined;
+    const totalCost = preferredToken
+        ? estimation?.transactionCost || 0
+        : displayEstimation?.cost || 0;
+    const tokenInfo = displayToken
+        ? SUPPORTED_GAS_TOKENS[displayToken]
+        : undefined;
 
     return (
         <>
@@ -208,12 +207,34 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                         w="full"
                     >
                         <HStack justifyContent="flex-start" w="full">
-                            <Text fontSize="sm" fontWeight="semibold">
-                                {formatGasCost(totalCost, 2)} {tokenInfo.symbol}
-                            </Text>
-                            <Text fontSize="xs" opacity={0.5}>
-                                {'≈'} ${(totalCost * 0.01).toFixed(2)}
-                            </Text>
+                            {isLoading ||
+                            (!preferredToken &&
+                                (!displayEstimation ||
+                                    displayEstimation.loading)) ||
+                            !tokenInfo ? (
+                                <>
+                                    <Skeleton
+                                        height="16px"
+                                        width="120px"
+                                        borderRadius="md"
+                                    />
+                                    <Skeleton
+                                        height="16px"
+                                        width="60px"
+                                        borderRadius="md"
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <Text fontSize="sm" fontWeight="semibold">
+                                        {formatGasCost(totalCost, 2)}{' '}
+                                        {tokenInfo.symbol}
+                                    </Text>
+                                    <Text fontSize="xs" opacity={0.5}>
+                                        {'≈'} ${(totalCost * 0.01).toFixed(2)}
+                                    </Text>
+                                </>
+                            )}
                         </HStack>
                     </HStack>
                 </VStack>
@@ -231,7 +252,10 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                         bg: isDark ? 'whiteAlpha.300' : 'blackAlpha.300',
                     }}
                     leftIcon={React.cloneElement(
-                        TOKEN_LOGO_COMPONENTS[tokenInfo.symbol],
+                        TOKEN_LOGO_COMPONENTS[
+                            (displayToken as GasTokenType) ||
+                                preferences.availableGasTokens[0]
+                        ],
                         {
                             boxSize: '20px',
                             borderRadius: 'full',
@@ -239,7 +263,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                     )}
                 >
                     <Text fontSize="sm" fontWeight="semibold">
-                        {tokenInfo.symbol}
+                        {displayToken || preferences.availableGasTokens[0]}
                     </Text>
                     <Icon
                         as={MdKeyboardArrowDown}
@@ -252,7 +276,10 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
             <GasFeeTokenSelector
                 isOpen={isOpen}
                 onClose={onClose}
-                selectedToken={estimation.usedToken as GasTokenType}
+                selectedToken={
+                    (displayToken as GasTokenType) ||
+                    preferences.availableGasTokens[0]
+                }
                 onTokenSelect={handleTokenSelect}
                 availableTokens={preferences.availableGasTokens}
                 tokenEstimations={tokenEstimations}

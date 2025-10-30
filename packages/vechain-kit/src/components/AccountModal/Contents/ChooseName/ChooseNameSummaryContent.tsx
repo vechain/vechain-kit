@@ -264,29 +264,26 @@ export const ChooseNameSummaryContent = ({
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
-                    feeDelegation?.delegatorUrl ||
-                    connection.isConnectedWithDappKit) && (
-                    <TransactionButtonAndStatus
-                        transactionError={txError}
-                        isSubmitting={isTransactionPending}
-                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                        onConfirm={handleConfirm}
-                        onRetry={handleRetry}
-                        transactionPendingText={
-                            isUnsetting
-                                ? t('Unsetting current domain...')
-                                : t('Claiming name...')
-                        }
-                        txReceipt={txReceipt}
-                        buttonText={t('Confirm')}
-                        isDisabled={
-                            isTransactionPending ||
-                            disableConfirmButtonDuringEstimation
-                        }
-                        onError={handleError}
-                    />
-                )}
+                <TransactionButtonAndStatus
+                    transactionError={txError}
+                    isSubmitting={isTransactionPending}
+                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                    onConfirm={handleConfirm}
+                    onRetry={handleRetry}
+                    transactionPendingText={
+                        isUnsetting
+                            ? t('Unsetting current domain...')
+                            : t('Claiming name...')
+                    }
+                    txReceipt={txReceipt}
+                    buttonText={t('Confirm')}
+                    isDisabled={
+                        isTransactionPending ||
+                        disableConfirmButtonDuringEstimation
+                    }
+                    onError={handleError}
+                />
+
                 {!feeDelegation?.delegatorUrl &&
                     !hasEnoughBalance &&
                     connection.isConnectedWithPrivy &&

@@ -278,6 +278,14 @@ export const SendTokenSummaryContent = ({
     // hasEnoughBalance is now determined by the hook itself
     const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
 
+    // Auto-fallback: if the selected token cannot cover fees (estimation error),
+    // clear selection to re-estimate across all available tokens
+    React.useEffect(() => {
+        if (gasEstimationError && selectedGasToken) {
+            setSelectedGasToken(null);
+        }
+    }, [gasEstimationError, selectedGasToken]);
+
     return (
         <>
             <StickyHeaderContainer>
@@ -367,25 +375,23 @@ export const SendTokenSummaryContent = ({
 
             <ModalFooter>
                 <VStack spacing={4} w="full">
-                    {
-                        <TransactionButtonAndStatus
-                            transactionError={
-                                selectedToken.symbol === 'VET'
-                                    ? transferVETError
-                                    : transferERC20Error
-                            }
-                            isSubmitting={isSubmitting}
-                            isTxWaitingConfirmation={isTxWaitingConfirmation}
-                            onConfirm={handleSend}
-                            transactionPendingText={t('Sending...')}
-                            txReceipt={getTxReceipt()}
-                            buttonText={t('Confirm')}
-                            isDisabled={
-                                isSubmitting ||
-                                disableConfirmButtonDuringEstimation
-                            }
-                        />
-                    }
+                    <TransactionButtonAndStatus
+                        transactionError={
+                            selectedToken.symbol === 'VET'
+                                ? transferVETError
+                                : transferERC20Error
+                        }
+                        isSubmitting={isSubmitting}
+                        isTxWaitingConfirmation={isTxWaitingConfirmation}
+                        onConfirm={handleSend}
+                        transactionPendingText={t('Sending...')}
+                        txReceipt={getTxReceipt()}
+                        buttonText={t('Confirm')}
+                        isDisabled={
+                            isSubmitting || disableConfirmButtonDuringEstimation
+                        }
+                    />
+
                     {!feeDelegation?.delegatorUrl &&
                         !hasEnoughBalance &&
                         connection.isConnectedWithPrivy &&

@@ -377,24 +377,20 @@ export const CustomizationSummaryContent = ({
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
-                    feeDelegation?.delegatorUrl ||
-                    connection.isConnectedWithDappKit) && (
-                    <TransactionButtonAndStatus
-                        transactionError={txError}
-                        isSubmitting={isTransactionPending}
-                        isTxWaitingConfirmation={isWaitingForWalletConfirmation}
-                        onConfirm={handleSubmit(onSubmit)}
-                        onRetry={handleRetry}
-                        transactionPendingText={t('Saving changes...')}
-                        txReceipt={txReceipt}
-                        buttonText={t('Confirm')}
-                        isDisabled={
-                            isTransactionPending ||
-                            disableConfirmButtonDuringEstimation
-                        }
-                    />
-                )}
+                <TransactionButtonAndStatus
+                    transactionError={txError}
+                    isSubmitting={isTransactionPending}
+                    isTxWaitingConfirmation={isWaitingForWalletConfirmation}
+                    onConfirm={handleSubmit(onSubmit)}
+                    onRetry={handleRetry}
+                    transactionPendingText={t('Saving changes...')}
+                    txReceipt={txReceipt}
+                    buttonText={t('Confirm')}
+                    isDisabled={
+                        isTransactionPending ||
+                        disableConfirmButtonDuringEstimation
+                    }
+                />
 
                 {!feeDelegation?.delegatorUrl &&
                     !hasEnoughBalance &&
