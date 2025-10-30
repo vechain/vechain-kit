@@ -34,7 +34,6 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
-import { showGasFees } from '@/utils/constants';
 import { GasTokenType } from '@/types/gasToken';
 
 export type CustomizationSummaryContentProps = {
@@ -70,10 +69,7 @@ export const CustomizationSummaryContent = ({
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
     const { account, connectedWallet, connection } = useWallet();
     const { preferences } = useGasTokenSelection();
-    const showGasFeeSummary = showGasFees(
-        connection.isConnectedWithPrivy,
-        !!feeDelegation?.delegatorUrl,
-    );
+
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -369,18 +365,15 @@ export const CustomizationSummaryContent = ({
                         renderField(t('Website'), changes.website)}
                     {changes.email && renderField(t('Email'), changes.email)}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl &&
-                    showGasFeeSummary &&
-                    gasEstimation &&
-                    usedGasToken && (
-                        <GasFeeSummary
-                            estimation={gasEstimation}
-                            isLoading={gasEstimationLoading}
-                            isLoadingTransaction={isTransactionPending}
-                            onTokenChange={handleGasTokenChange}
-                            clauses={clauses as any}
-                        />
-                    )}
+                {connection.isConnectedWithPrivy && (
+                    <GasFeeSummary
+                        estimation={gasEstimation}
+                        isLoading={gasEstimationLoading}
+                        isLoadingTransaction={isTransactionPending}
+                        onTokenChange={handleGasTokenChange}
+                        clauses={clauses as any}
+                    />
+                )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">

@@ -33,7 +33,6 @@ import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
-import { showGasFees } from '@/utils/constants';
 import { GasTokenType } from '@/types/gasToken';
 
 export type SendTokenSummaryContentProps = {
@@ -62,10 +61,7 @@ export const SendTokenSummaryContent = ({
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
     const { network, feeDelegation } = useVeChainKitConfig();
     const { preferences } = useGasTokenSelection();
-    const showGasFeeSummary = showGasFees(
-        connection.isConnectedWithPrivy,
-        !!feeDelegation?.delegatorUrl,
-    );
+
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -320,22 +316,19 @@ export const SendTokenSummaryContent = ({
                             tokenAddress={selectedToken.address}
                         />
 
-                        {feeDelegation?.genericDelegatorUrl &&
-                            showGasFeeSummary &&
-                            gasEstimation &&
-                            usedGasToken && (
-                                <GasFeeSummary
-                                    estimation={gasEstimation}
-                                    isLoading={gasEstimationLoading}
-                                    isLoadingTransaction={isSubmitting}
-                                    onTokenChange={handleGasTokenChange}
-                                    clauses={
-                                        selectedToken.symbol === 'VET'
-                                            ? vetClauses
-                                            : erc20Clauses
-                                    }
-                                />
-                            )}
+                        {connection.isConnectedWithPrivy && (
+                            <GasFeeSummary
+                                estimation={gasEstimation}
+                                isLoading={gasEstimationLoading}
+                                isLoadingTransaction={isSubmitting}
+                                onTokenChange={handleGasTokenChange}
+                                clauses={
+                                    selectedToken.symbol === 'VET'
+                                        ? vetClauses
+                                        : erc20Clauses
+                                }
+                            />
+                        )}
 
                         <VStack
                             spacing={0}

@@ -28,7 +28,6 @@ import {
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useVeChainKitConfig } from '@/providers';
-import { showGasFees } from '@/utils/constants';
 import { GasTokenType } from '@/types/gasToken';
 
 export type ChooseNameSummaryContentProps = {
@@ -62,10 +61,6 @@ export const ChooseNameSummaryContent = ({
 
     const { preferences } = useGasTokenSelection();
     const { feeDelegation } = useVeChainKitConfig();
-    const showGasFeeSummary = showGasFees(
-        connection.isConnectedWithPrivy,
-        !!feeDelegation?.delegatorUrl,
-    );
 
     const handleError = (error: string) => {
         if (isRejectionError(error)) {
@@ -257,18 +252,15 @@ export const ChooseNameSummaryContent = ({
                         </Text>
                     )}
                 </VStack>
-                {feeDelegation?.genericDelegatorUrl &&
-                    showGasFeeSummary &&
-                    gasEstimation &&
-                    usedGasToken && (
-                        <GasFeeSummary
-                            estimation={gasEstimation}
-                            isLoading={gasEstimationLoading}
-                            isLoadingTransaction={isTransactionPending}
-                            onTokenChange={handleGasTokenChange}
-                            clauses={clauses() as any}
-                        />
-                    )}
+                {connection.isConnectedWithPrivy && (
+                    <GasFeeSummary
+                        estimation={gasEstimation}
+                        isLoading={gasEstimationLoading}
+                        isLoadingTransaction={isTransactionPending}
+                        onTokenChange={handleGasTokenChange}
+                        clauses={clauses() as any}
+                    />
+                )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
