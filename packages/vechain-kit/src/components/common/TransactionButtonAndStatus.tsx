@@ -73,11 +73,20 @@ export const TransactionButtonAndStatus = ({
 
     // Gas estimation error details - simplified
     const gasEstimationErrorDetails = useMemo(() => {
+        // Don't show errors while loading or if we shouldn't show them
         if (!showGasEstimationError || isLoadingGasEstimation) {
             return null;
         }
 
-        // No gas tokens enabled
+        // Only show errors if we have an actual error OR if we've completed estimation
+        // This prevents showing errors on initial render before estimation starts
+        const hasAttemptedEstimation =
+            gasEstimationError || hasEnoughGasBalance;
+        if (!hasAttemptedEstimation) {
+            return null;
+        }
+
+        // No gas tokens enabled (only if we have an error but no specific balance issue)
         if (!hasEnoughGasBalance && !gasEstimationError) {
             return {
                 message: t(
