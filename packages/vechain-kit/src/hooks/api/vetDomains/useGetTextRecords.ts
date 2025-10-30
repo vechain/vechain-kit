@@ -115,5 +115,18 @@ export const useGetTextRecords = (domain?: string) => {
         queryKey: getTextRecordsQueryKey(domain, network.type),
         queryFn: () => getTextRecords(nodeUrl, network.type, domain),
         enabled: !!domain && !!network.type,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || errorMessage.includes('abort')) {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
+        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60, // 1 minute
     });
 };

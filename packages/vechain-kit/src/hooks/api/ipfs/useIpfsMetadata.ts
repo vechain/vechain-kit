@@ -49,6 +49,20 @@ export const useIpfsMetadata = <T>(ipfsUri?: string, parseJson = false) => {
         queryKey: getIpfsMetadataQueryKey(network.type, ipfsUri),
         queryFn: () => getIpfsMetadata<T>(network.type, ipfsUri, parseJson),
         enabled: !!ipfsUri && !!network.type,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation or validation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || 
+                    errorMessage.includes('abort') ||
+                    errorMessage === 'no uri provided' ||
+                    errorMessage === 'invalid uri') {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
         staleTime: Infinity,
     });
 };
