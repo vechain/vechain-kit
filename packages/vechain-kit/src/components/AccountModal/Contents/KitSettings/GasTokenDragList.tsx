@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Box, HStack, VStack, Text, Switch, Icon } from '@chakra-ui/react';
 import { MdDragIndicator } from 'react-icons/md';
 import { GasTokenType } from '@/types/gasToken';
@@ -20,6 +20,9 @@ interface TokenItemProps {
     onDragStart: (index: number) => void;
     onDragOver: (index: number) => void;
     onDrop: (index: number) => void;
+    onTouchStart: (index: number, event: React.TouchEvent) => void;
+    onTouchMove: (event: React.TouchEvent) => void;
+    onTouchEnd: () => void;
     isDragging: boolean;
     isDraggedOver: boolean;
 }
@@ -32,6 +35,9 @@ const TokenPriorityItem = ({
     onDragStart,
     onDragOver,
     onDrop,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
     isDragging,
     isDraggedOver,
 }: TokenItemProps) => {
@@ -67,6 +73,9 @@ const TokenPriorityItem = ({
                 onDragOver(index);
             }}
             onDrop={() => onDrop(index)}
+            onTouchStart={(e) => onTouchStart(index, e)}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
             _hover={{
                 backgroundColor: isDark ? '#ffffff12' : 'blackAlpha.200',
             }}
@@ -109,6 +118,8 @@ export const GasTokenDragList = ({
 }: DragListProps) => {
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const touchStartY = useRef<number>(0);
 
     const handleDragStart = (index: number) => {
         setDraggedIndex(index);
@@ -135,21 +146,73 @@ export const GasTokenDragList = ({
         setDragOverIndex(null);
     };
 
+    // Touch event handlers for mobile support
+    const handleTouchStart = (index: number, event: React.TouchEvent) => {
+        touchStartY.current = event.touches[0].clientY;
+        setDraggedIndex(index);
+    };
+
+    const handleTouchMove = (event: React.TouchEvent) => {
+        if (draggedIndex === null) return;
+
+        const touch = event.touches[0];
+        const currentY = touch.clientY;
+
+        // Find which item is under the current touch position
+        for (let i = 0; i < itemRefs.current.length; i++) {
+            const element = itemRefs.current[i];
+            if (!element) continue;
+
+            const rect = element.getBoundingClientRect();
+            if (currentY >= rect.top && currentY <= rect.bottom) {
+                setDragOverIndex(i);
+                break;
+            }
+        }
+    };
+
+    const handleTouchEnd = () => {
+        if (
+            draggedIndex !== null &&
+            dragOverIndex !== null &&
+            draggedIndex !== dragOverIndex
+        ) {
+            const newOrder = [...tokens];
+            const draggedToken = newOrder[draggedIndex];
+            newOrder.splice(draggedIndex, 1);
+            newOrder.splice(dragOverIndex, 0, draggedToken);
+            onReorder(newOrder);
+        }
+
+        setDraggedIndex(null);
+        setDragOverIndex(null);
+        touchStartY.current = 0;
+    };
+
     return (
         <Box w="full">
             {tokens.map((token, index) => (
-                <TokenPriorityItem
+                <Box
                     key={token}
-                    token={token}
-                    index={index}
-                    isExcluded={excludedTokens.includes(token)}
-                    onToggleExclusion={onToggleExclusion}
-                    onDragStart={handleDragStart}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    isDragging={draggedIndex === index}
-                    isDraggedOver={dragOverIndex === index}
-                />
+                    ref={(el) => {
+                        itemRefs.current[index] = el;
+                    }}
+                >
+                    <TokenPriorityItem
+                        token={token}
+                        index={index}
+                        isExcluded={excludedTokens.includes(token)}
+                        onToggleExclusion={onToggleExclusion}
+                        onDragStart={handleDragStart}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        isDragging={draggedIndex === index}
+                        isDraggedOver={dragOverIndex === index}
+                    />
+                </Box>
             ))}
         </Box>
     );
