@@ -6,7 +6,6 @@ import {
     VStack,
     Text,
     HStack,
-    Divider,
     ModalFooter,
 } from '@chakra-ui/react';
 import {
@@ -295,9 +294,6 @@ export const SendTokenSummaryContent = ({
 
             <ModalBody>
                 <VStack spacing={6} align="stretch" w="full">
-                    {connection.isConnectedWithPrivy && (
-                        <ExchangeWarningAlert />
-                    )}
                     {/* From/To Card */}
 
                     <VStack spacing={4} w="full">
@@ -320,12 +316,26 @@ export const SendTokenSummaryContent = ({
                             tokenAddress={selectedToken.address}
                         />
 
-                        <Divider />
+                        {feeDelegation?.genericDelegatorUrl &&
+                            showGasFeeSummary &&
+                            gasEstimation &&
+                            usedGasToken && (
+                                <GasFeeSummary
+                                    estimation={gasEstimation}
+                                    isLoading={gasEstimationLoading}
+                                    onTokenChange={handleGasTokenChange}
+                                    clauses={
+                                        selectedToken.symbol === 'VET'
+                                            ? vetClauses
+                                            : erc20Clauses
+                                    }
+                                />
+                            )}
+
                         <VStack
                             spacing={0}
                             w="full"
                             justifyContent="flex-start"
-                            p={2}
                         >
                             <Text
                                 fontSize="sm"
@@ -353,58 +363,49 @@ export const SendTokenSummaryContent = ({
                                 </Text>
                             </HStack>
                         </VStack>
-                        {feeDelegation?.genericDelegatorUrl &&
-                            showGasFeeSummary &&
-                            gasEstimation &&
-                            usedGasToken && (
-                                <GasFeeSummary
-                                    estimation={gasEstimation}
-                                    isLoading={gasEstimationLoading}
-                                    onTokenChange={handleGasTokenChange}
-                                    clauses={
-                                        selectedToken.symbol === 'VET'
-                                            ? vetClauses
-                                            : erc20Clauses
-                                    }
-                                />
-                            )}
                     </VStack>
                 </VStack>
             </ModalBody>
 
             <ModalFooter>
-                {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
-                    feeDelegation?.delegatorUrl ||
-                    connection.isConnectedWithDappKit) && (
-                    <TransactionButtonAndStatus
-                        transactionError={
-                            selectedToken.symbol === 'VET'
-                                ? transferVETError
-                                : transferERC20Error
-                        }
-                        isSubmitting={isSubmitting}
-                        isTxWaitingConfirmation={isTxWaitingConfirmation}
-                        onConfirm={handleSend}
-                        transactionPendingText={t('Sending...')}
-                        txReceipt={getTxReceipt()}
-                        buttonText={t('Confirm')}
-                        isDisabled={isSubmitting}
-                    />
-                )}
-                {!feeDelegation?.delegatorUrl &&
-                    !hasEnoughBalance &&
-                    connection.isConnectedWithPrivy &&
-                    !gasEstimationLoading && (
-                        <Text color="red.500">
-                            {gasEstimationError
-                                ? t(
-                                      'Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.',
-                                  )
-                                : t(
-                                      "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
-                                  )}
-                        </Text>
+                <VStack spacing={4} w="full">
+                    {((!feeDelegation?.delegatorUrl && hasEnoughBalance) ||
+                        feeDelegation?.delegatorUrl ||
+                        connection.isConnectedWithDappKit) && (
+                        <TransactionButtonAndStatus
+                            transactionError={
+                                selectedToken.symbol === 'VET'
+                                    ? transferVETError
+                                    : transferERC20Error
+                            }
+                            isSubmitting={isSubmitting}
+                            isTxWaitingConfirmation={isTxWaitingConfirmation}
+                            onConfirm={handleSend}
+                            transactionPendingText={t('Sending...')}
+                            txReceipt={getTxReceipt()}
+                            buttonText={t('Confirm')}
+                            isDisabled={isSubmitting}
+                        />
                     )}
+                    {!feeDelegation?.delegatorUrl &&
+                        !hasEnoughBalance &&
+                        connection.isConnectedWithPrivy &&
+                        !gasEstimationLoading && (
+                            <Text color="red.500">
+                                {gasEstimationError
+                                    ? t(
+                                          'Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.',
+                                      )
+                                    : t(
+                                          "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
+                                      )}
+                            </Text>
+                        )}
+
+                    {connection.isConnectedWithPrivy && (
+                        <ExchangeWarningAlert />
+                    )}
+                </VStack>
             </ModalFooter>
         </>
     );

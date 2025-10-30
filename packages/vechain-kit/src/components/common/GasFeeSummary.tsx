@@ -2,12 +2,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import {
     HStack,
     Text,
-    Button,
     Skeleton,
     Icon,
     Box,
     useDisclosure,
-    useColorModeValue,
+    VStack,
+    Button,
+    Divider,
 } from '@chakra-ui/react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,7 @@ interface GasFeeSummaryProps {
     clauses?: TransactionClause[];
 }
 
-export const GasFeeSummary = ({
+export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     estimation,
     isLoading,
     onTokenChange,
@@ -56,8 +57,6 @@ export const GasFeeSummary = ({
         >;
     });
 
-    const bgColor = useColorModeValue('gray.50', 'gray.700');
-    const hoverBgColor = useColorModeValue('gray.100', 'gray.600');
     const { darkMode: isDark } = useVeChainKitConfig();
     // Fetch estimates for all available tokens when modal opens
     const { data: allTokenEstimates, isLoading: isLoadingAllEstimates } =
@@ -140,9 +139,17 @@ export const GasFeeSummary = ({
 
     if (isLoading || !estimation || !tokenInfo) {
         return (
-            <Box w="full" p={3} bg={bgColor} borderRadius="md">
+            <Box
+                w="full"
+                p={2}
+                borderRadius="lg"
+                // bg={isDark ? '#00000038' : 'gray.50'}
+            >
+                <Text fontSize="sm" fontWeight="bold" mb={2}>
+                    {t('Fee')}
+                </Text>
                 <HStack justify="space-between" w="full">
-                    <Skeleton height="16px" width="60px" borderRadius="md" />
+                    <Skeleton height="16px" width="120px" borderRadius="md" />
                     <HStack spacing={2}>
                         <Skeleton
                             height="20px"
@@ -167,56 +174,65 @@ export const GasFeeSummary = ({
 
     return (
         <>
-            <Button
-                variant="ghost"
-                onClick={onOpen}
-                w="full"
-                justifyContent="space-between"
-                p={3}
-                h="auto"
-                bg={bgColor}
-                _hover={{ bg: hoverBgColor }}
-                borderRadius="md"
-            >
-                <HStack spacing={2}>
+            <Divider mt={3} />
+
+            <HStack mt={3} w="full" justifyContent="start" alignItems="center">
+                <VStack align="start" spacing={0} w="full">
                     <Text
                         fontSize="sm"
-                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                        fontWeight="normal"
+                        fontWeight="light"
+                        textAlign="left"
+                        w="full"
                     >
-                        {t('Max fee')}
+                        {t('Fee')}
                     </Text>
-                </HStack>
-                <HStack spacing={2}>
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        w="20px"
-                        h="20px"
+
+                    <HStack
+                        align="start"
+                        justifyContent="space-between"
+                        spacing={0}
+                        w="full"
                     >
+                        <HStack justifyContent="flex-start" w="full">
+                            <Text fontSize="sm" fontWeight="semibold">
+                                {formatGasCost(totalCost, 2)} {tokenInfo.symbol}
+                            </Text>
+                            <Text fontSize="xs" opacity={0.5}>
+                                {'≈'} ${(totalCost * 0.01).toFixed(2)}
+                            </Text>
+                        </HStack>
+                    </HStack>
+                </VStack>
+
+                <Button
+                    onClick={onOpen}
+                    variant="outline"
+                    size="sm"
+                    borderRadius="full"
+                    px={6}
+                    color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                    borderColor={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                    _hover={{
+                        bg: isDark ? 'whiteAlpha.300' : 'blackAlpha.300',
+                    }}
+                    leftIcon={React.cloneElement(
+                        TOKEN_LOGO_COMPONENTS[tokenInfo.symbol],
                         {
-                            TOKEN_LOGO_COMPONENTS[
-                                tokenInfo.symbol as keyof typeof TOKEN_LOGO_COMPONENTS
-                            ]
-                        }
-                    </Box>
+                            boxSize: '20px',
+                            borderRadius: 'full',
+                        },
+                    )}
+                >
                     <Text fontSize="sm" fontWeight="semibold">
-                        {tokenInfo.symbol} {formatGasCost(totalCost, 2)}
-                    </Text>
-                    <Text
-                        fontSize="xs"
-                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                    >
-                        {'<'} ${(totalCost * 0.01).toFixed(2)}
+                        {tokenInfo.symbol}
                     </Text>
                     <Icon
                         as={MdKeyboardArrowDown}
                         boxSize={5}
                         color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                     />
-                </HStack>
-            </Button>
+                </Button>
+            </HStack>
 
             <GasFeeTokenSelector
                 isOpen={isOpen}

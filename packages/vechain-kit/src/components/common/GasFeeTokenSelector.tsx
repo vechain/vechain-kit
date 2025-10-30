@@ -14,7 +14,6 @@ import {
     Switch,
     FormControl,
     FormLabel,
-    useColorModeValue,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { GasTokenType } from '@/types/gasToken';
@@ -50,10 +49,22 @@ export const GasFeeTokenSelector = ({
         React.useState(selectedToken);
     const [rememberChoice, setRememberChoice] = React.useState(false);
 
-    const bgColor = useColorModeValue('white', 'gray.800');
-    const borderColor = useColorModeValue('gray.200', 'gray.600');
-    const selectedBg = useColorModeValue('blue.50', 'blue.900');
-    const selectedBorder = useColorModeValue('blue.500', 'blue.300');
+    const itemBg = (selected: boolean) =>
+        isDark
+            ? selected
+                ? '#ffffff12'
+                : '#ffffff0a'
+            : selected
+            ? 'blackAlpha.200'
+            : 'blackAlpha.50';
+    const itemBorderColor = (selected: boolean) =>
+        selected
+            ? isDark
+                ? 'blue.400'
+                : 'blue.300'
+            : isDark
+            ? 'whiteAlpha.200'
+            : 'gray.200';
 
     React.useEffect(() => {
         if (isOpen) {
@@ -85,7 +96,7 @@ export const GasFeeTokenSelector = ({
     };
 
     return (
-        <BaseModal isOpen={isOpen} onClose={onClose} size="xs">
+        <BaseModal isOpen={isOpen} onClose={onClose} size="sm">
             <ModalHeader>
                 <Text fontSize="lg" fontWeight="semibold">
                     {t('Fee token')}
@@ -122,20 +133,16 @@ export const GasFeeTokenSelector = ({
                                     key={token}
                                     as="label"
                                     cursor="pointer"
-                                    bg={isSelected ? selectedBg : bgColor}
-                                    border="2px solid"
-                                    borderColor={
-                                        isSelected
-                                            ? selectedBorder
-                                            : borderColor
-                                    }
-                                    borderRadius="lg"
-                                    p={4}
-                                    transition="all 0.2s"
+                                    bg={itemBg(isSelected)}
+                                    border="1px"
+                                    borderColor={itemBorderColor(isSelected)}
+                                    borderRadius="md"
+                                    p={3}
+                                    transition="background-color 0.2s ease, border-color 0.2s ease"
                                     _hover={{
-                                        borderColor: isSelected
-                                            ? selectedBorder
-                                            : 'gray.300',
+                                        backgroundColor: isDark
+                                            ? '#ffffff12'
+                                            : 'blackAlpha.200',
                                     }}
                                     opacity={insufficient ? 0.6 : 1}
                                     position="relative"
@@ -221,9 +228,10 @@ export const GasFeeTokenSelector = ({
                 <Box
                     mt={4}
                     p={3}
-                    bg="gray.50"
+                    bg={isDark ? '#ffffff0a' : 'blackAlpha.50'}
                     borderRadius="md"
-                    _dark={{ bg: 'gray.700' }}
+                    border="1px"
+                    borderColor={isDark ? 'whiteAlpha.200' : 'gray.200'}
                 >
                     <FormControl
                         display="flex"
@@ -259,24 +267,23 @@ export const GasFeeTokenSelector = ({
             </ModalBody>
 
             <ModalFooter>
-                <HStack spacing={3} w="full">
+                <VStack spacing={3} w="full">
                     <Button
-                        variant="ghost"
-                        onClick={onClose}
-                        flex={1}
-                        colorScheme="gray"
-                    >
-                        {t('Cancel')}
-                    </Button>
-                    <Button
-                        colorScheme="blue"
+                        variant="vechainKitPrimary"
                         onClick={handleApply}
-                        flex={1}
                         isDisabled={hasInsufficientBalance(tempSelectedToken)}
                     >
                         {t('Apply')}
                     </Button>
-                </HStack>
+                    <Button
+                        variant="ghost"
+                        width="full"
+                        onClick={onClose}
+                        colorScheme="gray"
+                    >
+                        {t('Cancel')}
+                    </Button>
+                </VStack>
             </ModalFooter>
         </BaseModal>
     );
