@@ -1,5 +1,5 @@
 import { useVeChainKitConfig } from '@/providers';
-import { Button, Link, Text, VStack } from '@chakra-ui/react';
+import { Button, Link, Text, VStack, Box } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';
 import { TransactionStatusErrorType } from '@/types';
@@ -21,6 +21,12 @@ export type TransactionButtonAndStatusProps = {
         accentColor?: string;
     };
     onError?: (error: string) => void;
+    // Gas estimation error props
+    gasEstimationError?: Error | null;
+    hasEnoughGasBalance?: boolean;
+    isLoadingGasEstimation?: boolean;
+    showGasEstimationError?: boolean;
+    context?: 'send' | 'customization' | 'domain' | 'transaction';
 };
 
 export const TransactionButtonAndStatus = ({
@@ -36,6 +42,11 @@ export const TransactionButtonAndStatus = ({
     isDisabled = false,
     style,
     onError,
+    gasEstimationError,
+    hasEnoughGasBalance = true,
+    isLoadingGasEstimation = false,
+    showGasEstimationError = false,
+    context = 'transaction',
 }: TransactionButtonAndStatusProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -60,18 +71,117 @@ export const TransactionButtonAndStatus = ({
         return undefined;
     }, [style?.accentColor]);
 
+    // Gas estimation error details - simplified
+    const gasEstimationErrorDetails = useMemo(() => {
+        if (!showGasEstimationError || isLoadingGasEstimation) {
+            return null;
+        }
+
+        // No gas tokens enabled
+        if (!hasEnoughGasBalance && !gasEstimationError) {
+            return {
+                message: t(
+                    "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
+                ),
+            };
+        }
+
+        // Has estimation error - show simple contextual message
+        if (gasEstimationError) {
+            let message = '';
+            switch (context) {
+                case 'send':
+                    message = t(
+                        'Insufficient balance to complete this transfer and cover gas fees.' as any,
+                    );
+                    break;
+                case 'customization':
+                    message = t(
+                        'Insufficient balance to update your profile and cover gas fees.' as any,
+                    );
+                    break;
+                case 'domain':
+                    message = t(
+                        'Insufficient balance to claim this domain and cover gas fees.' as any,
+                    );
+                    break;
+                default:
+                    message = t(
+                        'Insufficient balance to complete this transaction and cover gas fees.' as any,
+                    );
+            }
+
+            return { message };
+        }
+
+        return null;
+    }, [
+        gasEstimationError,
+        hasEnoughGasBalance,
+        isLoadingGasEstimation,
+        showGasEstimationError,
+        context,
+        t,
+    ]);
+
     return (
         <VStack width="full" spacing={4}>
             {errorMessage && (
-                <Text
-                    color="#da5a5a"
-                    textAlign="center"
-                    width="full"
-                    data-testid="tx-send-error-msg"
+                <Box
+                    p={3}
+                    borderRadius="md"
+                    bg={
+                        isDark
+                            ? 'rgba(218, 90, 90, 0.1)'
+                            : 'rgba(218, 90, 90, 0.05)'
+                    }
+                    borderWidth="1px"
+                    borderColor={
+                        isDark
+                            ? 'rgba(218, 90, 90, 0.3)'
+                            : 'rgba(218, 90, 90, 0.2)'
+                    }
+                    w="full"
                 >
-                    {errorMessage}
-                </Text>
+                    <Text
+                        color="#da5a5a"
+                        fontSize="sm"
+                        fontWeight="medium"
+                        data-testid="tx-send-error-msg"
+                    >
+                        {errorMessage}
+                    </Text>
+                </Box>
             )}
+
+            {gasEstimationErrorDetails && !errorMessage && (
+                <Box
+                    p={3}
+                    borderRadius="md"
+                    bg={
+                        isDark
+                            ? 'rgba(218, 90, 90, 0.1)'
+                            : 'rgba(218, 90, 90, 0.05)'
+                    }
+                    borderWidth="1px"
+                    borderColor={
+                        isDark
+                            ? 'rgba(218, 90, 90, 0.3)'
+                            : 'rgba(218, 90, 90, 0.2)'
+                    }
+                    w="full"
+                >
+                    <Text
+                        color="#da5a5a"
+                        fontSize="sm"
+                        fontWeight="medium"
+                        data-testid="gas-estimation-error"
+                    >
+                        {gasEstimationErrorDetails.message}
+                    </Text>
+                </Box>
+            )}
+
             <Button
                 px={4}
                 variant="vechainKitPrimary"

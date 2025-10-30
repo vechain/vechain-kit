@@ -197,6 +197,9 @@ export const CustomizationSummaryContent = ({
     // Gas estimation
     const [selectedGasToken, setSelectedGasToken] =
         React.useState<GasTokenType | null>(null);
+    // Track the user's manual selection to keep the gas fee selector UI consistent
+    const [userSelectedGasToken, setUserSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
 
     const shouldEstimateGas =
         preferences.availableGasTokens.length > 0 &&
@@ -224,6 +227,7 @@ export const CustomizationSummaryContent = ({
     const handleGasTokenChange = React.useCallback(
         (token: GasTokenType) => {
             setSelectedGasToken(token);
+            setUserSelectedGasToken(token); // Track user's choice
             setTimeout(() => refetchGasEstimation(), 100);
         },
         [refetchGasEstimation],
@@ -231,6 +235,15 @@ export const CustomizationSummaryContent = ({
 
     // hasEnoughBalance is now determined by the hook itself
     const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
+    // Auto-fallback: if the selected token cannot cover fees (estimation error),
+    // clear selection to re-estimate across all available tokens
+    // But keep userSelectedGasToken so the selector UI shows what the user picked
+    React.useEffect(() => {
+        if (gasEstimationError && selectedGasToken) {
+            setSelectedGasToken(null);
+        }
+    }, [gasEstimationError, selectedGasToken]);
 
     const onSubmit = async () => {
         if (upgradeRequired) {
@@ -372,6 +385,7 @@ export const CustomizationSummaryContent = ({
                         isLoadingTransaction={isTransactionPending}
                         onTokenChange={handleGasTokenChange}
                         clauses={clauses as any}
+                        userSelectedToken={userSelectedGasToken}
                     />
                 )}
             </ModalBody>
@@ -390,22 +404,15 @@ export const CustomizationSummaryContent = ({
                         isTransactionPending ||
                         disableConfirmButtonDuringEstimation
                     }
+                    gasEstimationError={gasEstimationError}
+                    hasEnoughGasBalance={hasEnoughBalance}
+                    isLoadingGasEstimation={gasEstimationLoading}
+                    showGasEstimationError={
+                        !feeDelegation?.delegatorUrl &&
+                        connection.isConnectedWithPrivy
+                    }
+                    context="customization"
                 />
-
-                {!feeDelegation?.delegatorUrl &&
-                    !hasEnoughBalance &&
-                    connection.isConnectedWithPrivy &&
-                    !gasEstimationLoading && (
-                        <Text color="red.500" fontSize="sm">
-                            {gasEstimationError
-                                ? t(
-                                      'Unable to find a gas token with sufficient balance. Please enable more gas tokens in Gas Token Preferences or add funds to your wallet and try again.',
-                                  )
-                                : t(
-                                      "You don't have any gas tokens enabled. Please enable at least one gas token in Gas Token Preferences.",
-                                  )}
-                        </Text>
-                    )}
             </ModalFooter>
         </Box>
     );

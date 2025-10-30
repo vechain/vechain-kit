@@ -31,6 +31,7 @@ interface GasFeeSummaryProps {
     isLoadingTransaction?: boolean;
     onTokenChange?: (token: GasTokenType) => void;
     clauses?: TransactionClause[];
+    userSelectedToken?: GasTokenType | null; // Track user's manual selection
 }
 
 export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
@@ -39,6 +40,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     isLoadingTransaction,
     onTokenChange,
     clauses = [],
+    userSelectedToken,
 }: GasFeeSummaryProps) => {
     const { t } = useTranslation();
     const { feeDelegation } = useVeChainKitConfig();
@@ -151,14 +153,27 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     };
 
     // Determine display token and cost:
-    // - Prefer the used token from single estimation
-    // - Otherwise, pick the first available token with a loaded estimate and sufficient balance
-    // - Fallback to the first available token if none sufficient (UI still shows cost if loaded)
+    // Priority order:
+    // 1. User's manual selection (even if it failed - for consistency with error messages)
+    // 2. The used token from successful estimation
+    // 3. First available token with sufficient balance
+    // 4. First available token with loaded estimate
+    // 5. First available token
     const preferredToken = estimation?.usedToken as GasTokenType | undefined;
     const availableTokens = preferences.availableGasTokens as GasTokenType[];
 
-    let displayToken: GasTokenType | undefined = preferredToken;
-    if (!displayToken) {
+    let displayToken: GasTokenType | undefined;
+
+    // Priority 1: User's manual selection (shows what they picked)
+    if (userSelectedToken && availableTokens.includes(userSelectedToken)) {
+        displayToken = userSelectedToken;
+    }
+    // Priority 2: Successfully used token from estimation
+    else if (preferredToken) {
+        displayToken = preferredToken;
+    }
+    // Priority 3 & 4: Auto-select based on availability
+    else {
         displayToken = availableTokens.find(
             (t) =>
                 tokenEstimations[t] &&
@@ -178,9 +193,17 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     const displayEstimation = displayToken
         ? tokenEstimations[displayToken]
         : undefined;
-    const totalCost = preferredToken
-        ? estimation?.transactionCost || 0
-        : displayEstimation?.cost || 0;
+
+    // Show cost for the displayed token to keep UI consistent
+    // If displaying user's selection or a different token, use its estimation
+    // Otherwise use the successful estimation cost
+    const totalCost =
+        displayToken && displayToken !== preferredToken && displayEstimation
+            ? displayEstimation.cost
+            : preferredToken && estimation?.transactionCost
+            ? estimation.transactionCost
+            : displayEstimation?.cost || 0;
+
     const tokenInfo = displayToken
         ? SUPPORTED_GAS_TOKENS[displayToken]
         : undefined;

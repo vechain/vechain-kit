@@ -595,5 +595,9 @@
     "Remember my choice": "Remember my choice",
     "Use this token for future transactions": "Use this token for future transactions",
     "Apply": "Apply",
-    "Fee": "Fee"
+    "Fee": "Fee",
+    "Insufficient balance to complete this transfer and cover gas fees.": "Insufficient balance to complete this transfer and cover gas fees.",
+    "Insufficient balance to update your profile and cover gas fees.": "Insufficient balance to update your profile and cover gas fees.",
+    "Insufficient balance to claim this domain and cover gas fees.": "Insufficient balance to claim this domain and cover gas fees.",
+    "Insufficient balance to complete this transaction and cover gas fees.": "Insufficient balance to complete this transaction and cover gas fees."
 }
