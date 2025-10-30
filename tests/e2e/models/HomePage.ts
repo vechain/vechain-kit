@@ -20,7 +20,7 @@ export class HomePage extends BasePage {
     constructor(page: Page, context: BrowserContext, vwmock?: any) {
         super(page, context, vwmock);
 
-        this.loginButton = this.page.getByText('Login');
+        this.loginButton = this.page.getByRole('button', { name: 'Login', exact: true }).first();
         this.loginWithVechainButton = this.page.getByText('Login with VeChain');
         this.connectWalletButton = this.page.locator(
             "//*[text()='Connect wallet']/../..",
