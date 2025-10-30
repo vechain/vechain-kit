@@ -20,7 +20,9 @@ export class HomePage extends BasePage {
     constructor(page: Page, context: BrowserContext, vwmock?: any) {
         super(page, context, vwmock);
 
-        this.loginButton = this.page.getByRole('button', { name: 'Login', exact: true }).first();
+        this.loginButton = this.page
+            .getByRole('button', { name: 'Login', exact: true })
+            .first();
         this.loginWithVechainButton = this.page.getByText('Login with VeChain');
         this.connectWalletButton = this.page.locator(
             "//*[text()='Connect wallet']/../..",
@@ -42,14 +44,20 @@ export class HomePage extends BasePage {
 
     async acceptTnc() {
         return await test.step('Accept Terms & Conditions', async () => {
-            await this.acceptTncButton.waitFor({ state: 'visible', timeout: 10000 });
+            await this.acceptTncButton.waitFor({
+                state: 'visible',
+                timeout: 10000,
+            });
             await this.acceptTncButton.click();
         });
     }
 
     async rejectTnc() {
         return await test.step('Reject Terms and Conditions', async () => {
-            await this.rejectTncButton.waitFor({ state: 'visible', timeout: 10000 });
+            await this.rejectTncButton.waitFor({
+                state: 'visible',
+                timeout: 10000,
+            });
             await this.rejectTncButton.click();
         });
     }
@@ -59,7 +67,7 @@ export class HomePage extends BasePage {
             await this.loginButton.click();
             await this.connectWalletButton.click();
             await this.veworldButton.click();
-            
+
             if (args) {
                 switch (args!.acceptTnc) {
                     case true:
