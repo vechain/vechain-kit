@@ -54,5 +54,8 @@ export function calculateTotalCost(
 }
 
 export function formatGasCost(amount: number, decimals: number = 4): string {
-    return amount.toFixed(decimals);
+    return Number(amount).toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+    });
 }
