@@ -143,6 +143,11 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
         return null;
     }
 
+    // If no tokens are available, don't render anything
+    if (preferences.availableGasTokens.length === 0) {
+        return null;
+    }
+
     const { balances } = useTokenBalances(account?.address ?? '');
 
     const hasInsufficientBalanceForToken = (token: GasTokenType) => {

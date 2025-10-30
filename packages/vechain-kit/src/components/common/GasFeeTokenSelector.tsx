@@ -222,27 +222,29 @@ export const GasFeeTokenSelector = ({
                         );
                     })}
 
-                    <FormControl
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <FormLabel
-                            htmlFor="remember-choice"
-                            mb="0"
-                            fontSize="sm"
+                    {tempSelectedToken !== selectedToken && (
+                        <FormControl
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
                         >
-                            {t('Use this token for future transactions')}
-                        </FormLabel>
-                        <Switch
-                            id="remember-choice"
-                            isChecked={rememberChoice}
-                            onChange={(e) =>
-                                setRememberChoice(e.target.checked)
-                            }
-                            colorScheme="blue"
-                        />
-                    </FormControl>
+                            <FormLabel
+                                htmlFor="remember-choice"
+                                mb="0"
+                                fontSize="sm"
+                            >
+                                {t('Use this token for future transactions')}
+                            </FormLabel>
+                            <Switch
+                                id="remember-choice"
+                                isChecked={rememberChoice}
+                                onChange={(e) =>
+                                    setRememberChoice(e.target.checked)
+                                }
+                                colorScheme="blue"
+                            />
+                        </FormControl>
+                    )}
                 </VStack>
             </ModalBody>
 

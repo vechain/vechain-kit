@@ -4,6 +4,9 @@ import {
     VStack,
     ModalHeader,
     Text,
+    Alert,
+    AlertIcon,
+    AlertDescription,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -64,6 +67,18 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                             )}
                         </Text>
                     </VStack>
+
+                    {/* Warning when all tokens are disabled */}
+                    {preferences.availableGasTokens.length === 0 && (
+                        <Alert status="warning" borderRadius="md">
+                            <AlertIcon />
+                            <AlertDescription fontSize="sm">
+                                {t(
+                                    'You must enable at least one token to perform transactions. Without any enabled tokens, you will not be able to pay for gas fees.' as any,
+                                )}
+                            </AlertDescription>
+                        </Alert>
+                    )}
 
                     {/* Token Priority List */}
                     <VStack w="full" align="start" spacing={3}>

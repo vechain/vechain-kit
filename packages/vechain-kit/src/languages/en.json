@@ -599,5 +599,6 @@
     "Insufficient balance to complete this transfer and cover gas fees.": "Insufficient balance to complete this transfer and cover gas fees.",
     "Insufficient balance to update your profile and cover gas fees.": "Insufficient balance to update your profile and cover gas fees.",
     "Insufficient balance to claim this domain and cover gas fees.": "Insufficient balance to claim this domain and cover gas fees.",
-    "Insufficient balance to complete this transaction and cover gas fees.": "Insufficient balance to complete this transaction and cover gas fees."
+    "Insufficient balance to complete this transaction and cover gas fees.": "Insufficient balance to complete this transaction and cover gas fees.",
+    "You must enable at least one token to perform transactions. Without any enabled tokens, you will not be able to pay for gas fees.": "You must enable at least one token to perform transactions. Without any enabled tokens, you will not be able to pay for gas fees."
 }
