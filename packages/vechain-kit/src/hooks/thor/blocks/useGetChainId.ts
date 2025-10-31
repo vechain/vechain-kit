@@ -22,6 +22,5 @@ export const useGetChainId = () => {
         queryKey: getChainIdQueryKey(),
         queryFn: () => getChainId(thor),
         enabled: !!thor,
-        refetchInterval: 10000,
     });
 };
