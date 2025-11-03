@@ -11,6 +11,7 @@ import { LanguageSelector } from '@/app/components/features/LanguageSelector';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/SigningExample/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
+import { ConvertTokenExample } from '@/app/components/features/ConvertTokenExample';
 import { trackEvent } from '@/app/lib/mixpanelClient';
 
 export default function Home(): ReactElement {
@@ -49,6 +50,7 @@ export default function Home(): ReactElement {
                 <LanguageSelector />
                 <TransactionExamples />
                 <SigningExample />
+                <ConvertTokenExample />
             </VStack>
         </Container>
     );
