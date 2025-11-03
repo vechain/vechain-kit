@@ -1,0 +1,2 @@
+export { BetterSwapLogo } from './BetterSwapLogo';
+

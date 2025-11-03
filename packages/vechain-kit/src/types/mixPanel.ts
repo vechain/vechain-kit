@@ -414,12 +414,18 @@ export type SendProperties = {
     isError?: boolean;
 };
 
-export type SwapAction = 'view' | 'button_click' | 'launch_better_swap';
+export type SwapAction = 'view' | 'button_click' | 'token_selected' | 'amount_set' | 'completed' | 'failed';
 
 export type SwapProperties = {
     action: SwapAction;
     error?: string;
     isError?: boolean;
+    fromToken?: string;
+    toToken?: string;
+    amount?: string;
+    aggregator?: string;
+    direction?: 'from' | 'to';
+    type?: 'max' | 'percentage';
 };
 
 export type BridgeAction = 'view' | 'button_click' | 'launch_vechain_energy';

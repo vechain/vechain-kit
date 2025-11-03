@@ -34,6 +34,7 @@ import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
+import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
@@ -107,6 +108,10 @@ export const AccountModal = ({
                 case 'successful-operation':
                     return (
                         <SuccessfulOperationContent {...currentContent.props} />
+                    );
+                case 'failed-operation':
+                    return (
+                        <FailedOperationContent {...currentContent.props} />
                     );
                 case 'upgrade-smart-account':
                     return (

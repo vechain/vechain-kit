@@ -13,6 +13,7 @@ import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
+import { FailedOperationContentProps } from '../Contents/FailedOperation/FailedOperationContent';
 import { TermsAndPrivacyContentProps } from '../Contents/TermsAndPrivacy/TermsAndPrivacyContent';
 
 export type AccountModalContentTypes =
@@ -43,6 +44,10 @@ export type AccountModalContentTypes =
     | {
           type: 'successful-operation';
           props: SuccessfulOperationContentProps;
+      }
+    | {
+          type: 'failed-operation';
+          props: FailedOperationContentProps;
       }
     | {
           type: 'account-customization-summary';
