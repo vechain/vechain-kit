@@ -127,8 +127,6 @@ export const useSwapQuotes = (
                 });
             }
 
-            console.log('Swap Quotes', quotes);
-            console.log('Best Swap Quote', best);
             return { quotes, best };
         },
         enabled: enabled && params !== null && thor !== null && thor !== undefined,

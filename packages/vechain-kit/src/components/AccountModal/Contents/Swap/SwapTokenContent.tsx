@@ -17,8 +17,6 @@ import {
     Image,
     Spinner,
     Collapse,
-    Divider,
-    Badge,
     Center,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer, TransactionButtonAndStatus } from '@/components/common';

@@ -1,6 +1,6 @@
 import { TransactionClause, Clause, ABIContract, Address as VeChainAddress, VET, Units } from '@vechain/sdk-core';
 import { SwapAggregator, SwapQuote, SwapSimulation, SwapParams } from '@/types/swap';
-import { Address, formatUnits } from 'viem';
+import { Address } from 'viem';
 import { UNISWAP_V2_ROUTER_ABI } from './uniswapV2RouterAbi';
 import { ThorClient } from '@vechain/sdk-network';
 import React from 'react';
