@@ -415,37 +415,54 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                             >
                                 {t('From')}
                             </Text>
-                            <HStack spacing={2} align="flex-start">
-                                <Box display="flex" alignItems="center" height="fit-content">
-                                    <Button
-                                        onClick={() => setStep('select-from-token')}
-                                        variant="outline"
-                                        size="sm"
-                                        borderRadius="full"
-                                        flexShrink={0}
-                                        flexGrow={0}
-                                        whiteSpace="nowrap"
+                            <VStack align="stretch" spacing={2}>
+                                <HStack justify="space-between">
+                                    <Input
+                                        placeholder="0"
+                                        value={amount}
+                                        onChange={(e) => handleAmountChange(e.target.value)}
+                                        fontSize="4xl"
+                                        fontWeight="bold"
+                                        variant="unstyled"
+                                        data-testid="swap-amount-input"
+                                        type="number"
+                                        inputMode="decimal"
                                         color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
+                                            fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance)
+                                                ? 'red.500'
+                                                : undefined
                                         }
-                                        borderColor={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        _hover={{
-                                            bg: isDark
-                                                ? 'whiteAlpha.300'
-                                                : 'blackAlpha.300',
-                                        }}
-                                        leftIcon={
-                                            fromTokenDisplay ? (
+                                    />
+                                    {fromTokenDisplay ? (
+                                        <Button
+                                            onClick={() => setStep('select-from-token')}
+                                            variant="outline"
+                                            size="sm"
+                                            borderRadius="full"
+                                            px={6}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            borderColor={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                            }}
+                                            leftIcon={
                                                 fromTokenDisplay.logoComponent ? (
                                                     React.cloneElement(
                                                         fromTokenDisplay.logoComponent,
-                                                        { boxSize: '20px', borderRadius: 'full' },
+                                                        {
+                                                            boxSize: '20px',
+                                                            borderRadius: 'full',
+                                                        },
                                                     )
                                                 ) : fromTokenDisplay.logoUrl ? (
                                                     <Image
@@ -453,11 +470,31 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                                         alt={`${fromTokenDisplay.symbol} logo`}
                                                         boxSize="20px"
                                                         borderRadius="full"
+                                                        fallback={
+                                                            <Box
+                                                                boxSize="20px"
+                                                                borderRadius="full"
+                                                                bg="whiteAlpha.200"
+                                                                display="flex"
+                                                                alignItems="center"
+                                                                justifyContent="center"
+                                                            >
+                                                                <Text
+                                                                    fontSize="8px"
+                                                                    fontWeight="bold"
+                                                                >
+                                                                    {fromTokenDisplay.symbol.slice(
+                                                                        0,
+                                                                        3,
+                                                                    )}
+                                                                </Text>
+                                                            </Box>
+                                                        }
                                                     />
                                                 ) : undefined
-                                            ) : undefined
-                                        }
-                                        rightIcon={
+                                            }
+                                        >
+                                            {fromTokenDisplay.symbol}
                                             <Icon
                                                 as={MdKeyboardArrowDown}
                                                 boxSize={5}
@@ -467,51 +504,71 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                                         : 'blackAlpha.600'
                                                 }
                                             />
-                                        }
-                                    >
-                                        {fromTokenDisplay?.symbol ?? t('Select Token')}
-                                    </Button>
-                                </Box>
-                                <VStack align="flex-start" spacing={1} flex={1} position="relative" top={-2}>
-                                    <Box display="flex" alignItems="center" height="fit-content" width="100%" justifyContent="flex-end">
-                                        <InputGroup size="lg">
-                                            <Input
-                                                placeholder="0"
-                                                value={amount}
-                                                onChange={(e) => handleAmountChange(e.target.value)}
-                                                fontSize="4xl"
-                                                fontWeight="bold"
-                                                textAlign="right"
-                                                variant="unstyled"
-                                                _focus={{ border: 'none' }}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            onClick={() => setStep('select-from-token')}
+                                            variant="outline"
+                                            size="sm"
+                                            borderRadius="full"
+                                            px={6}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            borderColor={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                                color: isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700',
+                                            }}
+                                        >
+                                            {t('Select token')}
+                                            <Icon
+                                                as={MdKeyboardArrowDown}
+                                                boxSize={5}
                                                 color={
-                                                    fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance)
-                                                        ? 'red.500'
-                                                        : undefined
+                                                    isDark
+                                                        ? 'whiteAlpha.600'
+                                                        : 'blackAlpha.600'
                                                 }
                                             />
-                                        </InputGroup>
-                                    </Box>
-                                    {fromTokenDisplay && (
-                                        <HStack spacing={2} justify="flex-end" width="100%">
-                                            <Text
-                                                fontSize="xs"
-                                                color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                                                textAlign="right"
-                                                whiteSpace="nowrap"
-                                                cursor="pointer"
-                                                onClick={handleSetMaxAmount}
-                                                _hover={{
-                                                    color: isDark ? 'whiteAlpha.800' : 'blackAlpha.800',
-                                                    textDecoration: 'underline',
-                                                }}
-                                            >
-                                                {Number(fromTokenDisplay.balance).toLocaleString(undefined, {
-                                                    maximumFractionDigits: 2,
-                                                })} {fromTokenDisplay.symbol}
-                                            </Text>
+                                        </Button>
+                                    )}
+                                </HStack>
+                                {fromTokenDisplay && (
+                                    <HStack
+                                        spacing={1}
+                                        fontSize="sm"
+                                        justifyContent={'space-between'}
+                                        color={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
+                                        }
+                                    >
+                                        <HStack spacing={2} alignItems="center">
+                                            {Number(fromTokenDisplay.balance) > 0 && (
+                                                <Text
+                                                    noOfLines={1}
+                                                    overflow="hidden"
+                                                    textOverflow="ellipsis"
+                                                >
+                                                    {Number(fromTokenDisplay.balance).toLocaleString(undefined, {
+                                                        maximumFractionDigits: 2,
+                                                    })} {fromTokenDisplay.symbol}
+                                                </Text>
+                                            )}
                                             {fromTokenDisplay.value > 0 && (
-                                                <Text fontSize="xs" color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'} textAlign="right" whiteSpace="nowrap">
+                                                <Text opacity={0.5}>
                                                     ≈ {formatCompactCurrency(
                                                         fromTokenDisplay.value,
                                                         { currency: currentCurrency },
@@ -519,9 +576,24 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                                 </Text>
                                             )}
                                         </HStack>
-                                    )}
-                                </VStack>
-                            </HStack>
+                                        <Text
+                                            cursor="pointer"
+                                            _hover={{
+                                                color: isDark
+                                                    ? 'blue.300'
+                                                    : 'blue.500',
+                                                textDecoration: 'underline',
+                                            }}
+                                            onClick={handleSetMaxAmount}
+                                            noOfLines={1}
+                                            overflow="hidden"
+                                            textOverflow="ellipsis"
+                                        >
+                                            {t('Swap all')}
+                                        </Text>
+                                    </HStack>
+                                )}
+                            </VStack>
                         </Box>
 
                         {/* Arrow Icon */}
@@ -553,7 +625,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
 
                         {/* To Section */}
                         <Box
-                            p={4}
+                            p={6}
                             borderRadius="xl"
                             bg={isDark ? '#00000038' : 'gray.50'}
                         >
@@ -565,37 +637,48 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                             >
                                 {t('To')}
                             </Text>
-                            <HStack spacing={2} align="flex-start">
-                                <Box display="flex" alignItems="center" height="fit-content">
-                                    <Button
-                                        onClick={() => setStep('select-to-token')}
-                                        variant="outline"
-                                        size="sm"
-                                        borderRadius="full"
-                                        flexShrink={0}
-                                        flexGrow={0}
-                                        whiteSpace="nowrap"
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        borderColor={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                        _hover={{
-                                            bg: isDark
-                                                ? 'whiteAlpha.300'
-                                                : 'blackAlpha.300',
-                                        }}
-                                        leftIcon={
-                                            toTokenDisplay ? (
+                            <VStack align="stretch" spacing={2}>
+                                <HStack justify="space-between" alignItems="center">
+                                    <Input
+                                        value={Number(outputAmount).toLocaleString(undefined, {
+                                            maximumFractionDigits: Number(outputAmount) > 10000 ? 0 : 2,
+                                        })}
+                                        readOnly
+                                        variant="unstyled"
+                                        fontSize="4xl"
+                                        fontWeight="bold"
+                                        data-testid="swap-output-amount"
+                                    />
+                                    {toTokenDisplay ? (
+                                        <Button
+                                            onClick={() => setStep('select-to-token')}
+                                            variant="outline"
+                                            size="sm"
+                                            borderRadius="full"
+                                            px={6}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            borderColor={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                            }}
+                                            leftIcon={
                                                 toTokenDisplay.logoComponent ? (
                                                     React.cloneElement(
                                                         toTokenDisplay.logoComponent,
-                                                        { boxSize: '20px', borderRadius: 'full' },
+                                                        {
+                                                            boxSize: '20px',
+                                                            borderRadius: 'full',
+                                                        },
                                                     )
                                                 ) : toTokenDisplay.logoUrl ? (
                                                     <Image
@@ -603,11 +686,31 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                                         alt={`${toTokenDisplay.symbol} logo`}
                                                         boxSize="20px"
                                                         borderRadius="full"
+                                                        fallback={
+                                                            <Box
+                                                                boxSize="20px"
+                                                                borderRadius="full"
+                                                                bg="whiteAlpha.200"
+                                                                display="flex"
+                                                                alignItems="center"
+                                                                justifyContent="center"
+                                                            >
+                                                                <Text
+                                                                    fontSize="8px"
+                                                                    fontWeight="bold"
+                                                                >
+                                                                    {toTokenDisplay.symbol.slice(
+                                                                        0,
+                                                                        3,
+                                                                    )}
+                                                                </Text>
+                                                            </Box>
+                                                        }
                                                     />
                                                 ) : undefined
-                                            ) : undefined
-                                        }
-                                        rightIcon={
+                                            }
+                                        >
+                                            {toTokenDisplay.symbol}
                                             <Icon
                                                 as={MdKeyboardArrowDown}
                                                 boxSize={5}
@@ -617,39 +720,82 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                                         : 'blackAlpha.600'
                                                 }
                                             />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            onClick={() => setStep('select-to-token')}
+                                            variant="outline"
+                                            size="sm"
+                                            borderRadius="full"
+                                            px={6}
+                                            color={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            borderColor={
+                                                isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700'
+                                            }
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                                color: isDark
+                                                    ? 'whiteAlpha.700'
+                                                    : 'blackAlpha.700',
+                                            }}
+                                        >
+                                            {t('Select token')}
+                                            <Icon
+                                                as={MdKeyboardArrowDown}
+                                                boxSize={5}
+                                                color={
+                                                    isDark
+                                                        ? 'whiteAlpha.600'
+                                                        : 'blackAlpha.600'
+                                                }
+                                            />
+                                        </Button>
+                                    )}
+                                </HStack>
+                                {toTokenDisplay && (
+                                    <HStack
+                                        spacing={1}
+                                        fontSize="sm"
+                                        justifyContent={'space-between'}
+                                        color={
+                                            isDark
+                                                ? 'whiteAlpha.700'
+                                                : 'blackAlpha.700'
                                         }
                                     >
-                                        {toTokenDisplay?.symbol ?? t('Select Token')}
-                                    </Button>
-                                </Box>
-                                <VStack align="flex-start" spacing={1} flex={1} paddingEnd={2} position="relative" top={-2}>
-                                    <Box display="flex" alignItems="center" height="fit-content" width="100%" justifyContent="flex-end">
-                                        <Text
-                                            fontSize="4xl"
-                                            fontWeight="bold"
-                                            textAlign="right"
-                                            whiteSpace="nowrap"
-                                        >
-                                            {isLoadingQuote ? (
-                                                <Spinner size="sm" />
-                                            ) : (
-                                                Number(outputAmount).toLocaleString(undefined, {
-                                                    maximumFractionDigits: Number(outputAmount) > 10000 ? 0 : 2,
-                                                })
+                                        <HStack spacing={2} alignItems="center">
+                                            {Number(toTokenDisplay.balance) > 0 && (
+                                                <Text
+                                                    noOfLines={1}
+                                                    overflow="hidden"
+                                                    textOverflow="ellipsis"
+                                                >
+                                                    {Number(toTokenDisplay.balance).toLocaleString(undefined, {
+                                                        maximumFractionDigits: 2,
+                                                    })} {toTokenDisplay.symbol}
+                                                </Text>
                                             )}
-                                        </Text>
-                                    </Box>
-                                    {toTokenDisplay && (
-                                        <HStack spacing={2} justify="flex-end" width="100%">
-                                            <Text fontSize="xs" color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'} textAlign="right" whiteSpace="nowrap">
-                                                {Number(toTokenDisplay.balance).toLocaleString(undefined, {
-                                                    maximumFractionDigits: 2,
-                                                })} {toTokenDisplay.symbol}
-                                            </Text>
+                                            {toTokenDisplay.value > 0 && (
+                                                <Text opacity={0.5}>
+                                                    ≈ {formatCompactCurrency(
+                                                        toTokenDisplay.value,
+                                                        { currency: currentCurrency },
+                                                    )}
+                                                </Text>
+                                            )}
                                         </HStack>
-                                    )}
-                                </VStack>
-                            </HStack>
+                                        <Box />
+                                    </HStack>
+                                )}
+                            </VStack>
                         </Box>
 
                         {/* Show More Section */}
