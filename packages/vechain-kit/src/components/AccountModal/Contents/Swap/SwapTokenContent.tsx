@@ -653,7 +653,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                         </Box>
 
                         {/* Show More Section */}
-                        <Collapse in={showMore} animateOpacity>
+                        <Collapse in={showMore && !!quote} animateOpacity>
                             <VStack spacing={1} align="stretch" p={4} borderRadius="xl" bg={isDark ? '#00000038' : 'gray.50'}>
                                 {/* Source */}
                                 {quote && (
