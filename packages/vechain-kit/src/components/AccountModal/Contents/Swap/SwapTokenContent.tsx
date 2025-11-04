@@ -47,6 +47,7 @@ import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
 import { GasTokenType } from '@/types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
+import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -285,19 +286,87 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
             aggregator: quote?.aggregatorName ?? '',
         });
 
+        // Extract swap amounts from receipt transfer events
+        let swapTitle = t('Swap successful', { defaultValue: 'Swap successful' });
+        let swapDescription: string | undefined;
+
+        if (txReceipt && fromToken && toToken && account?.address) {
+            const swapAmounts = extractSwapAmounts(
+                txReceipt,
+                account.address,
+                fromToken.address,
+                toToken.address,
+            );
+
+            if (swapAmounts && from && to) {
+                try {
+                    // Format amounts using token decimals from useSwapQuotes
+                    const fromDecimals = from.decimals;
+                    const toDecimals = to.decimals;
+                    const fromAmountFormatted = formatUnits(
+                        swapAmounts.fromAmount,
+                        fromDecimals,
+                    );
+                    const toAmountFormatted = formatUnits(
+                        swapAmounts.toAmount,
+                        toDecimals,
+                    );
+
+                    // Format numbers for display (remove unnecessary trailing zeros)
+                    const formatAmount = (value: string) => {
+                        const num = Number(value);
+                        if (num >= 1000) {
+                            return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                        }
+                        return num.toLocaleString(undefined, {
+                            maximumFractionDigits: 6,
+                            minimumFractionDigits: 0,
+                        });
+                    };
+
+                    swapDescription = t(
+                        'You successfully swapped {fromAmount} {fromSymbol} for {toAmount} {toSymbol}',
+                        {
+                            fromAmount: formatAmount(fromAmountFormatted),
+                            fromSymbol: fromToken.symbol,
+                            toAmount: formatAmount(toAmountFormatted),
+                            toSymbol: toToken.symbol,
+                            defaultValue:
+                                `You successfully swapped ${formatAmount(fromAmountFormatted)} ${fromToken.symbol} for ${formatAmount(toAmountFormatted)} ${toToken.symbol}`,
+                        },
+                    );
+                } catch (error) {
+                    console.warn('Failed to format swap amounts:', error);
+                }
+            }
+        }
+
+        // Fallback to basic description if extraction failed
+        if (!swapDescription && fromToken && toToken) {
+            swapDescription = t(
+                'You successfully swapped {fromToken} for {toToken}',
+                {
+                    fromToken: fromToken.symbol,
+                    toToken: toToken.symbol,
+                    defaultValue: `You successfully swapped ${fromToken.symbol} for ${toToken.symbol}`,
+                },
+            );
+        }
+
         setCurrentContent({
             type: 'successful-operation',
             props: {
                 setCurrentContent,
                 txId,
-                title: t('Transaction successful'),
+                title: swapTitle,
+                description: swapDescription,
                 onDone: () => {
                     setCurrentContent('main');
                 },
                 showSocialButtons: true,
             },
         });
-    }, [fromToken, toToken, amount, quote, txReceipt, setCurrentContent, t]);
+    }, [fromToken, toToken, amount, quote, txReceipt, account?.address, setCurrentContent, t]);
 
     const handleSwapError = useCallback((error: Error | string) => {
         const errorMessage = typeof error === 'string' ? error : error.message;
