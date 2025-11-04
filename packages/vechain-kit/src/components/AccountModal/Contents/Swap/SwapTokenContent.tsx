@@ -131,6 +131,12 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
         }
     }, [fromToken, toToken]);
 
+    // Clear selected quote when quote parameters change
+    // This ensures that when amount/token changes, we use the new best quote
+    // instead of a stale manually selected quote
+    React.useEffect(() => {
+        setSelectedQuote(null);
+    }, [fromToken?.address, toToken?.address, amount]);
 
     // Unified quotes: get best and full list
     const { bestQuote, quotes: allQuotes, isLoading: isLoadingQuote, from, to } = useSwapQuotes(
