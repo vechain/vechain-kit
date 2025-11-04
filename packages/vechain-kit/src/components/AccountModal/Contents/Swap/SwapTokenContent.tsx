@@ -33,6 +33,8 @@ import {
     useSwapQuotes,
     useSwapTransaction,
     useCurrency,
+    useGasTokenSelection,
+    useGasEstimation,
 } from '@/hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
 import { SwapQuote } from '@/types/swap';
@@ -43,6 +45,8 @@ import { getConfig } from '@/config';
 import { compareAddresses } from '@/utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
+import { GasTokenType } from '@/types/gasToken';
+import { TransactionClause } from '@vechain/sdk-core';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -54,9 +58,10 @@ type SwapStep = 'main' | 'select-from-token' | 'select-to-token' | 'select-quote
 
 export const SwapTokenContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
-    const { account } = useWallet();
+    const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
     });
@@ -70,6 +75,9 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
     const [showSlippageConfig, setShowSlippageConfig] = useState(false);
     const [customSlippageValue, setCustomSlippageValue] = useState('1');
     const [selectedQuote, setSelectedQuote] = useState<SwapQuote | null>(null);
+    const [selectedGasToken, setSelectedGasToken] = React.useState<GasTokenType | null>(null);
+    const [userSelectedGasToken, setUserSelectedGasToken] = React.useState<GasTokenType | null>(null);
+    const [swapClauses, setSwapClauses] = React.useState<TransactionClause[]>([]);
 
     // Determine if we're in auto mode (1% default) or custom mode
     const isAutoMode = slippageTolerance === 1;
@@ -188,6 +196,74 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
 
     // Use gas cost from quote if available, otherwise from simulation hook
     const gasCostVTHO = quote?.gasCostVTHO ?? 0;
+
+    // Build swap clauses for gas estimation (async operation)
+    React.useEffect(() => {
+        const buildClauses = async () => {
+            if (!quote || !swapParams || !quote.aggregator) {
+                setSwapClauses([]);
+                return;
+            }
+
+            try {
+                const clauses = await quote.aggregator.buildSwapTransaction(swapParams, quote);
+                setSwapClauses(clauses);
+            } catch (error) {
+                console.error('Failed to build swap clauses for gas estimation:', error);
+                setSwapClauses([]);
+            }
+        };
+
+        buildClauses();
+    }, [quote, swapParams]);
+
+    // Gas estimation for social login wallets with generic delegator
+    const shouldEstimateGas =
+        preferences.availableGasTokens.length > 0 &&
+        (connection.isConnectedWithPrivy ||
+            connection.isConnectedWithVeChain) &&
+        !feeDelegation?.delegatorUrl;
+
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+        refetch: refetchGasEstimation,
+    } = useGasEstimation({
+        clauses: swapClauses,
+        tokens: selectedGasToken
+            ? [selectedGasToken]
+            : preferences.availableGasTokens,
+        sendingAmount: amount,
+        sendingTokenSymbol: fromToken?.symbol ?? '',
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl && swapClauses.length > 0,
+    });
+
+    const usedGasToken = gasEstimation?.usedToken;
+    const disableConfirmButtonDuringEstimation =
+        (gasEstimationLoading || !gasEstimation) &&
+        connection.isConnectedWithPrivy &&
+        !feeDelegation?.delegatorUrl;
+
+    const handleGasTokenChange = React.useCallback(
+        (token: GasTokenType) => {
+            setSelectedGasToken(token);
+            setUserSelectedGasToken(token);
+            setTimeout(() => refetchGasEstimation(), 100);
+        },
+        [refetchGasEstimation],
+    );
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
+    // Auto-fallback: if the selected token cannot cover fees (estimation error),
+    // clear selection to re-estimate across all available tokens
+    React.useEffect(() => {
+        if (gasEstimationError && selectedGasToken) {
+            setSelectedGasToken(null);
+        }
+    }, [gasEstimationError, selectedGasToken]);
 
     // Swap transaction execution
     const {
@@ -969,7 +1045,15 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                         Number(amount) <= 0 ||
                         isLoadingQuote ||
                         quote?.reverted === true ||
-                        Boolean(fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance))
+                        Boolean(fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance)) ||
+                        disableConfirmButtonDuringEstimation
+                    }
+                    gasEstimationError={gasEstimationError}
+                    hasEnoughGasBalance={hasEnoughBalance}
+                    isLoadingGasEstimation={gasEstimationLoading}
+                    showGasEstimationError={
+                        !feeDelegation?.delegatorUrl &&
+                        connection.isConnectedWithPrivy
                     }
                     context="transaction"
                 />
