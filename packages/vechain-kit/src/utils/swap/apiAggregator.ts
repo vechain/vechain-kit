@@ -69,7 +69,7 @@ export const createApiAggregator = (config: ApiAggregatorConfig): SwapAggregator
         name: config.name,
         getIcon: config.getIcon,
 
-        async getQuote(params: SwapParams, thor: ThorClient): Promise<SwapQuote> {
+        async getQuote(params: SwapParams, _thor: ThorClient): Promise<SwapQuote> {
             try {
                 // Build query parameters
                 const queryParams = new URLSearchParams({

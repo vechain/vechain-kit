@@ -287,7 +287,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
         });
 
         // Extract swap amounts from receipt transfer events
-        let swapTitle = t('Swap successful', { defaultValue: 'Swap successful' });
+        const swapTitle = t('Swap successful', { defaultValue: 'Swap successful' });
         let swapDescription: string | undefined;
 
         if (txReceipt && fromToken && toToken && account?.address) {
