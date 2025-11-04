@@ -12,6 +12,7 @@ import {
     Icon,
     Image,
     Tooltip,
+    ModalFooter,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { SwapQuote } from '@/types/swap';
@@ -334,6 +335,7 @@ export const SelectQuoteContent = ({
                     </VStack>
                 </ModalBody>
             </Container>
+            <ModalFooter />
         </>
     );
 };
