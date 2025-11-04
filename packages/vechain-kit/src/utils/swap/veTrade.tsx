@@ -1,25 +1,22 @@
 import { SwapAggregator } from '@/types/swap';
-import { type Address, zeroAddress } from 'viem';
-import { createUniswapV2Aggregator } from './uniswapV2Aggregator';
+import { createApiAggregator } from './apiAggregator';
 import { VeTradeLogo } from '@/assets/icons';
 import React from 'react';
 
 /**
  * VeTrade aggregator configuration
  * 
- * VeTrade Router Contract: 0xE5fA980a6EfE5B79C2150a529da06AeF455963b6
- * Uses Uniswap V2 compatible interface
+ * VeTrade API: https://vetrade.vet/api
+ * Fetches quotes and transaction clauses from the VeTrade API
  */
-const VETRADE_ROUTER_ADDRESS = '0xE5fA980a6EfE5B79C2150a529da06AeF455963b6' as Address;
-const WRAPPED_VET_ADDRESS = zeroAddress
+const VETRADE_API_BASE_URL = 'https://vetrade.vet/api';
 
 /**
  * VeTrade aggregator instance
- * Created using the shared Uniswap V2 aggregator module
+ * Created using the API aggregator module
  */
-export const veTradeAggregator: SwapAggregator = createUniswapV2Aggregator({
+export const veTradeAggregator: SwapAggregator = createApiAggregator({
     name: 'VeTrade.vet',
-    routerAddress: VETRADE_ROUTER_ADDRESS,
-    wrappedVET: WRAPPED_VET_ADDRESS,
+    apiBaseUrl: VETRADE_API_BASE_URL,
     getIcon: (boxSize = '20px') => React.createElement(VeTradeLogo, { boxSize }),
 });

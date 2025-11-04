@@ -166,20 +166,7 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
                     }
 
                     // Calculate gas cost for this clause
-                    if (result.gasUsed !== undefined && result.gasUsed !== null) {
-                        let gas: number;
-                        if (typeof result.gasUsed === 'string') {
-                            const cleaned = String(result.gasUsed).replace(/,/g, '');
-                            gas = Number(BigInt(cleaned));
-                        } else if (typeof result.gasUsed === 'bigint') {
-                            gas = Number(result.gasUsed);
-                        } else if (typeof result.gasUsed === 'number') {
-                            gas = result.gasUsed;
-                        } else {
-                            gas = Number(String(result.gasUsed));
-                        }
-                        totalGas += gas;
-                    }
+                    totalGas += result.gasUsed;
                 }
 
                 // Convert gas units to VTHO
