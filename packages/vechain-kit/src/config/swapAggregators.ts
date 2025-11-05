@@ -1,15 +1,19 @@
 import { SwapAggregator } from '@/types/swap';
-import { betterSwapAggregator } from '@/utils/swap/betterSwap';
-import { veTradeAggregator } from '@/utils/swap/veTrade';
+import { NETWORK_TYPE } from '@/config/network';
+import { createBetterSwapAggregator } from '@/utils/swap/betterSwap';
+import { createVeTradeAggregator } from '@/utils/swap/veTrade';
 
 /**
- * Configuration file for swap aggregators
+ * Get swap aggregators for a specific network
  * 
  * Add or remove aggregators by importing their modules and adding them to this array.
- * Each aggregator module must export a default object implementing the SwapAggregator interface.
+ * Each aggregator module must export a function or object implementing the SwapAggregator interface.
+ * 
+ * @param networkType - The network type (main, test, or solo)
+ * @returns Array of SwapAggregator instances configured for the specified network
  */
-export const swapAggregators: SwapAggregator[] = [
-    betterSwapAggregator,
-    veTradeAggregator,
+export const getSwapAggregators = (networkType: NETWORK_TYPE): SwapAggregator[] => [
+    createBetterSwapAggregator(networkType),
+    createVeTradeAggregator(networkType),
 ];
 

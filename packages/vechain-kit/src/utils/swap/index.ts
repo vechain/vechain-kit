@@ -1,3 +1,3 @@
-export { betterSwapAggregator } from './betterSwap';
-export { veTradeAggregator } from './veTrade';
+export { createBetterSwapAggregator } from './betterSwap';
+export { createVeTradeAggregator } from './veTrade';
 

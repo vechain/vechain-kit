@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { swapAggregators } from '@/config/swapAggregators';
+import { getSwapAggregators } from '@/config/swapAggregators';
 import { SwapParams, SwapQuote } from '@/types/swap';
 import { parseUnits, zeroAddress } from 'viem';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useGetCustomTokenInfo } from '@/hooks/api/wallet/useGetCustomTokenInfo';
 import { TokenWithValue } from '@/hooks';
+import { useWallet } from '@/hooks/api/wallet/useWallet';
 
 export type UnifiedSwapQuotesResult = {
     bestQuote: SwapQuote | null;
@@ -36,6 +37,7 @@ export const useSwapQuotes = (
     enabled: boolean = true,
 ): UnifiedSwapQuotesResult => {
     const thor = useThor();
+    const { connection } = useWallet();
 
     // Use on-chain token decimals for correct parsing of amountIn, pass empty string to not let it fetch details for VET
     const fromTokenAddress = fromToken?.address ?? null;
@@ -77,11 +79,12 @@ export const useSwapQuotes = (
     }, [fromTokenAddress, toTokenAddress, amountIn, userAddress, slippageTolerance, fromTokenDecimals]);
 
     const { data, isLoading, error } = useQuery<{ quotes: SwapQuote[]; best: SwapQuote | null }>({
-        queryKey: ['unified-swap-quotes', params],
+        queryKey: ['unified-swap-quotes', params, connection.network],
         queryFn: async () => {
-            if (!params || !thor) return { quotes: [], best: null };
+            if (!params || !thor || !connection.network) return { quotes: [], best: null };
 
-            const quotePromises = swapAggregators.map(async (aggregator) => {
+            const aggregators = getSwapAggregators(connection.network);
+            const quotePromises = aggregators.map(async (aggregator) => {
                 try {
                     const quote = await aggregator.getQuote(params, thor);
                     try {

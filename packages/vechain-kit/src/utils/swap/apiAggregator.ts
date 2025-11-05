@@ -1,5 +1,6 @@
 import { TransactionClause } from '@vechain/sdk-core';
 import { SwapAggregator, SwapQuote, SwapSimulation, SwapParams } from '@/types/swap';
+import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network';
 import React from 'react';
 
@@ -30,6 +31,10 @@ export interface ApiAggregatorConfig {
      * Base URL for the API endpoint
      */
     apiBaseUrl: string;
+    /**
+     * Network type (main, test, or solo)
+     */
+    network: NETWORK_TYPE;
     /**
      * Icon component factory function
      * @param boxSize Size of the icon (e.g., "20px", "24px")
@@ -78,6 +83,7 @@ export const createApiAggregator = (config: ApiAggregatorConfig): SwapAggregator
                     amountIn: params.amountIn,
                     recipient: params.userAddress,
                     slippageBps: String((params.slippageTolerance || 1) * 100), // Convert percentage to basis points
+                    network: config.network,
                 });
 
                 // Fetch quote from API
