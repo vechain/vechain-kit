@@ -19,7 +19,7 @@ import {
     Collapse,
     Center,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer, TransactionButtonAndStatus } from '@/components/common';
+import { GasFeeSummary, ModalBackButton, StickyHeaderContainer, TransactionButtonAndStatus } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
@@ -548,7 +548,8 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                     <VStack spacing={2} align="stretch" w="full">
                         {/* From Section */}
                         <Box
-                            p={6}
+                            px={6}
+                            py={connection.isConnectedWithPrivy ? 2 : 6}
                             borderRadius="xl"
                             bg={isDark ? '#00000038' : 'gray.50'}
                         >
@@ -770,7 +771,8 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
 
                         {/* To Section */}
                         <Box
-                            p={6}
+                            px={6}
+                            py={connection.isConnectedWithPrivy ? 2 : 6}
                             borderRadius="xl"
                             bg={isDark ? '#00000038' : 'gray.50'}
                         >
@@ -1094,7 +1096,20 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                 </Button>
                             )}
                         </Box>
+
+
+                        {swapClauses.length > 0 && connection.isConnectedWithPrivy && (
+                            <GasFeeSummary
+                                estimation={gasEstimation}
+                                isLoading={gasEstimationLoading}
+                                isLoadingTransaction={isTransactionPending}
+                                onTokenChange={handleGasTokenChange}
+                                clauses={swapClauses}
+                                userSelectedToken={userSelectedGasToken}
+                            />
+                        )}
                     </VStack>
+
                 </ModalBody>
             </Container>
 
