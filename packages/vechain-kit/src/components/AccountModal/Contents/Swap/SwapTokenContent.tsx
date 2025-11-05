@@ -370,7 +370,6 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
 
     const handleSwapError = useCallback((error: Error | string) => {
         const errorMessage = typeof error === 'string' ? error : error.message;
-        const txId = txReceipt?.meta.txID;
 
         Analytics.swap.failed({
             fromToken: fromToken?.symbol ?? '',
@@ -378,25 +377,13 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
             amount,
             error: errorMessage,
         });
-
-        setCurrentContent({
-            type: 'failed-operation',
-            props: {
-                setCurrentContent,
-                txId,
-                title: t('Transaction failed'),
-                description: errorMessage || t('Something went wrong. Please try again.'),
-                onDone: () => {
-                    setCurrentContent('swap-token');
-                },
-            },
-        });
-    }, [fromToken, toToken, amount, txReceipt, setCurrentContent, t]);
+    }, [fromToken, toToken, amount]);
 
     // Track if we've already shown success/error to prevent duplicate dialogs
     const [hasShownResult, setHasShownResult] = React.useState(false);
 
-    // Handle transaction status changes to show success/error dialogs
+    // Handle transaction status changes to show success dialogs
+    // Errors are shown inline via TransactionButtonAndStatus component
     React.useEffect(() => {
         // Reset the flag when transaction status changes to ready (new transaction)
         if (status === 'ready') {
@@ -409,15 +396,16 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
             return;
         }
 
+        // Only show success modal, errors are handled inline
         if (status === 'success' && txReceipt && !txReceipt.reverted) {
             setHasShownResult(true);
             handleSwapSuccess();
         } else if (status === 'error' && txError) {
-            setHasShownResult(true);
+            // Track error for analytics but don't show modal
             const errorMessage = (txError as any)?.reason || (txError as any)?.message || String(txError);
             handleSwapError(errorMessage);
         } else if (txReceipt?.reverted) {
-            setHasShownResult(true);
+            // Track reverted transaction for analytics but don't show modal
             handleSwapError('Transaction reverted');
         }
     }, [status, txReceipt, txError, handleSwapSuccess, handleSwapError, hasShownResult]);
@@ -1122,6 +1110,10 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                     transactionPendingText={t('Swapping...')}
                     txReceipt={txReceipt}
                     transactionError={txError}
+                    onError={(errorMessage) => {
+                        // Track error for analytics when displayed inline
+                        handleSwapError(errorMessage);
+                    }}
                     isDisabled={
                         !fromToken ||
                         !toToken ||
