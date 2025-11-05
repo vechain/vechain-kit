@@ -1120,6 +1120,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                         !amount ||
                         Number(amount) <= 0 ||
                         isLoadingQuote ||
+                        !quote ||
                         quote?.reverted === true ||
                         Boolean(fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance)) ||
                         disableConfirmButtonDuringEstimation
