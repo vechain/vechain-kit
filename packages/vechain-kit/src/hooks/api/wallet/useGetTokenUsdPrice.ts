@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { IVechainEnergyOracleV1__factory } from '@hooks/contracts';
+import { OracleVechainEnergy__factory } from '@hooks/contracts';
 import { BigNumber } from 'bignumber.js';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
@@ -27,7 +27,7 @@ export const getTokenUsdPrice = async (
     const res = await thor.contracts
         .load(
             getConfig(network).oracleContractAddress,
-            IVechainEnergyOracleV1__factory.abi,
+            OracleVechainEnergy__factory.abi,
         )
         .read.getLatestValue(PRICE_FEED_IDS[token]);
 
