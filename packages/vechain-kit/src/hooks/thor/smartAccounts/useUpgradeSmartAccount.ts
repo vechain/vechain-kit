@@ -1,14 +1,8 @@
-import { useCallback } from 'react';
-import { SimpleAccount__factory } from '@hooks/contracts';
-import {
-    useSendTransaction,
-    UseSendTransactionReturnValue,
-    useAccountImplementationAddress,
-    useRefreshFactoryQueries,
-    useRefreshSmartAccountQueries,
-} from '@/hooks';
+import { useAccountImplementationAddress, useRefreshFactoryQueries, useRefreshSmartAccountQueries, useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
 import { TransactionClause } from '@vechain/sdk-core';
+import { useCallback } from 'react';
 
 type UseUpgradeSmartAccountVersionProps = {
     smartAccountAddress: string;
@@ -21,7 +15,7 @@ type UseUpgradeSmartAccountVersionReturnValue = {
     sendTransaction: () => Promise<void>;
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
-const simpleAccountInterface = SimpleAccount__factory.createInterface();
+const socialLoginSmartAccountInterface = SocialLoginSmartAccountFactory__factory.createInterface();
 
 export const useUpgradeSmartAccount = ({
     smartAccountAddress,
@@ -52,12 +46,12 @@ export const useUpgradeSmartAccount = ({
             {
                 to: smartAccountAddress,
                 value: '0x0',
-                data: simpleAccountInterface.encodeFunctionData(
+                data: socialLoginSmartAccountInterface.encodeFunctionData(
                     'upgradeToAndCall',
                     [newImplementationAddress, '0x'],
                 ),
                 comment: `Upgrade account to version ${targetVersion}`,
-                abi: simpleAccountInterface
+                abi: socialLoginSmartAccountInterface
                     .getFunction('upgradeToAndCall')
                     .format('json'),
             },

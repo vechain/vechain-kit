@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@hooks/contracts';
-import { useThor } from '@vechain/dapp-kit-react';
-import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '@/config/network';
+import { useVeChainKitConfig } from '@/providers';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
+import { useQuery } from '@tanstack/react-query';
+import { useThor } from '@vechain/dapp-kit-react';
 import { ThorClient } from '@vechain/sdk-network';
 
 export const getAccountImplementationAddress = async (
@@ -16,7 +16,7 @@ export const getAccountImplementationAddress = async (
 
     const contract = thor.contracts.load(
         getConfig(networkType).accountFactoryAddress,
-        SimpleAccountFactory__factory.abi,
+        SocialLoginSmartAccountFactory__factory.abi,
     );
 
     let implementationAddressPromise:

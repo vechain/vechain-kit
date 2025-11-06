@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@hooks/contracts';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
@@ -7,7 +7,7 @@ import { getConfig } from '@/config';
 import { ThorClient } from '@vechain/sdk-network';
 import { executeCallClause } from '@/utils/thorUtils';
 
-const abi = SimpleAccountFactory__factory.abi;
+const abi = SocialLoginSmartAccountFactory__factory.abi;
 const method = 'hasLegacyAccount' as const;
 
 export const getHasV1SmartAccount = async (
