@@ -10,6 +10,7 @@ import {
     X2EarnApps__factory,
     XAllocationPool__factory,
     XAllocationVoting__factory,
+    VetDomainsRegistry__factory,
 } from '@vechain/vechain-contract-types';
 
 const SubdomainClaimer__factory = undefined as any; //TODO: MISSING CONTRACT
@@ -28,5 +29,5 @@ export {
     B3TR__factory,
     SubdomainClaimer__factory,
     IReverseRegistrar__factory,
-    MockENS__factory,
+    VetDomainsRegistry__factory,
 };

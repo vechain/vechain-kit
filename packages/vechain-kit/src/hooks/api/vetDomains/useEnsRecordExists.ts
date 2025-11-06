@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { MockENS__factory } from '@hooks/contracts';
+import { VetDomainsRegistry__factory } from '@hooks/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
@@ -26,7 +26,7 @@ const getEnsRecordExists = async (
     const res = await thor.contracts
         .load(
             getConfig(network).vetDomainsContractAddress,
-            MockENS__factory.abi,
+            VetDomainsRegistry__factory.abi,
         )
         .read.recordExists(subnode);
 
