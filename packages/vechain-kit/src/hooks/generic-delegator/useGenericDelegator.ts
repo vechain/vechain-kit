@@ -6,7 +6,7 @@ import {
 import * as nc_utils from '@noble/curves/abstract/utils';
 import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, Wallet } from '@/types';
 import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '@/hooks';
-import { ERC20__factory } from '@vechain/vechain-contract-types';
+import { ERC20__factory } from '@hooks/contracts';
 import { parseEther } from 'viem';
 import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '@/utils';
 import { ThorClient } from '@vechain/sdk-network';
@@ -94,8 +94,8 @@ export const estimateAndBuildTxBody = async (
  * @returns The signed final transaction.
  */
 export function signVip191Transaction(decodedTx: Transaction, gasPayerSignature: string) {
-    return Transaction.of( 
-        decodedTx.body, 
+    return Transaction.of(
+        decodedTx.body,
         nc_utils.concatBytes(
             decodedTx.signature ?? new Uint8Array(),
             HexUInt.of(gasPayerSignature.slice(2)).bytes
@@ -115,7 +115,7 @@ export function decodeRawTx(raw: any, isSigned: boolean) {
  * It will build the necessary clauses, estimate the gas, and send the transaction.
  * @param clauses The clauses to send in the transaction.
  * @param genericDelegatorUrl The URL of the generic delegator.
- * @returns 
+ * @returns
  */
 export const useGenericDelegator = () => {
     const { connectedWallet } = useWallet();
