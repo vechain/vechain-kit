@@ -14,7 +14,6 @@ import {
 } from '@vechain/vechain-contract-types';
 
 const SubdomainClaimer__factory = undefined as any; //TODO: MISSING CONTRACT
-const MockENS__factory = undefined as any; //TODO: MISSING CONTRACT
 
 export {
     ERC20__factory,
