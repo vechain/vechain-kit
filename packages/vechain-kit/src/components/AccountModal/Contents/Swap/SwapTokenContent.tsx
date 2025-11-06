@@ -55,11 +55,13 @@ type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    fromTokenAddress?: string;
+    toTokenAddress?: string;
 };
 
 type SwapStep = 'main' | 'select-from-token' | 'select-to-token' | 'select-quote';
 
-export const SwapTokenContent = ({ setCurrentContent }: Props) => {
+export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenAddress }: Props) => {
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
@@ -101,9 +103,24 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
         }
     }, [slippageTolerance]);
 
-    // Set default tokens (VET to B3TR) on initial load
+    // Set initial tokens from provided addresses if present, otherwise default VET -> B3TR
     React.useEffect(() => {
-        if (!fromToken && !toToken && sortedTokens.length > 0) {
+        if (sortedTokens.length === 0) return;
+
+        // Prefer provided addresses
+        if ((fromTokenAddress || toTokenAddress) && (!fromToken || !toToken)) {
+            if (fromTokenAddress && !fromToken) {
+                const match = sortedTokens.find((t) => compareAddresses(t.address, fromTokenAddress));
+                if (match) setFromToken(match);
+            }
+            if (toTokenAddress && !toToken) {
+                const match = sortedTokens.find((t) => compareAddresses(t.address, toTokenAddress));
+                if (match) setToToken(match);
+            }
+            return;
+        }
+
+        if (!fromToken && !toToken) {
             // Find VET token
             const vetToken = sortedTokens.find((t) => t.symbol === 'VET');
             if (vetToken) {
@@ -132,7 +149,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                 setToToken(b3trToken);
             }
         }
-    }, [sortedTokens, fromToken, toToken, network.type]);
+    }, [sortedTokens, fromToken, toToken, fromTokenAddress, toTokenAddress, network.type]);
 
     // Toggle swap direction
     const handleToggleDirection = useCallback(() => {

@@ -38,6 +38,16 @@ export type AccountModalContentTypes =
     | 'appearance-settings'
     | 'gas-token-settings'
     | {
+          type: 'swap-token';
+          props: {
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+              fromTokenAddress?: string;
+              toTokenAddress?: string;
+          };
+      }
+    | {
           type: 'account-customization';
           props: AccountCustomizationContentProps;
       }

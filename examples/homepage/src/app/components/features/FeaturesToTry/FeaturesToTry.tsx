@@ -9,7 +9,7 @@ import {
 } from 'react-icons/ri';
 import { IoMdNotifications } from 'react-icons/io';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useUpgradeSmartAccountModal, useWallet } from '@vechain/vechain-kit';
+import { useUpgradeSmartAccountModal, useWallet, useSwapTokenModal } from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
     useSendTokenModal,
@@ -42,6 +42,7 @@ export function FeaturesToTry() {
     const { open: openReceiveModal } = useReceiveModal();
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+    const { open: openSwapTokenModal } = useSwapTokenModal();
 
     const features = [
         {
@@ -65,6 +66,12 @@ export function FeaturesToTry() {
                 'Send and receive VET, VTHO, and other tokens seamlessly',
             icon: RiExchangeLine,
             content: openSendTokenModal,
+        },
+        {
+            title: 'Swap Tokens',
+            description: 'Swap between tokens with best available rates',
+            icon: RiExchangeLine,
+            content: openSwapTokenModal
         },
         {
             title: 'Receive Assets',
