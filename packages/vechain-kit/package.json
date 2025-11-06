@@ -37,7 +37,6 @@
         "@vechain/contract-getters": "1.0.0-beta.3",
         "@vechain/dapp-kit-react": "2.0.4",
         "@vechain/picasso": "^2.1.1",
-        "@vechain/vebetterdao-contracts": "^7.0.2",
         "@vechain/vechain-contract-types": "1.0.3",
         "@wagmi/core": "^2.17.2",
         "axios": "^1.10.0",
