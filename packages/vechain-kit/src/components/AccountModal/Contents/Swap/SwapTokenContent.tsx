@@ -45,6 +45,8 @@ import { getConfig } from '@/config';
 import { compareAddresses } from '@/utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
+import { convertToSelectedCurrency, SupportedCurrency } from '@/utils/currencyUtils';
+import { useTokenPrices } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
 import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
@@ -79,6 +81,9 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
     const [selectedGasToken, setSelectedGasToken] = React.useState<GasTokenType | null>(null);
     const [userSelectedGasToken, setUserSelectedGasToken] = React.useState<GasTokenType | null>(null);
     const [swapClauses, setSwapClauses] = React.useState<TransactionClause[]>([]);
+
+    // Prices and FX to compute fiat values for entered and output amounts
+    const { prices, exchangeRates } = useTokenPrices();
 
     // Determine if we're in auto mode (1% default) or custom mode
     const isAutoMode = slippageTolerance === 1;
@@ -180,6 +185,30 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
             return '0';
         }
     }, [quote, to?.decimals]);
+
+    // Fiat value for the entered input amount (from side)
+    const fromAmountFiatValue = useMemo(() => {
+        if (!fromToken || !amount) return 0;
+        const priceUsd = prices[fromToken.address] || 0;
+        const valueUsd = Number(amount) * priceUsd;
+        return convertToSelectedCurrency(
+            valueUsd,
+            currentCurrency as SupportedCurrency,
+            exchangeRates,
+        );
+    }, [fromToken?.address, amount, prices, currentCurrency, exchangeRates]);
+
+    // Fiat value for the quoted output amount (to side)
+    const toAmountFiatValue = useMemo(() => {
+        if (!toToken || !outputAmount) return 0;
+        const priceUsd = prices[toToken.address] || 0;
+        const valueUsd = Number(outputAmount) * priceUsd;
+        return convertToSelectedCurrency(
+            valueUsd,
+            currentCurrency as SupportedCurrency,
+            exchangeRates,
+        );
+    }, [toToken?.address, outputAmount, prices, currentCurrency, exchangeRates]);
 
     // Simulate swap to get gas estimate
     const swapParams = useMemo(() => {
@@ -690,25 +719,15 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                         }
                                     >
                                         <HStack spacing={2} alignItems="center">
-                                            {Number(fromTokenDisplay.balance) > 0 && (
-                                                <Text
-                                                    noOfLines={1}
-                                                    overflow="hidden"
-                                                    textOverflow="ellipsis"
-                                                >
-                                                    {Number(fromTokenDisplay.balance).toLocaleString(undefined, {
-                                                        maximumFractionDigits: 2,
-                                                    })} {fromTokenDisplay.symbol}
-                                                </Text>
-                                            )}
-                                            {fromTokenDisplay.value > 0 && (
+                                            {fromAmountFiatValue > 0 && (
                                                 <Text opacity={0.5}>
                                                     ≈ {formatCompactCurrency(
-                                                        fromTokenDisplay.value,
+                                                        fromAmountFiatValue,
                                                         { currency: currentCurrency },
                                                     )}
                                                 </Text>
                                             )}
+
                                         </HStack>
                                         <Text
                                             cursor="pointer"
@@ -723,7 +742,7 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                             overflow="hidden"
                                             textOverflow="ellipsis"
                                         >
-                                            {t('Swap all')}
+                                            {t('Swap all', { defaultValue: 'Swap all' })}
                                         </Text>
                                     </HStack>
                                 )}
@@ -907,21 +926,10 @@ export const SwapTokenContent = ({ setCurrentContent }: Props) => {
                                         }
                                     >
                                         <HStack spacing={2} alignItems="center">
-                                            {Number(toTokenDisplay.balance) > 0 && (
-                                                <Text
-                                                    noOfLines={1}
-                                                    overflow="hidden"
-                                                    textOverflow="ellipsis"
-                                                >
-                                                    {Number(toTokenDisplay.balance).toLocaleString(undefined, {
-                                                        maximumFractionDigits: 2,
-                                                    })} {toTokenDisplay.symbol}
-                                                </Text>
-                                            )}
-                                            {toTokenDisplay.value > 0 && (
+                                            {toAmountFiatValue > 0 && (
                                                 <Text opacity={0.5}>
                                                     ≈ {formatCompactCurrency(
-                                                        toTokenDisplay.value,
+                                                        toAmountFiatValue,
                                                         { currency: currentCurrency },
                                                     )}
                                                 </Text>
