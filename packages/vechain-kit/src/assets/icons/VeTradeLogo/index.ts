@@ -1,0 +1,2 @@
+export { VeTradeLogo } from './VeTradeLogo';
+

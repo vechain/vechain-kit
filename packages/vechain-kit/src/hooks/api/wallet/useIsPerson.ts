@@ -34,5 +34,20 @@ export const useIsPerson = (user?: string | null) => {
             });
         },
         enabled: !!user && !!network.type,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation or validation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || 
+                    errorMessage.includes('abort') ||
+                    errorMessage === 'user address is required') {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
+        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60, // 1 minute
     });
 };

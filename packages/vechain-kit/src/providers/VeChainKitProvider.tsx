@@ -32,6 +32,7 @@ import { ModalProvider } from './ModalProvider';
 import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
+    getGenericDelegatorUrl,
 } from '@/utils/constants';
 import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
@@ -81,8 +82,8 @@ export type VechainKitProviderProps = {
         loginMethods: PrivyLoginMethod[];
     };
     feeDelegation?: {
-        delegatorUrl: string;
-        delegateAllTransactions: boolean;
+        delegatorUrl?: string;
+        genericDelegatorUrl?: string;
         b3trTransfers?: {
             minAmountInEther: number;
         };
@@ -157,45 +158,45 @@ const validateConfig = (
 ) => {
     const errors: string[] = [];
 
+    const validatedProps = { ...props };
+
     // Check if fee delegation is required based on conditions
     const requiresFeeDelegation =
-        props.privy !== undefined ||
-        props.loginMethods?.some(
+        validatedProps.privy !== undefined ||
+        validatedProps.loginMethods?.some(
             (method) =>
                 method.method === 'vechain' || method.method === 'ecosystem',
         );
 
     // Validate fee delegation
     if (requiresFeeDelegation) {
-        if (!props.feeDelegation) {
-            errors.push(
-                'feeDelegation configuration is required when using Privy or vechain login method',
-            );
+        if (!validatedProps.feeDelegation) {
+            validatedProps.feeDelegation = {
+                genericDelegatorUrl: getGenericDelegatorUrl(),
+            };
         } else {
-            if (!props.feeDelegation || !props.feeDelegation.delegatorUrl) {
-                errors.push(
-                    'feeDelegation.delegatorUrl is required when using Privy or vechain login method',
-                );
+            if (!validatedProps.feeDelegation.delegatorUrl && !validatedProps.feeDelegation.genericDelegatorUrl) {
+                validatedProps.feeDelegation.genericDelegatorUrl = getGenericDelegatorUrl();
             }
         }
     }
 
     // Validate network
-    if (!props.network) {
+    if (!validatedProps.network) {
         errors.push('network configuration is required');
     } else {
-        if (!props.network.type) {
+        if (!validatedProps.network.type) {
             errors.push('network.type is required');
         }
-        if (!['main', 'test', 'solo'].includes(props.network.type)) {
+        if (!['main', 'test', 'solo'].includes(validatedProps.network.type)) {
             errors.push('network.type must be either "main", "test" or "solo"');
         }
     }
 
     // Validate login methods if Privy is not configured
-    if (props.loginMethods) {
-        if (!props.privy) {
-            const invalidMethods = props.loginMethods.filter((method) =>
+    if (validatedProps.loginMethods) {
+        if (!validatedProps.privy) {
+            const invalidMethods = validatedProps.loginMethods.filter((method) =>
                 ['email', 'google', 'passkey', 'more'].includes(method.method),
             );
 
@@ -210,9 +211,9 @@ const validateConfig = (
         }
     }
 
-    if (props?.legalDocuments) {
-        if (props.legalDocuments.termsAndConditions) {
-            props.legalDocuments.termsAndConditions.forEach((term) => {
+    if (validatedProps?.legalDocuments) {
+        if (validatedProps.legalDocuments.termsAndConditions) {
+            validatedProps.legalDocuments.termsAndConditions.forEach((term) => {
                 if (!isValidUrl(term.url)) {
                     errors.push(
                         `legalDocuments.termsAndConditions.url is invalid: ${term.url}`,
@@ -220,8 +221,8 @@ const validateConfig = (
                 }
             });
         }
-        if (props.legalDocuments.privacyPolicy) {
-            props.legalDocuments.privacyPolicy.forEach((term) => {
+        if (validatedProps.legalDocuments.privacyPolicy) {
+            validatedProps.legalDocuments.privacyPolicy.forEach((term) => {
                 if (!isValidUrl(term.url)) {
                     errors.push(
                         `legalDocuments.privacyPolicy.url is invalid: ${term.url}`,
@@ -229,8 +230,8 @@ const validateConfig = (
                 }
             });
         }
-        if (props.legalDocuments.cookiePolicy) {
-            props.legalDocuments.cookiePolicy.forEach((term) => {
+        if (validatedProps.legalDocuments.cookiePolicy) {
+            validatedProps.legalDocuments.cookiePolicy.forEach((term) => {
                 if (!isValidUrl(term.url)) {
                     errors.push(
                         `legalDocuments.cookiePolicy.url is invalid: ${term.url}`,
@@ -246,7 +247,7 @@ const validateConfig = (
         );
     }
 
-    return props;
+    return validatedProps;
 };
 
 /**
@@ -431,11 +432,8 @@ export const VeChainKitProvider = (
                                     network.nodeUrl ??
                                     getConfig(network.type).nodeUrl
                                 }
-                                delegatorUrl={feeDelegation?.delegatorUrl ?? ''}
-                                delegateAllTransactions={
-                                    feeDelegation?.delegateAllTransactions ??
-                                    false
-                                }
+                                delegatorUrl={feeDelegation?.delegatorUrl ?? feeDelegation?.genericDelegatorUrl}
+                                genericDelegator={!feeDelegation?.delegatorUrl && feeDelegation?.genericDelegatorUrl ? true : false}
                             >
                                 <ModalProvider>
                                     <LegalDocumentsProvider>

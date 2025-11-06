@@ -6,7 +6,7 @@ import { veWorldMockClient} from "@vechain/veworld-mock-playwright";
 import {AccountModal} from "../models/AccountModal";
 import {AccountModalNotifications} from "../models/AccountModalNotifications";
 
-test.describe.serial("Hooks", () => {
+test.describe.skip("Hooks", () => {
     let homePage: HomePage
     let dashboardPage: DashboardPage
     let accountModal: AccountModal

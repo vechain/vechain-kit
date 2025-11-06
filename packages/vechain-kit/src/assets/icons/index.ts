@@ -4,3 +4,5 @@ export * from './TwitterLogo';
 export * from './VechainLogo';
 export * from './PrivyLogo';
 export * from './VechainEnergy';
+export * from './BetterSwapLogo';
+export * from './VeTradeLogo';

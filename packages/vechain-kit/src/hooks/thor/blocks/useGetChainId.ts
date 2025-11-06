@@ -12,9 +12,8 @@ export const getChainId = async (thor: ThorClient) => {
 export const getChainIdQueryKey = () => ['VECHAIN_KIT_CHAIN_ID'];
 
 /**
- *  Get the account balance for the given address
- * @param address  The address of the account to get the balance for
- * @returns  The account balance
+ *  Get the chain id
+ * @returns The chain id
  */
 export const useGetChainId = () => {
     const thor = useThor();
@@ -23,6 +22,5 @@ export const useGetChainId = () => {
         queryKey: getChainIdQueryKey(),
         queryFn: () => getChainId(thor),
         enabled: !!thor,
-        refetchInterval: 10000,
     });
 };

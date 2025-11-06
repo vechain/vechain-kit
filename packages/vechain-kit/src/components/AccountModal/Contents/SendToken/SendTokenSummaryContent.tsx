@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -5,7 +6,6 @@ import {
     VStack,
     Text,
     HStack,
-    Divider,
     ModalFooter,
 } from '@chakra-ui/react';
 import {
@@ -13,6 +13,7 @@ import {
     StickyHeaderContainer,
     AddressDisplayCard,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';
@@ -23,14 +24,15 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
     TokenWithValue,
+    useGasTokenSelection,
+    useGasEstimation,
 } from '@/hooks';
-import { ExchangeWarningAlert } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
-import { useMemo } from 'react';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
+import { GasTokenType } from '@/types/gasToken';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -56,7 +58,9 @@ export const SendTokenSummaryContent = ({
     const { t } = useTranslation();
     const { account, connection, connectedWallet } = useWallet();
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
-    const { network } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
+    const { preferences } = useGasTokenSelection();
+
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
         connectedWallet?.address ?? '',
@@ -64,7 +68,6 @@ export const SendTokenSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
-
     // Get the final image URL
     const toImageSrc = useMemo(() => {
         if (avatar) {
@@ -137,6 +140,7 @@ export const SendTokenSummaryContent = ({
         isWaitingForWalletConfirmation:
             transferERC20WaitingForWalletConfirmation,
         isTransactionPending: transferERC20Pending,
+        clauses: erc20Clauses,
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -157,6 +161,7 @@ export const SendTokenSummaryContent = ({
         error: transferVETError,
         isWaitingForWalletConfirmation: transferVETWaitingForWalletConfirmation,
         isTransactionPending: transferVETPending,
+        clauses: vetClauses,
     } = useTransferVET({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -232,6 +237,59 @@ export const SendTokenSummaryContent = ({
         }
     };
 
+    const [selectedGasToken, setSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+    // Track the user's manual selection to show it during loading (before estimation completes)
+    const [userSelectedGasToken, setUserSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+
+    const shouldEstimateGas =
+        preferences.availableGasTokens.length > 0 &&
+        (connection.isConnectedWithPrivy ||
+            connection.isConnectedWithVeChain) &&
+        !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+        refetch: refetchGasEstimation,
+    } = useGasEstimation({
+        clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
+        tokens: selectedGasToken
+            ? [selectedGasToken]
+            : preferences.availableGasTokens, // Use selected token or all available
+        sendingAmount: amount,
+        sendingTokenSymbol: selectedToken.symbol,
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const usedGasToken = gasEstimation?.usedToken;
+    const disableConfirmButtonDuringEstimation =
+        (gasEstimationLoading || !gasEstimation) &&
+        connection.isConnectedWithPrivy &&
+        !feeDelegation?.delegatorUrl;
+
+    const handleGasTokenChange = React.useCallback(
+        (token: GasTokenType) => {
+            setSelectedGasToken(token);
+            setUserSelectedGasToken(token); // Track user's choice
+            // Refetch will be triggered automatically by the query key change
+            setTimeout(() => refetchGasEstimation(), 100);
+        },
+        [refetchGasEstimation],
+    );
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
+    // Auto-fallback: if the selected token cannot cover fees (estimation error),
+    // clear selection to re-estimate across all available tokens
+    // Keep userSelectedGasToken to show during loading, but actual result will show the token that succeeds
+    React.useEffect(() => {
+        if (gasEstimationError && selectedGasToken) {
+            setSelectedGasToken(null);
+        }
+    }, [gasEstimationError, selectedGasToken]);
+
     return (
         <>
             <StickyHeaderContainer>
@@ -248,9 +306,6 @@ export const SendTokenSummaryContent = ({
 
             <ModalBody>
                 <VStack spacing={6} align="stretch" w="full">
-                    {connection.isConnectedWithPrivy && (
-                        <ExchangeWarningAlert />
-                    )}
                     {/* From/To Card */}
 
                     <VStack spacing={4} w="full">
@@ -273,12 +328,25 @@ export const SendTokenSummaryContent = ({
                             tokenAddress={selectedToken.address}
                         />
 
-                        <Divider />
+                        {connection.isConnectedWithPrivy && (
+                            <GasFeeSummary
+                                estimation={gasEstimation}
+                                isLoading={gasEstimationLoading}
+                                isLoadingTransaction={isSubmitting}
+                                onTokenChange={handleGasTokenChange}
+                                clauses={
+                                    selectedToken.symbol === 'VET'
+                                        ? vetClauses
+                                        : erc20Clauses
+                                }
+                                userSelectedToken={userSelectedGasToken}
+                            />
+                        )}
+
                         <VStack
                             spacing={0}
                             w="full"
                             justifyContent="flex-start"
-                            p={2}
                         >
                             <Text
                                 fontSize="sm"
@@ -302,8 +370,7 @@ export const SendTokenSummaryContent = ({
                                     {selectedToken.symbol}
                                 </Text>
                                 <Text opacity={0.5}>
-                                    ≈{' '}
-                                    {formattedTotalAmount}
+                                    ≈ {formattedTotalAmount}
                                 </Text>
                             </HStack>
                         </VStack>
@@ -324,7 +391,17 @@ export const SendTokenSummaryContent = ({
                     transactionPendingText={t('Sending...')}
                     txReceipt={getTxReceipt()}
                     buttonText={t('Confirm')}
-                    isDisabled={isSubmitting}
+                    isDisabled={
+                        isSubmitting || disableConfirmButtonDuringEstimation
+                    }
+                    gasEstimationError={gasEstimationError}
+                    hasEnoughGasBalance={hasEnoughBalance}
+                    isLoadingGasEstimation={gasEstimationLoading}
+                    showGasEstimationError={
+                        !feeDelegation?.delegatorUrl &&
+                        connection.isConnectedWithPrivy
+                    }
+                    context="send"
                 />
             </ModalFooter>
         </>

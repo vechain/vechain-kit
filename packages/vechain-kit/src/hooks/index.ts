@@ -5,6 +5,7 @@ export * from './signing';
 export * from './login';
 export * from './utils';
 export * from './cache';
+export * from './generic-delegator';
 export * from './thor';
 export {
     usePrivy,

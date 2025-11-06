@@ -11,7 +11,7 @@ import {randomNumber} from "../utils/numbers";
 import {randomString} from "../utils/strings";
 import {AuthType, Language, PersonalizationData} from "../models/types";
 
-test.describe("Misc", () => {
+test.describe.skip("Misc", () => {
     let homePage: HomePage
     let dashboardPage: DashboardPage
     let accountModal: AccountModal

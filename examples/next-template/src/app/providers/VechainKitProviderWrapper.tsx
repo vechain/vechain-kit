@@ -28,19 +28,37 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const isDarkMode = colorMode === 'dark';
 
     const coloredLogo =
-        'https://i.ibb.co/7G4PQNZ/vechain-kit-logo-colored-circle.png';
+        'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
 
     return (
         <VeChainKitProvider
-            feeDelegation={{
-                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                delegateAllTransactions: false,
-                b3trTransfers: {
-                    minAmountInEther: 1,
+            privy={{
+                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+                loginMethods: [
+                    'google',
+                    'apple',
+                    'twitter',
+                    'farcaster',
+                    'email',
+                    'discord',
+                    'tiktok',
+                    // 'rabby_wallet',
+                    // 'coinbase_wallet',
+                    // 'rainbow',
+                    // 'phantom',
+                    // 'metamask',
+                ],
+                appearance: {
+                    loginMessage: 'Select a login method',
+                    logo: coloredLogo,
+                },
+                embeddedWallets: {
+                    createOnLogin: 'all-users',
                 },
             }}
             dappKit={{
-                allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
+                allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
                     projectId:
                         process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,

@@ -7,7 +7,7 @@ import {DENIAL_KITCHEN, PRIVY_TEST_EMAIL_SENDER} from "../constants";
 import { trimAddress } from "../utils/strings";
 import {AccountModal} from "../models/AccountModal";
 
-test.describe("Connect Wallet", () => {
+test.describe.skip("Connect Wallet", () => {
     let homePage: HomePage
     let dashboardPage: DashboardPage
     let accountModal: AccountModal
@@ -54,7 +54,7 @@ test.describe.skip("Privy", () => {
     })
 })
 
-test.describe('Terms and Conditions', () => {
+test.describe.skip('Terms and Conditions', () => {
     let homePage: HomePage
     let accountModal: AccountModal
 

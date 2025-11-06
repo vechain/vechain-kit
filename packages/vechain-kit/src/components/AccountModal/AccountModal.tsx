@@ -23,6 +23,7 @@ import {
     LanguageSettingsContent,
     AppearanceSettingsContent,
     TermsAndPrivacyContent,
+    GasTokenSettingsContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -33,6 +34,7 @@ import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
 import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
+import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
@@ -74,6 +76,8 @@ export const AccountModal = ({
                     return (
                         <SendTokenSummaryContent {...currentContent.props} />
                     );
+                case 'swap-token':
+                    return <SwapTokenContent {...currentContent.props} />;
                 case 'choose-name':
                     return <ChooseNameContent {...currentContent.props} />;
                 case 'choose-name-search':
@@ -106,6 +110,10 @@ export const AccountModal = ({
                 case 'successful-operation':
                     return (
                         <SuccessfulOperationContent {...currentContent.props} />
+                    );
+                case 'failed-operation':
+                    return (
+                        <FailedOperationContent {...currentContent.props} />
                     );
                 case 'upgrade-smart-account':
                     return (
@@ -233,6 +241,12 @@ export const AccountModal = ({
             case 'appearance-settings':
                 return (
                     <AppearanceSettingsContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
+            case 'gas-token-settings':
+                return (
+                    <GasTokenSettingsContent
                         setCurrentContent={setCurrentContent}
                     />
                 );

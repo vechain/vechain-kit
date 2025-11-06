@@ -58,10 +58,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     createOnLogin: 'all-users',
                 },
             }}
-            feeDelegation={{
-                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                delegateAllTransactions: false,
-            }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {

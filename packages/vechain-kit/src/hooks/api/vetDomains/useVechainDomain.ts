@@ -75,5 +75,21 @@ export const useVechainDomain = (addressOrDomain?: string | null) => {
             };
         },
         enabled: !!addressOrDomain && !!network.type,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation or validation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || 
+                    errorMessage.includes('abort') ||
+                    errorMessage === 'address or domain is required' ||
+                    errorMessage === 'input must be a valid domain or address') {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
+        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60, // 1 minute
     });
 };
