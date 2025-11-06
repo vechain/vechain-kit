@@ -7,6 +7,8 @@ on:
     branches: ["**"]
     paths: ['.github/workflows/**']
 
+permissions: {}
+
 jobs:
   zizmor:
     uses: vechain/github-actions-public/.github/workflows/scan-workflows.yaml@cf384c612d562dbc17022d23ed094751e92921e5 # v.1.0.0
