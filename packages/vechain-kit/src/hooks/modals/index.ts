@@ -5,6 +5,7 @@ export * from './useTransactionToast';
 export * from './useWalletModal';
 export * from './useChooseNameModal';
 export * from './useSendTokenModal';
+export * from './useSwapTokenModal';
 export * from './useAccessAndSecurityModal';
 export * from './useExploreEcosystemModal';
 export * from './useNotificationsModal';

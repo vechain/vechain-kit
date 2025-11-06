@@ -436,7 +436,17 @@ const Analytics = {
 
         buttonClicked: () => Analytics.swap.trackSwap('button_click'),
 
-        launchBetterSwap: () => Analytics.swap.trackSwap('launch_better_swap'),
+        tokenSelected: (direction: 'from' | 'to', tokenSymbol: string) =>
+            Analytics.swap.trackSwap('token_selected', { direction, fromToken: direction === 'from' ? tokenSymbol : undefined, toToken: direction === 'to' ? tokenSymbol : undefined }),
+
+        amountSet: (type: 'max' | 'percentage', amount: string) =>
+            Analytics.swap.trackSwap('amount_set', { type, amount }),
+
+        completed: (properties: { fromToken: string; toToken: string; amount: string; aggregator: string }) =>
+            Analytics.swap.trackSwap('completed', properties),
+
+        failed: (properties: { fromToken: string; toToken: string; amount: string; error: string }) =>
+            Analytics.swap.trackSwap('failed', { ...properties, isError: true }),
     },
 
     wallet: {
