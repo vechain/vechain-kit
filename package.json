@@ -1,12 +1,27 @@
 {
     "name": "vechain-kit",
     "private": true,
-    "description": "A TypeScript library that facilitates seamless interaction between vechain wallets (veworld, sync2) and dApps.",
+    "description": "All-in-one React library for building VeChain applications with wallet integration, social logins, developer hooks, and pre-built UI components.",
     "license": "MIT",
     "workspaces": [
         "examples/*",
         "!examples/test-tailwind-vck",
         "packages/*"
+    ],
+    "keywords": [
+        "vechain",
+        "vechain-kit",
+        "social",
+        "login",
+        "wallet",
+        "cross-app",
+        "ecosystem",
+        "privy",
+        "veworld",
+        "sync2",
+        "walletconnect",
+        "embedded-wallet",
+        "smart-account"
     ],
     "scripts": {
         "install:all": "yarn && yarn run build:deps",
