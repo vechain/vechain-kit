@@ -1,25 +1,21 @@
-import { TransactionClause, Clause, ABIContract, Address as VeChainAddress, VET, Units } from '@vechain/sdk-core';
-import { SwapAggregator, SwapQuote, SwapSimulation, SwapParams } from '@/types/swap';
-import { Address } from 'viem';
-import { UNISWAP_V2_ROUTER_ABI } from './uniswapV2RouterAbi';
+import {
+    SwapAggregator,
+    SwapParams,
+    SwapQuote,
+    SwapSimulation,
+} from '@/types/swap';
+import { ERC20__factory, UniswapV2Router__factory } from '@hooks/contracts';
+import {
+    ABIContract,
+    Clause,
+    TransactionClause,
+    Units,
+    Address as VeChainAddress,
+    VET,
+} from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import React from 'react';
-
-/**
- * ERC20 ABI for approve function
- */
-const ERC20_APPROVE_ABI = [
-    {
-        inputs: [
-            { internalType: 'address', name: 'spender', type: 'address' },
-            { internalType: 'uint256', name: 'amount', type: 'uint256' },
-        ],
-        name: 'approve',
-        outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-        stateMutability: 'nonpayable',
-        type: 'function',
-    },
-] as const;
+import { Address } from 'viem';
 
 /**
  * Helper to check if token is VET (native token)
@@ -34,7 +30,6 @@ const isVET = (address: string): boolean => {
 const getDeadline = (): bigint => {
     return BigInt(Math.floor(Date.now() / 1000) + 20 * 60);
 };
-
 
 /**
  * Configuration for a Uniswap V2 compatible aggregator
@@ -80,39 +75,52 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
 
             try {
                 // Call getAmountsOut on the router contract
-                const contract = thor.contracts.load(config.routerAddress, UNISWAP_V2_ROUTER_ABI);
-                const [amounts] = await contract.read.getAmountsOut(amountInBigInt, path);
+                const contract = thor.contracts.load(
+                    config.routerAddress,
+                    UniswapV2Router__factory.abi,
+                );
+                const [amounts] = await contract.read.getAmountsOut(
+                    amountInBigInt,
+                    path,
+                );
 
-                if (amounts.length > 0) {
-                    // Get the last amount (output amount after the swap)
-                    const outputAmount = amounts[amounts.length - 1];
+                // Handle both array and single value responses
+                const amountsArray = Array.isArray(amounts)
+                    ? amounts
+                    : [amounts];
+                const outputAmount = amountsArray[amountsArray.length - 1];
 
-                    // Ensure we have a valid output amount
-                    if (outputAmount === 0n) {
-                        throw new Error('Output amount is zero');
-                    }
-
-                    // Calculate minimum output with slippage
-                    // slippageTolerance is in percentage (e.g., 1 = 1%)
-                    // For 1% slippage: multiplier = 10000 - 100 = 9900 (99% of output)
-                    const slippageTolerancePercent = params.slippageTolerance || 1;
-                    const slippageMultiplier = BigInt(10000 - slippageTolerancePercent * 100);
-                    const minimumOutputAmount = (outputAmount * slippageMultiplier) / BigInt(10000);
-
-                    return {
-                        aggregatorName: config.name,
-                        aggregator,
-                        outputAmount,
-                        priceImpact: 0,
-                        minimumOutputAmount,
-                        data: {
-                            path,
-                            routerAddress: config.routerAddress,
-                        },
-                    };
-                } else {
-                    throw new Error('Could not extract amounts array from result');
+                // Ensure we have a valid output amount
+                if (!outputAmount || outputAmount === 0n) {
+                    throw new Error('Output amount is zero or invalid');
                 }
+
+                // Validate that outputAmount is a bigint
+                if (typeof outputAmount !== 'bigint') {
+                    throw new Error('Output amount is not a valid bigint');
+                }
+
+                // Calculate minimum output with slippage
+                // slippageTolerance is in percentage (e.g., 1 = 1%)
+                // For 1% slippage: multiplier = 10000 - 100 = 9900 (99% of output)
+                const slippageTolerancePercent = params.slippageTolerance || 1;
+                const slippageMultiplier = BigInt(
+                    10000 - slippageTolerancePercent * 100,
+                );
+                const minimumOutputAmount =
+                    (outputAmount * slippageMultiplier) / BigInt(10000);
+
+                return {
+                    aggregatorName: config.name,
+                    aggregator,
+                    outputAmount,
+                    priceImpact: 0,
+                    minimumOutputAmount,
+                    data: {
+                        path,
+                        routerAddress: config.routerAddress,
+                    },
+                };
             } catch (error) {
                 console.error(`${config.name} getQuote failed:`, error);
                 // Return empty quote on error
@@ -217,7 +225,7 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
             const isFromVET = isVET(params.fromTokenAddress);
             const isToVET = isVET(params.toTokenAddress);
 
-            const routerABI = ABIContract.ofAbi(UNISWAP_V2_ROUTER_ABI);
+            const routerABI = ABIContract.ofAbi(UniswapV2Router__factory.abi);
             const clauses: TransactionClause[] = [];
 
             if (isFromVET) {
@@ -236,13 +244,15 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
                         VET.of(amountIn, Units.wei),
                         {
                             comment: `Swap on ${quote.aggregatorName}`,
-                        }
+                        },
                     ),
                 );
             } else {
                 // From token is an ERC20 token, need to approve the router first
-                const tokenABI = ABIContract.ofAbi(ERC20_APPROVE_ABI);
-                const fromTokenAddress = VeChainAddress.of(params.fromTokenAddress);
+                const tokenABI = ABIContract.ofAbi(ERC20__factory.abi);
+                const fromTokenAddress = VeChainAddress.of(
+                    params.fromTokenAddress,
+                );
                 const routerAddress = VeChainAddress.of(config.routerAddress);
 
                 // Add approval clause: approve router to spend amountIn
@@ -309,4 +319,3 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
 
     return aggregator;
 };
-
