@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@hooks/contracts';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { useVeChainKitConfig } from '@/providers';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
+import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { ThorClient } from '@vechain/sdk-network';
 
@@ -15,7 +15,7 @@ export const getCurrentAccountImplementationVersion = async (
     const res = await thor.contracts
         .load(
             getConfig(networkType).accountFactoryAddress,
-            SimpleAccountFactory__factory.abi,
+            SocialLoginSmartAccountFactory__factory.abi,
         )
         .read.currentAccountImplementationVersion();
 

@@ -3,13 +3,13 @@ import { encodeFunctionData } from "viem";
 import { ethers } from "ethers";
 import { EnhancedClause, ExecuteWithAuthorizationSignData, ExecuteBatchWithAuthorizationSignData } from "@/types";
 import { Clause, Address, ABIContract, TransactionClause } from '@vechain/sdk-core';
-import { SimpleAccountFactoryABI, SimpleAccountABI } from '@/assets';
 import { getConfig } from '@/config';
 import { usePrivy } from '@privy-io/react-auth';
 import { NETWORK_TYPE } from '@/config/network';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useWallet, SmartAccountReturnType, useGetChainId } from "@/hooks";
 import { useVeChainKitConfig } from "@/providers";
+import { SocialLoginSmartAccount__factory, SocialLoginSmartAccountFactory__factory } from "@vechain/vechain-contract-types";
 
 export interface BuildClausesParams {
     clauses: EnhancedClause[];
@@ -165,7 +165,7 @@ function setUpBuildClausesParams() {
  * @returns The clauses for the executeWithAuthorization or executeBatchWithAuthorization function using buildClausesWithAuth
  */
 export const useBuildClauses = () => {
-    const { 
+    const {
         connection,
         connectedWallet,
         signTypedDataWithCrossApp,
@@ -190,9 +190,9 @@ export const useBuildClauses = () => {
             description,
             buttonText = 'Sign',
         } = params;
-    
+
         const resultClauses = [];
-        
+
         const dataToSign: ExecuteWithAuthorizationSignData[] =
             txClauses.map((txData: EnhancedClause) =>
                 buildSingleAuthorizationTypedData({
@@ -200,8 +200,8 @@ export const useBuildClauses = () => {
                     chainId: chainId as unknown as number,
                     smartAccount: smartAccount,
                 }),
-            );
-    
+        );
+
         // request signatures using privy
         const signatures: string[] = [];
         for (let index = 0; index < dataToSign.length; index++) {
@@ -243,10 +243,10 @@ export const useBuildClauses = () => {
                                 funcData !== null &&
                                 'functionName' in funcData
                                     ? (
-                                        funcData as {
-                                            functionName: string;
-                                        }
-                                    ).functionName
+                                          funcData as {
+                                              functionName: string;
+                                          }
+                                      ).functionName
                                     : ' ')),
                         buttonText,
                     },
@@ -261,21 +261,21 @@ export const useBuildClauses = () => {
                     Address.of(
                         getConfig(network.type as NETWORK_TYPE).accountFactoryAddress,
                     ),
-                    ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
-                        'createAccount',
-                    ),
+                    ABIContract.ofAbi(
+                        SocialLoginSmartAccountFactory__factory.abi,
+                    ).getFunction('createAccount'),
                     [connectedWallet?.address ?? ''], // set the Privy wallet address as the owner of the smart account
                 ),
             );
         }
-    
+
         dataToSign.forEach((data, index) => {
             resultClauses.push(
                 Clause.callFunction(
                     Address.of(smartAccount.address ?? ''),
-                    ABIContract.ofAbi(SimpleAccountABI).getFunction(
-                        'executeWithAuthorization',
-                    ),
+                    ABIContract.ofAbi(
+                        SocialLoginSmartAccount__factory.abi,
+                    ).getFunction('executeWithAuthorization'),
                     [
                         data.message.to as `0x${string}`,
                         BigInt(data.message.value),
@@ -298,31 +298,31 @@ export const useBuildClauses = () => {
             description,
             buttonText = 'Sign',
         } = params;
-    
+
         const resultClauses = [];
-    
+
         const typedData = buildBatchAuthorizationTypedData({
             clauses: txClauses,
             chainId: chainId as unknown as number,
             verifyingContract: smartAccount.address ?? '',
         });
-    
+
         // Sign the typed data (either cross-app or traditional Privy)
         let signature = undefined;
         signature = connection.isConnectedWithCrossApp
             ? await signTypedDataWithCrossApp({
-                ...typedData,
-                address: connectedWallet?.address as `0x${string}`,
-            } as SignTypedDataParameters)
+                  ...typedData,
+                  address: connectedWallet?.address as `0x${string}`,
+              } as SignTypedDataParameters)
             : (
-                await signTypedDataPrivy(typedData, {
-                    uiOptions: {
-                        title,
-                        description,
-                        buttonText,
-                    },
-                })
-            ).signature;
+                  await signTypedDataPrivy(typedData, {
+                      uiOptions: {
+                          title,
+                          description,
+                          buttonText,
+                      },
+                  })
+              ).signature;
         // If the smart account is not deployed, deploy it first
         if (!smartAccount.isDeployed) {
             resultClauses.push(
@@ -330,21 +330,21 @@ export const useBuildClauses = () => {
                     Address.of(
                         getConfig(network.type as NETWORK_TYPE).accountFactoryAddress,
                     ),
-                    ABIContract.ofAbi(SimpleAccountFactoryABI).getFunction(
-                        'createAccount',
-                    ),
+                    ABIContract.ofAbi(
+                        SocialLoginSmartAccountFactory__factory.abi,
+                    ).getFunction('createAccount'),
                     [connectedWallet?.address ?? ''],
                 ),
             );
         }
-    
+
         // Now the single batch execution call
         resultClauses.push(
             Clause.callFunction(
                 Address.of(smartAccount.address ?? ''),
-                ABIContract.ofAbi(SimpleAccountABI).getFunction(
-                    'executeBatchWithAuthorization',
-                ),
+                ABIContract.ofAbi(
+                    SocialLoginSmartAccount__factory.abi,
+                ).getFunction('executeBatchWithAuthorization'),
                 [
                     typedData.message.to,
                     typedData.message.value?.map((val) => BigInt(val)) ?? 0,

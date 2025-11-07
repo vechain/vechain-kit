@@ -4,7 +4,7 @@ import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { SimpleAccountFactory__factory } from '@hooks/contracts';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
 import { useThor } from '@vechain/dapp-kit-react';
 
 export interface SmartAccountReturnType {
@@ -23,7 +23,7 @@ export const getSmartAccount = async (
     const res = await thor.contracts
         .load(
             getConfig(network).accountFactoryAddress,
-            SimpleAccountFactory__factory.abi,
+            SocialLoginSmartAccountFactory__factory.abi,
         )
         .read.getAccountAddress(ownerAddress);
 

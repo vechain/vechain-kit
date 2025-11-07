@@ -1,10 +1,10 @@
-import { SimpleAccountFactory__factory } from '@hooks/contracts';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 
-const abi = SimpleAccountFactory__factory.abi;
+const abi = SocialLoginSmartAccountFactory__factory.abi;
 
 export const getAccountVersionQueryKey = (
     accountAddress: string,
