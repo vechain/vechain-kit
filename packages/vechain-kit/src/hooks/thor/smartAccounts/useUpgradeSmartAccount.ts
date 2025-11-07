@@ -1,6 +1,6 @@
 import { useAccountImplementationAddress, useRefreshFactoryQueries, useRefreshSmartAccountQueries, useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
 import { humanAddress, isValidAddress } from '@/utils';
-import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
+import { SocialLoginSmartAccount__factory } from '@hooks/contracts';
 import { TransactionClause } from '@vechain/sdk-core';
 import { useCallback } from 'react';
 
@@ -15,7 +15,7 @@ type UseUpgradeSmartAccountVersionReturnValue = {
     sendTransaction: () => Promise<void>;
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
-const socialLoginSmartAccountInterface = SocialLoginSmartAccountFactory__factory.createInterface();
+const socialLoginSmartAccountInterface = SocialLoginSmartAccount__factory.createInterface();
 
 export const useUpgradeSmartAccount = ({
     smartAccountAddress,
