@@ -2,28 +2,8 @@ import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useCallClause } from '@/hooks';
 import { namehash } from 'viem';
+import { VetDomainsRegistry__factory } from '@vechain/vechain-contract-types';
 
-const nameInterfaceAbi = [
-    {
-        type: 'function',
-        name: 'resolver',
-        inputs: [
-            {
-                type: 'bytes32',
-                name: 'node',
-                internalType: 'bytes32',
-            },
-        ],
-        outputs: [
-            {
-                type: 'address',
-                name: 'resolverAddress',
-                internalType: 'address',
-            },
-        ],
-        stateMutability: 'view',
-    },
-] as const;
 
 export const getResolverAddressQueryKey = (domain?: string) => [
     'VECHAIN_KIT',
@@ -41,7 +21,7 @@ export const useGetResolverAddress = (domain?: string) => {
 
     return useCallClause({
         address: getConfig(network.type).vetDomainsContractAddress,
-        abi: nameInterfaceAbi,
+        abi: VetDomainsRegistry__factory.abi,
         method: 'resolver',
         args: [domain ? namehash(domain) : '0x'],
         queryOptions: {
