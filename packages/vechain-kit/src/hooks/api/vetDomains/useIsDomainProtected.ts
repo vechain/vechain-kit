@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { SubdomainClaimer__factory } from '@hooks/contracts';
+import { VeworldSubdomainClaimer__factory } from '@hooks/contracts';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
@@ -21,7 +21,7 @@ const getIsDomainProtected = async (
         getConfig(network).veWorldSubdomainClaimerContractAddress;
 
     const res = await thor.contracts
-        .load(contractAddress, SubdomainClaimer__factory.abi)
+        .load(contractAddress, VeworldSubdomainClaimer__factory.abi)
         .read.isDomainProtected(domain);
 
     return res[0] as boolean;

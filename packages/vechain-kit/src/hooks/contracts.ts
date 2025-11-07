@@ -6,12 +6,13 @@ import {
     OracleVechainEnergy__factory,
     SocialLoginSmartAccount__factory,
     SocialLoginSmartAccountFactory__factory,
+    UniswapV2Router02__factory as UniswapV2Router__factory,
     VeBetterPassport__factory,
     VetDomainsRegistry__factory,
+    VeworldSubdomainClaimer__factory,
     X2EarnApps__factory,
     XAllocationPool__factory,
     XAllocationVoting__factory,
-    UniswapV2Router02__factory as UniswapV2Router__factory
 } from '@vechain/vechain-contract-types';
 
 export {
@@ -28,4 +29,5 @@ export {
     B3TR__factory,
     IReverseRegistrar__factory,
     VetDomainsRegistry__factory,
+    VeworldSubdomainClaimer__factory,
 };
