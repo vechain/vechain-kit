@@ -7,16 +7,16 @@ import {
     SocialLoginSmartAccount__factory,
     SocialLoginSmartAccountFactory__factory,
     VeBetterPassport__factory,
+    VetDomainsRegistry__factory,
     X2EarnApps__factory,
     XAllocationPool__factory,
     XAllocationVoting__factory,
-    VetDomainsRegistry__factory,
+    UniswapV2Router02__factory as UniswapV2Router__factory
 } from '@vechain/vechain-contract-types';
-
-const SubdomainClaimer__factory = undefined as any; //TODO: MISSING CONTRACT
 
 export {
     ERC20__factory,
+    UniswapV2Router__factory,
     SocialLoginSmartAccount__factory,
     SocialLoginSmartAccountFactory__factory,
     XAllocationPool__factory,
@@ -26,7 +26,6 @@ export {
     IVOT3__factory,
     OracleVechainEnergy__factory,
     B3TR__factory,
-    SubdomainClaimer__factory,
     IReverseRegistrar__factory,
     VetDomainsRegistry__factory,
 };
