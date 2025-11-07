@@ -16,7 +16,6 @@ export const getIsDomainProtectedQueryKey = (domain?: string) => [
 // Convert readonly ABI to mutable Abi type
 const subdomainClaimerABI = ABIContract.ofAbi(VeworldSubdomainClaimer__factory.abi as any);
 
-
 const getIsDomainProtected = async (
     thor: ThorClient,
     network: NETWORK_TYPE,
