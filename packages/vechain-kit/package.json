@@ -1,13 +1,44 @@
 {
     "name": "@vechain/vechain-kit",
     "version": "2.0.0-rc.18",
+    "author": "VeChain Foundation",
     "homepage": "https://github.com/vechain/vechain-kit",
-    "repository": "github:vechain/vechain-kit",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/vechain/vechain-kit.git",
+        "directory": "packages/vechain-kit"
+    },
+    "bugs": {
+        "url": "https://github.com/vechain/vechain-kit/issues"
+    },
+    "description": "All-in-one React library for building VeChain applications with wallet integration, social logins, developer hooks, and pre-built UI components.",
     "license": "MIT",
     "sideEffects": false,
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
+    "keywords": [
+        "vechain",
+        "vechain-kit",
+        "blockchain",
+        "web3",
+        "dapp",
+        "react",
+        "nextjs",
+        "typescript",
+        "vechain-thor",
+        "social",
+        "login",
+        "wallet",
+        "cross-app",
+        "ecosystem",
+        "privy",
+        "veworld",
+        "sync2",
+        "walletconnect",
+        "embedded-wallet",
+        "smart-account"
+    ],
     "files": [
         "dist",
         "package.json",
