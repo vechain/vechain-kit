@@ -1,0 +1,25 @@
+name: Scan Workflows using Zizmor and ReviewDog
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["**"]
+    paths: ['.github/workflows/**']
+
+permissions: {}
+
+jobs:
+  zizmor:
+    uses: vechain/github-actions-public/.github/workflows/scan-workflows.yaml@cf384c612d562dbc17022d23ed094751e92921e5 # v.1.0.0
+    with:
+      persona: 'auditor'
+      min_severity: 'medium'
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+      issues: write
+      pull-requests: write
+    secrets:
+      ZIZMOR_TOKEN: ${{ secrets.ZIZMOR_TOKEN }}
