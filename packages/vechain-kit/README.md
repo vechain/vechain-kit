@@ -30,7 +30,7 @@ It offers:
 # Installation
 
 ```bash
-yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp-kit-react@"1.5.0" @vechain/vechain-kit
+yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp-kit-react@"2.0.4" @vechain/vechain-kit
 ```
 
 # Quick Start
@@ -40,15 +40,13 @@ yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp
 ```typescript
 'use client';
 
-import VeChainKitProvider from '@vechain/vechain-kit';
+import { VeChainKitProvider } from '@vechain/vechain-kit';
 
 export function VeChainKitProviderWrapper({ children }: Props) {
     return (
         <VechainKitProvider
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                // set to false if you want to delegate ONLY social login transactions
-                delegateAllTransactions: true,
             }}
             loginMethods={[
                 { method: 'vechain', gridColumn: 4 },
