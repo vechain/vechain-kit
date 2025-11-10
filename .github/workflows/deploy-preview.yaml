@@ -34,11 +34,12 @@ jobs:
               run: |
                   sanitized_branch_name=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
                   echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
-                  echo "NEXT_PUBLIC_BASE_PATH=/$sanitized_branch_name" >> $GITHUB_ENV
+                  echo "basePath=/$sanitized_branch_name" >> $GITHUB_OUTPUT
 
             - name: Build App
               env:
                   NODE_OPTIONS: '--max-old-space-size=8192'
+                  NEXT_PUBLIC_BASE_PATH: ${{ steps.process-branch-name.outputs.basePath }}
               run: |
                   yarn install
                   yarn install:all
