@@ -1,7 +1,7 @@
 name: Deploy Preview Environment
 
 on:
-    pull_request_target:
+    pull_request_target: # zizmor: ignore[dangerous-triggers] # We have a check disabling external forks.
         branches:
             - main
         paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
@@ -24,6 +24,16 @@ jobs:
             AWS_REGION: eu-west-1
             BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         steps:
+            - name: Security - Block external forks
+              run: |
+                  if [ "$REPO_FULL_NAME" != "${{ github.repository }}" ]; then
+                    echo "::error::Security Policy: PRs from forked repositories cannot run this workflow due to secret access requirements."
+                    echo "::error::VeChain Team Members: Please create branches in the main repository instead of forking."
+                    exit 1
+                  fi
+              env:
+                  REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
+
             - name: Checkout
               uses: actions/checkout@v4
               with:
