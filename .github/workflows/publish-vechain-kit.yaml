@@ -36,7 +36,7 @@ jobs:
             - name: Publish VeChain-Kit to GitHub Packages
               run: |
                   cd packages/vechain-kit
-                  yarn version --immediate ${{ github.ref_name }}
+                  yarn version --immediate ${GITHUB_REF_NAME}
                   npm publish --tag latest
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -66,5 +66,5 @@ jobs:
             - name: Publish VeChain-Kit to npmjs.org
               run: |
                   cd packages/vechain-kit
-                  yarn version --immediate ${{ github.ref_name }}
+                  yarn version --immediate ${GITHUB_REF_NAME}
                   npm publish --tag latest

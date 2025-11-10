@@ -20,13 +20,13 @@ jobs:
           uses: actions/checkout@v4
 
         - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
+          uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
           with:
               role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
               aws-region: ${{ env.AWS_REGION }}
 
         - name: Setup SAM CLI
-          uses: aws-actions/setup-sam@v2
+          uses: aws-actions/setup-sam@c71dd89d980e49367c70391e8ada4353f52f2800 # v2
           with:
               use-installer: true
               token: ${{ secrets.GITHUB_TOKEN }}
