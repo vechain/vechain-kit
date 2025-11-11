@@ -7,13 +7,14 @@ on:
     paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
     types: [closed]
 
-permissions:
-  contents: read
-  id-token: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   deploy:
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
