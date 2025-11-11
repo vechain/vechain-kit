@@ -1,19 +1,51 @@
 name: Deploy Preview Environment
 
 on:
-    pull_request_target:
+    pull_request_target:  # zizmor: ignore[dangerous-triggers] - Mitigated with label-based approval
+        types: [labeled, synchronize, opened, reopened]
         branches:
             - main
         paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
 
 permissions:
     contents: read
-    id-token: write
-    pull-requests: write
 
 jobs:
+    # Job 1: Post instruction comment for external PRs
+    comment-external-pr:
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+        if: |
+            github.event.pull_request.head.repo.full_name != github.repository &&
+            github.event.action == 'opened'
+        steps:
+            - name: Comment on external PR
+              uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: |
+                      ## 👋 Thanks for your contribution!
+                      
+                      Since this PR comes from a forked repository, preview deployment requires approval from a maintainer for security reasons.
+                      
+                      **Next steps:**
+                      1. A maintainer will review your code
+                      2. If approved, they'll add the `safe-to-deploy` label to trigger deployment
+                      3. **After each new commit**, the maintainer will need to remove and re-add the label for security
+                      
+                      This ensures every version of the code is explicitly reviewed before deployment. Thank you for your patience! 🙏
+
+    # Job 2: Deploy (runs for internal PRs OR when external PR gets labeled)
     deploy:
         runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            pull-requests: write
+        # Security gate: Only run when 'safe-to-deploy' label is ADDED OR from internal branch
+        if: |
+            (github.event.label.name == 'safe-to-deploy') ||
+            (github.event.pull_request.head.repo.full_name == github.repository)
         env:
             NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
@@ -34,11 +66,12 @@ jobs:
               run: |
                   sanitized_branch_name=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
                   echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
-                  echo "NEXT_PUBLIC_BASE_PATH=/$sanitized_branch_name" >> $GITHUB_ENV
+                  echo "basePath=/$sanitized_branch_name" >> $GITHUB_OUTPUT
 
             - name: Build App
               env:
                   NODE_OPTIONS: '--max-old-space-size=8192'
+                  NEXT_PUBLIC_BASE_PATH: ${{ steps.process-branch-name.outputs.basePath }}
               run: |
                   yarn install
                   yarn install:all
@@ -51,7 +84,7 @@ jobs:
                   done
 
             - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v4
+              uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
               with:
                   role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
                   aws-region: ${{ env.AWS_REGION }}
@@ -65,7 +98,6 @@ jobs:
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
 
             - name: Create Deployment Comment
-              if: github.event.action == 'opened' || github.event.action == 'reopened'
               uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
               with:
                   issue-number: ${{ github.event.pull_request.number }}
