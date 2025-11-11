@@ -27,10 +27,26 @@ It offers:
 -   [Sample Next.js App](https://github.com/vechain/vechain-kit/tree/main/examples/next-template)
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 
-# Installation
+# Install dependencies
 
 ```bash
-yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp-kit-react@"1.5.0" @vechain/vechain-kit
+yarn add \
+  @emotion/styled@^11.14.0 \
+  @emotion/react@^11.14.0 \
+  framer-motion@^11.14.0 \
+  @tanstack/react-query@^5.64.2 \
+  @chakra-ui/react@^2.8.2 \
+  @vechain/dapp-kit-react@2.0.4 \
+  @vechain/sdk-core@1.2.0 \
+  @vechain/sdk-network@1.2.0 \
+  @vechain/vechain-kit
+
+```
+
+# Install vechain kit
+
+```bash
+yarn @vechain/vechain-kit@1.10.4
 ```
 
 # Quick Start
