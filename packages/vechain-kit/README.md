@@ -38,8 +38,7 @@ yarn add \
   @chakra-ui/react@^2.8.2 \
   @vechain/dapp-kit-react@2.0.4 \
   @vechain/sdk-core@1.2.0 \
-  @vechain/sdk-network@1.2.0 \
-  @vechain/vechain-kit
+  @vechain/sdk-network@1.2.0
 
 ```
 
