@@ -6,12 +6,13 @@ on:
             - main
         paths: ['lambda/**', '!lambda/tests/**', '.github/workflows/deploy-api-lambda.yaml']
 
-permissions:
-    contents: read
-    id-token: write
+permissions: {}
 
 jobs:
   deploy:
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     env:
         AWS_REGION: ap-northeast-3
