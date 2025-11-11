@@ -6453,14 +6453,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/vechain-contract-types@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@vechain/vechain-contract-types@npm:1.0.0"
+"@vechain/vechain-contract-types@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@vechain/vechain-contract-types@npm:1.0.3"
   dependencies:
     ethers: "npm:^6.13.5"
   peerDependencies:
     ethers: ^6.0.0
-  checksum: 10c0/e21a72135bc2577cc0ced776cd59968ff9fc805696305003acb91df9594fff04d1ee815a9788ccf69275809453df7bdf4998422e4cffcfdd82b08e8a90d0d9b9
+  checksum: 10c0/b8ae7576feae1dbecf360662c7c7877b96284a2595f72c0d0414a895e08a5ea09fb76f0fe0ef0bdfbe99b585f0d40af508d3878200f43d2b0c16d0f58f851e16
   languageName: node
   linkType: hard
 
@@ -6484,7 +6484,7 @@ __metadata:
     "@vechain/dapp-kit-react": "npm:1.5.1"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vebetterdao-contracts": "npm:^4.1.0"
-    "@vechain/vechain-contract-types": "npm:^1.0.0"
+    "@vechain/vechain-contract-types": "npm:1.0.3"
     "@wagmi/core": "npm:^2.17.2"
     axios: "npm:^1.10.0"
     bignumber.js: "npm:^9.1.2"
