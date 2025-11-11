@@ -1,19 +1,51 @@
 name: Deploy Preview Environment
 
 on:
-    pull_request_target: # zizmor: ignore[dangerous-triggers] # We have a check disabling external forks.
+    pull_request_target:  # zizmor: ignore[dangerous-triggers] - Mitigated with label-based approval
+        types: [labeled, synchronize, opened, reopened]
         branches:
             - main
         paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
 
 permissions:
     contents: read
-    id-token: write
-    pull-requests: write
 
 jobs:
+    # Job 1: Post instruction comment for external PRs
+    comment-external-pr:
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+        if: |
+            github.event.pull_request.head.repo.full_name != github.repository &&
+            github.event.action == 'opened'
+        steps:
+            - name: Comment on external PR
+              uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: |
+                      ## 👋 Thanks for your contribution!
+                      
+                      Since this PR comes from a forked repository, preview deployment requires approval from a maintainer for security reasons.
+                      
+                      **Next steps:**
+                      1. A maintainer will review your code
+                      2. If approved, they'll add the `safe-to-deploy` label to trigger deployment
+                      3. **After each new commit**, the maintainer will need to remove and re-add the label for security
+                      
+                      This ensures every version of the code is explicitly reviewed before deployment. Thank you for your patience! 🙏
+
+    # Job 2: Deploy (runs for internal PRs OR when external PR gets labeled)
     deploy:
         runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            pull-requests: write
+        # Security gate: Only run when 'safe-to-deploy' label is ADDED OR from internal branch
+        if: |
+            (github.event.label.name == 'safe-to-deploy') ||
+            (github.event.pull_request.head.repo.full_name == github.repository)
         env:
             NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
@@ -24,16 +56,6 @@ jobs:
             AWS_REGION: eu-west-1
             BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         steps:
-            - name: Security - Block external forks
-              run: |
-                  if [ "$REPO_FULL_NAME" != "${{ github.repository }}" ]; then
-                    echo "::error::Security Policy: PRs from forked repositories cannot run this workflow due to secret access requirements."
-                    echo "::error::VeChain Team Members: Please create branches in the main repository instead of forking."
-                    exit 1
-                  fi
-              env:
-                  REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
-
             - name: Checkout
               uses: actions/checkout@v4
               with:
@@ -76,7 +98,6 @@ jobs:
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
 
             - name: Create Deployment Comment
-              if: github.event.action == 'opened' || github.event.action == 'reopened'
               uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
               with:
                   issue-number: ${{ github.event.pull_request.number }}
