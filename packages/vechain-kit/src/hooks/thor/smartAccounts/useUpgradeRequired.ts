@@ -18,7 +18,11 @@ export const getUpgradeRequired = async (
             getConfig(networkType).accountFactoryAddress,
             SocialLoginSmartAccountFactory__factory.abi,
         )
-        .read.upgradeRequired(accountAddress, ownerAddress, targetVersion);
+        .read.upgradeRequired(
+            accountAddress as `0x${string}`,
+            ownerAddress as `0x${string}`,
+            BigInt(targetVersion),
+        );
 
     if (!res)
         throw new Error(
