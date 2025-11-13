@@ -34,7 +34,6 @@ import {
     CategoryFilterSection,
     CategoryFilter,
 } from './Components/CategoryFilterSection';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { AllowedCategories } from './Components/CategoryLabel';
 
 export type EcosystemWithCategoryProps = {
@@ -190,26 +189,11 @@ export const ExploreEcosystemContent = ({
     const { shortcuts } = useEcosystemShortcuts();
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-        if (query) {
-            Analytics.ecosystem.searchPerformed(
-                query,
-                filteredDefaultApps.length +
-                    filteredVbdApps.length +
-                    filteredAppHubApps.length,
-            );
-        }
+        setSearchQuery(e.target.value);
     };
 
     const handleCategoryChange = (category: CategoryFilter) => {
         setCurrentCategory(category);
-
-        if (category) {
-            Analytics.ecosystem.filterByCategory(category);
-        } else {
-            Analytics.ecosystem.filterByCategory('all');
-        }
     };
 
     return (

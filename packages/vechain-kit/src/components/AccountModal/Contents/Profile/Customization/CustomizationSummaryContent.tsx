@@ -30,8 +30,6 @@ import {
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
 import { GasTokenType } from '@/types/gasToken';
@@ -103,17 +101,6 @@ export const CustomizationSummaryContent = ({
         resolverAddress, // Pass the pre-fetched resolver address
         signerAccountAddress: account?.address ?? '',
         onSuccess: async () => {
-            Analytics.customization.completed({
-                hasAvatar: !!changes.avatarIpfsHash,
-                hasDisplayName: !!changes.displayName,
-                hasDescription: !!changes.description,
-                hasSocials: !!(
-                    changes.twitter ||
-                    changes.website ||
-                    changes.email
-                ),
-            });
-
             // Set success content first
             setCurrentContent({
                 type: 'successful-operation',
@@ -137,18 +124,7 @@ export const CustomizationSummaryContent = ({
             }
         },
         onError: (error) => {
-            if (error && isRejectionError(error?.message ?? '')) {
-                Analytics.customization.dropOff({
-                    stage: 'confirmation',
-                    reason: 'wallet_rejected',
-                    error: error?.message,
-                });
-            } else {
-                Analytics.customization.failed(
-                    'confirmation',
-                    error instanceof Error ? error.message : 'Unknown error',
-                );
-            }
+            console.error('Error updating text record:', error);
         },
     });
 
@@ -257,11 +233,6 @@ export const CustomizationSummaryContent = ({
             }
         } catch (error) {
             console.error('Error saving changes:', error);
-            Analytics.customization.dropOff({
-                stage: 'confirmation',
-                reason: 'transaction_error',
-                error: error instanceof Error ? error.message : 'Unknown error',
-            });
         }
     };
 
@@ -281,25 +252,13 @@ export const CustomizationSummaryContent = ({
     };
 
     const handleRetry = () => {
-        Analytics.customization.failed(
-            'confirmation',
-            txError instanceof Error ? txError.message : 'Unknown error',
-        );
         handleSubmit(onSubmit)();
     };
 
     const handleClose = () => {
-        Analytics.customization.dropOff({
-            stage: 'confirmation',
-            reason: 'modal_closed',
-        });
     };
 
     const handleBack = () => {
-        Analytics.customization.dropOff({
-            stage: 'confirmation',
-            reason: 'back_button',
-        });
         setCurrentContent({
             type: 'account-customization',
             props: {

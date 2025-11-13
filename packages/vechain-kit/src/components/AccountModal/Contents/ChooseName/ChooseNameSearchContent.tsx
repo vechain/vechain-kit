@@ -24,7 +24,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { ExistingDomainsList } from './Components/ExistingDomainsList';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ens_normalize } from '@adraffy/ens-normalize';
 
 export type ChooseNameSearchContentProps = {
@@ -102,10 +101,6 @@ export const ChooseNameSearchContent = ({
             setIsAvailable(true);
             setIsOwnDomain(false);
         }
-
-        if (name.length >= 3 && !isFetchingDomainInfo) {
-            Analytics.nameSelection.searched(name, isAvailable);
-        }
     }, [
         name,
         hasInteracted,
@@ -163,20 +158,9 @@ export const ChooseNameSearchContent = ({
         });
     };
 
-    const handleClose = () => {
-        Analytics.nameSelection.dropOff('search', {
-            isError: false,
-            name,
-            error: 'modal_closed',
-        });
-    };
+    const handleClose = () => {};
 
     const handleBack = () => {
-        Analytics.nameSelection.dropOff('search', {
-            isError: false,
-            name,
-            reason: 'back_button',
-        });
         setCurrentContent(initialContentSource);
     };
 

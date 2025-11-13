@@ -2,8 +2,6 @@ import { Button, useDisclosure } from '@chakra-ui/react';
 import { EcosystemModal } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -17,8 +15,6 @@ export const EcosystemButton = ({ appsInfo, isLoading }: Props) => {
     const ecosystemModal = useDisclosure();
 
     const handleEcosystemClick = () => {
-        Analytics.auth.flowStarted(VeLoginMethod.ECOSYSTEM);
-        Analytics.auth.methodSelected(VeLoginMethod.ECOSYSTEM);
         ecosystemModal.onOpen();
     };
 

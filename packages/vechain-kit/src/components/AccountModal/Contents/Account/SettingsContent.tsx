@@ -18,7 +18,6 @@ import { BsQuestionCircle } from 'react-icons/bs';
 import { IoShieldOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CgProfile } from 'react-icons/cg';
 import { IoSettingsOutline } from 'react-icons/io5';
 
@@ -52,7 +51,6 @@ export const SettingsContent = ({
     }, []);
 
     const handleCustomizeProfile = () => {
-        Analytics.customization.started();
         setCurrentContent({
             type: 'account-customization',
             props: {
@@ -63,7 +61,6 @@ export const SettingsContent = ({
     };
 
     const handleNameChange = () => {
-        Analytics.nameSelection.started('settings');
         if (account?.domain) {
             setCurrentContent({
                 type: 'choose-name-search',
@@ -87,21 +84,17 @@ export const SettingsContent = ({
 
     const handleAccessAndSecurity = () => {
         setCurrentContent('access-and-security');
-        Analytics.settings.accessAndSecurityViewed();
     };
 
     const handleConnectionDetails = () => {
         setCurrentContent('connection-details');
-        Analytics.settings.connectionDetailsViewed();
     };
 
     const handleGeneralSettings = () => {
         setCurrentContent('general-settings');
-        Analytics.settings.generalSettingsViewed();
     };
 
     const handleLogout = () => {
-        Analytics.auth.trackAuth('disconnect_initiated');
         disconnect();
         onLogoutSuccess();
     };

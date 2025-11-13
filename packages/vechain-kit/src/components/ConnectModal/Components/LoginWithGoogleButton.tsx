@@ -3,8 +3,6 @@ import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -20,8 +18,6 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={async () => {
-                    Analytics.auth.flowStarted(VeLoginMethod.GOOGLE);
-                    Analytics.auth.methodSelected(VeLoginMethod.GOOGLE);
                     await initOAuth({
                         provider: 'google',
                     });

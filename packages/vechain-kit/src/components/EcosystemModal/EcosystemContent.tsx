@@ -12,15 +12,13 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
-import { useCrossAppConnectionCache, usePrivy } from '@/hooks';
+import { useCrossAppConnectionCache } from '@/hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types/mixPanel';
 import { isRejectionError } from '@/utils/stringUtils';
 type Props = {
     onClose: () => void;
@@ -35,7 +33,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     const [loginError, setLoginError] = useState<string>();
     const [selectedApp, setSelectedApp] = useState<string>();
     const loginLoadingModal = useDisclosure();
-    const { user } = usePrivy();
 
     const { setConnectionCache } = useCrossAppConnectionCache();
 
@@ -52,9 +49,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             setSelectedApp(appName);
             try {
                 await loginWithCrossApp(appId);
-                Analytics.auth.trackAuth('connect_initiated', {
-                    totalConnections: appsInfo.length,
-                });
                 loginLoadingModal.onClose();
                 setConnectionCache({
                     name: appName,
@@ -62,20 +56,12 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     appId: appId,
                     website: appsInfo.find((app) => app.id === appId)?.website,
                 });
-                Analytics.auth.completed({
-                    userId: user?.id,
-                    loginMethod: VeLoginMethod.ECOSYSTEM,
-                });
                 onClose();
             } catch (error) {
                 const errorMsg = (error as { message?: string })?.message;
 
                 // Handle user rejection or other errors
                 if (errorMsg && isRejectionError(errorMsg)) {
-                    Analytics.auth.dropOff('ecosystem-app-connect', {
-                        ...(appName && { appName }),
-                    });
-
                     return new Error('Login request was cancelled.');
                 }
 
@@ -101,7 +87,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
 
     const handleTryAgain = () => {
         if (selectedApp) {
-            Analytics.auth.tryAgain(VeLoginMethod.ECOSYSTEM, selectedApp);
             const app = appsInfo.find((app) => app.name === selectedApp);
             if (app) {
                 connectWithVebetterDaoApps(app.id, app.name);
@@ -110,9 +95,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     };
 
     const handleClose = () => {
-        Analytics.auth.dropOff('ecosystem-view', {
-            ...(selectedApp && { appName: selectedApp }),
-        });
         onClose();
     };
 

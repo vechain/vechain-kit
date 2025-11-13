@@ -15,7 +15,7 @@ import {
     Image,
     FormControl,
 } from '@chakra-ui/react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -25,7 +25,6 @@ import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useVechainDomain, TokenWithValue } from '@/hooks';
 import { useCurrency, useTokenPrices } from '@/hooks';
 import {
@@ -103,64 +102,20 @@ export const SendTokenContent = ({
         return '';
     }, [amount, selectedToken, currentCurrency, exchangeRates]);
 
-    useEffect(() => {
-        if (selectedToken && amount) {
-            Analytics.send.flow('amount', {
-                tokenSymbol: selectedToken.symbol,
-                amount,
-            });
-        }
-    }, [amount, selectedToken]);
-
-    useEffect(() => {
-        if (selectedToken && toAddressOrDomain) {
-            Analytics.send.flow('recipient', {
-                tokenSymbol: selectedToken.symbol,
-                recipientAddress: toAddressOrDomain,
-                recipientType: toAddressOrDomain.includes('.')
-                    ? 'domain'
-                    : 'address',
-            });
-        }
-    }, [toAddressOrDomain, selectedToken]);
-
     const { data: resolvedDomainData, isLoading } =
         useVechainDomain(toAddressOrDomain);
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
             setValue('amount', selectedToken.balance);
-            Analytics.send.flow('amount', {
-                tokenSymbol: selectedToken.symbol,
-                amount: selectedToken.balance,
-            });
         }
     };
 
     const handleBack = () => {
-        if (selectedToken) {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                amount: amount || undefined,
-                recipientAddress: toAddressOrDomain || undefined,
-                error: 'back_button',
-                isError: false,
-            });
-        }
         parentOnBack();
     };
 
-    const handleClose = () => {
-        if (selectedToken) {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                amount: amount || undefined,
-                recipientAddress: toAddressOrDomain || undefined,
-                error: 'modal_closed',
-                isError: false,
-            });
-        }
-    };
+    const handleClose = () => {};
 
     const onSubmit = async (data: FormValues) => {
         if (!selectedToken) return;
@@ -178,10 +133,6 @@ export const SendTokenContent = ({
             setError('toAddressOrDomain', {
                 type: 'manual',
                 message: t('Invalid address or domain'),
-            });
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                error: 'Invalid address or domain',
             });
             return;
         }
@@ -210,10 +161,6 @@ export const SendTokenContent = ({
                                 },
                             ),
                         });
-                        Analytics.send.flow('review', {
-                            tokenSymbol: selectedToken.symbol,
-                            error: 'Below minimum amount',
-                        });
                         return;
                     }
                 } catch {
@@ -228,22 +175,9 @@ export const SendTokenContent = ({
                         symbol: selectedToken.symbol,
                     }),
                 });
-                Analytics.send.flow('review', {
-                    tokenSymbol: selectedToken.symbol,
-                    error: 'Insufficient balance',
-                });
                 return;
             }
         }
-
-        Analytics.send.flow('review', {
-            tokenSymbol: selectedToken.symbol,
-            amount: data.amount,
-            recipientAddress:
-                resolvedDomainData?.address || data.toAddressOrDomain,
-            recipientType: resolvedDomainData?.domain ? 'domain' : 'address',
-        });
-
         setCurrentContent({
             type: 'send-token-summary',
             props: {
@@ -263,27 +197,14 @@ export const SendTokenContent = ({
             <SelectTokenContent
                 setCurrentContent={setCurrentContent}
                 onSelectToken={(token) => {
-                    Analytics.send.tokenPageViewed(token.symbol);
                     setSelectedToken(token);
                     setIsSelectingToken(false);
                     setIsInitialTokenSelection(false);
                 }}
                 onBack={() => {
                     if (isInitialTokenSelection) {
-                        if (selectedToken) {
-                            Analytics.send.flow('token_select', {
-                                tokenSymbol: selectedToken.symbol,
-                                error: 'User cancelled - back to main',
-                            });
-                        }
                         setCurrentContent('main');
                     } else {
-                        if (selectedToken) {
-                            Analytics.send.flow('token_select', {
-                                tokenSymbol: selectedToken.symbol,
-                                error: 'User cancelled - back to form',
-                            });
-                        }
                         setIsSelectingToken(false);
                     }
                 }}

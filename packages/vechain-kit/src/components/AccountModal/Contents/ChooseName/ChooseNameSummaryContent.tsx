@@ -25,8 +25,6 @@ import {
     useGasTokenSelection,
     useGasEstimation,
 } from '@/hooks';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/stringUtils';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
 
@@ -63,19 +61,7 @@ export const ChooseNameSummaryContent = ({
     const { feeDelegation } = useVeChainKitConfig();
 
     const handleError = (error: string) => {
-        if (isRejectionError(error)) {
-            Analytics.nameSelection.dropOff('confirmation', {
-                isError: true,
-                name: fullDomain,
-                error,
-                reason: 'wallet_rejected',
-            });
-        } else {
-            Analytics.nameSelection.failed('confirmation', {
-                error,
-                name: fullDomain,
-            });
-        }
+        console.error('Transaction failed:', error);
     };
 
     // Use the unset domain hook if we're unsetting
@@ -147,24 +133,12 @@ export const ChooseNameSummaryContent = ({
     };
 
     const handleRetry = () => {
-        Analytics.nameSelection.retry('confirmation');
         handleConfirm();
     };
 
-    const handleClose = () => {
-        Analytics.nameSelection.dropOff('confirmation', {
-            isError: false,
-            name: isUnsetting ? '' : fullDomain,
-            error: 'modal_closed',
-        });
-    };
+    const handleClose = () => {};
 
     const handleBack = () => {
-        Analytics.nameSelection.dropOff('confirmation', {
-            isError: false,
-            name: isUnsetting ? '' : fullDomain,
-            error: 'back_button',
-        });
         setCurrentContent({
             type: 'choose-name-search',
             props: {

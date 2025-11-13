@@ -23,7 +23,6 @@ import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useNotifications } from '@/hooks';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -46,7 +45,6 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
             <StickyHeaderContainer>
                 <ModalNotificationButton
                     onClick={() => {
-                        Analytics.notifications.viewed();
                         setCurrentContent('notifications');
                     }}
                     hasUnreadNotifications={hasUnreadNotifications}
