@@ -3,11 +3,11 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
-import { useCallback } from 'react';
-import { ERC20__factory } from '@vechain/vechain-contract-types';
-import { useQueryClient } from '@tanstack/react-query';
+import { ERC20__factory } from '@hooks/contracts';
+import { useMemo } from 'react';
 import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';
+import { EnhancedClause } from '@/types';
 
 type useTransferERC20Props = {
     fromAddress: string;
@@ -22,9 +22,29 @@ type useTransferERC20Props = {
 
 type useTransferERC20ReturnValue = {
     sendTransaction: () => Promise<void>;
+    clauses: EnhancedClause[];
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 const ERC20Interface = ERC20__factory.createInterface();
+
+export const buildERC20Clauses = (receiverAddress: string, amount: string, tokenAddress: string, tokenName: string): EnhancedClause[] => {
+    if (!receiverAddress || !amount || !isValidAddress(receiverAddress))
+        throw new Error('Invalid receiver address or amount');
+
+    const clausesArray: any[] = [];
+
+    clausesArray.push({
+        to: tokenAddress,
+        value: '0x0',
+        data: ERC20Interface.encodeFunctionData('transfer', [
+            receiverAddress,
+            parseEther(amount),
+        ]),
+        comment: `Transfer ${amount} ${tokenName} to ${receiverAddress}`,
+        abi: ERC20Interface.getFunction('transfer'),
+    });
+    return clausesArray;
+};
 
 export const useTransferERC20 = ({
     fromAddress,
@@ -35,34 +55,10 @@ export const useTransferERC20 = ({
     onSuccess,
     onError,
 }: useTransferERC20Props): useTransferERC20ReturnValue => {
-    const queryClient = useQueryClient();
     const { refresh } = useRefreshBalances();
 
-    const buildClauses = useCallback(async () => {
-        if (!receiverAddress || !amount || !isValidAddress(receiverAddress))
-            throw new Error('Invalid receiver address or amount');
-
-        const clausesArray: any[] = [];
-
-        clausesArray.push({
-            to: tokenAddress,
-            value: '0x0',
-            data: ERC20Interface.encodeFunctionData('transfer', [
-                receiverAddress,
-                parseEther(amount),
-            ]),
-            comment: `Transfer ${amount} ${tokenName} to ${receiverAddress}`,
-            abi: ERC20Interface.getFunction('transfer'),
-        });
-
-        return clausesArray;
-    }, [receiverAddress, amount]);
-
-    //Refetch queries to update ui after the tx is confirmed
-    const handleOnSuccess = useCallback(async () => {
-        refresh();
-        onSuccess?.();
-    }, [onSuccess, fromAddress, queryClient]);
+    // Memoize the clauses
+    const clauses = useMemo(() => buildERC20Clauses(receiverAddress, amount, tokenAddress, tokenName), [receiverAddress, amount, tokenAddress, tokenName]);
 
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,
@@ -73,7 +69,10 @@ export const useTransferERC20 = ({
             )}`,
             buttonText: 'Sign to continue',
         },
-        onTxConfirmed: handleOnSuccess,
+        onTxConfirmed: async () => {
+            refresh();
+            onSuccess?.();
+        },
         onTxFailedOrCancelled: async (error) => {
             onError?.(error instanceof Error ? error.message : String(error));
         },
@@ -81,8 +80,9 @@ export const useTransferERC20 = ({
 
     return {
         ...result,
+        clauses,
         sendTransaction: async () => {
-            return result.sendTransaction(await buildClauses());
+            return result.sendTransaction(clauses);
         },
     };
 };

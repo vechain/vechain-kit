@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useGetAvatar } from './useGetAvatar';
 import { getPicassoImage } from '@/utils';
-import { useVechainDomain } from './useVechainDomain';
+import { getAddressDomain, getAvatar } from '@vechain/contract-getters';
+import { useVeChainKitConfig } from '@/providers';
 
 export const getAvatarOfAddressQueryKey = (address?: string) => [
     'VECHAIN_KIT',
@@ -17,31 +17,39 @@ export const getAvatarOfAddressQueryKey = (address?: string) => [
  * @returns The avatar URL for the address's primary domain
  */
 export const useGetAvatarOfAddress = (address?: string) => {
-    // First, get all domains for this address
-    const domainsQuery = useVechainDomain(address);
-
-    // Then, get the avatar for the first domain, but only if we have one
-    const primaryDomain = domainsQuery.data?.domain;
-    const avatarQuery = useGetAvatar(primaryDomain ?? '');
-
+    const { network } = useVeChainKitConfig();
     return useQuery({
         queryKey: getAvatarOfAddressQueryKey(address),
         queryFn: async () => {
-            if (!address) return getPicassoImage(address ?? '');
+            if (!address || !network.nodeUrl) return getPicassoImage(address ?? '');
 
-            // Wait for domains to be fetched
-            const domains = await domainsQuery.refetch();
-            if (!domains.data?.domain) return getPicassoImage(address);
+            const addressDomain = await getAddressDomain(address, {
+                networkUrl: network.nodeUrl,
+            });
+            if (!addressDomain) return getPicassoImage(address ?? '');
 
-            // Only try to get the avatar if we have a valid domain
-            if (domains.data.domain && avatarQuery.data)
-                return avatarQuery.data;
+            const avatar = await getAvatar(addressDomain, {
+                networkUrl: network.nodeUrl,
+            });
+            if (!avatar) return getPicassoImage(address ?? '');
+            return avatar;
 
-            return getPicassoImage(address);
         },
         enabled:
             !!address &&
-            domainsQuery.isSuccess &&
-            (primaryDomain ? avatarQuery.isSuccess : true),
+            !!network.nodeUrl,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || errorMessage.includes('abort')) {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
+        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60, // 1 minute
     });
 };

@@ -1,3 +1,5 @@
+![Zizmor Checks](https://github.com/vechain/vechain-kit/actions/workflows/scan-workflows.yaml/badge.svg?branch=main&event=push)
+
 #### An all-in-one library for building VeChain applications.
 
 <div align="center">

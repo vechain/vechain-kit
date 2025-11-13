@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
-import { IVechainEnergyOracleV1__factory } from '@vechain/vechain-contract-types';
+import { OracleVechainEnergy__factory } from '@hooks/contracts';
 import { BigNumber } from 'bignumber.js';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
@@ -27,7 +27,7 @@ export const getTokenUsdPrice = async (
     const res = await thor.contracts
         .load(
             getConfig(network).oracleContractAddress,
-            IVechainEnergyOracleV1__factory.abi,
+            OracleVechainEnergy__factory.abi,
         )
         .read.getLatestValue(PRICE_FEED_IDS[token]);
 
@@ -49,5 +49,18 @@ export const useGetTokenUsdPrice = (token: SupportedToken) => {
         queryKey: getTokenUsdPriceQueryKey(token),
         queryFn: async () => getTokenUsdPrice(thor, token, network.type),
         enabled: !!thor && !!network.type,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || errorMessage.includes('abort')) {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
+        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60, // 1 minute
     });
 };

@@ -55,6 +55,57 @@ export const AddressDisplayCard = ({
     const displaySymbol = tokenData?.symbol || '';
     const isLoading = totalBalanceLoading || tokensLoading;
 
+    if (isLoading) {
+        return (
+            <Box
+                w="full"
+                p={2}
+                borderRadius="lg"
+                bg={isDark ? '#00000038' : 'gray.50'}
+            >
+                <Text fontSize="sm" fontWeight="bold" mb={2}>
+                    {label}
+                </Text>
+                <HStack minH={'50px'} justify="space-between">
+                    <HStack>
+                        <Skeleton boxSize="40px" borderRadius="xl" />
+                        <VStack align="start" spacing={0}>
+                            <Skeleton
+                                height="16px"
+                                width="120px"
+                                borderRadius="md"
+                            />
+                            {!hideAddress && (
+                                <Skeleton
+                                    mt={2}
+                                    height="12px"
+                                    width="100px"
+                                    borderRadius="md"
+                                />
+                            )}
+                        </VStack>
+                    </HStack>
+
+                    <VStack
+                        justify="flex-start"
+                        align="flex-end"
+                        spacing={0}
+                        mr={2}
+                    >
+                        <Text fontSize="sm" fontWeight="medium">
+                            {t('Balance')}
+                        </Text>
+                        <Skeleton
+                            height="12px"
+                            width="80px"
+                            borderRadius="md"
+                        />
+                    </VStack>
+                </HStack>
+            </Box>
+        );
+    }
+
     return (
         <Box
             w="full"
@@ -116,14 +167,12 @@ export const AddressDisplayCard = ({
                     <Text fontSize="sm" fontWeight="medium">
                         {t('Balance')}
                     </Text>
-                    <Skeleton isLoaded={!isLoading}>
-                        <Text fontSize="xs" opacity={0.5}>
-                            {displayBalance.toLocaleString(undefined, {
-                                maximumFractionDigits: 2,
-                            })}
-                            {displaySymbol && ` ${displaySymbol}`}
-                        </Text>
-                    </Skeleton>
+                    <Text fontSize="xs" opacity={0.5}>
+                        {displayBalance.toLocaleString(undefined, {
+                            maximumFractionDigits: 2,
+                        })}
+                        {displaySymbol && ` ${displaySymbol}`}
+                    </Text>
                 </VStack>
             </HStack>
         </Box>

@@ -33,6 +33,7 @@ import {
     WalletProperties,
 } from '@/types/mixPanel';
 import VeChainKitMixpanel from 'mixpanel-browser';
+
 import { ENV, getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN } from './constants';
 import { getDocumentTitle, getWindowOrigin, isBrowser, isOnline, getLocalStorageItem, setLocalStorageItem } from './ssrUtils';
 
@@ -44,6 +45,7 @@ let hasTrackingConsent = false;
 
 // Initialize Mixpanel with basic config, but control actual tracking with consent checks
 // Use a named instance to avoid conflicts with user's Mixpanel
+
 let VeChainKitMixpanelInstance: any = null;
 
 if (isBrowser()) {
@@ -434,7 +436,17 @@ const Analytics = {
 
         buttonClicked: () => Analytics.swap.trackSwap('button_click'),
 
-        launchBetterSwap: () => Analytics.swap.trackSwap('launch_better_swap'),
+        tokenSelected: (direction: 'from' | 'to', tokenSymbol: string) =>
+            Analytics.swap.trackSwap('token_selected', { direction, fromToken: direction === 'from' ? tokenSymbol : undefined, toToken: direction === 'to' ? tokenSymbol : undefined }),
+
+        amountSet: (type: 'max' | 'percentage', amount: string) =>
+            Analytics.swap.trackSwap('amount_set', { type, amount }),
+
+        completed: (properties: { fromToken: string; toToken: string; amount: string; aggregator: string }) =>
+            Analytics.swap.trackSwap('completed', properties),
+
+        failed: (properties: { fromToken: string; toToken: string; amount: string; error: string }) =>
+            Analytics.swap.trackSwap('failed', { ...properties, isError: true }),
     },
 
     wallet: {
@@ -618,6 +630,21 @@ const Analytics = {
 
         appearanceSettingsViewed: () =>
             Analytics.settings.trackSettings('appearance_settings_view'),
+
+        gasTokenSettingsViewed: () =>
+            Analytics.settings.trackSettings('gas_token_settings_view'),
+
+        gasTokenReordered: () =>
+            Analytics.settings.trackSettings('gas_token_reordered'),
+
+        gasTokenConfirmationToggled: (enabled: boolean) =>
+            Analytics.settings.trackSettings('gas_token_confirmation_toggled', { enabled } as any),
+
+        gasTokenCostBreakdownToggled: (enabled: boolean) =>
+            Analytics.settings.trackSettings('gas_token_cost_breakdown_toggled', { enabled } as any),
+
+        gasTokenSettingsReset: () =>
+            Analytics.settings.trackSettings('gas_token_settings_reset'),
 
         manageSecuritySettings: () =>
             Analytics.settings.trackSettings('manage_security_settings'),

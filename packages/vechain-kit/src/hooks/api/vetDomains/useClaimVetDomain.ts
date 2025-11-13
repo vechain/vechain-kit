@@ -5,13 +5,15 @@ import {
 } from '@/hooks';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { useCallback } from 'react';
-import { IReverseRegistrar__factory } from '@vechain/vechain-contract-types';
+import { IReverseRegistrar__factory } from '@hooks/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig, VechainKitProviderProps } from '@/providers';
 import { ethers } from 'ethers';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
 import { humanAddress } from '@/utils';
+import { Wallet } from '@/types';
+import { TransactionClause } from '@vechain/sdk-core';
 
 type useClaimVetDomainProps = {
     domain: string;
@@ -23,9 +25,56 @@ type useClaimVetDomainProps = {
 
 type useClaimVetDomainReturnValue = {
     sendTransaction: () => Promise<void>;
+    clauses: () => TransactionClause[];
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
+
+export const buildVetDomainClauses = (domain: string, alreadyOwned: boolean, account: Wallet, network: VechainKitProviderProps['network']): TransactionClause[] => {
+    const clausesArray: any[] = [];
+
+    if (!domain) throw new Error('Invalid domain');
+
+    if (alreadyOwned) {
+        // For already owned domains, set the name in the reverse registrar
+        clausesArray.push({
+            to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
+            value: '0x0',
+            data: ReverseRegistrarInterface.encodeFunctionData('setName', [
+                domain,
+            ]),
+            comment: `Setting your VeChain nickname to ${domain}`,
+            abi: ReverseRegistrarInterface.getFunction('setName'),
+        });
+
+        // Also set the address in the public resolver
+        const PublicResolverInterface = new ethers.Interface([
+            'function setAddr(bytes32 node, address addr)',
+        ]);
+
+        // Calculate the namehash for the domain
+        const domainNode = ethers.namehash(domain);
+
+        clausesArray.push({
+            to: getConfig(network.type).vetDomainsPublicResolverAddress,
+            value: '0x0',
+            data: PublicResolverInterface.encodeFunctionData('setAddr', [
+                domainNode,
+                account?.address || '',
+            ]),
+            comment: `Setting the address for ${domain} to ${humanAddress(
+                account?.address ?? '',
+                4,
+                4,
+            )}`,
+            abi: PublicResolverInterface.getFunction('setAddr'),
+        });
+    } else {
+        throw new Error('Primary .vet domains are not supported yet');
+    }
+
+    return clausesArray;
+};
 
 /**
  * Hook for claiming a .vet domain
@@ -38,99 +87,16 @@ export const useClaimVetDomain = ({
     onError,
     alreadyOwned = false,
 }: useClaimVetDomainProps): useClaimVetDomainReturnValue => {
+    const { network } = useVeChainKitConfig();
     const queryClient = useQueryClient();
     const { account } = useWallet();
-    const { network } = useVeChainKitConfig();
+    
     const { refresh: refreshMetadata } = useRefreshMetadata(
         domain,
         account?.address ?? '',
     );
 
-    const buildClauses = useCallback(async () => {
-        const clausesArray: any[] = [];
-
-        if (!domain) throw new Error('Invalid domain');
-
-        if (alreadyOwned) {
-            // For already owned domains, set the name in the reverse registrar
-            clausesArray.push({
-                to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
-                value: '0x0',
-                data: ReverseRegistrarInterface.encodeFunctionData('setName', [
-                    domain,
-                ]),
-                comment: `Setting your VeChain nickname to ${domain}`,
-                abi: ReverseRegistrarInterface.getFunction('setName'),
-            });
-
-            // Also set the address in the public resolver
-            const PublicResolverInterface = new ethers.Interface([
-                'function setAddr(bytes32 node, address addr)',
-            ]);
-
-            // Calculate the namehash for the domain
-            const domainNode = ethers.namehash(domain);
-
-            clausesArray.push({
-                to: getConfig(network.type).vetDomainsPublicResolverAddress,
-                value: '0x0',
-                data: PublicResolverInterface.encodeFunctionData('setAddr', [
-                    domainNode,
-                    account?.address || '',
-                ]),
-                comment: `Setting the address for ${domain} to ${humanAddress(
-                    account?.address ?? '',
-                    4,
-                    4,
-                )}`,
-                abi: PublicResolverInterface.getFunction('setAddr'),
-            });
-        } else {
-            throw new Error('Primary .vet domains are not supported yet');
-            // // For domains that need to be claimed
-            // const ETHRegistrarControllerInterface = new ethers.Interface([
-            //     'function registerWithConfig(string name, address owner, uint32 duration, bytes32 secret, address resolver, address addr)',
-            // ]);
-
-            // // For new domains, claim the domain
-            // clausesArray.push({
-            //     to: getConfig(network.type).vetDomainsContractAddress,
-            //     value: '0x0',
-            //     data: ETHRegistrarControllerInterface.encodeFunctionData(
-            //         'registerWithConfig',
-            //         [
-            //             // Strip .vet if present
-            //             domain.replace('.vet', ''),
-            //             account?.address || '',
-            //             365 * 24 * 60 * 60, // 1 year in seconds
-            //             ethers.zeroPadValue('0x', 32), // empty secret
-            //             getConfig(network.type).vetDomainsPublicResolverAddress,
-            //             account?.address || '',
-            //         ],
-            //     ),
-            //     comment: `Claiming the VeChain domain: ${domain}`,
-            //     abi: ETHRegistrarControllerInterface.getFunction(
-            //         'registerWithConfig',
-            //     ),
-            // });
-
-            // clausesArray.push({
-            //     to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
-            //     value: '0x0',
-            //     data: ReverseRegistrarInterface.encodeFunctionData('setName', [
-            //         domain,
-            //     ]),
-            //     comment: `Setting ${domain} as the VeChain nickname of the account ${humanAddress(
-            //         account?.address ?? '',
-            //         4,
-            //         4,
-            //     )}`,
-            //     abi: ReverseRegistrarInterface.getFunction('setName'),
-            // });
-        }
-
-        return clausesArray;
-    }, [domain, alreadyOwned, account?.address, network.type]);
+    const clauses = useCallback(() => buildVetDomainClauses(domain, alreadyOwned, account, network), [domain, alreadyOwned, account, network]);
 
     // Refetch queries to update UI after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
@@ -171,8 +137,9 @@ export const useClaimVetDomain = ({
 
     return {
         ...result,
+        clauses,
         sendTransaction: async () => {
-            return result.sendTransaction(await buildClauses());
+            return result.sendTransaction(clauses());
         },
     };
 };

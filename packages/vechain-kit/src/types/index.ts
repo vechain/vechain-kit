@@ -1,5 +1,7 @@
 export * from './types';
 export * from './ensTextRecords';
+export * from './gasToken';
+export * from './gasEstimation';
 
 import { LegalDocument } from '@/providers';
 

@@ -5,6 +5,12 @@ export default tseslint.config(
         ignores: ['**/*.config.ts', 'dist/**', 'contracts/typechain-types/**'],
         extends: [...tseslint.configs.recommended],
         files: ['**/*.{ts,tsx}'],
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
         rules: {
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/ban-ts-comment': 'off',

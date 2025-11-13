@@ -27,6 +27,7 @@ export const useTxReceipt = (txId: string, blockTimeout = 5) => {
         queryFn: async () => {
             const response = await thor.transactions.waitForTransaction(txId, {
                 timeoutMs: blockTimeout * BLOCK_GENERATION_INTERVAL,
+                intervalMs: 3000
             });
 
             if (!response) throw new Error('Transaction receipt not found');

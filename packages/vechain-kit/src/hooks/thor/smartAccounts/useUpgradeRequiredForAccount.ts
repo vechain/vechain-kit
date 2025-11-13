@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { SimpleAccountFactory__factory } from '@vechain/vechain-contract-types';
+import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
@@ -15,7 +15,7 @@ export const getUpgradeRequiredForAccount = async (
     const res = await thor.contracts
         .load(
             getConfig(networkType).accountFactoryAddress,
-            SimpleAccountFactory__factory.abi,
+            SocialLoginSmartAccountFactory__factory.abi,
         )
         .read.upgradeRequiredForAccount(contractAddress, targetVersion);
 

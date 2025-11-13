@@ -16,7 +16,7 @@ import { FiSlash } from 'react-icons/fi';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { Analytics } from '@/utils/mixpanelClientInstance';
@@ -29,20 +29,42 @@ type Props = {
     >;
     onSelectToken: (token: TokenWithValue) => void;
     onBack: () => void;
+    /**
+     * If true, shows all tokens (not just tokens with balance) and sorts owned tokens first
+     */
+    showAllTokens?: boolean;
 };
 
-export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
+export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = false }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
     const { account } = useWallet();
-    const { tokensWithBalance } = useTokensWithValues({
+    const { tokensWithBalance, sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
     });
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Get the appropriate token list based on showAllTokens prop
+    const availableTokens = useMemo(() => {
+        if (showAllTokens) {
+            // Show all tokens, sorted with owned tokens first (by value), then unowned
+            const ownedTokens = sortedTokens.filter((token) => Number(token.balance) > 0);
+            const unownedTokens = sortedTokens.filter((token) => Number(token.balance) === 0);
+
+            // Owned tokens are already sorted by value (highest first)
+            // Unowned tokens are sorted alphabetically
+            const sortedUnowned = [...unownedTokens].sort((a, b) =>
+                a.symbol.localeCompare(b.symbol)
+            );
+
+            return [...ownedTokens, ...sortedUnowned];
+        }
+        return tokensWithBalance;
+    }, [showAllTokens, sortedTokens, tokensWithBalance]);
+
     // Filter tokens
-    const filteredTokens = tokensWithBalance.filter(({ symbol }) =>
+    const filteredTokens = availableTokens.filter(({ symbol }) =>
         symbol.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
@@ -89,7 +111,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack }: Props) => {
                             color={isDark ? 'whiteAlpha.800' : 'gray.700'}
                             mt={4}
                         >
-                            {t('Your tokens')}
+                            {showAllTokens ? t('All tokens') : t('Your tokens')}
                         </Text>
 
                         {filteredTokens.length === 0 ? (

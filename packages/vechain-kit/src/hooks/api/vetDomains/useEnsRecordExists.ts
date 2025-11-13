@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { MockENS__factory } from '@vechain/vechain-contract-types';
+import { VetDomainsRegistry__factory } from '@hooks/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
@@ -26,7 +26,7 @@ const getEnsRecordExists = async (
     const res = await thor.contracts
         .load(
             getConfig(network).vetDomainsContractAddress,
-            MockENS__factory.abi,
+            VetDomainsRegistry__factory.abi,
         )
         .read.recordExists(subnode);
 
@@ -48,5 +48,18 @@ export const useEnsRecordExists = (name: string) => {
         queryKey: getEnsRecordExistsQueryKey(name),
         queryFn: () => getEnsRecordExists(thor, network.type, name),
         enabled: !!name,
+        retry: (failureCount, error) => {
+            // Don't retry on cancellation errors
+            if (error instanceof Error) {
+                const errorMessage = error.message.toLowerCase();
+                if (errorMessage.includes('cancel') || errorMessage.includes('abort')) {
+                    return false;
+                }
+            }
+            // Retry network errors up to 2 times
+            return failureCount < 2;
+        },
+        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60, // 1 minute
     });
 };

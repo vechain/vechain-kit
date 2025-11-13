@@ -1,0 +1,33 @@
+import {
+    B3TR__factory,
+    MyERC20__factory as ERC20__factory,
+    VetDomainsReverseRegistrar__factory as IReverseRegistrar__factory,
+    IVOT3__factory,
+    OracleVechainEnergy__factory,
+    SocialLoginSmartAccount__factory,
+    SocialLoginSmartAccountFactory__factory,
+    UniswapV2Router02__factory as UniswapV2Router__factory,
+    VeBetterPassport__factory,
+    VetDomainsRegistry__factory,
+    VeworldSubdomainClaimer__factory,
+    X2EarnApps__factory,
+    XAllocationPool__factory,
+    XAllocationVoting__factory,
+} from '@vechain/vechain-contract-types';
+
+export {
+    ERC20__factory,
+    UniswapV2Router__factory,
+    SocialLoginSmartAccount__factory,
+    SocialLoginSmartAccountFactory__factory,
+    XAllocationPool__factory,
+    X2EarnApps__factory,
+    XAllocationVoting__factory,
+    VeBetterPassport__factory,
+    IVOT3__factory,
+    OracleVechainEnergy__factory,
+    B3TR__factory,
+    IReverseRegistrar__factory,
+    VetDomainsRegistry__factory,
+    VeworldSubdomainClaimer__factory,
+};

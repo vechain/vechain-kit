@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -11,6 +12,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
+    GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +24,8 @@ import {
     getAvatarQueryKey,
     getAvatarOfAddressQueryKey,
     getTextRecordsQueryKey,
+    useGasTokenSelection,
+    useGasEstimation,
 } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
@@ -30,6 +34,7 @@ import { Analytics } from '@/utils/mixpanelClientInstance';
 import { isRejectionError } from '@/utils/stringUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
+import { GasTokenType } from '@/types/gasToken';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -61,8 +66,9 @@ export const CustomizationSummaryContent = ({
     onDoneRedirectContent,
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
-    const { account, connectedWallet } = useWallet();
+    const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const { account, connectedWallet, connection } = useWallet();
+    const { preferences } = useGasTokenSelection();
 
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -71,6 +77,7 @@ export const CustomizationSummaryContent = ({
     );
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
+
     const { handleSubmit } = useForm<FormValues>({
         defaultValues: {
             ...changes,
@@ -91,6 +98,7 @@ export const CustomizationSummaryContent = ({
         error: txError,
         isWaitingForWalletConfirmation,
         isTransactionPending,
+        clauses: getClauses,
     } = useUpdateTextRecord({
         resolverAddress, // Pass the pre-fetched resolver address
         signerAccountAddress: account?.address ?? '',
@@ -144,34 +152,106 @@ export const CustomizationSummaryContent = ({
         },
     });
 
-    const onSubmit = async (data: FormValues) => {
+    // Build the text record updates immediately
+    const textRecordUpdates = useMemo(() => {
+        const domain = account?.domain ?? '';
+        const CHANGES_TO_TEXT_RECORDS = {
+            displayName: 'display',
+            description: 'description',
+            twitter: 'com.x',
+            website: 'url',
+            email: 'email',
+            avatarIpfsHash: 'avatar',
+        } as const;
+
+        return Object.entries(changes)
+            .filter(
+                (entry): entry is [string, string] =>
+                    entry[1] !== undefined && entry[1] !== null,
+            )
+            .map(([key, value]) => ({
+                domain,
+                key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
+                value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
+            }));
+    }, [changes, account?.domain]);
+
+    // Build clauses synchronously only if resolver address is available
+    const clauses = useMemo(() => {
+        try {
+            // Don't build clauses until we have a resolver address
+            if (
+                !resolverAddress ||
+                textRecordUpdates.length === 0 ||
+                !getClauses
+            ) {
+                return [];
+            }
+            return getClauses(textRecordUpdates);
+        } catch (error) {
+            console.error('Error building clauses:', error);
+            return [];
+        }
+    }, [textRecordUpdates, getClauses, resolverAddress]);
+
+    // Gas estimation
+    const [selectedGasToken, setSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+    // Track the user's manual selection to show it during loading (before estimation completes)
+    const [userSelectedGasToken, setUserSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+
+    const shouldEstimateGas =
+        preferences.availableGasTokens.length > 0 &&
+        (connection.isConnectedWithPrivy ||
+            connection.isConnectedWithVeChain) &&
+        !feeDelegation?.delegatorUrl;
+    const {
+        data: gasEstimation,
+        isLoading: gasEstimationLoading,
+        error: gasEstimationError,
+        refetch: refetchGasEstimation,
+    } = useGasEstimation({
+        clauses: clauses,
+        tokens: selectedGasToken
+            ? [selectedGasToken]
+            : preferences.availableGasTokens, // Use selected token or all available
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+    });
+    const usedGasToken = gasEstimation?.usedToken;
+    const disableConfirmButtonDuringEstimation =
+        (gasEstimationLoading || !gasEstimation) &&
+        connection.isConnectedWithPrivy &&
+        !feeDelegation?.delegatorUrl;
+
+    const handleGasTokenChange = React.useCallback(
+        (token: GasTokenType) => {
+            setSelectedGasToken(token);
+            setUserSelectedGasToken(token); // Track user's choice
+            setTimeout(() => refetchGasEstimation(), 100);
+        },
+        [refetchGasEstimation],
+    );
+
+    // hasEnoughBalance is now determined by the hook itself
+    const hasEnoughBalance = !!usedGasToken && !gasEstimationError;
+
+    // Auto-fallback: if the selected token cannot cover fees (estimation error),
+    // clear selection to re-estimate across all available tokens
+    // Keep userSelectedGasToken to show during loading, but actual result will show the token that succeeds
+    React.useEffect(() => {
+        if (gasEstimationError && selectedGasToken) {
+            setSelectedGasToken(null);
+        }
+    }, [gasEstimationError, selectedGasToken]);
+
+    const onSubmit = async () => {
         if (upgradeRequired) {
             openUpgradeSmartAccountModal();
             return;
         }
 
         try {
-            const domain = account?.domain ?? '';
-            const CHANGES_TO_TEXT_RECORDS = {
-                displayName: 'display',
-                description: 'description',
-                twitter: 'com.x',
-                website: 'url',
-                email: 'email',
-                avatarIpfsHash: 'avatar',
-            } as const;
-
-            const textRecordUpdates = Object.entries(data)
-                .filter(
-                    (entry): entry is [string, string] =>
-                        entry[1] !== undefined && entry[1] !== null,
-                )
-                .map(([key, value]) => ({
-                    domain,
-                    key: CHANGES_TO_TEXT_RECORDS[key as keyof FormValues],
-                    value: key === 'avatarIpfsHash' ? `ipfs://${value}` : value,
-                }));
-
             if (textRecordUpdates.length > 0) {
                 await updateTextRecord(textRecordUpdates);
             }
@@ -298,6 +378,16 @@ export const CustomizationSummaryContent = ({
                         renderField(t('Website'), changes.website)}
                     {changes.email && renderField(t('Email'), changes.email)}
                 </VStack>
+                {connection.isConnectedWithPrivy && (
+                    <GasFeeSummary
+                        estimation={gasEstimation}
+                        isLoading={gasEstimationLoading}
+                        isLoadingTransaction={isTransactionPending}
+                        onTokenChange={handleGasTokenChange}
+                        clauses={clauses as any}
+                        userSelectedToken={userSelectedGasToken}
+                    />
+                )}
             </ModalBody>
 
             <ModalFooter gap={4} w="full">
@@ -310,7 +400,18 @@ export const CustomizationSummaryContent = ({
                     transactionPendingText={t('Saving changes...')}
                     txReceipt={txReceipt}
                     buttonText={t('Confirm')}
-                    isDisabled={isTransactionPending}
+                    isDisabled={
+                        isTransactionPending ||
+                        disableConfirmButtonDuringEstimation
+                    }
+                    gasEstimationError={gasEstimationError}
+                    hasEnoughGasBalance={hasEnoughBalance}
+                    isLoadingGasEstimation={gasEstimationLoading}
+                    showGasEstimationError={
+                        !feeDelegation?.delegatorUrl &&
+                        connection.isConnectedWithPrivy
+                    }
+                    context="customization"
                 />
             </ModalFooter>
         </Box>

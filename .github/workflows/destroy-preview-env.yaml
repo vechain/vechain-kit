@@ -7,25 +7,28 @@ on:
     paths: ['examples/homepage/**', 'packages/vechain-kit/**', 'yarn.lock']
     types: [closed]
 
-permissions:
-  contents: read
-  id-token: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   deploy:
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
         with:
           role-to-assume: ${{ secrets.AWS_ACC_ROLE }}
           aws-region: eu-west-1
 
       - name: Process Branch Name
         id: process-branch-name
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         run: |
           sanitized_branch_name=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
           echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT

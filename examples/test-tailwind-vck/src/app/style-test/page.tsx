@@ -325,7 +325,6 @@ export default function StyleTest() {
         <VeChainKitProvider
             feeDelegation={{
                 delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
-                delegateAllTransactions: false,
             }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect', 'sync2'],

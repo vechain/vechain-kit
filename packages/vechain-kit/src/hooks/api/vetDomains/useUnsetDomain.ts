@@ -4,12 +4,14 @@ import {
     useWallet,
 } from '@/hooks';
 import { useCallback } from 'react';
-import { IReverseRegistrar__factory } from '@vechain/vechain-contract-types';
+import { IReverseRegistrar__factory } from '@hooks/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig, VechainKitProviderProps } from '@/providers';
 import { humanAddress } from '@/utils';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
+import { Wallet } from '@/types';
+import { TransactionClause } from '@vechain/sdk-core';
 
 type useUnsetDomainProps = {
     onSuccess?: () => void;
@@ -18,9 +20,29 @@ type useUnsetDomainProps = {
 
 type useUnsetDomainReturnValue = {
     sendTransaction: () => Promise<void>;
+    clauses: () => TransactionClause[];
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
+
+const buildUnsetDomainClauses = (account: Wallet, network: VechainKitProviderProps['network']): TransactionClause[] => {
+    const clausesArray: any[] = [];
+
+    // When unsetting domain, we only need to call setName with an empty string
+    clausesArray.push({
+        to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
+        value: '0x0',
+        data: ReverseRegistrarInterface.encodeFunctionData('setName', ['']),
+        comment: `Unsetting your current VeChain nickname of the account ${humanAddress(
+            account?.address ?? '',
+            4,
+            4,
+        )}`,
+        abi: ReverseRegistrarInterface.getFunction('setName'),
+    });
+
+    return clausesArray;
+};
 
 /**
  * Hook for unsetting any domain name (both .veworld.vet and .vet domains)
@@ -36,24 +58,7 @@ export const useUnsetDomain = ({
     const { account } = useWallet();
     const { network } = useVeChainKitConfig();
 
-    const buildClauses = useCallback(async () => {
-        const clausesArray: any[] = [];
-
-        // When unsetting domain, we only need to call setName with an empty string
-        clausesArray.push({
-            to: getConfig(network.type).vetDomainsReverseRegistrarAddress,
-            value: '0x0',
-            data: ReverseRegistrarInterface.encodeFunctionData('setName', ['']),
-            comment: `Unsetting your current VeChain nickname of the account ${humanAddress(
-                account?.address ?? '',
-                4,
-                4,
-            )}`,
-            abi: ReverseRegistrarInterface.getFunction('setName'),
-        });
-
-        return clausesArray;
-    }, [account?.address, network.type]);
+    const clauses = useCallback(() => buildUnsetDomainClauses(account, network), [account, network]);
 
     // Refetch queries to update UI after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
@@ -85,8 +90,9 @@ export const useUnsetDomain = ({
 
     return {
         ...result,
+        clauses,
         sendTransaction: async () => {
-            return result.sendTransaction(await buildClauses());
+            return result.sendTransaction(clauses());
         },
     };
 };
