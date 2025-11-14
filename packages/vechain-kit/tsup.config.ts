@@ -9,7 +9,7 @@ export default defineConfig({
     },
     outDir: 'dist',
     format: ['cjs', 'esm'],
-    minify: false,
+    minify: true,
     sourcemap: true,
     clean: true,
     external: ['react'],
