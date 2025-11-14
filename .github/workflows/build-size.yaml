@@ -1,7 +1,8 @@
 name: Build Size Check
 
 on:
-  pull_request_target:  # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
+   # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
+  pull_request_target:
     types: [opened, synchronize, reopened]
     branches: [main, test]
 
