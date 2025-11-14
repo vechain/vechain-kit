@@ -53,7 +53,7 @@ export const BalanceSection = ({
                 role="group"
             >
                 <Heading size={'xs'} fontWeight={'500'} opacity={0.5}>
-                    {t('Balance')}
+                    {t('Assets')}
                 </Heading>
 
                 <Box
@@ -106,6 +106,7 @@ export const BalanceSection = ({
                     w={'full'}
                     justifyContent={'flex-start'}
                     data-testid="all-assets-button"
+                    mt={2}
                 >
                     <AssetIcons
                         style={{
