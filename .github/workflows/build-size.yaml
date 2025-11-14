@@ -31,11 +31,11 @@ jobs:
           NODE_OPTIONS: '--max-old-space-size=8192'
         run: yarn build
 
-      - name: Compare bundle sizes
+      - name: Compare package sizes
         uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: "packages/vechain-kit/dist/*.{js,cjs}"
-          exclude: "{**/*.map,**/metafile*.json,**/bundle-analysis*.html,**/bundle-analysis-report.txt}"
-          compression: gzip
-          minimum-change-threshold: 100
+          pattern: "packages/vechain-kit/dist/**/*"
+          exclude: "{**/node_modules/**}"
+          compression: none
+          minimum-change-threshold: 1000
