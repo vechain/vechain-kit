@@ -158,8 +158,6 @@ export const ChooseNameSearchContent = ({
         });
     };
 
-    const handleClose = () => {};
-
     const handleBack = () => {
         setCurrentContent(initialContentSource);
     };
@@ -171,7 +169,7 @@ export const ChooseNameSearchContent = ({
                     {t('Choose Name')}
                 </ModalHeader>
                 <ModalBackButton onClick={handleBack} />
-                <ModalCloseButton onClick={handleClose} />
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody>

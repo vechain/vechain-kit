@@ -169,8 +169,6 @@ export const SendTokenSummaryContent = ({
         });
     };
 
-    const handleClose = () => {};
-
     const handleError = (error: string) => {
         console.error('Transaction failed:', error);
     };
@@ -236,10 +234,7 @@ export const SendTokenSummaryContent = ({
                     isDisabled={isSubmitting}
                     onClick={handleBack}
                 />
-                <ModalCloseButton
-                    isDisabled={isSubmitting}
-                    onClick={handleClose}
-                />
+                <ModalCloseButton isDisabled={isSubmitting} />
             </StickyHeaderContainer>
 
             <ModalBody>

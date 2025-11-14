@@ -255,9 +255,6 @@ export const CustomizationSummaryContent = ({
         handleSubmit(onSubmit)();
     };
 
-    const handleClose = () => {
-    };
-
     const handleBack = () => {
         setCurrentContent({
             type: 'account-customization',
@@ -305,10 +302,7 @@ export const CustomizationSummaryContent = ({
                     isDisabled={isTransactionPending}
                     onClick={handleBack}
                 />
-                <ModalCloseButton
-                    isDisabled={isTransactionPending}
-                    onClick={handleClose}
-                />
+                <ModalCloseButton isDisabled={isTransactionPending} />
             </StickyHeaderContainer>
 
             <ModalBody>

@@ -115,8 +115,6 @@ export const SendTokenContent = ({
         parentOnBack();
     };
 
-    const handleClose = () => {};
-
     const onSubmit = async (data: FormValues) => {
         if (!selectedToken) return;
 
@@ -217,7 +215,7 @@ export const SendTokenContent = ({
             <StickyHeaderContainer>
                 <ModalHeader>{t('Send')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
-                <ModalCloseButton onClick={handleClose} />
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody>

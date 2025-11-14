@@ -136,8 +136,6 @@ export const ChooseNameSummaryContent = ({
         handleConfirm();
     };
 
-    const handleClose = () => {};
-
     const handleBack = () => {
         setCurrentContent({
             type: 'choose-name-search',
@@ -211,10 +209,7 @@ export const ChooseNameSummaryContent = ({
                     onClick={handleBack}
                     isDisabled={isTransactionPending}
                 />
-                <ModalCloseButton
-                    isDisabled={isTransactionPending}
-                    onClick={handleClose}
-                />
+                <ModalCloseButton isDisabled={isTransactionPending} />
             </StickyHeaderContainer>
 
             <ModalBody>

@@ -30,8 +30,6 @@ export const ChooseNameContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
-    const handleClose = () => {};
-
     const handleBack = () => {
         onBack();
     };
@@ -41,7 +39,7 @@ export const ChooseNameContent = ({
             <StickyHeaderContainer>
                 <ModalHeader data-testid='modal-title'>{t('Choose your account name')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
-                <ModalCloseButton onClick={handleClose} />
+                <ModalCloseButton/>
             </StickyHeaderContainer>
 
             <ModalBody>

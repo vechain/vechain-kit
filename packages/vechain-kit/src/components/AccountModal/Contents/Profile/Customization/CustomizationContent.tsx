@@ -211,8 +211,6 @@ export const CustomizationContent = ({
         });
     };
 
-    const handleClose = () => {};
-
     const handleBack = () => {
         setCurrentContent(initialContentSource);
     };
@@ -222,7 +220,7 @@ export const CustomizationContent = ({
             <StickyHeaderContainer>
                 <ModalHeader data-testid='modal-title'>{t('Customization')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
-                <ModalCloseButton onClick={handleClose} />
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody>
