@@ -134,22 +134,17 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
 
     return (
-        <VStack w={'full'} mt={mt} spacing={4}>
-            <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.5}>
-                {t('Tools')}
-            </Heading>
-            <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
-                {QUICK_ACTIONS.map((action) => (
-                    <QuickActionButton
-                        key={action.label}
-                        icon={action.icon}
-                        label={action.label}
-                        onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(hasAnyBalance)}
-                        showRedDot={showRedDot && action.label === 'Settings'}
-                    />
-                ))}
-            </Grid>
-        </VStack>
+        <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full" mt={mt}>
+            {QUICK_ACTIONS.map((action) => (
+                <QuickActionButton
+                    key={action.label}
+                    icon={action.icon}
+                    label={action.label}
+                    onClick={() => action.onClick(setCurrentContent)}
+                    isDisabled={action.isDisabled?.(hasAnyBalance)}
+                    showRedDot={showRedDot && action.label === 'Settings'}
+                />
+            ))}
+        </Grid>
     );
 };
