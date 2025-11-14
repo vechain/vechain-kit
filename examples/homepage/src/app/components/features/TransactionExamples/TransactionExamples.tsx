@@ -36,7 +36,7 @@ export function TransactionExamples() {
                 {
                     ...thor.contracts
                         .load(b3trMainnetAddress, IB3TR__factory.abi)
-                        .clause.transfer(account.address, '0').clause,
+                        .clause.transfer(account.address, BigInt('0')).clause,
                     comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
                 },
             ];

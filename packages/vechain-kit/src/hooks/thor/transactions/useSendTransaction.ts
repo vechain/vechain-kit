@@ -10,7 +10,7 @@ import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
 import { estimateTxGas } from './transactionUtils';
 import { signerUtils, TransactionReceipt } from '@vechain/sdk-network';
-import { TransactionClause } from '@vechain/sdk-core';
+import { Revision, TransactionClause } from '@vechain/sdk-core';
 
 /**
  * Props for the {@link useSendTransaction} hook
@@ -144,7 +144,7 @@ export const useSendTransaction = ({
                     [..._clauses],
                     signerAccountAddress,
                     {
-                        revision: 'next',
+                        revision: Revision.NEXT,
                         ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
                     },
                 );
