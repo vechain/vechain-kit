@@ -1,54 +1,20 @@
 name: Build Size Check
 
 on:
-  pull_request_target:  # zizmor: ignore[dangerous-triggers] - Mitigated with label-based approval
-    types: [labeled, synchronize, opened, reopened]
+  pull_request:
     branches: [main, test]
 
-permissions:
-  contents: read
-
 jobs:
-  # Job 1: Post instruction comment for external PRs
-  comment-external-pr:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    if: |
-      github.event.pull_request.head.repo.full_name != github.repository &&
-      github.event.action == 'opened'
-    steps:
-      - name: Comment on external PR
-        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ## 👋 Thanks for your contribution!
-
-            Since this PR comes from a forked repository, build size check requires approval from a maintainer for security reasons.
-
-            **Next steps:**
-            1. A maintainer will review your code
-            2. If approved, they'll add the `safe-to-build` label to trigger the build size check
-            3. **After each new commit**, the maintainer will need to remove and re-add the label for security
-
-            This ensures every version of the code is explicitly reviewed before running checks. Thank you for your patience! 🙏
-
-  # Job 2: Build size check (runs for internal PRs OR when external PR gets labeled)
   build-size-check:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       contents: read
-    # Security gate: Only run when 'safe-to-build' label is ADDED OR from internal branch
-    if: |
-      (github.event.label.name == 'safe-to-build') ||
-      (github.event.pull_request.head.repo.full_name == github.repository)
+
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup Node
