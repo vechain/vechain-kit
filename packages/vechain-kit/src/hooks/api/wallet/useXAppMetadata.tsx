@@ -3,7 +3,6 @@ import { X2EarnApps__factory } from '@hooks/contracts';
 import { useVeChainKitConfig } from '@/providers';
 import { useThor } from '@vechain/dapp-kit-react';
 import { convertUriToUrl } from '@/utils';
-import axios from 'axios';
 import { NETWORK_TYPE } from '@/config/network';
 import { useQuery } from '@tanstack/react-query';
 
@@ -51,12 +50,18 @@ export const getXAppMetadata = async (
     uri: string,
     networkType: NETWORK_TYPE,
 ): Promise<XAppMetadata | undefined> => {
-    const metadata = await axios.get<XAppMetadata>(
-        convertUriToUrl(uri, networkType) || '',
-        { timeout: 20000 },
-    );
+    const url = convertUriToUrl(uri, networkType) || '';
 
-    return metadata.data;
+    const response = await fetch(url, {
+        signal: AbortSignal.timeout(20000),
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const metadata = await response.json();
+    return metadata;
 };
 
 const abi = X2EarnApps__factory.abi;

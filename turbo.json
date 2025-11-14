@@ -33,11 +33,6 @@
         "clean": {
             "cache": false
         },
-        "compile": {
-            "outputs": ["artifacts/**", "typechain-types/**"],
-            "inputs": ["contracts/**", "hardhat.config.ts", "package.json"],
-            "cache": true
-        },
         "test": {
             "inputs": ["src/**", "test/**", "tests/**", "package.json"],
             "cache": true

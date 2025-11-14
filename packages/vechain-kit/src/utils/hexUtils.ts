@@ -1,5 +1,4 @@
-import crypto from "crypto";
-const PREFIX = "0x";
+const PREFIX = '0x';
 const PREFIX_REGEX = /^0[xX]/;
 const HEX_REGEX = /^(0[xX])?[a-fA-F0-9]+$/;
 
@@ -12,7 +11,7 @@ const HEX_REGEX = /^(0[xX])?[a-fA-F0-9]+$/;
  */
 export const removePrefix = (hex: string): string => {
     validate(hex);
-    return hex.replace(PREFIX_REGEX, "");
+    return hex.replace(PREFIX_REGEX, '');
 };
 
 /**
@@ -36,7 +35,7 @@ export const addPrefix = (hex: string): string => {
  * @throws an error if the input is not a valid hex string
  */
 export const validate = (hex: string) => {
-    if (!isValid(hex)) throw Error("Provided hex value is not valid");
+    if (!isValid(hex)) throw Error('Provided hex value is not valid');
 };
 
 /**
@@ -62,20 +61,8 @@ export const compare = (hex1: string, hex2: string): boolean => {
             removePrefix(hex1).toLowerCase() ===
             removePrefix(hex2).toLowerCase()
         );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
         return false;
     }
-};
-
-/**
- * Generate a random hex string of the defined length
- * @param size - the length of the random hex output
- * @returns a random hex string of length `size`
- */
-export const generateRandom = (size: number): string => {
-    if (size < 1) throw Error("Size must be > 0");
-    const randBuffer = crypto.randomBytes(Math.ceil(size / 2));
-    if (!randBuffer) throw Error("Failed to generate random hex");
-    return `${PREFIX}${randBuffer.toString("hex").substring(0, size)}`;
 };
