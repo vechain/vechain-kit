@@ -66,7 +66,7 @@
         "@tanstack/react-query": "^5.64.2",
         "@tanstack/react-query-devtools": "^5.64.1",
         "@vechain/contract-getters": "1.0.3",
-        "@vechain/dapp-kit-react": "2.0.4",
+        "@vechain/dapp-kit-react": "2.1.0-rc.2",
         "@vechain/picasso": "^2.1.1",
         "@vechain/vechain-contract-types": "1.4.1",
         "@wagmi/core": "^2.17.2",
@@ -112,7 +112,7 @@
     "peerDependencies": {
         "@chakra-ui/react": "^2.8.2",
         "@tanstack/react-query": "^5.64.2",
-        "@vechain/dapp-kit-react": "2.0.4"
+        "@vechain/dapp-kit-react": "2.1.0-rc.2"
     },
     "peerDependenciesMeta": {
         "@chakra-ui/react": {

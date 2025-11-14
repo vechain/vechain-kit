@@ -71,8 +71,8 @@ export const useXAppMetadata = (xAppId: string) => {
             const address = getConfig(network.type).x2EarnAppsContractAddress;
             const contract = thor.contracts.load(address, abi);
 
-            const [app] = await contract.read.app(xAppId);
-            const metadataURI = (app as Array<string>)?.[3] || '';
+            const [app] = await contract.read.app(xAppId as `0x${string}`);
+            const metadataURI = app.metadataURI || '';
 
             const [baseUri] = await contract.read.baseURI();
 

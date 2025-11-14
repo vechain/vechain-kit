@@ -11,10 +11,11 @@ permissions: {}
 
 jobs:
   zizmor:
-    uses: vechain/github-actions-public/.github/workflows/scan-workflows.yaml@cf384c612d562dbc17022d23ed094751e92921e5 # v.1.0.0
+    uses: vechain/github-actions-public/.github/workflows/scan-workflows.yaml@77660aeff2fac9bbb704b3a2ce786814d0b632fa # v.1.1.0
     with:
       persona: 'auditor'
       min_severity: 'medium'
+      min_confidence: 'high'
     permissions:
       contents: read
       actions: read
