@@ -6724,7 +6724,6 @@ __metadata:
     i18next: "npm:^24.2.1"
     i18next-browser-languagedetector: "npm:^8.0.2"
     mixpanel-browser: "npm:^2.61.1"
-    net: "npm:^1.0.2"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
     react-device-detect: "npm:^2.2.3"
@@ -12813,13 +12812,6 @@ __metadata:
   version: 1.0.0
   resolution: "negotiator@npm:1.0.0"
   checksum: 10c0/4c559dd52669ea48e1914f9d634227c561221dd54734070791f999c52ed0ff36e437b2e07d5c1f6e32909fc625fe46491c16e4a8f0572567d4dd15c3a4fda04b
-  languageName: node
-  linkType: hard
-
-"net@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "net@npm:1.0.2"
-  checksum: 10c0/7cf9cf8f9c9a2bdadd9002e85da7bd509216ed84b76315aa903a51f15997e4844e7cb8c742f8af434d8cf431564c868d8565106004bbd9ce4223696c9b13d2fd
   languageName: node
   linkType: hard
 
