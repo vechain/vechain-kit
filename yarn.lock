@@ -14433,13 +14433,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"punycode@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "punycode@npm:1.4.1"
-  checksum: 10c0/354b743320518aef36f77013be6e15da4db24c2b4f62c5f1eb0529a6ed02fbaf1cb52925785f6ab85a962f2b590d9cd5ad730b70da72b5f180e2556b8bd3ca08
-  languageName: node
-  linkType: hard
-
 "punycode@npm:^2.1.0":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
@@ -17259,7 +17252,6 @@ __metadata:
     husky: "npm:^8.0.0"
     lint-staged: "npm:^15.0.2"
     prettier: "npm:^2.5.1"
-    punycode: "npm:^1.4.1"
     ts-node: "npm:^10.9.2"
     turbo: "npm:latest"
     typescript: "npm:4.9.5"
