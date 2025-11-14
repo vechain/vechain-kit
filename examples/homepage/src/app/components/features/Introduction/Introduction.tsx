@@ -87,7 +87,6 @@ export function Introduction() {
                                 rel="noopener noreferrer"
                                 colorScheme="red"
                                 width="100%"
-                                onClick={() => trackExternalLink('npm')}
                             >
                                 View Package on NPM
                             </Button>
@@ -99,7 +98,6 @@ export function Introduction() {
                                 rel="noopener noreferrer"
                                 colorScheme="gray"
                                 width="100%"
-                                onClick={() => trackExternalLink('github')}
                             >
                                 View GitHub Repository
                             </Button>
@@ -118,9 +116,6 @@ export function Introduction() {
                                 rel="noopener noreferrer"
                                 variant="outline"
                                 width="100%"
-                                onClick={() =>
-                                    trackExternalLink('smart-accounts')
-                                }
                             >
                                 Learn about Smart Accounts
                             </Button>
@@ -317,11 +312,6 @@ export function Introduction() {
                                     as={Link}
                                     href={app.href}
                                     isExternal
-                                    onClick={() =>
-                                        trackExternalLink(
-                                            `example-app-${app.name.toLowerCase()}`,
-                                        )
-                                    }
                                 >
                                     <HStack
                                         align="start"
