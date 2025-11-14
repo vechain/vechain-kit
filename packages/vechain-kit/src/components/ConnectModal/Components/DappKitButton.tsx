@@ -6,7 +6,6 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { IoWalletOutline } from 'react-icons/io5';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { isRejectionError } from '@/utils/stringUtils';
 import { VeWorldLogoDark, VeWorldLogoLight } from '@/assets';
 import { IconType } from 'react-icons';
 import { useVeChainKitConfig } from '@/providers';
@@ -35,19 +34,7 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
         ) => {
             if (!address) {
                 if (error?.message) {
-                    const errorMsg = error.message.toLowerCase();
-                    if (errorMsg.includes('veworld')) {
-                        return { ...(source && { source }) };
-                    }
-                    if (errorMsg.includes('sync2')) {
-                        return { ...(source && { source }) };
-                    }
-                    if (errorMsg.includes('wallet-connect')) {
-                        return { ...(source && { source }) };
-                    }
-                    if (errorMsg && isRejectionError(errorMsg)) {
-                        return { ...(source && { source }) };
-                    }
+                    console.error(error?.message);
                 }
                 return { ...(source && { source }) };
             }
