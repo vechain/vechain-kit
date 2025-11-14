@@ -62,30 +62,6 @@ const QUICK_ACTIONS: QuickAction[] = [
             }),
         isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
-    {
-        icon: RiSwap3Line,
-        label: 'Bridge',
-        onClick: (setCurrentContent) => {
-            Analytics.bridge.opened();
-            setCurrentContent('bridge');
-        },
-    },
-    {
-        icon: IoMdApps,
-        label: 'Ecosystem',
-        onClick: (setCurrentContent) => {
-            Analytics.ecosystem.opened();
-            setCurrentContent('ecosystem');
-        },
-    },
-    {
-        icon: IoMdSettings,
-        label: 'Settings',
-        onClick: (setCurrentContent) => {
-            Analytics.settings.opened('general');
-            setCurrentContent('settings');
-        },
-    },
 ];
 
 const QuickActionButton = ({
