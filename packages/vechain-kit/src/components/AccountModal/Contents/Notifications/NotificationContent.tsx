@@ -21,7 +21,6 @@ import { useNotifications } from '@/hooks/notifications';
 import { useState } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
 import { NotificationItem } from './Components/NotificationItem';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -44,17 +43,12 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
     );
 
     const handleClearAll = () => {
-        Analytics.notifications.cleared(undefined, notifications.length);
         clearAllNotifications();
         setArchivedNotifications([...archivedNotifications, ...notifications]);
         setNotifications([]);
     };
 
     const handleMarkAsRead = (id: string) => {
-        const notification = notifications.find((n) => n.id === id);
-        if (notification) {
-            Analytics.notifications.archived(notification.status);
-        }
         markAsRead(id);
         const notificationToArchive = notifications.find((n) => n.id === id);
         setNotifications(notifications.filter((n) => n.id !== id));
@@ -67,9 +61,6 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
     };
 
     const handleToggleView = () => {
-        Analytics.notifications.toggleView(
-            isArchiveView ? 'current' : 'archived',
-        );
         setIsArchiveView(!isArchiveView);
     };
 

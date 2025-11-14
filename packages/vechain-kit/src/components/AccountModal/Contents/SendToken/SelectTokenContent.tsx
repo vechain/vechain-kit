@@ -16,10 +16,9 @@ import { FiSlash } from 'react-icons/fi';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useCurrency } from '@/hooks';
 import { SupportedCurrency } from '@/utils/currencyUtils';
 
@@ -67,12 +66,6 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
     const filteredTokens = availableTokens.filter(({ symbol }) =>
         symbol.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-
-    useEffect(() => {
-        if (searchQuery) {
-            Analytics.send.tokenSearchPerformed(searchQuery);
-        }
-    }, [searchQuery, filteredTokens.length]);
 
     return (
         <>

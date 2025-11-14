@@ -13,7 +13,6 @@ import {
     ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useTranslation } from 'react-i18next';
 import { AccountModalContentTypes } from '../../Types';
 import { useGasTokenSelection } from '@/hooks';
@@ -38,7 +37,6 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
     const handleReorder = useCallback(
         (newOrder: GasTokenType[]) => {
             reorderTokenPriority(newOrder);
-            Analytics.settings.gasTokenReordered();
         },
         [reorderTokenPriority],
     );

@@ -16,7 +16,6 @@ import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
 import { LuArrowDownToLine } from 'react-icons/lu';
 import { RiSwap3Line } from 'react-icons/ri';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     mt?: number;
@@ -37,7 +36,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: MdSwapHoriz,
         label: 'Swap',
         onClick: (setCurrentContent) => {
-            Analytics.swap.opened();
             setCurrentContent('swap-token');
         },
     },
@@ -45,7 +43,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: LuArrowDownToLine,
         label: 'Receive',
         onClick: (setCurrentContent) => {
-            Analytics.wallet.trackWallet('receive_qr_generated');
             setCurrentContent('receive-token');
         },
     },
@@ -66,7 +63,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: RiSwap3Line,
         label: 'Bridge',
         onClick: (setCurrentContent) => {
-            Analytics.bridge.opened();
             setCurrentContent('bridge');
         },
     },
@@ -74,7 +70,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: IoMdApps,
         label: 'Ecosystem',
         onClick: (setCurrentContent) => {
-            Analytics.ecosystem.opened();
             setCurrentContent('ecosystem');
         },
     },
@@ -82,7 +77,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: IoMdSettings,
         label: 'Settings',
         onClick: (setCurrentContent) => {
-            Analytics.settings.opened('general');
             setCurrentContent('settings');
         },
     },

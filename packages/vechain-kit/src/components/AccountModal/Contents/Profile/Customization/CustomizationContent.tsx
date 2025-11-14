@@ -37,7 +37,6 @@ import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '@/utils';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 // Update FormValues type to include validation
 type FormValues = {
@@ -148,14 +147,9 @@ export const CustomizationContent = ({
                 network.type,
             );
             setAvatarIpfsHash(ipfsHash);
-            Analytics.customization.imageUploaded(true);
         } catch (error) {
             console.error('Error uploading image:', error);
             setPreviewImageUrl(null);
-            Analytics.customization.imageUploaded(
-                false,
-                error instanceof Error ? error.message : 'Unknown error',
-            );
         } finally {
             setIsUploading(false);
         }
@@ -217,32 +211,7 @@ export const CustomizationContent = ({
         });
     };
 
-    const handleClose = () => {
-        if (isUploading) {
-            Analytics.customization.dropOff({
-                stage: 'avatar',
-                reason: 'modal_closed_during_upload',
-            });
-        } else {
-            Analytics.customization.dropOff({
-                stage: 'form',
-                reason: 'modal_closed',
-            });
-        }
-    };
-
     const handleBack = () => {
-        if (isUploading) {
-            Analytics.customization.dropOff({
-                stage: 'avatar',
-                reason: 'back_button_during_upload',
-            });
-        } else {
-            Analytics.customization.dropOff({
-                stage: 'form',
-                reason: 'back_button',
-            });
-        }
         setCurrentContent(initialContentSource);
     };
 
@@ -251,7 +220,7 @@ export const CustomizationContent = ({
             <StickyHeaderContainer>
                 <ModalHeader data-testid='modal-title'>{t('Customization')}</ModalHeader>
                 <ModalBackButton onClick={handleBack} />
-                <ModalCloseButton onClick={handleClose} />
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody>
@@ -357,9 +326,6 @@ export const CustomizationContent = ({
                                     'Choose a unique .vet domain name for your account.',
                                 )}
                                 onClick={() => {
-                                    Analytics.nameSelection.started(
-                                        'account-customization',
-                                    );
                                     if (account?.domain) {
                                         setCurrentContent({
                                             type: 'choose-name-search',

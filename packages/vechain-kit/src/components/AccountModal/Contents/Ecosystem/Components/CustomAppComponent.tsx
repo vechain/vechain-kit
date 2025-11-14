@@ -1,6 +1,5 @@
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { SharedAppCard } from './SharedAppCard';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CategoryFilter } from './CategoryFilterSection';
 import { AllowedCategories } from './CategoryLabel';
 
@@ -28,7 +27,6 @@ export const CustomAppComponent = ({
     setCurrentContent,
 }: Props) => {
     const handleAppClick = () => {
-        Analytics.ecosystem.appSelected(name);
         setCurrentContent({
             type: 'app-overview',
             props: {

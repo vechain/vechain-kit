@@ -19,7 +19,6 @@ import { useVeChainKitConfig } from '@/providers';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type FAQContentProps = {
     onGoBack: () => void;
@@ -34,7 +33,6 @@ export const FAQContent = ({
     const { i18n, t } = useTranslation();
 
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        Analytics.settings.language.changed(e.target.value, i18n.language);
         i18n.changeLanguage(e.target.value);
     };
 

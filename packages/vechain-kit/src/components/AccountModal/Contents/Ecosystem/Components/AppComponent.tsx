@@ -2,7 +2,6 @@ import { useIpfsImage, useXAppMetadata, XApp } from '@/hooks';
 import { SharedAppCard } from './SharedAppCard';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { Skeleton } from '@chakra-ui/react';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CategoryFilter } from './CategoryFilterSection';
 
 type Props = {
@@ -26,7 +25,6 @@ export const AppComponent = ({
 
     const handleAppClick = () => {
         if (appMetadata?.name) {
-            Analytics.ecosystem.appSelected(appMetadata.name);
             setCurrentContent({
                 type: 'app-overview',
                 props: {

@@ -11,7 +11,6 @@ import {
     ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { useTranslation } from 'react-i18next';
 import { IoLanguage } from 'react-icons/io5';
 import {
@@ -38,7 +37,6 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
     const { feeDelegation } = useVeChainKitConfig();
 
     const handleCurrencyClick = () => {
-        Analytics.settings.currencySettingsViewed();
         setCurrentContent('change-currency');
     };
 
@@ -92,7 +90,6 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                                     : {}),
                             }}
                             onClick={() => {
-                                Analytics.settings.languageSettingsViewed();
                                 setCurrentContent('change-language');
                             }}
                             leftIcon={IoLanguage}
@@ -107,7 +104,6 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                                         borderTopRadius: '0px', // last item in the group
                                     }}
                                     onClick={() => {
-                                        Analytics.settings.gasTokenSettingsViewed();
                                         setCurrentContent('gas-token-settings');
                                     }}
                                     leftIcon={MdLocalGasStation}
@@ -118,7 +114,6 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                     <ActionButton
                         title={t('Terms and Policies')}
                         onClick={() => {
-                            Analytics.settings.termsAndPolicyViewed();
                             setCurrentContent({
                                 type: 'terms-and-privacy',
                                 props: {

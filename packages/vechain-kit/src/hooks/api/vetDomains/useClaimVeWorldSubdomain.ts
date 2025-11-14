@@ -12,7 +12,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig, VechainKitProviderProps } from '@/providers';
 import { humanAddress } from '@/utils';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
@@ -172,8 +171,6 @@ export const useClaimVeWorldSubdomain = ({
 
         // Use the dedicated metadata refresh utility
         refreshMetadata();
-
-        Analytics.nameSelection.completed(subdomain, alreadyOwned);
         onSuccess?.();
     }, [
         onSuccess,

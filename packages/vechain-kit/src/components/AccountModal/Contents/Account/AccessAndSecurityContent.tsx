@@ -29,7 +29,6 @@ import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
 import { HiOutlineShieldCheck, HiOutlineWallet } from 'react-icons/hi2';
 import { GiHouseKeys } from 'react-icons/gi';
 import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -117,7 +116,6 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     <ActionButton
                         title={t('Your embedded wallet')}
                         onClick={() => {
-                            Analytics.settings.embeddedWalletViewed();
                             setCurrentContent('embedded-wallet');
                         }}
                         leftIcon={HiOutlineWallet}

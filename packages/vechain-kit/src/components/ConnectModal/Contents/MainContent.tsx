@@ -14,7 +14,6 @@ import React, { useEffect } from 'react';
 import { useWallet, useFetchAppInfo } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { EcosystemButton } from '../Components/EcosystemButton';
 
 type Props = {
@@ -35,7 +34,6 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
         useFetchAppInfo(privyEcosystemAppIDS);
 
     const handleFAQClick = () => {
-        Analytics.help.faqViewed();
         setCurrentContent('faq');
     };
 

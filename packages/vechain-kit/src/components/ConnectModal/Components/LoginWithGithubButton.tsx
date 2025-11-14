@@ -3,8 +3,6 @@ import { FaGithub } from 'react-icons/fa';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types/mixPanel';
 
 type Props = {
     isDark: boolean;
@@ -20,8 +18,6 @@ export const LoginWithGithubButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={async () => {
-                    Analytics.auth.flowStarted(VeLoginMethod.GITHUB);
-                    Analytics.auth.methodSelected(VeLoginMethod.GITHUB);
                     await initOAuth({
                         provider: 'github',
                     });

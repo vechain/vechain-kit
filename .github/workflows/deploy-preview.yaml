@@ -51,7 +51,6 @@ jobs:
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}
             NEXT_PUBLIC_PRIVY_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_CLIENT_ID }}
             NEXT_PUBLIC_DELEGATOR_URL: ${{ secrets.NEXT_PUBLIC_DELEGATOR_URL }}
-            NEXT_PUBLIC_MIXPANEL_TOKEN: 'f53d48e696601c813b128d6f91e8bc88'
             NEXT_PUBLIC_NETWORK_TYPE: 'main'
             AWS_REGION: eu-west-1
             BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
@@ -98,6 +97,7 @@ jobs:
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
 
             - name: Create Deployment Comment
+              if: github.event.action == 'opened' || github.event.action == 'reopened'
               uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
               with:
                   issue-number: ${{ github.event.pull_request.number }}

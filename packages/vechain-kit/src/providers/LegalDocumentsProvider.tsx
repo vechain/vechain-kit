@@ -17,10 +17,6 @@ import {
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
 } from '@/utils/legalDocumentsUtils';
 import {
-    Analytics,
-    setHasTrackingConsent,
-} from '@/utils/mixpanelClientInstance';
-import {
     createContext,
     ReactNode,
     useCallback,
@@ -202,7 +198,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         return hasAgreedToRequiredDocuments && hasOptionalDocumentsToShow;
     }, [hasAgreedToRequiredDocuments, hasOptionalDocumentsToShow]);
 
-    const hasAgreedWithAnalytics = useMemo(() => {
+    useMemo(() => {
         if (!isAnalyticsAllowed) return false;
 
         const storedAgreementIds = new Set(
@@ -211,10 +207,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
 
         return documents.some((doc) => storedAgreementIds.has(doc.id));
     }, [isAnalyticsAllowed, documents, storedAgreements]);
-
-    useEffect(() => {
-        setHasTrackingConsent(hasAgreedWithAnalytics);
-    }, [hasAgreedWithAnalytics]);
 
     useEffect(() => {
         if (connection.isConnected && account?.address) {
@@ -313,7 +305,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     );
 
     const handleLogout = () => {
-        Analytics.auth.trackAuth('disconnect_initiated');
         disconnect();
         setShowTermsModal(false);
     };

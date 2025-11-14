@@ -9,7 +9,6 @@ import {
 import { IoCloseCircle } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
 import { Notification } from '@/hooks/notifications/types';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     notification: Notification;
@@ -25,7 +24,6 @@ export const NotificationItem = ({
     const { t } = useTranslation();
 
     const handleDismiss = () => {
-        Analytics.notifications.dismissed(notification.status);
         onMarkAsRead(notification.id);
     };
 

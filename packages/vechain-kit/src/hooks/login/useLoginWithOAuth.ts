@@ -3,10 +3,6 @@ import {
     useCreateWallet,
     OAuthProviderType,
 } from '@privy-io/react-auth';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { VeLoginMethod } from '@/types/mixPanel';
-import { usePrivy } from '@privy-io/react-auth';
-import { isRejectionError } from '@/utils/stringUtils';
 import { useCallback } from 'react';
 
 interface OAuthOptions {
@@ -44,31 +40,11 @@ export const useLoginWithOAuth = () => {
     const { initOAuth: privyInitOAuth } = usePrivyLoginWithOAuth({
         onComplete: handleComplete,
     });
-    const { user } = usePrivy();
 
     const initOAuth = async ({ provider }: OAuthOptions) => {
-        const loginMethod = VeLoginMethod.OAUTH;
-
         try {
-            Analytics.auth.flowStarted(loginMethod);
-            Analytics.auth.methodSelected(loginMethod);
             await privyInitOAuth({ provider });
-            Analytics.auth.completed({
-                userId: user?.id,
-                loginMethod,
-            });
         } catch (error) {
-            const errorMsg =
-                error instanceof Error ? error.message : 'Unknown error';
-
-            if (isRejectionError(errorMsg)) {
-                Analytics.auth.dropOff('oauth', {
-                    ...(provider && { provider }),
-                });
-            } else {
-                Analytics.auth.failed(loginMethod, errorMsg);
-            }
-
             throw error;
         }
     };

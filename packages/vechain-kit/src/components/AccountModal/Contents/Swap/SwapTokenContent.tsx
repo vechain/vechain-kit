@@ -25,7 +25,6 @@ import { FiArrowDown } from 'react-icons/fi';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import {
     useWallet,
     useTokensWithValues,
@@ -324,14 +323,6 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
 
     const handleSwapSuccess = useCallback(() => {
         const txId = txReceipt?.meta.txID ?? '';
-
-        Analytics.swap.completed({
-            fromToken: fromToken?.symbol ?? '',
-            toToken: toToken?.symbol ?? '',
-            amount,
-            aggregator: quote?.aggregatorName ?? '',
-        });
-
         // Extract swap amounts from receipt transfer events
         const swapTitle = t('Swap successful', { defaultValue: 'Swap successful' });
         let swapDescription: string | undefined;
@@ -416,13 +407,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
 
     const handleSwapError = useCallback((error: Error | string) => {
         const errorMessage = typeof error === 'string' ? error : error.message;
-
-        Analytics.swap.failed({
-            fromToken: fromToken?.symbol ?? '',
-            toToken: toToken?.symbol ?? '',
-            amount,
-            error: errorMessage,
-        });
+        console.error('Swap failed:', errorMessage);
     }, [fromToken, toToken, amount]);
 
     // Track if we've already shown success/error to prevent duplicate dialogs
@@ -486,13 +471,11 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
         }
 
         setStep('main');
-        Analytics.swap.tokenSelected('from', token.symbol);
     }, [toToken, sortedTokens, network.type]);
 
     const handleSelectToToken = useCallback((token: TokenWithValue) => {
         setToToken(token);
         setStep('main');
-        Analytics.swap.tokenSelected('to', token.symbol);
     }, []);
 
     // Amount input handlers
@@ -507,7 +490,6 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
     const handleSetMaxAmount = useCallback(() => {
         if (fromToken) {
             setAmount(fromToken.balance);
-            Analytics.swap.amountSet('max', fromToken.balance);
         }
     }, [fromToken]);
 
