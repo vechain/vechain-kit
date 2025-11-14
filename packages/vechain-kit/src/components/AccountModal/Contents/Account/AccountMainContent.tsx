@@ -92,6 +92,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                             setCurrentContent('profile');
                         }}
                         setCurrentContent={setCurrentContent}
+                        onClose={onClose}
                         wallet={wallet}
                     />
 

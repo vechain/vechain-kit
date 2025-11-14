@@ -26,6 +26,7 @@ type Props = {
     >;
     size?: string;
     onClick?: () => void;
+    onClose: () => void;
     mt?: number;
     style?: StackProps;
 };
@@ -35,6 +36,7 @@ export const AccountSelector = ({
     setCurrentContent,
     size = 'md',
     onClick,
+    onClose,
     mt,
     style,
 }: Props) => {
