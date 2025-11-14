@@ -44,18 +44,16 @@ export const BalanceSection = ({
     };
 
     return (
-        <VStack w="full" justifyContent={'start'} spacing={2} mt={mt} mb={mb}>
-            <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.5}>
-                {t('Balance')}
-            </Heading>
+        <VStack w="full" justifyContent={'start'} spacing={1} mt={mt} mb={mb}>
             <HStack
                 w={'full'}
-                justifyContent={'space-between'}
-                alignItems={'baseline'}
+                justifyContent={'flex-start'}
+                alignItems={'center'}
+                spacing={2}
                 role="group"
             >
-                <Heading size={'2xl'} fontWeight={'700'}>
-                    {formattedBalance}
+                <Heading size={'xs'} fontWeight={'500'} opacity={0.5}>
+                    {t('Assets')}
                 </Heading>
 
                 <Box
@@ -84,42 +82,53 @@ export const BalanceSection = ({
                     />
                 </Box>
             </HStack>
-            <HStack
-                w={'full'}
-                justifyContent={'flex-start'}
-                data-testid="all-assets-button"
+
+            <VStack
+                onClick={onAssetsClick}
+                width="100%"
+                mt={1}
+                backgroundColor={isDark ? '#ffffff0a' : 'blackAlpha.50'}
+                borderRadius="xl"
+                p={3}
+                cursor="pointer"
+                _hover={{
+                    backgroundColor: isDark ? '#ffffff12' : 'blackAlpha.200',
+                }}
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                spacing={2}
             >
-                <AssetIcons
-                    onClick={onAssetsClick}
-                    maxIcons={10}
-                    iconSize={26}
-                    iconsGap={3}
-                    address={account?.address ?? ''}
-                    showNoAssetsWarning={true}
-                    rightIcon={
-                        <Icon
-                            as={MdOutlineNavigateNext}
-                            boxSize={5}
-                            opacity={0.5}
-                            marginLeft={2}
-                        />
-                    }
-                    style={{
-                        width: '100%',
-                        mt: 2,
-                        backgroundColor: isDark ? '#ffffff0a' : 'blackAlpha.50',
-                        borderRadius: 'xl',
-                        p: 3,
-                        cursor: 'pointer',
-                        _hover: {
-                            backgroundColor: isDark
-                                ? '#ffffff12'
-                                : 'blackAlpha.200',
-                        },
-                        justifyContent: 'space-between',
-                    }}
-                />
-            </HStack>
+                <Heading size={'2xl'} fontWeight={'700'}>
+                    {formattedBalance}
+                </Heading>
+
+                <HStack
+                    w={'full'}
+                    justifyContent={'flex-start'}
+                    data-testid="all-assets-button"
+                    mt={2}
+                >
+                    <AssetIcons
+                        style={{
+                            width: '100%',
+                            justifyContent: 'space-between',
+                        }}
+                        maxIcons={10}
+                        iconSize={26}
+                        iconsGap={3}
+                        address={account?.address ?? ''}
+                        showNoAssetsWarning={true}
+                        rightIcon={
+                            <Icon
+                                as={MdOutlineNavigateNext}
+                                boxSize={5}
+                                opacity={0.5}
+                                marginLeft={2}
+                            />
+                        }
+                    />
+                </HStack>
+            </VStack>
         </VStack>
     );
 };

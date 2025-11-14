@@ -4,18 +4,17 @@ import {
     IconButton,
     VStack,
     Text,
-    Heading,
     HStack,
     Box,
 } from '@chakra-ui/react';
-import { MdSwapHoriz } from 'react-icons/md';
-import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import { useUpgradeRequired, useWallet, useTotalBalance } from '@/hooks';
-import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
-import { LuArrowDownToLine } from 'react-icons/lu';
-import { RiSwap3Line } from 'react-icons/ri';
+import {
+    LuArrowDownToLine,
+    LuArrowLeftRight,
+    LuArrowUpFromLine,
+} from 'react-icons/lu';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
@@ -34,23 +33,7 @@ type QuickAction = {
 
 const QUICK_ACTIONS: QuickAction[] = [
     {
-        icon: MdSwapHoriz,
-        label: 'Swap',
-        onClick: (setCurrentContent) => {
-            Analytics.swap.opened();
-            setCurrentContent('swap-token');
-        },
-    },
-    {
-        icon: LuArrowDownToLine,
-        label: 'Receive',
-        onClick: (setCurrentContent) => {
-            Analytics.wallet.trackWallet('receive_qr_generated');
-            setCurrentContent('receive-token');
-        },
-    },
-    {
-        icon: FiSend,
+        icon: LuArrowUpFromLine,
         label: 'Send',
         onClick: (setCurrentContent) =>
             setCurrentContent({
@@ -63,27 +46,19 @@ const QUICK_ACTIONS: QuickAction[] = [
         isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
     {
-        icon: RiSwap3Line,
-        label: 'Bridge',
+        icon: LuArrowLeftRight,
+        label: 'Swap',
         onClick: (setCurrentContent) => {
-            Analytics.bridge.opened();
-            setCurrentContent('bridge');
+            Analytics.swap.opened();
+            setCurrentContent('swap-token');
         },
     },
     {
-        icon: IoMdApps,
-        label: 'Ecosystem',
+        icon: LuArrowDownToLine,
+        label: 'Receive',
         onClick: (setCurrentContent) => {
-            Analytics.ecosystem.opened();
-            setCurrentContent('ecosystem');
-        },
-    },
-    {
-        icon: IoMdSettings,
-        label: 'Settings',
-        onClick: (setCurrentContent) => {
-            Analytics.settings.opened('general');
-            setCurrentContent('settings');
+            Analytics.wallet.trackWallet('receive_qr_generated');
+            setCurrentContent('receive-token');
         },
     },
 ];
@@ -146,7 +121,6 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
-    const { t } = useTranslation();
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
@@ -157,22 +131,17 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
 
     return (
-        <VStack w={'full'} mt={mt} spacing={4}>
-            <Heading size={'xs'} fontWeight={'500'} w={'full'} opacity={0.5}>
-                {t('Tools')}
-            </Heading>
-            <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
-                {QUICK_ACTIONS.map((action) => (
-                    <QuickActionButton
-                        key={action.label}
-                        icon={action.icon}
-                        label={action.label}
-                        onClick={() => action.onClick(setCurrentContent)}
-                        isDisabled={action.isDisabled?.(hasAnyBalance)}
-                        showRedDot={showRedDot && action.label === 'Settings'}
-                    />
-                ))}
-            </Grid>
-        </VStack>
+        <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full" mt={mt}>
+            {QUICK_ACTIONS.map((action) => (
+                <QuickActionButton
+                    key={action.label}
+                    icon={action.icon}
+                    label={action.label}
+                    onClick={() => action.onClick(setCurrentContent)}
+                    isDisabled={action.isDisabled?.(hasAnyBalance)}
+                    showRedDot={showRedDot && action.label === 'Settings'}
+                />
+            ))}
+        </Grid>
     );
 };

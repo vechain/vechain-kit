@@ -15,23 +15,33 @@ import { MdOutlineNavigateNext } from 'react-icons/md';
 import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
+import { RiLogoutBoxLine } from 'react-icons/ri';
+import { AccountModalContentTypes } from '../Types/Types';
+import { useWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
     size?: string;
     onClick?: () => void;
+    onClose: () => void;
     mt?: number;
     style?: StackProps;
 };
 
 export const AccountSelector = ({
     wallet,
+    setCurrentContent,
     size = 'md',
     onClick,
+    onClose,
     mt,
     style,
 }: Props) => {
     const [copied, setCopied] = useState(false);
+    const { disconnect } = useWallet();
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
@@ -44,6 +54,12 @@ export const AccountSelector = ({
             }, 2000);
         }
     };
+
+    const handleLogout = () => {
+        disconnect();
+        onClose();
+    };
+
     return (
         <HStack
             mt={mt}
@@ -94,6 +110,25 @@ export const AccountSelector = ({
                 size="sm"
                 opacity={0.5}
                 _hover={{ opacity: 0.8 }}
+            />
+
+            <IconButton
+                aria-label="Logout"
+                icon={<Icon as={RiLogoutBoxLine} />}
+                onClick={() =>
+                    setCurrentContent({
+                        type: 'disconnect-confirm',
+                        props: {
+                            onDisconnect: handleLogout,
+                            onBack: () => setCurrentContent('main'),
+                        },
+                    })
+                }
+                variant="ghost"
+                size="sm"
+                opacity={0.5}
+                _hover={{ opacity: 0.8 }}
+                colorScheme="red"
             />
         </HStack>
     );

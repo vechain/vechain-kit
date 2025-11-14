@@ -37,7 +37,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
 
             <Container maxW={'container.lg'}>
                 <ModalBody>
-                    <VStack spacing={0} align="center" w="full">
+                    <VStack spacing={4} align="center" w="full">
                         <QRCode
                             value={account?.address ?? ''}
                             size={200}
