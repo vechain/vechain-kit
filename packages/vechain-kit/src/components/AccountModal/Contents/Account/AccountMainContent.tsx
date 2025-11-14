@@ -91,6 +91,7 @@ export const AccountMainContent = ({ setCurrentContent, wallet }: Props) => {
                         onClick={() => {
                             setCurrentContent('profile');
                         }}
+                        setCurrentContent={setCurrentContent}
                         wallet={wallet}
                     />
 
