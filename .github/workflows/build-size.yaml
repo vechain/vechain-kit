@@ -66,7 +66,7 @@ jobs:
         run: yarn build
 
       - name: Compare bundle sizes
-        uses: preactjs/compressed-size-action@v2
+        uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           pattern: "packages/vechain-kit/dist/*.{js,cjs}"
