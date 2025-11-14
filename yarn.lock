@@ -1680,21 +1680,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@choc-ui/chakra-autocomplete@npm:^5.3.0":
-  version: 5.9.0
-  resolution: "@choc-ui/chakra-autocomplete@npm:5.9.0"
-  dependencies:
-    react-nanny: "npm:2.15.0"
-  peerDependencies:
-    "@chakra-ui/react": ^2.5.5
-    "@emotion/react": ^11.10.0
-    "@emotion/styled": ^11.10.0
-    framer-motion: ">7.6.14"
-    react: ^18.2.0
-  checksum: 10c0/ace296b7f0e36cde4281eacb6e1d611ee9e28ebe126a3347babdf0ce47b9fc254ae8c573899c485dc9f3a9389c96bdbdfd33ce117d4ac2710c4b68675eab38c8
-  languageName: node
-  linkType: hard
-
 "@coinbase/cdp-sdk@npm:^1.0.0":
   version: 1.38.5
   resolution: "@coinbase/cdp-sdk@npm:1.38.5"
@@ -6711,7 +6696,6 @@ __metadata:
   dependencies:
     "@adraffy/ens-normalize": "npm:^1.11.0"
     "@chakra-ui/react": "npm:^2.8.2"
-    "@choc-ui/chakra-autocomplete": "npm:^5.3.0"
     "@emotion/styled": "npm:^11.14.1"
     "@privy-io/cross-app-connect": "npm:0.2.2"
     "@privy-io/react-auth": "npm:2.24.0"
@@ -14511,15 +14495,6 @@ __metadata:
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
   checksum: 10c0/f2f1e60010c683479e74c63f96b09fb41603527cd131a9959e2aee1e5a8b0caf270b365e5ca77d4a6b18aae659b60a86150bb3979073528877029b35aecd2072
-  languageName: node
-  linkType: hard
-
-"react-nanny@npm:2.15.0":
-  version: 2.15.0
-  resolution: "react-nanny@npm:2.15.0"
-  peerDependencies:
-    react: ">=16.0.0"
-  checksum: 10c0/dadda08ec8320a1a241b2f3a23c071be57cac15ff052d6e03a50538e50d9331205b7f09f00920f97753234aa96e23190c4ac6becdac85bbdfea0ca7cb80093dc
   languageName: node
   linkType: hard
 

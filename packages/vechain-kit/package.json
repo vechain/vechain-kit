@@ -57,7 +57,6 @@
     "dependencies": {
         "@adraffy/ens-normalize": "^1.11.0",
         "@chakra-ui/react": "^2.8.2",
-        "@choc-ui/chakra-autocomplete": "^5.3.0",
         "@emotion/styled": "^11.14.1",
         "@privy-io/cross-app-connect": "0.2.2",
         "@privy-io/react-auth": "2.24.0",
