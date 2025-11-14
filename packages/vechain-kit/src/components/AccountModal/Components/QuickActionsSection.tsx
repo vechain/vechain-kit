@@ -9,13 +9,14 @@ import {
     Box,
 } from '@chakra-ui/react';
 import { MdSwapHoriz } from 'react-icons/md';
-import { FiSend } from 'react-icons/fi';
 import { AccountModalContentTypes } from '../Types';
 import { useUpgradeRequired, useWallet, useTotalBalance } from '@/hooks';
-import { IoMdApps, IoMdSettings } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
-import { LuArrowDownToLine } from 'react-icons/lu';
-import { RiSwap3Line } from 'react-icons/ri';
+import {
+    LuArrowDownToLine,
+    LuArrowLeftRight,
+    LuArrowUpFromLine,
+} from 'react-icons/lu';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
@@ -34,7 +35,20 @@ type QuickAction = {
 
 const QUICK_ACTIONS: QuickAction[] = [
     {
-        icon: MdSwapHoriz,
+        icon: LuArrowUpFromLine,
+        label: 'Send',
+        onClick: (setCurrentContent) =>
+            setCurrentContent({
+                type: 'send-token',
+                props: {
+                    setCurrentContent,
+                    isNavigatingFromMain: true,
+                },
+            }),
+        isDisabled: (hasAnyBalance) => !hasAnyBalance,
+    },
+    {
+        icon: LuArrowLeftRight,
         label: 'Swap',
         onClick: (setCurrentContent) => {
             Analytics.swap.opened();
@@ -48,19 +62,6 @@ const QUICK_ACTIONS: QuickAction[] = [
             Analytics.wallet.trackWallet('receive_qr_generated');
             setCurrentContent('receive-token');
         },
-    },
-    {
-        icon: FiSend,
-        label: 'Send',
-        onClick: (setCurrentContent) =>
-            setCurrentContent({
-                type: 'send-token',
-                props: {
-                    setCurrentContent,
-                    isNavigatingFromMain: true,
-                },
-            }),
-        isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
 ];
 
