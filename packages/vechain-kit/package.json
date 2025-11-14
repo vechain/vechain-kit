@@ -97,8 +97,7 @@
         "eslint-plugin-i18next": "^6.1.1",
         "tsup": "*",
         "typescript": "*",
-        "vite": "^4.5.5",
-        "vitest": "^0.34.6"
+        "vite": "^4.5.5"
     },
     "peerDependencies": {
         "@chakra-ui/react": "^2.8.2",
