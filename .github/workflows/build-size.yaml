@@ -3,8 +3,9 @@ name: Build Size Check
 on:
    # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
   pull_request_target:
-    types: [opened, synchronize, reopened]
-    branches: [main, test]
+    types: [labeled, opened, synchronize, reopened]
+    branches:
+        - main
 
 concurrency:
   group: ${{ github.head_ref || github.ref_name }}-build-size
@@ -42,8 +43,10 @@ jobs:
     permissions:
       pull-requests: write
       contents: read
-    # Security gate: Only run for internal PRs
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    # Security gate: Only run when 'safe-to-build' label is ADDED OR from internal branch
+    if: |
+      (github.event.label.name == 'safe-to-build') ||
+      (github.event.pull_request.head.repo.full_name == github.repository)
 
     steps:
       - name: Checkout PR branch
