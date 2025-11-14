@@ -10454,15 +10454,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prefer-arrow@npm:1.2.3":
-  version: 1.2.3
-  resolution: "eslint-plugin-prefer-arrow@npm:1.2.3"
-  peerDependencies:
-    eslint: ">=2.0.0"
-  checksum: 10c0/9fd463ae0a8b80f216bee947783813b565d1859583e82b7f72f8853931be7cf6297209610f8e4bdc0b7e5459328b6f0030eab695964d3662ef1939eaada2e86e
-  languageName: node
-  linkType: hard
-
 "eslint-plugin-react-hooks@npm:^4.5.0 || 5.0.0-canary-7118f5dd7-20230705":
   version: 5.0.0-canary-7118f5dd7-20230705
   resolution: "eslint-plugin-react-hooks@npm:5.0.0-canary-7118f5dd7-20230705"
@@ -17366,7 +17357,6 @@ __metadata:
     "@vechain/sdk-network": "npm:2.0.5"
     commitlint: "npm:^18.0.0"
     eslint: "npm:^9.12.0"
-    eslint-plugin-prefer-arrow: "npm:1.2.3"
     husky: "npm:^8.0.0"
     lint-staged: "npm:^15.0.2"
     prettier: "npm:^2.5.1"
