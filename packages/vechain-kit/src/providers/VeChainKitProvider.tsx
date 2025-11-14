@@ -97,6 +97,10 @@ export type VechainKitProviderProps = {
         themeVariables?: CustomizedStyle;
         modalParent?: HTMLElement;
         onSourceClick?: (source?: SourceInfo) => void;
+        v2Api?: {
+            enabled?: boolean;
+            external?: boolean; // whether to disconnect the user on every visit
+        };
     };
     loginModalUI?: {
         logo?: string;
@@ -175,8 +179,12 @@ const validateConfig = (
                 genericDelegatorUrl: getGenericDelegatorUrl(),
             };
         } else {
-            if (!validatedProps.feeDelegation.delegatorUrl && !validatedProps.feeDelegation.genericDelegatorUrl) {
-                validatedProps.feeDelegation.genericDelegatorUrl = getGenericDelegatorUrl();
+            if (
+                !validatedProps.feeDelegation.delegatorUrl &&
+                !validatedProps.feeDelegation.genericDelegatorUrl
+            ) {
+                validatedProps.feeDelegation.genericDelegatorUrl =
+                    getGenericDelegatorUrl();
             }
         }
     }
@@ -196,8 +204,11 @@ const validateConfig = (
     // Validate login methods if Privy is not configured
     if (validatedProps.loginMethods) {
         if (!validatedProps.privy) {
-            const invalidMethods = validatedProps.loginMethods.filter((method) =>
-                ['email', 'google', 'passkey', 'more'].includes(method.method),
+            const invalidMethods = validatedProps.loginMethods.filter(
+                (method) =>
+                    ['email', 'google', 'passkey', 'more'].includes(
+                        method.method,
+                    ),
             );
 
             if (invalidMethods.length > 0) {
@@ -339,9 +350,11 @@ export const VeChainKitProvider = (
                         darkMode,
                         i18n: i18nConfig,
                         language,
-                        network:{
+                        network: {
                             ...network,
-                            nodeUrl: network.nodeUrl ?? getConfig(network?.type)?.nodeUrl,
+                            nodeUrl:
+                                network.nodeUrl ??
+                                getConfig(network?.type)?.nodeUrl,
                         },
                         allowCustomTokens,
                         legalDocuments,
@@ -387,6 +400,10 @@ export const VeChainKitProvider = (
                                 network.nodeUrl ??
                                 getConfig(network.type).nodeUrl
                             }
+                            v2Api={{
+                                enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
+                                external: dappKit.v2Api?.external ?? false, //defaults to false
+                            }}
                             i18n={i18nConfig}
                             language={language}
                             logLevel={dappKit.logLevel}
@@ -430,8 +447,16 @@ export const VeChainKitProvider = (
                                     network.nodeUrl ??
                                     getConfig(network.type).nodeUrl
                                 }
-                                delegatorUrl={feeDelegation?.delegatorUrl ?? feeDelegation?.genericDelegatorUrl}
-                                genericDelegator={!feeDelegation?.delegatorUrl && feeDelegation?.genericDelegatorUrl ? true : false}
+                                delegatorUrl={
+                                    feeDelegation?.delegatorUrl ??
+                                    feeDelegation?.genericDelegatorUrl
+                                }
+                                genericDelegator={
+                                    !feeDelegation?.delegatorUrl &&
+                                    feeDelegation?.genericDelegatorUrl
+                                        ? true
+                                        : false
+                                }
                             >
                                 <ModalProvider>
                                     <LegalDocumentsProvider>
