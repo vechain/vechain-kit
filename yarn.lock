@@ -6517,7 +6517,6 @@ __metadata:
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vechain-contract-types": "npm:1.4.1"
     "@wagmi/core": "npm:^2.17.2"
-    axios: "npm:^1.10.0"
     bignumber.js: "npm:^9.1.2"
     browser-image-compression: "npm:^2.0.2"
     cross-env: "npm:^7.0.3"
@@ -7925,7 +7924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.10.0, axios@npm:^1.12.2":
+"axios@npm:^1.12.2":
   version: 1.13.2
   resolution: "axios@npm:1.13.2"
   dependencies:
