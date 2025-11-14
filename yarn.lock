@@ -7268,9 +7268,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/contract-getters@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@vechain/contract-getters@npm:1.0.2"
+"@vechain/contract-getters@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@vechain/contract-getters@npm:1.0.3"
   peerDependencies:
     "@vechain/sdk-network": ^2.0.5
     "@vechain/vechain-contract-types": ^1.4.1
@@ -7469,7 +7469,7 @@ __metadata:
     "@types/mixpanel-browser": "npm:^2.51.0"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
-    "@vechain/contract-getters": "npm:1.0.2"
+    "@vechain/contract-getters": "npm:1.0.3"
     "@vechain/dapp-kit-react": "npm:2.1.0-rc.2"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vechain-contract-types": "npm:1.4.1"
