@@ -1,20 +1,54 @@
 name: Build Size Check
 
 on:
-  pull_request:
+  pull_request_target:  # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
+    types: [opened, synchronize, reopened]
     branches: [main, test]
 
+concurrency:
+  group: ${{ github.head_ref || github.ref_name }}-build-size
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
+  # Job 1: Post instruction comment for external PRs
+  comment-external-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    if: |
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      github.event.action == 'opened'
+    steps:
+      - name: Comment on external PR
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## 👋 Thanks for your contribution!
+
+            Since this PR comes from a forked repository, the build size check will only run for internal PRs for security reasons.
+
+            A maintainer will review your changes and can manually verify the build size impact if needed.
+
+            Thank you for your patience! 🙏
+
+  # Job 2: Build size check (only runs for internal PRs)
   build-size-check:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       contents: read
+    # Security gate: Only run for internal PRs
+    if: github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Setup Node
