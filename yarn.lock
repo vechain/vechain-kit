@@ -6721,7 +6721,6 @@ __metadata:
     eslint-plugin-i18next: "npm:^6.1.1"
     ethers: "npm:^6.13.5"
     framer-motion: "npm:^11.15.0"
-    https-browserify: "npm:^1.0.0"
     i18next: "npm:^24.2.1"
     i18next-browser-languagedetector: "npm:^8.0.2"
     mixpanel-browser: "npm:^2.61.1"
@@ -11133,13 +11132,6 @@ __metadata:
     agent-base: "npm:^7.1.0"
     debug: "npm:^4.3.4"
   checksum: 10c0/4207b06a4580fb85dd6dff521f0abf6db517489e70863dca1a0291daa7f2d3d2d6015a57bd702af068ea5cf9f1f6ff72314f5f5b4228d299c0904135d2aef921
-  languageName: node
-  linkType: hard
-
-"https-browserify@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "https-browserify@npm:1.0.0"
-  checksum: 10c0/e17b6943bc24ea9b9a7da5714645d808670af75a425f29baffc3284962626efdc1eb3aa9bbffaa6e64028a6ad98af5b09fabcb454a8f918fb686abfdc9e9b8ae
   languageName: node
   linkType: hard
 

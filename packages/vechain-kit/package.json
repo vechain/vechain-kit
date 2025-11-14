@@ -75,7 +75,6 @@
         "dotenv": "^16.4.7",
         "ethers": "^6.13.5",
         "framer-motion": "^11.15.0",
-        "https-browserify": "^1.0.0",
         "i18next": "^24.2.1",
         "i18next-browser-languagedetector": "^8.0.2",
         "mixpanel-browser": "^2.61.1",
