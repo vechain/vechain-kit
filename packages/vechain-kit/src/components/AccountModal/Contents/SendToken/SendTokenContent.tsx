@@ -306,6 +306,14 @@ export const SendTokenContent = ({
                         borderRadius="xl"
                         bg={isDark ? '#00000038' : 'gray.50'}
                     >
+                        <Text
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            mb={2}
+                        >
+                            {t('Amount')}
+                        </Text>
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.amount}>
                                 <HStack justify="space-between">
@@ -564,7 +572,23 @@ export const SendTokenContent = ({
                         borderRadius="xl"
                         bg={isDark ? '#00000038' : 'gray.50'}
                     >
-                        <VStack align="stretch" spacing={2} p={6} width="100%">
+                        <Text
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            mb={2}
+                            px={6}
+                            pt={6}
+                        >
+                            {t('To')}
+                        </Text>
+                        <VStack
+                            align="stretch"
+                            spacing={2}
+                            p={6}
+                            pt={2}
+                            width="100%"
+                        >
                             <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
                                     {...register('toAddressOrDomain', {
