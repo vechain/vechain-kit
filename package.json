@@ -63,7 +63,6 @@
         ]
     },
     "devDependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@changesets/cli": "^2.27.1",
         "@commitlint/config-conventional": "^18.0.0",
         "@vechain/sdk-core": "2.0.5",
