@@ -6713,7 +6713,6 @@ __metadata:
     axios: "npm:^1.10.0"
     bignumber.js: "npm:^9.1.2"
     browser-image-compression: "npm:^2.0.2"
-    buffer: "npm:^6.0.3"
     cross-env: "npm:^7.0.3"
     dotenv: "npm:^16.4.7"
     dotenv-cli: "npm:^8.0.0"
