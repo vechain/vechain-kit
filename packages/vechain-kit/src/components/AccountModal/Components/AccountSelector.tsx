@@ -16,6 +16,8 @@ import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
 import { RiLogoutBoxLine } from 'react-icons/ri';
+import { AccountModalContentTypes } from '../Types/Types';
+import { useWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
@@ -37,6 +39,7 @@ export const AccountSelector = ({
     style,
 }: Props) => {
     const [copied, setCopied] = useState(false);
+    const { disconnect } = useWallet();
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
