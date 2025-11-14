@@ -95,8 +95,7 @@
         "eslint-plugin-i18next": "^6.1.1",
         "translo-cli": "^1.0.6",
         "tsup": "*",
-        "typescript": "*",
-        "vite": "^4.5.5"
+        "typescript": "*"
     },
     "peerDependencies": {
         "@chakra-ui/react": "^2.8.2",
@@ -112,12 +111,7 @@
         },
         "@vechain/dapp-kit-react": {
             "optional": true
-        },
-        "dependencies": {},
-        "devDependencies": {},
-        "exports": {},
-        "peerDependencies": {},
-        "peerDependenciesMeta": {}
+        }
     },
     "exports": {
         ".": {
