@@ -4,7 +4,6 @@ import {
     IconButton,
     VStack,
     Text,
-    Heading,
     HStack,
     Box,
 } from '@chakra-ui/react';
@@ -122,7 +121,6 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
-    const { t } = useTranslation();
 
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
