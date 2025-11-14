@@ -8,7 +8,6 @@ import {
     HStack,
     Box,
 } from '@chakra-ui/react';
-import { MdSwapHoriz } from 'react-icons/md';
 import { AccountModalContentTypes } from '../Types';
 import { useUpgradeRequired, useWallet, useTotalBalance } from '@/hooks';
 import { useTranslation } from 'react-i18next';

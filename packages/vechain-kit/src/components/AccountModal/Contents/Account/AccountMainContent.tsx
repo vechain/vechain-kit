@@ -18,7 +18,6 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useNotifications } from '@/hooks';
 import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
@@ -37,10 +36,6 @@ export const AccountMainContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
-
-    const { getNotifications } = useNotifications();
-    const notifications = getNotifications();
-    const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
     return (
         <ScrollToTopWrapper>
