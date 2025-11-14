@@ -52,6 +52,7 @@ const QUICK_ACTIONS: QuickAction[] = [
             Analytics.swap.opened();
             setCurrentContent('swap-token');
         },
+        isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
     {
         icon: LuArrowDownToLine,
