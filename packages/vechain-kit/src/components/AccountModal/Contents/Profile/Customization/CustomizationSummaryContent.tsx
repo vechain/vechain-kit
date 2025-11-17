@@ -33,7 +33,6 @@ import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddr
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
 import { GasTokenType } from '@/types/gasToken';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -67,7 +66,6 @@ export const CustomizationSummaryContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
     const { account, connectedWallet, connection } = useWallet();
-    const { isolatedView, closeAccountModal } = useAccountModalOptions();
     const { preferences } = useGasTokenSelection();
 
     const { data: upgradeRequired } = useUpgradeRequired(
