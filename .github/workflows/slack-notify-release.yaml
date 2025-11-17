@@ -1,4 +1,4 @@
-name: Slack Notification - Release Published
+name: Slack Notification - Release Published test pr
 
 on:
     release:
