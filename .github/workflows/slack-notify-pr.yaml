@@ -21,7 +21,7 @@ jobs:
                             "type": "header",
                             "text": {
                               "type": "plain_text",
-                              "text": "🔔 New Pull Request"
+                              "text": "New PR: ${{ github.event.pull_request.title }}"
                             }
                           },
                           {
@@ -36,13 +36,6 @@ jobs:
                                 "text": "*PR Number:*\n#${{ github.event.pull_request.number }}"
                               }
                             ]
-                          },
-                          {
-                            "type": "section",
-                            "text": {
-                              "type": "mrkdwn",
-                              "text": "*Title:*\n${{ github.event.pull_request.title }}"
-                            }
                           },
                           {
                             "type": "actions",

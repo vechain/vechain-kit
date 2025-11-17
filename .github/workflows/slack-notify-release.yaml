@@ -21,7 +21,14 @@ jobs:
                             "type": "header",
                             "text": {
                               "type": "plain_text",
-                              "text": "🚀 New Release Published"
+                              "text": "New Release: ${{ github.event.release.name }}"
+                            }
+                          },
+                           {
+                            "type": "section",
+                            "text": {
+                              "type": "mrkdwn",
+                              "text": "*Release Notes:*\n${{ github.event.release.body }}"
                             }
                           },
                           {
@@ -34,19 +41,8 @@ jobs:
                               {
                                 "type": "mrkdwn",
                                 "text": "*Release:*\n${{ github.event.release.name }}"
-                              },
-                              {
-                                "type": "mrkdwn",
-                                "text": "*Tag:*\n${{ github.event.release.tag_name }}"
                               }
                             ]
-                          },
-                          {
-                            "type": "section",
-                            "text": {
-                              "type": "mrkdwn",
-                              "text": "*Release Notes:*\n${{ github.event.release.body }}"
-                            }
                           },
                           {
                             "type": "actions",
