@@ -92,9 +92,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
-            legalDocuments={{
-                allowAnalytics: true,
-            }}
         >
             {children}
         </VeChainKitProvider>

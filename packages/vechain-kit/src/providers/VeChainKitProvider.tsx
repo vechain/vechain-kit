@@ -52,7 +52,6 @@ type LoginMethodOrder = {
 };
 
 export type LegalDocumentOptions = {
-    allowAnalytics?: boolean;
     privacyPolicy?: LegalDocument[];
     termsAndConditions?: LegalDocument[];
     cookiePolicy?: LegalDocument[];
