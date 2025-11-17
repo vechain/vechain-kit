@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Send Slack notification
-              uses: slackapi/slack-github-action@70cd7daef51c5f2e1c8b570e24c7f07c86c5f86f # v1.27.0
+              uses: slackapi/slack-github-action@v1.27.0
               with:
                   webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
                   webhook-type: incoming-webhook
