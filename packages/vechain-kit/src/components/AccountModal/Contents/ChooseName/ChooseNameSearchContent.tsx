@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { ExistingDomainsList } from './Components/ExistingDomainsList';
 import { ens_normalize } from '@adraffy/ens-normalize';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type ChooseNameSearchContentProps = {
     name: string;
@@ -42,6 +43,7 @@ export const ChooseNameSearchContent = ({
     const { t } = useTranslation();
     const { account } = useWallet();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { isolatedView } = useAccountModalOptions();
     const [name, setName] = useState(ens_normalize(initialName));
     const [error, setError] = useState<string | null>(null);
     const [isOwnDomain, setIsOwnDomain] = useState(false);
@@ -168,7 +170,7 @@ export const ChooseNameSearchContent = ({
                 <ModalHeader data-testid="modal-title">
                     {t('Choose Name')}
                 </ModalHeader>
-                <ModalBackButton onClick={handleBack} />
+                {!isolatedView && <ModalBackButton onClick={handleBack} />}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

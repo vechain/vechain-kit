@@ -114,11 +114,7 @@ export const CustomizationSummaryContent = ({
                         'Your changes have been saved successfully.',
                     ),
                     onDone: () => {
-                        if (isolatedView) {
-                            closeAccountModal();
-                        } else {
-                            setCurrentContent(onDoneRedirectContent);
-                        }
+                        setCurrentContent(onDoneRedirectContent);
                     },
                 },
             });
