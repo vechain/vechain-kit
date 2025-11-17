@@ -46,6 +46,8 @@ export type SendTokenContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     preselectedToken?: TokenWithValue;
+    initialAmount?: string;
+    initialToAddressOrDomain?: string;
     onBack?: () => void;
 };
 
@@ -58,6 +60,8 @@ type FormValues = {
 export const SendTokenContent = ({
     setCurrentContent,
     preselectedToken,
+    initialAmount = '',
+    initialToAddressOrDomain = '',
     onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
@@ -95,8 +99,8 @@ export const SendTokenContent = ({
         handleSubmit,
     } = useForm<FormValues>({
         defaultValues: {
-            amount: '',
-            toAddressOrDomain: '',
+            amount: initialAmount,
+            toAddressOrDomain: initialToAddressOrDomain,
         },
         mode: 'onChange',
     });
