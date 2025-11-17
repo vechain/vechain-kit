@@ -79,23 +79,6 @@ export const getGenericDelegatorUrl = () => {
         : 'https://testnet.delegator.vechain.org/api/v1/'; // or url to your delegator
 };
 
-export const VECHAIN_KIT_MIXPANEL_TOKENS = {
-    development: 'e9627dff3f9ac07c28c28615fa86b181',
-    production: '2c9e0d4c8a37e9f31e3d59361f48b0dc',
-};
-
-export const getVECHAIN_KIT_MIXPANEL_PROJECT_TOKEN = () => {
-    const env = getENV();
-    return env.isProduction
-        ? VECHAIN_KIT_MIXPANEL_TOKENS.production
-        : VECHAIN_KIT_MIXPANEL_TOKENS.development;
-};
-
-// Default to development token for SSR compatibility
-export const VECHAIN_KIT_MIXPANEL_PROJECT_TOKEN =
-    VECHAIN_KIT_MIXPANEL_TOKENS.development;
-
-export const VECHAIN_KIT_MIXPANEL_PROJECT_NAME = 'vechain-kit';
 
 export type PrivyEcosystemApp = {
     id: string;

@@ -171,7 +171,7 @@ export const LegalDocumentsContent = ({
                         {onlyOptionalDocuments && (
                             <Text fontSize="sm" color={headingColor} mb={3}>
                                 <Trans
-                                    i18nKey="<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies and analytics that help us enhance your experience."
+                                    i18nKey="<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience."
                                     components={{
                                         bold: (
                                             <Text

@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement, useEffect, useRef, useState } from 'react';
+import { type ReactElement, useRef, useState } from 'react';
 import {
     Container,
     VStack,
@@ -25,7 +25,6 @@ import { DataReadingExample } from '../components/features/DataReading';
 import { VechainLogo } from '@vechain/vechain-kit/assets';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
-import { trackEvent } from '@/app/lib/mixpanelClient';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -38,10 +37,6 @@ export default function Home(): ReactElement {
         featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
         setHasScrolled(true);
     };
-
-    useEffect(() => {
-        trackEvent('Home Page Viewed');
-    }, []);
 
     if (!account) {
         return (

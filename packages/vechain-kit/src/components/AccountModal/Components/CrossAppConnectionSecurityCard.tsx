@@ -16,7 +16,6 @@ import { GrUserAdmin } from 'react-icons/gr';
 import { HiOutlineShieldCheck } from 'react-icons/hi2';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export const CrossAppConnectionSecurityCard = () => {
     const { t } = useTranslation();
@@ -113,7 +112,6 @@ export const CrossAppConnectionSecurityCard = () => {
                     variant="vechainKitSecondary"
                     w="full"
                     onClick={() => {
-                        Analytics.settings.manageSecuritySettings();
                         window.open(
                             connectionCache?.ecosystemApp.website ??
                                 'https://governance.vebetterdao.org/',

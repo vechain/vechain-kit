@@ -1,22 +1,16 @@
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCrossAppConnectionCache } from '@/hooks/cache/useCrossAppConnectionCache';
-import { useFetchAppInfo, usePrivy } from '@/hooks';
+import { useFetchAppInfo } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
-import { VeLoginMethod } from '@/types/mixPanel';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/stringUtils';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
     const { setConnectionCache } = useCrossAppConnectionCache();
     const { data: appsInfo } = useFetchAppInfo([VECHAIN_PRIVY_APP_ID]);
-    const { user } = usePrivy();
 
     const login = async () => {
         try {
-            Analytics.auth.methodSelected(VeLoginMethod.VECHAIN);
-
             await loginWithVeChain(VECHAIN_PRIVY_APP_ID);
 
             setConnectionCache({
@@ -26,20 +20,7 @@ export const useLoginWithVeChain = () => {
                 website: 'https://governance.vebetterdao.org',
             });
 
-            Analytics.auth.completed({
-                userId: user?.id,
-                loginMethod: VeLoginMethod.VECHAIN,
-            });
         } catch (error) {
-            const errorMsg =
-                error instanceof Error ? error.message : 'Unknown error';
-
-            if (isRejectionError(errorMsg)) {
-                Analytics.auth.dropOff('vechain-approval');
-            } else {
-                Analytics.auth.failed(VeLoginMethod.VECHAIN, errorMsg);
-            }
-
             throw handlePopupError({
                 error,
                 mobileBrowserPopupMessage:

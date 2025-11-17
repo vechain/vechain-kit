@@ -180,7 +180,6 @@ export const ProfileCard = ({
                             metadata: metadata?.records,
                         }}
                         style={{ mt: 4 }}
-                        fromScreen="profile"
                     />
                 </VStack>
             </CardBody>

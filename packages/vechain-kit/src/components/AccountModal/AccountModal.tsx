@@ -38,7 +38,6 @@ import { FailedOperationContent } from './Contents/FailedOperation/FailedOperati
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
 
 type Props = {
@@ -63,7 +62,6 @@ export const AccountModal = ({
     useEffect(() => {
         if (isOpen && initialContent) {
             setCurrentContent(initialContent);
-            Analytics.wallet.opened(!!account);
         }
     }, [isOpen, initialContent, setCurrentContent]);
 
@@ -149,7 +147,6 @@ export const AccountModal = ({
                     <SettingsContent
                         setCurrentContent={setCurrentContent}
                         onLogoutSuccess={() => {
-                            Analytics.auth.logoutCompleted();
                             onClose();
                         }}
                     />
@@ -159,7 +156,6 @@ export const AccountModal = ({
                     <ProfileContent
                         setCurrentContent={setCurrentContent}
                         onLogoutSuccess={() => {
-                            Analytics.auth.logoutCompleted();
                             onClose();
                         }}
                     />

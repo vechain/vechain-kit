@@ -11,7 +11,6 @@ import { FeatureAnnouncementCard, ProfileCard } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -47,7 +46,6 @@ export const ProfileContent = ({
 
                     <ProfileCard
                         onEditClick={() => {
-                            Analytics.customization.started();
                             setCurrentContent({
                                 type: 'account-customization',
                                 props: {

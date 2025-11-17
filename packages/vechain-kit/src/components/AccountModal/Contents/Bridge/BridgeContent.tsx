@@ -14,7 +14,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { VechainEnergy } from '@/assets';
 
 type Props = {
@@ -28,7 +27,6 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
 
     const handleLaunchVeChainEnergy = () => {
-        Analytics.bridge.launchVeChainEnergy();
         window.open('https://swap.vechain.energy/', '_blank');
     };
 

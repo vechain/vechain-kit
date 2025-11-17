@@ -30,8 +30,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
-import { Analytics } from '@/utils/mixpanelClientInstance';
-import { isRejectionError } from '@/utils/stringUtils';
 import { GasTokenType } from '@/types/gasToken';
 
 export type SendTokenSummaryContentProps = {
@@ -83,42 +81,17 @@ export const SendTokenSummaryContent = ({
         }
 
         try {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                amount,
-                recipientAddress: resolvedAddress || toAddressOrDomain,
-                recipientType: resolvedDomain ? 'domain' : 'address',
-            });
-
             if (selectedToken.symbol === 'VET') {
                 await transferVET();
             } else {
                 await transferERC20();
             }
         } catch (error) {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                error: error instanceof Error ? error.message : 'Unknown error',
-            });
             console.error(t('Transaction failed:'), error);
         }
     };
 
     const handleSuccess = (txId: string) => {
-        Analytics.send.flow('confirmation', {
-            tokenSymbol: selectedToken.symbol,
-            amount,
-            recipientAddress: resolvedAddress || toAddressOrDomain,
-            recipientType: resolvedDomain ? 'domain' : 'address',
-        });
-
-        Analytics.send.completed(
-            selectedToken.symbol,
-            amount,
-            txId,
-            selectedToken.symbol === 'VET' ? 'vet' : 'erc20',
-        );
-
         setCurrentContent({
             type: 'successful-operation',
             props: {
@@ -187,14 +160,6 @@ export const SendTokenSummaryContent = ({
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
 
     const handleBack = () => {
-        Analytics.send.flow('review', {
-            tokenSymbol: selectedToken.symbol,
-            amount,
-            recipientAddress: resolvedAddress || toAddressOrDomain,
-            recipientType: resolvedDomain ? 'domain' : 'address',
-            error: 'back_button',
-            isError: false,
-        });
         setCurrentContent({
             type: 'send-token',
             props: {
@@ -206,37 +171,8 @@ export const SendTokenSummaryContent = ({
         });
     };
 
-    const handleClose = () => {
-        Analytics.send.flow('review', {
-            tokenSymbol: selectedToken.symbol,
-            amount,
-            recipientAddress: resolvedAddress || toAddressOrDomain,
-            recipientType: resolvedDomain ? 'domain' : 'address',
-            error: 'modal_closed',
-            isError: false,
-        });
-    };
-
     const handleError = (error: string) => {
-        if (error && isRejectionError(error)) {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                amount,
-                recipientAddress: resolvedAddress || toAddressOrDomain,
-                recipientType: resolvedDomain ? 'domain' : 'address',
-                error: 'wallet_rejected',
-                isError: true,
-            });
-        } else {
-            Analytics.send.flow('review', {
-                tokenSymbol: selectedToken.symbol,
-                amount,
-                recipientAddress: resolvedAddress || toAddressOrDomain,
-                recipientType: resolvedDomain ? 'domain' : 'address',
-                error,
-                isError: true,
-            });
-        }
+        console.error('Transaction failed:', error);
     };
 
     const [selectedGasToken, setSelectedGasToken] =
@@ -300,10 +236,7 @@ export const SendTokenSummaryContent = ({
                     isDisabled={isSubmitting}
                     onClick={handleBack}
                 />
-                <ModalCloseButton
-                    isDisabled={isSubmitting}
-                    onClick={handleClose}
-                />
+                <ModalCloseButton isDisabled={isSubmitting} />
             </StickyHeaderContainer>
 
             <ModalBody>

@@ -17,14 +17,12 @@ import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { HiOutlineWallet } from 'react-icons/hi2';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     wallet: Wallet;
     label?: string;
     style?: PropsOf<typeof VStack>;
     showHumanAddress?: boolean;
-    fromScreen?: string;
 };
 
 export const AddressDisplay = ({
@@ -32,7 +30,6 @@ export const AddressDisplay = ({
     label,
     style,
     showHumanAddress = true,
-    fromScreen,
 }: Props) => {
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
@@ -47,7 +44,6 @@ export const AddressDisplay = ({
             setTimeout(() => {
                 setCopied(false);
             }, 2000);
-            Analytics.user.profile.addressCopied(fromScreen);
         }
     };
 

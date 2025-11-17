@@ -15,7 +15,6 @@ import {
     LuArrowLeftRight,
     LuArrowUpFromLine,
 } from 'react-icons/lu';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 
 type Props = {
     mt?: number;
@@ -48,7 +47,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: LuArrowLeftRight,
         label: 'Swap',
         onClick: (setCurrentContent) => {
-            Analytics.swap.opened();
             setCurrentContent('swap-token');
         },
         isDisabled: (hasAnyBalance) => !hasAnyBalance,
@@ -57,7 +55,6 @@ const QUICK_ACTIONS: QuickAction[] = [
         icon: LuArrowDownToLine,
         label: 'Receive',
         onClick: (setCurrentContent) => {
-            Analytics.wallet.trackWallet('receive_qr_generated');
             setCurrentContent('receive-token');
         },
     },

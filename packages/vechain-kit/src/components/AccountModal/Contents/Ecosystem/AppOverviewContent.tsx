@@ -17,7 +17,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { ShortcutButton } from './Components/ShortcutButton';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { CategoryLabel, AllowedCategories } from './Components/CategoryLabel';
 import { CategoryFilter } from './Components/CategoryFilterSection';
 
@@ -47,7 +46,6 @@ export const AppOverviewContent = ({
     const { t } = useTranslation();
 
     const handleLaunchApp = () => {
-        Analytics.ecosystem.launchApp(name);
         window.open(url, '_blank');
     };
 

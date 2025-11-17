@@ -8,7 +8,6 @@ import {
     LegalDocumentType,
 } from '@/types';
 import { compareAddresses } from '@/utils';
-import { VECHAIN_KIT_COOKIES_CONFIG } from '@/utils';
 import {
     createDocumentRecords,
     formatDocuments,
@@ -16,10 +15,6 @@ import {
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
 } from '@/utils/legalDocumentsUtils';
-import {
-    Analytics,
-    setHasTrackingConsent,
-} from '@/utils/mixpanelClientInstance';
 import {
     createContext,
     ReactNode,
@@ -87,11 +82,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         [optionalRejected],
     );
 
-    const isAnalyticsAllowed = useMemo(() => {
-        //If allowAnalytics is not set, it defaults to false
-        return legalDocuments?.allowAnalytics ?? false;
-    }, [legalDocuments?.allowAnalytics]);
-
     const [documents, requiredDocuments] = useMemo(() => {
         // Create document mappings once with consistent naming
         const documentConfigs = [
@@ -121,21 +111,12 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             })),
         );
 
-        // Add analytics cookie if allowed
-        if (isAnalyticsAllowed) {
-            allDocs.push({
-                ...VECHAIN_KIT_COOKIES_CONFIG,
-                documentType: LegalDocumentType.COOKIES,
-                documentSource: LegalDocumentSource.VECHAIN_KIT,
-            });
-        }
-
         // Format documents with IDs and filter required ones in one pass
         const formattedDocs = formatDocuments(allDocs);
         const required = formattedDocs.filter((doc) => doc.required);
 
         return [formattedDocs, required];
-    }, [legalDocuments, isAnalyticsAllowed]);
+    }, [legalDocuments]);
 
     const documentsNotAgreed = useMemo(() => {
         if (!account?.address) return [];
@@ -202,19 +183,13 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         return hasAgreedToRequiredDocuments && hasOptionalDocumentsToShow;
     }, [hasAgreedToRequiredDocuments, hasOptionalDocumentsToShow]);
 
-    const hasAgreedWithAnalytics = useMemo(() => {
-        if (!isAnalyticsAllowed) return false;
-
+    useMemo(() => {
         const storedAgreementIds = new Set(
             storedAgreements.map((agreement) => agreement.id),
         );
 
         return documents.some((doc) => storedAgreementIds.has(doc.id));
-    }, [isAnalyticsAllowed, documents, storedAgreements]);
-
-    useEffect(() => {
-        setHasTrackingConsent(hasAgreedWithAnalytics);
-    }, [hasAgreedWithAnalytics]);
+    }, [documents, storedAgreements]);
 
     useEffect(() => {
         if (connection.isConnected && account?.address) {
@@ -313,7 +288,6 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
     );
 
     const handleLogout = () => {
-        Analytics.auth.trackAuth('disconnect_initiated');
         disconnect();
         setShowTermsModal(false);
     };
