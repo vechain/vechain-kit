@@ -49,6 +49,7 @@ import { useTokenPrices } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
 import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -65,6 +66,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const { isolatedView, closeAccountModal } = useAccountModalOptions();
     const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
@@ -398,12 +400,16 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                 title: swapTitle,
                 description: swapDescription,
                 onDone: () => {
-                    setCurrentContent('main');
+                    if (isolatedView) {
+                        closeAccountModal();
+                    } else {
+                        setCurrentContent('main');
+                    }
                 },
                 showSocialButtons: true,
             },
         });
-    }, [fromToken, toToken, amount, quote, txReceipt, account?.address, setCurrentContent, t]);
+    }, [fromToken, toToken, amount, quote, txReceipt, account?.address, setCurrentContent, t, isolatedView, closeAccountModal]);
 
     const handleSwapError = useCallback((error: Error | string) => {
         const errorMessage = typeof error === 'string' ? error : error.message;
@@ -555,7 +561,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Swap')}</ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

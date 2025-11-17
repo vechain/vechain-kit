@@ -1,12 +1,12 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useNotificationsModal = () => {
     const { openAccountModal, closeAccountModal, isAccountModalOpen } =
         useModal();
 
-    const open = () => {
-        openAccountModal('notifications');
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal('notifications', options);
     };
 
     const close = () => {

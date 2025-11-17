@@ -13,6 +13,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type ChooseNameContentProps = {
     setCurrentContent: React.Dispatch<
@@ -29,6 +30,7 @@ export const ChooseNameContent = ({
 }: ChooseNameContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { isolatedView } = useAccountModalOptions();
 
     const handleBack = () => {
         onBack();
@@ -38,7 +40,7 @@ export const ChooseNameContent = ({
         <>
             <StickyHeaderContainer>
                 <ModalHeader data-testid='modal-title'>{t('Choose your account name')}</ModalHeader>
-                <ModalBackButton onClick={handleBack} />
+                {!isolatedView && <ModalBackButton onClick={handleBack} />}
                 <ModalCloseButton/>
             </StickyHeaderContainer>
 

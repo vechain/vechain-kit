@@ -16,6 +16,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -26,12 +27,17 @@ type Props = {
 export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { account } = useWallet();
+    const { isolatedView } = useAccountModalOptions();
 
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Receive')}</ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('main')}
+                    />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -49,10 +55,7 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
                             }}
                         />
 
-                        <AddressDisplay
-                            wallet={account}
-                            style={{ w: '85%' }}
-                        />
+                        <AddressDisplay wallet={account} style={{ w: '85%' }} />
 
                         <Text fontSize="sm" textAlign="center">
                             {t('Copy your address or scan this QR code')}

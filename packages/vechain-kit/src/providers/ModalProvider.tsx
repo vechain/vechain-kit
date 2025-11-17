@@ -17,13 +17,20 @@ import { isBrowser } from '@/utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 
+export type AccountModalOptions = {
+    isolatedView?: boolean;
+};
+
 type ModalContextType = {
     // Connect Modal
     openConnectModal: () => void;
     closeConnectModal: () => void;
     isConnectModalOpen: boolean;
     // Account Modal
-    openAccountModal: (content?: AccountModalContentTypes) => void;
+    openAccountModal: (
+        content?: AccountModalContentTypes,
+        options?: AccountModalOptions,
+    ) => void;
     closeAccountModal: () => void;
     isAccountModalOpen: boolean;
     // Account Modal Content State
@@ -31,6 +38,8 @@ type ModalContextType = {
     setAccountModalContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    // Account Modal Options
+    isolatedView: boolean;
     // Transaction Modal
     openTransactionModal: () => void;
     closeTransactionModal: () => void;
@@ -76,17 +85,22 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+    const [isolatedView, setIsolatedView] = useState(false);
     const openAccountModal = useCallback(
-        (content?: AccountModalContentTypes) => {
+        (content?: AccountModalContentTypes, options?: AccountModalOptions) => {
             setAccountModalContent(content ?? 'main');
+            setIsolatedView(options?.isolatedView ?? false);
             setIsAccountModalOpen(true);
         },
         [],
     );
-    const closeAccountModal = useCallback(
-        () => setIsAccountModalOpen(false),
-        [],
-    );
+    const closeAccountModal = useCallback(() => {
+        setIsAccountModalOpen(false);
+        // Reset isolatedView after modal close animation completes
+        setTimeout(() => {
+            setIsolatedView(false);
+        }, 300);
+    }, []);
 
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const openTransactionModal = useCallback(
@@ -137,6 +151,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 isAccountModalOpen,
                 setAccountModalContent,
                 accountModalContent,
+                isolatedView,
                 openTransactionModal,
                 closeTransactionModal,
                 isTransactionModalOpen,

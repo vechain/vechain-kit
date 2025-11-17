@@ -27,6 +27,7 @@ import {
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -48,6 +49,7 @@ export const ChooseNameSummaryContent = ({
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
+    const { isolatedView, closeAccountModal } = useAccountModalOptions();
     const { account, connectedWallet, connection } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -113,7 +115,11 @@ export const ChooseNameSummaryContent = ({
                           name: fullDomain,
                       }),
                 onDone: () => {
-                    setCurrentContent(initialContentSource);
+                    if (isolatedView) {
+                        closeAccountModal();
+                    } else {
+                        setCurrentContent(initialContentSource);
+                    }
                 },
             },
         });

@@ -1,4 +1,4 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useSendTokenModal = () => {
@@ -9,13 +9,16 @@ export const useSendTokenModal = () => {
         setAccountModalContent,
     } = useModal();
 
-    const open = () => {
-        openAccountModal({
-            type: 'send-token',
-            props: {
-                setCurrentContent: setAccountModalContent,
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal(
+            {
+                type: 'send-token',
+                props: {
+                    setCurrentContent: setAccountModalContent,
+                },
             },
-        });
+            options,
+        );
     };
 
     const close = () => {

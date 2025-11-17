@@ -20,6 +20,7 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 import { FaRegAddressCard } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import { IoSettingsOutline } from 'react-icons/io5';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -34,6 +35,7 @@ export const SettingsContent = ({
 }: SettingsContentProps) => {
     const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
+    const { isolatedView } = useAccountModalOptions();
 
     const { connection, disconnect, smartAccount, connectedWallet, account } =
         useWallet();
@@ -104,7 +106,9 @@ export const SettingsContent = ({
             <StickyHeaderContainer>
                 <ModalHeader>{t('Settings')}</ModalHeader>
 
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

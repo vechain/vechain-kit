@@ -1,12 +1,12 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useReceiveModal = () => {
     const { openAccountModal, closeAccountModal, isAccountModalOpen } =
         useModal();
 
-    const open = () => {
-        openAccountModal('receive-token');
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal('receive-token', options);
     };
 
     const close = () => {

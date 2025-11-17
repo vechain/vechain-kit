@@ -15,6 +15,7 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { VechainEnergy } from '@/assets';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -25,6 +26,7 @@ type Props = {
 export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    const { isolatedView } = useAccountModalOptions();
 
     const handleLaunchVeChainEnergy = () => {
         window.open('https://swap.vechain.energy/', '_blank');
@@ -34,7 +36,9 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Bridge')}</ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

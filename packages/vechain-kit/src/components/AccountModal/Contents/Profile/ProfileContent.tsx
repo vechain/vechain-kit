@@ -11,6 +11,7 @@ import { FeatureAnnouncementCard, ProfileCard } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -24,15 +25,21 @@ export const ProfileContent = ({
     onLogoutSuccess,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
-
+    const { isolatedView } = useAccountModalOptions();
     const { account, disconnect } = useWallet();
 
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader data-testid='modal-title'>{t('Profile')}</ModalHeader>
+                <ModalHeader data-testid="modal-title">
+                    {t('Profile')}
+                </ModalHeader>
 
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('main')}
+                    />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

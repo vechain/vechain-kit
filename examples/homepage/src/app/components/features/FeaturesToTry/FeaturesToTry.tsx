@@ -9,7 +9,11 @@ import {
 } from 'react-icons/ri';
 import { IoMdNotifications } from 'react-icons/io';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useUpgradeSmartAccountModal, useWallet, useSwapTokenModal } from '@vechain/vechain-kit';
+import {
+    useUpgradeSmartAccountModal,
+    useWallet,
+    useSwapTokenModal,
+} from '@vechain/vechain-kit';
 import {
     useChooseNameModal,
     useSendTokenModal,
@@ -51,40 +55,40 @@ export function FeaturesToTry() {
                 'Replace your complex address with a memorable .vet domain name',
             icon: FaRegAddressCard,
             highlight: !account?.domain,
-            content: openChooseNameModal,
+            content: () => openChooseNameModal({ isolatedView: true }),
         },
         {
             title: 'Customize Profile',
             description:
                 'Show the user his profile and allow them to customize it with a profile image, display name, bio and more to enhance their identity across VeChain applications.',
             icon: CgProfile,
-            content: openProfileModal,
+            content: () => openProfileModal({ isolatedView: true }),
         },
         {
             title: 'Transfer Assets',
             description:
                 'Send and receive VET, VTHO, and other tokens seamlessly',
             icon: RiExchangeLine,
-            content: openSendTokenModal,
+            content: () => openSendTokenModal({ isolatedView: true }),
         },
         {
             title: 'Swap Tokens',
             description: 'Swap between tokens with best available rates',
             icon: RiExchangeLine,
-            content: openSwapTokenModal
+            content: () => openSwapTokenModal({ isolatedView: true }),
         },
         {
             title: 'Receive Assets',
             description: 'Receive VET, VTHO, and other tokens from anyone',
             icon: FaRegArrowAltCircleDown,
-            content: openReceiveModal,
+            content: () => openReceiveModal({ isolatedView: true }),
         },
         {
             title: 'Access & Security',
             description:
                 'Allow the user to secure his embedded wallet with proper backup procedures, update his login methods, add MFA and more.',
             icon: RiShieldKeyholeLine,
-            content: openAccessAndSecurityModal,
+            content: () => openAccessAndSecurityModal({ isolatedView: true }),
             disabled: !connection.isConnectedWithPrivy,
         },
         {
@@ -92,20 +96,20 @@ export function FeaturesToTry() {
             description:
                 'Explore other apps built on VeChain, and add shortcuts for faster access.',
             icon: RiUserSettingsLine,
-            content: openExploreEcosystemModal,
+            content: () => openExploreEcosystemModal({ isolatedView: true }),
         },
         {
             title: 'Notifications',
             description:
                 'Stay updated with the kit or ecosystem updates, and account alerts',
             icon: IoMdNotifications,
-            content: openNotificationsModal,
+            content: () => openNotificationsModal({ isolatedView: true }),
         },
         {
             title: 'FAQ',
             description: 'Find answers to common questions about VeChain',
             icon: BsQuestionCircle,
-            content: openFAQModal,
+            content: () => openFAQModal({ isolatedView: true }),
         },
         {
             title: 'Upgrade Smart Account',
