@@ -15,7 +15,7 @@ import {
     Image,
     FormControl,
 } from '@chakra-ui/react';
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -25,7 +25,12 @@ import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
-import { useVechainDomain, TokenWithValue } from '@/hooks';
+import {
+    useVechainDomain,
+    TokenWithValue,
+    useTokensWithValues,
+    useWallet,
+} from '@/hooks';
 import { useCurrency, useTokenPrices } from '@/hooks';
 import {
     formatCompactCurrency,
@@ -39,8 +44,9 @@ export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    isNavigatingFromMain?: boolean;
     preselectedToken?: TokenWithValue;
+    initialAmount?: string;
+    initialToAddressOrDomain?: string;
     onBack?: () => void;
 };
 
@@ -52,22 +58,35 @@ type FormValues = {
 
 export const SendTokenContent = ({
     setCurrentContent,
-    isNavigatingFromMain = true,
     preselectedToken,
+    initialAmount = '',
+    initialToAddressOrDomain = '',
     onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
     const { exchangeRates } = useTokenPrices();
+    const { account } = useWallet();
+    const { tokensWithBalance } = useTokensWithValues({
+        address: account?.address ?? '',
+    });
+
     const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
-        preselectedToken ?? null,
+        preselectedToken ?? tokensWithBalance[0] ?? null,
     );
-    const [isSelectingToken, setIsSelectingToken] = useState(
-        isNavigatingFromMain && !preselectedToken,
-    );
-    const [isInitialTokenSelection, setIsInitialTokenSelection] =
-        useState(isNavigatingFromMain);
+    const [isSelectingToken, setIsSelectingToken] = useState(false);
+
+    // Set first token with balance as default when tokens load
+    useEffect(() => {
+        if (
+            !preselectedToken &&
+            !selectedToken &&
+            tokensWithBalance.length > 0
+        ) {
+            setSelectedToken(tokensWithBalance[0]);
+        }
+    }, [tokensWithBalance, preselectedToken, selectedToken]);
 
     // Form setup with validation rules
     const {
@@ -79,14 +98,29 @@ export const SendTokenContent = ({
         handleSubmit,
     } = useForm<FormValues>({
         defaultValues: {
-            amount: '',
-            toAddressOrDomain: '',
+            amount: initialAmount,
+            toAddressOrDomain: initialToAddressOrDomain,
         },
         mode: 'onChange',
     });
 
     // Watch form values
     const { toAddressOrDomain, amount } = watch();
+
+    // Track previous token to detect changes
+    const prevTokenRef = useRef<TokenWithValue | null>(selectedToken);
+
+    // Reset amount when token changes
+    useEffect(() => {
+        if (
+            prevTokenRef.current &&
+            selectedToken &&
+            prevTokenRef.current.address !== selectedToken.address
+        ) {
+            setValue('amount', '');
+        }
+        prevTokenRef.current = selectedToken;
+    }, [selectedToken, setValue]);
 
     const formattedValue = useMemo(() => {
         if (selectedToken) {
@@ -197,14 +231,9 @@ export const SendTokenContent = ({
                 onSelectToken={(token) => {
                     setSelectedToken(token);
                     setIsSelectingToken(false);
-                    setIsInitialTokenSelection(false);
                 }}
                 onBack={() => {
-                    if (isInitialTokenSelection) {
-                        setCurrentContent('main');
-                    } else {
-                        setIsSelectingToken(false);
-                    }
+                    setIsSelectingToken(false);
                 }}
             />
         );
@@ -225,6 +254,14 @@ export const SendTokenContent = ({
                         borderRadius="xl"
                         bg={isDark ? '#00000038' : 'gray.50'}
                     >
+                        <Text
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            mb={2}
+                        >
+                            {t('Amount')}
+                        </Text>
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.amount}>
                                 <HStack justify="space-between">
@@ -483,7 +520,23 @@ export const SendTokenContent = ({
                         borderRadius="xl"
                         bg={isDark ? '#00000038' : 'gray.50'}
                     >
-                        <VStack align="stretch" spacing={2} p={6} width="100%">
+                        <Text
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            mb={2}
+                            px={6}
+                            pt={6}
+                        >
+                            {t('To')}
+                        </Text>
+                        <VStack
+                            align="stretch"
+                            spacing={2}
+                            p={6}
+                            pt={2}
+                            width="100%"
+                        >
                             <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
                                     {...register('toAddressOrDomain', {

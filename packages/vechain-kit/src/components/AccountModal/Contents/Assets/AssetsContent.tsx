@@ -45,7 +45,6 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
             type: 'send-token',
             props: {
                 setCurrentContent,
-                isNavigatingFromMain: false,
                 preselectedToken: token,
                 onBack: () => setCurrentContent('assets'),
             },
