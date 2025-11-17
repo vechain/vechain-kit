@@ -15,7 +15,7 @@ import {
     Image,
     FormControl,
 } from '@chakra-ui/react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { FiArrowDown } from 'react-icons/fi';
@@ -103,6 +103,21 @@ export const SendTokenContent = ({
 
     // Watch form values
     const { toAddressOrDomain, amount } = watch();
+
+    // Track previous token to detect changes
+    const prevTokenRef = useRef<TokenWithValue | null>(selectedToken);
+
+    // Reset amount when token changes
+    useEffect(() => {
+        if (
+            prevTokenRef.current &&
+            selectedToken &&
+            prevTokenRef.current.address !== selectedToken.address
+        ) {
+            setValue('amount', '');
+        }
+        prevTokenRef.current = selectedToken;
+    }, [selectedToken, setValue]);
 
     const formattedValue = useMemo(() => {
         if (selectedToken) {
