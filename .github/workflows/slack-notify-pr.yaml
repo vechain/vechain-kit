@@ -1,0 +1,62 @@
+name: Slack Notification - PR Opened
+
+on:
+    pull_request:
+        types: [opened]
+
+jobs:
+    notify-slack:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send Slack notification
+              uses: slackapi/slack-github-action@70cd7daef51c5f2e1c8b570e24c7f07c86c5f86f # v1.27.0
+              with:
+                  webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+                  webhook-type: incoming-webhook
+                  payload: |
+                      {
+                        "text": "New Pull Request Opened",
+                        "blocks": [
+                          {
+                            "type": "header",
+                            "text": {
+                              "type": "plain_text",
+                              "text": "🔔 New Pull Request"
+                            }
+                          },
+                          {
+                            "type": "section",
+                            "fields": [
+                              {
+                                "type": "mrkdwn",
+                                "text": "*Author:*\n${{ github.event.pull_request.user.login }}"
+                              },
+                              {
+                                "type": "mrkdwn",
+                                "text": "*PR Number:*\n#${{ github.event.pull_request.number }}"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "section",
+                            "text": {
+                              "type": "mrkdwn",
+                              "text": "*Title:*\n${{ github.event.pull_request.title }}"
+                            }
+                          },
+                          {
+                            "type": "actions",
+                            "elements": [
+                              {
+                                "type": "button",
+                                "text": {
+                                  "type": "plain_text",
+                                  "text": "View Pull Request"
+                                },
+                                "url": "${{ github.event.pull_request.html_url }}",
+                                "style": "primary"
+                              }
+                            ]
+                          }
+                        ]
+                      }
