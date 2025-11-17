@@ -1,10 +1,11 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import type { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { ReactNode } from 'react';
 
 type SwapTokenModalOptions = {
     fromTokenAddress?: string;
     toTokenAddress?: string;
+    isolatedView?: boolean;
 };
 
 export const useSwapTokenModal = () => {
@@ -25,7 +26,10 @@ export const useSwapTokenModal = () => {
             type: 'swap-token',
             props,
         };
-        openAccountModal(content);
+        const accountOptions: AccountModalOptions = {
+            isolatedView: options?.isolatedView,
+        };
+        openAccountModal(content, accountOptions);
     };
 
     const close = () => {

@@ -19,6 +19,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type FAQContentProps = {
     onGoBack: () => void;
@@ -31,6 +32,7 @@ export const FAQContent = ({
 }: FAQContentProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
+    const { isolatedView } = useAccountModalOptions();
 
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         i18n.changeLanguage(e.target.value);
@@ -40,7 +42,7 @@ export const FAQContent = ({
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Help')}</ModalHeader>
-                <ModalBackButton onClick={onGoBack} />
+                {!isolatedView && <ModalBackButton onClick={onGoBack} />}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

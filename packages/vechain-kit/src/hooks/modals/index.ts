@@ -15,3 +15,4 @@ export * from './useReceiveModal';
 export * from './useLoginModalContent';
 export * from './useUpgradeSmartAccountModal';
 export * from './useProfileModal';
+export * from './useAccountModalOptions';

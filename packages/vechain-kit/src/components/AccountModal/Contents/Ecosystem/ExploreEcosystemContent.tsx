@@ -35,6 +35,7 @@ import {
     CategoryFilter,
 } from './Components/CategoryFilterSection';
 import { AllowedCategories } from './Components/CategoryLabel';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type EcosystemWithCategoryProps = {
     selectedCategory: CategoryFilter;
@@ -105,6 +106,7 @@ export const ExploreEcosystemContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { isolatedView } = useAccountModalOptions();
     const [searchQuery, setSearchQuery] = useState('');
 
     // Initialize currentCategory with selectedCategory or null
@@ -200,7 +202,9 @@ export const ExploreEcosystemContent = ({
         <Box>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Ecosystem')}</ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

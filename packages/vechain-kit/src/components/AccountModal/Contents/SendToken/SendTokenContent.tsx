@@ -39,6 +39,7 @@ import {
 } from '@/utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
 import { MdKeyboardArrowDown } from 'react-icons/md';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
@@ -68,6 +69,7 @@ export const SendTokenContent = ({
     const { currentCurrency } = useCurrency();
     const { exchangeRates } = useTokenPrices();
     const { account } = useWallet();
+    const { isolatedView } = useAccountModalOptions();
     const { tokensWithBalance } = useTokensWithValues({
         address: account?.address ?? '',
     });
@@ -243,7 +245,7 @@ export const SendTokenContent = ({
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Send')}</ModalHeader>
-                <ModalBackButton onClick={handleBack} />
+                {!isolatedView && <ModalBackButton onClick={handleBack} />}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

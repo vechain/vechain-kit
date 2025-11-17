@@ -1,12 +1,12 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useProfileModal = () => {
     const { openAccountModal, closeAccountModal, isAccountModalOpen } =
         useModal();
 
-    const open = () => {
-        openAccountModal('profile');
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal('profile', options);
     };
 
     const close = () => {

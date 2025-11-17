@@ -25,6 +25,7 @@ import { CiSearch } from 'react-icons/ci';
 import { useState } from 'react';
 import { useCurrency } from '@/hooks';
 import { SupportedCurrency } from '@/utils/currencyUtils';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -38,6 +39,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
     const { t } = useTranslation();
+    const { isolatedView } = useAccountModalOptions();
     const [searchQuery, setSearchQuery] = useState('');
 
     const handleTokenSelect = (token: TokenWithValue) => {
@@ -60,7 +62,11 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Assets')}</ModalHeader>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('main')}
+                    />
+                )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
 

@@ -1,4 +1,4 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useChooseNameModal = () => {
@@ -9,15 +9,18 @@ export const useChooseNameModal = () => {
         setAccountModalContent,
     } = useModal();
 
-    const open = () => {
-        openAccountModal({
-            type: 'choose-name',
-            props: {
-                setCurrentContent: setAccountModalContent,
-                onBack: () => setAccountModalContent('main'),
-                initialContentSource: 'main',
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal(
+            {
+                type: 'choose-name',
+                props: {
+                    setCurrentContent: setAccountModalContent,
+                    onBack: () => setAccountModalContent('main'),
+                    initialContentSource: 'main',
+                },
             },
-        });
+            options,
+        );
     };
 
     const close = () => {

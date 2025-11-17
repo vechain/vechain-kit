@@ -21,6 +21,7 @@ import { useNotifications } from '@/hooks/notifications';
 import { useState } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
 import { NotificationItem } from './Components/NotificationItem';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -30,6 +31,7 @@ type Props = {
 
 export const NotificationsContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
+    const { isolatedView } = useAccountModalOptions();
     const {
         getNotifications,
         getArchivedNotifications,
@@ -89,7 +91,9 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalBackButton onClick={() => setCurrentContent('main')} />
+                {!isolatedView && (
+                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                )}
                 <ModalHeader data-testid="modal-title">
                     {isArchiveView
                         ? t('Archived Notifications')

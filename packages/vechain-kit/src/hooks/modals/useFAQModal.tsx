@@ -1,4 +1,4 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useFAQModal = () => {
@@ -9,14 +9,17 @@ export const useFAQModal = () => {
         setAccountModalContent,
     } = useModal();
 
-    const open = () => {
-        openAccountModal({
-            type: 'faq',
-            props: {
-                onGoBack: () => setAccountModalContent('main'),
-                showLanguageSelector: false,
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal(
+            {
+                type: 'faq',
+                props: {
+                    onGoBack: () => setAccountModalContent('main'),
+                    showLanguageSelector: false,
+                },
             },
-        });
+            options,
+        );
     };
 
     const close = () => {

@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
 import { GasTokenType } from '@/types/gasToken';
+import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -58,6 +59,7 @@ export const SendTokenSummaryContent = ({
     const { data: avatar } = useGetAvatarOfAddress(resolvedAddress ?? '');
     const { network, feeDelegation } = useVeChainKitConfig();
     const { preferences } = useGasTokenSelection();
+    const { isolatedView, closeAccountModal } = useAccountModalOptions();
 
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -99,7 +101,11 @@ export const SendTokenSummaryContent = ({
                 txId,
                 title: t('Transaction successful'),
                 onDone: () => {
-                    setCurrentContent('main');
+                    if (isolatedView) {
+                        closeAccountModal();
+                    } else {
+                        setCurrentContent('main');
+                    }
                 },
                 showSocialButtons: true,
             },
