@@ -40,7 +40,6 @@ export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
-    isNavigatingFromMain?: boolean;
     preselectedToken?: TokenWithValue;
     onBack?: () => void;
 };
@@ -53,7 +52,6 @@ type FormValues = {
 
 export const SendTokenContent = ({
     setCurrentContent,
-    isNavigatingFromMain = true,
     preselectedToken,
     onBack: parentOnBack = () => setCurrentContent('main'),
 }: SendTokenContentProps) => {
@@ -64,11 +62,7 @@ export const SendTokenContent = ({
     const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
         preselectedToken ?? null,
     );
-    const [isSelectingToken, setIsSelectingToken] = useState(
-        isNavigatingFromMain && !preselectedToken,
-    );
-    const [isInitialTokenSelection, setIsInitialTokenSelection] =
-        useState(isNavigatingFromMain);
+    const [isSelectingToken, setIsSelectingToken] = useState(false);
 
     // Form setup with validation rules
     const {
@@ -266,26 +260,15 @@ export const SendTokenContent = ({
                     Analytics.send.tokenPageViewed(token.symbol);
                     setSelectedToken(token);
                     setIsSelectingToken(false);
-                    setIsInitialTokenSelection(false);
                 }}
                 onBack={() => {
-                    if (isInitialTokenSelection) {
-                        if (selectedToken) {
-                            Analytics.send.flow('token_select', {
-                                tokenSymbol: selectedToken.symbol,
-                                error: 'User cancelled - back to main',
-                            });
-                        }
-                        setCurrentContent('main');
-                    } else {
-                        if (selectedToken) {
-                            Analytics.send.flow('token_select', {
-                                tokenSymbol: selectedToken.symbol,
-                                error: 'User cancelled - back to form',
-                            });
-                        }
-                        setIsSelectingToken(false);
+                    if (selectedToken) {
+                        Analytics.send.flow('token_select', {
+                            tokenSymbol: selectedToken.symbol,
+                            error: 'User cancelled - back to form',
+                        });
                     }
+                    setIsSelectingToken(false);
                 }}
             />
         );
