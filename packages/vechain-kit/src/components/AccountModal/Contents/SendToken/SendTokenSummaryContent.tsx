@@ -200,6 +200,8 @@ export const SendTokenSummaryContent = ({
             props: {
                 setCurrentContent,
                 preselectedToken: selectedToken,
+                initialAmount: amount,
+                initialToAddressOrDomain: toAddressOrDomain,
             },
         });
     };

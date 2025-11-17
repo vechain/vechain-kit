@@ -40,7 +40,6 @@ const QUICK_ACTIONS: QuickAction[] = [
                 type: 'send-token',
                 props: {
                     setCurrentContent,
-                    isNavigatingFromMain: true,
                 },
             }),
         isDisabled: (hasAnyBalance) => !hasAnyBalance,
