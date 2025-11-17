@@ -26,7 +26,12 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { Analytics } from '@/utils/mixpanelClientInstance';
-import { useVechainDomain, TokenWithValue } from '@/hooks';
+import {
+    useVechainDomain,
+    TokenWithValue,
+    useTokensWithValues,
+    useWallet,
+} from '@/hooks';
 import { useCurrency, useTokenPrices } from '@/hooks';
 import {
     formatCompactCurrency,
@@ -59,10 +64,26 @@ export const SendTokenContent = ({
     const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
     const { exchangeRates } = useTokenPrices();
+    const { account } = useWallet();
+    const { tokensWithBalance } = useTokensWithValues({
+        address: account?.address ?? '',
+    });
+
     const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
-        preselectedToken ?? null,
+        preselectedToken ?? tokensWithBalance[0] ?? null,
     );
     const [isSelectingToken, setIsSelectingToken] = useState(false);
+
+    // Set first token with balance as default when tokens load
+    useEffect(() => {
+        if (
+            !preselectedToken &&
+            !selectedToken &&
+            tokensWithBalance.length > 0
+        ) {
+            setSelectedToken(tokensWithBalance[0]);
+        }
+    }, [tokensWithBalance, preselectedToken, selectedToken]);
 
     // Form setup with validation rules
     const {
