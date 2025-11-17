@@ -18,7 +18,6 @@ import {
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { Analytics } from '@/utils/mixpanelClientInstance';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 type Props = {
