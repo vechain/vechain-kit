@@ -24,7 +24,6 @@ import {
     useMemo,
 } from 'react';
 
-import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { ModalProvider } from './ModalProvider';

@@ -1,7 +1,3 @@
-// Type definitions for i18next with dynamic loading
-// Resources are loaded at runtime, not bundled
-import type { TFunction } from 'i18next';
-
 declare module 'i18next' {
     interface CustomTypeOptions {
         defaultNS: 'translation';
