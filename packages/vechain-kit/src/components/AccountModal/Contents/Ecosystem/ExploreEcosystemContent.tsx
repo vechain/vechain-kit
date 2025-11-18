@@ -14,7 +14,7 @@ import {
     Spinner,
     Center,
 } from '@chakra-ui/react';
-import { CiSearch } from 'react-icons/ci';
+import { LuSearch } from 'react-icons/lu';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
@@ -233,7 +233,7 @@ export const ExploreEcosystemContent = ({
                             pl={12}
                         />
                         <InputLeftElement h="56px" w="56px" pl={4}>
-                            <CiSearch
+                            <LuSearch
                                 color={isDark ? 'whiteAlpha.400' : 'gray.400'}
                             />
                         </InputLeftElement>

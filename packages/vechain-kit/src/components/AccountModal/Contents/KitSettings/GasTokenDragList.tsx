@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Box, HStack, VStack, Text, Switch, Icon } from '@chakra-ui/react';
-import { MdDragIndicator } from 'react-icons/md';
+import { LuGripVertical } from 'react-icons/lu';
 import { GasTokenType } from '@/types/gasToken';
 import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
 import { useVeChainKitConfig } from '@/providers';
@@ -87,7 +87,7 @@ const TokenPriorityItem = ({
                         _active={{ cursor: 'grabbing' }}
                         pointerEvents="none"
                     >
-                        <Icon as={MdDragIndicator} color="gray.400" />
+                        <Icon as={LuGripVertical} color="gray.400" />
                     </Box>
                     <VStack align="start" spacing={0}>
                         <Text fontWeight="medium">{tokenInfo.name}</Text>

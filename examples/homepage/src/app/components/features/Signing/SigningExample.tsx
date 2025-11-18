@@ -15,10 +15,9 @@ import {
     useSignTypedData,
     WalletButton,
 } from '@vechain/vechain-kit';
-import { MdFingerprint } from 'react-icons/md';
+import { LuFingerprint, LuCode } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import { Link } from '@chakra-ui/react';
-import { FaCode } from 'react-icons/fa';
 
 // Example EIP-712 typed data
 const exampleTypedData = {
@@ -106,7 +105,7 @@ export function SigningExample(): ReactElement {
         return (
             <CollapsibleCard
                 title="Message Signing"
-                icon={MdFingerprint}
+                icon={LuFingerprint}
                 style={{ bg: 'whiteAlpha.100' }}
             >
                 <VStack spacing={4}>
@@ -121,7 +120,7 @@ export function SigningExample(): ReactElement {
         <CollapsibleCard
             defaultIsOpen={false}
             title="Message Signing"
-            icon={MdFingerprint}
+            icon={LuFingerprint}
             style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
@@ -195,7 +194,7 @@ export function SigningExample(): ReactElement {
                         href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/SigningExample/SigningExample.tsx"
                         w="full"
                         variant="outline"
-                        rightIcon={<FaCode />}
+                        rightIcon={<LuCode />}
                     >
                         View Code Example
                     </Button>
@@ -205,7 +204,7 @@ export function SigningExample(): ReactElement {
                         href="https://docs.vechainkit.vechain.org/vechain-kit/sign-messages"
                         w="full"
                         variant="outline"
-                        rightIcon={<MdFingerprint />}
+                        rightIcon={<LuFingerprint />}
                     >
                         Read Documentation
                     </Button>

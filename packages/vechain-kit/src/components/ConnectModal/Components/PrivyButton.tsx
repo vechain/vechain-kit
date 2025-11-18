@@ -1,8 +1,7 @@
 import { GridItem, Icon } from '@chakra-ui/react';
-import { CiCircleMore } from 'react-icons/ci';
+import { LuEllipsis, LuArrowRight } from 'react-icons/lu';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
-import { IoIosArrowForward } from 'react-icons/io';
 
 type Props = {
     isDark: boolean;
@@ -17,9 +16,9 @@ export const PrivyButton = ({ isDark, onViewMoreLogin, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={onViewMoreLogin}
-                icon={CiCircleMore}
+                icon={LuEllipsis}
                 text={gridColumn && gridColumn >= 2 ? t('More') : undefined}
-                rightIcon={<Icon as={IoIosArrowForward} />}
+                rightIcon={<Icon as={LuArrowRight} />}
             />
         </GridItem>
     );

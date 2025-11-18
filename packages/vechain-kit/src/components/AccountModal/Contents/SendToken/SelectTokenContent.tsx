@@ -11,8 +11,7 @@ import {
     ModalFooter,
     Container,
 } from '@chakra-ui/react';
-import { CiSearch } from 'react-icons/ci';
-import { FiSlash } from 'react-icons/fi';
+import { LuSearch, LuSlash } from 'react-icons/lu';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
@@ -90,7 +89,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
                                 data-testid="search-token-input"
                             />
                             <InputLeftElement h="56px" w="56px" pl={4}>
-                                <CiSearch
+                                <LuSearch
                                     color={
                                         isDark ? 'whiteAlpha.400' : 'gray.400'
                                     }
@@ -115,7 +114,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
                                     isDark ? 'whiteAlpha.600' : 'blackAlpha.600'
                                 }
                             >
-                                <Icon as={FiSlash} boxSize={12} opacity={0.5} />
+                                <Icon as={LuSlash} boxSize={12} opacity={0.5} />
                                 <Text fontSize="lg">
                                     {t('No tokens found')}
                                 </Text>

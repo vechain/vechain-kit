@@ -16,8 +16,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { GoLinkExternal } from 'react-icons/go';
-import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
+import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';
 import { ShareButtons } from '@/components/TransactionModal';
 
 export type SuccessfulOperationContentProps = {
@@ -53,7 +52,7 @@ export const SuccessfulOperationContent = ({
             <ModalBody>
                 <VStack align={'center'} p={6} spacing={3}>
                     <Icon
-                        as={IoIosCheckmarkCircleOutline}
+                        as={LuCircleCheck}
                         fontSize={'100px'}
                         color={darkMode ? '#00ff45de' : '#10ba3e'}
                         data-testid="success-icon"
@@ -109,7 +108,7 @@ export const SuccessfulOperationContent = ({
                                 <Text>
                                     {t('View transaction on the explorer')}
                                 </Text>
-                                <Icon size={16} as={GoLinkExternal} />
+                                <Icon size={16} as={LuExternalLink} />
                             </HStack>
                         </Link>
                     )}

@@ -10,7 +10,7 @@ import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
 import { Accordion, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MdGavel } from 'react-icons/md';
+import { LuGavel } from 'react-icons/lu';
 
 import { PolicyAccordion } from './PolicyAccordion';
 
@@ -73,7 +73,7 @@ export const TermsAndPrivacyAccordion = () => {
                 description={t(
                     'When you have accepted a policy, it will appear here',
                 )}
-                icon={MdGavel}
+                icon={LuGavel}
             />
         );
     }

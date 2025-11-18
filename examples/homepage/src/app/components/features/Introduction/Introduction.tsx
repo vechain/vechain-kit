@@ -13,13 +13,10 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import { FaGithub, FaDiscord, FaApple } from 'react-icons/fa';
-import { IoDocumentText, IoWalletOutline } from 'react-icons/io5';
-import { MdBrush, MdCode, MdEmail } from 'react-icons/md';
-import { CiLogin } from 'react-icons/ci';
+import { LuGithub, LuApple, LuFileText, LuWallet, LuPalette, LuCode, LuMail, LuLogIn, LuTwitter } from 'react-icons/lu';
 import { SiNpm, SiFarcaster } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
-import { FaSquareXTwitter } from 'react-icons/fa6';
+import { FaDiscord } from 'react-icons/fa';
 import { CollapsibleCard } from '@/app/components/ui/CollapsibleCard';
 
 export function Introduction() {
@@ -62,7 +59,7 @@ export function Introduction() {
                             width="100%"
                         >
                             <Button
-                                leftIcon={<IoDocumentText />}
+                                leftIcon={<LuFileText />}
                                 as={Link}
                                 href="https://docs.vechainkit.vechain.org/"
                                 isExternal
@@ -91,7 +88,7 @@ export function Introduction() {
                                 View Package on NPM
                             </Button>
                             <Button
-                                leftIcon={<FaGithub />}
+                                leftIcon={<LuGithub />}
                                 as="a"
                                 href="https://github.com/vechain/vechain-kit"
                                 target="_blank"
@@ -126,7 +123,7 @@ export function Introduction() {
 
             <CollapsibleCard
                 title="Learn More About VeChain Kit Features"
-                icon={IoDocumentText}
+                icon={LuFileText}
                 defaultIsOpen={!connection.isConnected}
                 style={{ mt: 8, borderRadius: 'lg' }}
             >
@@ -135,7 +132,7 @@ export function Introduction() {
                         <Box p={4} borderRadius="md" borderWidth="1px">
                             <VStack align="start" spacing={3}>
                                 <Icon
-                                    as={CiLogin}
+                                    as={LuLogIn}
                                     boxSize={6}
                                     color="blue.400"
                                 />
@@ -149,11 +146,11 @@ export function Introduction() {
                                 </Text>
                                 <HStack spacing={3} wrap="wrap">
                                     <Icon as={FcGoogle} boxSize={6} />
-                                    <Icon as={FaSquareXTwitter} boxSize={6} />
-                                    <Icon as={MdEmail} boxSize={6} />
+                                    <Icon as={LuTwitter} boxSize={6} />
+                                    <Icon as={LuMail} boxSize={6} />
                                     <Icon as={FaDiscord} boxSize={6} />
                                     <Icon as={SiFarcaster} boxSize={6} />
-                                    <Icon as={FaApple} boxSize={6} />
+                                    <Icon as={LuApple} boxSize={6} />
                                     <Image
                                         src={`${basePath}/images/veworld-logo.png`}
                                         alt="VeWorld"
@@ -206,7 +203,7 @@ export function Introduction() {
                         <Box p={4} borderRadius="md" borderWidth="1px">
                             <VStack align="start" spacing={3}>
                                 <Icon
-                                    as={IoWalletOutline}
+                                    as={LuWallet}
                                     boxSize={6}
                                     color="blue.400"
                                 />
@@ -226,7 +223,7 @@ export function Introduction() {
                         <Box p={4} borderRadius="md" borderWidth="1px">
                             <VStack align="start" spacing={3}>
                                 <Icon
-                                    as={MdCode}
+                                    as={LuCode}
                                     boxSize={6}
                                     color="green.400"
                                 />
@@ -245,7 +242,7 @@ export function Introduction() {
                         <Box p={4} borderRadius="md" borderWidth="1px">
                             <VStack align="start" spacing={3}>
                                 <Icon
-                                    as={MdBrush}
+                                    as={LuPalette}
                                     boxSize={6}
                                     color="purple.400"
                                 />

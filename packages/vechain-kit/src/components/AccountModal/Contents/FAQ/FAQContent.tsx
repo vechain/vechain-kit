@@ -9,7 +9,7 @@ import {
     Select,
     ModalFooter,
 } from '@chakra-ui/react';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { LuExternalLink } from 'react-icons/lu';
 import {
     ModalBackButton,
     ScrollToTopWrapper,
@@ -80,7 +80,7 @@ export const FAQContent = ({
                         href="https://docs.vechainkit.vechain.org/"
                         isExternal
                         variant="vechainKitSecondary"
-                        rightIcon={<Icon as={FaExternalLinkAlt} />}
+                        rightIcon={<Icon as={LuExternalLink} />}
                     >
                         {t('For developers')}
                     </Button>

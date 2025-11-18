@@ -12,8 +12,7 @@ import {
     SimpleGrid,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import { RiWalletLine } from 'react-icons/ri';
-import { MdAccountBalanceWallet } from 'react-icons/md';
+import { LuWallet, LuWalletCards } from 'react-icons/lu';
 
 export function AccountInfo() {
     const { smartAccount, connectedWallet, connection } = useWallet();
@@ -39,7 +38,7 @@ export function AccountInfo() {
                             borderRadius="md"
                             bg="whiteAlpha.50"
                         >
-                            <Icon as={MdAccountBalanceWallet} boxSize={8} />
+                            <Icon as={LuWalletCards} boxSize={8} />
                             <Text fontWeight="bold">Smart Account</Text>
                             <VStack spacing={3} align="start">
                                 <Text>
@@ -64,7 +63,7 @@ export function AccountInfo() {
                         borderRadius="md"
                         bg="whiteAlpha.50"
                     >
-                        <Icon as={RiWalletLine} boxSize={8} />
+                        <Icon as={LuWallet} boxSize={8} />
                         <Text fontWeight="bold">
                             {connection.isConnectedWithPrivy
                                 ? 'Embedded Wallet'

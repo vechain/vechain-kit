@@ -22,12 +22,15 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { ActionButton } from '../../Components';
-import { MdOutlineNavigateNext } from 'react-icons/md';
-import { GrUserAdmin } from 'react-icons/gr';
-import { IoCogSharp } from 'react-icons/io5';
-import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
-import { HiOutlineShieldCheck, HiOutlineWallet } from 'react-icons/hi2';
-import { GiHouseKeys } from 'react-icons/gi';
+import {
+    LuChevronRight,
+    LuUserCog,
+    LuSettings2,
+    LuRotateCcw,
+    LuShieldCheck,
+    LuWallet,
+    LuKey,
+} from 'react-icons/lu';
 import { CrossAppConnectionSecurityCard } from '../../Components/CrossAppConnectionSecurityCard';
 
 type Props = {
@@ -97,7 +100,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                                 'A new version is available for your account',
                             )}
                             onClick={handleUpgradeSmartAccountClick}
-                            leftIcon={IoCogSharp}
+                            leftIcon={LuSettings2}
                             extraContent={
                                 <Box
                                     minWidth="8px"
@@ -118,8 +121,8 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                         onClick={() => {
                             setCurrentContent('embedded-wallet');
                         }}
-                        leftIcon={HiOutlineWallet}
-                        rightIcon={MdOutlineNavigateNext}
+                        leftIcon={LuWallet}
+                        rightIcon={LuChevronRight}
                     />
 
                     {connection.isConnectedWithSocialLogin ? (
@@ -132,8 +135,8 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                                 onClick={() => {
                                     setCurrentContent('privy-linked-accounts');
                                 }}
-                                leftIcon={GrUserAdmin}
-                                rightIcon={MdOutlineNavigateNext}
+                                leftIcon={LuUserCog}
+                                rightIcon={LuChevronRight}
                             />
 
                             <ActionButton
@@ -145,7 +148,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                                 onClick={() => {
                                     exportWallet();
                                 }}
-                                leftIcon={GiHouseKeys}
+                                leftIcon={LuKey}
                             />
 
                             <ActionButton
@@ -157,7 +160,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                                 onClick={() => {
                                     showMfaEnrollmentModal();
                                 }}
-                                leftIcon={HiOutlineShieldCheck}
+                                leftIcon={LuShieldCheck}
                             />
 
                             <ActionButton
@@ -168,7 +171,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                                 onClick={() => {
                                     setWalletRecovery();
                                 }}
-                                leftIcon={MdOutlineSettingsBackupRestore}
+                                leftIcon={LuRotateCcw}
                             />
                         </VStack>
                     ) : (

@@ -20,7 +20,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
 import { humanAddress, TOKEN_LOGOS } from '@/utils';
-import { IoTrashBin } from 'react-icons/io5';
+import { LuTrash2 } from 'react-icons/lu';
 
 export type ManageCustomTokenContentProps = {
     setCurrentContent: React.Dispatch<
@@ -208,7 +208,7 @@ export const ManageCustomTokenContent = ({
                                                 removeToken(token.address)
                                             }
                                         >
-                                            <IoTrashBin size={16} />
+                                            <LuTrash2 size={16} />
                                         </Button>
                                     </HStack>
                                 ))}

@@ -9,7 +9,7 @@ import {
     Tag,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoCloseCircle } from 'react-icons/io5';
+import { LuCircleX } from 'react-icons/lu';
 import { useFeatureAnnouncement } from '@/hooks/utils/useFeatureAnnouncement';
 import { AccountModalContentTypes } from '../../Types';
 
@@ -78,7 +78,7 @@ export const FeatureAnnouncementCard = ({
                         size="sm"
                         variant="ghost"
                         colorScheme="gray"
-                        icon={<IoCloseCircle />}
+                        icon={<LuCircleX />}
                         onClick={(e) => {
                             e.stopPropagation();
                             closeAnnouncement();

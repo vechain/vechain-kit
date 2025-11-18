@@ -3,8 +3,7 @@ import { EnrichedLegalDocument } from '@/types';
 import { Checkbox, HStack, Icon, Input, Link, Text } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { FiExternalLink } from 'react-icons/fi';
+import { LuExternalLink } from 'react-icons/lu';
 
 type Props = {
     document: EnrichedLegalDocument;
@@ -68,7 +67,7 @@ export const LegalDocumentItem = ({
                     hidden
                 />
                 {displayName}
-                <Icon as={FaExternalLinkAlt} ml={1} boxSize={3} />
+                <Icon as={LuExternalLink} ml={1} boxSize={3} />
             </Link>
         );
     }
@@ -108,7 +107,7 @@ export const LegalDocumentItem = ({
                         alignItems="center"
                     >
                         {displayName}
-                        <Icon as={FiExternalLink} ml={1} />
+                        <Icon as={LuExternalLink} ml={1} />
                     </Link>
                     {document.required && (
                         <Text as="span" color="red.500" fontWeight="bold">

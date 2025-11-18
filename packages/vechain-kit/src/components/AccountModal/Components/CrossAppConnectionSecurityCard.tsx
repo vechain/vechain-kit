@@ -11,9 +11,7 @@ import {
     Center,
     Box,
 } from '@chakra-ui/react';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { GrUserAdmin } from 'react-icons/gr';
-import { HiOutlineShieldCheck } from 'react-icons/hi2';
+import { LuExternalLink, LuUserCog, LuShieldCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
 
@@ -54,7 +52,7 @@ export const CrossAppConnectionSecurityCard = () => {
                             bg="blackAlpha.100"
                             flexShrink={0}
                         >
-                            <Icon as={GrUserAdmin} />
+                            <Icon as={LuUserCog} />
                         </Center>
                         <Box flex={1}>
                             <Text
@@ -83,7 +81,7 @@ export const CrossAppConnectionSecurityCard = () => {
                             bg="blackAlpha.100"
                             flexShrink={0}
                         >
-                            <Icon as={HiOutlineShieldCheck} />
+                            <Icon as={LuShieldCheck} />
                         </Center>
                         <Box flex={1}>
                             <Text
@@ -123,7 +121,7 @@ export const CrossAppConnectionSecurityCard = () => {
                         appName:
                             connectionCache?.ecosystemApp.name ?? 'origin app',
                     })}
-                    <Icon as={FaExternalLinkAlt} ml={2} />
+                    <Icon as={LuExternalLink} ml={2} />
                 </Button>
             </CardFooter>
         </Card>

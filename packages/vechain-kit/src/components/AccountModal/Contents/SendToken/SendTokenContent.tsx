@@ -18,7 +18,7 @@ import {
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
-import { FiArrowDown } from 'react-icons/fi';
+import { LuArrowDown, LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
@@ -38,7 +38,6 @@ import {
     convertToSelectedCurrency,
 } from '@/utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
-import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type SendTokenContentProps = {
@@ -403,7 +402,7 @@ export const SendTokenContent = ({
                                             {selectedToken.symbol}
 
                                             <Icon
-                                                as={MdKeyboardArrowDown}
+                                                as={LuChevronDown}
                                                 boxSize={5}
                                                 color={
                                                     isDark
@@ -442,7 +441,7 @@ export const SendTokenContent = ({
                                         >
                                             {t('Select token')}
                                             <Icon
-                                                as={MdKeyboardArrowDown}
+                                                as={LuChevronDown}
                                                 boxSize={5}
                                                 color={
                                                     isDark
@@ -511,7 +510,7 @@ export const SendTokenContent = ({
                         zIndex={2}
                     >
                         <Icon
-                            as={FiArrowDown}
+                            as={LuArrowDown}
                             boxSize={5}
                             opacity={0.5}
                             color={isDark ? 'whiteAlpha.700' : 'gray.600'}

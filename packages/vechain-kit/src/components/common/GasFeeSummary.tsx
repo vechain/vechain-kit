@@ -9,7 +9,7 @@ import {
     Button,
     Divider,
 } from '@chakra-ui/react';
-import { MdKeyboardArrowDown } from 'react-icons/md';
+import { LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
@@ -291,7 +291,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                         {displayToken || preferences.availableGasTokens[0]}
                     </Text>
                     <Icon
-                        as={MdKeyboardArrowDown}
+                        as={LuChevronDown}
                         boxSize={5}
                         color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                     />

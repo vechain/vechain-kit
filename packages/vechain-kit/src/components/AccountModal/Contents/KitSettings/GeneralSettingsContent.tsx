@@ -12,13 +12,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { IoLanguage } from 'react-icons/io5';
-import {
-    MdCurrencyExchange,
-    MdOutlineNavigateNext,
-    MdPrivacyTip,
-    MdLocalGasStation,
-} from 'react-icons/md';
+import { LuLanguages, LuChevronRight, LuShield, LuFuel, LuDollarSign } from 'react-icons/lu';
 
 import { ActionButton } from '../../Components';
 import { AccountModalContentTypes } from '../../Types';
@@ -77,8 +71,8 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                                 borderBottomRadius: '0px',
                             }}
                             onClick={handleCurrencyClick}
-                            leftIcon={MdCurrencyExchange}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuDollarSign}
+                            rightIcon={LuChevronRight}
                         />
 
                         <ActionButton
@@ -92,8 +86,8 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                             onClick={() => {
                                 setCurrentContent('change-language');
                             }}
-                            leftIcon={IoLanguage}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuLanguages}
+                            rightIcon={LuChevronRight}
                         />
 
                         {connection.isConnectedWithPrivy &&
@@ -106,8 +100,8 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                                     onClick={() => {
                                         setCurrentContent('gas-token-settings');
                                     }}
-                                    leftIcon={MdLocalGasStation}
-                                    rightIcon={MdOutlineNavigateNext}
+                                    leftIcon={LuFuel}
+                                    rightIcon={LuChevronRight}
                                 />
                             )}
                     </VStack>
@@ -122,8 +116,8 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                                 },
                             });
                         }}
-                        leftIcon={MdPrivacyTip}
-                        rightIcon={MdOutlineNavigateNext}
+                        leftIcon={LuShield}
+                        rightIcon={LuChevronRight}
                     />
                 </VStack>
             </ModalBody>

@@ -15,7 +15,7 @@ import {
     ProfileCard,
     useWallet,
 } from '@vechain/vechain-kit';
-import { MdBrush } from 'react-icons/md';
+import { LuPalette } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export function UIControls() {
@@ -26,7 +26,7 @@ export function UIControls() {
     return (
         <CollapsibleCard
             title="UI Customization Examples"
-            icon={MdBrush}
+            icon={LuPalette}
             defaultIsOpen={false}
             style={{ bg: 'whiteAlpha.100' }}
         >

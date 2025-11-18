@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { EmptyContent } from '@/components/common/EmptyContent';
-import { BiBell, BiArchive } from 'react-icons/bi';
+import { LuBell, LuArchive } from 'react-icons/lu';
 
 type Props = {
     showArchived: boolean;
@@ -21,7 +21,7 @@ export const EmptyNotifications = ({ showArchived }: Props) => {
                     ? t('Cleared notifications will appear here')
                     : t('When you have notifications, they will appear here')
             }
-            icon={showArchived ? BiArchive : BiBell}
+            icon={showArchived ? LuArchive : LuBell}
         />
     );
 };

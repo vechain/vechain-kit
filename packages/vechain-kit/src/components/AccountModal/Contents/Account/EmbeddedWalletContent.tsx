@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { AccountModalContentTypes } from '../../Types';
-import { IoOpenOutline } from 'react-icons/io5';
+import { LuExternalLink } from 'react-icons/lu';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -122,7 +122,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 >
                                     {' '}
                                     {t('VeWorld Wallet')}
-                                    <Icon ml={1} as={IoOpenOutline} />
+                                    <Icon ml={1} as={LuExternalLink} />
                                 </Link>
                                 .
                             </Text>

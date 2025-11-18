@@ -7,19 +7,21 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react';
 import { useUpgradeRequired, useWallet } from '@/hooks';
-import { MdOutlineNavigateNext } from 'react-icons/md';
+import {
+    LuChevronRight,
+    LuCircleHelp,
+    LuShield,
+    LuLogOut,
+    LuCreditCard,
+    LuUser,
+    LuSettings,
+} from 'react-icons/lu';
 import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { VscDebugDisconnect } from 'react-icons/vsc';
+import { LuUnlink } from 'react-icons/lu';
 import { useEffect, useRef } from 'react';
-import { BsQuestionCircle } from 'react-icons/bs';
-import { IoShieldOutline } from 'react-icons/io5';
-import { RiLogoutBoxLine } from 'react-icons/ri';
-import { FaRegAddressCard } from 'react-icons/fa';
-import { CgProfile } from 'react-icons/cg';
-import { IoSettingsOutline } from 'react-icons/io5';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type SettingsContentProps = {
@@ -107,7 +109,9 @@ export const SettingsContent = ({
                 <ModalHeader>{t('Settings')}</ModalHeader>
 
                 {!isolatedView && (
-                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('main')}
+                    />
                 )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -122,8 +126,8 @@ export const SettingsContent = ({
                             }}
                             title={t('Customize profile')}
                             onClick={handleCustomizeProfile}
-                            leftIcon={CgProfile}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuUser}
+                            rightIcon={LuChevronRight}
                         />
 
                         <ActionButton
@@ -133,8 +137,8 @@ export const SettingsContent = ({
                             title={t('Choose account name')}
                             description={t('Choose a name for your account.')}
                             onClick={handleNameChange}
-                            leftIcon={FaRegAddressCard}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuCreditCard}
+                            rightIcon={LuChevronRight}
                         />
                     </VStack>
 
@@ -146,8 +150,8 @@ export const SettingsContent = ({
                                 }}
                                 title={t('Access and security')}
                                 onClick={handleAccessAndSecurity}
-                                leftIcon={IoShieldOutline}
-                                rightIcon={MdOutlineNavigateNext}
+                                leftIcon={LuShield}
+                                rightIcon={LuChevronRight}
                                 extraContent={
                                     upgradeRequired && (
                                         <Box
@@ -177,8 +181,8 @@ export const SettingsContent = ({
                             }
                             title={t('General')}
                             onClick={handleGeneralSettings}
-                            leftIcon={IoSettingsOutline}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuSettings}
+                            rightIcon={LuChevronRight}
                         />
                         <ActionButton
                             title={t('Help')}
@@ -192,8 +196,8 @@ export const SettingsContent = ({
                                     },
                                 })
                             }
-                            leftIcon={BsQuestionCircle}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuCircleHelp}
+                            rightIcon={LuChevronRight}
                             style={{
                                 borderTopRadius: '0px',
                             }}
@@ -206,8 +210,8 @@ export const SettingsContent = ({
                             }}
                             title={t('Connection details')}
                             onClick={handleConnectionDetails}
-                            leftIcon={VscDebugDisconnect}
-                            rightIcon={MdOutlineNavigateNext}
+                            leftIcon={LuUnlink}
+                            rightIcon={LuChevronRight}
                         />
                         <ActionButton
                             variant="vechainKitLogout"
@@ -225,7 +229,7 @@ export const SettingsContent = ({
                                     },
                                 })
                             }
-                            leftIcon={RiLogoutBoxLine}
+                            leftIcon={LuLogOut}
                         />
                     </VStack>
                 </VStack>

@@ -15,7 +15,7 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { LuExternalLink } from 'react-icons/lu';
 import { ShortcutButton } from './Components/ShortcutButton';
 import { CategoryLabel, AllowedCategories } from './Components/CategoryLabel';
 import { CategoryFilter } from './Components/CategoryFilterSection';
@@ -114,7 +114,7 @@ export const AppOverviewContent = ({
                         onClick={handleLaunchApp}
                     >
                         {t('Launch {{name}}', { name })}
-                        <Icon as={FaExternalLinkAlt} ml={2} />
+                        <Icon as={LuExternalLink} ml={2} />
                     </Button>
 
                     <ShortcutButton

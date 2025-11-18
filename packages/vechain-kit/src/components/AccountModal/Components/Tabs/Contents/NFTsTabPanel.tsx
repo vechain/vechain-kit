@@ -1,5 +1,5 @@
 import { Icon, Text, VStack, Button } from '@chakra-ui/react';
-import { IoWalletOutline } from 'react-icons/io5';
+import { LuWallet } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -11,7 +11,7 @@ export const NFTsTabPanel = ({ onOpenReceiveModal }: Props) => {
     return (
         <VStack spacing={4} align="center" mt={8}>
             <Icon
-                as={IoWalletOutline}
+                as={LuWallet}
                 boxSize={12}
                 opacity={0.5}
                 p={2}

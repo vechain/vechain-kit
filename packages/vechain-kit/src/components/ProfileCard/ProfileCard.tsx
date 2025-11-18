@@ -16,9 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWallet, useWalletMetadata } from '@/hooks';
-import { FaEdit, FaEnvelope, FaGlobe } from 'react-icons/fa';
-import { RiLogoutBoxLine } from 'react-icons/ri';
-import { FaXTwitter } from 'react-icons/fa6';
+import { LuPencil, LuMail, LuGlobe, LuLogOut, LuTwitter } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
@@ -147,7 +145,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="mail-link"
                                 >
-                                    <Icon as={FaEnvelope} />
+                                    <Icon as={LuMail} />
                                 </Link>
                             )}
                             {metadata?.records?.url && (
@@ -156,7 +154,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="website-link"
                                 >
-                                    <Icon as={FaGlobe} />
+                                    <Icon as={LuGlobe} />
                                 </Link>
                             )}
                             {metadata?.records?.['com.x'] && (
@@ -165,7 +163,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="twitter-link"
                                 >
-                                    <Icon as={FaXTwitter} />
+                                    <Icon as={LuTwitter} />
                                 </Link>
                             )}
                         </HStack>
@@ -193,7 +191,7 @@ export const ProfileCard = ({
                                 width="full"
                                 height="40px"
                                 variant="ghost"
-                                leftIcon={<Icon as={FaEdit} />}
+                                leftIcon={<Icon as={LuPencil} />}
                                 onClick={onEditClick ?? (() => {
                                     openAccountModal({
                                         type: 'account-customization',
@@ -211,7 +209,7 @@ export const ProfileCard = ({
                                 width="full"
                                 height="40px"
                                 variant="ghost"
-                                leftIcon={<Icon as={RiLogoutBoxLine} />}
+                                leftIcon={<Icon as={LuLogOut} />}
                                 colorScheme="red"
                                 onClick={onLogout ?? (() => {
                                     openAccountModal({

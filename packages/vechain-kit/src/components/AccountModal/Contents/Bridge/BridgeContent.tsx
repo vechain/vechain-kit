@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { LuExternalLink } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { VechainEnergy } from '@/assets';
@@ -62,7 +62,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
                     onClick={handleLaunchVeChainEnergy}
                 >
                     {t('Launch vechain.energy')}
-                    <Icon as={FaExternalLinkAlt} ml={2} />
+                    <Icon as={LuExternalLink} ml={2} />
                 </Button>
             </ModalFooter>
         </>

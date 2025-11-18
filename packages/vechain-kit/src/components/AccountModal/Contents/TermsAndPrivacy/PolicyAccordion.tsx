@@ -9,11 +9,9 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoChevronDown } from 'react-icons/io5';
-import { IoChevronUp } from 'react-icons/io5';
+import { LuChevronDown, LuChevronUp, LuCheck } from 'react-icons/lu';
 
 import { EnrichedLegalDocument, LegalDocumentAgreement } from '@/types';
-import { MdCheck } from 'react-icons/md';
 import { formatDate } from '@/utils/dateUtils';
 import { AcceptedPolicyItem } from './AcceptedPolicyItem';
 
@@ -61,7 +59,7 @@ export const PolicyAccordion = ({
                             </Text>
                         </VStack>
                         <Icon
-                            as={isExpanded ? IoChevronUp : IoChevronDown}
+                            as={isExpanded ? LuChevronUp : LuChevronDown}
                             fontSize="20px"
                             opacity={0.7}
                         />
@@ -70,7 +68,7 @@ export const PolicyAccordion = ({
                         <VStack align="stretch" spacing={4}>
                             {currentPolicyAgreement?.id ? (
                                 <HStack w="full">
-                                    <Icon as={MdCheck} color="green.500" />
+                                    <Icon as={LuCheck} color="green.500" />
                                     <Text fontSize="xs">
                                         {t(
                                             'You accepted current policy on {{date}}',

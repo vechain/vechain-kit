@@ -16,9 +16,7 @@ import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { GoLinkExternal } from 'react-icons/go';
-import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
-import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
+import { LuExternalLink, LuCircleCheck, LuCircleAlert, LuRefreshCw } from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
 import { StickyHeaderContainer } from '../common';
 import { TransactionModalProps } from './TransactionModal';
@@ -75,7 +73,7 @@ export const TransactionModalContent = ({
                     title: t('Something went wrong'),
                     icon: uiConfig?.errorIcon ?? (
                         <Icon
-                            as={MdOutlineErrorOutline}
+                            as={LuCircleAlert}
                             color="#ef4444"
                             fontSize="100px"
                             data-testid="error-icon-modal"
@@ -89,7 +87,7 @@ export const TransactionModalContent = ({
                     title: t('Transaction successful!'),
                     icon: uiConfig?.successIcon ?? (
                         <Icon
-                            as={IoIosCheckmarkCircleOutline}
+                            as={LuCircleCheck}
                             color="#22c55e"
                             fontSize="100px"
                             data-testid="success-icon-modal"
@@ -173,7 +171,7 @@ export const TransactionModalContent = ({
                             onClick={onTryAgain}
                             width="full"
                         >
-                            <Icon mr={2} as={MdOutlineRefresh} />
+                            <Icon mr={2} as={LuRefreshCw} />
                             {t('Try again')}
                         </Button>
                     )}
@@ -219,7 +217,7 @@ export const TransactionModalContent = ({
                                 <Text>
                                     {t('View transaction on the explorer')}
                                 </Text>
-                                <Icon size="sm" as={GoLinkExternal} />
+                                <Icon size="sm" as={LuExternalLink} />
                             </HStack>
                         </Link>
                     )}

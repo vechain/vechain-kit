@@ -16,7 +16,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { languageNames, supportedLanguages } from '../../../../../i18n';
-import { BsCheck } from 'react-icons/bs';
+import { LuCheck } from 'react-icons/lu';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -44,7 +44,7 @@ export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
         >
             <Text>{languageNames[lang as keyof typeof languageNames]}</Text>
             {i18n.language === lang && (
-                <Icon as={BsCheck} boxSize={5} color="blue.500" />
+                <Icon as={LuCheck} boxSize={5} color="blue.500" />
             )}
         </Button>
     );

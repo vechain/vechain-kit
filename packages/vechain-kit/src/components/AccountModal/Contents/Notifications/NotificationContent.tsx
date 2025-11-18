@@ -9,7 +9,7 @@ import {
     Button,
     HStack,
 } from '@chakra-ui/react';
-import { BiBell, BiArchive } from 'react-icons/bi';
+import { LuBell, LuArchive } from 'react-icons/lu';
 import {
     ModalBackButton,
     ScrollToTopWrapper,
@@ -110,7 +110,7 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
                                 variant="ghost"
                                 leftIcon={
                                     <Icon
-                                        as={isArchiveView ? BiBell : BiArchive}
+                                        as={isArchiveView ? LuBell : LuArchive}
                                     />
                                 }
                                 size="sm"

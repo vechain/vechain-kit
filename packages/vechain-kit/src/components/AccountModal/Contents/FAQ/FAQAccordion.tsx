@@ -13,10 +13,8 @@ import {
     InputLeftElement,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
+import { LuChevronDown, LuChevronUp, LuSearch, LuSlash } from 'react-icons/lu';
 import { useState } from 'react';
-import { CiSearch } from 'react-icons/ci';
-import { FiSlash } from 'react-icons/fi';
 
 interface FAQItem {
     question: string;
@@ -142,7 +140,7 @@ export const FAQAccordion = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <InputLeftElement h="56px" w="56px" pl={4}>
-                    <CiSearch
+                    <LuSearch
                         color={isDark ? 'whiteAlpha.400' : 'blackAlpha.600'}
                     />
                 </InputLeftElement>
@@ -154,7 +152,7 @@ export const FAQAccordion = () => {
                     py={8}
                     color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                 >
-                    <Icon as={FiSlash} boxSize={12} opacity={0.5} />
+                    <Icon as={LuSlash} boxSize={12} opacity={0.5} />
                     <Text fontSize="lg">{t('No questions found')}</Text>
                     <Text fontSize="md">
                         {t('Try searching with a different term')}
@@ -187,8 +185,8 @@ export const FAQAccordion = () => {
                                         <Icon
                                             as={
                                                 isExpanded
-                                                    ? IoChevronUp
-                                                    : IoChevronDown
+                                                    ? LuChevronUp
+                                                    : LuChevronDown
                                             }
                                             fontSize="20px"
                                             opacity={0.5}

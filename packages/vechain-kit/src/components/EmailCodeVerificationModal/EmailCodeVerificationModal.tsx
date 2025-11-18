@@ -12,7 +12,7 @@ import {
     ModalCloseButton,
     Container,
 } from '@chakra-ui/react';
-import { MdEmail } from 'react-icons/md';
+import { LuMail } from 'react-icons/lu';
 import { BaseModal, StickyHeaderContainer } from '../common';
 import { useEffect, useState } from 'react';
 import { useCreateWallet, useLoginWithEmail } from '@privy-io/react-auth';
@@ -75,7 +75,7 @@ export const EmailCodeVerificationModal = ({
                 <ModalBody>
                     <VStack spacing={2}>
                         <Icon
-                            as={MdEmail}
+                            as={LuMail}
                             w="48px"
                             h="48px"
                             color={isDark ? 'whiteAlpha.700' : 'gray.600'}

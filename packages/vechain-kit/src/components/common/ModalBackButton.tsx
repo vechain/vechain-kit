@@ -1,6 +1,6 @@
 import { useVeChainKitConfig } from '@/providers';
 import { IconButton, IconButtonProps } from '@chakra-ui/react';
-import { IoChevronBack } from 'react-icons/io5';
+import { LuChevronLeft } from 'react-icons/lu';
 
 type BackButtonProps = {
     onClick: () => void;
@@ -11,7 +11,7 @@ export const ModalBackButton = ({ onClick, ...props }: BackButtonProps) => {
     return (
         <IconButton
             aria-label="Back"
-            icon={<IoChevronBack fontSize={'20px'} />}
+            icon={<LuChevronLeft fontSize={'20px'} />}
             size="sm"
             variant="ghost"
             _hover={{ bg: isDark ? 'whiteAlpha.100' : 'blackAlpha.100' }}

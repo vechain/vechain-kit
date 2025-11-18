@@ -13,7 +13,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { IoChevronDown, IoChevronUp, IoTrashOutline } from 'react-icons/io5';
+import { LuChevronDown, LuChevronUp, LuTrash2 } from 'react-icons/lu';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
@@ -142,7 +142,7 @@ const UnsetDomainListItem = ({ onUnset }: { onUnset: () => void }) => {
                     bg={isDark ? 'whiteAlpha.100' : 'gray.100'}
                 >
                     <Icon
-                        as={IoTrashOutline}
+                        as={LuTrash2}
                         fontSize="18px"
                         color={isDark ? 'red.300' : 'red.500'}
                     />
@@ -207,7 +207,7 @@ export const ExistingDomainsList = ({
                                 </Text>
                             </Box>
                             <Icon
-                                as={isExpanded ? IoChevronUp : IoChevronDown}
+                                as={isExpanded ? LuChevronUp : LuChevronDown}
                                 fontSize="20px"
                                 opacity={0.5}
                             />

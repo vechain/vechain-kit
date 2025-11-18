@@ -9,7 +9,7 @@ import {
     Select,
     Button,
 } from '@chakra-ui/react';
-import { BsGlobe } from 'react-icons/bs';
+import { LuGlobe } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { languageNames, supportedLanguages } from '../../../../../i18n';
 import { useAccountModal } from '@vechain/vechain-kit';
@@ -28,7 +28,7 @@ export function LanguageCard() {
         >
             <VStack spacing={3} align="start">
                 <Icon
-                    as={BsGlobe}
+                    as={LuGlobe}
                     boxSize={6}
                     color={colorMode === 'light' ? 'blue.500' : 'blue.300'}
                 />
