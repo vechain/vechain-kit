@@ -2,7 +2,6 @@ import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
 import { isValidUrl, setLocalStorageItem } from '@/utils';
-import { initializeI18n } from '@/utils/i18n';
 import {
     LoginMethodOrderOption,
     NonEmptyArray,
@@ -306,29 +305,6 @@ export const VeChainKitProvider = (
         privyAppId = privy.appId;
         privyClientId = privy.clientId;
     }
-
-    // Initialize i18n with the provided language and merge translations
-    useEffect(() => {
-        // Initialize translations from VeChainKit
-        initializeI18n(i18n);
-
-        if (language) {
-            i18n.changeLanguage(language);
-        }
-
-        if (i18nConfig) {
-            // Add custom translations from the app if provided
-            Object.keys(i18nConfig).forEach((lang) => {
-                i18n.addResourceBundle(
-                    lang,
-                    'translation',
-                    i18nConfig[lang],
-                    true,
-                    true,
-                );
-            });
-        }
-    }, [language, i18nConfig]);
 
     useEffect(() => {
         setLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);

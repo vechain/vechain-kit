@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "ESNext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "target": "es2021",
         "experimentalDecorators": true,
         "composite": false,
@@ -48,6 +48,7 @@
         "src/**/*.ts",
         "src/**/*.tsx",
         "src/*.d.ts",
+        "i18n.ts",
         "eslint.config.mjs"
     ]
 }
