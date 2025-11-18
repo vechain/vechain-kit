@@ -1,27 +1,13 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import HttpBackend from 'i18next-http-backend';
 
-// Import all language JSON files
-import en from './src/languages/en.json';
-import de from './src/languages/de.json';
-import it from './src/languages/it.json';
-import fr from './src/languages/fr.json';
-import es from './src/languages/es.json';
-import zh from './src/languages/zh.json';
-import ja from './src/languages/ja.json';
-
+const instance = i18next.createInstance();
 // Define supported languages
 export const supportedLanguages = ['en', 'de', 'it', 'fr', 'es', 'zh', 'ja'];
 
-export const resources = {
-    en: { translation: en },
-    de: { translation: de },
-    it: { translation: it },
-    fr: { translation: fr },
-    es: { translation: es },
-    zh: { translation: zh },
-    ja: { translation: ja },
-};
+// Empty resources - will be loaded dynamically
+export const resources = {};
 
 // Language names mapping
 export const languageNames = {
@@ -73,20 +59,38 @@ const customLanguageDetector = {
     },
 };
 
-i18n.use({
-    type: 'languageDetector',
-    async: false,
-    init: () => {},
-    detect: customLanguageDetector.lookup,
-    cacheUserLanguage: customLanguageDetector.cacheUserLanguage,
-})
+instance
+    .use(HttpBackend)
+    .use({
+        type: 'languageDetector',
+        async: false,
+        init: () => {},
+        detect: customLanguageDetector.lookup,
+        cacheUserLanguage: customLanguageDetector.cacheUserLanguage,
+    })
     .use(initReactI18next)
     .init({
-        resources,
         fallbackLng: 'en',
+        supportedLngs: supportedLanguages,
         interpolation: {
             escapeValue: false,
         },
+        backend: {
+            // Load from the locales directory in the published package
+            loadPath: '/locales/{{lng}}.json',
+            // For npm packages, we need to handle the path resolution
+            requestOptions: {
+                mode: 'cors',
+                credentials: 'same-origin',
+                cache: 'default',
+            },
+        },
+        // Don't load resources immediately - they'll be loaded on demand
+        initImmediate: false,
+        // Only load the current language
+        load: 'currentOnly',
+        // Preload only the fallback language
+        preload: ['en'],
     });
 
-export default i18n;
+export default instance;
