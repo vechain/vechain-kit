@@ -18,7 +18,7 @@
     "main": "./dist/index.js",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
-        "keywords": [
+    "keywords": [
         "vechain",
         "vechain-kit",
         "blockchain",

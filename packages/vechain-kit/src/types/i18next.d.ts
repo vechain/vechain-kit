@@ -1,3 +1,7 @@
+// Type definitions for i18next with dynamic loading
+// Resources are loaded at runtime, not bundled
+import 'i18next';
+
 declare module 'i18next' {
     interface CustomTypeOptions {
         defaultNS: 'translation';
@@ -14,9 +18,14 @@ declare module 'i18next' {
 }
 
 declare module 'react-i18next' {
+    import { ComponentType } from 'react';
+
     export function useTranslation(): {
         t: (key: any, options?: any) => string;
         i18n: any;
         ready: boolean;
     };
+
+    export const Trans: ComponentType<any>;
+
 }
