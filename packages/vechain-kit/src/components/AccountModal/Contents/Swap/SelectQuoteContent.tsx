@@ -19,7 +19,7 @@ import { SwapQuote } from '@/types/swap';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } from '@/utils/currencyUtils';
 import { useCurrency, useTokensWithValues, useWallet } from '@/hooks';
 import { useTokenPrices } from '@/hooks';
@@ -282,7 +282,7 @@ export const SelectQuoteContent = ({
                                         {unavailableQuotes.length} {t('rate')}{unavailableQuotes.length !== 1 ? 's' : ''} {t('unavailable')}
                                     </Text>
                                     <Icon
-                                        as={showUnavailable ? FaChevronUp : FaChevronDown}
+                                        as={showUnavailable ? LuChevronUp : LuChevronDown}
                                         boxSize={4}
                                         color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                                     />

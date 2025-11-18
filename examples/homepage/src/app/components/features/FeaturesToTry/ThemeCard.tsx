@@ -8,7 +8,7 @@ import {
     useColorMode,
     Button,
 } from '@chakra-ui/react';
-import { BsSun, BsMoon } from 'react-icons/bs';
+import { LuSun, LuMoon } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 
 export function ThemeCard() {
@@ -25,7 +25,7 @@ export function ThemeCard() {
         >
             <VStack spacing={3} align="start">
                 <Icon
-                    as={colorMode === 'light' ? BsSun : BsMoon}
+                    as={colorMode === 'light' ? LuSun : LuMoon}
                     boxSize={6}
                     color={colorMode === 'light' ? 'orange.500' : 'purple.300'}
                 />
@@ -45,7 +45,7 @@ export function ThemeCard() {
                         }
                         leftIcon={
                             <Icon
-                                as={colorMode === 'light' ? BsMoon : BsSun}
+                                as={colorMode === 'light' ? LuMoon : LuSun}
                                 boxSize={4}
                             />
                         }

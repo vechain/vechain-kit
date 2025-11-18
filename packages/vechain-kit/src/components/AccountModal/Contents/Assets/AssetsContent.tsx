@@ -19,9 +19,9 @@ import {
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
 import { useTranslation } from 'react-i18next';
-import { RiEdit2Line } from 'react-icons/ri';
+import { LuPencil } from 'react-icons/lu';
 import { AccountModalContentTypes } from '../../Types';
-import { CiSearch } from 'react-icons/ci';
+import { LuSearch } from 'react-icons/lu';
 import { useState } from 'react';
 import { useCurrency } from '@/hooks';
 import { SupportedCurrency } from '@/utils/currencyUtils';
@@ -84,7 +84,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                             data-testid="search-token-input"
                         />
                         <InputLeftElement h="56px" w="56px" pl={4}>
-                            <CiSearch
+                            <LuSearch
                                 color={darkMode ? 'whiteAlpha.400' : 'gray.400'}
                             />
                         </InputLeftElement>
@@ -114,7 +114,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                     {allowCustomTokens && (
                         <Button
                             variant="vechainKitSecondary"
-                            leftIcon={<Icon as={RiEdit2Line} boxSize={4} />}
+                            leftIcon={<Icon as={LuPencil} boxSize={4} />}
                             onClick={() =>
                                 setCurrentContent('add-custom-token')
                             }

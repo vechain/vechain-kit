@@ -11,11 +11,9 @@ import {
 import { humanAddress, humanDomain } from '../../../utils';
 import { copyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
-import { MdOutlineNavigateNext } from 'react-icons/md';
+import { LuChevronRight, LuCheck, LuCopy, LuLogOut } from 'react-icons/lu';
 import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
-import { IoCheckmarkOutline, IoCopyOutline } from 'react-icons/io5';
-import { RiLogoutBoxLine } from 'react-icons/ri';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useWallet } from '@/hooks';
 
@@ -95,7 +93,7 @@ export const AccountSelector = ({
 
                     <Icon
                         boxSize={5}
-                        as={MdOutlineNavigateNext}
+                        as={LuChevronRight}
                         cursor="pointer"
                         opacity={0.5}
                     />
@@ -104,7 +102,7 @@ export const AccountSelector = ({
 
             <IconButton
                 aria-label="Copy address"
-                icon={<Icon as={copied ? IoCheckmarkOutline : IoCopyOutline} />}
+                icon={<Icon as={copied ? LuCheck : LuCopy} />}
                 onClick={handleCopyToClipboard}
                 variant="ghost"
                 size="sm"
@@ -114,7 +112,7 @@ export const AccountSelector = ({
 
             <IconButton
                 aria-label="Logout"
-                icon={<Icon as={RiLogoutBoxLine} />}
+                icon={<Icon as={LuLogOut} />}
                 onClick={() =>
                     setCurrentContent({
                         type: 'disconnect-confirm',

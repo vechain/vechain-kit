@@ -26,7 +26,7 @@ import {
     UpgradeSmartAccountModalContentsTypes,
     UpgradeSmartAccountModalStyle,
 } from '../UpgradeSmartAccountModal';
-import { FaArrowRight } from 'react-icons/fa';
+import { LuArrowRight } from 'react-icons/lu';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -133,7 +133,7 @@ export const UpgradeSmartAccountContent = ({
                             </Heading>
                         </Box>
 
-                        <Icon as={FaArrowRight} color="#3DBA67" />
+                        <Icon as={LuArrowRight} color="#3DBA67" />
 
                         <Box position="relative" display="inline-block">
                             <Circle size="60px" bg="gray.200">

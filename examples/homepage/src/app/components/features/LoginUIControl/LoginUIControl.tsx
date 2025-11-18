@@ -7,10 +7,10 @@ import {
     useDAppKitWalletModal,
     useLoginWithOAuth,
 } from '@vechain/vechain-kit';
-import { MdLogin } from 'react-icons/md';
+import { LuLogIn } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import { FcGoogle } from 'react-icons/fc';
-import { FaGithub } from 'react-icons/fa';
+import { LuGithub } from 'react-icons/lu';
 
 export const LoginUIControl = () => {
     const { open } = useConnectModal();
@@ -20,7 +20,7 @@ export const LoginUIControl = () => {
     return (
         <CollapsibleCard
             title="Login UI Examples"
-            icon={MdLogin}
+            icon={LuLogIn}
             defaultIsOpen={true}
             style={{ bg: 'whiteAlpha.100' }}
         >
@@ -227,7 +227,7 @@ export const LoginUIControl = () => {
                                         initOAuth({ provider: 'github' })
                                     }
                                     leftIcon={
-                                        <Icon as={FaGithub} boxSize="20px" />
+                                        <Icon as={LuGithub} boxSize="20px" />
                                     }
                                     colorScheme="gray"
                                     variant="outline"

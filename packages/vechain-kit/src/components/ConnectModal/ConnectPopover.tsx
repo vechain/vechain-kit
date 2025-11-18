@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { ConnectionOptionsStack } from './Components/ConnectionOptionsStack';
 import { useTranslation } from 'react-i18next';
-import { FaChevronDown } from 'react-icons/fa';
+import { LuChevronDown } from 'react-icons/lu';
 import { EcosystemButton } from './Components';
 import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo } from '@/hooks';
@@ -56,7 +56,7 @@ export const ConnectPopover = ({
                             {t('Login')}
                             <Icon
                                 ml={2}
-                                as={FaChevronDown}
+                                as={LuChevronDown}
                                 transform={
                                     isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                                 }

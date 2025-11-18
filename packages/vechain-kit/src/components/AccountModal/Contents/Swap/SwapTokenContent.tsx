@@ -21,9 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { GasFeeSummary, ModalBackButton, StickyHeaderContainer, TransactionButtonAndStatus } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { FiArrowDown } from 'react-icons/fi';
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
-import { MdKeyboardArrowDown } from 'react-icons/md';
+import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
     useWallet,
@@ -666,7 +664,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         >
                                             {fromTokenDisplay.symbol}
                                             <Icon
-                                                as={MdKeyboardArrowDown}
+                                                as={LuChevronDown}
                                                 boxSize={5}
                                                 color={
                                                     isDark
@@ -703,7 +701,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         >
                                             {t('Select token')}
                                             <Icon
-                                                as={MdKeyboardArrowDown}
+                                                as={LuChevronDown}
                                                 boxSize={5}
                                                 color={
                                                     isDark
@@ -775,7 +773,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                 <Spinner size="sm" />
                             ) : (
                                 <Icon
-                                    as={FiArrowDown}
+                                    as={LuArrowDown}
                                     boxSize={5}
                                     opacity={0.5}
                                     color={isDark ? 'whiteAlpha.700' : 'gray.600'}
@@ -873,7 +871,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         >
                                             {toTokenDisplay.symbol}
                                             <Icon
-                                                as={MdKeyboardArrowDown}
+                                                as={LuChevronDown}
                                                 boxSize={5}
                                                 color={
                                                     isDark
@@ -910,7 +908,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         >
                                             {t('Select token')}
                                             <Icon
-                                                as={MdKeyboardArrowDown}
+                                                as={LuChevronDown}
                                                 boxSize={5}
                                                 color={
                                                     isDark
@@ -1085,7 +1083,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         <Icon
                                             color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
                                             _hover={{ color: isDark ? 'whiteAlpha.800' : 'blackAlpha.800' }}
-                                            as={showMore ? FaArrowUp : FaArrowDown}
+                                            as={showMore ? LuArrowUp : LuArrowDown}
                                         />
                                     }
                                     fontSize="xs"

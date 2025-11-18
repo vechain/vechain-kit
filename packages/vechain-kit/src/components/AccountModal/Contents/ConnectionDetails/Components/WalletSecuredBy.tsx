@@ -3,7 +3,7 @@ import { useCrossAppConnectionCache, useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { HStack, Icon, Image, Text, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { PiLineVertical } from 'react-icons/pi';
+import { LuMinus } from 'react-icons/lu';
 
 export const WalletSecuredBy = () => {
     const { connection } = useWallet();
@@ -29,7 +29,7 @@ export const WalletSecuredBy = () => {
             </Text>
             <HStack justify={'center'}>
                 <PrivyLogo isDark={isDark} w={'50px'} />
-                <Icon as={PiLineVertical} ml={3} />
+                <Icon as={LuMinus} ml={3} />
 
                 {connection.isConnectedWithVeChain ? (
                     <VechainLogo

@@ -6,7 +6,7 @@ import {
     IconButton,
     AlertTitle,
 } from '@chakra-ui/react';
-import { IoCloseCircle } from 'react-icons/io5';
+import { LuCircleX } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { Notification } from '@/hooks/notifications/types';
 
@@ -62,7 +62,7 @@ export const NotificationItem = ({
                     top={1}
                     size="sm"
                     variant="ghost"
-                    icon={<IoCloseCircle />}
+                    icon={<LuCircleX />}
                     onClick={(e) => {
                         e.stopPropagation();
                         handleDismiss();

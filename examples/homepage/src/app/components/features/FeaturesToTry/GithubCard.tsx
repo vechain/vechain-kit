@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, VStack, Text, Icon, Link, useColorMode } from '@chakra-ui/react';
-import { BsGithub } from 'react-icons/bs';
+import { LuGithub } from 'react-icons/lu';
 
 export function GithubCard() {
     const { colorMode } = useColorMode();
@@ -26,7 +26,7 @@ export function GithubCard() {
             >
                 <VStack spacing={3} align="start">
                     <Icon
-                        as={BsGithub}
+                        as={LuGithub}
                         boxSize={6}
                         color={
                             colorMode === 'light' ? 'green.500' : 'green.300'

@@ -1,7 +1,7 @@
 'use client';
 
 import { VStack, Text, SimpleGrid } from '@chakra-ui/react';
-import { MdAccountBalance } from 'react-icons/md';
+import { LuBuilding2 } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
@@ -17,7 +17,7 @@ export function DaoInfo() {
     return (
         <CollapsibleCard
             title="Contract Interactions"
-            icon={MdAccountBalance}
+            icon={LuBuilding2}
             style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">

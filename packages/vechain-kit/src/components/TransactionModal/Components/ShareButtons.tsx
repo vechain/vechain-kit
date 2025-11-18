@@ -1,8 +1,7 @@
 import { Box, HStack, Link } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { FaTelegramPlane } from 'react-icons/fa';
-import { FaWhatsapp } from 'react-icons/fa6';
-import { RiTwitterXFill } from 'react-icons/ri';
+import { FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
+import { LuTwitter } from 'react-icons/lu';
 import React from 'react';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -53,7 +52,7 @@ export const ShareButtons = ({ descriptionEncoded }: Props) => {
                         p={2}
                         borderRadius={'full'}
                     >
-                        <RiTwitterXFill size={22} />
+                        <LuTwitter size={22} />
                     </Box>
                 </Link>
             </BouncingAnimation>

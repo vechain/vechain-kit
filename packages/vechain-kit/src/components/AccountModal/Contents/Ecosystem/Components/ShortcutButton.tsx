@@ -1,6 +1,6 @@
 import { Button, Icon } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+import { LuBookmark, LuBookmarkCheck } from 'react-icons/lu';
 import { useEcosystemShortcuts } from '@/hooks';
 
 type Props = {
@@ -31,7 +31,7 @@ export const ShortcutButton = ({ name, image, url, description }: Props) => {
             variant="vechainKitSecondary"
             borderRadius="xl"
             onClick={handleShortcutClick}
-            leftIcon={<Icon as={hasShortcut ? BsBookmarkFill : BsBookmark} />}
+            leftIcon={<Icon as={hasShortcut ? LuBookmarkCheck : LuBookmark} />}
         >
             {hasShortcut ? t('Remove from shortcuts') : t('Add to shortcuts')}
         </Button>

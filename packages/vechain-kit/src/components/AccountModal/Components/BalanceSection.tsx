@@ -9,9 +9,9 @@ import {
 import { useRefreshBalances, useWallet, useTotalBalance } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { VscRefresh } from 'react-icons/vsc';
+import { LuRefreshCw } from 'react-icons/lu';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
-import { MdOutlineNavigateNext } from 'react-icons/md';
+import { LuChevronRight } from 'react-icons/lu';
 import { useVeChainKitConfig } from '@/providers';
 
 export const BalanceSection = ({
@@ -68,7 +68,7 @@ export const BalanceSection = ({
                         opacity={0.5}
                         _hover={{ opacity: 0.8 }}
                         onClick={handleRefresh}
-                        icon={<Icon as={VscRefresh} boxSize={4} />}
+                        icon={<Icon as={LuRefreshCw} boxSize={4} />}
                         isLoading={isLoading || isRefreshing}
                         sx={{
                             '& > span.chakra-button__spinner': {
@@ -118,7 +118,7 @@ export const BalanceSection = ({
                         showNoAssetsWarning={true}
                         rightIcon={
                             <Icon
-                                as={MdOutlineNavigateNext}
+                                as={LuChevronRight}
                                 boxSize={5}
                                 opacity={0.5}
                                 marginLeft={2}

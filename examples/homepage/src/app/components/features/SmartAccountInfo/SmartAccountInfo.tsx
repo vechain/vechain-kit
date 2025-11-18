@@ -1,15 +1,14 @@
 'use client';
 
 import { SimpleGrid, VStack, Text, Icon } from '@chakra-ui/react';
-import { RiShieldKeyholeLine, RiLockPasswordLine } from 'react-icons/ri';
-import { MdSecurity } from 'react-icons/md';
+import { LuShield, LuLock, LuShieldCheck } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export function SmartAccountInfo() {
     return (
         <CollapsibleCard
             title="Smart Account Explained"
-            icon={RiShieldKeyholeLine}
+            icon={LuShield}
             style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
@@ -27,7 +26,7 @@ export function SmartAccountInfo() {
                         borderRadius="md"
                         bg="whiteAlpha.50"
                     >
-                        <Icon as={RiShieldKeyholeLine} boxSize={8} />
+                        <Icon as={LuShield} boxSize={8} />
                         <Text fontWeight="bold">Secure Ownership</Text>
                         <Text fontSize="sm" textAlign="center">
                             Exclusively controlled by your Privy-secured wallet
@@ -40,7 +39,7 @@ export function SmartAccountInfo() {
                         borderRadius="md"
                         bg="whiteAlpha.50"
                     >
-                        <Icon as={RiLockPasswordLine} boxSize={8} />
+                        <Icon as={LuLock} boxSize={8} />
                         <Text fontWeight="bold">Transferable</Text>
                         <Text fontSize="sm" textAlign="center">
                             Transfer ownership to another wallet anytime
@@ -53,7 +52,7 @@ export function SmartAccountInfo() {
                         borderRadius="md"
                         bg="whiteAlpha.50"
                     >
-                        <Icon as={MdSecurity} boxSize={8} />
+                        <Icon as={LuShieldCheck} boxSize={8} />
                         <Text fontWeight="bold">Recovery</Text>
                         <Text fontSize="sm" textAlign="center">
                             Secure backup and recovery through Privy

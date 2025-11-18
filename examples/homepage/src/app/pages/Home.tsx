@@ -18,8 +18,7 @@ import { TransactionExamples } from '@/app/components/features/TransactionExampl
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { Introduction } from '../components/features/Introduction';
 import { FAQSection } from '../components/features/FAQSection';
-import { IoMdMoon } from 'react-icons/io';
-import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
+import { LuMoon, LuSun, LuHand, LuChevronDown } from 'react-icons/lu';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
 import { VechainLogo } from '@vechain/vechain-kit/assets';
@@ -70,7 +69,7 @@ export default function Home(): ReactElement {
                                     },
                                 }}
                             >
-                                <FaHandPointLeft
+                                <LuHand
                                     size={24}
                                     color={
                                         colorMode === 'light'
@@ -94,7 +93,7 @@ export default function Home(): ReactElement {
                         <IconButton
                             onClick={toggleColorMode}
                             icon={
-                                colorMode === 'light' ? <IoMdMoon /> : <FaSun />
+                                colorMode === 'light' ? <LuMoon /> : <LuSun />
                             }
                             aria-label="Toggle color mode"
                             borderRadius="xl"
@@ -131,7 +130,7 @@ export default function Home(): ReactElement {
 
                     <IconButton
                         onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}
+                        icon={colorMode === 'light' ? <LuMoon /> : <LuSun />}
                         aria-label="Toggle color mode"
                         borderRadius="xl"
                     />
@@ -150,7 +149,7 @@ export default function Home(): ReactElement {
                         <Text fontSize="sm" textAlign="center">
                             Scroll down to explore available features
                         </Text>
-                        <FaChevronDown
+                        <LuChevronDown
                             size={20}
                             color={
                                 colorMode === 'light'

@@ -10,23 +10,10 @@ import {
     Icon,
     ModalFooter,
 } from '@chakra-ui/react';
-import {
-    FaGoogle,
-    FaEnvelope,
-    FaWallet,
-    FaTwitter,
-    FaPhone,
-    FaSpotify,
-    FaApple,
-    FaInstagram,
-    FaTiktok,
-    FaGithub,
-    FaLinkedin,
-    FaTelegram,
-    FaPlus,
-    FaDiscord,
-} from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 import { SiFarcaster } from 'react-icons/si';
+import { FaSpotify, FaApple, FaInstagram, FaTiktok, FaLinkedin, FaTelegram, FaDiscord } from 'react-icons/fa';
+import { LuMail, LuWallet, LuTwitter, LuPhone, LuGithub, LuPlus, LuFingerprint } from 'react-icons/lu';
 import { ActionButton } from '@/components';
 import {
     ModalBackButton,
@@ -36,7 +23,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { useVeChainKitConfig } from '@/providers';
-import { IoIosFingerPrint } from 'react-icons/io';
 import { humanAddress } from '@/utils';
 
 type ConfirmUnlinkProps = {
@@ -154,17 +140,17 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const getAccountIcon = (type: string) => {
         switch (type) {
             case 'google_oauth':
-                return FaGoogle;
+                return FcGoogle;
             case 'email':
-                return FaEnvelope;
+                return LuMail;
             case 'passkey':
-                return IoIosFingerPrint;
+                return LuFingerprint;
             case 'wallet':
-                return FaWallet;
+                return LuWallet;
             case 'twitter_oauth':
-                return FaTwitter;
+                return LuTwitter;
             case 'phone':
-                return FaPhone;
+                return LuPhone;
             case 'spotify_oauth':
                 return FaSpotify;
             case 'apple_oauth':
@@ -174,7 +160,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
             case 'tiktok_oauth':
                 return FaTiktok;
             case 'github_oauth':
-                return FaGithub;
+                return LuGithub;
             case 'linkedin_oauth':
                 return FaLinkedin;
             case 'telegram':
@@ -342,7 +328,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 'Set up a passkey for easier access',
                             )}
                             onClick={() => linkPasskey()}
-                            leftIcon={IoIosFingerPrint}
+                            leftIcon={LuFingerprint}
                         />
 
                         {canLinkGoogle && (
@@ -352,7 +338,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect your Google account for easier access',
                                 )}
                                 onClick={() => linkGoogle()}
-                                leftIcon={FaGoogle}
+                                leftIcon={FcGoogle}
                             />
                         )}
                         {canLinkEmail && (
@@ -362,7 +348,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect your email for easier access',
                                 )}
                                 onClick={() => linkEmail()}
-                                leftIcon={FaEnvelope}
+                                leftIcon={LuMail}
                                 stacked={true}
                             />
                         )}
@@ -373,7 +359,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect your Twitter account for easier access',
                                 )}
                                 onClick={() => linkTwitter()}
-                                leftIcon={FaTwitter}
+                                leftIcon={LuTwitter}
                             />
                         )}
                         {canLinkSms && (
@@ -383,7 +369,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect your phone number for easier access',
                                 )}
                                 onClick={() => linkPhone()}
-                                leftIcon={FaPhone}
+                                leftIcon={LuPhone}
                             />
                         )}
                         {canLinkSpotify && (
@@ -433,7 +419,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect your Github account for easier access',
                                 )}
                                 onClick={() => linkGithub()}
-                                leftIcon={FaGithub}
+                                leftIcon={LuGithub}
                             />
                         )}
                         {canLinkLinkedin && (
@@ -483,7 +469,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect an external wallet for easier access',
                                 )}
                                 onClick={() => linkWallet()}
-                                leftIcon={FaWallet}
+                                leftIcon={LuWallet}
                             />
                         )}
                         {!canLinkGoogle &&
@@ -676,7 +662,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                     w="full"
                     variant="vechainKitSecondary"
                     onClick={() => setShowLinkOptions(true)}
-                    leftIcon={<Icon as={FaPlus} />}
+                    leftIcon={<Icon as={LuPlus} />}
                     isDisabled={
                         !canLinkGoogle &&
                         !canLinkEmail &&

@@ -11,12 +11,10 @@ import {
     InputLeftElement,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { IoCopyOutline, IoCheckmarkOutline } from 'react-icons/io5';
+import { LuCopy, LuCheck, LuWallet, LuCreditCard } from 'react-icons/lu';
 import { humanAddress } from '@/utils';
 import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
-import { FaRegAddressCard } from 'react-icons/fa';
-import { HiOutlineWallet } from 'react-icons/hi2';
 
 type Props = {
     wallet: Wallet;
@@ -59,7 +57,7 @@ export const AddressDisplay = ({
                     <VStack spacing={2} w={'full'}>
                         <InputGroup>
                             <InputLeftElement>
-                                <Icon as={FaRegAddressCard} opacity={0.5} />
+                                <Icon as={LuCreditCard} opacity={0.5} />
                             </InputLeftElement>
                             <Input
                                 cursor="pointer"
@@ -86,8 +84,8 @@ export const AddressDisplay = ({
                                     cursor="pointer"
                                     as={
                                         copiedDomain
-                                            ? IoCheckmarkOutline
-                                            : IoCopyOutline
+                                            ? LuCheck
+                                            : LuCopy
                                     }
                                 />
                             </InputRightElement>
@@ -95,7 +93,7 @@ export const AddressDisplay = ({
 
                         <InputGroup>
                             <InputLeftElement>
-                                <Icon as={HiOutlineWallet} opacity={0.5} />
+                                <Icon as={LuWallet} opacity={0.5} />
                             </InputLeftElement>
                             <Input
                                 cursor="pointer"
@@ -130,8 +128,8 @@ export const AddressDisplay = ({
                                     }
                                     as={
                                         copied
-                                            ? IoCheckmarkOutline
-                                            : IoCopyOutline
+                                            ? LuCheck
+                                            : LuCopy
                                     }
                                 />
                             </InputRightElement>
@@ -140,7 +138,7 @@ export const AddressDisplay = ({
                 ) : (
                     <InputGroup>
                         <InputLeftElement>
-                            <Icon as={HiOutlineWallet} opacity={0.5} />
+                            <Icon as={LuWallet} opacity={0.5} />
                         </InputLeftElement>
                         <Input
                             cursor="pointer"
@@ -169,7 +167,7 @@ export const AddressDisplay = ({
                                     )
                                 }
                                 cursor="pointer"
-                                as={copied ? IoCheckmarkOutline : IoCopyOutline}
+                                as={copied ? LuCheck : LuCopy}
                             />
                         </InputRightElement>
                     </InputGroup>

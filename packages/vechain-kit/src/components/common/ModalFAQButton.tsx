@@ -1,6 +1,6 @@
 import { useVeChainKitConfig } from '@/providers';
 import { IconButton, IconButtonProps, Icon } from '@chakra-ui/react';
-import { BsQuestionCircle } from 'react-icons/bs';
+import { LuCircleHelp } from 'react-icons/lu';
 
 type FAQButtonProps = {
     onClick: () => void;
@@ -11,7 +11,7 @@ export const ModalFAQButton = ({ onClick, ...props }: FAQButtonProps) => {
     return (
         <IconButton
             aria-label="FAQ"
-            icon={<Icon as={BsQuestionCircle} fontSize={'17px'} />}
+            icon={<Icon as={LuCircleHelp} fontSize={'17px'} />}
             size="sm"
             variant="ghost"
             _hover={{ bg: isDark ? 'whiteAlpha.100' : 'blackAlpha.100' }}

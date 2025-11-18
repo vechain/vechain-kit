@@ -2,7 +2,7 @@
 
 import { VStack, Text } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import { RiShieldUserLine } from 'react-icons/ri';
+import { LuShield } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export function ConnectionInfo() {
@@ -24,7 +24,7 @@ export function ConnectionInfo() {
     return (
         <CollapsibleCard
             title="Your Connection Source"
-            icon={RiShieldUserLine}
+            icon={LuShield}
             style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">

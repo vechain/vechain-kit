@@ -1,14 +1,14 @@
 'use client';
 
 import { VStack, Text, SimpleGrid } from '@chakra-ui/react';
-import { FaRegAddressCard } from 'react-icons/fa';
 import {
-    RiExchangeLine,
-    RiShieldKeyholeLine,
-    RiUserSettingsLine,
-} from 'react-icons/ri';
-import { IoMdNotifications } from 'react-icons/io';
-import { BsQuestionCircle } from 'react-icons/bs';
+    LuCreditCard,
+    LuArrowLeftRight,
+    LuShield,
+    LuUserCog,
+    LuBell,
+    LuCircleHelp,
+} from 'react-icons/lu';
 import {
     useUpgradeSmartAccountModal,
     useWallet,
@@ -28,9 +28,7 @@ import { FeatureCard } from './FeatureCard';
 import { GithubCard } from './GithubCard';
 import { LanguageCard } from './LanguageCard';
 import { ThemeCard } from './ThemeCard';
-import { CgProfile } from 'react-icons/cg';
-import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-import { MdOutlineBrowserUpdated } from 'react-icons/md';
+import { LuUser, LuArrowDownToLine, LuRefreshCw } from 'react-icons/lu';
 
 export function FeaturesToTry() {
     const { account, connection } = useWallet();
@@ -53,7 +51,7 @@ export function FeaturesToTry() {
             title: 'Set VET Domain',
             description:
                 'Replace your complex address with a memorable .vet domain name',
-            icon: FaRegAddressCard,
+            icon: LuCreditCard,
             highlight: !account?.domain,
             content: () => openChooseNameModal({ isolatedView: true }),
         },
@@ -61,33 +59,33 @@ export function FeaturesToTry() {
             title: 'Customize Profile',
             description:
                 'Show the user his profile and allow them to customize it with a profile image, display name, bio and more to enhance their identity across VeChain applications.',
-            icon: CgProfile,
+            icon: LuUser,
             content: () => openProfileModal({ isolatedView: true }),
         },
         {
             title: 'Transfer Assets',
             description:
                 'Send and receive VET, VTHO, and other tokens seamlessly',
-            icon: RiExchangeLine,
+            icon: LuArrowLeftRight,
             content: () => openSendTokenModal({ isolatedView: true }),
         },
         {
             title: 'Swap Tokens',
             description: 'Swap between tokens with best available rates',
-            icon: RiExchangeLine,
+            icon: LuArrowLeftRight,
             content: () => openSwapTokenModal({ isolatedView: true }),
         },
         {
             title: 'Receive Assets',
             description: 'Receive VET, VTHO, and other tokens from anyone',
-            icon: FaRegArrowAltCircleDown,
+            icon: LuArrowDownToLine,
             content: () => openReceiveModal({ isolatedView: true }),
         },
         {
             title: 'Access & Security',
             description:
                 'Allow the user to secure his embedded wallet with proper backup procedures, update his login methods, add MFA and more.',
-            icon: RiShieldKeyholeLine,
+            icon: LuShield,
             content: () => openAccessAndSecurityModal({ isolatedView: true }),
             disabled: !connection.isConnectedWithPrivy,
         },
@@ -95,26 +93,26 @@ export function FeaturesToTry() {
             title: 'Explore Ecosystem',
             description:
                 'Explore other apps built on VeChain, and add shortcuts for faster access.',
-            icon: RiUserSettingsLine,
+            icon: LuUserCog,
             content: () => openExploreEcosystemModal({ isolatedView: true }),
         },
         {
             title: 'Notifications',
             description:
                 'Stay updated with the kit or ecosystem updates, and account alerts',
-            icon: IoMdNotifications,
+            icon: LuBell,
             content: () => openNotificationsModal({ isolatedView: true }),
         },
         {
             title: 'FAQ',
             description: 'Find answers to common questions about VeChain',
-            icon: BsQuestionCircle,
+            icon: LuCircleHelp,
             content: () => openFAQModal({ isolatedView: true }),
         },
         {
             title: 'Upgrade Smart Account',
             description: 'Upgrade your smart account to the latest version',
-            icon: MdOutlineBrowserUpdated,
+            icon: LuRefreshCw,
             content: openUpgradeSmartAccountModal,
         },
     ];

@@ -17,7 +17,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
 import { useCurrency } from '@/hooks';
-import { BsCheck } from 'react-icons/bs';
+import { LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { setLocalStorageItem } from '@/utils/ssrUtils';
@@ -55,7 +55,7 @@ export const ChangeCurrencyContent = ({
                 <Text>{currency.toUpperCase()}</Text>
             </HStack>
             {currentCurrency === currency && (
-                <Icon as={BsCheck} boxSize={5} color="blue.500" />
+                <Icon as={LuCheck} boxSize={5} color="blue.500" />
             )}
         </Button>
     );

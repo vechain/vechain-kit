@@ -11,9 +11,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { FcCheckmark } from 'react-icons/fc';
-import { IoCloseOutline, IoOpenOutline } from 'react-icons/io5';
-import { MdOutlineErrorOutline } from 'react-icons/md';
+import { LuX, LuExternalLink, LuCircleAlert, LuCircleCheck } from 'react-icons/lu';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
@@ -86,7 +84,7 @@ export const TransactionToastContent = ({
                 return {
                     icon: (
                         <Icon
-                            as={MdOutlineErrorOutline}
+                            as={LuCircleAlert}
                             color={'red.500'}
                             fontSize={'40px'}
                             data-testid="error-icon-toast"
@@ -100,7 +98,8 @@ export const TransactionToastContent = ({
                 return {
                     icon: (
                         <Icon
-                            as={FcCheckmark}
+                            as={LuCircleCheck}
+                            color={'green.500'}
                             fontSize={'40px'}
                             data-testid="success-icon-toast"
                         />
@@ -171,7 +170,7 @@ export const TransactionToastContent = ({
                                 href={`${explorerUrl}/${txReceipt.meta.txID}`}
                             >
                                 {t('View on explorer')}{' '}
-                                <Icon as={IoOpenOutline} />
+                                <Icon as={LuExternalLink} />
                             </Link>
                         )}
                     </VStack>
@@ -185,7 +184,7 @@ export const TransactionToastContent = ({
                     size="sm"
                     borderRadius={'full'}
                     aria-label="Close"
-                    icon={<Icon as={IoCloseOutline} boxSize={4} />}
+                    icon={<Icon as={LuX} boxSize={4} />}
                 />
             )}
         </HStack>

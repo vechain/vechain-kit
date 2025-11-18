@@ -1,5 +1,5 @@
 import { GridItem } from '@chakra-ui/react';
-import { FaGithub } from 'react-icons/fa';
+import { LuGithub } from 'react-icons/lu';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
@@ -22,7 +22,7 @@ export const LoginWithGithubButton = ({ isDark, gridColumn }: Props) => {
                         provider: 'github',
                     });
                 }}
-                icon={FaGithub}
+                icon={LuGithub}
                 text={t('Continue with Github')}
             />
         </GridItem>

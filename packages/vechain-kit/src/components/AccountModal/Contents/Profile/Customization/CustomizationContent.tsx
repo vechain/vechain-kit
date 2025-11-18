@@ -25,17 +25,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
-import { MdOutlineNavigateNext, MdPhotoCamera } from 'react-icons/md';
+import { LuChevronRight, LuCamera, LuCreditCard, LuMail, LuGlobe, LuTwitter } from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '@/utils/ipfs';
-import { FaRegAddressCard, FaEnvelope, FaGlobe } from 'react-icons/fa';
 import { AccountAvatar } from '@/components/common';
 import { DomainRequiredAlert } from '../../../Components/Alerts';
 import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
-import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '@/utils';
 
 // Update FormValues type to include validation
@@ -245,7 +243,7 @@ export const CustomizationContent = ({
                         {/* {hasDomain && (
                             <IconButton
                                 aria-label="Update cover"
-                                icon={<MdPhotoCamera />}
+                                icon={<LuCamera />}
                                 size="sm"
                                 position="absolute"
                                 right="2"
@@ -275,7 +273,7 @@ export const CustomizationContent = ({
                         />
                         {hasDomain && (
                             <Icon
-                                as={MdPhotoCamera}
+                                as={LuCamera}
                                 position="absolute"
                                 right="2"
                                 bottom="2"
@@ -362,8 +360,8 @@ export const CustomizationContent = ({
                                         });
                                     }
                                 }}
-                                leftIcon={FaRegAddressCard}
-                                rightIcon={MdOutlineNavigateNext}
+                                leftIcon={LuCreditCard}
+                                rightIcon={LuChevronRight}
                                 dataTestId="set-domain-name-button"
                             />
 
@@ -428,7 +426,7 @@ export const CustomizationContent = ({
                                     >
                                         <InputGroup>
                                             <InputLeftElement>
-                                                <Icon as={FaXTwitter} />
+                                                <Icon as={LuTwitter} />
                                             </InputLeftElement>
                                             <Input
                                                 {...register('twitter', {
@@ -462,7 +460,7 @@ export const CustomizationContent = ({
                                     >
                                         <InputGroup>
                                             <InputLeftElement>
-                                                <Icon as={FaGlobe} />
+                                                <Icon as={LuGlobe} />
                                             </InputLeftElement>
                                             <Input
                                                 {...register('website', {
@@ -495,7 +493,7 @@ export const CustomizationContent = ({
                                     >
                                         <InputGroup>
                                             <InputLeftElement>
-                                                <Icon as={FaEnvelope} />
+                                                <Icon as={LuMail} />
                                             </InputLeftElement>
                                             <Input
                                                 {...register('email', {

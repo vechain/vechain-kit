@@ -9,7 +9,7 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
-import { FaHandPointLeft } from 'react-icons/fa';
+import { LuHand } from 'react-icons/lu';
 
 interface FeatureCardProps {
     title: string;
@@ -81,15 +81,14 @@ export function FeatureCard({
                                 },
                             }}
                         >
-                            <FaHandPointLeft
+                            <LuHand
                                 size={24}
-                                rotate={10}
                                 color={
                                     colorMode === 'light'
                                         ? '#4A5568'
                                         : '#A0AEC0'
                                 }
-                                style={{ marginLeft: '8px' }}
+                                style={{ marginLeft: '8px', transform: 'rotate(10deg)' }}
                             />
 
                             <Text

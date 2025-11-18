@@ -11,7 +11,7 @@ import {
     BoxProps,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { MdExpandMore, MdExpandLess } from 'react-icons/md';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 
 interface CollapsibleCardProps {
     title: string;
@@ -54,7 +54,7 @@ export function CollapsibleCard({
                     </HStack>
                     <IconButton
                         aria-label={isOpen ? 'Collapse' : 'Expand'}
-                        icon={isOpen ? <MdExpandLess /> : <MdExpandMore />}
+                        icon={isOpen ? <LuChevronUp /> : <LuChevronDown />}
                         variant="ghost"
                         size="sm"
                     />

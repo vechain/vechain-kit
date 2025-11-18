@@ -16,8 +16,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { GoLinkExternal } from 'react-icons/go';
-import { MdOutlineErrorOutline } from 'react-icons/md';
+import { LuExternalLink, LuCircleAlert } from 'react-icons/lu';
 
 export type FailedOperationContentProps = {
     setCurrentContent: React.Dispatch<
@@ -49,7 +48,7 @@ export const FailedOperationContent = ({
             <ModalBody>
                 <VStack align={'center'} p={6} spacing={3}>
                     <Icon
-                        as={MdOutlineErrorOutline}
+                        as={LuCircleAlert}
                         fontSize={'100px'}
                         color={darkMode ? 'red.400' : 'red.500'}
                         data-testid="error-icon"
@@ -90,7 +89,7 @@ export const FailedOperationContent = ({
                                 <Text>
                                     {t('View transaction on the explorer')}
                                 </Text>
-                                <Icon size={16} as={GoLinkExternal} />
+                                <Icon size={16} as={LuExternalLink} />
                             </HStack>
                         </Link>
                     )}

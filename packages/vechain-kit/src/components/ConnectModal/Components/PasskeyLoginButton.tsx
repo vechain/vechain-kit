@@ -1,6 +1,6 @@
 import { GridItem, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
-import { IoIosFingerPrint } from 'react-icons/io';
+import { LuFingerprint } from 'react-icons/lu';
 import { LoginLoadingModal, ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithPasskey } from '@/hooks';
@@ -47,7 +47,7 @@ export const PasskeyLoginButton = ({ isDark, gridColumn }: Props) => {
                 <ConnectionButton
                     isDark={isDark}
                     onClick={handleLoginWithPasskey}
-                    icon={IoIosFingerPrint}
+                    icon={LuFingerprint}
                     text={
                         gridColumn && gridColumn >= 2 ? t('Passkey') : undefined
                     }

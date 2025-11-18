@@ -1,6 +1,6 @@
 import { useVeChainKitConfig } from '@/providers';
 import { IconButton, IconButtonProps, Box } from '@chakra-ui/react';
-import { BiBell } from 'react-icons/bi';
+import { LuBell } from 'react-icons/lu';
 
 type NotificationButtonProps = {
     onClick: () => void;
@@ -26,7 +26,7 @@ export const ModalNotificationButton = ({
             onClick={onClick}
             icon={
                 <Box position="relative">
-                    <BiBell fontSize={'20px'} />
+                    <LuBell fontSize={'20px'} />
                     {hasUnreadNotifications && (
                         <Box
                             position="absolute"

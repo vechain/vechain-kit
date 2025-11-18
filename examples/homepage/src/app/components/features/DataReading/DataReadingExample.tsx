@@ -18,7 +18,7 @@ import {
     useGetTokenUsdPrice,
     useCurrentAllocationsRoundId,
 } from '@vechain/vechain-kit';
-import { MdDataUsage } from 'react-icons/md';
+import { LuDatabase } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export function DataReadingExample(): ReactElement {
@@ -38,7 +38,7 @@ export function DataReadingExample(): ReactElement {
         <CollapsibleCard
             defaultIsOpen={false}
             title="Reading Blockchain Data"
-            icon={MdDataUsage}
+            icon={LuDatabase}
             style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
@@ -129,7 +129,7 @@ const { data: vetPrice } =
                             href="https://docs.vechainkit.vechain.org/vechain-kit/hooks"
                             w="full"
                             variant="outline"
-                            rightIcon={<MdDataUsage />}
+                            rightIcon={<LuDatabase />}
                         >
                             View Full Documentation
                         </Button>

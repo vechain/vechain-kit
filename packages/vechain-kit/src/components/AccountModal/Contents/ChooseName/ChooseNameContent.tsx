@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { FaRegAddressCard } from 'react-icons/fa';
+import { LuCreditCard } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
@@ -47,7 +47,7 @@ export const ChooseNameContent = ({
             <ModalBody>
                 <VStack spacing={6} align="center" py={8}>
                     <Icon
-                        as={FaRegAddressCard}
+                        as={LuCreditCard}
                         boxSize={16}
                         opacity={0.5}
                         color={isDark ? 'whiteAlpha.800' : 'gray.600'}

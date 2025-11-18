@@ -11,7 +11,7 @@ import {
     Button,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
-import { MdOutlineErrorOutline, MdOutlineRefresh } from 'react-icons/md';
+import { LuCircleAlert, LuRefreshCw } from 'react-icons/lu';
 import { motion } from 'framer-motion';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -118,7 +118,7 @@ const LoadingContent = ({
             <ModalFooter justifyContent={'center'}>
                 {showTimeout && (
                     <Button variant="vechainKitSecondary" onClick={onTryAgain}>
-                        <Icon mr={2} as={MdOutlineRefresh} />
+                        <Icon mr={2} as={LuRefreshCw} />
                         {t('Try again')}
                     </Button>
                 )}
@@ -169,7 +169,7 @@ const ErrorContent = ({
                         }}
                     >
                         <Icon
-                            as={MdOutlineErrorOutline}
+                            as={LuCircleAlert}
                             color={'#ef4444'}
                             fontSize={'60px'}
                             opacity={0.5}
@@ -182,7 +182,7 @@ const ErrorContent = ({
             </ModalBody>
             <ModalFooter justifyContent={'center'}>
                 <Button variant="vechainKitSecondary" onClick={onTryAgain}>
-                    <Icon mr={2} as={MdOutlineRefresh} />
+                    <Icon mr={2} as={LuRefreshCw} />
                     {t('Try again')}
                 </Button>
             </ModalFooter>

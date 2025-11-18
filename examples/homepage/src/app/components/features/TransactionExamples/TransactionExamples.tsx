@@ -1,8 +1,7 @@
 'use client';
 
 import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
-import { MdSend } from 'react-icons/md';
-import { FaCode } from 'react-icons/fa';
+import { LuSend, LuCode } from 'react-icons/lu';
 import { useCallback } from 'react';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
@@ -75,7 +74,7 @@ export function TransactionExamples() {
         <CollapsibleCard
             defaultIsOpen={false}
             title="Transaction Examples"
-            icon={MdSend}
+            icon={LuSend}
             style={{ bg: 'whiteAlpha.100' }}
         >
             <VStack spacing={6} align="stretch">
@@ -128,7 +127,7 @@ export function TransactionExamples() {
                             href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/TransactionExamples/TransactionExamples.tsx"
                             w="full"
                             variant="outline"
-                            rightIcon={<FaCode />}
+                            rightIcon={<LuCode />}
                         >
                             View Code Example
                         </Button>
@@ -138,7 +137,7 @@ export function TransactionExamples() {
                             href="https://docs.vechainkit.vechain.org/vechain-kit/send-transactions"
                             w="full"
                             variant="outline"
-                            rightIcon={<MdSend />}
+                            rightIcon={<LuSend />}
                         >
                             Read Docs
                         </Button>

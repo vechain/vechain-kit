@@ -1,7 +1,7 @@
 import { useUpgradeRequired, useWallet } from '@/hooks';
 import { IconButton, IconButtonProps, Box } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { LiaCogSolid } from 'react-icons/lia';
+import { LuSettings2 } from 'react-icons/lu';
 
 type ModalSettingsButtonProps = {
     onClick: () => void;
@@ -49,7 +49,7 @@ export const ModalSettingsButton = ({
             onClick={handleOnClick}
             icon={
                 <Box position="relative">
-                    <LiaCogSolid fontSize={'20px'} />
+                    <LuSettings2 fontSize={'20px'} />
                     {showRedDot && (
                         <Box
                             position="absolute"

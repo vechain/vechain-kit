@@ -1,5 +1,5 @@
 import { Icon, Text, VStack } from '@chakra-ui/react';
-import { BiTransferAlt } from 'react-icons/bi';
+import { LuArrowLeftRight } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 
 export const ActivityTabPanel = () => {
@@ -7,7 +7,7 @@ export const ActivityTabPanel = () => {
     return (
         <VStack spacing={4} align="center" mt={8}>
             <Icon
-                as={BiTransferAlt}
+                as={LuArrowLeftRight}
                 boxSize={12}
                 opacity={0.5}
                 p={2}
