@@ -6182,14 +6182,25 @@ __metadata:
     wagmi: "npm:^2.15.4"
   peerDependencies:
     "@chakra-ui/react": ^2.8.2
+    "@emotion/react": ^11.0.0
+    "@emotion/styled": ^11.0.0
     "@tanstack/react-query": ^5.64.2
     "@vechain/dapp-kit-react": 2.1.0-rc.2
+    framer-motion: ^11.0.0
+    react: ^18.0.0
+    react-dom: ^18.0.0
   peerDependenciesMeta:
     "@chakra-ui/react":
+      optional: true
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
       optional: true
     "@tanstack/react-query":
       optional: true
     "@vechain/dapp-kit-react":
+      optional: true
+    framer-motion:
       optional: true
   languageName: unknown
   linkType: soft
