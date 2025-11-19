@@ -1,6 +1,7 @@
 import { useVeChainKitConfig } from '@/providers';
-import { Box } from '@chakra-ui/react';
+import { Box, useToken } from '@chakra-ui/react';
 import { useEffect, useState, useRef } from 'react';
+import { useVechainKitThemeConfig } from '@/providers';
 
 type Props = {
     children: React.ReactNode;
@@ -10,6 +11,12 @@ export const StickyHeaderContainer = ({ children }: Props) => {
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
     const { darkMode: isDark } = useVeChainKitConfig();
+    
+    // Use semantic tokens for sticky header
+    const stickyHeaderBg = useToken('colors', 'vechain-kit-sticky-header');
+    const { tokens } = useVechainKitThemeConfig();
+    const backdropFilter = tokens?.effects.backdropFilter.stickyHeader;
+    
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -33,9 +40,17 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                bg={isDark ? 'rgb(31 31 30 / 90%)' : 'rgb(255 255 255 / 69%)'}
-                backdropFilter={'blur(12px)'}
-                style={{ WebkitBackdropFilter: 'blur(12px)' }}
+                bg={
+                    hasContentBelow
+                        ? isDark
+                            ? 'rgba(21, 21, 21, 0.6)'
+                            : 'rgba(255, 255, 255, 0.6)'
+                        : 'transparent'
+                }
+                backdropFilter={hasContentBelow ? backdropFilter : 'none'}
+                style={{
+                    WebkitBackdropFilter: hasContentBelow ? backdropFilter : 'none',
+                }}
                 zIndex={1000}
                 boxShadow={
                     hasContentBelow

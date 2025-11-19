@@ -3,31 +3,70 @@ import { getModalTheme } from './modal';
 import { getCardTheme } from './card';
 import { getButtonTheme } from './button';
 import { getPopoverTheme } from './popover';
+import {
+    VechainKitThemeConfig,
+    ThemeTokens,
+    getDefaultTokens,
+    convertThemeConfigToTokens,
+    mergeTokens,
+} from './tokens';
 
 // minimal theme that completely disables global styles
-const getThemeConfig = (darkMode: boolean): ThemeConfig => ({
+const getThemeConfig = (
+    darkMode: boolean,
+    tokens: ThemeTokens,
+): ThemeConfig => ({
     useSystemColorMode: false,
     disableTransitionOnChange: false,
 
     // @ts-ignore
     components: {
-        Modal: getModalTheme(darkMode),
-        Card: getCardTheme(darkMode),
-        Button: getButtonTheme(darkMode),
-        Popover: getPopoverTheme(darkMode),
+        Modal: getModalTheme(tokens),
+        Card: getCardTheme(tokens),
+        Button: getButtonTheme(tokens),
+        Popover: getPopoverTheme(tokens),
     },
     // COMPLETELY disable global styles to prevent any conflicts
     styles: {
         global: () => ({}), // empty object = no global styles injected
     },
 
-    // only defining the semantic tokens we need, scoped to our components
+    // semantic tokens derived from ThemeTokens
     semanticTokens: {
         colors: {
-            'chakra-body-text': darkMode ? '#F7FAFC' : '#1A202C',
-            'chakra-body-bg': darkMode ? '#1A202C' : '#FFFFFF',
-            'chakra-border-color': darkMode ? '#2D3748' : '#E2E8F0',
-            'chakra-placeholder-color': darkMode ? '#718096' : '#A0AEC0',
+            'chakra-body-text': tokens.colors.text.primary,
+            'chakra-body-bg': tokens.colors.background.modal,
+            'chakra-border-color': tokens.colors.border.default,
+            'chakra-placeholder-color': tokens.colors.text.tertiary,
+            // VeChain Kit semantic tokens
+            'vechain-kit-modal': tokens.colors.background.modal,
+            'vechain-kit-overlay': tokens.colors.background.overlay,
+            'vechain-kit-card': tokens.colors.background.card,
+            'vechain-kit-card-elevated': tokens.colors.background.cardElevated,
+            'vechain-kit-sticky-header': tokens.colors.background.stickyHeader,
+            'vechain-kit-primary': tokens.colors.primary.base,
+            'vechain-kit-primary-hover': tokens.colors.primary.hover,
+            'vechain-kit-primary-active': tokens.colors.primary.active,
+            'vechain-kit-secondary': tokens.colors.secondary.base,
+            'vechain-kit-secondary-hover': tokens.colors.secondary.hover,
+            'vechain-kit-tertiary': tokens.colors.tertiary.base,
+            'vechain-kit-text-primary': tokens.colors.text.primary,
+            'vechain-kit-text-secondary': tokens.colors.text.secondary,
+            'vechain-kit-text-tertiary': tokens.colors.text.tertiary,
+            'vechain-kit-border': tokens.colors.border.default,
+            'vechain-kit-border-hover': tokens.colors.border.hover,
+            'vechain-kit-border-focus': tokens.colors.border.focus,
+            'vechain-kit-success': tokens.colors.success,
+            'vechain-kit-error': tokens.colors.error,
+            'vechain-kit-warning': tokens.colors.warning,
+        },
+        effects: {
+            'vechain-kit-backdrop-filter-modal':
+                tokens.effects.backdropFilter.modal,
+            'vechain-kit-backdrop-filter-overlay':
+                tokens.effects.backdropFilter.overlay,
+            'vechain-kit-backdrop-filter-sticky-header':
+                tokens.effects.backdropFilter.stickyHeader,
         },
 
         config: {
@@ -36,13 +75,35 @@ const getThemeConfig = (darkMode: boolean): ThemeConfig => ({
     },
 
     // minimal foundations to prevent global style injection
-    fonts: baseTheme.fonts,
+    fonts: {
+        ...baseTheme.fonts,
+        body: tokens.fonts.family,
+        heading: tokens.fonts.family,
+    },
     colors: baseTheme.colors,
     space: baseTheme.space,
 });
 
-export const getVechainKitTheme = (darkMode: boolean) => {
-    const theme = extendTheme(getThemeConfig(darkMode));
+export const getVechainKitTheme = (
+    darkMode: boolean,
+    customThemeConfig?: VechainKitThemeConfig,
+): ReturnType<typeof extendTheme> => {
+    // Get default tokens for the mode
+    const defaultTokens = getDefaultTokens(darkMode);
+
+    // Convert custom config to partial tokens
+    const customTokens = convertThemeConfigToTokens(
+        customThemeConfig,
+        darkMode,
+    );
+
+    // Merge custom tokens with defaults
+    const tokens = mergeTokens(defaultTokens, customTokens);
+
+    // Generate theme config with tokens
+    const themeConfig = getThemeConfig(darkMode, tokens);
+
+    const theme = extendTheme(themeConfig);
 
     // CRITICAL: Force override of global styles after theme creation
     theme.styles.global = () => ({});

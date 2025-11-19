@@ -1,35 +1,41 @@
 import { modalAnatomy as parts } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
+import { ThemeTokens } from './tokens';
 
 const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(parts.keys);
 
-const getModalVariants = (darkMode: boolean) => ({
+const getModalVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({
         dialog: {
             scrollbarWidth: 'none',
             overflow: 'scroll',
             overflowX: 'hidden',
             maxHeight: '550px',
-            borderRadius: '24px',
-            backgroundColor: darkMode ? '#1f1f1e' : 'white',
+            borderRadius: tokens.borders.radius.xl,
+            backgroundColor: tokens.colors.background.modal,
+            backdropFilter: tokens.effects.backdropFilter.modal,
+        },
+        overlay: {
+            backgroundColor: tokens.colors.background.overlay,
+            backdropFilter: tokens.effects.backdropFilter.overlay,
         },
         closeButton: {
-            borderRadius: '50%',
+            borderRadius: tokens.borders.radius.full,
         },
         header: {
             w: 'full',
-            color: darkMode ? '#dfdfdd' : '#2e2e2e',
-            fontSize: 'md',
-            fontWeight: '700',
+            color: tokens.colors.text.primary,
+            fontSize: tokens.fonts.sizes.medium,
+            fontWeight: tokens.fonts.weights.bold,
             textAlign: 'center',
         },
     }),
 });
 
-export const getModalTheme = (darkMode: boolean) =>
+export const getModalTheme = (tokens: ThemeTokens) =>
     defineMultiStyleConfig({
-        variants: getModalVariants(darkMode),
+        variants: getModalVariants(tokens),
         defaultProps: {
             variant: 'vechainKitBase',
         },

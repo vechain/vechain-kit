@@ -4,6 +4,7 @@ import {
     ModalContentProps,
     ModalOverlay,
     useMediaQuery,
+    useToken,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useVechainKitThemeConfig } from '@/providers';
@@ -40,6 +41,16 @@ export const BaseModal = ({
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
     const { portalRootRef } = useVechainKitThemeConfig();
+
+    // Use semantic tokens for modal and overlay colors
+    const modalBg = useToken('colors', 'vechain-kit-modal');
+    const overlayBg = useToken('colors', 'vechain-kit-overlay');
+
+    // Get backdrop filter from tokens context
+    const { tokens } = useVechainKitThemeConfig();
+    const defaultBackdropFilter = tokens?.effects.backdropFilter.overlay;
+    const effectiveBackdropFilter = backdropFilter ?? defaultBackdropFilter;
+
     const modalContentProps: ModalContentProps = isDesktop
         ? {}
         : {
@@ -69,10 +80,15 @@ export const BaseModal = ({
             trapFocus={!allowExternalFocus}
             autoFocus={!allowExternalFocus}
         >
-            <ModalOverlay backdropFilter={backdropFilter} />
+            <ModalOverlay
+                bg={overlayBg}
+                backdropFilter={effectiveBackdropFilter}
+            />
             <ModalContent
                 role="dialog"
                 aria-modal={!allowExternalFocus}
+                bg={modalBg}
+                variant="vechainKitBase"
                 {...modalContentProps}
             >
                 {children}

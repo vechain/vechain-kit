@@ -10,6 +10,7 @@ import {
     Icon,
     Link,
     HStack,
+    useToken,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -38,9 +39,11 @@ export const SuccessfulOperationContent = ({
     showSocialButtons = false,
 }: SuccessfulOperationContentProps) => {
     const { t } = useTranslation();
-    const { network, darkMode } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const socialDescription = `${explorerUrl}/${txId}`;
+    
+    const successColor = useToken('colors', 'vechain-kit-success');
 
     return (
         <Box>
@@ -54,7 +57,7 @@ export const SuccessfulOperationContent = ({
                     <Icon
                         as={LuCircleCheck}
                         fontSize={'100px'}
-                        color={darkMode ? '#00ff45de' : '#10ba3e'}
+                        color={successColor}
                         data-testid="success-icon"
                     />
 

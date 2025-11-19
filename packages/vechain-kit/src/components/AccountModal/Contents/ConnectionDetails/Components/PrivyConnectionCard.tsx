@@ -1,13 +1,16 @@
 import { useFetchAppInfo } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { VStack, Text, Spinner, HStack } from '@chakra-ui/react';
+import { VStack, Text, Spinner, HStack, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { NetworkInfo } from './NetworkInfo';
 
 export const PrivyConnectionCard = () => {
     const { t } = useTranslation();
-    const { privy, darkMode: isDark } = useVeChainKitConfig();
+    const { privy } = useVeChainKitConfig();
     const { data: appInfo, isLoading } = useFetchAppInfo(privy?.appId ?? '');
+    
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const textColor = useToken('colors', 'vechain-kit-text-secondary');
 
     if (isLoading)
         return (
@@ -21,24 +24,18 @@ export const PrivyConnectionCard = () => {
             {appInfo && (
                 <VStack
                     p={4}
-                    bg={isDark ? '#00000038' : '#f5f5f5'}
+                    bg={cardBg}
                     borderRadius={'xl'}
                     spacing={4}
                     w="full"
                     justifyContent="space-between"
                 >
                     <HStack w="full" justifyContent="space-between">
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
+                        <Text fontSize="sm" color={textColor}>
                             {t('Logged in with')}:
                         </Text>
 
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
+                        <Text fontSize="sm" color={textColor}>
                             {Object.values(appInfo)[0].name}
                         </Text>
                     </HStack>

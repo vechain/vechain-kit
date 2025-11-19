@@ -1,108 +1,124 @@
 import { defineStyle, defineStyleConfig } from '@chakra-ui/react';
+import { ThemeTokens } from './tokens';
 
 const baseStyle = defineStyle({
     borderRadius: '12px',
 });
 
-const getVariants = (darkMode: boolean) => ({
+const getVariants = (tokens: ThemeTokens) => ({
     loginIn: defineStyle(() => ({
-        bg: darkMode ? 'transparent' : 'white',
-        color: darkMode ? 'white' : '#1a1a1a',
-        fontSize: '14px',
-        fontWeight: '400',
-        border: darkMode ? '1px solid #ffffff1a' : '1px solid #ebebeb',
+        bg: tokens.colors.tertiary.base,
+        color: tokens.colors.text.primary,
+        fontSize: tokens.fonts.sizes.medium,
+        fontWeight: tokens.fonts.weights.normal,
+        border: `1px solid ${tokens.colors.border.default}`,
         py: 6,
         px: 3,
-        borderRadius: 16,
+        borderRadius: tokens.borders.radius.large,
         _hover: {
-            bg: darkMode ? '#2a2a2a' : '#eaeaea',
+            bg: tokens.colors.tertiary.hover,
         },
     })),
     loginWithVechain: defineStyle(() => ({
-        bg: darkMode ? 'white' : '#1a1a1a',
-        color: darkMode ? '#1a1a1a' : 'white',
-        fontSize: '14px',
-        fontWeight: '400',
+        bg: tokens.colors.primary.base,
+        color: tokens.colors.text.primary,
+        fontSize: tokens.fonts.sizes.medium,
+        fontWeight: tokens.fonts.weights.normal,
         py: 6,
         px: 3,
-        borderRadius: 16,
-        border: darkMode ? '1px solid #ffffff1a' : '1px solid #5e5e5e',
+        borderRadius: tokens.borders.radius.large,
+        border: `1px solid ${tokens.colors.border.default}`,
         _hover: {
-            bg: darkMode ? '#eaeaea' : '#2a2a2a',
+            bg: tokens.colors.primary.hover,
         },
         transition: 'all 0.2s',
     })),
     vechainKitPrimary: defineStyle(() => ({
-        fontSize: 'md',
+        fontSize: tokens.fonts.sizes.medium,
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: 'xl',
-        bg: darkMode ? '#3182CE' : '#2B6CB0',
+        borderRadius: tokens.borders.radius.xl,
+        bg: tokens.colors.primary.base,
         color: 'white',
         _hover: {
-            bg: darkMode ? '#2B6CB0' : '#2C5282',
+            bg: tokens.colors.primary.hover,
             _disabled: {
-                bg: '#2B6CB0',
+                bg: tokens.colors.primary.disabled,
             },
         },
         transition: 'all 0.2s',
     })),
     vechainKitSecondary: defineStyle(() => ({
-        fontSize: 'md',
+        fontSize: tokens.fonts.sizes.medium,
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: 'xl',
-        backgroundColor: darkMode ? '#ffffff0a' : 'blackAlpha.50',
+        borderRadius: tokens.borders.radius.xl,
+        backgroundColor: tokens.colors.secondary.base,
         _hover: {
-            backgroundColor: darkMode ? '#ffffff12' : 'blackAlpha.200',
+            backgroundColor: tokens.colors.secondary.hover,
         },
         border: '1px solid',
-        borderColor: darkMode ? 'whiteAlpha.200' : 'gray.200',
-        color: darkMode ? 'whiteAlpha.900' : 'blackAlpha.900',
+        borderColor: tokens.colors.border.default,
+        color: tokens.colors.text.primary,
+        transition: 'all 0.2s',
+    })),
+    vechainKitTertiary: defineStyle(() => ({
+        fontSize: tokens.fonts.sizes.medium,
+        px: 4,
+        width: 'full',
+        height: '60px',
+        borderRadius: tokens.borders.radius.xl,
+        backgroundColor: tokens.colors.tertiary.base,
+        _hover: {
+            backgroundColor: tokens.colors.tertiary.hover,
+        },
+        border: '1px solid',
+        borderColor: tokens.colors.border.default,
+        color: tokens.colors.text.primary,
         transition: 'all 0.2s',
     })),
     vechainKitLogout: defineStyle(() => ({
         width: 'full',
         minHeight: '50px',
         height: 'fit-content',
-        borderRadius: 'xl',
+        borderRadius: tokens.borders.radius.xl,
         p: 0,
-        backgroundColor: darkMode ? 'rgba(254, 178, 178, 0.12)' : 'red.50',
+        backgroundColor: tokens.colors.error + '1f',
         _hover: {
-            backgroundColor: darkMode ? 'rgba(254, 178, 178, 0.37)' : 'red.200',
-            color: darkMode ? 'red.50' : 'red.900',
+            backgroundColor: tokens.colors.error + '5e',
+            color: tokens.colors.error,
         },
         transition: 'all 0.2s',
-        color: darkMode ? 'red.200' : 'red.900',
+        color: tokens.colors.error,
     })),
     mainContentButton: defineStyle(() => ({
         width: '100%',
-        backgroundColor: darkMode ? '#ffffff0a' : 'blackAlpha.50',
-        borderRadius: 'xl',
+        backgroundColor: tokens.colors.secondary.base,
+        borderRadius: tokens.borders.radius.xl,
         p: 3,
         cursor: 'pointer',
         _hover: {
-            backgroundColor: darkMode ? '#ffffff12' : 'blackAlpha.200',
+            backgroundColor: tokens.colors.secondary.hover,
         },
     })),
     actionButton: defineStyle(() => ({
         width: 'full',
         minHeight: '50px',
         height: 'fit-content',
-        backgroundColor: darkMode ? '#ffffff0a' : 'blackAlpha.50',
-        borderRadius: 'xl',
+        backgroundColor: tokens.colors.secondary.base,
+        borderRadius: tokens.borders.radius.xl,
         p: 0,
         _hover: {
-            backgroundColor: darkMode ? '#ffffff12' : 'blackAlpha.200',
+            backgroundColor: tokens.colors.secondary.hover,
         },
         transition: 'all 0.2s',
     })),
 });
 
-export const getButtonTheme = (darkMode: boolean) =>
+export const getButtonTheme = (tokens: ThemeTokens) =>
     defineStyleConfig({
         baseStyle,
-        variants: getVariants(darkMode),
+        variants: getVariants(tokens),
     });

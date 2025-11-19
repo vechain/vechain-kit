@@ -1,14 +1,15 @@
 import { cardAnatomy } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
+import { ThemeTokens } from './tokens';
 
 const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(cardAnatomy.keys);
 
-const getCardVariants = (darkMode: boolean) => ({
+const getCardVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({
         container: {
-            backgroundColor: darkMode ? '#1c1c1b' : '#f5f5f5',
-            borderRadius: '14px',
+            backgroundColor: tokens.colors.background.card,
+            borderRadius: tokens.borders.radius.medium,
             width: 'full',
             border: 'none',
         },
@@ -19,22 +20,22 @@ const getCardVariants = (darkMode: boolean) => ({
         header: {
             p: 5,
             width: 'full',
-            borderRadius: '14px 14px 0 0',
+            borderRadius: `${tokens.borders.radius.medium} ${tokens.borders.radius.medium} 0 0`,
         },
         footer: {
             width: 'full',
-            borderRadius: '0 0 14px 14px',
+            borderRadius: `0 0 ${tokens.borders.radius.medium} ${tokens.borders.radius.medium}`,
         },
     }),
 
     featureAnnouncement: definePartsStyle({
         body: {
-            backgroundColor: darkMode ? '#ffffff0a' : 'blackAlpha.50',
-            borderRadius: '12px',
-            color: darkMode ? '#ffffff12' : 'blackAlpha.200',
+            backgroundColor: tokens.colors.secondary.base,
+            borderRadius: tokens.borders.radius.medium,
+            color: tokens.colors.text.secondary,
         },
         container: {
-            borderRadius: '12px',
+            borderRadius: tokens.borders.radius.medium,
             backgroundColor: 'transparent',
         },
     }),
@@ -42,21 +43,21 @@ const getCardVariants = (darkMode: boolean) => ({
     vechainKitAppCard: definePartsStyle({
         body: {
             height: 'full',
-            borderRadius: '12px',
-            backgroundColor: darkMode ? '#1f1f1e' : 'white',
-            border: darkMode ? '1px solid #2d2d2d' : '1px solid #eaeaea',
+            borderRadius: tokens.borders.radius.medium,
+            backgroundColor: tokens.colors.background.cardElevated,
+            border: `1px solid ${tokens.colors.border.default}`,
         },
         container: {
             height: '150px',
-            borderRadius: '12px',
+            borderRadius: tokens.borders.radius.medium,
             backgroundColor: 'transparent',
         },
     }),
 });
 
-export const getCardTheme = (darkMode: boolean) =>
+export const getCardTheme = (tokens: ThemeTokens) =>
     defineMultiStyleConfig({
-        variants: getCardVariants(darkMode),
+        variants: getCardVariants(tokens),
         defaultProps: {
             variant: 'vechainKitBase', // default is solid
         },

@@ -67,7 +67,7 @@ export const useModal = () => {
 };
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-    const { darkMode } = useVeChainKitConfig();
+    const { darkMode, theme } = useVeChainKitConfig();
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
     const { setSource, connectV2 } = useDAppKitWallet();
     const openConnectModal = useCallback(() => {
@@ -164,7 +164,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             }}
         >
             {children}
-            <VechainKitThemeProvider darkMode={darkMode}>
+            <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
                 <ConnectModal
                     isOpen={isConnectModalOpen}
                     onClose={closeConnectModal}

@@ -17,10 +17,19 @@ import {
 } from 'react';
 import { getVechainKitTheme } from '@/theme';
 import { safeQuerySelector } from '@/utils/ssrUtils';
+import type { VechainKitThemeConfig } from '../theme/tokens';
+import { VeChainKitContext } from './VeChainKitProvider';
+import { ThemeTokens } from '@/theme/tokens';
+import {
+    getDefaultTokens,
+    convertThemeConfigToTokens,
+    mergeTokens,
+} from '@/theme/tokens';
 
 type Props = {
     children: ReactNode;
     darkMode?: boolean;
+    theme?: VechainKitThemeConfig;
 };
 
 // Create a standalone toast system
@@ -100,8 +109,10 @@ const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
 
 const VechainKitThemeContext = createContext<{
     portalRootRef?: React.RefObject<HTMLDivElement | null>;
+    tokens?: ThemeTokens;
 }>({
     portalRootRef: undefined,
+    tokens: undefined,
 });
 
 export const useVechainKitThemeConfig = () => {
@@ -129,21 +140,38 @@ export const ColorModeSync = ({ darkMode = false }: { darkMode: boolean }) => {
 export const VechainKitThemeProvider = ({
     children,
     darkMode = false,
+    theme: customTheme,
 }: Props) => {
     const portalRootRef = useRef<HTMLDivElement | null>(null);
+
+    // Get theme from context if not provided as prop
+    const context = useContext(VeChainKitContext);
+    const contextTheme = context ? (context as any).theme : undefined;
+    const effectiveTheme = customTheme ?? contextTheme;
+
+    // Generate tokens for component access
+    const tokens = useMemo(() => {
+        const defaultTokens = getDefaultTokens(darkMode);
+        const customTokens = convertThemeConfigToTokens(
+            effectiveTheme,
+            darkMode,
+        );
+        return mergeTokens(defaultTokens, customTokens);
+    }, [darkMode, effectiveTheme]);
+
     const theme = useMemo(
         () => ({
-            ...getVechainKitTheme(darkMode),
+            ...getVechainKitTheme(darkMode, effectiveTheme),
             config: {
-                ...getVechainKitTheme(darkMode).config,
+                ...getVechainKitTheme(darkMode, effectiveTheme).config,
                 initialColorMode: darkMode ? 'dark' : 'light',
             },
         }),
-        [darkMode],
+        [darkMode, effectiveTheme],
     );
 
     return (
-        <VechainKitThemeContext.Provider value={{ portalRootRef }}>
+        <VechainKitThemeContext.Provider value={{ portalRootRef, tokens }}>
             <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider theme={theme}>
                 <ColorModeSync darkMode={darkMode} />
