@@ -95,6 +95,7 @@ export const BalanceSection = ({
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={2}
+                transition="all 0.2s"
             >
                 <Heading size={'2xl'} fontWeight={'700'}>
                     {formattedBalance}

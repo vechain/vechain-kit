@@ -38,7 +38,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         py: 6,
         px: 3,
         borderRadius: tokens.borders.radius.large,
-        border: `1px solid ${tokens.colors.border.default}`,
+        border: `1px solid ${tokens.colors.border.button}`,
         _hover: {
             opacity: 0.5,
         },
@@ -52,6 +52,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         borderRadius: tokens.borders.radius.large,
         bg: tokens.colors.primary.base,
         color: 'white',
+        border: 'none',
         _hover: {
             bg: tokens.colors.primary.hover,
             _disabled: {
@@ -70,8 +71,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
         },
-        border: '1px solid',
-        borderColor: tokens.colors.border.default,
+        border: 'none',
         color: tokens.colors.text.primary,
         transition: 'all 0.2s',
     })),
@@ -85,8 +85,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         _hover: {
             backgroundColor: tokens.colors.tertiary.hover,
         },
-        border: '1px solid',
-        borderColor: tokens.colors.border.default,
+        border: 'none',
         color: tokens.colors.text.primary,
         transition: 'all 0.2s',
     })),
@@ -104,22 +103,6 @@ const getVariants = (tokens: ThemeTokens) => ({
         transition: 'all 0.2s',
         color: tokens.colors.error,
     })),
-    // These variants use secondary colors but with different sizing
-    // Consider migrating to vechainKitSecondary for consistency
-    mainContentButton: defineStyle(() => ({
-        width: '100%',
-        backgroundColor: tokens.colors.secondary.base,
-        borderRadius: tokens.borders.radius.xl,
-        p: 3,
-        cursor: 'pointer',
-        color: tokens.colors.text.primary,
-        border: '1px solid',
-        borderColor: tokens.colors.border.default,
-        _hover: {
-            backgroundColor: tokens.colors.secondary.hover,
-        },
-        transition: 'all 0.2s',
-    })),
     actionButton: defineStyle(() => ({
         width: 'full',
         minHeight: '50px',
@@ -128,8 +111,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         borderRadius: tokens.borders.radius.xl,
         p: 0,
         color: tokens.colors.text.primary,
-        border: '1px solid',
-        borderColor: tokens.colors.border.default,
+        border: `1px solid ${tokens.colors.border.button}`,
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
         },

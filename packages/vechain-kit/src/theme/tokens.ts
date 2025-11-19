@@ -41,6 +41,7 @@ export interface ThemeTokens {
             default: string;
             hover: string;
             focus: string;
+            button: string;
         };
         success: string;
         error: string;
@@ -126,6 +127,7 @@ export interface VechainKitThemeConfig {
             default?: string;
             hover?: string;
             focus?: string;
+            button?: string;
         };
         success?: string;
         error?: string;
@@ -202,9 +204,10 @@ const defaultLightTokens: ThemeTokens = {
             disabled: '#A0AEC0',
         },
         border: {
-            default: '#ebebeb',
+            default: 'transparent',
             hover: '#d0d0d0',
             focus: '#2B6CB0',
+            button: '#ebebeb',
         },
         success: '#10ba3e',
         error: '#ef4444',
@@ -284,6 +287,7 @@ const defaultDarkTokens: ThemeTokens = {
             default: 'rgba(255, 255, 255, 0.1)',
             hover: 'rgba(255, 255, 255, 0.2)',
             focus: '#3182CE',
+            button: 'rgba(255, 255, 255, 0.1)',
         },
         success: '#00ff45de',
         error: '#ef4444',
@@ -388,6 +392,11 @@ export function mergeTokens(
                 ...defaultTokens.colors.border,
                 ...customTokens.colors.border,
             };
+            // Ensure button border defaults to default if not provided
+            if (!customTokens.colors.border.button) {
+                merged.colors.border.button =
+                    defaultTokens.colors.border.button;
+            }
         }
     }
 
@@ -557,6 +566,7 @@ export function convertThemeConfigToTokens(
                 default: config.colors.border.default || '',
                 hover: config.colors.border.hover || '',
                 focus: config.colors.border.focus || '',
+                button: config.colors.border.button || '',
             };
         }
 
