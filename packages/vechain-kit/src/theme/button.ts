@@ -49,7 +49,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.lg,
+        borderRadius: tokens.borders.radius.large,
         bg: tokens.colors.primary.base,
         color: 'white',
         _hover: {
@@ -65,7 +65,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.lg,
+        borderRadius: tokens.borders.radius.large,
         backgroundColor: tokens.colors.secondary.base,
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
@@ -80,7 +80,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.lg,
+        borderRadius: tokens.borders.radius.large,
         backgroundColor: tokens.colors.tertiary.base,
         _hover: {
             backgroundColor: tokens.colors.tertiary.hover,

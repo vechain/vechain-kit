@@ -103,7 +103,13 @@ export interface VechainKitThemeConfig {
                   hover?: string;
                   active?: string;
               };
-        tertiary?: string;
+        tertiary?:
+            | string
+            | {
+                  base: string;
+                  hover?: string;
+                  active?: string;
+              };
         background?: {
             modal?: string;
             overlay?: string;
