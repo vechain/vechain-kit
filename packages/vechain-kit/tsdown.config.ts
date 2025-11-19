@@ -18,18 +18,21 @@ export default defineConfig({
     // Code Optimization
     minify: true,
     treeshake: true,
-    splitting: true,
 
     // Source Maps & Debug
     sourcemap: true,
 
     // External Dependencies
+    // Externalize all peer dependencies to avoid duplication
     external: [
         'react',
         'react-dom',
         '@chakra-ui/react',
         '@emotion/react',
         '@emotion/styled',
+        'framer-motion',
+        '@tanstack/react-query',
+        '@vechain/dapp-kit-react',
     ],
     skipNodeModulesBundle: true,
 
@@ -42,7 +45,7 @@ export default defineConfig({
     },
 
     // Build Analysis
-    metafile: true,
+    report: true,
 
     // Performance
     shims: false,
