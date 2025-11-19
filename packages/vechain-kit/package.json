@@ -47,8 +47,8 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "tsc --noEmit && cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup",
-        "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsup --watch",
+        "build": "tsc --noEmit && cross-env NODE_OPTIONS='--max-old-space-size=8192' tsdown",
+        "watch": "cross-env NODE_OPTIONS='--max-old-space-size=8192' tsdown --watch",
         "clean": "rm -rf dist .turbo",
         "lint": "eslint",
         "purge": "yarn clean && rm -rf node_modules",
@@ -96,16 +96,27 @@
         "eslint": "^9.12.0",
         "eslint-plugin-i18next": "^6.1.1",
         "translo-cli": "^1.0.6",
-        "tsup": "*",
+        "tsdown": "^0.16.5",
         "typescript": "*"
     },
     "peerDependencies": {
         "@chakra-ui/react": "^2.8.2",
+        "@emotion/react": "^11.0.0",
+        "@emotion/styled": "^11.0.0",
         "@tanstack/react-query": "^5.64.2",
-        "@vechain/dapp-kit-react": "2.1.0-rc.2"
+        "@vechain/dapp-kit-react": "2.1.0-rc.2",
+        "framer-motion": "^11.0.0",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0"
     },
     "peerDependenciesMeta": {
         "@chakra-ui/react": {
+            "optional": true
+        },
+        "@emotion/react": {
+            "optional": true
+        },
+        "@emotion/styled": {
             "optional": true
         },
         "@tanstack/react-query": {
@@ -113,21 +124,41 @@
         },
         "@vechain/dapp-kit-react": {
             "optional": true
+        },
+        "framer-motion": {
+            "optional": true
         }
     },
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
         },
         "./utils": {
-            "types": "./dist/utils/index.d.ts",
-            "default": "./dist/utils/index.js"
+            "import": {
+                "types": "./dist/utils/index.d.mts",
+                "default": "./dist/utils/index.mjs"
+            },
+            "require": {
+                "types": "./dist/utils/index.d.cts",
+                "default": "./dist/utils/index.cjs"
+            }
         },
         "./assets": {
-            "types": "./dist/assets/index.d.ts",
-            "default": "./dist/assets/index.js"
-        },
-        "./locales/*": "./dist/locales/*"
+            "import": {
+                "types": "./dist/assets/index.d.mts",
+                "default": "./dist/assets/index.mjs"
+            },
+            "require": {
+                "types": "./dist/assets/index.d.cts",
+                "default": "./dist/assets/index.cjs"
+            }
+        }
     }
 }
