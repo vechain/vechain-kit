@@ -97,7 +97,7 @@ jobs:
                   AWS_MAX_ATTEMPTS=10 aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_PREVIEW_CLOUDFRONT_DISTRIBUTION_ID }} --paths '/' '/*'
 
             - name: Create Deployment Comment
-              if: github.event.action == 'opened' || github.event.action == 'reopened'
+              if: github.event.action == 'opened' || github.event.action == 'reopened' || github.event.pull_request.draft == true
               uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
               with:
                   issue-number: ${{ github.event.pull_request.number }}
