@@ -117,6 +117,18 @@ const getVariants = (tokens: ThemeTokens) => ({
         },
         transition: 'all 0.2s',
     })),
+    ghost: defineStyle(() => ({
+        bg: 'transparent',
+        color: tokens.colors.text.primary,
+        border: 'none',
+        _hover: {
+            bg: tokens.colors.secondary.base,
+        },
+        _active: {
+            bg: tokens.colors.secondary.active,
+        },
+        transition: 'all 0.2s',
+    })),
 });
 
 export const getButtonTheme = (tokens: ThemeTokens) =>

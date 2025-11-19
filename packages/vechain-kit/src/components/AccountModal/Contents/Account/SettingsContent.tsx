@@ -214,7 +214,6 @@ export const SettingsContent = ({
                             rightIcon={LuChevronRight}
                         />
                         <ActionButton
-                            variant="vechainKitLogout"
                             style={{
                                 borderTopRadius: '0px',
                             }}

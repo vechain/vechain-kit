@@ -40,7 +40,6 @@ export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
             onClick={() => handleLanguageChange(lang)}
             py={6}
             px={4}
-            _hover={{ bg: 'whiteAlpha.100' }}
         >
             <Text>{languageNames[lang as keyof typeof languageNames]}</Text>
             {i18n.language === lang && (
