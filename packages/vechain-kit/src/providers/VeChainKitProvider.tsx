@@ -362,14 +362,17 @@ export const VeChainKitProvider = (
     );
 
     const privyCSSVariables = useMemo(
-        () => generatePrivyCSSVariables(tokens),
-        [tokens],
+        () => generatePrivyCSSVariables(tokens, darkMode),
+        [tokens, darkMode],
     );
 
-    // Apply Privy CSS variables to document
+    // Apply Privy CSS variables to document and inject backdrop filter
     useEffect(() => {
-        applyPrivyCSSVariables(privyCSSVariables);
-    }, [privyCSSVariables]);
+        applyPrivyCSSVariables(
+            privyCSSVariables,
+            tokens.effects.backdropFilter.modal,
+        );
+    }, [privyCSSVariables, tokens.effects.backdropFilter.modal]);
 
     return (
         <EnsureQueryClient>
