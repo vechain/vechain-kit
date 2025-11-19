@@ -6,6 +6,7 @@ import {
     IconButton,
     Box,
     Button,
+    useToken,
 } from '@chakra-ui/react';
 import { useRefreshBalances, useWallet, useTotalBalance } from '@/hooks';
 import { useState } from 'react';
@@ -31,6 +32,7 @@ export const BalanceSection = ({
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleRefresh = async () => {
         setIsRefreshing(true);
@@ -49,7 +51,7 @@ export const BalanceSection = ({
                 spacing={2}
                 role="group"
             >
-                <Heading size={'xs'} fontWeight={'500'} opacity={0.5}>
+                <Heading size={'xs'} fontWeight={'500'} color={textSecondary}>
                     {t('Assets')}
                 </Heading>
 

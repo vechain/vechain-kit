@@ -220,7 +220,7 @@ export const ManageCustomTokenContent = ({
 
             <ModalFooter>
                 <Button
-                    variant="vechainKitPrimary"
+                    variant="vechainKitSecondary"
                     isDisabled={!isValid}
                     onClick={handleSubmit(onSubmit)}
                 >

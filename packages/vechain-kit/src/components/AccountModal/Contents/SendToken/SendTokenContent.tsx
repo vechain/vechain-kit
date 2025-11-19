@@ -67,7 +67,7 @@ export const SendTokenContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
-    
+
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const { exchangeRates } = useTokenPrices();
     const { account } = useWallet();
@@ -591,7 +591,7 @@ export const SendTokenContent = ({
 
             <ModalFooter>
                 <Button
-                    variant="vechainKitPrimary"
+                    variant="vechainKitSecondary"
                     isDisabled={!selectedToken || !isValid}
                     isLoading={isLoading}
                     onClick={handleSubmit(onSubmit)}

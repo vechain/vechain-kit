@@ -16,7 +16,12 @@ import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { LuExternalLink, LuCircleCheck, LuCircleAlert, LuRefreshCw } from 'react-icons/lu';
+import {
+    LuExternalLink,
+    LuCircleCheck,
+    LuCircleAlert,
+    LuRefreshCw,
+} from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
 import { StickyHeaderContainer } from '../common';
 import { TransactionModalProps } from './TransactionModal';
@@ -60,7 +65,12 @@ export const TransactionModalContent = ({
                         (isSendingTransaction
                             ? t('Sending Transaction...')
                             : t('Waiting for confirmation')),
-                    icon: uiConfig?.loadingIcon ?? <Spinner size="xl" data-testid="pending-spinner-modal" />,
+                    icon: uiConfig?.loadingIcon ?? (
+                        <Spinner
+                            size="xl"
+                            data-testid="pending-spinner-modal"
+                        />
+                    ),
                     description: isSendingTransaction
                         ? t(
                               'Transaction is being processed, it can take up to 15 seconds.',
@@ -167,7 +177,7 @@ export const TransactionModalContent = ({
                 <VStack width="full" spacing={4}>
                     {status === 'error' && !!onTryAgain && (
                         <Button
-                            variant="vechainKitPrimary"
+                            variant="vechainKitSecondary"
                             onClick={onTryAgain}
                             width="full"
                         >
@@ -179,7 +189,7 @@ export const TransactionModalContent = ({
                     {status === 'ready' && (
                         <Button
                             onClick={onTryAgain}
-                            variant="vechainKitPrimary"
+                            variant="vechainKitSecondary"
                             width="full"
                         >
                             {t('Confirm')}

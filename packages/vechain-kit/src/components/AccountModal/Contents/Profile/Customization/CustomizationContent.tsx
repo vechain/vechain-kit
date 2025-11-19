@@ -26,7 +26,14 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
-import { LuChevronRight, LuCamera, LuCreditCard, LuMail, LuGlobe, LuTwitter } from 'react-icons/lu';
+import {
+    LuChevronRight,
+    LuCamera,
+    LuCreditCard,
+    LuMail,
+    LuGlobe,
+    LuTwitter,
+} from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
@@ -60,7 +67,7 @@ export const CustomizationContent = ({
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { account } = useWallet();
-    
+
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const errorColor = useToken('colors', 'vechain-kit-error');
 
@@ -220,7 +227,9 @@ export const CustomizationContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader data-testid='modal-title'>{t('Customization')}</ModalHeader>
+                <ModalHeader data-testid="modal-title">
+                    {t('Customization')}
+                </ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -391,7 +400,11 @@ export const CustomizationContent = ({
                                     data-testid="display-name-input"
                                 />
                                 {errors.displayName && (
-                                    <Text color={errorColor} fontSize="sm" mt={1}>
+                                    <Text
+                                        color={errorColor}
+                                        fontSize="sm"
+                                        mt={1}
+                                    >
                                         {errors.displayName.message}
                                     </Text>
                                 )}
@@ -415,7 +428,11 @@ export const CustomizationContent = ({
                                     data-testid="description-input"
                                 />
                                 {errors.description && (
-                                    <Text color={errorColor} fontSize="sm" mt={1}>
+                                    <Text
+                                        color={errorColor}
+                                        fontSize="sm"
+                                        mt={1}
+                                    >
                                         {errors.description.message}
                                     </Text>
                                 )}
@@ -444,7 +461,7 @@ export const CustomizationContent = ({
                                                 placeholder={t(
                                                     'Twitter username',
                                                 )}
-                                                data-testid='twitter-input'
+                                                data-testid="twitter-input"
                                             />
                                         </InputGroup>
                                         {errors.twitter && (
@@ -477,7 +494,7 @@ export const CustomizationContent = ({
                                                 })}
                                                 placeholder={t('Website URL')}
                                                 type="url"
-                                                data-testid='website-input'
+                                                data-testid="website-input"
                                             />
                                         </InputGroup>
                                         {errors.website && (
@@ -510,7 +527,7 @@ export const CustomizationContent = ({
                                                 })}
                                                 placeholder={t('Email address')}
                                                 type="email"
-                                                data-testid='email-input'
+                                                data-testid="email-input"
                                             />
                                         </InputGroup>
                                         {errors.email && (
@@ -551,12 +568,12 @@ export const CustomizationContent = ({
             <StickyFooterContainer>
                 <ModalFooter w="full" p={0}>
                     <Button
-                        variant="vechainKitPrimary"
+                        variant="vechainKitSecondary"
                         onClick={handleSaveChanges}
                         isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}
                         loadingText={t('Preparing changes...')}
-                        data-testid='save-changes-button'
+                        data-testid="save-changes-button"
                     >
                         {t('Save Changes')}
                     </Button>

@@ -1,4 +1,12 @@
-import { Box, Text, HStack, VStack, Image, Skeleton } from '@chakra-ui/react';
+import {
+    Box,
+    Text,
+    HStack,
+    VStack,
+    Image,
+    Skeleton,
+    useToken,
+} from '@chakra-ui/react';
 import { humanAddress } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { useTotalBalance, useTokensWithValues } from '@/hooks';
@@ -28,6 +36,8 @@ export const AddressDisplayCard = ({
 }: AddressDisplayCardProps) => {
     const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
+
+    const textColor = useToken('colors', 'vechain-kit-text-primary');
 
     const { isLoading: totalBalanceLoading } = useTotalBalance({ address });
     const { tokens, isLoading: tokensLoading } = useTokensWithValues({
@@ -63,7 +73,7 @@ export const AddressDisplayCard = ({
                 borderRadius="lg"
                 bg={isDark ? '#00000038' : 'gray.50'}
             >
-                <Text fontSize="sm" fontWeight="bold" mb={2}>
+                <Text fontSize="sm" fontWeight="bold" mb={2} color={textColor}>
                     {label}
                 </Text>
                 <HStack minH={'50px'} justify="space-between">
@@ -92,7 +102,11 @@ export const AddressDisplayCard = ({
                         spacing={0}
                         mr={2}
                     >
-                        <Text fontSize="sm" fontWeight="medium">
+                        <Text
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={textColor}
+                        >
                             {t('Balance')}
                         </Text>
                         <Skeleton
@@ -111,10 +125,10 @@ export const AddressDisplayCard = ({
             w="full"
             p={2}
             borderRadius="lg"
-            bg={isDark ? '#00000038' : 'gray.50'}
+            bg={isDark ? 'vechain-kit-overlay' : 'vechain-kit-card'}
             wordBreak="break-word"
         >
-            <Text fontSize="sm" fontWeight="bold" mb={2}>
+            <Text fontSize="sm" fontWeight="bold" mb={2} color={textColor}>
                 {label}
             </Text>
             <HStack minH={'50px'} justify="space-between">
@@ -132,6 +146,7 @@ export const AddressDisplayCard = ({
                                 <Text
                                     fontWeight="medium"
                                     fontSize="sm"
+                                    color={textColor}
                                     data-testid={`${label.toLowerCase()}-domain`}
                                 >
                                     {domain}
@@ -140,6 +155,7 @@ export const AddressDisplayCard = ({
                                     <Text
                                         fontSize="xs"
                                         opacity={0.5}
+                                        color={textColor}
                                         data-testid={`${label.toLowerCase()}-address`}
                                     >
                                         {humanAddress(address, 6, 4)}
@@ -150,6 +166,7 @@ export const AddressDisplayCard = ({
                             <Text
                                 fontWeight="medium"
                                 fontSize="sm"
+                                color={textColor}
                                 data-testid={`${label.toLowerCase()}-address`}
                             >
                                 {humanAddress(address, 6, 4)}
@@ -164,10 +181,10 @@ export const AddressDisplayCard = ({
                     spacing={0}
                     mr={2}
                 >
-                    <Text fontSize="sm" fontWeight="medium">
+                    <Text fontSize="sm" fontWeight="medium" color={textColor}>
                         {t('Balance')}
                     </Text>
-                    <Text fontSize="xs" opacity={0.5}>
+                    <Text fontSize="xs" opacity={0.5} color={textColor}>
                         {displayBalance.toLocaleString(undefined, {
                             maximumFractionDigits: 2,
                         })}

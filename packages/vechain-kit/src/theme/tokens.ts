@@ -91,6 +91,7 @@ export interface ThemeTokens {
 export interface VechainKitThemeConfig {
     backgroundColor?: string;
     textColor?: string;
+    overlayColor?: string; // Optional: customize overlay separately from modal background
     effects?: {
         glass?: {
             enabled?: boolean;
@@ -98,6 +99,7 @@ export interface VechainKitThemeConfig {
         };
         backdropFilter?: {
             modal?: string; // Optional custom blur for modal
+            overlay?: string; // Optional custom blur for overlay
         };
     };
 }
@@ -118,10 +120,10 @@ function hexToRgba(hex: string, opacity: number): string {
 }
 
 /**
- * Parse color string (hex or rgba) and return rgba with new opacity
+ * Parse color string (hex, rgba, rgb, or named color) and return rgba with new opacity
  */
 function applyOpacity(color: string, opacity: number): string {
-    // If already rgba, extract RGB values and apply new opacity
+    // If already rgba/rgb, extract RGB values and apply new opacity
     const rgbaMatch = color.match(
         /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/,
     );
@@ -134,7 +136,35 @@ function applyOpacity(color: string, opacity: number): string {
         return hexToRgba(color, opacity);
     }
 
-    // Fallback: return as-is
+    // Try to parse named colors or other formats by creating a temporary element
+    // This handles CSS named colors like 'red', 'blue', etc.
+    // Only works in browser environment (not SSR)
+    if (
+        typeof window !== 'undefined' &&
+        typeof document !== 'undefined' &&
+        document.body
+    ) {
+        try {
+            const tempEl = document.createElement('div');
+            tempEl.style.color = color;
+            document.body.appendChild(tempEl);
+            const computedColor = window.getComputedStyle(tempEl).color;
+            document.body.removeChild(tempEl);
+
+            // If we got a valid rgb/rgba color, extract and apply opacity
+            const computedMatch = computedColor.match(
+                /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/,
+            );
+            if (computedMatch) {
+                return `rgba(${computedMatch[1]}, ${computedMatch[2]}, ${computedMatch[3]}, ${opacity})`;
+            }
+        } catch {
+            // Fall through to fallback
+        }
+    }
+
+    // Fallback: return as-is (for SSR or unsupported formats)
+    // In practice, users should use hex or rgba colors
     return color;
 }
 
@@ -144,12 +174,18 @@ function applyOpacity(color: string, opacity: number): string {
 function deriveBackgroundColors(
     baseColor: string,
     darkMode: boolean,
+    defaultOverlayColor: string,
+    overlayColor?: string,
 ): ThemeTokens['colors']['background'] {
+    // Use custom overlayColor if provided, otherwise use default overlay color
+    // Never derive overlay from backgroundColor - always use default unless explicitly set
+    const overlay = overlayColor || defaultOverlayColor;
+
     return {
         modal: baseColor, // 100% opacity
         card: applyOpacity(baseColor, 0.8),
         cardElevated: baseColor, // Same as modal for elevated
-        overlay: darkMode ? applyOpacity(baseColor, 0.4) : 'rgba(0, 0, 0, 0.4)', // Overlay uses black in light mode
+        overlay: overlay,
         stickyHeader: applyOpacity(baseColor, 0.9),
     };
 }
@@ -228,9 +264,16 @@ function getGlassEffectSettings(
     overlayOpacity: number;
     stickyHeaderOpacity: number;
 } {
+    // Default blur values (used when glass is disabled or as fallback)
+    const defaultBlur = {
+        modal: 'blur(3px)',
+        overlay: 'blur(3px)',
+        stickyHeader: 'blur(12px)',
+    };
+
     if (!enabled) {
         return {
-            blur: 'none',
+            blur: defaultBlur.modal, // Use default blur even when glass is disabled
             modalOpacity: 1,
             overlayOpacity: 0.4,
             stickyHeaderOpacity: 0.9,
@@ -280,9 +323,9 @@ const defaultLightTokens: ThemeTokens = {
             disabled: '#A0AEC0',
         },
         secondary: {
-            base: 'rgba(0, 0, 0, 0.05)',
-            hover: 'rgba(0, 0, 0, 0.1)',
-            active: 'rgba(0, 0, 0, 0.15)',
+            base: 'rgba(0, 0, 0, 0.1)',
+            hover: 'rgba(0, 0, 0, 0.15)',
+            active: 'rgba(0, 0, 0, 0.20)',
         },
         tertiary: {
             base: 'transparent',
@@ -370,10 +413,10 @@ const defaultDarkTokens: ThemeTokens = {
             active: 'rgba(255, 255, 255, 0.1)',
         },
         text: {
-            primary: '#dfdfdd',
-            secondary: '#b0b0b0',
-            tertiary: '#718096',
-            disabled: '#4A5568',
+            primary: 'rgb(223, 223, 221)',
+            secondary: 'rgba(223, 223, 221, 0.6)',
+            tertiary: 'rgba(223, 223, 221, 0.4)',
+            disabled: 'rgba(223, 223, 221, 0.2)',
         },
         border: {
             default: 'rgba(255, 255, 255, 0.1)',
@@ -567,7 +610,7 @@ export function convertThemeConfigToTokens(
     const defaultTokens = getDefaultTokens(darkMode);
 
     // Derive colors from backgroundColor and textColor
-    if (config.backgroundColor || config.textColor) {
+    if (config.backgroundColor || config.textColor || config.overlayColor) {
         tokens.colors = {} as ThemeTokens['colors'];
 
         // Derive background colors from backgroundColor
@@ -575,7 +618,19 @@ export function convertThemeConfigToTokens(
             tokens.colors.background = deriveBackgroundColors(
                 config.backgroundColor,
                 darkMode,
+                defaultTokens.colors.background.overlay, // Pass default overlay color
+                config.overlayColor, // Use custom overlayColor if provided
             );
+        } else if (config.overlayColor) {
+            // If only overlayColor is provided, use defaults for other backgrounds
+            const defaultBg = defaultTokens.colors.background;
+            tokens.colors.background = {
+                ...defaultBg,
+                overlay: config.overlayColor,
+            };
+        } else {
+            // Use defaults if no backgroundColor or overlayColor provided
+            tokens.colors.background = defaultTokens.colors.background;
         }
 
         // Derive secondary and tertiary colors from backgroundColor
@@ -628,13 +683,26 @@ export function convertThemeConfigToTokens(
         );
 
         // Apply glass effect to backdrop filters
+        // When glass is disabled, use default blur values instead of 'none'
+        // Overlay blur can be customized independently
         tokens.effects.backdropFilter = {
-            modal: config.effects.backdropFilter?.modal || glassSettings.blur,
-            overlay: glassSettings.blur,
-            stickyHeader: glassSettings.blur,
+            modal:
+                config.effects.backdropFilter?.modal ||
+                (glassEnabled
+                    ? glassSettings.blur
+                    : defaultTokens.effects.backdropFilter.modal),
+            overlay:
+                config.effects.backdropFilter?.overlay ||
+                (glassEnabled
+                    ? glassSettings.blur
+                    : defaultTokens.effects.backdropFilter.overlay),
+            stickyHeader: glassEnabled
+                ? glassSettings.blur
+                : defaultTokens.effects.backdropFilter.stickyHeader,
         };
 
         // Apply glass opacity to backgrounds if enabled
+        // Note: overlay color is NOT affected by glass opacity - it uses overlayColor directly
         if (glassEnabled && config.backgroundColor) {
             tokens.effects.glassOpacity = {
                 modal: glassSettings.modalOpacity,
@@ -643,6 +711,7 @@ export function convertThemeConfigToTokens(
             };
 
             // Update background colors with glass opacity
+            // IMPORTANT: Do NOT modify overlay - it should use overlayColor as-is
             if (tokens.colors?.background) {
                 tokens.colors.background.modal = applyOpacity(
                     config.backgroundColor,
@@ -652,10 +721,28 @@ export function convertThemeConfigToTokens(
                     config.backgroundColor,
                     glassSettings.stickyHeaderOpacity,
                 );
+                // Overlay color is already set correctly from overlayColor or default
+                // Don't modify it here
             }
         } else {
             tokens.effects.glassOpacity = defaultTokens.effects.glassOpacity;
         }
+
+        // Ensure overlayColor is always respected, even after glass effects
+        if (config.overlayColor && tokens.colors?.background) {
+            tokens.colors.background.overlay = config.overlayColor;
+        }
+    } else {
+        // If no effects config provided, use default backdrop filters
+        tokens.effects = {
+            backdropFilter: defaultTokens.effects.backdropFilter,
+            glassOpacity: defaultTokens.effects.glassOpacity,
+        };
+    }
+
+    // Ensure overlayColor is always respected, even if no effects config
+    if (config.overlayColor && tokens.colors?.background) {
+        tokens.colors.background.overlay = config.overlayColor;
     }
 
     return tokens;

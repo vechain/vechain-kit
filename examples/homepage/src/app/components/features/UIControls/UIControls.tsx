@@ -1,27 +1,12 @@
 'use client';
 
-import {
-    VStack,
-    Text,
-    Button,
-    Box,
-    HStack,
-    Grid,
-    useColorMode,
-} from '@chakra-ui/react';
-import {
-    WalletButton,
-    useAccountModal,
-    ProfileCard,
-    useWallet,
-} from '@vechain/vechain-kit';
+import { VStack, Text, Button, Box, HStack, Grid } from '@chakra-ui/react';
+import { WalletButton, useAccountModal } from '@vechain/vechain-kit';
 import { LuPalette } from 'react-icons/lu';
 import { CollapsibleCard } from '../../ui/CollapsibleCard';
 
 export function UIControls() {
     const { open } = useAccountModal();
-    const { account } = useWallet();
-    const { colorMode } = useColorMode();
 
     return (
         <CollapsibleCard
@@ -211,49 +196,6 @@ export function UIControls() {
                         </VStack>
                     </HStack>
                 </HStack>
-                <VStack
-                    w={'full'}
-                    justifyContent={'center'}
-                    spacing={6}
-                    p={6}
-                    borderRadius="md"
-                    bg="whiteAlpha.50"
-                >
-                    <Text fontWeight="bold">Profile Cards</Text>
-                    <Text fontSize="sm" textAlign="center" color="gray.400">
-                        Import the profile card component and use it in your
-                        app. You can pass in an address and it will display all
-                        the information set by the user. You can decide to hide
-                        specific sections. (Customize your profile to see how
-                        this card changes)
-                    </Text>
-                    <Grid
-                        templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
-                        gap={4}
-                        w="full"
-                    >
-                        <ProfileCard
-                            address={account?.address ?? ''}
-                            showEdit={false}
-                            style={{
-                                card: {
-                                    backgroundColor:
-                                        colorMode === 'dark'
-                                            ? '#1c1c1b'
-                                            : '#f5f5f5',
-                                },
-                            }}
-                        />
-
-                        <ProfileCard
-                            address={
-                                '0x73D1d7e67B9696Be68F53fb80C7e6e50b314a62f'
-                            }
-                            showEdit={false}
-                            showHeader={false}
-                        />
-                    </Grid>
-                </VStack>
             </VStack>
         </CollapsibleCard>
     );
