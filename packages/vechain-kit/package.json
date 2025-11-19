@@ -115,16 +115,23 @@
     },
     "exports": {
         ".": {
-            "types": "./dist/index.d.ts",
-            "default": "./dist/index.js"
+            "types": "./dist/index.d.mts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs",
+            "default": "./dist/index.mjs"
         },
         "./utils": {
-            "types": "./dist/utils/index.d.ts",
-            "default": "./dist/utils/index.js"
+            "types": "./dist/utils/index.d.mts",
+            "import": "./dist/utils/index.mjs",
+            "require": "./dist/utils/index.cjs",
+            "default": "./dist/utils/index.mjs"
         },
         "./assets": {
-            "types": "./dist/assets/index.d.ts",
-            "default": "./dist/assets/index.js"
-        }
+            "types": "./dist/assets/index.d.mts",
+            "import": "./dist/assets/index.mjs",
+            "require": "./dist/assets/index.cjs",
+            "default": "./dist/assets/index.mjs"
+        },
+        "./package.json": "./package.json"
     }
 }
