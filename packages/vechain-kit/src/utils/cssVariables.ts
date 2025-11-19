@@ -10,7 +10,10 @@ import { CustomizedStyle } from '@vechain/dapp-kit-ui';
  * Slightly increase opacity for Privy modals to improve readability
  * while maintaining the glass effect appearance
  */
-function improvePrivyReadability(color: string, darkMode: boolean): string {
+export function improvePrivyReadability(
+    color: string,
+    darkMode: boolean,
+): string {
     // If it's already a solid color (hex or rgb without alpha), return as-is
     if (!color.includes('rgba') && !color.includes('hsla')) {
         return color;
@@ -81,6 +84,8 @@ export function generateDAppKitCSSVariables(
  * Note: Privy modals don't support backdrop filters natively, so we:
  * 1. Slightly increase opacity for readability while maintaining glass effect
  * 2. Inject CSS to apply backdrop filters to Privy modals
+ * 3. Map primary hover/active colors to Privy button states (background-2/background-3)
+ * 4. Inject CSS to apply card colors to Privy card elements directly
  */
 export function generatePrivyCSSVariables(
     tokens: ThemeTokens,
@@ -91,12 +96,15 @@ export function generatePrivyCSSVariables(
         tokens.colors.background.modal,
         darkMode,
     );
-    const privyCardBg = improvePrivyReadability(
-        tokens.colors.background.card,
+
+    // Map primary colors to Privy button states
+    // Privy uses background-2 and background-3 for button hover/active states
+    const privyButtonHoverBg = improvePrivyReadability(
+        tokens.colors.primary.hover,
         darkMode,
     );
-    const privyCardElevatedBg = improvePrivyReadability(
-        tokens.colors.background.cardElevated,
+    const privyButtonActiveBg = improvePrivyReadability(
+        tokens.colors.primary.active,
         darkMode,
     );
 
@@ -106,8 +114,9 @@ export function generatePrivyCSSVariables(
         '--privy-border-radius-lg': tokens.borders.radius.large,
         '--privy-border-radius-full': tokens.borders.radius.full,
         '--privy-color-background': privyModalBg,
-        '--privy-color-background-2': privyCardBg,
-        '--privy-color-background-3': privyCardElevatedBg,
+        // Map primary hover/active to Privy button states
+        '--privy-color-background-2': privyButtonHoverBg,
+        '--privy-color-background-3': privyButtonActiveBg,
         '--privy-color-foreground': tokens.colors.text.primary,
         '--privy-color-foreground-2': tokens.colors.text.secondary,
         '--privy-color-foreground-3': tokens.colors.text.tertiary,
@@ -127,11 +136,16 @@ export function generatePrivyCSSVariables(
 }
 
 /**
- * Apply Privy CSS variables to document body and inject backdrop filter styles
+ * Apply Privy CSS variables to document body and inject backdrop filter + card styles
  */
 export function applyPrivyCSSVariables(
     variables: Record<string, string>,
     backdropFilter?: string,
+    cardBg?: string,
+    cardElevatedBg?: string,
+    buttonBaseColor?: string,
+    buttonHoverColor?: string,
+    buttonActiveColor?: string,
 ): void {
     if (typeof document === 'undefined') return;
 
@@ -140,20 +154,21 @@ export function applyPrivyCSSVariables(
         root.style.setProperty(key, value);
     });
 
-    // Inject CSS to apply backdrop filters to Privy modals
-    // This helps maintain visual consistency with VeChain Kit modals
+    // Inject CSS for backdrop filters, card backgrounds, and button colors
+    const styleId = 'vechain-kit-privy-styles';
+    let styleElement = document.getElementById(styleId);
+
+    if (!styleElement) {
+        styleElement = document.createElement('style');
+        styleElement.id = styleId;
+        document.head.appendChild(styleElement);
+    }
+
+    const cssRules: string[] = [];
+
+    // Apply backdrop filter to Privy modal containers
     if (backdropFilter) {
-        const styleId = 'vechain-kit-privy-backdrop-filter';
-        let styleElement = document.getElementById(styleId);
-
-        if (!styleElement) {
-            styleElement = document.createElement('style');
-            styleElement.id = styleId;
-            document.head.appendChild(styleElement);
-        }
-
-        // Apply backdrop filter to Privy modal containers
-        styleElement.textContent = `
+        cssRules.push(`
             [data-privy-dialog-overlay],
             [data-privy-dialog-content],
             .privy-dialog-overlay,
@@ -161,6 +176,67 @@ export function applyPrivyCSSVariables(
                 backdrop-filter: ${backdropFilter} !important;
                 -webkit-backdrop-filter: ${backdropFilter} !important;
             }
-        `;
+        `);
+    }
+
+    // Apply card backgrounds to Privy card/container elements
+    // Target common Privy card selectors without affecting button hover states
+    if (cardBg) {
+        cssRules.push(`
+            [data-privy-card],
+            .privy-card,
+            [class*="privy-card"],
+            [class*="privy-connect-wallet-card"],
+            [class*="privy-account-card"] {
+                background-color: ${cardBg} !important;
+            }
+        `);
+    }
+
+    if (cardElevatedBg) {
+        cssRules.push(`
+            [data-privy-card][data-elevated],
+            .privy-card-elevated,
+            [class*="privy-card"][class*="elevated"] {
+                background-color: ${cardElevatedBg} !important;
+            }
+        `);
+    }
+
+    // Apply primary base color to Privy login method buttons
+    if (buttonBaseColor) {
+        cssRules.push(`
+            #headlessui-portal-root .login-method-button,
+            #headlessui-portal-root [class*="login-method-button"],
+            .login-method-button {
+                background-color: ${buttonBaseColor} !important;
+            }
+        `);
+    }
+
+    // Apply hover state with !important to override Privy's styles
+    if (buttonHoverColor) {
+        cssRules.push(`
+            #headlessui-portal-root .login-method-button:hover,
+            #headlessui-portal-root [class*="login-method-button"]:hover,
+            .login-method-button:hover {
+                background-color: ${buttonHoverColor} !important;
+            }
+        `);
+    }
+
+    // Apply active state with !important to override Privy's styles
+    if (buttonActiveColor) {
+        cssRules.push(`
+            #headlessui-portal-root .login-method-button:active,
+            #headlessui-portal-root [class*="login-method-button"]:active,
+            .login-method-button:active {
+                background-color: ${buttonActiveColor} !important;
+            }
+        `);
+    }
+
+    if (cssRules.length > 0) {
+        styleElement.textContent = cssRules.join('\n');
     }
 }

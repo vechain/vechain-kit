@@ -34,6 +34,7 @@ import {
     generateDAppKitCSSVariables,
     generatePrivyCSSVariables,
     applyPrivyCSSVariables,
+    improvePrivyReadability,
 } from '@/utils/cssVariables';
 
 import i18n from '../../i18n';
@@ -366,13 +367,50 @@ export const VeChainKitProvider = (
         [tokens, darkMode],
     );
 
-    // Apply Privy CSS variables to document and inject backdrop filter
+    // Apply Privy CSS variables to document and inject backdrop filter + card styles
     useEffect(() => {
+        // Prepare card backgrounds with readability improvements
+        const privyCardBg = improvePrivyReadability(
+            tokens.colors.background.card,
+            darkMode,
+        );
+        const privyCardElevatedBg = improvePrivyReadability(
+            tokens.colors.background.cardElevated,
+            darkMode,
+        );
+        // Prepare button colors with readability improvements
+        const privyButtonBaseBg = improvePrivyReadability(
+            tokens.colors.primary.base,
+            darkMode,
+        );
+        const privyButtonHoverBg = improvePrivyReadability(
+            tokens.colors.primary.hover,
+            darkMode,
+        );
+        const privyButtonActiveBg = improvePrivyReadability(
+            tokens.colors.primary.active,
+            darkMode,
+        );
+
         applyPrivyCSSVariables(
             privyCSSVariables,
             tokens.effects.backdropFilter.modal,
+            privyCardBg,
+            privyCardElevatedBg,
+            privyButtonBaseBg,
+            privyButtonHoverBg,
+            privyButtonActiveBg,
         );
-    }, [privyCSSVariables, tokens.effects.backdropFilter.modal]);
+    }, [
+        privyCSSVariables,
+        tokens.effects.backdropFilter.modal,
+        tokens.colors.background.card,
+        tokens.colors.background.cardElevated,
+        tokens.colors.primary.base,
+        tokens.colors.primary.hover,
+        tokens.colors.primary.active,
+        darkMode,
+    ]);
 
     return (
         <EnsureQueryClient>
