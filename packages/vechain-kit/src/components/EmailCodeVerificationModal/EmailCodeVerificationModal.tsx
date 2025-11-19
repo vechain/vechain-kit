@@ -11,6 +11,7 @@ import {
     ModalHeader,
     ModalCloseButton,
     Container,
+    useToken,
 } from '@chakra-ui/react';
 import { LuMail } from 'react-icons/lu';
 import { BaseModal, StickyHeaderContainer } from '../common';
@@ -36,6 +37,8 @@ export const EmailCodeVerificationModal = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
+    
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const [code, setCode] = useState('');
     const [error, setError] = useState<string | null>(null);
 
@@ -78,12 +81,12 @@ export const EmailCodeVerificationModal = ({
                             as={LuMail}
                             w="48px"
                             h="48px"
-                            color={isDark ? 'whiteAlpha.700' : 'gray.600'}
+                            color={textSecondary}
                         />
 
                         <Text
                             fontSize="xs"
-                            color={isDark ? 'whiteAlpha.700' : 'gray.600'}
+                            color={textSecondary}
                             textAlign="center"
                         >
                             {t(

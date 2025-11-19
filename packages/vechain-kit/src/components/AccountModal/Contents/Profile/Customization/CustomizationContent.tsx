@@ -16,6 +16,7 @@ import {
     FormLabel,
     InputGroup,
     InputLeftElement,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -59,6 +60,9 @@ export const CustomizationContent = ({
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { account } = useWallet();
+    
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const errorColor = useToken('colors', 'vechain-kit-error');
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
@@ -278,7 +282,7 @@ export const CustomizationContent = ({
                                 right="2"
                                 bottom="2"
                                 bg="gray.700"
-                                color="white"
+                                color={textPrimary}
                                 p="1"
                                 borderRadius="full"
                                 boxSize="6"
@@ -387,7 +391,7 @@ export const CustomizationContent = ({
                                     data-testid="display-name-input"
                                 />
                                 {errors.displayName && (
-                                    <Text color="#ef4444" fontSize="sm" mt={1}>
+                                    <Text color={errorColor} fontSize="sm" mt={1}>
                                         {errors.displayName.message}
                                     </Text>
                                 )}
@@ -411,7 +415,7 @@ export const CustomizationContent = ({
                                     data-testid="description-input"
                                 />
                                 {errors.description && (
-                                    <Text color="#ef4444" fontSize="sm" mt={1}>
+                                    <Text color={errorColor} fontSize="sm" mt={1}>
                                         {errors.description.message}
                                     </Text>
                                 )}
@@ -445,7 +449,7 @@ export const CustomizationContent = ({
                                         </InputGroup>
                                         {errors.twitter && (
                                             <Text
-                                                color="#ef4444"
+                                                color={errorColor}
                                                 fontSize="sm"
                                                 mt={1}
                                             >
@@ -478,7 +482,7 @@ export const CustomizationContent = ({
                                         </InputGroup>
                                         {errors.website && (
                                             <Text
-                                                color="#ef4444"
+                                                color={errorColor}
                                                 fontSize="sm"
                                                 mt={1}
                                             >
@@ -511,7 +515,7 @@ export const CustomizationContent = ({
                                         </InputGroup>
                                         {errors.email && (
                                             <Text
-                                                color="#ef4444"
+                                                color={errorColor}
                                                 fontSize="sm"
                                                 mt={1}
                                             >

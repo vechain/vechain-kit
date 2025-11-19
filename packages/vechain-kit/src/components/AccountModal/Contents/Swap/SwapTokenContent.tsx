@@ -18,6 +18,7 @@ import {
     Spinner,
     Collapse,
     Center,
+    useToken,
 } from '@chakra-ui/react';
 import { GasFeeSummary, ModalBackButton, StickyHeaderContainer, TransactionButtonAndStatus } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -65,6 +66,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
     const { currentCurrency } = useCurrency();
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
+    
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
@@ -578,7 +582,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             <Text
                                 fontSize="sm"
                                 fontWeight="medium"
-                                color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                                color={textSecondary}
                                 mb={2}
                             >
                                 {t('From')}
@@ -608,11 +612,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
                                             borderColor={
                                                 isDark
                                                     ? 'whiteAlpha.700'
@@ -680,11 +680,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
                                             borderColor={
                                                 isDark
                                                     ? 'whiteAlpha.700'
@@ -717,11 +713,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         spacing={1}
                                         fontSize="sm"
                                         justifyContent={'space-between'}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
+                                        color={textSecondary}
                                     >
                                         <HStack spacing={2} alignItems="center">
                                             {fromAmountFiatValue > 0 && (
@@ -776,7 +768,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                     as={LuArrowDown}
                                     boxSize={5}
                                     opacity={0.5}
-                                    color={isDark ? 'whiteAlpha.700' : 'gray.600'}
+                                    color={textSecondary}
                                 />
                             )}
                         </Center>
@@ -791,7 +783,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             <Text
                                 fontSize="sm"
                                 fontWeight="medium"
-                                color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                                color={textSecondary}
                                 mb={2}
                             >
                                 {t('To')}
@@ -815,11 +807,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
                                             borderColor={
                                                 isDark
                                                     ? 'whiteAlpha.700'
@@ -887,11 +875,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
                                             borderColor={
                                                 isDark
                                                     ? 'whiteAlpha.700'
@@ -924,11 +908,7 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         spacing={1}
                                         fontSize="sm"
                                         justifyContent={'space-between'}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
+                                        color={textSecondary}
                                     >
                                         <HStack spacing={2} alignItems="center">
                                             {toAmountFiatValue > 0 && (
@@ -1081,14 +1061,14 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                     onClick={() => setShowMore(!showMore)}
                                     rightIcon={
                                         <Icon
-                                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                                            color={textTertiary}
                                             _hover={{ color: isDark ? 'whiteAlpha.800' : 'blackAlpha.800' }}
                                             as={showMore ? LuArrowUp : LuArrowDown}
                                         />
                                     }
                                     fontSize="xs"
                                     fontWeight="light"
-                                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                                    color={textTertiary}
                                     _hover={{
                                         color: isDark ? 'whiteAlpha.800' : 'blackAlpha.800',
                                     }}

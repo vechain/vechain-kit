@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
 import { NETWORK_TYPE } from '@vechain-kit/config/network';
-import type { VechainKitThemeConfig } from '@vechain-kit/theme';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -31,81 +30,18 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const logo =
         'https://vechain-brand-assets.s3.eu-north-1.amazonaws.com/VeChain_Logomark_Light.png';
 
-    // Glass effect theme configuration
-    // This matches the hardcoded values you tested and liked
-    const glassTheme: VechainKitThemeConfig = {
-        colors: {
-            background: {
-                // Modal with glass effect (40% opacity)
-                modal: isDarkMode
-                    ? 'rgba(21, 21, 21, 0.4)'
-                    : 'rgba(255, 255, 255, 0.4)',
-                // Overlay colors matching your hardcoded values
-                // overlay: isDarkMode ? 'rgb(255, 19, 19)' : '#00000024'
-                // Card backgrounds - > should this be taken from the primary color?
-                card: isDarkMode
-                    ? 'rgba(255, 14, 14, 0.4)'
-                    : 'rgba(255, 255, 255, 0.4)',
-                cardElevated: isDarkMode
-                    ? 'rgba(21, 21, 21, 0.6)'
-                    : 'rgba(255, 255, 255, 0.6)',
-                // Sticky header (will be conditional based on hasContentBelow)
-                stickyHeader: isDarkMode
-                    ? 'rgba(21, 21, 21, 0.6)'
-                    : 'rgba(255, 255, 255, 0.6)',
-            },
-            // DAppKit primary colors (for wallet cards)
-            primary: isDarkMode
-                ? {
-                      base: 'rgba(242, 8, 8, 0.93)',
-                      hover: 'rgb(75, 219, 19)',
-                      active: 'rgba(255, 255, 255, 0.1)',
-                  }
-                : {
-                      base: 'rgba(255, 255, 255, 0.4)',
-                      hover: 'rgba(248, 248, 248, 0.5)',
-                      active: 'rgba(240, 240, 240, 0.6)',
-                  },
-            // DAppKit secondary colors
-            secondary: isDarkMode
-                ? {
-                      base: 'rgba(26, 121, 238, 0.6)',
-                      hover: 'rgba(12, 194, 40, 0.7)',
-                      active: 'rgba(21, 21, 21, 0.8)',
-                  }
-                : {
-                      base: 'rgba(255, 255, 255, 0.6)',
-                      hover: 'rgba(255, 255, 255, 0.7)',
-                      active: 'rgba(255, 255, 255, 0.8)',
-                  },
-            tertiary: {
-                base: 'rgba(227, 21, 249, 0.89)', // or your desired color
-                hover: 'rgba(33, 192, 25, 0.2)',
-                active: 'rgba(255, 255, 255, 0.3)',
-            },
-            border: {
-                default: isDarkMode ? '#ffffff0a' : '#ebebeb',
-            },
-            text: {
-                primary: isDarkMode ? 'rgba(227, 21, 249, 0.89)' : '#2e2e2e',
-                secondary: isDarkMode ? 'rgba(108, 249, 21, 0.89)' : '#4d4d4d',
-                tertiary: isDarkMode ? 'rgba(21, 37, 223, 0.89)' : '#a0aec0',
-                disabled: isDarkMode ? 'rgba(249, 21, 21, 0.89)' : '#a0aec0',
-            },
-        },
-
-        effects: {
-            backdropFilter: {
-                modal: 'blur(15px)', // Modal backdrop blur
-                overlay: 'blur(2px)', // Overlay backdrop blur (from BaseModal default)
-                stickyHeader: 'blur(15px)', // Sticky header blur when hasContentBelow
-            },
-        },
-    };
-
     return (
         <VeChainKitProvider
-            // theme={glassTheme}
+            theme={{
+                backgroundColor: isDarkMode ? '#040607' : '#ffffff',
+                textColor: isDarkMode ? 'red' : 'rgba(31, 31, 30, 0.97)',
+                effects: {
+                    glass: {
+                        enabled: false,
+                        intensity: 'high',
+                    },
+                },
+            }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,

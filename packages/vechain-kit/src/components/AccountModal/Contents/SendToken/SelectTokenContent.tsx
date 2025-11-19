@@ -10,6 +10,7 @@ import {
     Icon,
     ModalFooter,
     Container,
+    useToken,
 } from '@chakra-ui/react';
 import { LuSearch, LuSlash } from 'react-icons/lu';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -37,6 +38,9 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
+    
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { account } = useWallet();
     const { tokensWithBalance, sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
@@ -100,7 +104,7 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
                         <Text
                             fontSize="lg"
                             fontWeight="semibold"
-                            color={isDark ? 'whiteAlpha.800' : 'gray.700'}
+                            color={textSecondary}
                             mt={4}
                         >
                             {showAllTokens ? t('All tokens') : t('Your tokens')}

@@ -129,6 +129,17 @@ const getVariants = (tokens: ThemeTokens) => ({
         },
         transition: 'all 0.2s',
     })),
+    link: defineStyle(() => ({
+        color: tokens.colors.text.primary,
+        _hover: {
+            color: tokens.colors.text.secondary,
+            textDecoration: 'underline',
+        },
+        _active: {
+            color: tokens.colors.text.primary,
+        },
+        transition: 'all 0.2s',
+    })),
 });
 
 export const getButtonTheme = (tokens: ThemeTokens) =>

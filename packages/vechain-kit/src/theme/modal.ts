@@ -22,6 +22,13 @@ const getModalVariants = (tokens: ThemeTokens) => ({
         },
         closeButton: {
             borderRadius: tokens.borders.radius.full,
+            color: tokens.colors.text.primary,
+            _hover: {
+                bg: tokens.colors.secondary.base,
+            },
+            _active: {
+                bg: tokens.colors.secondary.active,
+            },
         },
         header: {
             w: 'full',

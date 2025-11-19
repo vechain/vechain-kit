@@ -13,6 +13,7 @@ import {
     Box,
     Spinner,
     Center,
+    useToken,
 } from '@chakra-ui/react';
 import { LuSearch } from 'react-icons/lu';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -107,6 +108,8 @@ export const ExploreEcosystemContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
     const { isolatedView } = useAccountModalOptions();
+    
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const [searchQuery, setSearchQuery] = useState('');
 
     // Initialize currentCategory with selectedCategory or null
@@ -234,7 +237,7 @@ export const ExploreEcosystemContent = ({
                         />
                         <InputLeftElement h="56px" w="56px" pl={4}>
                             <LuSearch
-                                color={isDark ? 'whiteAlpha.400' : 'gray.400'}
+                                color={textTertiary}
                             />
                         </InputLeftElement>
                     </InputGroup>

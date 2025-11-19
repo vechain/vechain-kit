@@ -14,6 +14,7 @@ import {
     ModalFooter,
     Image,
     FormControl,
+    useToken,
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
@@ -66,6 +67,8 @@ export const SendTokenContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
+    
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const { exchangeRates } = useTokenPrices();
     const { account } = useWallet();
     const { isolatedView } = useAccountModalOptions();
@@ -258,7 +261,7 @@ export const SendTokenContent = ({
                         <Text
                             fontSize="sm"
                             fontWeight="medium"
-                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            color={textSecondary}
                             mb={2}
                         >
                             {t('Amount')}
@@ -513,7 +516,7 @@ export const SendTokenContent = ({
                             as={LuArrowDown}
                             boxSize={5}
                             opacity={0.5}
-                            color={isDark ? 'whiteAlpha.700' : 'gray.600'}
+                            color={textSecondary}
                         />
                     </Center>
 
@@ -524,7 +527,7 @@ export const SendTokenContent = ({
                         <Text
                             fontSize="sm"
                             fontWeight="medium"
-                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            color={textSecondary}
                             mb={2}
                             px={6}
                             pt={6}

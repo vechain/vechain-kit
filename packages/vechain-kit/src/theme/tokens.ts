@@ -85,88 +85,180 @@ export interface ThemeTokens {
 
 /**
  * Developer-facing theme configuration
- * All fields are optional - only provided values will override defaults
+ * Simplified interface - only backgroundColor and textColor required
+ * All other colors are automatically derived from these base colors
  */
 export interface VechainKitThemeConfig {
-    colors?: {
-        primary?:
-            | string
-            | {
-                  base: string;
-                  hover?: string;
-                  active?: string;
-                  disabled?: string;
-              };
-        secondary?:
-            | string
-            | {
-                  base: string;
-                  hover?: string;
-                  active?: string;
-              };
-        tertiary?:
-            | string
-            | {
-                  base: string;
-                  hover?: string;
-                  active?: string;
-              };
-        background?: {
-            modal?: string;
-            overlay?: string;
-            card?: string;
-            cardElevated?: string;
-            stickyHeader?: string;
-        };
-        text?: {
-            primary?: string;
-            secondary?: string;
-            tertiary?: string;
-        };
-        border?: {
-            default?: string;
-            hover?: string;
-            focus?: string;
-            button?: string;
-        };
-        success?: string;
-        error?: string;
-        warning?: string;
-    };
+    backgroundColor?: string;
+    textColor?: string;
     effects?: {
+        glass?: {
+            enabled?: boolean;
+            intensity?: 'low' | 'medium' | 'high';
+        };
         backdropFilter?: {
-            modal?: string;
-            overlay?: string;
-            stickyHeader?: string;
-        };
-        glassOpacity?: {
-            modal?: number;
-            overlay?: number;
-            stickyHeader?: number;
+            modal?: string; // Optional custom blur for modal
         };
     };
-    fonts?: {
-        family?: string;
-        sizes?: {
-            small?: string;
-            medium?: string;
-            large?: string;
-        };
-        weights?: {
-            normal?: number;
-            medium?: number;
-            bold?: number;
-        };
+}
+
+/**
+ * Convert hex color to rgba with opacity
+ */
+function hexToRgba(hex: string, opacity: number): string {
+    // Remove # if present
+    hex = hex.replace('#', '');
+
+    // Parse hex values
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+/**
+ * Parse color string (hex or rgba) and return rgba with new opacity
+ */
+function applyOpacity(color: string, opacity: number): string {
+    // If already rgba, extract RGB values and apply new opacity
+    const rgbaMatch = color.match(
+        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/,
+    );
+    if (rgbaMatch) {
+        return `rgba(${rgbaMatch[1]}, ${rgbaMatch[2]}, ${rgbaMatch[3]}, ${opacity})`;
+    }
+
+    // If hex, convert to rgba
+    if (color.startsWith('#')) {
+        return hexToRgba(color, opacity);
+    }
+
+    // Fallback: return as-is
+    return color;
+}
+
+/**
+ * Derive background colors from base color with different opacities
+ */
+function deriveBackgroundColors(
+    baseColor: string,
+    darkMode: boolean,
+): ThemeTokens['colors']['background'] {
+    return {
+        modal: baseColor, // 100% opacity
+        card: applyOpacity(baseColor, 0.8),
+        cardElevated: baseColor, // Same as modal for elevated
+        overlay: darkMode ? applyOpacity(baseColor, 0.4) : 'rgba(0, 0, 0, 0.4)', // Overlay uses black in light mode
+        stickyHeader: applyOpacity(baseColor, 0.9),
     };
-    borders?: {
-        radius?: {
-            small?: string;
-            medium?: string;
-            large?: string;
-            xl?: string;
-            full?: string;
-        };
+}
+
+/**
+ * Derive secondary colors from background color with opacity
+ */
+function deriveSecondaryColors(
+    baseColor: string,
+    darkMode: boolean,
+): ThemeTokens['colors']['secondary'] {
+    // For dark mode, use white overlay; for light mode, use black overlay
+    const overlayColor = darkMode ? '#ffffff' : '#000000';
+    return {
+        base: applyOpacity(overlayColor, 0.05),
+        hover: applyOpacity(overlayColor, 0.1),
+        active: applyOpacity(overlayColor, 0.15),
     };
+}
+
+/**
+ * Derive tertiary colors from background color with opacity
+ */
+function deriveTertiaryColors(
+    baseColor: string,
+    darkMode: boolean,
+): ThemeTokens['colors']['tertiary'] {
+    const overlayColor = darkMode ? '#ffffff' : '#000000';
+    return {
+        base: 'transparent',
+        hover: applyOpacity(overlayColor, 0.05),
+        active: applyOpacity(overlayColor, 0.1),
+    };
+}
+
+/**
+ * Derive text colors from base text color with opacity
+ */
+function deriveTextColors(
+    baseColor: string,
+    darkMode: boolean,
+): ThemeTokens['colors']['text'] {
+    return {
+        primary: baseColor,
+        secondary: applyOpacity(baseColor, 0.7),
+        tertiary: applyOpacity(baseColor, 0.5),
+        disabled: darkMode ? '#4A5568' : '#A0AEC0',
+    };
+}
+
+/**
+ * Derive border colors from background color with low opacity
+ */
+function deriveBorderColors(
+    baseColor: string,
+    darkMode: boolean,
+): ThemeTokens['colors']['border'] {
+    const overlayColor = darkMode ? '#ffffff' : '#000000';
+    return {
+        default: applyOpacity(overlayColor, 0.1),
+        hover: applyOpacity(overlayColor, 0.2),
+        focus: darkMode ? '#3182CE' : '#2B6CB0',
+        button: applyOpacity(overlayColor, 0.1),
+    };
+}
+
+/**
+ * Get glass effect settings based on intensity
+ */
+function getGlassEffectSettings(
+    intensity: 'low' | 'medium' | 'high',
+    enabled: boolean,
+): {
+    blur: string;
+    modalOpacity: number;
+    overlayOpacity: number;
+    stickyHeaderOpacity: number;
+} {
+    if (!enabled) {
+        return {
+            blur: 'none',
+            modalOpacity: 1,
+            overlayOpacity: 0.4,
+            stickyHeaderOpacity: 0.9,
+        };
+    }
+
+    const settings = {
+        low: {
+            blur: 'blur(2px)',
+            modalOpacity: 0.6,
+            overlayOpacity: 0.3,
+            stickyHeaderOpacity: 0.7,
+        },
+        medium: {
+            blur: 'blur(3px)',
+            modalOpacity: 0.7,
+            overlayOpacity: 0.4,
+            stickyHeaderOpacity: 0.8,
+        },
+        high: {
+            blur: 'blur(5px)',
+            modalOpacity: 0.8,
+            overlayOpacity: 0.5,
+            stickyHeaderOpacity: 0.85,
+        },
+    };
+
+    return settings[intensity];
 }
 
 /**
@@ -461,7 +553,7 @@ export function mergeTokens(
 
 /**
  * Convert developer-facing config to internal tokens
- * Only includes keys that are actually provided
+ * Derives all colors from backgroundColor and textColor
  */
 export function convertThemeConfigToTokens(
     config: VechainKitThemeConfig | undefined,
@@ -472,162 +564,97 @@ export function convertThemeConfigToTokens(
     }
 
     const tokens: Partial<ThemeTokens> = {};
+    const defaultTokens = getDefaultTokens(darkMode);
 
-    if (config.colors) {
+    // Derive colors from backgroundColor and textColor
+    if (config.backgroundColor || config.textColor) {
         tokens.colors = {} as ThemeTokens['colors'];
 
-        if (config.colors.background) {
-            tokens.colors.background = {
-                ...config.colors.background,
-            } as ThemeTokens['colors']['background'];
+        // Derive background colors from backgroundColor
+        if (config.backgroundColor) {
+            tokens.colors.background = deriveBackgroundColors(
+                config.backgroundColor,
+                darkMode,
+            );
         }
 
-        if (config.colors.primary) {
-            // Handle both string (simple) and object (with hover/active) formats
-            if (typeof config.colors.primary === 'string') {
-                tokens.colors.primary = {
-                    base: config.colors.primary,
-                    hover: config.colors.primary,
-                    active: config.colors.primary,
-                    disabled: darkMode ? '#4A5568' : '#A0AEC0',
-                };
-            } else {
-                tokens.colors.primary = {
-                    base: config.colors.primary.base || '',
-                    hover:
-                        config.colors.primary.hover ||
-                        config.colors.primary.base ||
-                        '',
-                    active:
-                        config.colors.primary.active ||
-                        config.colors.primary.base ||
-                        '',
-                    disabled:
-                        config.colors.primary.disabled ||
-                        (darkMode ? '#4A5568' : '#A0AEC0'),
-                };
-            }
+        // Derive secondary and tertiary colors from backgroundColor
+        if (config.backgroundColor) {
+            tokens.colors.secondary = deriveSecondaryColors(
+                config.backgroundColor,
+                darkMode,
+            );
+            tokens.colors.tertiary = deriveTertiaryColors(
+                config.backgroundColor,
+                darkMode,
+            );
         }
 
-        if (config.colors.secondary) {
-            if (typeof config.colors.secondary === 'string') {
-                tokens.colors.secondary = {
-                    base: config.colors.secondary,
-                    hover: config.colors.secondary,
-                    active: config.colors.secondary,
-                };
-            } else {
-                tokens.colors.secondary = {
-                    base: config.colors.secondary.base || '',
-                    hover:
-                        config.colors.secondary.hover ||
-                        config.colors.secondary.base ||
-                        '',
-                    active:
-                        config.colors.secondary.active ||
-                        config.colors.secondary.base ||
-                        '',
-                };
-            }
+        // Derive text colors from textColor
+        if (config.textColor) {
+            tokens.colors.text = deriveTextColors(config.textColor, darkMode);
         }
 
-        if (config.colors.tertiary) {
-            if (typeof config.colors.tertiary === 'string') {
-                // Simple string format - apply to all states
-                tokens.colors.tertiary = {
-                    base: config.colors.tertiary,
-                    hover: config.colors.tertiary,
-                    active: config.colors.tertiary,
-                };
-            } else {
-                // Object format with states
-                tokens.colors.tertiary = {
-                    base: config.colors.tertiary.base || '',
-                    hover:
-                        config.colors.tertiary.hover ||
-                        config.colors.tertiary.base ||
-                        '',
-                    active:
-                        config.colors.tertiary.active ||
-                        config.colors.tertiary.base ||
-                        '',
-                };
-            }
+        // Derive border colors from backgroundColor
+        if (config.backgroundColor) {
+            tokens.colors.border = deriveBorderColors(
+                config.backgroundColor,
+                darkMode,
+            );
         }
 
-        if (config.colors.text) {
-            tokens.colors.text = {
-                ...config.colors.text,
-            } as ThemeTokens['colors']['text'];
-        }
+        // Keep primary colors as defaults (or could derive from backgroundColor if needed)
+        tokens.colors.primary = defaultTokens.colors.primary;
 
-        if (config.colors.border) {
-            tokens.colors.border = {
-                default: config.colors.border.default || '',
-                hover: config.colors.border.hover || '',
-                focus: config.colors.border.focus || '',
-                button: config.colors.border.button || '',
-            };
-        }
-
-        if (config.colors.success) {
-            tokens.colors.success = config.colors.success;
-        }
-
-        if (config.colors.error) {
-            tokens.colors.error = config.colors.error;
-        }
-
-        if (config.colors.warning) {
-            tokens.colors.warning = config.colors.warning;
-        }
+        // Keep error/success/warning as defaults
+        tokens.colors.error = defaultTokens.colors.error;
+        tokens.colors.success = defaultTokens.colors.success;
+        tokens.colors.warning = defaultTokens.colors.warning;
     }
 
+    // Handle glass effect settings
     if (config.effects) {
-        tokens.effects = {
-            ...config.effects,
-        } as ThemeTokens['effects'];
+        tokens.effects = {} as ThemeTokens['effects'];
 
-        if (config.effects.backdropFilter) {
-            tokens.effects.backdropFilter = {
-                ...config.effects.backdropFilter,
-            } as ThemeTokens['effects']['backdropFilter'];
-        }
+        const glassEnabled =
+            config.effects.glass?.enabled !== undefined
+                ? config.effects.glass.enabled
+                : true;
+        const glassIntensity = config.effects.glass?.intensity || 'medium';
 
-        if (config.effects.glassOpacity) {
+        const glassSettings = getGlassEffectSettings(
+            glassIntensity,
+            glassEnabled,
+        );
+
+        // Apply glass effect to backdrop filters
+        tokens.effects.backdropFilter = {
+            modal: config.effects.backdropFilter?.modal || glassSettings.blur,
+            overlay: glassSettings.blur,
+            stickyHeader: glassSettings.blur,
+        };
+
+        // Apply glass opacity to backgrounds if enabled
+        if (glassEnabled && config.backgroundColor) {
             tokens.effects.glassOpacity = {
-                ...config.effects.glassOpacity,
-            } as ThemeTokens['effects']['glassOpacity'];
-        }
-    }
+                modal: glassSettings.modalOpacity,
+                overlay: glassSettings.overlayOpacity,
+                stickyHeader: glassSettings.stickyHeaderOpacity,
+            };
 
-    if (config.fonts) {
-        tokens.fonts = {
-            ...config.fonts,
-        } as ThemeTokens['fonts'];
-
-        if (config.fonts.sizes) {
-            tokens.fonts.sizes = {
-                ...config.fonts.sizes,
-            } as ThemeTokens['fonts']['sizes'];
-        }
-
-        if (config.fonts.weights) {
-            tokens.fonts.weights = {
-                ...config.fonts.weights,
-            } as ThemeTokens['fonts']['weights'];
-        }
-    }
-
-    if (config.borders) {
-        tokens.borders = {
-            ...config.borders,
-        } as ThemeTokens['borders'];
-
-        if (config.borders.radius) {
-            tokens.borders.radius = {
-                ...config.borders.radius,
-            } as ThemeTokens['borders']['radius'];
+            // Update background colors with glass opacity
+            if (tokens.colors?.background) {
+                tokens.colors.background.modal = applyOpacity(
+                    config.backgroundColor,
+                    glassSettings.modalOpacity,
+                );
+                tokens.colors.background.stickyHeader = applyOpacity(
+                    config.backgroundColor,
+                    glassSettings.stickyHeaderOpacity,
+                );
+            }
+        } else {
+            tokens.effects.glassOpacity = defaultTokens.effects.glassOpacity;
         }
     }
 

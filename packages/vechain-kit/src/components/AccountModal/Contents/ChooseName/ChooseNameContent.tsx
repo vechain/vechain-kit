@@ -7,6 +7,7 @@ import {
     Button,
     Icon,
     ModalFooter,
+    useToken,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -31,6 +32,8 @@ export const ChooseNameContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { isolatedView } = useAccountModalOptions();
+    
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleBack = () => {
         onBack();
@@ -50,7 +53,7 @@ export const ChooseNameContent = ({
                         as={LuCreditCard}
                         boxSize={16}
                         opacity={0.5}
-                        color={isDark ? 'whiteAlpha.800' : 'gray.600'}
+                        color={textSecondary}
                     />
                     <VStack spacing={2}>
                         <Text fontSize="lg" fontWeight="500" textAlign="center">
