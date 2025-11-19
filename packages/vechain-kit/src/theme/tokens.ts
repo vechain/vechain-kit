@@ -517,11 +517,27 @@ export function convertThemeConfigToTokens(
         }
 
         if (config.colors.tertiary) {
-            tokens.colors.tertiary = {
-                base: config.colors.tertiary,
-                hover: config.colors.tertiary,
-                active: config.colors.tertiary,
-            };
+            if (typeof config.colors.tertiary === 'string') {
+                // Simple string format - apply to all states
+                tokens.colors.tertiary = {
+                    base: config.colors.tertiary,
+                    hover: config.colors.tertiary,
+                    active: config.colors.tertiary,
+                };
+            } else {
+                // Object format with states
+                tokens.colors.tertiary = {
+                    base: config.colors.tertiary.base || '',
+                    hover:
+                        config.colors.tertiary.hover ||
+                        config.colors.tertiary.base ||
+                        '',
+                    active:
+                        config.colors.tertiary.active ||
+                        config.colors.tertiary.base ||
+                        '',
+                };
+            }
         }
 
         if (config.colors.text) {

@@ -64,16 +64,23 @@ export function generateDAppKitCSSVariables(
         '--vdk-font-weight-medium': tokens.fonts.weights.medium.toString(),
     };
 
+    // Use loginIn variant style: white (light) / transparent (dark) background
     if (darkMode) {
-        vars['--vdk-color-dark-primary'] = tokens.colors.primary.base;
-        vars['--vdk-color-dark-primary-hover'] = tokens.colors.primary.hover;
-        vars['--vdk-color-dark-primary-active'] = tokens.colors.primary.active;
-        vars['--vdk-color-dark-secondary'] = tokens.colors.secondary.base;
+        vars['--vdk-color-dark-primary'] = 'transparent'; // loginIn dark mode bg
+        vars['--vdk-color-dark-primary-hover'] = 'transparent'; // Will use opacity: 0.5 via CSS
+        vars['--vdk-color-dark-primary-active'] = 'transparent'; // Will use opacity: 0.5 via CSS
+        // DAppKit uses secondary color for modal background
+        vars['--vdk-color-dark-secondary'] = tokens.colors.background.modal;
+        // DAppKit uses tertiary color for text
+        vars['--vdk-color-dark-tertiary'] = tokens.colors.text.primary;
     } else {
-        vars['--vdk-color-light-primary'] = tokens.colors.primary.base;
-        vars['--vdk-color-light-primary-hover'] = tokens.colors.primary.hover;
-        vars['--vdk-color-light-primary-active'] = tokens.colors.primary.active;
-        vars['--vdk-color-light-secondary'] = tokens.colors.secondary.base;
+        vars['--vdk-color-light-primary'] = '#ffffff'; // loginIn light mode bg
+        vars['--vdk-color-light-primary-hover'] = '#ffffff'; // Will use opacity: 0.5 via CSS
+        vars['--vdk-color-light-primary-active'] = '#ffffff'; // Will use opacity: 0.5 via CSS
+        // DAppKit uses secondary color for modal background
+        vars['--vdk-color-light-secondary'] = tokens.colors.background.modal;
+        // DAppKit uses tertiary color for text
+        vars['--vdk-color-light-tertiary'] = tokens.colors.text.primary;
     }
 
     return vars;
@@ -97,16 +104,11 @@ export function generatePrivyCSSVariables(
         darkMode,
     );
 
-    // Map primary colors to Privy button states
-    // Privy uses background-2 and background-3 for button hover/active states
-    const privyButtonHoverBg = improvePrivyReadability(
-        tokens.colors.primary.hover,
-        darkMode,
-    );
-    const privyButtonActiveBg = improvePrivyReadability(
-        tokens.colors.primary.active,
-        darkMode,
-    );
+    // Use loginIn variant style: white (light) / transparent (dark) background
+    // For hover/active, we'll apply opacity: 0.5 via CSS injection
+    const privyButtonBaseBg = darkMode ? 'transparent' : '#ffffff';
+    const privyButtonHoverBg = darkMode ? 'transparent' : '#ffffff';
+    const privyButtonActiveBg = darkMode ? 'transparent' : '#ffffff';
 
     const variables: Record<string, string> = {
         '--privy-border-radius-sm': tokens.borders.radius.small,
@@ -114,25 +116,78 @@ export function generatePrivyCSSVariables(
         '--privy-border-radius-lg': tokens.borders.radius.large,
         '--privy-border-radius-full': tokens.borders.radius.full,
         '--privy-color-background': privyModalBg,
-        // Map primary hover/active to Privy button states
+        // Use loginIn variant style: white (light) / transparent (dark) background
+        // Hover/active will use opacity: 0.5 via CSS injection
         '--privy-color-background-2': privyButtonHoverBg,
         '--privy-color-background-3': privyButtonActiveBg,
         '--privy-color-foreground': tokens.colors.text.primary,
-        '--privy-color-foreground-2': tokens.colors.text.secondary,
-        '--privy-color-foreground-3': tokens.colors.text.tertiary,
-        '--privy-color-foreground-4': tokens.colors.text.disabled,
-        '--privy-color-foreground-accent': tokens.colors.primary.base,
-        '--privy-color-accent': tokens.colors.primary.base,
-        '--privy-color-accent-light': tokens.colors.primary.hover,
-        '--privy-color-accent-lightest': tokens.colors.tertiary.base,
-        '--privy-color-accent-dark': tokens.colors.primary.active,
-        '--privy-color-accent-darkest': tokens.colors.primary.active,
+        '--privy-color-foreground-2': tokens.colors.text.primary, // Privy uses this for primary text
+        '--privy-color-foreground-3': tokens.colors.text.secondary, // Privy uses this for secondary text
+        '--privy-color-foreground-4': tokens.colors.text.tertiary, // Privy uses this for tertiary text
+        // Use loginIn text colors: #1a1a1a (light) / white (dark)
+        '--privy-color-foreground-accent': darkMode ? '#ffffff' : '#1a1a1a',
+        '--privy-color-accent': privyButtonBaseBg, // loginIn background color
+        '--privy-color-accent-light': privyButtonHoverBg,
+        '--privy-color-accent-lightest': privyButtonActiveBg,
+        '--privy-color-accent-dark': privyButtonHoverBg,
+        '--privy-color-accent-darkest': privyButtonActiveBg,
         '--privy-color-success': tokens.colors.success,
         '--privy-color-error': tokens.colors.error,
         '--privy-color-error-light': tokens.colors.error + '33',
     };
 
     return variables;
+}
+
+/**
+ * Apply DAppKit button styles (hover opacity matching loginIn variant)
+ */
+export function applyDAppKitButtonStyles(): void {
+    if (typeof document === 'undefined') return;
+
+    const styleId = 'vechain-kit-dappkit-button-styles';
+    let styleElement = document.getElementById(styleId);
+
+    if (!styleElement) {
+        styleElement = document.createElement('style');
+        styleElement.id = styleId;
+        document.head.appendChild(styleElement);
+    }
+
+    // Target DAppKit wallet source buttons/cards
+    // DAppKit uses source-card elements for wallet selection buttons
+    const cssRules = `
+        /* DAppKit wallet source buttons - apply loginIn hover style */
+        [data-vdk-source-card],
+        [class*="vdk-source-card"],
+        [class*="source-card"],
+        button[class*="vdk"],
+        [data-vdk-button],
+        [class*="vdk-button"] {
+            opacity: 1 !important;
+            transition: opacity 0.2s !important;
+        }
+        
+        [data-vdk-source-card]:hover,
+        [class*="vdk-source-card"]:hover,
+        [class*="source-card"]:hover,
+        button[class*="vdk"]:hover,
+        [data-vdk-button]:hover,
+        [class*="vdk-button"]:hover {
+            opacity: 0.5 !important;
+        }
+        
+        [data-vdk-source-card]:active,
+        [class*="vdk-source-card"]:active,
+        [class*="source-card"]:active,
+        button[class*="vdk"]:active,
+        [data-vdk-button]:active,
+        [class*="vdk-button"]:active {
+            opacity: 0.5 !important;
+        }
+    `;
+
+    styleElement.textContent = cssRules;
 }
 
 /**
@@ -146,6 +201,7 @@ export function applyPrivyCSSVariables(
     buttonBaseColor?: string,
     buttonHoverColor?: string,
     buttonActiveColor?: string,
+    borderColor?: string,
 ): void {
     if (typeof document === 'undefined') return;
 
@@ -203,35 +259,41 @@ export function applyPrivyCSSVariables(
         `);
     }
 
-    // Apply primary base color to Privy login method buttons
+    // Apply loginIn variant style to Privy login method buttons
+    // Base: white (light) / transparent (dark)
+    // Hover/Active: opacity: 0.5 (matching loginIn variant)
     if (buttonBaseColor) {
+        const borderColorValue = borderColor || 'rgba(0, 0, 0, 0.1)';
         cssRules.push(`
             #headlessui-portal-root .login-method-button,
             #headlessui-portal-root [class*="login-method-button"],
             .login-method-button {
                 background-color: ${buttonBaseColor} !important;
+                border: 1px solid ${borderColorValue} !important;
             }
         `);
     }
 
-    // Apply hover state with !important to override Privy's styles
+    // Apply hover state with opacity: 0.5 (matching loginIn variant)
     if (buttonHoverColor) {
         cssRules.push(`
             #headlessui-portal-root .login-method-button:hover,
             #headlessui-portal-root [class*="login-method-button"]:hover,
             .login-method-button:hover {
                 background-color: ${buttonHoverColor} !important;
+                opacity: 0.5 !important;
             }
         `);
     }
 
-    // Apply active state with !important to override Privy's styles
+    // Apply active state with opacity: 0.5 (matching loginIn variant)
     if (buttonActiveColor) {
         cssRules.push(`
             #headlessui-portal-root .login-method-button:active,
             #headlessui-portal-root [class*="login-method-button"]:active,
             .login-method-button:active {
                 background-color: ${buttonActiveColor} !important;
+                opacity: 0.5 !important;
             }
         `);
     }

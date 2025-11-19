@@ -1,4 +1,3 @@
-import { useVeChainKitConfig } from '@/providers';
 import {
     Accordion,
     AccordionItem,
@@ -11,6 +10,7 @@ import {
     InputGroup,
     Input,
     InputLeftElement,
+    useToken,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { LuChevronDown, LuChevronUp, LuSearch, LuSlash } from 'react-icons/lu';
@@ -23,8 +23,14 @@ interface FAQItem {
 
 export const FAQAccordion = () => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const [searchQuery, setSearchQuery] = useState('');
+
+    // Use semantic tokens for colors
+    const inputBg = useToken('colors', 'vechain-kit-card');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
+    const accordionBg = useToken('colors', 'vechain-kit-secondary');
+    const accordionBgHover = useToken('colors', 'vechain-kit-secondary-hover');
 
     const faqItems: FAQItem[] = [
         {
@@ -132,7 +138,7 @@ export const FAQAccordion = () => {
             <InputGroup size="lg">
                 <Input
                     placeholder={t('Search FAQ')}
-                    bg={isDark ? '#00000038' : 'gray.50'}
+                    bg={inputBg}
                     borderRadius="xl"
                     height="56px"
                     pl={12}
@@ -140,18 +146,12 @@ export const FAQAccordion = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <InputLeftElement h="56px" w="56px" pl={4}>
-                    <LuSearch
-                        color={isDark ? 'whiteAlpha.400' : 'blackAlpha.600'}
-                    />
+                    <LuSearch color={textTertiary} />
                 </InputLeftElement>
             </InputGroup>
 
             {filteredFaqItems.length === 0 ? (
-                <VStack
-                    spacing={2}
-                    py={8}
-                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                >
+                <VStack spacing={2} py={8} color={textSecondary}>
                     <Icon as={LuSlash} boxSize={12} opacity={0.5} />
                     <Text fontSize="lg">{t('No questions found')}</Text>
                     <Text fontSize="md">
@@ -165,20 +165,15 @@ export const FAQAccordion = () => {
                             {({ isExpanded }) => (
                                 <>
                                     <AccordionButton
-                                        bg={
-                                            isDark
-                                                ? 'whiteAlpha.50'
-                                                : 'blackAlpha.50'
-                                        }
+                                        bg={accordionBg}
                                         borderRadius="xl"
+                                        color={textSecondary}
                                         _hover={{
-                                            bg: isDark
-                                                ? 'whiteAlpha.100'
-                                                : 'blackAlpha.100',
+                                            bg: accordionBgHover,
                                         }}
                                     >
                                         <Box flex="1" textAlign="left" py={2}>
-                                            <Text fontWeight="500">
+                                            <Text fontWeight="500" color={textSecondary}>
                                                 {item.question}
                                             </Text>
                                         </Box>
@@ -193,7 +188,7 @@ export const FAQAccordion = () => {
                                         />
                                     </AccordionButton>
                                     <AccordionPanel pb={4}>
-                                        <Text fontSize="sm" opacity={0.8}>
+                                        <Text fontSize="sm" color={textSecondary} opacity={0.8}>
                                             {item.answer}
                                         </Text>
                                     </AccordionPanel>

@@ -71,7 +71,8 @@ export const AccountSelector = ({
                 h={12}
                 aria-label="Wallet"
                 onClick={onClick}
-                variant="mainContentButton"
+                variant="vechainKitSecondary"
+                p={3}
                 data-testid="profile-button"
             >
                 <HStack

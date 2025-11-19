@@ -6,9 +6,15 @@ const baseStyle = defineStyle({
 });
 
 const getVariants = (tokens: ThemeTokens) => ({
+    // Login variants - maintained for backward compatibility
+    // These should eventually be replaced with vechainKitTertiary and vechainKitPrimary
     loginIn: defineStyle(() => ({
-        bg: tokens.colors.tertiary.base,
-        color: tokens.colors.text.primary,
+        color: '#1a1a1a',
+        bg: 'white',
+        _dark: {
+            color: 'white',
+            bg: 'transparent',
+        },
         fontSize: tokens.fonts.sizes.medium,
         fontWeight: tokens.fonts.weights.normal,
         border: `1px solid ${tokens.colors.border.default}`,
@@ -16,12 +22,17 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 3,
         borderRadius: tokens.borders.radius.large,
         _hover: {
-            bg: tokens.colors.tertiary.hover,
+            opacity: 0.5,
         },
+        transition: 'all 0.2s',
     })),
     loginWithVechain: defineStyle(() => ({
-        bg: tokens.colors.primary.base,
-        color: tokens.colors.text.primary,
+        color: 'white', // Note: Different from vechainKitPrimary which uses 'white'
+        bg: '#1a1a1a',
+        _dark: {
+            color: '#1a1a1a',
+            bg: 'white',
+        },
         fontSize: tokens.fonts.sizes.medium,
         fontWeight: tokens.fonts.weights.normal,
         py: 6,
@@ -29,7 +40,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         borderRadius: tokens.borders.radius.large,
         border: `1px solid ${tokens.colors.border.default}`,
         _hover: {
-            bg: tokens.colors.primary.hover,
+            opacity: 0.5,
         },
         transition: 'all 0.2s',
     })),
@@ -38,7 +49,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.xl,
+        borderRadius: tokens.borders.radius.lg,
         bg: tokens.colors.primary.base,
         color: 'white',
         _hover: {
@@ -54,7 +65,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.xl,
+        borderRadius: tokens.borders.radius.lg,
         backgroundColor: tokens.colors.secondary.base,
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
@@ -69,7 +80,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.xl,
+        borderRadius: tokens.borders.radius.lg,
         backgroundColor: tokens.colors.tertiary.base,
         _hover: {
             backgroundColor: tokens.colors.tertiary.hover,
@@ -93,15 +104,21 @@ const getVariants = (tokens: ThemeTokens) => ({
         transition: 'all 0.2s',
         color: tokens.colors.error,
     })),
+    // These variants use secondary colors but with different sizing
+    // Consider migrating to vechainKitSecondary for consistency
     mainContentButton: defineStyle(() => ({
         width: '100%',
         backgroundColor: tokens.colors.secondary.base,
         borderRadius: tokens.borders.radius.xl,
         p: 3,
         cursor: 'pointer',
+        color: tokens.colors.text.primary,
+        border: '1px solid',
+        borderColor: tokens.colors.border.default,
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
         },
+        transition: 'all 0.2s',
     })),
     actionButton: defineStyle(() => ({
         width: 'full',
@@ -110,6 +127,9 @@ const getVariants = (tokens: ThemeTokens) => ({
         backgroundColor: tokens.colors.secondary.base,
         borderRadius: tokens.borders.radius.xl,
         p: 0,
+        color: tokens.colors.text.primary,
+        border: '1px solid',
+        borderColor: tokens.colors.border.default,
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
         },

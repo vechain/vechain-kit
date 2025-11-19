@@ -34,6 +34,7 @@ import {
     generateDAppKitCSSVariables,
     generatePrivyCSSVariables,
     applyPrivyCSSVariables,
+    applyDAppKitButtonStyles,
     improvePrivyReadability,
 } from '@/utils/cssVariables';
 
@@ -378,19 +379,10 @@ export const VeChainKitProvider = (
             tokens.colors.background.cardElevated,
             darkMode,
         );
-        // Prepare button colors with readability improvements
-        const privyButtonBaseBg = improvePrivyReadability(
-            tokens.colors.primary.base,
-            darkMode,
-        );
-        const privyButtonHoverBg = improvePrivyReadability(
-            tokens.colors.primary.hover,
-            darkMode,
-        );
-        const privyButtonActiveBg = improvePrivyReadability(
-            tokens.colors.primary.active,
-            darkMode,
-        );
+        // Use loginIn variant style: white (light) / transparent (dark) background
+        const privyButtonBaseBg = darkMode ? 'transparent' : '#ffffff';
+        const privyButtonHoverBg = darkMode ? 'transparent' : '#ffffff';
+        const privyButtonActiveBg = darkMode ? 'transparent' : '#ffffff';
 
         applyPrivyCSSVariables(
             privyCSSVariables,
@@ -400,17 +392,21 @@ export const VeChainKitProvider = (
             privyButtonBaseBg,
             privyButtonHoverBg,
             privyButtonActiveBg,
+            tokens.colors.border.default,
         );
     }, [
         privyCSSVariables,
         tokens.effects.backdropFilter.modal,
         tokens.colors.background.card,
         tokens.colors.background.cardElevated,
-        tokens.colors.primary.base,
-        tokens.colors.primary.hover,
-        tokens.colors.primary.active,
+        tokens.colors.border.default,
         darkMode,
     ]);
+
+    // Apply DAppKit button styles (hover opacity matching loginIn variant)
+    useEffect(() => {
+        applyDAppKitButtonStyles();
+    }, []);
 
     return (
         <EnsureQueryClient>
@@ -460,8 +456,11 @@ export const VeChainKitProvider = (
                                 accentColor:
                                     privy?.appearance.accentColor ??
                                     (tokens.colors.primary.base?.startsWith('#')
-                                        ? (tokens.colors.primary.base as `#${string}`)
-                                        : (darkMode ? '#3182CE' : '#2B6CB0')),
+                                        ? (tokens.colors.primary
+                                              .base as `#${string}`)
+                                        : darkMode
+                                        ? '#3182CE'
+                                        : '#2B6CB0'),
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
@@ -495,7 +494,10 @@ export const VeChainKitProvider = (
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
                             themeVariables={
                                 dappKit.themeVariables
-                                    ? { ...dappKitThemeVariables, ...dappKit.themeVariables }
+                                    ? {
+                                          ...dappKitThemeVariables,
+                                          ...dappKit.themeVariables,
+                                      }
                                     : dappKitThemeVariables
                             }
                         >

@@ -8,6 +8,7 @@ import {
     Icon,
     Select,
     ModalFooter,
+    useToken,
 } from '@chakra-ui/react';
 import { LuExternalLink } from 'react-icons/lu';
 import {
@@ -34,6 +35,11 @@ export const FAQContent = ({
     const { i18n, t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
+    // Use semantic tokens for colors
+    const selectBg = useToken('colors', 'vechain-kit-card');
+    const selectBorder = useToken('colors', 'vechain-kit-border');
+    const selectBorderHover = useToken('colors', 'vechain-kit-border-hover');
+
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         i18n.changeLanguage(e.target.value);
     };
@@ -55,12 +61,10 @@ export const FAQContent = ({
                             width="auto"
                             value={i18n.language}
                             onChange={handleLanguageChange}
-                            bg={isDark ? 'whiteAlpha.200' : 'gray.100'}
-                            borderColor={isDark ? 'whiteAlpha.300' : 'gray.200'}
+                            bg={selectBg}
+                            borderColor={selectBorder}
                             _hover={{
-                                borderColor: isDark
-                                    ? 'whiteAlpha.400'
-                                    : 'gray.300',
+                                borderColor: selectBorderHover,
                             }}
                         >
                             {supportedLanguages.map((lang) => (

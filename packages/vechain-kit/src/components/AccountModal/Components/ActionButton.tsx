@@ -54,10 +54,18 @@ export const ActionButton = ({
     variant = 'actionButton',
 }: ActionButtonProps) => {
     const { t } = useTranslation();
+    
+    // Map actionButton to vechainKitSecondary for consistency
+    // Maintain backward compatibility by allowing override
+    const standardVariant = variant === 'actionButton' ? 'vechainKitSecondary' : variant;
+    
     return (
         <Button
-            variant={variant}
+            variant={standardVariant}
             py={stacked ? 0 : 2}
+            minHeight="50px"
+            height="fit-content"
+            p={0}
             onClick={onClick}
             display={hide ? 'none' : 'flex'}
             isDisabled={showComingSoon || isDisabled}
