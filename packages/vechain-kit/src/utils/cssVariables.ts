@@ -65,18 +65,24 @@ export function generateDAppKitCSSVariables(
     };
 
     // Use loginIn variant style: white (light) / transparent (dark) background
+    // For hover/active, derive colors that simulate the opacity: 0.5 effect
+    // DAppKit uses these CSS variables for background colors
     if (darkMode) {
         vars['--vdk-color-dark-primary'] = 'transparent'; // loginIn dark mode bg
-        vars['--vdk-color-dark-primary-hover'] = 'transparent'; // Will use opacity: 0.5 via CSS
-        vars['--vdk-color-dark-primary-active'] = 'transparent'; // Will use opacity: 0.5 via CSS
+        // For transparent base, use a subtle white overlay to simulate dimming
+        // This creates a visual effect similar to opacity: 0.5
+        vars['--vdk-color-dark-primary-hover'] = 'rgba(255, 255, 255, 0.05)'; // Subtle white overlay
+        vars['--vdk-color-dark-primary-active'] = 'rgba(255, 255, 255, 0.1)'; // Slightly more visible
         // DAppKit uses secondary color for modal background
         vars['--vdk-color-dark-secondary'] = tokens.colors.background.modal;
         // DAppKit uses tertiary color for text
         vars['--vdk-color-dark-tertiary'] = tokens.colors.text.primary;
     } else {
         vars['--vdk-color-light-primary'] = '#ffffff'; // loginIn light mode bg
-        vars['--vdk-color-light-primary-hover'] = '#ffffff'; // Will use opacity: 0.5 via CSS
-        vars['--vdk-color-light-primary-active'] = '#ffffff'; // Will use opacity: 0.5 via CSS
+        // For white base, use a slightly grayed white to simulate opacity: 0.5
+        // This makes the button appear dimmed on hover
+        vars['--vdk-color-light-primary-hover'] = 'rgba(245, 245, 245, 0.8)'; // Slightly grayed white
+        vars['--vdk-color-light-primary-active'] = 'rgba(240, 240, 240, 0.8)'; // Slightly darker for active
         // DAppKit uses secondary color for modal background
         vars['--vdk-color-light-secondary'] = tokens.colors.background.modal;
         // DAppKit uses tertiary color for text
@@ -155,39 +161,110 @@ export function applyDAppKitButtonStyles(): void {
     }
 
     // Target DAppKit wallet source buttons/cards
-    // DAppKit uses source-card elements for wallet selection buttons
+    // Apply hover/active opacity to match loginIn variant style
+    // Target all button-like elements (buttons, clickable divs, elements with cursor pointer)
     const cssRules = `
         /* DAppKit wallet source buttons - apply loginIn hover style */
+        /* Target all button-like elements within DAppKit containers */
+        [class*="vdk"] button,
+        [class*="vdk"] [role="button"],
+        [class*="vdk"] [tabindex],
+        [id*="vdk"] button,
+        [id*="vdk"] [role="button"],
+        [id*="vdk"] [tabindex],
+        [data-vdk-modal] button,
+        [data-vdk-modal] [role="button"],
+        [data-vdk-modal] [tabindex],
         [data-vdk-source-card],
         [class*="vdk-source-card"],
         [class*="source-card"],
         button[class*="vdk"],
         [data-vdk-button],
-        [class*="vdk-button"] {
-            opacity: 1 !important;
-            transition: opacity 0.2s !important;
+        [class*="vdk-button"],
+        /* Target elements that are likely buttons based on styling */
+        [class*="vdk"] [style*="cursor"][style*="pointer"],
+        [id*="vdk"] [style*="cursor"][style*="pointer"],
+        [data-vdk-modal] [style*="cursor"][style*="pointer"] {
+            transition: opacity 0.2s ease !important;
         }
         
+        /* Hover states */
+        [class*="vdk"] button:hover,
+        [class*="vdk"] [role="button"]:hover,
+        [class*="vdk"] [tabindex]:hover,
+        [id*="vdk"] button:hover,
+        [id*="vdk"] [role="button"]:hover,
+        [id*="vdk"] [tabindex]:hover,
+        [data-vdk-modal] button:hover,
+        [data-vdk-modal] [role="button"]:hover,
+        [data-vdk-modal] [tabindex]:hover,
         [data-vdk-source-card]:hover,
         [class*="vdk-source-card"]:hover,
         [class*="source-card"]:hover,
         button[class*="vdk"]:hover,
         [data-vdk-button]:hover,
-        [class*="vdk-button"]:hover {
+        [class*="vdk-button"]:hover,
+        [class*="vdk"] [style*="cursor"][style*="pointer"]:hover,
+        [id*="vdk"] [style*="cursor"][style*="pointer"]:hover,
+        [data-vdk-modal] [style*="cursor"][style*="pointer"]:hover {
             opacity: 0.5 !important;
         }
         
+        /* Active states */
+        [class*="vdk"] button:active,
+        [class*="vdk"] [role="button"]:active,
+        [class*="vdk"] [tabindex]:active,
+        [id*="vdk"] button:active,
+        [id*="vdk"] [role="button"]:active,
+        [id*="vdk"] [tabindex]:active,
+        [data-vdk-modal] button:active,
+        [data-vdk-modal] [role="button"]:active,
+        [data-vdk-modal] [tabindex]:active,
         [data-vdk-source-card]:active,
         [class*="vdk-source-card"]:active,
         [class*="source-card"]:active,
         button[class*="vdk"]:active,
         [data-vdk-button]:active,
-        [class*="vdk-button"]:active {
+        [class*="vdk-button"]:active,
+        [class*="vdk"] [style*="cursor"][style*="pointer"]:active,
+        [id*="vdk"] [style*="cursor"][style*="pointer"]:active,
+        [data-vdk-modal] [style*="cursor"][style*="pointer"]:active {
             opacity: 0.5 !important;
         }
     `;
 
     styleElement.textContent = cssRules;
+
+    // Use MutationObserver to apply styles to dynamically added DAppKit elements
+    if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver(() => {
+            // Re-apply styles when DAppKit adds new elements
+            const dappKitElements = document.querySelectorAll(
+                '[data-vdk-source-card], [class*="vdk-source-card"], [class*="source-card"], [data-vdk-modal] button, [data-vdk-modal] [role="button"]',
+            );
+            dappKitElements.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                    element.style.setProperty('opacity', '1', 'important');
+                    element.style.setProperty(
+                        'transition',
+                        'opacity 0.2s ease',
+                        'important',
+                    );
+                }
+            });
+        });
+
+        // Observe the document body for DAppKit modal additions
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
+
+        // Cleanup observer after a delay (DAppKit modals are typically short-lived)
+        setTimeout(() => {
+            observer.disconnect();
+        }, 60000); // Disconnect after 60 seconds
+    }
 }
 
 /**
