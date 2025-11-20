@@ -65,15 +65,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
             //     //     },
             //     // },
             // }}
-            theme={{
-                backgroundColor: isDarkMode ? 'rgb(0, 0, 0)' : '#ffffff',
-                effects: {
-                    glass: {
-                        enabled: true,
-                        intensity: 'high',
-                    },
-                },
-            }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
