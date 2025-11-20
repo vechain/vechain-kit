@@ -82,6 +82,7 @@ export type VechainKitProviderProps = {
     };
     feeDelegation?: {
         delegatorUrl?: string;
+        delegateAllTransactions?: boolean;
         genericDelegatorUrl?: string;
         b3trTransfers?: {
             minAmountInEther: number;
@@ -449,6 +450,10 @@ export const VeChainKitProvider = (
                                 delegatorUrl={
                                     feeDelegation?.delegatorUrl ??
                                     feeDelegation?.genericDelegatorUrl
+                                }
+                                delegateAllTransactions={
+                                    feeDelegation?.delegateAllTransactions ??
+                                    false
                                 }
                                 genericDelegator={
                                     !feeDelegation?.delegatorUrl &&
