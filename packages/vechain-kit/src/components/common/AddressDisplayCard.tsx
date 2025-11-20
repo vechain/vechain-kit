@@ -38,6 +38,7 @@ export const AddressDisplayCard = ({
     const { t } = useTranslation();
 
     const textColor = useToken('colors', 'vechain-kit-text-primary');
+    const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const { isLoading: totalBalanceLoading } = useTotalBalance({ address });
     const { tokens, isLoading: tokensLoading } = useTokensWithValues({
@@ -71,7 +72,7 @@ export const AddressDisplayCard = ({
                 w="full"
                 p={2}
                 borderRadius="lg"
-                bg={isDark ? '#00000038' : 'gray.50'}
+                bg={isDark ? 'vechain-kit-overlay' : 'vechain-kit-card'}
             >
                 <Text fontSize="sm" fontWeight="bold" mb={2} color={textColor}>
                     {label}
@@ -154,8 +155,7 @@ export const AddressDisplayCard = ({
                                 {!hideAddress && (
                                     <Text
                                         fontSize="xs"
-                                        opacity={0.5}
-                                        color={textColor}
+                                        color={secondaryTextColor}
                                         data-testid={`${label.toLowerCase()}-address`}
                                     >
                                         {humanAddress(address, 6, 4)}
@@ -184,7 +184,7 @@ export const AddressDisplayCard = ({
                     <Text fontSize="sm" fontWeight="medium" color={textColor}>
                         {t('Balance')}
                     </Text>
-                    <Text fontSize="xs" opacity={0.5} color={textColor}>
+                    <Text fontSize="xs" color={secondaryTextColor}>
                         {displayBalance.toLocaleString(undefined, {
                             maximumFractionDigits: 2,
                         })}

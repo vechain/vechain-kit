@@ -68,7 +68,8 @@ export const SendTokenContent = ({
     const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
 
-    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
     const { exchangeRates } = useTokenPrices();
     const { account } = useWallet();
     const { isolatedView } = useAccountModalOptions();
@@ -261,7 +262,7 @@ export const SendTokenContent = ({
                         <Text
                             fontSize="sm"
                             fontWeight="medium"
-                            color={textSecondary}
+                            color={textPrimary}
                             mb={2}
                         >
                             {t('Amount')}
@@ -466,7 +467,7 @@ export const SendTokenContent = ({
                                                 : 'blackAlpha.700'
                                         }
                                     >
-                                        <Text opacity={0.5}>
+                                        <Text color={secondaryTextColor}>
                                             ≈ {formattedValue}
                                         </Text>
                                         <Text
@@ -515,19 +516,18 @@ export const SendTokenContent = ({
                         <Icon
                             as={LuArrowDown}
                             boxSize={5}
-                            opacity={0.5}
-                            color={textSecondary}
+                            color={secondaryTextColor}
                         />
                     </Center>
 
                     <Box
                         borderRadius="xl"
-                        bg={isDark ? '#00000038' : 'gray.50'}
+                        bg={isDark ? 'vechain-kit-overlay' : 'vechain-kit-card'}
                     >
                         <Text
                             fontSize="sm"
                             fontWeight="medium"
-                            color={textSecondary}
+                            color={textPrimary}
                             mb={2}
                             px={6}
                             pt={6}

@@ -38,7 +38,7 @@ export const AssetIcons = ({
     const { t } = useTranslation();
     const { tokensWithBalance } = useTokensWithValues({ address });
     const { darkMode } = useVeChainKitConfig();
-    const textColor = useToken('colors', 'vechain-kit-text-primary');
+    const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
     const marginLeft = iconsGap < 1 ? `-${iconSize / 2}px` : `${iconsGap}px`;
 
     const tokensToShow = tokensWithBalance.slice(0, maxIcons);
@@ -115,8 +115,7 @@ export const AssetIcons = ({
                 {tokensWithBalance.length === 0 && showNoAssetsWarning && (
                     <Text
                         fontSize={'sm'}
-                        opacity={0.9}
-                        color={textColor}
+                        color={secondaryTextColor}
                         fontWeight="700"
                     >
                         {t('No assets')}

@@ -33,6 +33,7 @@ export const ChooseNameContent = ({
     const { isolatedView } = useAccountModalOptions();
 
     const textColor = useToken('colors', 'vechain-kit-text-primary');
+    const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleBack = () => {
         onBack();
@@ -53,8 +54,7 @@ export const ChooseNameContent = ({
                     <Icon
                         as={LuCreditCard}
                         boxSize={16}
-                        opacity={0.5}
-                        color={textColor}
+                        color={secondaryTextColor}
                     />
                     <VStack spacing={2}>
                         <Text
