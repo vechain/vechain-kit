@@ -32,39 +32,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            // theme={{
-            //     backgroundColor: isDarkMode ? 'pink' : '#ffffff',
-            //     // overlayColor: isDarkMode
-            //     //     ? 'rgba(0, 0, 0, 0.4)'
-            //     //     : 'rgba(255, 255, 255, 0.4)',
-            //     textColor: isDarkMode
-            //         ? 'rgb(250, 8, 8)'
-            //         : 'rgba(31, 31, 30, 0.97)',
-            //     button: {
-            //         bg: isDarkMode ? 'rgb(108, 90, 198)' : '#ffffff',
-            //         color: isDarkMode
-            //             ? 'rgb(8, 250, 52)'
-            //             : 'rgba(31, 31, 30, 0.97)',
-            //         border: isDarkMode
-            //             ? '1px solid rgb(234, 8, 250)'
-            //             : '1px solid rgba(31, 31, 30, 0.97)',
-            //     },
-            //     loginButton: {
-            //         bg: isDarkMode ? 'rgb(89, 8, 250)' : '#ffffff',
-            //         color: isDarkMode
-            //             ? 'rgb(250, 8, 8)'
-            //             : 'rgba(31, 31, 30, 0.97)',
-            //         border: isDarkMode
-            //             ? '1px solid rgb(250, 8, 8)'
-            //             : '1px solid rgba(31, 31, 30, 0.97)',
-            //     },
-            //     // effects: {
-            //     //     glass: {
-            //     //         enabled: false,
-            //     //         intensity: 'high',
-            //     //     },
-            //     // },
-            // }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
