@@ -70,8 +70,7 @@ const TokenPriorityItem = ({
                     ? isDark
                         ? 'blue.400'
                         : 'blue.200'
-                    : isDark
-                    ? cardBg
+                    : cardBg
             }
             p={3}
             mb={2}
