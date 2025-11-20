@@ -103,7 +103,11 @@ export interface ThemeTokens {
 export interface VechainKitThemeConfig {
     backgroundColor?: string;
     textColor?: string;
-    overlayColor?: string; // Optional: customize overlay separately from modal background
+    overlayColor?: string; // Optional: customize overlay separately from modal background (deprecated, use overlay.backgroundColor)
+    overlay?: {
+        backgroundColor?: string; // Customize overlay background color
+        blur?: string; // Customize overlay blur effect (e.g., "blur(10px)")
+    };
     button?: {
         bg?: string;
         color?: string;
@@ -121,7 +125,7 @@ export interface VechainKitThemeConfig {
         };
         backdropFilter?: {
             modal?: string; // Optional custom blur for modal
-            overlay?: string; // Optional custom blur for overlay
+            overlay?: string; // Optional custom blur for overlay (deprecated, use overlay.blur)
         };
     };
 }
@@ -736,10 +740,14 @@ export function convertThemeConfigToTokens(
 
     // Derive colors from backgroundColor and textColor
     // Always initialize colors if any color-related config is provided
+    // Support both overlay.backgroundColor (new) and overlayColor (deprecated)
+    const overlayBgColor =
+        config.overlay?.backgroundColor || config.overlayColor;
+
     if (
         config.backgroundColor ||
         config.textColor ||
-        config.overlayColor ||
+        overlayBgColor ||
         config.button ||
         config.loginButton
     ) {
@@ -751,17 +759,17 @@ export function convertThemeConfigToTokens(
                 config.backgroundColor,
                 darkMode,
                 defaultTokens.colors.background.overlay, // Pass default overlay color
-                config.overlayColor, // Use custom overlayColor if provided
+                overlayBgColor, // Use custom overlay backgroundColor if provided
             );
-        } else if (config.overlayColor) {
-            // If only overlayColor is provided, use defaults for other backgrounds
+        } else if (overlayBgColor) {
+            // If only overlay backgroundColor is provided, use defaults for other backgrounds
             const defaultBg = defaultTokens.colors.background;
             tokens.colors.background = {
                 ...defaultBg,
-                overlay: config.overlayColor,
+                overlay: overlayBgColor,
             };
         } else {
-            // Use defaults if no backgroundColor or overlayColor provided
+            // Use defaults if no backgroundColor or overlay backgroundColor provided
             tokens.colors.background = defaultTokens.colors.background;
         }
 
@@ -817,7 +825,10 @@ export function convertThemeConfigToTokens(
 
         // Apply glass effect to backdrop filters
         // When glass is disabled, use default blur values instead of 'none'
-        // Overlay blur can be customized independently
+        // Overlay blur can be customized independently via overlay.blur (new) or effects.backdropFilter.overlay (deprecated)
+        const overlayBlur =
+            config.overlay?.blur || config.effects.backdropFilter?.overlay;
+
         tokens.effects.backdropFilter = {
             modal:
                 config.effects.backdropFilter?.modal ||
@@ -825,7 +836,7 @@ export function convertThemeConfigToTokens(
                     ? glassSettings.blur
                     : defaultTokens.effects.backdropFilter.modal),
             overlay:
-                config.effects.backdropFilter?.overlay ||
+                overlayBlur ||
                 (glassEnabled
                     ? glassSettings.blur
                     : defaultTokens.effects.backdropFilter.overlay),
@@ -885,19 +896,29 @@ export function convertThemeConfigToTokens(
             // Don't modify it here
         }
 
-        // Ensure overlayColor is always respected, even after glass effects
-        if (config.overlayColor && tokens.colors?.background) {
-            tokens.colors.background.overlay = config.overlayColor;
+        // Ensure overlay backgroundColor is always respected, even after glass effects
+        // Support both overlay.backgroundColor (new) and overlayColor (deprecated)
+        // overlayBgColor is already declared at the top of the function
+        if (overlayBgColor && tokens.colors?.background) {
+            tokens.colors.background.overlay = overlayBgColor;
         }
     } else {
         // If no effects config provided, use default backdrop filters
-        tokens.effects.backdropFilter = defaultTokens.effects.backdropFilter;
+        // But still check for overlay.blur
+        const overlayBlur = config.overlay?.blur;
+        tokens.effects.backdropFilter = {
+            ...defaultTokens.effects.backdropFilter,
+            overlay:
+                overlayBlur || defaultTokens.effects.backdropFilter.overlay,
+        };
         tokens.effects.glassOpacity = defaultTokens.effects.glassOpacity;
     }
 
-    // Ensure overlayColor is always respected, even if no effects config
-    if (config.overlayColor && tokens.colors?.background) {
-        tokens.colors.background.overlay = config.overlayColor;
+    // Ensure overlay backgroundColor is always respected, even if no effects config
+    // Support both overlay.backgroundColor (new) and overlayColor (deprecated)
+    // overlayBgColor is already declared at the top of the function
+    if (overlayBgColor && tokens.colors?.background) {
+        tokens.colors.background.overlay = overlayBgColor;
     }
 
     // Derive button styles
