@@ -32,16 +32,23 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            theme={{
-                backgroundColor: isDarkMode ? '#040607' : '#ffffff',
-                textColor: isDarkMode ? 'red' : 'rgba(31, 31, 30, 0.97)',
-                effects: {
-                    glass: {
-                        enabled: false,
-                        intensity: 'high',
-                    },
-                },
-            }}
+            theme={
+                {
+                    // backgroundColor: isDarkMode ? 'blue' : '#ffffff',
+                    // overlayColor: isDarkMode
+                    //     ? 'rgba(0, 0, 0, 0.4)'
+                    //     : 'rgba(255, 255, 255, 0.4)',
+                    // textColor: isDarkMode
+                    //     ? 'rgb(250, 8, 8)'
+                    //     : 'rgba(31, 31, 30, 0.97)',
+                    // effects: {
+                    //     glass: {
+                    //         enabled: false,
+                    //         intensity: 'high',
+                    //     },
+                    // },
+                }
+            }
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
