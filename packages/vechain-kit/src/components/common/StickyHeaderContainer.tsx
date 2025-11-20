@@ -12,7 +12,8 @@ export const StickyHeaderContainer = ({ children }: Props) => {
 
     // Use semantic tokens for sticky header
     const { tokens } = useVechainKitThemeConfig();
-    const backdropFilter = tokens?.effects.backdropFilter.stickyHeader;
+    const backdropFilter =
+        tokens?.effects?.backdropFilter?.stickyHeader ?? 'blur(12px)';
     const stickyHeaderBg = useToken('colors', 'vechain-kit-sticky-header');
 
     useEffect(() => {

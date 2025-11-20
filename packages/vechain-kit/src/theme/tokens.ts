@@ -735,7 +735,14 @@ export function convertThemeConfigToTokens(
     const defaultTokens = getDefaultTokens(darkMode);
 
     // Derive colors from backgroundColor and textColor
-    if (config.backgroundColor || config.textColor || config.overlayColor) {
+    // Always initialize colors if any color-related config is provided
+    if (
+        config.backgroundColor ||
+        config.textColor ||
+        config.overlayColor ||
+        config.button ||
+        config.loginButton
+    ) {
         tokens.colors = {} as ThemeTokens['colors'];
 
         // Derive background colors from backgroundColor
@@ -793,9 +800,10 @@ export function convertThemeConfigToTokens(
     }
 
     // Handle glass effect settings
-    if (config.effects) {
-        tokens.effects = {} as ThemeTokens['effects'];
+    // Always initialize effects to ensure they're always available
+    tokens.effects = {} as ThemeTokens['effects'];
 
+    if (config.effects) {
         const glassEnabled =
             config.effects.glass?.enabled !== undefined
                 ? config.effects.glass.enabled
@@ -828,16 +836,26 @@ export function convertThemeConfigToTokens(
 
         // Apply glass opacity to backgrounds if enabled
         // Note: overlay color is NOT affected by glass opacity - it uses overlayColor directly
-        if (glassEnabled && config.backgroundColor) {
-            tokens.effects.glassOpacity = {
-                modal: glassSettings.modalOpacity,
-                overlay: glassSettings.overlayOpacity,
-                stickyHeader: glassSettings.stickyHeaderOpacity,
-            };
+        tokens.effects.glassOpacity = {
+            modal: glassSettings.modalOpacity,
+            overlay: glassSettings.overlayOpacity,
+            stickyHeader: glassSettings.stickyHeaderOpacity,
+        };
 
-            // Update background colors with glass opacity
-            // IMPORTANT: Do NOT modify overlay - it should use overlayColor as-is
-            if (tokens.colors?.background) {
+        // Update background colors with glass opacity if glass is enabled
+        if (glassEnabled) {
+            // Ensure colors.background is initialized
+            if (!tokens.colors) {
+                tokens.colors = {} as ThemeTokens['colors'];
+            }
+            if (!tokens.colors.background) {
+                tokens.colors.background = {
+                    ...defaultTokens.colors.background,
+                };
+            }
+
+            if (config.backgroundColor) {
+                // Use custom backgroundColor with glass opacity
                 tokens.colors.background.modal = applyOpacity(
                     config.backgroundColor,
                     glassSettings.modalOpacity,
@@ -846,11 +864,25 @@ export function convertThemeConfigToTokens(
                     config.backgroundColor,
                     glassSettings.stickyHeaderOpacity,
                 );
-                // Overlay color is already set correctly from overlayColor or default
-                // Don't modify it here
+            } else {
+                // Apply glass opacity to default background colors
+                const defaultModalBg = defaultTokens.colors.background.modal;
+                const defaultStickyHeaderBg =
+                    defaultTokens.colors.background.stickyHeader;
+
+                // Extract base color from default backgrounds and apply glass opacity
+                // For rgba colors, we need to extract the RGB values and apply new opacity
+                tokens.colors.background.modal = applyOpacity(
+                    defaultModalBg,
+                    glassSettings.modalOpacity,
+                );
+                tokens.colors.background.stickyHeader = applyOpacity(
+                    defaultStickyHeaderBg,
+                    glassSettings.stickyHeaderOpacity,
+                );
             }
-        } else {
-            tokens.effects.glassOpacity = defaultTokens.effects.glassOpacity;
+            // Overlay color is already set correctly from overlayColor or default
+            // Don't modify it here
         }
 
         // Ensure overlayColor is always respected, even after glass effects
@@ -859,10 +891,8 @@ export function convertThemeConfigToTokens(
         }
     } else {
         // If no effects config provided, use default backdrop filters
-        tokens.effects = {
-            backdropFilter: defaultTokens.effects.backdropFilter,
-            glassOpacity: defaultTokens.effects.glassOpacity,
-        };
+        tokens.effects.backdropFilter = defaultTokens.effects.backdropFilter;
+        tokens.effects.glassOpacity = defaultTokens.effects.glassOpacity;
     }
 
     // Ensure overlayColor is always respected, even if no effects config

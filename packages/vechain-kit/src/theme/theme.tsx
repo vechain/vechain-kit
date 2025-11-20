@@ -40,9 +40,7 @@ const getThemeConfig = (
             'chakra-placeholder-color': tokens.colors.text.tertiary,
             // VeChain Kit semantic tokens
             'vechain-kit-modal': tokens.colors.background.modal,
-            'vechain-kit-overlay': darkMode
-                ? 'rgba(0, 0, 0, 0.6)'
-                : 'rgba(0, 0, 0, 0.4)', // Darker overlay with transparency
+            'vechain-kit-overlay': tokens.colors.background.overlay,
             'vechain-kit-card': darkMode
                 ? 'rgba(0, 0, 0, 0.3)'
                 : 'rgba(0, 0, 0, 0.05)', // Darker card with transparency

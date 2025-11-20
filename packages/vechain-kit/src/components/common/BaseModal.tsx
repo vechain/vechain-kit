@@ -48,8 +48,10 @@ export const BaseModal = ({
 
     // Get backdrop filter from tokens context
     const { tokens } = useVechainKitThemeConfig();
-    const defaultBackdropFilter = tokens?.effects.backdropFilter.overlay;
-    const effectiveBackdropFilter = backdropFilter ?? defaultBackdropFilter;
+    const defaultBackdropFilter = tokens?.effects?.backdropFilter?.overlay;
+    const modalBackdropFilter = tokens?.effects?.backdropFilter?.modal;
+    const effectiveBackdropFilter =
+        backdropFilter ?? defaultBackdropFilter ?? 'blur(3px)';
 
     const modalContentProps: ModalContentProps = isDesktop
         ? {}
@@ -89,6 +91,10 @@ export const BaseModal = ({
                 aria-modal={!allowExternalFocus}
                 bg={modalBg}
                 variant="vechainKitBase"
+                sx={{
+                    backdropFilter: modalBackdropFilter,
+                    WebkitBackdropFilter: modalBackdropFilter,
+                }}
                 {...modalContentProps}
             >
                 {children}
