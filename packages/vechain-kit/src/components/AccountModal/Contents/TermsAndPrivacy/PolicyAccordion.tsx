@@ -6,6 +6,7 @@ import {
     HStack,
     Icon,
     Text,
+    useToken,
     VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
@@ -33,6 +34,10 @@ export const PolicyAccordion = ({
     currentPolicy,
 }: PolicyAccordionProps) => {
     const { t } = useTranslation();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+
     const hasDocuments = documents?.length > 0;
 
     const currentPolicyAgreement = documents?.find(
@@ -53,23 +58,25 @@ export const PolicyAccordion = ({
                         }}
                     >
                         <VStack w="full" align="flex-start" textAlign="left">
-                            <Text fontWeight="700">{title}</Text>
-                            <Text fontSize="xs" color="gray.400">
+                            <Text fontWeight="700" color={textPrimary}>
+                                {title}
+                            </Text>
+                            <Text fontSize="xs" color={textSecondary}>
                                 {description}
                             </Text>
                         </VStack>
                         <Icon
                             as={isExpanded ? LuChevronUp : LuChevronDown}
                             fontSize="20px"
-                            opacity={0.7}
+                            color={textSecondary}
                         />
                     </AccordionButton>
                     <AccordionPanel pb={4} pt={3}>
                         <VStack align="stretch" spacing={4}>
                             {currentPolicyAgreement?.id ? (
                                 <HStack w="full">
-                                    <Icon as={LuCheck} color="green.500" />
-                                    <Text fontSize="xs">
+                                    <Icon as={LuCheck} color={textPrimary} />
+                                    <Text fontSize="xs" color={textSecondary}>
                                         {t(
                                             'You accepted current policy on {{date}}',
                                             {
@@ -83,7 +90,11 @@ export const PolicyAccordion = ({
                             ) : null}
 
                             <HStack w="full" textAlign="left">
-                                <Text fontSize="xs" fontWeight="bold">
+                                <Text
+                                    fontSize="xs"
+                                    fontWeight="bold"
+                                    color={textSecondary}
+                                >
                                     {t('All policies you have accepted')}
                                 </Text>
                             </HStack>

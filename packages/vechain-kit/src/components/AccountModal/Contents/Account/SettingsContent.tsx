@@ -12,7 +12,7 @@ import {
     LuCircleHelp,
     LuShield,
     LuLogOut,
-    LuCreditCard,
+    LuSquareUser,
     LuUser,
     LuSettings,
 } from 'react-icons/lu';
@@ -137,7 +137,7 @@ export const SettingsContent = ({
                             title={t('Choose account name')}
                             description={t('Choose a name for your account.')}
                             onClick={handleNameChange}
-                            leftIcon={LuCreditCard}
+                            leftIcon={LuSquareUser}
                             rightIcon={LuChevronRight}
                         />
                     </VStack>
@@ -214,7 +214,6 @@ export const SettingsContent = ({
                             rightIcon={LuChevronRight}
                         />
                         <ActionButton
-                            variant="vechainKitLogout"
                             style={{
                                 borderTopRadius: '0px',
                             }}

@@ -1,7 +1,6 @@
-import { Text, HStack, VStack } from '@chakra-ui/react';
+import { Text, HStack, VStack, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { CrossAppConnectionCache } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
 import { NetworkInfo } from './NetworkInfo';
 
 type Props = {
@@ -10,44 +9,35 @@ type Props = {
 
 export const CrossAppConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const textColorSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
 
     return (
         <>
             {connectionCache.ecosystemApp && (
                 <VStack
                     p={4}
-                    bg={isDark ? '#00000038' : '#f5f5f5'}
+                    bg={cardBg}
                     borderRadius={'xl'}
                     spacing={4}
                     w="full"
                 >
                     <HStack w="full" justifyContent="space-between">
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
+                        <Text fontSize="sm" color={textPrimary}>
                             {t('Logged in with')}:
                         </Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
+                        <Text fontSize="sm" color={textColorSecondary}>
                             {connectionCache.ecosystemApp.name}
                         </Text>
                     </HStack>
 
                     <HStack w="full" justifyContent="space-between">
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
+                        <Text fontSize="sm" color={textPrimary}>
                             {t('At')}:
                         </Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
-                        >
+                        <Text fontSize="sm" color={textColorSecondary}>
                             {new Date(
                                 connectionCache.timestamp,
                             ).toLocaleString()}

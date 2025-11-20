@@ -4,7 +4,7 @@ import {
     HStack,
     VStack,
     Text,
-    useColorModeValue,
+    useToken,
     IconButton,
     Tag,
 } from '@chakra-ui/react';
@@ -24,11 +24,8 @@ export const FeatureAnnouncementCard = ({
     const { t } = useTranslation();
     const { isVisible, closeAnnouncement } = useFeatureAnnouncement();
 
-    const titleColor = useColorModeValue('blackAlpha.800', 'whiteAlpha.800');
-    const descriptionColor = useColorModeValue(
-        'blackAlpha.700',
-        'whiteAlpha.700',
-    );
+    const titleColor = useToken('colors', 'vechain-kit-text-primary');
+    const descriptionColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleOnClick = () => {
         setCurrentContent({

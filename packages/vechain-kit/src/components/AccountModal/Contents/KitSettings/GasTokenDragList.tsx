@@ -1,5 +1,13 @@
 import { useState, useRef } from 'react';
-import { Box, HStack, VStack, Text, Switch, Icon } from '@chakra-ui/react';
+import {
+    Box,
+    HStack,
+    VStack,
+    Text,
+    Switch,
+    Icon,
+    useToken,
+} from '@chakra-ui/react';
 import { LuGripVertical } from 'react-icons/lu';
 import { GasTokenType } from '@/types/gasToken';
 import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
@@ -43,6 +51,11 @@ const TokenPriorityItem = ({
 }: TokenItemProps) => {
     const tokenInfo = SUPPORTED_GAS_TOKENS[token];
     const { darkMode: isDark } = useVeChainKitConfig();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const cardBg = useToken('colors', 'vechain-kit-card');
+
     return (
         <Box
             bg={isDark ? '#ffffff0a' : 'blackAlpha.50'}
@@ -57,9 +70,7 @@ const TokenPriorityItem = ({
                     ? isDark
                         ? 'blue.400'
                         : 'blue.200'
-                    : isDark
-                    ? 'whiteAlpha.200'
-                    : 'gray.200'
+                    : cardBg
             }
             p={3}
             mb={2}
@@ -87,14 +98,13 @@ const TokenPriorityItem = ({
                         _active={{ cursor: 'grabbing' }}
                         pointerEvents="none"
                     >
-                        <Icon as={LuGripVertical} color="gray.400" />
+                        <Icon as={LuGripVertical} color={textSecondary} />
                     </Box>
                     <VStack align="start" spacing={0}>
-                        <Text fontWeight="medium">{tokenInfo.name}</Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                        >
+                        <Text fontWeight="medium" color={textPrimary}>
+                            {tokenInfo.name}
+                        </Text>
+                        <Text fontSize="sm" color={textSecondary}>
                             {tokenInfo.description}
                         </Text>
                     </VStack>

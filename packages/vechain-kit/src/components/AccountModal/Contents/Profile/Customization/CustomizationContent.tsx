@@ -14,8 +14,7 @@ import {
     Textarea,
     FormControl,
     FormLabel,
-    InputGroup,
-    InputLeftElement,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -25,7 +24,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
-import { LuChevronRight, LuCamera, LuCreditCard, LuMail, LuGlobe, LuTwitter } from 'react-icons/lu';
+import { LuChevronRight, LuCamera, LuSquareUser } from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
@@ -34,15 +33,11 @@ import { AccountAvatar } from '@/components/common';
 import { DomainRequiredAlert } from '../../../Components/Alerts';
 import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';
-import { getPicassoImage } from '@/utils';
 
 // Update FormValues type to include validation
 type FormValues = {
     displayName: string;
     description: string;
-    twitter: string;
-    email: string;
-    website: string;
 };
 
 export type AccountCustomizationContentProps = {
@@ -59,6 +54,10 @@ export const CustomizationContent = ({
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
     const { account } = useWallet();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const errorColor = useToken('colors', 'vechain-kit-error');
+    const cardBg = useToken('colors', 'vechain-kit-card');
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const coverInputRef = useRef<HTMLInputElement>(null);
@@ -77,9 +76,6 @@ export const CustomizationContent = ({
     );
     const [initialDisplayName, setInitialDisplayName] = useState('');
     const [initialDescription, setInitialDescription] = useState('');
-    const [initialTwitter, setInitialTwitter] = useState('');
-    const [initialWebsite, setInitialWebsite] = useState('');
-    const [initialEmail, setInitialEmail] = useState('');
 
     // Update form initialization with validation rules
     const {
@@ -90,9 +86,6 @@ export const CustomizationContent = ({
         defaultValues: {
             displayName: account?.metadata?.display || '',
             description: account?.metadata?.description || '',
-            twitter: account?.metadata?.['com.x'] || '',
-            email: account?.metadata?.email || '',
-            website: account?.metadata?.url || '',
         },
         mode: 'onChange',
     });
@@ -103,9 +96,6 @@ export const CustomizationContent = ({
             const metadata = account.metadata;
             setInitialDisplayName(metadata.display || '');
             setInitialDescription(metadata.description || '');
-            setInitialTwitter(metadata['com.x'] || '');
-            setInitialEmail(metadata.email || '');
-            setInitialWebsite(metadata.url || '');
             setInitialAvatarHash(
                 account.image ? account.image.replace('ipfs://', '') : null,
             );
@@ -173,9 +163,6 @@ export const CustomizationContent = ({
             avatarIpfsHash?: string;
             displayName?: string;
             description?: string;
-            twitter?: string;
-            website?: string;
-            email?: string;
         } = {};
 
         if (avatarIpfsHash !== initialAvatarHash && avatarIpfsHash)
@@ -184,11 +171,6 @@ export const CustomizationContent = ({
             changes.displayName = formValues.displayName;
         if (formValues.description !== initialDescription)
             changes.description = formValues.description;
-        if (formValues.twitter !== initialTwitter)
-            changes.twitter = formValues.twitter;
-        if (formValues.website !== initialWebsite)
-            changes.website = formValues.website;
-        if (formValues.email !== initialEmail) changes.email = formValues.email;
         return changes;
     };
 
@@ -216,7 +198,9 @@ export const CustomizationContent = ({
     return (
         <Box>
             <StickyHeaderContainer>
-                <ModalHeader data-testid='modal-title'>{t('Customization')}</ModalHeader>
+                <ModalHeader data-testid="modal-title">
+                    {t('Customization')}
+                </ModalHeader>
                 <ModalBackButton onClick={handleBack} />
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -226,38 +210,12 @@ export const CustomizationContent = ({
                     variant="vechainKitBase"
                     position="relative"
                     overflow="visible"
+                    justifyContent="center"
+                    alignItems="center"
                 >
                     <Box
-                        p={0}
-                        backgroundSize="100% !important"
-                        backgroundPosition="center"
-                        position="relative"
-                        h="80px"
-                        background={`no-repeat url('${getPicassoImage(
-                            account?.address ?? '',
-                        )}')`}
-                        w="100%"
-                        borderRadius="14px 14px 0 0"
-                    >
-                        {/* For now we don't allow cover image upload */}
-                        {/* {hasDomain && (
-                            <IconButton
-                                aria-label="Update cover"
-                                icon={<LuCamera />}
-                                size="sm"
-                                position="absolute"
-                                right="2"
-                                bottom="2"
-                                onClick={() => coverInputRef.current?.click()}
-                            />
-                        )} */}
-                    </Box>
-                    <Box
-                        position="absolute"
-                        top="30px"
-                        left="50%"
-                        transform="translateX(-50%)"
                         cursor={hasDomain ? 'pointer' : 'default'}
+                        pt={2}
                         onClick={() =>
                             hasDomain && fileInputRef.current?.click()
                         }
@@ -275,10 +233,10 @@ export const CustomizationContent = ({
                             <Icon
                                 as={LuCamera}
                                 position="absolute"
-                                right="2"
-                                bottom="2"
-                                bg="gray.700"
-                                color="white"
+                                top="80px"
+                                left="60%"
+                                bg={cardBg}
+                                color={textPrimary}
                                 p="1"
                                 borderRadius="full"
                                 boxSize="6"
@@ -286,11 +244,6 @@ export const CustomizationContent = ({
                         )}
                         {isUploading && (
                             <Box
-                                position="absolute"
-                                top="0"
-                                left="0"
-                                right="0"
-                                bottom="0"
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="center"
@@ -306,14 +259,8 @@ export const CustomizationContent = ({
                         )}
                     </Box>
 
-                    <CardBody
-                        pt="14"
-                        pb="6"
-                        w="full"
-                        backgroundColor={'none'}
-                        border={'none'}
-                    >
-                        <VStack spacing={6} mt={4}>
+                    <CardBody w="full" backgroundColor={'none'} border={'none'}>
+                        <VStack spacing={6}>
                             {!hasDomain && <DomainRequiredAlert />}
 
                             <ActionButton
@@ -360,7 +307,7 @@ export const CustomizationContent = ({
                                         });
                                     }
                                 }}
-                                leftIcon={LuCreditCard}
+                                leftIcon={LuSquareUser}
                                 rightIcon={LuChevronRight}
                                 dataTestId="set-domain-name-button"
                             />
@@ -369,7 +316,13 @@ export const CustomizationContent = ({
                                 isDisabled={!hasDomain}
                                 isInvalid={!!errors.displayName}
                             >
-                                <FormLabel>Display Name</FormLabel>
+                                <FormLabel
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color={textPrimary}
+                                >
+                                    {t('Display Name')}
+                                </FormLabel>
                                 <Input
                                     {...register('displayName', {
                                         maxLength: {
@@ -384,10 +337,18 @@ export const CustomizationContent = ({
                                             ? t('Set a domain first')
                                             : t('Enter your display name')
                                     }
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color={textPrimary}
                                     data-testid="display-name-input"
                                 />
                                 {errors.displayName && (
-                                    <Text color="#ef4444" fontSize="sm" mt={1}>
+                                    <Text
+                                        color={errorColor}
+                                        fontSize="sm"
+                                        mt={1}
+                                        fontWeight="medium"
+                                    >
                                         {errors.displayName.message}
                                     </Text>
                                 )}
@@ -397,7 +358,13 @@ export const CustomizationContent = ({
                                 isDisabled={!hasDomain}
                                 isInvalid={!!errors.description}
                             >
-                                <FormLabel>Description</FormLabel>
+                                <FormLabel
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color={textPrimary}
+                                >
+                                    {t('Description')}
+                                </FormLabel>
                                 <Textarea
                                     {...register('description', {
                                         maxLength: {
@@ -408,118 +375,21 @@ export const CustomizationContent = ({
                                         },
                                     })}
                                     placeholder={t('Eg: DevRel @ ENS Labs')}
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color={textPrimary}
                                     data-testid="description-input"
                                 />
                                 {errors.description && (
-                                    <Text color="#ef4444" fontSize="sm" mt={1}>
+                                    <Text
+                                        color={errorColor}
+                                        mt={1}
+                                        fontSize="sm"
+                                        fontWeight="medium"
+                                    >
                                         {errors.description.message}
                                     </Text>
                                 )}
-                            </FormControl>
-
-                            <FormControl isDisabled={!hasDomain}>
-                                <FormLabel>Social Links</FormLabel>
-                                <VStack spacing={3}>
-                                    <FormControl
-                                        isInvalid={!!errors.twitter}
-                                        isDisabled={!hasDomain}
-                                    >
-                                        <InputGroup>
-                                            <InputLeftElement>
-                                                <Icon as={LuTwitter} />
-                                            </InputLeftElement>
-                                            <Input
-                                                {...register('twitter', {
-                                                    pattern: {
-                                                        value: /^[A-Za-z0-9_]+$/,
-                                                        message: t(
-                                                            'Please enter a valid Twitter handle without @',
-                                                        ),
-                                                    },
-                                                })}
-                                                placeholder={t(
-                                                    'Twitter username',
-                                                )}
-                                                data-testid='twitter-input'
-                                            />
-                                        </InputGroup>
-                                        {errors.twitter && (
-                                            <Text
-                                                color="#ef4444"
-                                                fontSize="sm"
-                                                mt={1}
-                                            >
-                                                {errors.twitter.message}
-                                            </Text>
-                                        )}
-                                    </FormControl>
-
-                                    <FormControl
-                                        isInvalid={!!errors.website}
-                                        isDisabled={!hasDomain}
-                                    >
-                                        <InputGroup>
-                                            <InputLeftElement>
-                                                <Icon as={LuGlobe} />
-                                            </InputLeftElement>
-                                            <Input
-                                                {...register('website', {
-                                                    pattern: {
-                                                        value: /^https:\/\/.+/,
-                                                        message: t(
-                                                            'Website URL must start with https://',
-                                                        ),
-                                                    },
-                                                })}
-                                                placeholder={t('Website URL')}
-                                                type="url"
-                                                data-testid='website-input'
-                                            />
-                                        </InputGroup>
-                                        {errors.website && (
-                                            <Text
-                                                color="#ef4444"
-                                                fontSize="sm"
-                                                mt={1}
-                                            >
-                                                {errors.website.message}
-                                            </Text>
-                                        )}
-                                    </FormControl>
-
-                                    <FormControl
-                                        isInvalid={!!errors.email}
-                                        isDisabled={!hasDomain}
-                                    >
-                                        <InputGroup>
-                                            <InputLeftElement>
-                                                <Icon as={LuMail} />
-                                            </InputLeftElement>
-                                            <Input
-                                                {...register('email', {
-                                                    pattern: {
-                                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                                        message: t(
-                                                            'Please enter a valid email address',
-                                                        ),
-                                                    },
-                                                })}
-                                                placeholder={t('Email address')}
-                                                type="email"
-                                                data-testid='email-input'
-                                            />
-                                        </InputGroup>
-                                        {errors.email && (
-                                            <Text
-                                                color="#ef4444"
-                                                fontSize="sm"
-                                                mt={1}
-                                            >
-                                                {errors.email.message}
-                                            </Text>
-                                        )}
-                                    </FormControl>
-                                </VStack>
                             </FormControl>
                         </VStack>
                     </CardBody>
@@ -547,12 +417,12 @@ export const CustomizationContent = ({
             <StickyFooterContainer>
                 <ModalFooter w="full" p={0}>
                     <Button
-                        variant="vechainKitPrimary"
+                        variant="vechainKitSecondary"
                         onClick={handleSaveChanges}
                         isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}
                         loadingText={t('Preparing changes...')}
-                        data-testid='save-changes-button'
+                        data-testid="save-changes-button"
                     >
                         {t('Save Changes')}
                     </Button>

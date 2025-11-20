@@ -10,18 +10,21 @@ import {
     useColorMode,
     IconButton,
     useMediaQuery,
-    Flex,
 } from '@chakra-ui/react';
-import { useWallet, WalletButton } from '@vechain/vechain-kit';
+import { useWallet, WalletButton, VechainLogo } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { Introduction } from '../components/features/Introduction';
 import { FAQSection } from '../components/features/FAQSection';
-import { LuMoon, LuSun, LuHand, LuChevronDown } from 'react-icons/lu';
+import {
+    LuMoon,
+    LuSun,
+    LuMousePointerClick,
+    LuChevronDown,
+} from 'react-icons/lu';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
-import { VechainLogo } from '@vechain/vechain-kit/assets';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
 
@@ -69,7 +72,7 @@ export default function Home(): ReactElement {
                                     },
                                 }}
                             >
-                                <LuHand
+                                <LuMousePointerClick
                                     size={24}
                                     color={
                                         colorMode === 'light'

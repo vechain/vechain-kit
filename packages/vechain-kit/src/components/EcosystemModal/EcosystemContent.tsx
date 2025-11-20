@@ -10,6 +10,7 @@ import {
     Text,
     VStack,
     useDisclosure,
+    useToken,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
 import { useCrossAppConnectionCache } from '@/hooks';
@@ -18,7 +19,6 @@ import { useState } from 'react';
 import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
 import { isRejectionError } from '@/utils/stringUtils';
 type Props = {
     onClose: () => void;
@@ -28,7 +28,9 @@ type Props = {
 
 export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+
+    // Use semantic token for text color (buttons use variants now)
+    const textColor = useToken('colors', 'vechain-kit-text-primary');
 
     const [loginError, setLoginError] = useState<string>();
     const [selectedApp, setSelectedApp] = useState<string>();
@@ -124,14 +126,9 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                             {appsInfo.map((appInfo) => (
                                 <Button
                                     key={appInfo.id}
+                                    variant="loginIn"
                                     fontSize={'14px'}
                                     fontWeight={'400'}
-                                    backgroundColor={
-                                        isDark ? 'transparent' : '#ffffff'
-                                    }
-                                    border={`1px solid ${
-                                        isDark ? '#ffffff29' : '#ebebeb'
-                                    }`}
                                     p={6}
                                     borderRadius={16}
                                     w={'full'}
@@ -155,7 +152,7 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                     )}
 
                     {!isLoading && !appsInfo && (
-                        <Text textAlign={'center'}>
+                        <Text textAlign={'center'} color={textColor}>
                             {t(
                                 'No application from VeChain ecosystem is available to login.',
                             )}

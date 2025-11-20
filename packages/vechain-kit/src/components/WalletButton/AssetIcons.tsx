@@ -1,4 +1,11 @@
-import { HStack, Text, Circle, Image, StackProps } from '@chakra-ui/react';
+import {
+    HStack,
+    Text,
+    Circle,
+    Image,
+    StackProps,
+    useToken,
+} from '@chakra-ui/react';
 import { useTokensWithValues } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
@@ -31,6 +38,7 @@ export const AssetIcons = ({
     const { t } = useTranslation();
     const { tokensWithBalance } = useTokensWithValues({ address });
     const { darkMode } = useVeChainKitConfig();
+    const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
     const marginLeft = iconsGap < 1 ? `-${iconSize / 2}px` : `${iconsGap}px`;
 
     const tokensToShow = tokensWithBalance.slice(0, maxIcons);
@@ -107,8 +115,7 @@ export const AssetIcons = ({
                 {tokensWithBalance.length === 0 && showNoAssetsWarning && (
                     <Text
                         fontSize={'sm'}
-                        color={darkMode ? 'white' : 'black'}
-                        opacity={0.9}
+                        color={secondaryTextColor}
                         fontWeight="700"
                     >
                         {t('No assets')}

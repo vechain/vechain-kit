@@ -7,7 +7,8 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
-import { FeatureAnnouncementCard, ProfileCard } from '@/components';
+import { FeatureAnnouncementCard } from '@/components';
+import { ProfileCard } from '@/components/ProfileCard/ProfileCard';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';

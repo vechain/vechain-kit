@@ -6,6 +6,7 @@ import {
     VStack,
     ModalFooter,
     Text,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -49,6 +50,7 @@ export const ChooseNameSummaryContent = ({
     initialContentSource = 'settings',
 }: ChooseNameSummaryContentProps) => {
     const { t } = useTranslation();
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
     const { account, connectedWallet, connection } = useWallet();
     const { data: upgradeRequired } = useUpgradeRequired(
@@ -220,7 +222,7 @@ export const ChooseNameSummaryContent = ({
 
             <ModalBody>
                 <VStack spacing={4} w="full" textAlign="center">
-                    <Text fontSize="lg">
+                    <Text fontSize="lg" color={textPrimary}>
                         {isUnsetting
                             ? t(
                                   'Are you sure you want to unset your current domain?',
@@ -233,7 +235,7 @@ export const ChooseNameSummaryContent = ({
                         <Text
                             fontSize="xl"
                             fontWeight="bold"
-                            color="blue.500"
+                            color={textPrimary}
                             data-testid="preconfirm-domain-val"
                         >
                             {`${fullDomain}`}

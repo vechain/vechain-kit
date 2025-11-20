@@ -12,11 +12,13 @@ import {
     Icon,
     Link,
     Text,
+    useToken,
     VStack,
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWallet, useWalletMetadata } from '@/hooks';
-import { LuPencil, LuMail, LuGlobe, LuLogOut, LuTwitter } from 'react-icons/lu';
+import { LuPencil, LuMail, LuGlobe, LuLogOut } from 'react-icons/lu';
+import { FaXTwitter } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
@@ -53,6 +55,9 @@ export const ProfileCard = ({
     const { account, disconnect } = useWallet();
     const { network } = useVeChainKitConfig();
     const { openAccountModal, closeAccountModal } = useModal();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const metadata = useWalletMetadata(address, network.type);
 
@@ -110,6 +115,7 @@ export const ProfileCard = ({
                     {showDisplayName && metadata?.records?.display && (
                         <Text
                             fontSize="xl"
+                            color={textPrimary}
                             fontWeight="bold"
                             w="full"
                             textAlign="center"
@@ -123,7 +129,7 @@ export const ProfileCard = ({
                     {showDescription && metadata?.records?.description && (
                         <Text
                             fontSize="sm"
-                            opacity={0.7}
+                            color={textSecondary}
                             w="full"
                             textAlign="center"
                             data-testid="description-val"
@@ -145,7 +151,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="mail-link"
                                 >
-                                    <Icon as={LuMail} />
+                                    <Icon as={LuMail} color={textPrimary} />
                                 </Link>
                             )}
                             {metadata?.records?.url && (
@@ -154,7 +160,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="website-link"
                                 >
-                                    <Icon as={LuGlobe} />
+                                    <Icon as={LuGlobe} color={textPrimary} />
                                 </Link>
                             )}
                             {metadata?.records?.['com.x'] && (
@@ -163,7 +169,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="twitter-link"
                                 >
-                                    <Icon as={LuTwitter} />
+                                    <Icon as={FaXTwitter} color={textPrimary} />
                                 </Link>
                             )}
                         </HStack>
@@ -192,14 +198,18 @@ export const ProfileCard = ({
                                 height="40px"
                                 variant="ghost"
                                 leftIcon={<Icon as={LuPencil} />}
-                                onClick={onEditClick ?? (() => {
-                                    openAccountModal({
-                                        type: 'account-customization',
-                                        props: {
-                                            setCurrentContent: () => closeAccountModal(),
-                                        },
-                                    });
-                                })}
+                                onClick={
+                                    onEditClick ??
+                                    (() => {
+                                        openAccountModal({
+                                            type: 'account-customization',
+                                            props: {
+                                                setCurrentContent: () =>
+                                                    closeAccountModal(),
+                                            },
+                                        });
+                                    })
+                                }
                                 data-testid="customize-button"
                             >
                                 {t('Customize')}
@@ -211,18 +221,22 @@ export const ProfileCard = ({
                                 variant="ghost"
                                 leftIcon={<Icon as={LuLogOut} />}
                                 colorScheme="red"
-                                onClick={onLogout ?? (() => {
-                                    openAccountModal({
-                                        type: 'disconnect-confirm',
+                                onClick={
+                                    onLogout ??
+                                    (() => {
+                                        openAccountModal({
+                                            type: 'disconnect-confirm',
                                             props: {
                                                 onDisconnect: () => {
                                                     disconnect();
                                                     closeAccountModal();
                                                 },
-                                                onBack: () => closeAccountModal(),
+                                                onBack: () =>
+                                                    closeAccountModal(),
                                             },
                                         });
-                                })}
+                                    })
+                                }
                                 data-testid="logout-button"
                             >
                                 {t('Logout')}

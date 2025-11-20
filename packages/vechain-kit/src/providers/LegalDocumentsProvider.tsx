@@ -59,7 +59,7 @@ export const useLegalDocuments = () => {
 
 export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
-    const { darkMode, legalDocuments } = useVeChainKitConfig();
+    const { darkMode, legalDocuments, theme } = useVeChainKitConfig();
 
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         LegalDocumentAgreement[]
@@ -303,7 +303,7 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             }}
         >
             {children}
-            <VechainKitThemeProvider darkMode={darkMode}>
+            <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
                 <LegalDocumentsModal
                     isOpen={showTermsModal}
                     onAgree={handleAgree}

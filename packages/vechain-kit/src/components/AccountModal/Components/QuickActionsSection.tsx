@@ -77,11 +77,12 @@ const QuickActionButton = ({
 
     return (
         <IconButton
-            variant="mainContentButton"
+            variant="vechainKitSecondary"
             h="80px"
             w="full"
             aria-label={label}
             isDisabled={isDisabled}
+            p={3}
             icon={
                 <VStack spacing={4}>
                     <Icon as={icon} boxSize={5} opacity={0.9} />

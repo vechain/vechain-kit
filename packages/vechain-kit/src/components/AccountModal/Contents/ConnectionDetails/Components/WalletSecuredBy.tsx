@@ -1,17 +1,18 @@
 import { PrivyLogo, VechainLogo } from '@/assets';
 import { useCrossAppConnectionCache, useWallet } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { HStack, Icon, Image, Text, VStack } from '@chakra-ui/react';
+import { HStack, Icon, Image, Text, VStack, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { LuMinus } from 'react-icons/lu';
 
 export const WalletSecuredBy = () => {
     const { connection } = useWallet();
     const { t } = useTranslation();
-    const { darkMode: isDark, privy } = useVeChainKitConfig();
+    const { privy, darkMode: isDark } = useVeChainKitConfig();
     const { getConnectionCache } = useCrossAppConnectionCache();
 
     const connectionCache = getConnectionCache();
+    const cardBg = useToken('colors', 'vechain-kit-card');
 
     return (
         <VStack
@@ -21,7 +22,7 @@ export const WalletSecuredBy = () => {
             mt={5}
             p={3}
             borderRadius="lg"
-            bg={isDark ? '#00000038' : '#f5f5f5'}
+            bg={cardBg}
             shadow="sm"
         >
             <Text fontSize={'xs'} fontWeight={'800'}>

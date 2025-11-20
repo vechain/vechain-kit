@@ -28,10 +28,18 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const isDarkMode = colorMode === 'dark';
 
     const logo =
-        'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
+        'https://vechain-brand-assets.s3.eu-north-1.amazonaws.com/VeChain_Logomark_Light.png';
 
     return (
         <VeChainKitProvider
+            theme={{
+                effects: {
+                    glass: {
+                        enabled: true,
+                        intensity: 'high',
+                    },
+                },
+            }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
@@ -47,7 +55,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     // 'rabby_wallet',
                     // 'coinbase_wallet',
                     // 'rainbow',
-                    // 'phantom',
                     // 'metamask',
                 ],
                 appearance: {

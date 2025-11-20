@@ -16,13 +16,13 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
+    useToken,
     VStack,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { AccountModalContentTypes } from '../../Types';
 import { LuExternalLink } from 'react-icons/lu';
 import { WalletSecuredBy } from '../ConnectionDetails/Components';
-import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: (content: AccountModalContentTypes) => void;
@@ -34,7 +34,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
     const walletImage = getPicassoImage(connectedWallet?.address ?? '');
     const { getConnectionCache } = useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
         <ScrollToTopWrapper>
@@ -69,7 +69,7 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
                     {connection.isConnectedWithCrossApp && (
                         <>
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t(
                                     'This is your main wallet, created by {{element}} and secured by Privy.',
                                     {
@@ -79,12 +79,12 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 )}
                             </Text>
 
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t(
                                     'This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.',
                                 )}
                             </Text>
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t(
                                     'Please be sure to keep this wallet safe and backed up.',
                                 )}
@@ -94,29 +94,25 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
 
                     {connection.isConnectedWithSocialLogin && (
                         <>
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t(
                                     'You are using an Embedded Wallet secured by your social login method, ensuring a seamless VeChain experience.',
                                 )}
                             </Text>
 
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t(
                                     'This wallet is the owner of your smart account, which is used as your identity and as a gateway for your blockchain interactions.',
                                 )}
                             </Text>
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t(
                                     'We highly recommend exporting your private key to back up your wallet. This ensures you can restore it if needed or transfer it to self-custody using',
                                 )}
                                 <Link
                                     href="https://www.veworld.net/"
                                     isExternal
-                                    color={
-                                        isDark
-                                            ? 'whiteAlpha.600'
-                                            : 'blackAlpha.600'
-                                    }
+                                    color={textSecondary}
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >
@@ -126,16 +122,12 @@ export const EmbeddedWalletContent = ({ setCurrentContent }: Props) => {
                                 </Link>
                                 .
                             </Text>
-                            <Text fontSize={'sm'} opacity={0.5}>
+                            <Text fontSize={'sm'} color={textSecondary}>
                                 {t('Click')}{' '}
                                 <Link
                                     href="https://docs.vechainkit.vechain.org/vechain-kit/embedded-wallets"
                                     isExternal
-                                    color={
-                                        isDark
-                                            ? 'whiteAlpha.600'
-                                            : 'blackAlpha.600'
-                                    }
+                                    color={textSecondary}
                                     fontSize={'14px'}
                                     textDecoration={'underline'}
                                 >

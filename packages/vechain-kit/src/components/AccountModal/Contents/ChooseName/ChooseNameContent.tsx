@@ -7,12 +7,12 @@ import {
     Button,
     Icon,
     ModalFooter,
+    useToken,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { LuCreditCard } from 'react-icons/lu';
+import { LuSquareUser } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type ChooseNameContentProps = {
@@ -29,8 +29,11 @@ export const ChooseNameContent = ({
     initialContentSource = 'settings',
 }: ChooseNameContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+
     const { isolatedView } = useAccountModalOptions();
+
+    const textColor = useToken('colors', 'vechain-kit-text-primary');
+    const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleBack = () => {
         onBack();
@@ -39,26 +42,32 @@ export const ChooseNameContent = ({
     return (
         <>
             <StickyHeaderContainer>
-                <ModalHeader data-testid='modal-title'>{t('Choose your account name')}</ModalHeader>
+                <ModalHeader data-testid="modal-title">
+                    {t('Choose your account name')}
+                </ModalHeader>
                 {!isolatedView && <ModalBackButton onClick={handleBack} />}
-                <ModalCloseButton/>
+                <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody>
                 <VStack spacing={6} align="center" py={8}>
                     <Icon
-                        as={LuCreditCard}
+                        as={LuSquareUser}
                         boxSize={16}
-                        opacity={0.5}
-                        color={isDark ? 'whiteAlpha.800' : 'gray.600'}
+                        color={secondaryTextColor}
                     />
                     <VStack spacing={2}>
-                        <Text fontSize="lg" fontWeight="500" textAlign="center">
+                        <Text
+                            fontSize="lg"
+                            fontWeight="500"
+                            textAlign="center"
+                            color={textColor}
+                        >
                             {t('Finally say goodbye to 0x addresses')}
                         </Text>
                         <Text
                             fontSize="md"
-                            opacity={0.7}
+                            color={secondaryTextColor}
                             textAlign="center"
                             px={4}
                         >
@@ -71,7 +80,7 @@ export const ChooseNameContent = ({
             </ModalBody>
             <ModalFooter>
                 <Button
-                    variant="vechainKitPrimary"
+                    variant="vechainKitSecondary"
                     onClick={() =>
                         setCurrentContent({
                             type: 'choose-name-search',
