@@ -67,8 +67,7 @@ export const ChooseNameContent = ({
                         </Text>
                         <Text
                             fontSize="md"
-                            opacity={0.7}
-                            color={textColor}
+                            color={secondaryTextColor}
                             textAlign="center"
                             px={4}
                         >

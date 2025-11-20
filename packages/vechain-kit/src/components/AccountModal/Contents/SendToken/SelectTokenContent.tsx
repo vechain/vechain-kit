@@ -34,11 +34,16 @@ type Props = {
     showAllTokens?: boolean;
 };
 
-export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = false }: Props) => {
+export const SelectTokenContent = ({
+    onSelectToken,
+    onBack,
+    showAllTokens = false,
+}: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
-    
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { account } = useWallet();
@@ -51,13 +56,17 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
     const availableTokens = useMemo(() => {
         if (showAllTokens) {
             // Show all tokens, sorted with owned tokens first (by value), then unowned
-            const ownedTokens = sortedTokens.filter((token) => Number(token.balance) > 0);
-            const unownedTokens = sortedTokens.filter((token) => Number(token.balance) === 0);
+            const ownedTokens = sortedTokens.filter(
+                (token) => Number(token.balance) > 0,
+            );
+            const unownedTokens = sortedTokens.filter(
+                (token) => Number(token.balance) === 0,
+            );
 
             // Owned tokens are already sorted by value (highest first)
             // Unowned tokens are sorted alphabetically
             const sortedUnowned = [...unownedTokens].sort((a, b) =>
-                a.symbol.localeCompare(b.symbol)
+                a.symbol.localeCompare(b.symbol),
             );
 
             return [...ownedTokens, ...sortedUnowned];
@@ -84,7 +93,11 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
                         <InputGroup size="lg">
                             <Input
                                 placeholder="Search token"
-                                bg={isDark ? '#00000038' : 'gray.50'}
+                                bg={
+                                    isDark
+                                        ? 'vechain-kit-overlay'
+                                        : 'vechain-kit-card'
+                                }
                                 borderRadius="xl"
                                 height="56px"
                                 pl={12}
@@ -93,36 +106,30 @@ export const SelectTokenContent = ({ onSelectToken, onBack, showAllTokens = fals
                                 data-testid="search-token-input"
                             />
                             <InputLeftElement h="56px" w="56px" pl={4}>
-                                <LuSearch
-                                    color={
-                                        isDark ? 'whiteAlpha.400' : 'gray.400'
-                                    }
-                                />
+                                <LuSearch color={textTertiary} />
                             </InputLeftElement>
                         </InputGroup>
 
                         <Text
                             fontSize="lg"
                             fontWeight="semibold"
-                            color={textSecondary}
+                            color={textPrimary}
                             mt={4}
                         >
                             {showAllTokens ? t('All tokens') : t('Your tokens')}
                         </Text>
 
                         {filteredTokens.length === 0 ? (
-                            <VStack
-                                spacing={2}
-                                py={8}
-                                color={
-                                    isDark ? 'whiteAlpha.600' : 'blackAlpha.600'
-                                }
-                            >
-                                <Icon as={LuSlash} boxSize={12} opacity={0.5} />
-                                <Text fontSize="lg">
+                            <VStack spacing={2} py={8}>
+                                <Icon
+                                    as={LuSlash}
+                                    boxSize={12}
+                                    color={textTertiary}
+                                />
+                                <Text fontSize="lg" color={textPrimary}>
                                     {t('No tokens found')}
                                 </Text>
-                                <Text fontSize="md">
+                                <Text fontSize="md" color={textSecondary}>
                                     {t('Try searching with a different term')}
                                 </Text>
                             </VStack>

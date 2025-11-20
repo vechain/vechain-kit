@@ -392,7 +392,7 @@ const defaultDarkTokens: ThemeTokens = {
         background: {
             modal: '#1f1f1e',
             overlay: 'rgba(0, 0, 0, 0.6)',
-            card: '#1c1c1b',
+            card: 'rgba(0, 0, 0, 0.3)',
             cardElevated: '#2a2a2a',
             stickyHeader: 'rgba(31, 31, 30, 0.9)',
         },

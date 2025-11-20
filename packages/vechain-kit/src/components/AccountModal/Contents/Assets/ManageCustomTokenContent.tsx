@@ -12,11 +12,11 @@ import {
     FormControl,
     FormLabel,
     Image,
+    useToken,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
 import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
 import { humanAddress, TOKEN_LOGOS } from '@/utils';
@@ -37,7 +37,12 @@ export const ManageCustomTokenContent = ({
     setCurrentContent,
 }: ManageCustomTokenContentProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const backgroundCard = useToken('colors', 'vechain-kit-card');
+    const backgroundOverlay = useToken('colors', 'vechain-kit-overlay');
+
     const {
         addToken,
         removeToken,
@@ -96,14 +101,14 @@ export const ManageCustomTokenContent = ({
             <ModalBody>
                 <VStack spacing={4} align="stretch" position="relative">
                     {/* Input Section */}
-                    <Box
-                        p={6}
-                        borderRadius="xl"
-                        bg={isDark ? '#1a1a1a' : 'gray.50'}
-                    >
+                    <Box p={6} borderRadius="xl" bg={backgroundCard}>
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.newTokenAddress}>
-                                <FormLabel fontSize="sm" fontWeight="medium">
+                                <FormLabel
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color={textPrimary}
+                                >
                                     {t('Token Contract Address')}
                                 </FormLabel>
                                 <Input
@@ -142,11 +147,7 @@ export const ManageCustomTokenContent = ({
 
                     {/* Existing Tokens List */}
                     {customTokens.length > 0 && (
-                        <Box
-                            p={4}
-                            borderRadius="xl"
-                            bg={isDark ? '#ffffff0f' : 'gray.50'}
-                        >
+                        <Box p={4} borderRadius="xl" bg={backgroundOverlay}>
                             <Text fontSize="sm" fontWeight="medium" mb={2}>
                                 {t('Existing Custom Tokens')}
                             </Text>
@@ -158,7 +159,7 @@ export const ManageCustomTokenContent = ({
                                         fontSize="sm"
                                         p={2}
                                         borderRadius="md"
-                                        bg={isDark ? '#2a2a2a' : 'gray.100'}
+                                        bg={backgroundCard}
                                     >
                                         <HStack>
                                             <Image
@@ -178,6 +179,7 @@ export const ManageCustomTokenContent = ({
                                                         <Text
                                                             fontSize="8px"
                                                             fontWeight="bold"
+                                                            color={textPrimary}
                                                         >
                                                             {token.symbol?.slice(
                                                                 0,
@@ -187,11 +189,14 @@ export const ManageCustomTokenContent = ({
                                                     </Box>
                                                 }
                                             />
-                                            <Text fontWeight="medium">
+                                            <Text
+                                                fontWeight="medium"
+                                                color={textPrimary}
+                                            >
                                                 {token.symbol ?? 'Unknown'}
                                             </Text>
                                         </HStack>
-                                        <Text opacity={0.7}>
+                                        <Text color={textSecondary}>
                                             {humanAddress(
                                                 token.address ?? '',
                                                 4,
@@ -201,14 +206,17 @@ export const ManageCustomTokenContent = ({
                                         <Button
                                             size="sm"
                                             variant="ghost"
-                                            colorScheme="red"
+                                            color={textPrimary}
                                             borderRadius="md"
                                             p={2}
                                             onClick={() =>
                                                 removeToken(token.address)
                                             }
                                         >
-                                            <LuTrash2 size={16} />
+                                            <LuTrash2
+                                                size={16}
+                                                color={textPrimary}
+                                            />
                                         </Button>
                                     </HStack>
                                 ))}
