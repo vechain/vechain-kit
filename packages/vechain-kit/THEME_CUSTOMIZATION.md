@@ -34,17 +34,18 @@ The theme configuration has been simplified to focus on what matters most:
 
 ### Base Colors
 
-- **`backgroundColor`** (optional) - Base background color. Automatically derives:
-  - Modal background (100% opacity)
-  - Card background (80% opacity)
-  - Sticky header background (90% opacity)
-  - Secondary/tertiary colors (with opacity overlays)
-  - Border colors
+-   **`backgroundColor`** (optional) - Base background color. Automatically derives:
 
-- **`textColor`** (optional) - Base text color. Automatically derives:
-  - Primary text (100% opacity)
-  - Secondary text (70% opacity)
-  - Tertiary text (50% opacity)
+    -   Modal background (100% opacity)
+    -   Card background (80% opacity)
+    -   Sticky header background (90% opacity)
+    -   Secondary/tertiary colors (with opacity overlays)
+    -   Border colors
+
+-   **`textColor`** (optional) - Base text color. Automatically derives:
+    -   Primary text (100% opacity)
+    -   Secondary text (70% opacity)
+    -   Tertiary text (50% opacity)
 
 ### Overlay Configuration
 
@@ -142,14 +143,16 @@ effects: {
 ```
 
 When glass is enabled, the system automatically:
-- Applies appropriate blur values based on intensity
-- Adjusts background opacities for glass morphism effect
-- Maintains readability across all surfaces
+
+-   Applies appropriate blur values based on intensity
+-   Adjusts background opacities for glass morphism effect
+-   Maintains readability across all surfaces
 
 **Glass Intensity Settings:**
-- `low`: `blur(2px)`, modal opacity 0.6, sticky header opacity 0.7
-- `medium`: `blur(3px)`, modal opacity 0.7, sticky header opacity 0.8
-- `high`: `blur(5px)`, modal opacity 0.8, sticky header opacity 0.85
+
+-   `low`: `blur(2px)`, modal opacity 0.6, sticky header opacity 0.7
+-   `medium`: `blur(3px)`, modal opacity 0.7, sticky header opacity 0.8
+-   `high`: `blur(5px)`, modal opacity 0.8, sticky header opacity 0.85
 
 ## Complete Example
 
@@ -162,23 +165,21 @@ const theme: VechainKitThemeConfig = {
     backgroundColor: isDarkMode ? '#1f1f1e' : '#ffffff',
     textColor: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
     overlay: {
-        backgroundColor: isDarkMode 
-            ? 'rgba(0, 0, 0, 0.6)' 
+        backgroundColor: isDarkMode
+            ? 'rgba(0, 0, 0, 0.6)'
             : 'rgba(0, 0, 0, 0.4)',
         blur: 'blur(3px)',
     },
     button: {
-        bg: isDarkMode 
-            ? 'rgba(255, 255, 255, 0.05)' 
-            : 'rgba(0, 0, 0, 0.1)',
+        bg: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.1)',
         color: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
         border: 'none',
     },
     loginButton: {
         bg: 'transparent',
         color: isDarkMode ? 'white' : '#1a1a1a',
-        border: isDarkMode 
-            ? '1px solid rgba(255, 255, 255, 0.1)' 
+        border: isDarkMode
+            ? '1px solid rgba(255, 255, 255, 0.1)'
             : '1px solid #ebebeb',
     },
     fonts: {
@@ -204,7 +205,7 @@ const theme: VechainKitThemeConfig = {
 
 <VeChainKitProvider theme={theme} {...otherProps}>
     {children}
-</VeChainKitProvider>
+</VeChainKitProvider>;
 ```
 
 ## How It Works
@@ -220,23 +221,26 @@ const theme: VechainKitThemeConfig = {
 ## Color Derivation
 
 When you provide `backgroundColor`:
-- **Modal**: Uses `backgroundColor` at 100% opacity
-- **Card**: Uses `backgroundColor` at 80% opacity
-- **Sticky Header**: Uses `backgroundColor` at 90% opacity
-- **Secondary Colors**: Derived from white (dark mode) or black (light mode) overlays with opacity
-- **Borders**: Derived from white (dark mode) or black (light mode) overlays with low opacity
+
+-   **Modal**: Uses `backgroundColor` at 100% opacity
+-   **Card**: Uses `backgroundColor` at 80% opacity
+-   **Sticky Header**: Uses `backgroundColor` at 90% opacity
+-   **Secondary Colors**: Derived from white (dark mode) or black (light mode) overlays with opacity
+-   **Borders**: Derived from white (dark mode) or black (light mode) overlays with low opacity
 
 When you provide `textColor`:
-- **Primary Text**: Uses `textColor` at 100% opacity
-- **Secondary Text**: Uses `textColor` at 70% opacity
-- **Tertiary Text**: Uses `textColor` at 50% opacity
+
+-   **Primary Text**: Uses `textColor` at 100% opacity
+-   **Secondary Text**: Uses `textColor` at 70% opacity
+-   **Tertiary Text**: Uses `textColor` at 50% opacity
 
 ## Glass Effects
 
 When glass effects are enabled:
-- Background colors automatically get reduced opacity based on intensity
-- Blur values are applied to modal, overlay, and sticky header
-- The system ensures readability while maintaining the glass aesthetic
+
+-   Background colors automatically get reduced opacity based on intensity
+-   Blur values are applied to modal, overlay, and sticky header
+-   The system ensures readability while maintaining the glass aesthetic
 
 If glass is disabled, default blur values are still applied (not removed).
 
@@ -301,7 +305,8 @@ The sticky header automatically becomes transparent when there's no content belo
 ## Default Behavior
 
 If you don't provide a theme config, the system uses default colors:
-- **Light Mode**: White backgrounds, dark text
-- **Dark Mode**: Dark backgrounds (`#1f1f1e`), light text (`rgb(223, 223, 221)`)
-- **Default Blur**: `blur(3px)` for modal and overlay, `blur(12px)` for sticky header
-- **Default Overlay**: `rgba(0, 0, 0, 0.4)` (light) or `rgba(0, 0, 0, 0.6)` (dark)
+
+-   **Light Mode**: White backgrounds, dark text
+-   **Dark Mode**: Dark backgrounds (`#1f1f1e`), light text (`rgb(223, 223, 221)`)
+-   **Default Blur**: `blur(3px)` for modal and overlay, `blur(12px)` for sticky header
+-   **Default Overlay**: `rgba(0, 0, 0, 0.4)` (light) or `rgba(0, 0, 0, 0.6)` (dark)
