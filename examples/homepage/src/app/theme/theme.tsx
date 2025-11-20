@@ -32,8 +32,8 @@ const exampleTheme = {
     },
     //@ts-ignore
     fonts: {
-        heading: `"Instrument Sans Variable", sans-serif`,
-        body: `"Inter Variable", sans-serif`,
+        heading: `"Satoshi", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+        body: `"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
     },
 };
 

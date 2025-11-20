@@ -72,7 +72,8 @@ export interface ThemeTokens {
         };
     };
     fonts: {
-        family: string;
+        body: string; // Font family for body text
+        heading: string; // Font family for headings (h1-h6)
         sizes: {
             small: string;
             medium: string;
@@ -118,7 +119,9 @@ export interface VechainKitThemeConfig {
         border?: string; // Full CSS border string like "1px solid #color"
     };
     fonts?: {
-        family?: string; // Font family (e.g., "Inter, sans-serif")
+        family?: string; // Font family for both body and headings (backward compatibility)
+        body?: string; // Font family for body text (e.g., "Inter, sans-serif")
+        heading?: string; // Font family for headings (e.g., "Satoshi, sans-serif")
         sizes?: {
             small?: string; // Font size for small text (e.g., "12px")
             medium?: string; // Font size for medium text (e.g., "14px")
@@ -469,7 +472,9 @@ const defaultLightTokens: ThemeTokens = {
         },
     },
     fonts: {
-        family: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        body: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        heading:
+            'Satoshi, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         sizes: {
             small: '12px',
             medium: '14px',
@@ -561,7 +566,9 @@ const defaultDarkTokens: ThemeTokens = {
         },
     },
     fonts: {
-        family: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        body: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        heading:
+            'Satoshi, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         sizes: {
             small: '12px',
             medium: '14px',
@@ -681,6 +688,14 @@ export function mergeTokens(
             ...defaultTokens.fonts,
             ...customTokens.fonts,
         };
+
+        // Ensure body and heading are set (use body as fallback for heading if not provided)
+        if (customTokens.fonts.body) {
+            merged.fonts.body = customTokens.fonts.body;
+        }
+        if (customTokens.fonts.heading) {
+            merged.fonts.heading = customTokens.fonts.heading;
+        }
 
         if (customTokens.fonts.sizes) {
             merged.fonts.sizes = {
@@ -927,8 +942,17 @@ export function convertThemeConfigToTokens(
         tokens.fonts = {} as ThemeTokens['fonts'];
         const defaultFonts = defaultTokens.fonts;
 
-        // Font family
-        tokens.fonts.family = config.fonts.family ?? defaultFonts.family;
+        // Font families - support backward compatibility with `family` prop
+        // If `family` is provided, use it for both body and heading
+        // Otherwise, use separate `body` and `heading` props
+        if (config.fonts.family) {
+            // Backward compatibility: use `family` for both
+            tokens.fonts.body = config.fonts.family;
+            tokens.fonts.heading = config.fonts.family;
+        } else {
+            tokens.fonts.body = config.fonts.body ?? defaultFonts.body;
+            tokens.fonts.heading = config.fonts.heading ?? defaultFonts.heading;
+        }
 
         // Font sizes
         tokens.fonts.sizes = {

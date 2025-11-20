@@ -58,7 +58,7 @@ export function generateDAppKitCSSVariables(
         '--vdk-modal-backdrop-filter': tokens.effects.backdropFilter.modal,
         '--vdk-border-dark-source-card': `1px solid ${tokens.colors.border.default}`,
         '--vdk-border-light-source-card': `1px solid ${tokens.colors.border.default}`,
-        '--vdk-font-family': tokens.fonts.family,
+        '--vdk-font-family': tokens.fonts.body,
         '--vdk-font-size-medium': tokens.fonts.sizes.medium,
         '--vdk-font-size-large': tokens.fonts.sizes.large,
         '--vdk-font-weight-medium': tokens.fonts.weights.medium.toString(),

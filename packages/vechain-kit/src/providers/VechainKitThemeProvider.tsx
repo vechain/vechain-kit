@@ -45,7 +45,13 @@ const createVeChainKitCache = () => {
 };
 
 // CSS Layer setup - simpler approach that doesn't interfere with host app
-const LayerSetup = ({ fontFamily }: { fontFamily: string }) => {
+const LayerSetup = ({
+    bodyFont,
+    headingFont,
+}: {
+    bodyFont: string;
+    headingFont: string;
+}) => {
     return (
         <Global
             styles={css`
@@ -71,16 +77,45 @@ const LayerSetup = ({ fontFamily }: { fontFamily: string }) => {
                     [data-vechain-kit],
                     [id*='headlessui-portal-root'],
                     [data-vdk-modal] {
-                        --chakra-fonts-body: ${fontFamily} !important;
-                        --chakra-fonts-heading: ${fontFamily} !important;
-                        font-family: ${fontFamily} !important;
+                        --chakra-fonts-body: ${bodyFont} !important;
+                        --chakra-fonts-heading: ${headingFont} !important;
+                        font-family: ${bodyFont} !important;
                     }
 
+                    /* Apply body font to all text elements */
                     #vechain-kit-root *,
                     [data-vechain-kit] *,
                     [id*='headlessui-portal-root'] *,
                     [data-vdk-modal] * {
-                        font-family: ${fontFamily} !important;
+                        font-family: ${bodyFont} !important;
+                    }
+
+                    /* Apply heading font to headings */
+                    #vechain-kit-root h1,
+                    #vechain-kit-root h2,
+                    #vechain-kit-root h3,
+                    #vechain-kit-root h4,
+                    #vechain-kit-root h5,
+                    #vechain-kit-root h6,
+                    [data-vechain-kit] h1,
+                    [data-vechain-kit] h2,
+                    [data-vechain-kit] h3,
+                    [data-vechain-kit] h4,
+                    [data-vechain-kit] h5,
+                    [data-vechain-kit] h6,
+                    [id*='headlessui-portal-root'] h1,
+                    [id*='headlessui-portal-root'] h2,
+                    [id*='headlessui-portal-root'] h3,
+                    [id*='headlessui-portal-root'] h4,
+                    [id*='headlessui-portal-root'] h5,
+                    [id*='headlessui-portal-root'] h6,
+                    [data-vdk-modal] h1,
+                    [data-vdk-modal] h2,
+                    [data-vdk-modal] h3,
+                    [data-vdk-modal] h4,
+                    [data-vdk-modal] h5,
+                    [data-vdk-modal] h6 {
+                        font-family: ${headingFont} !important;
                     }
                 }
             `}
@@ -92,11 +127,13 @@ const LayerSetup = ({ fontFamily }: { fontFamily: string }) => {
 const EnsureChakraProvider = ({
     children,
     theme,
-    fontFamily,
+    bodyFont,
+    headingFont,
 }: {
     children: ReactNode;
     theme: any;
-    fontFamily: string;
+    bodyFont: string;
+    headingFont: string;
 }) => {
     const cache = useMemo(() => createVeChainKitCache(), []);
 
@@ -104,7 +141,7 @@ const EnsureChakraProvider = ({
     // vechain-kit components should be self-contained with their own styling
     return (
         <CacheProvider value={cache}>
-            <LayerSetup fontFamily={fontFamily} />
+            <LayerSetup bodyFont={bodyFont} headingFont={headingFont} />
             <ChakraProvider
                 theme={theme}
                 resetCSS={false}
@@ -201,7 +238,8 @@ export const VechainKitThemeProvider = ({
             <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider
                 theme={theme}
-                fontFamily={tokens.fonts.family}
+                bodyFont={tokens.fonts.body}
+                headingFont={tokens.fonts.heading}
             >
                 <ColorModeSync darkMode={darkMode} />
                 <Box
