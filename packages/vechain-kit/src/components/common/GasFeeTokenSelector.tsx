@@ -48,10 +48,11 @@ export const GasFeeTokenSelector = ({
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const errorColor = useToken('colors', 'vechain-kit-error');
 
     const itemBg = (selected: boolean) =>
-        selected ? textSecondary : 'transparent';
+        selected ? textTertiary : 'transparent';
     const itemBorderColor = (selected: boolean) =>
         selected ? textPrimary : 'transparent';
 
