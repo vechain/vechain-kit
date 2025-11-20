@@ -16,7 +16,6 @@ import {
     ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
-import { useVeChainKitConfig } from '@/providers';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
@@ -31,7 +30,6 @@ export const FAQContent = ({
     onGoBack,
     showLanguageSelector = true,
 }: FAQContentProps) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { i18n, t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
