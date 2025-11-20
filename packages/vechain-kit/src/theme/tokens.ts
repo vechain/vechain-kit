@@ -365,14 +365,14 @@ function getGlassEffectSettings(
 
     const settings = {
         low: {
-            blur: 'blur(2px)',
-            modalOpacity: 0.6,
+            blur: 'blur(4px)',
+            modalOpacity: 0.4,
             overlayOpacity: 0.3,
             stickyHeaderOpacity: 0.7,
         },
         medium: {
-            blur: 'blur(3px)',
-            modalOpacity: 0.7,
+            blur: 'blur(4px)',
+            modalOpacity: 0.6,
             overlayOpacity: 0.4,
             stickyHeaderOpacity: 0.8,
         },
@@ -485,7 +485,7 @@ const defaultLightTokens: ThemeTokens = {
 const defaultDarkTokens: ThemeTokens = {
     colors: {
         background: {
-            modal: '#1f1f1e',
+            modal: '#151515',
             overlay: 'rgba(0, 0, 0, 0.6)',
             card: 'rgba(0, 0, 0, 0.3)',
             cardElevated: '#2a2a2a',
