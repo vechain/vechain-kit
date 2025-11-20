@@ -36,7 +36,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 effects: {
                     glass: {
                         enabled: true,
-                        intensity: 'medium',
+                        intensity: 'high',
                     },
                 },
             }}
