@@ -85,6 +85,45 @@ loginButton: {
 
 Hover and active states are handled automatically through opacity.
 
+### Font Customization
+
+Customize fonts used throughout VeChain Kit components:
+
+```tsx
+fonts: {
+    family: 'Inter, sans-serif', // Font family (e.g., "Inter, sans-serif", "'Roboto', sans-serif")
+    sizes: {
+        small: '12px', // Font size for small text
+        medium: '14px', // Font size for medium text
+        large: '16px', // Font size for large text
+    },
+    weights: {
+        normal: 400, // Normal font weight
+        medium: 500, // Medium font weight
+        bold: 700, // Bold font weight
+    },
+}
+```
+
+**Important**: Font customization only affects VeChain Kit components (modals, buttons, etc.) and does not leak to your host application. Fonts are scoped to VeChain Kit containers only.
+
+You can customize any subset of font properties - unspecified values will use defaults:
+
+```tsx
+// Only customize font family
+fonts: {
+    family: 'Inter, sans-serif',
+}
+
+// Only customize font sizes
+fonts: {
+    sizes: {
+        medium: '15px',
+        large: '18px',
+    },
+}
+```
+
 ### Glass Effects
 
 Enable and configure glass morphism effects:
@@ -141,6 +180,19 @@ const theme: VechainKitThemeConfig = {
         border: isDarkMode 
             ? '1px solid rgba(255, 255, 255, 0.1)' 
             : '1px solid #ebebeb',
+    },
+    fonts: {
+        family: 'Inter, sans-serif',
+        sizes: {
+            small: '12px',
+            medium: '14px',
+            large: '16px',
+        },
+        weights: {
+            normal: 400,
+            medium: 500,
+            bold: 700,
+        },
     },
     effects: {
         glass: {
@@ -217,6 +269,13 @@ theme={{
         bg: '#6366f1',
         color: '#ffffff',
         border: 'none',
+    },
+}}
+
+// Customize fonts only
+theme={{
+    fonts: {
+        family: 'Inter, sans-serif',
     },
 }}
 ```

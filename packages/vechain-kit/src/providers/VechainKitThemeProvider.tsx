@@ -45,7 +45,7 @@ const createVeChainKitCache = () => {
 };
 
 // CSS Layer setup - simpler approach that doesn't interfere with host app
-const LayerSetup = () => {
+const LayerSetup = ({ fontFamily }: { fontFamily: string }) => {
     return (
         <Global
             styles={css`
@@ -58,6 +58,30 @@ const LayerSetup = () => {
                     .vechain-kit-root {
                         /* vechain-kit styles are contained here */
                     }
+
+                    /* CRITICAL: Remove font CSS variables from :root to prevent leaking to host app */
+                    /* Chakra UI sets these globally, so we need to explicitly remove them */
+                    :root {
+                        --chakra-fonts-body: unset !important;
+                        --chakra-fonts-heading: unset !important;
+                    }
+
+                    /* Apply font family and CSS variables only to VeChain Kit components */
+                    #vechain-kit-root,
+                    [data-vechain-kit],
+                    [id*='headlessui-portal-root'],
+                    [data-vdk-modal] {
+                        --chakra-fonts-body: ${fontFamily} !important;
+                        --chakra-fonts-heading: ${fontFamily} !important;
+                        font-family: ${fontFamily} !important;
+                    }
+
+                    #vechain-kit-root *,
+                    [data-vechain-kit] *,
+                    [id*='headlessui-portal-root'] *,
+                    [data-vdk-modal] * {
+                        font-family: ${fontFamily} !important;
+                    }
                 }
             `}
         />
@@ -68,9 +92,11 @@ const LayerSetup = () => {
 const EnsureChakraProvider = ({
     children,
     theme,
+    fontFamily,
 }: {
     children: ReactNode;
     theme: any;
+    fontFamily: string;
 }) => {
     const cache = useMemo(() => createVeChainKitCache(), []);
 
@@ -78,7 +104,7 @@ const EnsureChakraProvider = ({
     // vechain-kit components should be self-contained with their own styling
     return (
         <CacheProvider value={cache}>
-            <LayerSetup />
+            <LayerSetup fontFamily={fontFamily} />
             <ChakraProvider
                 theme={theme}
                 resetCSS={false}
@@ -173,7 +199,10 @@ export const VechainKitThemeProvider = ({
     return (
         <VechainKitThemeContext.Provider value={{ portalRootRef, tokens }}>
             <EnsureColorModeScript darkMode={darkMode} />
-            <EnsureChakraProvider theme={theme}>
+            <EnsureChakraProvider
+                theme={theme}
+                fontFamily={tokens.fonts.family}
+            >
                 <ColorModeSync darkMode={darkMode} />
                 <Box
                     id="vechain-kit-root"

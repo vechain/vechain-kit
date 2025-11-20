@@ -117,6 +117,19 @@ export interface VechainKitThemeConfig {
         color?: string;
         border?: string; // Full CSS border string like "1px solid #color"
     };
+    fonts?: {
+        family?: string; // Font family (e.g., "Inter, sans-serif")
+        sizes?: {
+            small?: string; // Font size for small text (e.g., "12px")
+            medium?: string; // Font size for medium text (e.g., "14px")
+            large?: string; // Font size for large text (e.g., "16px")
+        };
+        weights?: {
+            normal?: number; // Normal font weight (e.g., 400)
+            medium?: number; // Medium font weight (e.g., 500)
+            bold?: number; // Bold font weight (e.g., 700)
+        };
+    };
     effects?: {
         glass?: {
             enabled?: boolean;
@@ -907,6 +920,29 @@ export function convertThemeConfigToTokens(
     // Ensure overlay backgroundColor is always respected (after all processing)
     if (overlayBgColor && tokens.colors?.background) {
         tokens.colors.background.overlay = overlayBgColor;
+    }
+
+    // Handle font customization
+    if (config.fonts) {
+        tokens.fonts = {} as ThemeTokens['fonts'];
+        const defaultFonts = defaultTokens.fonts;
+
+        // Font family
+        tokens.fonts.family = config.fonts.family ?? defaultFonts.family;
+
+        // Font sizes
+        tokens.fonts.sizes = {
+            small: config.fonts.sizes?.small ?? defaultFonts.sizes.small,
+            medium: config.fonts.sizes?.medium ?? defaultFonts.sizes.medium,
+            large: config.fonts.sizes?.large ?? defaultFonts.sizes.large,
+        };
+
+        // Font weights
+        tokens.fonts.weights = {
+            normal: config.fonts.weights?.normal ?? defaultFonts.weights.normal,
+            medium: config.fonts.weights?.medium ?? defaultFonts.weights.medium,
+            bold: config.fonts.weights?.bold ?? defaultFonts.weights.bold,
+        };
     }
 
     // Derive button styles
