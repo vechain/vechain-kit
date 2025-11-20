@@ -1,13 +1,13 @@
 import { getConfig } from '@/config';
 import { useWallet, useFetchPrivyStatus, useGetAccountVersion } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { HStack, Text } from '@chakra-ui/react';
+import { HStack, Text, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import packageJson from '../../../../../../package.json';
 
 export const NetworkInfo = () => {
     const { t } = useTranslation();
-    const { darkMode: isDark, network } = useVeChainKitConfig();
+    const { network } = useVeChainKitConfig();
     const { connection, smartAccount, connectedWallet } = useWallet();
     const { data: privyStatus, isLoading: isPrivyStatusLoading } =
         useFetchPrivyStatus();
@@ -18,7 +18,8 @@ export const NetworkInfo = () => {
             connectedWallet?.address ?? '',
         );
 
-    const textColor = isDark ? '#dfdfdd' : '#4d4d4d';
+    const textColor = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const InfoRow = ({
         label,
@@ -37,12 +38,12 @@ export const NetworkInfo = () => {
             </Text>
             <Text
                 fontSize="sm"
-                color={textColor}
                 as={href ? 'a' : undefined}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: href ? 'underline' : 'none' }}
+                color={textSecondary}
             >
                 {isLoading ? 'Loading...' : value}
             </Text>

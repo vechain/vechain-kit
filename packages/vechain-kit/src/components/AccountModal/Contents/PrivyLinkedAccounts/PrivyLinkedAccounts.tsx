@@ -9,11 +9,28 @@ import {
     Text,
     Icon,
     ModalFooter,
+    useToken,
 } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiFarcaster } from 'react-icons/si';
-import { FaSpotify, FaApple, FaInstagram, FaTiktok, FaLinkedin, FaTelegram, FaDiscord } from 'react-icons/fa';
-import { LuMail, LuWallet, LuTwitter, LuPhone, LuGithub, LuPlus, LuFingerprint } from 'react-icons/lu';
+import {
+    FaSpotify,
+    FaApple,
+    FaInstagram,
+    FaTiktok,
+    FaLinkedin,
+    FaTelegram,
+    FaDiscord,
+} from 'react-icons/fa';
+import {
+    LuMail,
+    LuWallet,
+    LuTwitter,
+    LuPhone,
+    LuGithub,
+    LuPlus,
+    LuFingerprint,
+} from 'react-icons/lu';
 import { ActionButton } from '@/components';
 import {
     ModalBackButton,
@@ -41,9 +58,11 @@ const ConfirmUnlink = ({
     onCancel,
 }: ConfirmUnlinkProps) => {
     const { t } = useTranslation();
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+
     return (
         <VStack spacing={6} align="stretch">
-            <Text fontSize="md" textAlign="center">
+            <Text fontSize="md" textAlign="center" color={textPrimary}>
                 {t(
                     'Are you sure you want to unlink {{accountType}} as a login method linked to {{accountDescription}}?',
                     {
@@ -87,6 +106,9 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
     const [showLinkOptions, setShowLinkOptions] = useState(false);
     const [showFullText, setShowFullText] = useState(false);
     const [isLoadingUnlink, setIsLoadingUnlink] = useState(false);
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const {
         user,
@@ -551,13 +573,13 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                         textAlign="left"
                         w={'full'}
                     >
-                        <Text fontSize="sm" opacity={0.5}>
+                        <Text fontSize="sm" color={textSecondary}>
                             {t(
                                 'These accounts are linked to your embedded wallet and can be used to login to your wallet and access your private key.',
                             )}
                         </Text>
                         {showFullText && (
-                            <Text fontSize="sm" opacity={0.5}>
+                            <Text fontSize="sm" color={textSecondary}>
                                 {t(
                                     'Adding more linked accounts increases security against loss of access, but also introduces additional potential attack vectors. For enhanced security, we recommend enabling MFA.',
                                 )}
@@ -568,7 +590,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                             mt={0}
                             size="sm"
                             onClick={() => setShowFullText(!showFullText)}
-                            color="blue.500"
+                            color={textPrimary}
                         >
                             {t(showFullText ? 'Show Less' : 'Read More')}
                         </Button>
@@ -592,9 +614,15 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                 w={'full'}
                             >
                                 <Flex align="center" gap={3}>
-                                    <Icon as={getAccountIcon(account.type)} />
+                                    <Icon
+                                        as={getAccountIcon(account.type)}
+                                        color={textPrimary}
+                                    />
                                     <VStack align="start" spacing={0}>
-                                        <Text fontWeight="500">
+                                        <Text
+                                            fontWeight="500"
+                                            color={textPrimary}
+                                        >
                                             {account.type === 'google_oauth'
                                                 ? t('Google')
                                                 : account.type === 'email'
@@ -632,7 +660,10 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                                 ? t('Discord')
                                                 : t('Wallet')}
                                         </Text>
-                                        <Text fontSize="sm" opacity={0.8}>
+                                        <Text
+                                            fontSize="sm"
+                                            color={textSecondary}
+                                        >
                                             {getAccountDescription(account)}
                                         </Text>
                                     </VStack>

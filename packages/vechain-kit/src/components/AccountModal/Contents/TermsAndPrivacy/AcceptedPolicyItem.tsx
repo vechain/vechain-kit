@@ -4,7 +4,7 @@ import {
     LegalDocumentType,
 } from '@/types';
 import { formatDate } from '@/utils/dateUtils';
-import { HStack, Tag, Text } from '@chakra-ui/react';
+import { HStack, Tag, Text, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
 export const AcceptedPolicyItem = ({
@@ -13,17 +13,19 @@ export const AcceptedPolicyItem = ({
     document: LegalDocumentAgreement;
 }) => {
     const { t } = useTranslation();
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const isVechainKitTerms =
         document.documentSource === LegalDocumentSource.VECHAIN_KIT &&
         document.documentType === LegalDocumentType.TERMS;
     return (
         <HStack>
-            <Tag size="sm" borderRadius="full">
+            <Tag size="sm" borderRadius="full" color={textSecondary}>
                 v{document.version}
             </Tag>
             <Text
                 fontSize="xs"
                 cursor="pointer"
+                color={textSecondary}
                 onClick={() => {
                     window.open(document.url, '_blank');
                 }}

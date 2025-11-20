@@ -8,8 +8,9 @@ export const PrivyConnectionCard = () => {
     const { t } = useTranslation();
     const { privy } = useVeChainKitConfig();
     const { data: appInfo, isLoading } = useFetchAppInfo(privy?.appId ?? '');
-    
+
     const cardBg = useToken('colors', 'vechain-kit-card');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textColor = useToken('colors', 'vechain-kit-text-secondary');
 
     if (isLoading)
@@ -31,7 +32,7 @@ export const PrivyConnectionCard = () => {
                     justifyContent="space-between"
                 >
                     <HStack w="full" justifyContent="space-between">
-                        <Text fontSize="sm" color={textColor}>
+                        <Text fontSize="sm" color={textPrimary}>
                             {t('Logged in with')}:
                         </Text>
 

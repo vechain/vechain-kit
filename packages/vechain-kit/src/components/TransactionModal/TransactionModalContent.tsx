@@ -11,6 +11,7 @@ import {
     Link,
     HStack,
     Spinner,
+    useToken,
 } from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,6 +43,11 @@ export const TransactionModalContent = ({
 }: Omit<TransactionModalProps, 'isOpen'>) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
+
+    const errorColor = useToken('colors', 'vechain-kit-error');
+    const successColor = useToken('colors', 'vechain-kit-success');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const errorMessage = useMemo(() => {
         if (!txError) return null;
@@ -84,7 +90,7 @@ export const TransactionModalContent = ({
                     icon: uiConfig?.errorIcon ?? (
                         <Icon
                             as={LuCircleAlert}
-                            color="#ef4444"
+                            color={errorColor}
                             fontSize="100px"
                             data-testid="error-icon-modal"
                         />
@@ -98,7 +104,7 @@ export const TransactionModalContent = ({
                     icon: uiConfig?.successIcon ?? (
                         <Icon
                             as={LuCircleCheck}
-                            color="#22c55e"
+                            color={successColor}
                             fontSize="100px"
                             data-testid="success-icon-modal"
                         />
@@ -147,7 +153,7 @@ export const TransactionModalContent = ({
                             <Text
                                 fontSize="sm"
                                 fontWeight={'bold'}
-                                opacity={0.5}
+                                color={textSecondary}
                             >
                                 {t('Share on')}
                             </Text>
@@ -161,7 +167,9 @@ export const TransactionModalContent = ({
                         <Text
                             fontSize={status === 'ready' ? 'md' : 'sm'}
                             textAlign="center"
-                            color={status === 'error' ? 'red.500' : 'inherit'}
+                            color={
+                                status === 'error' ? errorColor : textPrimary
+                            }
                             mt={5}
                             style={{
                                 lineBreak: 'anywhere',
@@ -224,10 +232,14 @@ export const TransactionModalContent = ({
                                 w="full"
                                 justifyContent="center"
                             >
-                                <Text>
+                                <Text color={textSecondary}>
                                     {t('View transaction on the explorer')}
                                 </Text>
-                                <Icon size="sm" as={LuExternalLink} />
+                                <Icon
+                                    size="sm"
+                                    as={LuExternalLink}
+                                    color={textSecondary}
+                                />
                             </HStack>
                         </Link>
                     )}

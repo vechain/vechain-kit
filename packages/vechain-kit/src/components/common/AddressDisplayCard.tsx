@@ -8,7 +8,6 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { humanAddress } from '@/utils';
-import { useVeChainKitConfig } from '@/providers';
 import { useTotalBalance, useTokensWithValues } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
@@ -34,11 +33,11 @@ export const AddressDisplayCard = ({
     balance,
     tokenAddress,
 }: AddressDisplayCardProps) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
 
     const textColor = useToken('colors', 'vechain-kit-text-primary');
     const secondaryTextColor = useToken('colors', 'vechain-kit-text-secondary');
+    const cardBg = useToken('colors', 'vechain-kit-card');
 
     const { isLoading: totalBalanceLoading } = useTotalBalance({ address });
     const { tokens, isLoading: tokensLoading } = useTokensWithValues({
@@ -68,12 +67,7 @@ export const AddressDisplayCard = ({
 
     if (isLoading) {
         return (
-            <Box
-                w="full"
-                p={2}
-                borderRadius="lg"
-                bg={isDark ? 'vechain-kit-overlay' : 'vechain-kit-card'}
-            >
+            <Box w="full" p={2} borderRadius="lg" bg={cardBg}>
                 <Text fontSize="sm" fontWeight="bold" mb={2} color={textColor}>
                     {label}
                 </Text>
@@ -126,7 +120,7 @@ export const AddressDisplayCard = ({
             w="full"
             p={2}
             borderRadius="lg"
-            bg={isDark ? 'vechain-kit-overlay' : 'vechain-kit-card'}
+            bg={cardBg}
             wordBreak="break-word"
         >
             <Text fontSize="sm" fontWeight="bold" mb={2} color={textColor}>

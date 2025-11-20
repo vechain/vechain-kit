@@ -11,10 +11,10 @@ import {
     Tag,
     HStack,
     VStack,
+    useToken,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { LuChevronDown, LuChevronUp, LuTrash2 } from 'react-icons/lu';
-import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
 import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
 import { AccountAvatar } from '@/components/common';
@@ -36,29 +36,29 @@ const DomainListItem = ({
     isCurrentDomain: boolean;
     onSelect: (name: string) => void;
 }) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
     const { t } = useTranslation();
     const metadata = useWalletMetadata(domain.name, connection.network);
+
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
+    const borderColor = useToken('colors', 'vechain-kit-border');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const secondaryColor = useToken('colors', 'vechain-kit-secondary');
 
     return (
         <ListItem
             key={domain.name}
             p={4}
-            bg={isDark ? '#1f1f1e' : 'white'}
+            bg={cardBg}
             borderRadius="xl"
             cursor={isCurrentDomain ? 'default' : 'pointer'}
             opacity={isCurrentDomain ? 0.7 : 1}
-            border={`1px solid ${isDark ? '#2d2d2d' : '#eaeaea'}`}
+            border={`1px solid ${borderColor}`}
             _hover={{
-                bg: isCurrentDomain
-                    ? isDark
-                        ? '#1f1f1e'
-                        : 'white'
-                    : isDark
-                    ? '#252525'
-                    : 'gray.50',
-                borderColor: isDark ? '#3d3d3d' : '#dedede',
+                bg: isCurrentDomain ? cardBgHover : cardBg,
+                borderColor: borderColor,
             }}
             onClick={() => !isCurrentDomain && onSelect(domain.name)}
             transition="all 0.2s"
@@ -74,18 +74,11 @@ const DomainListItem = ({
                 />
 
                 <VStack align="start" spacing={0} flex={1}>
-                    <Text
-                        color={isDark ? 'whiteAlpha.900' : 'gray.700'}
-                        fontSize="md"
-                        fontWeight="500"
-                    >
+                    <Text color={textPrimary} fontSize="md" fontWeight="500">
                         {humanDomain(domain.name, 24, 0)}
                     </Text>
                     {isCurrentDomain && (
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                        >
+                        <Text fontSize="sm" color={textSecondary}>
                             {t('Current domain')}
                         </Text>
                     )}
@@ -94,8 +87,8 @@ const DomainListItem = ({
                 {isCurrentDomain && (
                     <Tag
                         size="sm"
-                        bg={isDark ? '#ffffff0a' : 'whiteAlpha.100'}
-                        color={isDark ? 'whiteAlpha.900' : 'blackAlpha.600'}
+                        bg={secondaryColor}
+                        color={textPrimary}
                         px={3}
                         py={1}
                         borderRadius="full"
@@ -109,21 +102,27 @@ const DomainListItem = ({
 };
 
 const UnsetDomainListItem = ({ onUnset }: { onUnset: () => void }) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
+    const borderColor = useToken('colors', 'vechain-kit-border');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const errorColor = useToken('colors', 'vechain-kit-error');
+
     const { t } = useTranslation();
 
     return (
         <ListItem
             key={'unset-domain-list-item'}
             p={4}
-            bg={isDark ? '#1f1f1e' : 'white'}
+            bg={cardBg}
             borderRadius="xl"
             cursor={'pointer'}
             opacity={1}
-            border={`1px solid ${isDark ? '#2d2d2d' : '#eaeaea'}`}
+            border={`1px solid ${borderColor}`}
             _hover={{
-                bg: isDark ? '#252525' : 'gray.50',
-                borderColor: isDark ? '#3d3d3d' : '#dedede',
+                bg: cardBgHover,
+                borderColor: borderColor,
                 color: 'red.400',
             }}
             onClick={onUnset}
@@ -139,26 +138,15 @@ const UnsetDomainListItem = ({ onUnset }: { onUnset: () => void }) => {
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    bg={isDark ? 'whiteAlpha.100' : 'gray.100'}
+                    bg={cardBg}
                 >
-                    <Icon
-                        as={LuTrash2}
-                        fontSize="18px"
-                        color={isDark ? 'red.300' : 'red.500'}
-                    />
+                    <Icon as={LuTrash2} fontSize="18px" color={errorColor} />
                 </Box>
                 <VStack align="start" spacing={0} flex={1}>
-                    <Text
-                        color={isDark ? 'whiteAlpha.900' : 'gray.700'}
-                        fontSize="md"
-                        fontWeight="500"
-                    >
+                    <Text color={textPrimary} fontSize="md" fontWeight="500">
                         {t('Unset current domain')}
                     </Text>
-                    <Text
-                        fontSize="sm"
-                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                    >
+                    <Text fontSize="sm" color={textSecondary}>
                         {t('Remove your current domain name')}
                     </Text>
                 </VStack>
@@ -174,8 +162,12 @@ export const ExistingDomainsList = ({
     isLoading,
 }: ExistingDomainsListProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { account } = useWallet();
+
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     // avoid flickering after loading by returning null, so if no domains are found, it will not show the accordion
     if (domains.length === 0 || isLoading) {
@@ -188,17 +180,17 @@ export const ExistingDomainsList = ({
                 {({ isExpanded }) => (
                     <>
                         <AccordionButton
-                            bg={isDark ? 'whiteAlpha.50' : 'gray.50'}
+                            bg={cardBg}
                             borderRadius="xl"
                             _hover={{
-                                bg: isDark ? 'whiteAlpha.100' : 'gray.100',
+                                bg: cardBgHover,
                             }}
                             opacity={isLoading ? 0.7 : 1}
                             transition="all 0.2s"
                             disabled={isLoading}
                         >
                             <Box flex="1" textAlign="left" py={2}>
-                                <Text fontWeight="500">
+                                <Text fontWeight="500" color={textPrimary}>
                                     {isLoading
                                         ? t('Loading your domains...')
                                         : `${t('Your existing domains')} (${
@@ -209,7 +201,7 @@ export const ExistingDomainsList = ({
                             <Icon
                                 as={isExpanded ? LuChevronUp : LuChevronDown}
                                 fontSize="20px"
-                                opacity={0.5}
+                                color={textSecondary}
                             />
                         </AccordionButton>
                         <AccordionPanel pb={4} pt={2}>

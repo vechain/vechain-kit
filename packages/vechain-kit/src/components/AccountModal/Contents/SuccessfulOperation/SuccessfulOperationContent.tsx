@@ -42,8 +42,10 @@ export const SuccessfulOperationContent = ({
     const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const socialDescription = `${explorerUrl}/${txId}`;
-    
+
     const successColor = useToken('colors', 'vechain-kit-success');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
         <Box>
@@ -62,7 +64,11 @@ export const SuccessfulOperationContent = ({
                     />
 
                     {description && (
-                        <Text fontSize="sm" textAlign="center">
+                        <Text
+                            fontSize="sm"
+                            textAlign="center"
+                            color={textPrimary}
+                        >
                             {description}
                         </Text>
                     )}
@@ -72,7 +78,7 @@ export const SuccessfulOperationContent = ({
                             <Text
                                 fontSize="sm"
                                 fontWeight={'bold'}
-                                opacity={0.5}
+                                color={textSecondary}
                             >
                                 {t('Share on')}
                             </Text>
@@ -108,7 +114,7 @@ export const SuccessfulOperationContent = ({
                                 w={'full'}
                                 justifyContent={'center'}
                             >
-                                <Text>
+                                <Text color={textSecondary}>
                                     {t('View transaction on the explorer')}
                                 </Text>
                                 <Icon size={16} as={LuExternalLink} />

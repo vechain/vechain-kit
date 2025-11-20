@@ -10,6 +10,7 @@ import {
     Button,
     ModalFooter,
     InputRightElement,
+    useToken,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -49,6 +50,10 @@ export const ChooseNameSearchContent = ({
     const [isOwnDomain, setIsOwnDomain] = useState(false);
     const [isAvailable, setIsAvailable] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
+
+    const errorColor = useToken('colors', 'vechain-kit-error');
+    const successColor = useToken('colors', 'vechain-kit-success');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const { data: ensRecordExists, isLoading: isEnsCheckLoading } =
         useEnsRecordExists(name);
@@ -217,13 +222,7 @@ export const ChooseNameSearchContent = ({
                             paddingRight="12px"
                             h={'full'}
                         >
-                            <Box
-                                mr={4}
-                                fontSize="sm"
-                                color={
-                                    isDark ? 'whiteAlpha.800' : 'blackAlpha.600'
-                                }
-                            >
+                            <Box mr={4} fontSize="sm" color={textSecondary}>
                                 .veworld.vet
                             </Box>
                         </InputRightElement>
@@ -231,7 +230,7 @@ export const ChooseNameSearchContent = ({
 
                     {error && hasInteracted && (
                         <Text
-                            color="#ef4444"
+                            color={errorColor}
                             fontSize="sm"
                             data-testid="domain-availability-status"
                         >
@@ -242,7 +241,7 @@ export const ChooseNameSearchContent = ({
                     {!error && hasInteracted && name.length >= 3 && (
                         <Text
                             fontSize="sm"
-                            color={isAvailable ? 'green.500' : '#ef4444'}
+                            color={isAvailable ? successColor : errorColor}
                             fontWeight="500"
                             data-testid="domain-availability-status"
                         >

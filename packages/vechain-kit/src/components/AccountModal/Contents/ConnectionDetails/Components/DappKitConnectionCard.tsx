@@ -6,9 +6,10 @@ import { NetworkInfo } from './NetworkInfo';
 export const DappKitConnectionCard = () => {
     const { t } = useTranslation();
     const { source } = useWallet();
-    
+
     const cardBg = useToken('colors', 'vechain-kit-card');
     const textColor = useToken('colors', 'vechain-kit-text-secondary');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
 
     return (
         <>
@@ -22,7 +23,7 @@ export const DappKitConnectionCard = () => {
                     justifyContent="space-between"
                 >
                     <HStack w="full" justifyContent="space-between">
-                        <Text fontSize="sm" color={textColor}>
+                        <Text fontSize="sm" color={textPrimary}>
                             {t('Logged in with')}:
                         </Text>
 

@@ -80,11 +80,16 @@ export const SwapTokenContent = ({
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
 
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
+    const borderColor = useToken('colors', 'vechain-kit-border');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
+
     const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
@@ -670,7 +675,7 @@ export const SwapTokenContent = ({
                             px={6}
                             py={connection.isConnectedWithPrivy ? 2 : 6}
                             borderRadius="xl"
-                            bg={isDark ? '#00000038' : 'gray.50'}
+                            bg={cardBg}
                         >
                             <Text
                                 fontSize="sm"
@@ -700,7 +705,7 @@ export const SwapTokenContent = ({
                                             Number(amount) >
                                                 Number(fromTokenDisplay.balance)
                                                 ? 'red.500'
-                                                : undefined
+                                                : textPrimary
                                         }
                                     />
                                     {fromTokenDisplay ? (
@@ -713,15 +718,10 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
                                             }}
                                             leftIcon={
                                                 fromTokenDisplay.logoComponent ? (
@@ -753,6 +753,9 @@ export const SwapTokenContent = ({
                                                                 <Text
                                                                     fontSize="8px"
                                                                     fontWeight="bold"
+                                                                    color={
+                                                                        textPrimary
+                                                                    }
                                                                 >
                                                                     {fromTokenDisplay.symbol.slice(
                                                                         0,
@@ -769,11 +772,7 @@ export const SwapTokenContent = ({
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     ) : (
@@ -786,29 +785,18 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
-                                                color: isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
+                                                color: textSecondary,
                                             }}
                                         >
                                             {t('Select token')}
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     )}
@@ -837,9 +825,7 @@ export const SwapTokenContent = ({
                                         <Text
                                             cursor="pointer"
                                             _hover={{
-                                                color: isDark
-                                                    ? 'blue.300'
-                                                    : 'blue.500',
+                                                color: textSecondary,
                                                 textDecoration: 'underline',
                                             }}
                                             onClick={handleSetMaxAmount}
@@ -862,7 +848,7 @@ export const SwapTokenContent = ({
                             marginTop="-20px"
                             marginBottom="-20px"
                             marginX="auto"
-                            bg={isDark ? '#151515' : 'gray.100'}
+                            bg={cardBg}
                             borderRadius="xl"
                             w="40px"
                             h="40px"
@@ -899,7 +885,7 @@ export const SwapTokenContent = ({
                             px={6}
                             py={connection.isConnectedWithPrivy ? 2 : 6}
                             borderRadius="xl"
-                            bg={isDark ? '#00000038' : 'gray.50'}
+                            bg={cardBg}
                         >
                             <Text
                                 fontSize="sm"
@@ -928,6 +914,7 @@ export const SwapTokenContent = ({
                                         fontSize="4xl"
                                         fontWeight="bold"
                                         data-testid="swap-output-amount"
+                                        color={textPrimary}
                                     />
                                     {toTokenDisplay ? (
                                         <Button
@@ -939,15 +926,10 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
                                             }}
                                             leftIcon={
                                                 toTokenDisplay.logoComponent ? (
@@ -979,6 +961,9 @@ export const SwapTokenContent = ({
                                                                 <Text
                                                                     fontSize="8px"
                                                                     fontWeight="bold"
+                                                                    color={
+                                                                        textPrimary
+                                                                    }
                                                                 >
                                                                     {toTokenDisplay.symbol.slice(
                                                                         0,
@@ -995,11 +980,7 @@ export const SwapTokenContent = ({
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     ) : (
@@ -1012,29 +993,18 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
-                                                color: isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
+                                                color: textSecondary,
                                             }}
                                         >
                                             {t('Select token')}
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     )}
@@ -1073,18 +1043,14 @@ export const SwapTokenContent = ({
                                 align="stretch"
                                 p={4}
                                 borderRadius="xl"
-                                bg={isDark ? '#00000038' : 'gray.50'}
+                                bg={cardBg}
                             >
                                 {/* Source */}
                                 {quote && (
                                     <HStack justify="space-between">
                                         <Text
                                             fontSize="xs"
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
                                         >
                                             {t('Source')}:
                                         </Text>
@@ -1098,7 +1064,10 @@ export const SwapTokenContent = ({
                                             alignItems="center"
                                         >
                                             {quote.aggregator?.getIcon('12px')}
-                                            <Text fontSize="xs">
+                                            <Text
+                                                fontSize="xs"
+                                                color={textPrimary}
+                                            >
                                                 {quote.aggregatorName}
                                             </Text>
                                         </HStack>
@@ -1118,15 +1087,15 @@ export const SwapTokenContent = ({
                                     >
                                         <Text
                                             fontSize="xs"
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
                                         >
                                             {t('Slippage tolerance')}:
                                         </Text>
-                                        <Text fontSize="xs" fontWeight="medium">
+                                        <Text
+                                            fontSize="xs"
+                                            fontWeight="medium"
+                                            color={textPrimary}
+                                        >
                                             {slippageTolerance}%
                                         </Text>
                                     </HStack>
@@ -1161,6 +1130,7 @@ export const SwapTokenContent = ({
                                                     minW="60px"
                                                     borderRadius="md"
                                                     fontSize="xs"
+                                                    color={textPrimary}
                                                 >
                                                     Auto
                                                 </Button>
@@ -1187,6 +1157,7 @@ export const SwapTokenContent = ({
                                                     minW="60px"
                                                     borderRadius="md"
                                                     fontSize="xs"
+                                                    color={textPrimary}
                                                 >
                                                     0.5%
                                                 </Button>
@@ -1209,6 +1180,7 @@ export const SwapTokenContent = ({
                                                     minW="60px"
                                                     borderRadius="md"
                                                     fontSize="xs"
+                                                    color={textPrimary}
                                                 >
                                                     3%
                                                 </Button>
@@ -1258,6 +1230,7 @@ export const SwapTokenContent = ({
                                                         textAlign="right"
                                                         pr={8}
                                                         fontSize="xs"
+                                                        color={textPrimary}
                                                     />
                                                     <InputRightElement
                                                         width="2rem"
@@ -1266,9 +1239,7 @@ export const SwapTokenContent = ({
                                                         <Text
                                                             fontSize="2xs"
                                                             color={
-                                                                isDark
-                                                                    ? 'whiteAlpha.600'
-                                                                    : 'blackAlpha.600'
+                                                                textSecondary
                                                             }
                                                         >
                                                             %
@@ -1282,17 +1253,14 @@ export const SwapTokenContent = ({
 
                                 {/* Gas Fee */}
                                 <HStack justify="space-between">
-                                    <Text
-                                        fontSize="xs"
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
-                                    >
+                                    <Text fontSize="xs" color={textSecondary}>
                                         {t('Gas fee')}:
                                     </Text>
-                                    <Text fontSize="xs" fontWeight="medium">
+                                    <Text
+                                        fontSize="xs"
+                                        fontWeight="medium"
+                                        color={textPrimary}
+                                    >
                                         {gasCostVTHO > 0
                                             ? `${gasCostVTHO.toLocaleString(
                                                   undefined,
@@ -1322,9 +1290,7 @@ export const SwapTokenContent = ({
                                         <Icon
                                             color={textTertiary}
                                             _hover={{
-                                                color: isDark
-                                                    ? 'whiteAlpha.800'
-                                                    : 'blackAlpha.800',
+                                                color: textSecondary,
                                             }}
                                             as={
                                                 showMore
@@ -1337,9 +1303,7 @@ export const SwapTokenContent = ({
                                     fontWeight="light"
                                     color={textTertiary}
                                     _hover={{
-                                        color: isDark
-                                            ? 'whiteAlpha.800'
-                                            : 'blackAlpha.800',
+                                        color: textSecondary,
                                     }}
                                 >
                                     {showMore ? t('Show Less') : t('Show More')}

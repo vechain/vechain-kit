@@ -12,6 +12,7 @@ import {
     Switch,
     FormControl,
     FormLabel,
+    useToken,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { GasTokenType } from '@/types/gasToken';
@@ -19,7 +20,6 @@ import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
 import { formatGasCost } from '@/types/gasEstimation';
 import { useTokenBalances } from '@/hooks';
 import { BaseModal } from './BaseModal';
-import { useVeChainKitConfig } from '@/providers';
 
 interface GasFeeTokenSelectorProps {
     isOpen: boolean;
@@ -41,28 +41,19 @@ export const GasFeeTokenSelector = ({
     walletAddress,
 }: GasFeeTokenSelectorProps) => {
     const { t } = useTranslation();
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { balances } = useTokenBalances(walletAddress);
     const [tempSelectedToken, setTempSelectedToken] =
         React.useState(selectedToken);
     const [rememberChoice, setRememberChoice] = React.useState(false);
 
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const errorColor = useToken('colors', 'vechain-kit-error');
+
     const itemBg = (selected: boolean) =>
-        isDark
-            ? selected
-                ? '#ffffff12'
-                : 'transparent'
-            : selected
-            ? 'blackAlpha.100'
-            : 'transparent';
+        selected ? textSecondary : 'transparent';
     const itemBorderColor = (selected: boolean) =>
-        selected
-            ? isDark
-                ? 'blue.400'
-                : 'blue.500'
-            : isDark
-            ? 'whiteAlpha.200'
-            : 'gray.200';
+        selected ? textPrimary : 'transparent';
 
     React.useEffect(() => {
         if (isOpen) {
@@ -96,13 +87,13 @@ export const GasFeeTokenSelector = ({
     return (
         <BaseModal isOpen={isOpen} onClose={onClose} size="sm">
             <ModalHeader>
-                <Text fontSize="lg" fontWeight="semibold">
+                <Text fontSize="lg" fontWeight="semibold" color={textPrimary}>
                     {t('Fee token')}
                 </Text>
                 <Text
                     fontSize="sm"
                     fontWeight="normal"
-                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    color={textSecondary}
                     mt={1}
                 >
                     {t('Select the token to pay the fee with')}
@@ -135,18 +126,12 @@ export const GasFeeTokenSelector = ({
                                 _hover={{
                                     backgroundColor: insufficient
                                         ? itemBg(isSelected)
-                                        : isDark
+                                        : textSecondary
                                         ? '#ffffff12'
-                                        : 'blackAlpha.100',
+                                        : textSecondary,
                                     borderColor: insufficient
                                         ? itemBorderColor(isSelected)
-                                        : isSelected
-                                        ? isDark
-                                            ? 'blue.400'
-                                            : 'blue.500'
-                                        : isDark
-                                        ? 'whiteAlpha.300'
-                                        : 'gray.300',
+                                        : textSecondary,
                                 }}
                                 opacity={insufficient ? 0.5 : 1}
                                 onClick={() =>
@@ -163,16 +148,15 @@ export const GasFeeTokenSelector = ({
                                             },
                                         )}
                                         <VStack align="start" spacing={0}>
-                                            <Text fontWeight="medium">
+                                            <Text
+                                                fontWeight="medium"
+                                                color={textPrimary}
+                                            >
                                                 {tokenInfo.symbol}
                                             </Text>
                                             <Text
                                                 fontSize="xs"
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             >
                                                 {t('Balance')}:{' '}
                                                 {getTokenBalance(token)}
@@ -180,7 +164,7 @@ export const GasFeeTokenSelector = ({
                                             {insufficient && (
                                                 <Text
                                                     fontSize="xs"
-                                                    color="red.500"
+                                                    color={errorColor}
                                                 >
                                                     {t('Insufficient balance')}
                                                 </Text>
@@ -198,6 +182,7 @@ export const GasFeeTokenSelector = ({
                                                 <Text
                                                     fontSize="sm"
                                                     fontWeight="semibold"
+                                                    color={textPrimary}
                                                 >
                                                     {formatGasCost(
                                                         estimation.cost,
@@ -206,11 +191,7 @@ export const GasFeeTokenSelector = ({
                                                 </Text>
                                                 <Text
                                                     fontSize="xs"
-                                                    color={
-                                                        isDark
-                                                            ? 'whiteAlpha.600'
-                                                            : 'blackAlpha.600'
-                                                    }
+                                                    color={textSecondary}
                                                 >
                                                     {tokenInfo.symbol}
                                                 </Text>
@@ -232,6 +213,7 @@ export const GasFeeTokenSelector = ({
                                 htmlFor="remember-choice"
                                 mb="0"
                                 fontSize="sm"
+                                color={textPrimary}
                             >
                                 {t('Use this token for future transactions')}
                             </FormLabel>
@@ -241,7 +223,7 @@ export const GasFeeTokenSelector = ({
                                 onChange={(e) =>
                                     setRememberChoice(e.target.checked)
                                 }
-                                colorScheme="blue"
+                                color={textPrimary}
                             />
                         </FormControl>
                     )}
@@ -257,12 +239,7 @@ export const GasFeeTokenSelector = ({
                     >
                         {t('Apply')}
                     </Button>
-                    <Button
-                        variant="ghost"
-                        width="full"
-                        onClick={onClose}
-                        colorScheme="gray"
-                    >
+                    <Button variant="ghost" width="full" onClick={onClose}>
                         {t('Cancel')}
                     </Button>
                 </VStack>

@@ -7,6 +7,7 @@ import {
     Text,
     HStack,
     ModalFooter,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -60,6 +61,9 @@ export const SendTokenSummaryContent = ({
     const { network, feeDelegation } = useVeChainKitConfig();
     const { preferences } = useGasTokenSelection();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const { data: upgradeRequired } = useUpgradeRequired(
         account?.address ?? '',
@@ -294,6 +298,7 @@ export const SendTokenSummaryContent = ({
                                 fontWeight="light"
                                 textAlign="left"
                                 w="full"
+                                color={textSecondary}
                             >
                                 {t('Amount')}
                             </Text>
@@ -303,6 +308,7 @@ export const SendTokenSummaryContent = ({
                                     fontWeight="semibold"
                                     textAlign="left"
                                     data-testid="send-summary-amount"
+                                    color={textPrimary}
                                 >
                                     {Number(amount).toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
@@ -310,7 +316,7 @@ export const SendTokenSummaryContent = ({
                                     })}{' '}
                                     {selectedToken.symbol}
                                 </Text>
-                                <Text opacity={0.5}>
+                                <Text color={textSecondary}>
                                     ≈ {formattedTotalAmount}
                                 </Text>
                             </HStack>

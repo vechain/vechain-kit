@@ -9,6 +9,7 @@ import {
     InputGroup,
     InputRightElement,
     InputLeftElement,
+    useToken,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { LuCopy, LuCheck, LuWallet, LuCreditCard } from 'react-icons/lu';
@@ -32,6 +33,9 @@ export const AddressDisplay = ({
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+
     const copyToClipboard = async (
         textToCopy: string,
         setCopied: (value: boolean) => void,
@@ -49,7 +53,7 @@ export const AddressDisplay = ({
         <VStack w={'full'} justifyContent={'center'} {...style}>
             <VStack w={'full'} spacing={4}>
                 {label && (
-                    <Text fontSize={'sm'} opacity={0.7}>
+                    <Text fontSize={'sm'} color={textSecondary}>
                         {label}
                     </Text>
                 )}
@@ -57,7 +61,7 @@ export const AddressDisplay = ({
                     <VStack spacing={2} w={'full'}>
                         <InputGroup>
                             <InputLeftElement>
-                                <Icon as={LuCreditCard} opacity={0.5} />
+                                <Icon as={LuCreditCard} color={textSecondary} />
                             </InputLeftElement>
                             <Input
                                 cursor="pointer"
@@ -65,6 +69,7 @@ export const AddressDisplay = ({
                                 readOnly
                                 fontSize={'sm'}
                                 fontWeight={'700'}
+                                color={textPrimary}
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet.domain || '',
@@ -74,7 +79,7 @@ export const AddressDisplay = ({
                             />
                             <InputRightElement>
                                 <Icon
-                                    opacity={0.5}
+                                    color={textSecondary}
                                     onClick={() =>
                                         copyToClipboard(
                                             wallet.domain || '',
@@ -82,18 +87,14 @@ export const AddressDisplay = ({
                                         )
                                     }
                                     cursor="pointer"
-                                    as={
-                                        copiedDomain
-                                            ? LuCheck
-                                            : LuCopy
-                                    }
+                                    as={copiedDomain ? LuCheck : LuCopy}
                                 />
                             </InputRightElement>
                         </InputGroup>
 
                         <InputGroup>
                             <InputLeftElement>
-                                <Icon as={LuWallet} opacity={0.5} />
+                                <Icon as={LuWallet} color={textSecondary} />
                             </InputLeftElement>
                             <Input
                                 cursor="pointer"
@@ -109,6 +110,7 @@ export const AddressDisplay = ({
                                 readOnly
                                 fontSize={'sm'}
                                 fontWeight={'700'}
+                                color={textPrimary}
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet.address ?? '',
@@ -118,7 +120,7 @@ export const AddressDisplay = ({
                             />
                             <InputRightElement>
                                 <Icon
-                                    opacity={0.5}
+                                    color={textSecondary}
                                     cursor="pointer"
                                     onClick={() =>
                                         copyToClipboard(
@@ -126,11 +128,7 @@ export const AddressDisplay = ({
                                             setCopied,
                                         )
                                     }
-                                    as={
-                                        copied
-                                            ? LuCheck
-                                            : LuCopy
-                                    }
+                                    as={copied ? LuCheck : LuCopy}
                                 />
                             </InputRightElement>
                         </InputGroup>
@@ -138,7 +136,7 @@ export const AddressDisplay = ({
                 ) : (
                     <InputGroup>
                         <InputLeftElement>
-                            <Icon as={LuWallet} opacity={0.5} />
+                            <Icon as={LuWallet} color={textSecondary} />
                         </InputLeftElement>
                         <Input
                             cursor="pointer"
@@ -150,6 +148,7 @@ export const AddressDisplay = ({
                             readOnly
                             fontSize={'sm'}
                             fontWeight={'700'}
+                            color={textPrimary}
                             onClick={() =>
                                 copyToClipboard(
                                     wallet?.address ?? '',
@@ -159,7 +158,7 @@ export const AddressDisplay = ({
                         />
                         <InputRightElement>
                             <Icon
-                                opacity={0.5}
+                                color={textSecondary}
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet?.address ?? '',
