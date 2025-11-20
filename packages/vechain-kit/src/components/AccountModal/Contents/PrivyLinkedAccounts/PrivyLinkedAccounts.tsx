@@ -25,12 +25,12 @@ import {
 import {
     LuMail,
     LuWallet,
-    LuTwitter,
     LuPhone,
     LuGithub,
     LuPlus,
     LuFingerprint,
 } from 'react-icons/lu';
+import { FaXTwitter } from 'react-icons/fa6';
 import { ActionButton } from '@/components';
 import {
     ModalBackButton,
@@ -170,7 +170,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
             case 'wallet':
                 return LuWallet;
             case 'twitter_oauth':
-                return LuTwitter;
+                return FaXTwitter;
             case 'phone':
                 return LuPhone;
             case 'spotify_oauth':
@@ -381,7 +381,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
                                     'Connect your Twitter account for easier access',
                                 )}
                                 onClick={() => linkTwitter()}
-                                leftIcon={LuTwitter}
+                                leftIcon={FaXTwitter}
                             />
                         )}
                         {canLinkSms && (

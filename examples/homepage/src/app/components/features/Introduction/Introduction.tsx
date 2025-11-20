@@ -13,7 +13,17 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { useWallet } from '@vechain/vechain-kit';
-import { LuGithub, LuApple, LuFileText, LuWallet, LuPalette, LuCode, LuMail, LuLogIn, LuTwitter } from 'react-icons/lu';
+import {
+    LuGithub,
+    LuApple,
+    LuFileText,
+    LuWallet,
+    LuPalette,
+    LuCode,
+    LuMail,
+    LuLogIn,
+} from 'react-icons/lu';
+import { FaXTwitter } from 'react-icons/fa6';
 import { SiNpm, SiFarcaster } from 'react-icons/si';
 import { FcGoogle } from 'react-icons/fc';
 import { FaDiscord } from 'react-icons/fa';
@@ -146,7 +156,7 @@ export function Introduction() {
                                 </Text>
                                 <HStack spacing={3} wrap="wrap">
                                     <Icon as={FcGoogle} boxSize={6} />
-                                    <Icon as={LuTwitter} boxSize={6} />
+                                    <Icon as={FaXTwitter} boxSize={6} />
                                     <Icon as={LuMail} boxSize={6} />
                                     <Icon as={FaDiscord} boxSize={6} />
                                     <Icon as={SiFarcaster} boxSize={6} />

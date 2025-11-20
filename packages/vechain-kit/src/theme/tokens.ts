@@ -47,6 +47,18 @@ export interface ThemeTokens {
         error: string;
         warning: string;
     };
+    buttons: {
+        button: {
+            bg: string;
+            color: string;
+            border: string;
+        };
+        loginButton: {
+            bg: string;
+            color: string;
+            border: string;
+        };
+    };
     effects: {
         backdropFilter: {
             modal: string;
@@ -92,6 +104,16 @@ export interface VechainKitThemeConfig {
     backgroundColor?: string;
     textColor?: string;
     overlayColor?: string; // Optional: customize overlay separately from modal background
+    button?: {
+        bg?: string;
+        color?: string;
+        border?: string; // Full CSS border string like "1px solid #color"
+    };
+    loginButton?: {
+        bg?: string;
+        color?: string;
+        border?: string; // Full CSS border string like "1px solid #color"
+    };
     effects?: {
         glass?: {
             enabled?: boolean;
@@ -253,6 +275,64 @@ function deriveBorderColors(
 }
 
 /**
+ * Derive button styles from backgroundColor and textColor
+ */
+function deriveButtonStyles(
+    backgroundColor: string | undefined,
+    textColor: string | undefined,
+    darkMode: boolean,
+    customConfig: VechainKitThemeConfig['button'] | undefined,
+    defaultTokens: ThemeTokens,
+): ThemeTokens['buttons']['button'] {
+    // Use custom config if provided
+    if (customConfig) {
+        return {
+            bg: customConfig.bg || defaultTokens.buttons.button.bg,
+            color: customConfig.color || defaultTokens.buttons.button.color,
+            border: customConfig.border || defaultTokens.buttons.button.border,
+        };
+    }
+
+    // Derive from backgroundColor and textColor if available
+    if (backgroundColor && textColor) {
+        const overlayColor = darkMode ? '#ffffff' : '#000000';
+        return {
+            bg: applyOpacity(overlayColor, 0.1), // Similar to secondary.base
+            color: textColor,
+            border: `1px solid ${applyOpacity(overlayColor, 0.1)}`, // Similar to border.button
+        };
+    }
+
+    // Use defaults
+    return defaultTokens.buttons.button;
+}
+
+/**
+ * Derive login button styles
+ */
+function deriveLoginButtonStyles(
+    backgroundColor: string | undefined,
+    textColor: string | undefined,
+    darkMode: boolean,
+    customConfig: VechainKitThemeConfig['loginButton'] | undefined,
+    defaultTokens: ThemeTokens,
+): ThemeTokens['buttons']['loginButton'] {
+    // Use custom config if provided
+    if (customConfig) {
+        return {
+            bg: customConfig.bg || defaultTokens.buttons.loginButton.bg,
+            color:
+                customConfig.color || defaultTokens.buttons.loginButton.color,
+            border:
+                customConfig.border || defaultTokens.buttons.loginButton.border,
+        };
+    }
+
+    // Use default login button styles (current hardcoded behavior)
+    return defaultTokens.buttons.loginButton;
+}
+
+/**
  * Get glass effect settings based on intensity
  */
 function getGlassEffectSettings(
@@ -348,6 +428,18 @@ const defaultLightTokens: ThemeTokens = {
         error: '#ef4444',
         warning: '#F6AD55',
     },
+    buttons: {
+        button: {
+            bg: 'rgba(0, 0, 0, 0.1)',
+            color: '#2e2e2e',
+            border: 'none',
+        },
+        loginButton: {
+            bg: 'white',
+            color: '#1a1a1a',
+            border: '1px solid transparent',
+        },
+    },
     effects: {
         backdropFilter: {
             modal: 'blur(3px)',
@@ -427,6 +519,18 @@ const defaultDarkTokens: ThemeTokens = {
         success: '#00ff45de',
         error: '#ef4444',
         warning: '#F6AD55',
+    },
+    buttons: {
+        button: {
+            bg: 'rgba(255, 255, 255, 0.05)',
+            color: 'rgb(223, 223, 221)',
+            border: 'none',
+        },
+        loginButton: {
+            bg: 'transparent',
+            color: 'white',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+        },
     },
     effects: {
         backdropFilter: {
@@ -591,6 +695,27 @@ export function mergeTokens(
         }
     }
 
+    if (customTokens.buttons) {
+        merged.buttons = {
+            ...defaultTokens.buttons,
+            ...customTokens.buttons,
+        };
+
+        if (customTokens.buttons.button) {
+            merged.buttons.button = {
+                ...defaultTokens.buttons.button,
+                ...customTokens.buttons.button,
+            };
+        }
+
+        if (customTokens.buttons.loginButton) {
+            merged.buttons.loginButton = {
+                ...defaultTokens.buttons.loginButton,
+                ...customTokens.buttons.loginButton,
+            };
+        }
+    }
+
     return merged;
 }
 
@@ -744,6 +869,23 @@ export function convertThemeConfigToTokens(
     if (config.overlayColor && tokens.colors?.background) {
         tokens.colors.background.overlay = config.overlayColor;
     }
+
+    // Derive button styles
+    tokens.buttons = {} as ThemeTokens['buttons'];
+    tokens.buttons.button = deriveButtonStyles(
+        config.backgroundColor,
+        config.textColor,
+        darkMode,
+        config.button,
+        defaultTokens,
+    );
+    tokens.buttons.loginButton = deriveLoginButtonStyles(
+        config.backgroundColor,
+        config.textColor,
+        darkMode,
+        config.loginButton,
+        defaultTokens,
+    );
 
     return tokens;
 }

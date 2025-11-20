@@ -8,7 +8,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useWallet, WalletButton } from '@vechain/vechain-kit';
-import { LuHand } from 'react-icons/lu';
+import { LuMousePointerClick } from 'react-icons/lu';
 
 export function WelcomeSection() {
     const { connection } = useWallet();
@@ -62,7 +62,7 @@ export function WelcomeSection() {
                                 },
                             }}
                         >
-                            <LuHand
+                            <LuMousePointerClick
                                 size={24}
                                 color={
                                     colorMode === 'light'

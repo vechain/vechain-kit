@@ -17,7 +17,8 @@ import {
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWallet, useWalletMetadata } from '@/hooks';
-import { LuPencil, LuMail, LuGlobe, LuLogOut, LuTwitter } from 'react-icons/lu';
+import { LuPencil, LuMail, LuGlobe, LuLogOut } from 'react-icons/lu';
+import { FaXTwitter } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
@@ -168,7 +169,7 @@ export const ProfileCard = ({
                                     target="_blank"
                                     data-testid="twitter-link"
                                 >
-                                    <Icon as={LuTwitter} color={textPrimary} />
+                                    <Icon as={FaXTwitter} color={textPrimary} />
                                 </Link>
                             )}
                         </HStack>

@@ -9,15 +9,11 @@ const getVariants = (tokens: ThemeTokens) => ({
     // Login variants - maintained for backward compatibility
     // These should eventually be replaced with vechainKitTertiary and vechainKitPrimary
     loginIn: defineStyle(() => ({
-        color: '#1a1a1a',
-        bg: 'white',
-        _dark: {
-            color: 'white',
-            bg: 'transparent',
-        },
+        bg: tokens.buttons.loginButton.bg,
+        color: tokens.buttons.loginButton.color,
+        border: tokens.buttons.loginButton.border,
         fontSize: tokens.fonts.sizes.medium,
         fontWeight: tokens.fonts.weights.normal,
-        border: `1px solid ${tokens.colors.border.default}`,
         py: 6,
         px: 3,
         borderRadius: tokens.borders.radius.large,
@@ -68,11 +64,14 @@ const getVariants = (tokens: ThemeTokens) => ({
         height: '60px',
         borderRadius: tokens.borders.radius.large,
         backgroundColor: tokens.colors.secondary.base,
+        color: tokens.colors.text.primary,
+        border:
+            tokens.buttons.button.border === 'none'
+                ? 'none'
+                : tokens.buttons.button.border,
         _hover: {
             backgroundColor: tokens.colors.secondary.hover,
         },
-        border: 'none',
-        color: tokens.colors.text.primary,
         transition: 'all 0.2s',
     })),
     vechainKitTertiary: defineStyle(() => ({

@@ -9,7 +9,7 @@ import {
     HStack,
 } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
-import { LuHand } from 'react-icons/lu';
+import { LuMousePointerClick } from 'react-icons/lu';
 
 interface FeatureCardProps {
     title: string;
@@ -81,14 +81,14 @@ export function FeatureCard({
                                 },
                             }}
                         >
-                            <LuHand
+                            <LuMousePointerClick
                                 size={24}
                                 color={
                                     colorMode === 'light'
                                         ? '#4A5568'
                                         : '#A0AEC0'
                                 }
-                                style={{ marginLeft: '8px', transform: 'rotate(10deg)' }}
+                                style={{ marginLeft: '8px' }}
                             />
 
                             <Text

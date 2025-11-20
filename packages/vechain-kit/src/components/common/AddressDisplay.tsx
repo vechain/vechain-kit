@@ -12,7 +12,7 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import { LuCopy, LuCheck, LuWallet, LuCreditCard } from 'react-icons/lu';
+import { LuCopy, LuCheck, LuWallet, LuSquareUser } from 'react-icons/lu';
 import { humanAddress } from '@/utils';
 import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
@@ -61,7 +61,7 @@ export const AddressDisplay = ({
                     <VStack spacing={2} w={'full'}>
                         <InputGroup>
                             <InputLeftElement>
-                                <Icon as={LuCreditCard} color={textSecondary} />
+                                <Icon as={LuSquareUser} color={textSecondary} />
                             </InputLeftElement>
                             <Input
                                 cursor="pointer"

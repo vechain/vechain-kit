@@ -27,7 +27,12 @@ import {
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
+import {
+    LuArrowDown,
+    LuArrowUp,
+    LuChevronDown,
+    LuArrowDownUp,
+} from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
     useWallet,
@@ -873,7 +878,7 @@ export const SwapTokenContent = ({
                                 <Spinner size="sm" />
                             ) : (
                                 <Icon
-                                    as={LuArrowDown}
+                                    as={LuArrowDownUp}
                                     boxSize={5}
                                     color={textSecondary}
                                 />

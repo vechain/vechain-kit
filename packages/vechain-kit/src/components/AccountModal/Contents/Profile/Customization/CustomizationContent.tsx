@@ -24,7 +24,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
-import { LuChevronRight, LuCamera, LuCreditCard } from 'react-icons/lu';
+import { LuChevronRight, LuCamera, LuSquareUser } from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
@@ -307,7 +307,7 @@ export const CustomizationContent = ({
                                         });
                                     }
                                 }}
-                                leftIcon={LuCreditCard}
+                                leftIcon={LuSquareUser}
                                 rightIcon={LuChevronRight}
                                 dataTestId="set-domain-name-button"
                             />

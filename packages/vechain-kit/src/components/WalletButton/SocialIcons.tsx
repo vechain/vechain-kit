@@ -1,8 +1,8 @@
 import { HStack, Circle, Icon, useMediaQuery } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '@/providers';
 import { FcGoogle } from 'react-icons/fc';
-import { FaDiscord } from 'react-icons/fa6';
-import { LuPlus, LuTwitter } from 'react-icons/lu';
+import { FaDiscord, FaXTwitter } from 'react-icons/fa6';
+import { LuPlus } from 'react-icons/lu';
 
 export const SocialIcons = () => {
     const iconSize = 25;
@@ -35,7 +35,7 @@ export const SocialIcons = () => {
                     justifyContent="center"
                     zIndex={2}
                 >
-                    <Icon as={LuTwitter} color={'white'} fontSize={'20px'} />
+                    <Icon as={FaXTwitter} color={'white'} fontSize={'20px'} />
                 </Circle>
             )}
             {!isSmallScreen && !isMediumScreen && (

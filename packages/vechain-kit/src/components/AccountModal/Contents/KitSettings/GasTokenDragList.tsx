@@ -54,6 +54,7 @@ const TokenPriorityItem = ({
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const cardBg = useToken('colors', 'vechain-kit-card');
 
     return (
         <Box
@@ -70,8 +71,7 @@ const TokenPriorityItem = ({
                         ? 'blue.400'
                         : 'blue.200'
                     : isDark
-                    ? 'whiteAlpha.200'
-                    : 'gray.200'
+                    ? cardBg
             }
             p={3}
             mb={2}

@@ -2,7 +2,7 @@
 
 import { VStack, Text, SimpleGrid } from '@chakra-ui/react';
 import {
-    LuCreditCard,
+    LuSquareUser,
     LuArrowLeftRight,
     LuShield,
     LuUserCog,
@@ -51,7 +51,7 @@ export function FeaturesToTry() {
             title: 'Set VET Domain',
             description:
                 'Replace your complex address with a memorable .vet domain name',
-            icon: LuCreditCard,
+            icon: LuSquareUser,
             highlight: !account?.domain,
             content: () => openChooseNameModal({ isolatedView: true }),
         },
