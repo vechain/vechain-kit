@@ -234,7 +234,7 @@ export const GasFeeTokenSelector = ({
             <ModalFooter>
                 <VStack spacing={3} w="full">
                     <Button
-                        variant="vechainKitSecondary"
+                        variant="vechainKitPrimary"
                         onClick={handleApply}
                         isDisabled={hasInsufficientBalance(tempSelectedToken)}
                     >

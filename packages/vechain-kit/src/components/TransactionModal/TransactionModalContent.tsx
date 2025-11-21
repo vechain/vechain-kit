@@ -185,7 +185,7 @@ export const TransactionModalContent = ({
                 <VStack width="full" spacing={4}>
                     {status === 'error' && !!onTryAgain && (
                         <Button
-                            variant="vechainKitSecondary"
+                            variant="vechainKitPrimary"
                             onClick={onTryAgain}
                             width="full"
                         >
@@ -197,7 +197,7 @@ export const TransactionModalContent = ({
                     {status === 'ready' && (
                         <Button
                             onClick={onTryAgain}
-                            variant="vechainKitSecondary"
+                            variant="vechainKitPrimary"
                             width="full"
                         >
                             {t('Confirm')}

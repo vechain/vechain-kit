@@ -19,6 +19,15 @@ const getVariants = (tokens: ThemeTokens) => ({
         borderRadius: tokens.borders.radius.large,
         _hover: {
             opacity: 0.5,
+            _disabled: {
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: tokens.buttons.loginButton.bg, // Ensure background stays
+            },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: tokens.buttons.loginButton.bg, // Explicitly set background
         },
         transition: 'all 0.2s',
     })),
@@ -37,6 +46,27 @@ const getVariants = (tokens: ThemeTokens) => ({
         border: `1px solid ${tokens.colors.border.button}`,
         _hover: {
             opacity: 0.5,
+            _disabled: {
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: '#1a1a1a', // Ensure background stays
+            },
+        },
+        _dark: {
+            _hover: {
+                _disabled: {
+                    bg: 'white', // Ensure background stays in dark mode
+                },
+            },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: '#1a1a1a', // Explicitly set background
+        },
+        _dark: {
+            _disabled: {
+                bg: 'white', // Explicitly set background in dark mode
+            },
         },
         transition: 'all 0.2s',
     })),
@@ -46,14 +76,20 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         height: '60px',
         borderRadius: tokens.borders.radius.large,
-        bg: tokens.colors.primary.base,
-        color: 'white',
-        border: 'none',
+        bg: tokens.buttons.primaryButton.bg,
+        color: tokens.buttons.primaryButton.color,
+        border: tokens.buttons.primaryButton.border,
         _hover: {
-            bg: tokens.colors.primary.hover,
+            opacity: 0.8,
             _disabled: {
-                bg: tokens.colors.primary.disabled,
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: tokens.buttons.primaryButton.bg, // Ensure background stays
             },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: tokens.buttons.primaryButton.bg, // Explicitly set background
         },
         transition: 'all 0.2s',
     })),
@@ -63,14 +99,22 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         height: '60px',
         borderRadius: tokens.borders.radius.large,
-        backgroundColor: tokens.colors.secondary.base,
+        bg: tokens.colors.secondary.base,
         color: tokens.colors.text.primary,
         border:
             tokens.buttons.button.border === 'none'
                 ? 'none'
                 : tokens.buttons.button.border,
         _hover: {
-            backgroundColor: tokens.colors.secondary.hover,
+            bg: tokens.colors.secondary.hover,
+            _disabled: {
+                bg: tokens.colors.secondary.base, // Override hover bg when disabled
+            },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: tokens.colors.secondary.base, // Explicitly set background
         },
         transition: 'all 0.2s',
     })),
@@ -80,9 +124,17 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         height: '60px',
         borderRadius: tokens.borders.radius.large,
-        backgroundColor: tokens.colors.tertiary.base,
+        bg: tokens.colors.tertiary.base,
         _hover: {
-            backgroundColor: tokens.colors.tertiary.hover,
+            bg: tokens.colors.tertiary.hover,
+            _disabled: {
+                bg: tokens.colors.tertiary.base, // Override hover bg when disabled
+            },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: tokens.colors.tertiary.base, // Explicitly set background
         },
         border: 'none',
         color: tokens.colors.text.primary,
@@ -94,9 +146,9 @@ const getVariants = (tokens: ThemeTokens) => ({
         height: 'fit-content',
         borderRadius: tokens.borders.radius.xl,
         p: 0,
-        backgroundColor: tokens.colors.error + '1f',
+        bg: tokens.colors.error + '1f',
         _hover: {
-            backgroundColor: tokens.colors.error + '5e',
+            bg: tokens.colors.error + '5e',
             color: tokens.colors.error,
         },
         transition: 'all 0.2s',
@@ -106,13 +158,21 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         minHeight: '50px',
         height: 'fit-content',
-        backgroundColor: tokens.colors.secondary.base,
+        bg: tokens.colors.secondary.base,
         borderRadius: tokens.borders.radius.xl,
         p: 0,
         color: tokens.colors.text.primary,
         border: `1px solid ${tokens.colors.border.button}`,
         _hover: {
-            backgroundColor: tokens.colors.secondary.hover,
+            bg: tokens.colors.secondary.hover,
+            _disabled: {
+                bg: tokens.colors.secondary.base, // Override hover bg when disabled
+            },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: tokens.colors.secondary.base, // Explicitly set background
         },
         transition: 'all 0.2s',
     })),

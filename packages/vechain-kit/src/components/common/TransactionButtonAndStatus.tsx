@@ -193,7 +193,9 @@ export const TransactionButtonAndStatus = ({
 
             <Button
                 px={4}
-                variant="vechainKitSecondary"
+                variant={
+                    errorMessage ? 'vechainKitSecondary' : 'vechainKitPrimary'
+                }
                 bg={buttonBg}
                 onClick={() =>
                     errorMessage && onRetry ? onRetry() : onConfirm()

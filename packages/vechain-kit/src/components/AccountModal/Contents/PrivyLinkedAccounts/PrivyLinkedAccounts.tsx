@@ -691,7 +691,7 @@ export const PrivyLinkedAccounts = ({ onBack }: PrivyLinkedAccountsProps) => {
             <ModalFooter w={'full'}>
                 <Button
                     w="full"
-                    variant="vechainKitSecondary"
+                    variant="vechainKitPrimary"
                     onClick={() => setShowLinkOptions(true)}
                     leftIcon={<Icon as={LuPlus} />}
                     isDisabled={

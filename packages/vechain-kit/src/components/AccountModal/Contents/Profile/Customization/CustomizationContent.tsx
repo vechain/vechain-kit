@@ -417,7 +417,7 @@ export const CustomizationContent = ({
             <StickyFooterContainer>
                 <ModalFooter w="full" p={0}>
                     <Button
-                        variant="vechainKitSecondary"
+                        variant="vechainKitPrimary"
                         onClick={handleSaveChanges}
                         isDisabled={!hasDomain || !hasChanges || !isValid}
                         isLoading={isUploading}

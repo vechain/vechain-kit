@@ -53,6 +53,11 @@ export interface ThemeTokens {
             color: string;
             border: string;
         };
+        primaryButton: {
+            bg: string;
+            color: string;
+            border: string;
+        };
         loginButton: {
             bg: string;
             color: string;
@@ -109,6 +114,11 @@ export interface VechainKitThemeConfig {
         blur?: string; // Customize overlay blur effect (e.g., "blur(10px)")
     };
     button?: {
+        bg?: string;
+        color?: string;
+        border?: string; // Full CSS border string like "1px solid #color"
+    };
+    primaryButton?: {
         bg?: string;
         color?: string;
         border?: string; // Full CSS border string like "1px solid #color"
@@ -327,6 +337,44 @@ function deriveButtonStyles(
 }
 
 /**
+ * Derive primary button styles
+ */
+function derivePrimaryButtonStyles(
+    backgroundColor: string | undefined,
+    textColor: string | undefined,
+    darkMode: boolean,
+    customConfig: VechainKitThemeConfig['primaryButton'] | undefined,
+    defaultTokens: ThemeTokens,
+): ThemeTokens['buttons']['primaryButton'] {
+    // Use custom config if provided
+    if (customConfig) {
+        return {
+            bg: customConfig.bg || defaultTokens.buttons.primaryButton.bg,
+            color:
+                customConfig.color || defaultTokens.buttons.primaryButton.color,
+            border:
+                customConfig.border ||
+                defaultTokens.buttons.primaryButton.border,
+        };
+    }
+
+    // Derive from backgroundColor and textColor if available
+    // Primary buttons typically use primary color from theme
+    if (backgroundColor && textColor) {
+        // Use primary color from tokens (which defaults to blue)
+        // But allow customization via primaryButton config
+        return {
+            bg: defaultTokens.colors.primary.base,
+            color: 'white', // Primary buttons typically have white text
+            border: 'none',
+        };
+    }
+
+    // Use defaults
+    return defaultTokens.buttons.primaryButton;
+}
+
+/**
  * Derive login button styles
  */
 function deriveLoginButtonStyles(
@@ -416,10 +464,10 @@ const defaultLightTokens: ThemeTokens = {
             stickyHeader: 'rgba(255, 255, 255, 0.69)',
         },
         primary: {
-            base: '#2B6CB0',
-            hover: '#2C5282',
-            active: '#2A4A6E',
-            disabled: '#A0AEC0',
+            base: 'rgb(96 66 221)',
+            hover: 'rgb(96 66 221 / 0.8)',
+            active: 'rgb(96 66 221 / 0.8)',
+            disabled: 'rgb(96 66 221 / 0.3)',
         },
         secondary: {
             base: 'rgba(0, 0, 0, 0.1)',
@@ -451,6 +499,11 @@ const defaultLightTokens: ThemeTokens = {
         button: {
             bg: 'rgba(0, 0, 0, 0.1)',
             color: '#2e2e2e',
+            border: 'none',
+        },
+        primaryButton: {
+            bg: 'rgb(96 66 221)',
+            color: 'white',
             border: 'none',
         },
         loginButton: {
@@ -510,10 +563,10 @@ const defaultDarkTokens: ThemeTokens = {
             stickyHeader: 'rgba(31, 31, 30, 0.9)',
         },
         primary: {
-            base: '#3182CE',
-            hover: '#2B6CB0',
-            active: '#2C5282',
-            disabled: '#4A5568',
+            base: 'rgb(96 66 221)',
+            hover: 'rgb(96 66 221 / 0.8)',
+            active: 'rgb(96 66 221 / 0.8)',
+            disabled: 'rgb(96 66 221 / 0.3)',
         },
         secondary: {
             base: 'rgba(255, 255, 255, 0.05)',
@@ -545,6 +598,11 @@ const defaultDarkTokens: ThemeTokens = {
         button: {
             bg: 'rgba(255, 255, 255, 0.05)',
             color: 'rgb(223, 223, 221)',
+            border: 'none',
+        },
+        primaryButton: {
+            bg: 'rgb(96 66 221)',
+            color: 'white',
             border: 'none',
         },
         loginButton: {
@@ -739,6 +797,13 @@ export function mergeTokens(
             };
         }
 
+        if (customTokens.buttons.primaryButton) {
+            merged.buttons.primaryButton = {
+                ...defaultTokens.buttons.primaryButton,
+                ...customTokens.buttons.primaryButton,
+            };
+        }
+
         if (customTokens.buttons.loginButton) {
             merged.buttons.loginButton = {
                 ...defaultTokens.buttons.loginButton,
@@ -774,6 +839,7 @@ export function convertThemeConfigToTokens(
         config.textColor ||
         overlayBgColor ||
         config.button ||
+        config.primaryButton ||
         config.loginButton
     ) {
         tokens.colors = {} as ThemeTokens['colors'];
@@ -976,6 +1042,13 @@ export function convertThemeConfigToTokens(
         config.textColor,
         darkMode,
         config.button,
+        defaultTokens,
+    );
+    tokens.buttons.primaryButton = derivePrimaryButtonStyles(
+        config.backgroundColor,
+        config.textColor,
+        darkMode,
+        config.primaryButton,
         defaultTokens,
     );
     tokens.buttons.loginButton = deriveLoginButtonStyles(

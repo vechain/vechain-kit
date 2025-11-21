@@ -60,7 +60,9 @@ overlay: {
 
 ### Button Customization
 
-Customize button styles:
+Customize button styles for different button variants:
+
+**Secondary Buttons** (applies to all `vechainKitSecondary` buttons):
 
 ```tsx
 button: {
@@ -70,11 +72,17 @@ button: {
 }
 ```
 
-This applies to all `vechainKitSecondary` buttons. Hover and active states are handled automatically through opacity.
+**Primary Buttons** (applies to all `vechainKitPrimary` buttons):
 
-### Login Button Customization
+```tsx
+primaryButton: {
+    bg: '#3182CE', // Background color
+    color: '#ffffff', // Text color
+    border: 'none', // Border (full CSS string)
+}
+```
 
-Customize login button styles (applies to `loginIn` variant):
+**Login Buttons** (applies to `loginIn` variant):
 
 ```tsx
 loginButton: {
@@ -84,7 +92,7 @@ loginButton: {
 }
 ```
 
-Hover and active states are handled automatically through opacity.
+Hover and active states are handled automatically through opacity for all button types.
 
 ### Font Customization
 
@@ -173,6 +181,11 @@ const theme: VechainKitThemeConfig = {
     button: {
         bg: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.1)',
         color: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
+        border: 'none',
+    },
+    primaryButton: {
+        bg: isDarkMode ? '#3182CE' : '#2B6CB0',
+        color: 'white',
         border: 'none',
     },
     loginButton: {
@@ -267,10 +280,19 @@ theme={{
     },
 }}
 
-// Customize buttons only
+// Customize secondary buttons only
 theme={{
     button: {
         bg: '#6366f1',
+        color: '#ffffff',
+        border: 'none',
+    },
+}}
+
+// Customize primary buttons only
+theme={{
+    primaryButton: {
+        bg: '#3182CE',
         color: '#ffffff',
         border: 'none',
     },
