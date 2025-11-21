@@ -31,6 +31,7 @@ import { SignTypedDataParameters } from '@wagmi/core';
 
 export interface PrivyWalletProviderContextType {
     accountFactory: string;
+    delegateAllTransactions: boolean;
     sendTransaction: (tx: {
         txClauses: TransactionClause[];
         title?: string;
@@ -63,11 +64,13 @@ export const PrivyWalletProvider = ({
     children,
     nodeUrl,
     delegatorUrl = getGenericDelegatorUrl(),
+    delegateAllTransactions,
     genericDelegator,
 }: {
     children: React.ReactNode;
     nodeUrl: string;
     delegatorUrl?: string;
+    delegateAllTransactions: boolean;
     genericDelegator?: boolean;
 }) => {
     const {
@@ -291,6 +294,7 @@ export const PrivyWalletProvider = ({
                 signMessage,
                 signTypedData,
                 exportWallet,
+                delegateAllTransactions,
             }}
         >
             {children}
