@@ -218,7 +218,7 @@ export const LegalDocumentsContent = ({
                 <ModalFooter>
                     <VStack width="full" spacing={3}>
                         <Button
-                            variant="vechainKitSecondary"
+                            variant="vechainKitPrimary"
                             width="full"
                             type="submit"
                             isDisabled={!isValid}

@@ -33,10 +33,14 @@ export function VechainKitProviderWrapper({ children }: Props) {
     return (
         <VeChainKitProvider
             theme={{
-                effects: {
-                    glass: {
-                        enabled: true,
-                        intensity: 'high',
+                backgroundColor: isDarkMode ? '#1b1d1e' : '#ffffff',
+                textColor: isDarkMode ? '#ffffff' : '#272A2E',
+                buttons: {
+                    secondaryButton: {
+                        border: 'none',
+                        bg: isDarkMode
+                            ? 'rgb(45, 45, 45)'
+                            : 'rgb(240, 240, 240)',
                     },
                 },
             }}

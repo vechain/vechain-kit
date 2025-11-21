@@ -80,7 +80,7 @@ export const ChooseNameContent = ({
             </ModalBody>
             <ModalFooter>
                 <Button
-                    variant="vechainKitSecondary"
+                    variant="vechainKitPrimary"
                     onClick={() =>
                         setCurrentContent({
                             type: 'choose-name-search',

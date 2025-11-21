@@ -257,7 +257,7 @@ export const ChooseNameSearchContent = ({
 
             <ModalFooter>
                 <Button
-                    variant="vechainKitSecondary"
+                    variant="vechainKitPrimary"
                     isDisabled={
                         !isAvailable ||
                         !!error ||

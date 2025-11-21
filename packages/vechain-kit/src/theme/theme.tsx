@@ -40,6 +40,7 @@ const getThemeConfig = (
             'chakra-border-color': tokens.colors.border.default,
             'chakra-placeholder-color': tokens.colors.text.tertiary,
             // VeChain Kit semantic tokens
+            // Main structural background tokens (for component backgrounds)
             'vechain-kit-modal': tokens.colors.background.modal,
             'vechain-kit-overlay': tokens.colors.background.overlay,
             'vechain-kit-card': darkMode
@@ -49,12 +50,6 @@ const getThemeConfig = (
                 ? 'rgba(0, 0, 0, 0.4)'
                 : 'rgba(0, 0, 0, 0.08)', // Darker elevated card with transparency
             'vechain-kit-sticky-header': tokens.colors.background.stickyHeader,
-            'vechain-kit-primary': tokens.colors.primary.base,
-            'vechain-kit-primary-hover': tokens.colors.primary.hover,
-            'vechain-kit-primary-active': tokens.colors.primary.active,
-            'vechain-kit-secondary': tokens.colors.secondary.base,
-            'vechain-kit-secondary-hover': tokens.colors.secondary.hover,
-            'vechain-kit-tertiary': tokens.colors.tertiary.base,
             'vechain-kit-text-primary': tokens.colors.text.primary,
             'vechain-kit-text-secondary': tokens.colors.text.secondary,
             'vechain-kit-text-tertiary': tokens.colors.text.tertiary,

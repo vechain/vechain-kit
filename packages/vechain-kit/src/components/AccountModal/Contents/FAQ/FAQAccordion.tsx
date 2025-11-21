@@ -29,8 +29,8 @@ export const FAQAccordion = () => {
     const inputBg = useToken('colors', 'vechain-kit-card');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
-    const accordionBg = useToken('colors', 'vechain-kit-secondary');
-    const accordionBgHover = useToken('colors', 'vechain-kit-secondary-hover');
+    const accordionBg = useToken('colors', 'vechain-kit-card');
+    const accordionBgHover = useToken('colors', 'vechain-kit-card-elevated');
 
     const faqItems: FAQItem[] = [
         {

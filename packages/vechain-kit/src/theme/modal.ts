@@ -24,10 +24,11 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             borderRadius: tokens.borders.radius.full,
             color: tokens.colors.text.primary,
             _hover: {
-                bg: tokens.colors.secondary.base,
+                bg: tokens.buttons.button.bg,
             },
             _active: {
-                bg: tokens.colors.secondary.active,
+                bg: tokens.buttons.button.bg,
+                opacity: 0.8,
             },
         },
         header: {

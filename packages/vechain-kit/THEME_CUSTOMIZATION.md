@@ -15,6 +15,13 @@ The theme system is designed to be simple - you only need to provide a base `bac
             backgroundColor: 'rgba(0, 0, 0, 0.6)',
             blur: 'blur(3px)',
         },
+        buttons: {
+            secondaryButton: {
+                bg: 'rgba(255, 255, 255, 0.1)',
+                color: '#ffffff',
+                border: 'none',
+            },
+        },
         effects: {
             glass: {
                 enabled: true,
@@ -60,31 +67,79 @@ overlay: {
 
 ### Button Customization
 
-Customize button styles:
+Customize button styles for different button variants. All button configs are grouped under the `buttons` object:
+
+**Secondary Buttons** (applies to all `vechainKitSecondary` buttons):
 
 ```tsx
-button: {
-    bg: 'rgba(255, 255, 255, 0.1)', // Background color
-    color: '#ffffff', // Text color
-    border: '1px solid rgba(255, 255, 255, 0.2)', // Border (full CSS string)
+buttons: {
+    secondaryButton: {
+        bg: 'rgba(255, 255, 255, 0.1)', // Background color
+        color: '#ffffff', // Text color
+        border: '1px solid rgba(255, 255, 255, 0.2)', // Border (full CSS string)
+    },
 }
 ```
 
-This applies to all `vechainKitSecondary` buttons. Hover and active states are handled automatically through opacity.
-
-### Login Button Customization
-
-Customize login button styles (applies to `loginIn` variant):
+**Primary Buttons** (applies to all `vechainKitPrimary` buttons):
 
 ```tsx
-loginButton: {
-    bg: 'transparent', // Background color
-    color: '#ffffff', // Text color
-    border: '1px solid rgba(255, 255, 255, 0.1)', // Border (full CSS string)
+buttons: {
+    primaryButton: {
+        bg: '#3182CE', // Background color
+        color: '#ffffff', // Text color
+        border: 'none', // Border (full CSS string)
+    },
 }
 ```
 
-Hover and active states are handled automatically through opacity.
+**Tertiary Buttons** (applies to all `vechainKitTertiary` buttons):
+
+```tsx
+buttons: {
+    tertiaryButton: {
+        bg: 'transparent', // Background color
+        color: '#ffffff', // Text color
+        border: 'none', // Border (full CSS string)
+    },
+}
+```
+
+**Login Buttons** (applies to `loginIn` variant):
+
+```tsx
+buttons: {
+    loginButton: {
+        bg: 'transparent', // Background color
+        color: '#ffffff', // Text color
+        border: '1px solid rgba(255, 255, 255, 0.1)', // Border (full CSS string)
+    },
+}
+```
+
+You can customize multiple button types in one config:
+
+```tsx
+buttons: {
+    secondaryButton: {
+        bg: 'rgba(255, 255, 255, 0.1)',
+        color: '#ffffff',
+        border: 'none',
+    },
+    primaryButton: {
+        bg: '#3182CE',
+        color: '#ffffff',
+        border: 'none',
+    },
+    loginButton: {
+        bg: 'transparent',
+        color: '#ffffff',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+    },
+}
+```
+
+Hover and active states are handled automatically through opacity for all button types.
 
 ### Font Customization
 
@@ -170,17 +225,24 @@ const theme: VechainKitThemeConfig = {
             : 'rgba(0, 0, 0, 0.4)',
         blur: 'blur(3px)',
     },
-    button: {
-        bg: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.1)',
-        color: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
-        border: 'none',
-    },
-    loginButton: {
-        bg: 'transparent',
-        color: isDarkMode ? 'white' : '#1a1a1a',
-        border: isDarkMode
-            ? '1px solid rgba(255, 255, 255, 0.1)'
-            : '1px solid #ebebeb',
+    buttons: {
+        secondaryButton: {
+            bg: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.1)',
+            color: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
+            border: 'none',
+        },
+        primaryButton: {
+            bg: isDarkMode ? '#3182CE' : '#2B6CB0',
+            color: 'white',
+            border: 'none',
+        },
+        loginButton: {
+            bg: 'transparent',
+            color: isDarkMode ? 'white' : '#1a1a1a',
+            border: isDarkMode
+                ? '1px solid rgba(255, 255, 255, 0.1)'
+                : '1px solid #ebebeb',
+        },
     },
     fonts: {
         family: 'Inter, sans-serif',
@@ -267,12 +329,25 @@ theme={{
     },
 }}
 
-// Customize buttons only
+// Customize secondary buttons only
 theme={{
-    button: {
-        bg: '#6366f1',
-        color: '#ffffff',
-        border: 'none',
+    buttons: {
+        secondaryButton: {
+            bg: '#6366f1',
+            color: '#ffffff',
+            border: 'none',
+        },
+    },
+}}
+
+// Customize primary buttons only
+theme={{
+    buttons: {
+        primaryButton: {
+            bg: '#3182CE',
+            color: '#ffffff',
+            border: 'none',
+        },
     },
 }}
 
