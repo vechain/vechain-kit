@@ -5,6 +5,7 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -12,7 +13,13 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { LuLanguages, LuChevronRight, LuShield, LuFuel, LuDollarSign } from 'react-icons/lu';
+import {
+    LuLanguages,
+    LuChevronRight,
+    LuShield,
+    LuFuel,
+    LuDollarSign,
+} from 'react-icons/lu';
 
 import { ActionButton } from '../../Components';
 import { AccountModalContentTypes } from '../../Types';
@@ -29,6 +36,8 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
     const { connection } = useWallet();
     const { t } = useTranslation();
     const { feeDelegation } = useVeChainKitConfig();
+
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleCurrencyClick = () => {
         setCurrentContent('change-currency');
@@ -55,7 +64,7 @@ export const GeneralSettingsContent = ({ setCurrentContent }: Props) => {
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
                         <Text
                             fontSize={'sm'}
-                            opacity={0.5}
+                            color={textSecondary}
                             textAlign={'center'}
                         >
                             {t(

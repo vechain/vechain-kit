@@ -24,6 +24,19 @@ import {
     useEffect,
     useMemo,
 } from 'react';
+import { VechainKitThemeConfig } from '@/theme/tokens';
+import {
+    getDefaultTokens,
+    convertThemeConfigToTokens,
+    mergeTokens,
+} from '@/theme/tokens';
+import {
+    generateDAppKitCSSVariables,
+    generatePrivyCSSVariables,
+    applyPrivyCSSVariables,
+    applyDAppKitButtonStyles,
+    improvePrivyReadability,
+} from '@/utils/cssVariables';
 
 import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
@@ -123,6 +136,7 @@ export type VechainKitProviderProps = {
     allowCustomTokens?: boolean;
     legalDocuments?: LegalDocumentOptions;
     defaultCurrency?: CURRENCY;
+    theme?: VechainKitThemeConfig;
 };
 
 type VeChainKitConfig = {
@@ -139,6 +153,7 @@ type VeChainKitConfig = {
     allowCustomTokens?: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
+    theme?: VechainKitThemeConfig;
 };
 
 /**
@@ -283,6 +298,7 @@ export const VeChainKitProvider = (
         allowCustomTokens,
         legalDocuments,
         defaultCurrency = 'usd',
+        theme: customTheme,
     } = validatedProps;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
@@ -335,6 +351,64 @@ export const VeChainKitProvider = (
         setLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
     }, [network]);
 
+    // Generate tokens from custom theme config
+    const tokens = useMemo(() => {
+        const defaultTokens = getDefaultTokens(darkMode);
+        const customTokens = convertThemeConfigToTokens(customTheme, darkMode);
+        return mergeTokens(defaultTokens, customTokens);
+    }, [customTheme, darkMode]);
+
+    // Generate CSS variables for DAppKit and Privy
+    const dappKitThemeVariables = useMemo(
+        () => generateDAppKitCSSVariables(tokens, darkMode),
+        [tokens, darkMode],
+    );
+
+    const privyCSSVariables = useMemo(
+        () => generatePrivyCSSVariables(tokens, darkMode),
+        [tokens, darkMode],
+    );
+
+    // Apply Privy CSS variables to document and inject backdrop filter + card styles
+    useEffect(() => {
+        // Prepare card backgrounds with readability improvements
+        const privyCardBg = improvePrivyReadability(
+            tokens.colors.background.card,
+            darkMode,
+        );
+        const privyCardElevatedBg = improvePrivyReadability(
+            tokens.colors.background.cardElevated,
+            darkMode,
+        );
+        // Use loginIn variant style: white (light) / transparent (dark) background
+        const privyButtonBaseBg = darkMode ? 'transparent' : '#ffffff';
+        const privyButtonHoverBg = darkMode ? 'transparent' : '#ffffff';
+        const privyButtonActiveBg = darkMode ? 'transparent' : '#ffffff';
+
+        applyPrivyCSSVariables(
+            privyCSSVariables,
+            tokens.effects.backdropFilter.modal,
+            privyCardBg,
+            privyCardElevatedBg,
+            privyButtonBaseBg,
+            privyButtonHoverBg,
+            privyButtonActiveBg,
+            tokens.colors.border.default,
+        );
+    }, [
+        privyCSSVariables,
+        tokens.effects.backdropFilter.modal,
+        tokens.colors.background.card,
+        tokens.colors.background.cardElevated,
+        tokens.colors.border.default,
+        darkMode,
+    ]);
+
+    // Apply DAppKit button styles (hover opacity matching loginIn variant)
+    useEffect(() => {
+        applyDAppKitButtonStyles();
+    }, []);
+
     return (
         <EnsureQueryClient>
             <ReactQueryDevtools initialIsOpen={false} />
@@ -359,6 +433,7 @@ export const VeChainKitProvider = (
                         allowCustomTokens,
                         legalDocuments,
                         defaultCurrency,
+                        theme: customTheme,
                     }}
                 >
                     <PrivyProvider
@@ -381,7 +456,12 @@ export const VeChainKitProvider = (
                                 theme: darkMode ? 'dark' : 'light',
                                 accentColor:
                                     privy?.appearance.accentColor ??
-                                    (darkMode ? '#3182CE' : '#2B6CB0'),
+                                    (tokens.colors.primary.base?.startsWith('#')
+                                        ? (tokens.colors.primary
+                                              .base as `#${string}`)
+                                        : darkMode
+                                        ? '#3182CE'
+                                        : '#2B6CB0'),
                                 loginMessage: privy?.appearance.loginMessage,
                                 logo: privy?.appearance.logo,
                             },
@@ -413,34 +493,14 @@ export const VeChainKitProvider = (
                             allowedWallets={dappKit.allowedWallets}
                             walletConnectOptions={dappKit.walletConnectOptions}
                             themeMode={darkMode ? 'DARK' : 'LIGHT'}
-                            themeVariables={{
-                                '--vdk-modal-z-index': '10000',
-                                '--vdk-modal-width': '22rem',
-                                '--vdk-modal-backdrop-filter': 'blur(3px)',
-                                '--vdk-border-dark-source-card': `1px solid ${'#ffffff0a'}`,
-                                '--vdk-border-light-source-card': `1px solid ${'#ebebeb'}`,
-
-                                // Dark mode colors
-                                '--vdk-color-dark-primary': 'transparent',
-                                '--vdk-color-dark-primary-hover':
-                                    'rgba(255, 255, 255, 0.05)',
-                                '--vdk-color-dark-primary-active':
-                                    'rgba(255, 255, 255, 0.1)',
-                                '--vdk-color-dark-secondary': '#1f1f1e',
-
-                                // Light mode colors
-                                '--vdk-color-light-primary': '#ffffff',
-                                '--vdk-color-light-primary-hover': '#f8f8f8',
-                                '--vdk-color-light-primary-active': '#f0f0f0',
-                                '--vdk-color-light-secondary': 'white',
-
-                                // Font settings - using system fonts instead of Chakra variables
-                                '--vdk-font-family':
-                                    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                                '--vdk-font-size-medium': '14px',
-                                '--vdk-font-size-large': '16px',
-                                '--vdk-font-weight-medium': '500',
-                            }}
+                            themeVariables={
+                                dappKit.themeVariables
+                                    ? {
+                                          ...dappKitThemeVariables,
+                                          ...dappKit.themeVariables,
+                                      }
+                                    : dappKitThemeVariables
+                            }
                         >
                             <PrivyWalletProvider
                                 nodeUrl={

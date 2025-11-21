@@ -5,8 +5,6 @@ import {
     VStack,
     Tag,
     ModalFooter,
-    HStack,
-    Text,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
@@ -46,31 +44,20 @@ export const AccountMainContent = ({
                     data-testid="settings-button"
                 />
                 <ModalHeader>
-                    <HStack
-                        w={'full'}
-                        justifyContent={'center'}
-                        p={0}
-                        spacing={2}
-                    >
-                        <Text
-                            fontSize={'md'}
-                            fontWeight={'bold'}
-                            data-testid="modal-title"
+                    {t('Wallet')}
+
+                    {network?.type !== 'main' && (
+                        <Tag
+                            size="xs"
+                            colorScheme="orange"
+                            fontSize={'2xs'}
+                            p={1}
+                            ml={1}
+                            textTransform={'uppercase'}
                         >
-                            {t('Wallet')}
-                        </Text>
-                        {network?.type !== 'main' && (
-                            <Tag
-                                size="xs"
-                                colorScheme="orange"
-                                fontSize={'2xs'}
-                                p={1}
-                                textTransform={'uppercase'}
-                            >
-                                {`${network?.type}`}
-                            </Tag>
-                        )}
-                    </HStack>
+                            {`${network?.type}`}
+                        </Tag>
+                    )}
                 </ModalHeader>
 
                 <ModalCloseButton />

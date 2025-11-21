@@ -1,12 +1,12 @@
-import { useVeChainKitConfig } from '@/providers';
-import { Box } from '@chakra-ui/react';
+import { Box, useToken } from '@chakra-ui/react';
 
 type Props = {
     children: React.ReactNode;
 };
 
 export const StickyFooterContainer = ({ children }: Props) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
+    // Use semantic token for sticky footer background (same as modal)
+    const footerBg = useToken('colors', 'vechain-kit-modal');
 
     return (
         <Box
@@ -14,7 +14,7 @@ export const StickyFooterContainer = ({ children }: Props) => {
             bottom="0"
             left="0"
             right="0"
-            bg={isDark ? '#1f1f1e' : 'white'}
+            bg={footerBg}
             zIndex="1000"
             p={4}
             boxShadow={'0px -1px 6px -3px rgb(0 0 0 / 56%)'}

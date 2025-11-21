@@ -10,6 +10,7 @@ import {
     ModalFooter,
     ModalHeader,
     VStack,
+    useToken,
 } from '@chakra-ui/react';
 import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
 import {
@@ -38,6 +39,8 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { sortedTokens } = useTokensWithValues({ address: account?.address });
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
+    
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
     const [searchQuery, setSearchQuery] = useState('');
@@ -85,7 +88,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                         />
                         <InputLeftElement h="56px" w="56px" pl={4}>
                             <LuSearch
-                                color={darkMode ? 'whiteAlpha.400' : 'gray.400'}
+                                color={textTertiary}
                             />
                         </InputLeftElement>
                     </InputGroup>

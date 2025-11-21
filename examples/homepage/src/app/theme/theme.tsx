@@ -14,12 +14,12 @@ const exampleTheme = {
     semanticTokens: {
         colors: {
             'chakra-body-text': {
-                _light: '#1A202C',
+                _light: 'none',
                 _dark: '#F7FAFC', // Added dark mode text color
             },
             'chakra-body-bg': {
                 _light: '#FFFFFF',
-                _dark: '#1A202C', // Added dark mode background color
+                _dark: 'none', // Added dark mode background color
             },
         },
     },
@@ -32,8 +32,8 @@ const exampleTheme = {
     },
     //@ts-ignore
     fonts: {
-        heading: `"Instrument Sans Variable", sans-serif`,
-        body: `"Inter Variable", sans-serif`,
+        heading: `"Satoshi", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+        body: `"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
     },
 };
 

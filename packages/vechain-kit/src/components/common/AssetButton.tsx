@@ -6,10 +6,10 @@ import {
     Box,
     VStack,
     ButtonProps,
+    useToken,
 } from '@chakra-ui/react';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import React from 'react';
-import { useVeChainKitConfig } from '@/providers';
 import { CURRENCY } from '@/types';
 import {
     formatCompactCurrency,
@@ -34,7 +34,8 @@ export const AssetButton = ({
     onClick,
     ...buttonProps
 }: AssetButtonProps) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
         <Button
@@ -73,29 +74,33 @@ export const AssetButton = ({
                                 alignItems="center"
                                 justifyContent="center"
                             >
-                                <Text fontSize="10px" fontWeight="bold">
+                                <Text
+                                    fontSize="10px"
+                                    fontWeight="bold"
+                                    color={textPrimary}
+                                >
                                     {symbol.slice(0, 3)}
                                 </Text>
                             </Box>
                         }
                     />
                 )}
-                <Text>{symbol}</Text>
+                <Text color={textPrimary}>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>
-                <Text>
+                <Text color={textPrimary}>
                     {amount.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
-                    })}{' '}</Text>
+                    })}{' '}
+                </Text>
                 <Text
                     fontSize="sm"
-                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                    color={textSecondary}
                     data-testid={`${symbol}-balance`}
                 >
-                    {formatCompactCurrency(
-                        currencyValue,
-                        { currency: currentCurrency as SupportedCurrency },
-                    )}
+                    {formatCompactCurrency(currencyValue, {
+                        currency: currentCurrency as SupportedCurrency,
+                    })}
                 </Text>
             </VStack>
         </Button>

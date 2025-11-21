@@ -8,6 +8,7 @@ import {
     VStack,
     Button,
     Divider,
+    useToken,
 } from '@chakra-ui/react';
 import { LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
@@ -48,6 +49,9 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
     const { preferences, reorderTokenPriority } = useGasTokenSelection();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+
     const [tokenEstimations, setTokenEstimations] = useState<
         Record<GasTokenType, { cost: number; loading: boolean }>
     >(() => {
@@ -64,8 +68,6 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
             { cost: number; loading: boolean }
         >;
     });
-
-    const { darkMode: isDark } = useVeChainKitConfig();
 
     // Fetch estimates for all available tokens when modal opens
     const { data: allTokenEstimates, isLoading: isLoadingAllEstimates } =
@@ -221,6 +223,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                         fontWeight="light"
                         textAlign="left"
                         w="full"
+                        color={textSecondary}
                     >
                         {t('Fee')}
                     </Text>
@@ -251,11 +254,15 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                                 </>
                             ) : (
                                 <>
-                                    <Text fontSize="sm" fontWeight="semibold">
+                                    <Text
+                                        color={textPrimary}
+                                        fontSize="sm"
+                                        fontWeight="semibold"
+                                    >
                                         {formatGasCost(totalCost, 2)}{' '}
                                         {tokenInfo.symbol}
                                     </Text>
-                                    <Text fontSize="xs" opacity={0.5}>
+                                    <Text color={textSecondary} fontSize="xs">
                                         {'≈'} ${(totalCost * 0.01).toFixed(2)}
                                     </Text>
                                 </>
@@ -271,10 +278,10 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                     borderRadius="full"
                     px={6}
                     disabled={isLoadingTransaction}
-                    color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
-                    borderColor={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                    color={textSecondary}
+                    borderColor={textSecondary}
                     _hover={{
-                        bg: isDark ? 'whiteAlpha.300' : 'blackAlpha.300',
+                        bg: textSecondary,
                     }}
                     leftIcon={React.cloneElement(
                         TOKEN_LOGO_COMPONENTS[
@@ -293,7 +300,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                     <Icon
                         as={LuChevronDown}
                         boxSize={5}
-                        color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                        color={textSecondary}
                     />
                 </Button>
             </HStack>

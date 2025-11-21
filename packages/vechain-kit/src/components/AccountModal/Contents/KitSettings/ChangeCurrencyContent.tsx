@@ -48,7 +48,6 @@ export const ChangeCurrencyContent = ({
             onClick={() => changeCurrency(currency)}
             py={6}
             px={4}
-            _hover={{ bg: 'whiteAlpha.100' }}
         >
             <HStack spacing={3}>
                 <Text fontSize="xl">{CURRENCY_SYMBOLS[currency]}</Text>

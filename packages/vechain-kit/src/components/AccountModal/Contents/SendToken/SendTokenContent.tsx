@@ -9,16 +9,16 @@ import {
     Text,
     Box,
     HStack,
-    Center,
     Icon,
     ModalFooter,
     Image,
     FormControl,
+    useToken,
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
-import { LuArrowDown, LuChevronDown } from 'react-icons/lu';
+import { LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
@@ -66,6 +66,13 @@ export const SendTokenContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark, feeDelegation } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
+    const errorColor = useToken('colors', 'vechain-kit-error');
+    const cardBg = useToken('colors', 'vechain-kit-card');
+
     const { exchangeRates } = useTokenPrices();
     const { account } = useWallet();
     const { isolatedView } = useAccountModalOptions();
@@ -250,15 +257,11 @@ export const SendTokenContent = ({
 
             <ModalBody>
                 <VStack spacing={1} align="stretch" position="relative">
-                    <Box
-                        p={6}
-                        borderRadius="xl"
-                        bg={isDark ? '#00000038' : 'gray.50'}
-                    >
+                    <Box p={6} borderRadius="xl" bg={cardBg}>
                         <Text
                             fontSize="sm"
                             fontWeight="medium"
-                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            color={textPrimary}
                             mb={2}
                         >
                             {t('Amount')}
@@ -324,6 +327,7 @@ export const SendTokenContent = ({
                                         data-testid="tx-amount-input"
                                         type="number"
                                         inputMode="decimal"
+                                        color={textPrimary}
                                     />
 
                                     {selectedToken ? (
@@ -332,16 +336,8 @@ export const SendTokenContent = ({
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
+                                            borderColor={textSecondary}
                                             _hover={{
                                                 bg: isDark
                                                     ? 'whiteAlpha.300'
@@ -387,6 +383,9 @@ export const SendTokenContent = ({
                                                                 <Text
                                                                     fontSize="8px"
                                                                     fontWeight="bold"
+                                                                    color={
+                                                                        textPrimary
+                                                                    }
                                                                 >
                                                                     {selectedToken.symbol.slice(
                                                                         0,
@@ -404,11 +403,7 @@ export const SendTokenContent = ({
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     ) : (
@@ -417,23 +412,13 @@ export const SendTokenContent = ({
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
+                                            borderColor={textSecondary}
                                             _hover={{
                                                 bg: isDark
                                                     ? 'whiteAlpha.300'
                                                     : 'blackAlpha.300',
-                                                color: isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700',
+                                                color: textTertiary,
                                             }}
                                             onClick={() =>
                                                 setIsSelectingToken(true)
@@ -443,11 +428,7 @@ export const SendTokenContent = ({
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     )}
@@ -457,21 +438,15 @@ export const SendTokenContent = ({
                                         spacing={1}
                                         fontSize="sm"
                                         justifyContent={'space-between'}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
+                                        color={textSecondary}
                                     >
-                                        <Text opacity={0.5}>
+                                        <Text color={textSecondary}>
                                             ≈ {formattedValue}
                                         </Text>
                                         <Text
                                             cursor="pointer"
                                             _hover={{
-                                                color: isDark
-                                                    ? 'blue.300'
-                                                    : 'blue.500',
+                                                color: textSecondary,
                                                 textDecoration: 'underline',
                                             }}
                                             onClick={handleSetMaxAmount}
@@ -497,34 +472,11 @@ export const SendTokenContent = ({
                         </VStack>
                     </Box>
 
-                    {/* Arrow Icon */}
-                    <Center
-                        position="relative"
-                        marginTop="-20px"
-                        marginBottom="-20px"
-                        marginX="auto"
-                        bg={isDark ? '#151515' : 'gray.100'}
-                        borderRadius="xl"
-                        w="40px"
-                        h="40px"
-                        zIndex={2}
-                    >
-                        <Icon
-                            as={LuArrowDown}
-                            boxSize={5}
-                            opacity={0.5}
-                            color={isDark ? 'whiteAlpha.700' : 'gray.600'}
-                        />
-                    </Center>
-
-                    <Box
-                        borderRadius="xl"
-                        bg={isDark ? '#00000038' : 'gray.50'}
-                    >
+                    <Box borderRadius="xl" bg={cardBg}>
                         <Text
                             fontSize="sm"
                             fontWeight="medium"
-                            color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                            color={textPrimary}
                             mb={2}
                             px={6}
                             pt={6}
@@ -568,12 +520,13 @@ export const SendTokenContent = ({
                                     }}
                                     fontSize="lg"
                                     fontWeight="bold"
+                                    color={textPrimary}
                                     variant="unstyled"
                                     data-testid="tx-address-input"
                                 />
                                 {errors.toAddressOrDomain && (
                                     <Text
-                                        color="#ef4444"
+                                        color={errorColor}
                                         fontSize="sm"
                                         data-testid="address-error-msg"
                                     >
@@ -588,7 +541,7 @@ export const SendTokenContent = ({
 
             <ModalFooter>
                 <Button
-                    variant="vechainKitPrimary"
+                    variant="vechainKitSecondary"
                     isDisabled={!selectedToken || !isValid}
                     isLoading={isLoading}
                     onClick={handleSubmit(onSubmit)}

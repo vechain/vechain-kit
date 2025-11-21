@@ -18,10 +18,21 @@ import {
     Spinner,
     Collapse,
     Center,
+    useToken,
 } from '@chakra-ui/react';
-import { GasFeeSummary, ModalBackButton, StickyHeaderContainer, TransactionButtonAndStatus } from '@/components/common';
+import {
+    GasFeeSummary,
+    ModalBackButton,
+    StickyHeaderContainer,
+    TransactionButtonAndStatus,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
+import {
+    LuArrowDown,
+    LuArrowUp,
+    LuChevronDown,
+    LuArrowDownUp,
+} from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
     useWallet,
@@ -42,7 +53,10 @@ import { getConfig } from '@/config';
 import { compareAddresses } from '@/utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
-import { convertToSelectedCurrency, SupportedCurrency } from '@/utils/currencyUtils';
+import {
+    convertToSelectedCurrency,
+    SupportedCurrency,
+} from '@/utils/currencyUtils';
 import { useTokenPrices } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
@@ -57,14 +71,30 @@ type Props = {
     toTokenAddress?: string;
 };
 
-type SwapStep = 'main' | 'select-from-token' | 'select-to-token' | 'select-quote';
+type SwapStep =
+    | 'main'
+    | 'select-from-token'
+    | 'select-to-token'
+    | 'select-quote';
 
-export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenAddress }: Props) => {
+export const SwapTokenContent = ({
+    setCurrentContent,
+    fromTokenAddress,
+    toTokenAddress,
+}: Props) => {
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const { network, feeDelegation } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
+
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
+    const borderColor = useToken('colors', 'vechain-kit-border');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
+
     const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
         address: account?.address ?? '',
@@ -79,9 +109,13 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
     const [showSlippageConfig, setShowSlippageConfig] = useState(false);
     const [customSlippageValue, setCustomSlippageValue] = useState('1');
     const [selectedQuote, setSelectedQuote] = useState<SwapQuote | null>(null);
-    const [selectedGasToken, setSelectedGasToken] = React.useState<GasTokenType | null>(null);
-    const [userSelectedGasToken, setUserSelectedGasToken] = React.useState<GasTokenType | null>(null);
-    const [swapClauses, setSwapClauses] = React.useState<TransactionClause[]>([]);
+    const [selectedGasToken, setSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+    const [userSelectedGasToken, setUserSelectedGasToken] =
+        React.useState<GasTokenType | null>(null);
+    const [swapClauses, setSwapClauses] = React.useState<TransactionClause[]>(
+        [],
+    );
 
     // Prices and FX to compute fiat values for entered and output amounts
     const { prices, exchangeRates } = useTokenPrices();
@@ -109,11 +143,15 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
         // Prefer provided addresses
         if ((fromTokenAddress || toTokenAddress) && (!fromToken || !toToken)) {
             if (fromTokenAddress && !fromToken) {
-                const match = sortedTokens.find((t) => compareAddresses(t.address, fromTokenAddress));
+                const match = sortedTokens.find((t) =>
+                    compareAddresses(t.address, fromTokenAddress),
+                );
                 if (match) setFromToken(match);
             }
             if (toTokenAddress && !toToken) {
-                const match = sortedTokens.find((t) => compareAddresses(t.address, toTokenAddress));
+                const match = sortedTokens.find((t) =>
+                    compareAddresses(t.address, toTokenAddress),
+                );
                 if (match) setToToken(match);
             }
             return;
@@ -136,11 +174,14 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                     const b3trAddress = config.b3trContractAddress;
                     if (b3trAddress) {
                         b3trToken = sortedTokens.find((t) =>
-                            compareAddresses(t.address, b3trAddress)
+                            compareAddresses(t.address, b3trAddress),
                         );
                     }
                 } catch (error) {
-                    console.warn('Failed to get B3TR address from config:', error);
+                    console.warn(
+                        'Failed to get B3TR address from config:',
+                        error,
+                    );
                 }
             }
 
@@ -148,7 +189,14 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                 setToToken(b3trToken);
             }
         }
-    }, [sortedTokens, fromToken, toToken, fromTokenAddress, toTokenAddress, network.type]);
+    }, [
+        sortedTokens,
+        fromToken,
+        toToken,
+        fromTokenAddress,
+        toTokenAddress,
+        network.type,
+    ]);
 
     // Toggle swap direction
     const handleToggleDirection = useCallback(() => {
@@ -169,7 +217,13 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
     }, [fromToken?.address, toToken?.address, amount]);
 
     // Unified quotes: get best and full list
-    const { bestQuote, quotes: allQuotes, isLoading: isLoadingQuote, from, to } = useSwapQuotes(
+    const {
+        bestQuote,
+        quotes: allQuotes,
+        isLoading: isLoadingQuote,
+        from,
+        to,
+    } = useSwapQuotes(
         fromToken,
         toToken,
         amount,
@@ -224,7 +278,13 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
             currentCurrency as SupportedCurrency,
             exchangeRates,
         );
-    }, [toToken?.address, outputAmount, prices, currentCurrency, exchangeRates]);
+    }, [
+        toToken?.address,
+        outputAmount,
+        prices,
+        currentCurrency,
+        exchangeRates,
+    ]);
 
     // Simulate swap to get gas estimate
     const swapParams = useMemo(() => {
@@ -252,10 +312,16 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
             }
 
             try {
-                const clauses = await quote.aggregator.buildSwapTransaction(swapParams, quote);
+                const clauses = await quote.aggregator.buildSwapTransaction(
+                    swapParams,
+                    quote,
+                );
                 setSwapClauses(clauses);
             } catch (error) {
-                console.error('Failed to build swap clauses for gas estimation:', error);
+                console.error(
+                    'Failed to build swap clauses for gas estimation:',
+                    error,
+                );
                 setSwapClauses([]);
             }
         };
@@ -282,7 +348,10 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
             : preferences.availableGasTokens,
         sendingAmount: amount,
         sendingTokenSymbol: fromToken?.symbol ?? '',
-        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl && swapClauses.length > 0,
+        enabled:
+            shouldEstimateGas &&
+            !!feeDelegation?.genericDelegatorUrl &&
+            swapClauses.length > 0,
     });
 
     const usedGasToken = gasEstimation?.usedToken;
@@ -324,7 +393,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
     const handleSwapSuccess = useCallback(() => {
         const txId = txReceipt?.meta.txID ?? '';
         // Extract swap amounts from receipt transfer events
-        const swapTitle = t('Swap successful', { defaultValue: 'Swap successful' });
+        const swapTitle = t('Swap successful', {
+            defaultValue: 'Swap successful',
+        });
         let swapDescription: string | undefined;
 
         if (txReceipt && fromToken && toToken && account?.address) {
@@ -353,7 +424,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                     const formatAmount = (value: string) => {
                         const num = Number(value);
                         if (num >= 1000) {
-                            return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+                            return num.toLocaleString(undefined, {
+                                maximumFractionDigits: 2,
+                            });
                         }
                         return num.toLocaleString(undefined, {
                             maximumFractionDigits: 6,
@@ -368,8 +441,11 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             fromSymbol: fromToken.symbol,
                             toAmount: formatAmount(toAmountFormatted),
                             toSymbol: toToken.symbol,
-                            defaultValue:
-                                `You successfully swapped ${formatAmount(fromAmountFormatted)} ${fromToken.symbol} for ${formatAmount(toAmountFormatted)} ${toToken.symbol}`,
+                            defaultValue: `You successfully swapped ${formatAmount(
+                                fromAmountFormatted,
+                            )} ${fromToken.symbol} for ${formatAmount(
+                                toAmountFormatted,
+                            )} ${toToken.symbol}`,
                         },
                     );
                 } catch (error) {
@@ -407,12 +483,27 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                 showSocialButtons: true,
             },
         });
-    }, [fromToken, toToken, amount, quote, txReceipt, account?.address, setCurrentContent, t, isolatedView, closeAccountModal]);
+    }, [
+        fromToken,
+        toToken,
+        amount,
+        quote,
+        txReceipt,
+        account?.address,
+        setCurrentContent,
+        t,
+        isolatedView,
+        closeAccountModal,
+    ]);
 
-    const handleSwapError = useCallback((error: Error | string) => {
-        const errorMessage = typeof error === 'string' ? error : error.message;
-        console.error('Swap failed:', errorMessage);
-    }, [fromToken, toToken, amount]);
+    const handleSwapError = useCallback(
+        (error: Error | string) => {
+            const errorMessage =
+                typeof error === 'string' ? error : error.message;
+            console.error('Swap failed:', errorMessage);
+        },
+        [fromToken, toToken, amount],
+    );
 
     // Track if we've already shown success/error to prevent duplicate dialogs
     const [hasShownResult, setHasShownResult] = React.useState(false);
@@ -437,45 +528,61 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
             handleSwapSuccess();
         } else if (status === 'error' && txError) {
             // Track error for analytics but don't show modal
-            const errorMessage = (txError as any)?.reason || (txError as any)?.message || String(txError);
+            const errorMessage =
+                (txError as any)?.reason ||
+                (txError as any)?.message ||
+                String(txError);
             handleSwapError(errorMessage);
         } else if (txReceipt?.reverted) {
             // Track reverted transaction for analytics but don't show modal
             handleSwapError('Transaction reverted');
         }
-    }, [status, txReceipt, txError, handleSwapSuccess, handleSwapError, hasShownResult]);
+    }, [
+        status,
+        txReceipt,
+        txError,
+        handleSwapSuccess,
+        handleSwapError,
+        hasShownResult,
+    ]);
 
     // Token selection handlers
-    const handleSelectFromToken = useCallback((token: TokenWithValue) => {
-        setFromToken(token);
+    const handleSelectFromToken = useCallback(
+        (token: TokenWithValue) => {
+            setFromToken(token);
 
-        // Default to B3TR if VET is selected as from token
-        if (token.symbol === 'VET' && !toToken) {
-            // Try finding B3TR by symbol first
-            let b3trToken = sortedTokens.find((t) => t.symbol === 'B3TR');
+            // Default to B3TR if VET is selected as from token
+            if (token.symbol === 'VET' && !toToken) {
+                // Try finding B3TR by symbol first
+                let b3trToken = sortedTokens.find((t) => t.symbol === 'B3TR');
 
-            // If not found by symbol, try finding by address from config
-            if (!b3trToken) {
-                try {
-                    const config = getConfig(network.type);
-                    const b3trAddress = config.b3trContractAddress;
-                    if (b3trAddress) {
-                        b3trToken = sortedTokens.find((t) =>
-                            compareAddresses(t.address, b3trAddress)
+                // If not found by symbol, try finding by address from config
+                if (!b3trToken) {
+                    try {
+                        const config = getConfig(network.type);
+                        const b3trAddress = config.b3trContractAddress;
+                        if (b3trAddress) {
+                            b3trToken = sortedTokens.find((t) =>
+                                compareAddresses(t.address, b3trAddress),
+                            );
+                        }
+                    } catch (error) {
+                        console.warn(
+                            'Failed to get B3TR address from config:',
+                            error,
                         );
                     }
-                } catch (error) {
-                    console.warn('Failed to get B3TR address from config:', error);
+                }
+
+                if (b3trToken) {
+                    setToToken(b3trToken);
                 }
             }
 
-            if (b3trToken) {
-                setToToken(b3trToken);
-            }
-        }
-
-        setStep('main');
-    }, [toToken, sortedTokens, network.type]);
+            setStep('main');
+        },
+        [toToken, sortedTokens, network.type],
+    );
 
     const handleSelectToToken = useCallback((token: TokenWithValue) => {
         setToToken(token);
@@ -496,8 +603,6 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
             setAmount(fromToken.balance);
         }
     }, [fromToken]);
-
-
 
     // Get token display info
     const getTokenDisplay = (token: TokenWithValue | null) => {
@@ -560,7 +665,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
             <StickyHeaderContainer>
                 <ModalHeader>{t('Swap')}</ModalHeader>
                 {!isolatedView && (
-                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('main')}
+                    />
                 )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -573,12 +680,12 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             px={6}
                             py={connection.isConnectedWithPrivy ? 2 : 6}
                             borderRadius="xl"
-                            bg={isDark ? '#00000038' : 'gray.50'}
+                            bg={cardBg}
                         >
                             <Text
                                 fontSize="sm"
                                 fontWeight="medium"
-                                color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                                color={textSecondary}
                                 mb={2}
                             >
                                 {t('From')}
@@ -588,7 +695,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                     <Input
                                         placeholder="0"
                                         value={amount}
-                                        onChange={(e) => handleAmountChange(e.target.value)}
+                                        onChange={(e) =>
+                                            handleAmountChange(e.target.value)
+                                        }
                                         fontSize="4xl"
                                         fontWeight="bold"
                                         variant="unstyled"
@@ -596,32 +705,28 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         type="number"
                                         inputMode="decimal"
                                         color={
-                                            fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance)
+                                            fromTokenDisplay &&
+                                            amount &&
+                                            Number(amount) >
+                                                Number(fromTokenDisplay.balance)
                                                 ? 'red.500'
-                                                : undefined
+                                                : textPrimary
                                         }
                                     />
                                     {fromTokenDisplay ? (
                                         <Button
-                                            onClick={() => setStep('select-from-token')}
+                                            onClick={() =>
+                                                setStep('select-from-token')
+                                            }
                                             variant="outline"
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
                                             }}
                                             leftIcon={
                                                 fromTokenDisplay.logoComponent ? (
@@ -629,12 +734,15 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                         fromTokenDisplay.logoComponent,
                                                         {
                                                             boxSize: '20px',
-                                                            borderRadius: 'full',
+                                                            borderRadius:
+                                                                'full',
                                                         },
                                                     )
                                                 ) : fromTokenDisplay.logoUrl ? (
                                                     <Image
-                                                        src={fromTokenDisplay.logoUrl}
+                                                        src={
+                                                            fromTokenDisplay.logoUrl
+                                                        }
                                                         alt={`${fromTokenDisplay.symbol} logo`}
                                                         boxSize="20px"
                                                         borderRadius="full"
@@ -650,6 +758,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                                 <Text
                                                                     fontSize="8px"
                                                                     fontWeight="bold"
+                                                                    color={
+                                                                        textPrimary
+                                                                    }
                                                                 >
                                                                     {fromTokenDisplay.symbol.slice(
                                                                         0,
@@ -666,48 +777,31 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     ) : (
                                         <Button
-                                            onClick={() => setStep('select-from-token')}
+                                            onClick={() =>
+                                                setStep('select-from-token')
+                                            }
                                             variant="outline"
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
-                                                color: isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
+                                                color: textSecondary,
                                             }}
                                         >
                                             {t('Select token')}
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     )}
@@ -717,29 +811,26 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         spacing={1}
                                         fontSize="sm"
                                         justifyContent={'space-between'}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
+                                        color={textSecondary}
                                     >
                                         <HStack spacing={2} alignItems="center">
                                             {fromAmountFiatValue > 0 && (
-                                                <Text opacity={0.5}>
-                                                    ≈ {formatCompactCurrency(
+                                                <Text color={textSecondary}>
+                                                    ≈{' '}
+                                                    {formatCompactCurrency(
                                                         fromAmountFiatValue,
-                                                        { currency: currentCurrency },
+                                                        {
+                                                            currency:
+                                                                currentCurrency,
+                                                        },
                                                     )}
                                                 </Text>
                                             )}
-
                                         </HStack>
                                         <Text
                                             cursor="pointer"
                                             _hover={{
-                                                color: isDark
-                                                    ? 'blue.300'
-                                                    : 'blue.500',
+                                                color: textSecondary,
                                                 textDecoration: 'underline',
                                             }}
                                             onClick={handleSetMaxAmount}
@@ -747,7 +838,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             overflow="hidden"
                                             textOverflow="ellipsis"
                                         >
-                                            {t('Swap all', { defaultValue: 'Swap all' })}
+                                            {t('Swap all', {
+                                                defaultValue: 'Swap all',
+                                            })}
                                         </Text>
                                     </HStack>
                                 )}
@@ -760,23 +853,34 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             marginTop="-20px"
                             marginBottom="-20px"
                             marginX="auto"
-                            bg={isDark ? '#151515' : 'gray.100'}
+                            bg={cardBg}
                             borderRadius="xl"
                             w="40px"
                             h="40px"
                             zIndex={2}
-                            cursor={!fromToken || !toToken || isLoadingQuote ? 'not-allowed' : 'pointer'}
-                            onClick={(!fromToken || !toToken || isLoadingQuote) ? undefined : handleToggleDirection}
-                            opacity={!fromToken || !toToken || isLoadingQuote ? 0.5 : 1}
+                            cursor={
+                                !fromToken || !toToken || isLoadingQuote
+                                    ? 'not-allowed'
+                                    : 'pointer'
+                            }
+                            onClick={
+                                !fromToken || !toToken || isLoadingQuote
+                                    ? undefined
+                                    : handleToggleDirection
+                            }
+                            opacity={
+                                !fromToken || !toToken || isLoadingQuote
+                                    ? 0.5
+                                    : 1
+                            }
                         >
                             {isLoadingQuote ? (
                                 <Spinner size="sm" />
                             ) : (
                                 <Icon
-                                    as={LuArrowDown}
+                                    as={LuArrowDownUp}
                                     boxSize={5}
-                                    opacity={0.5}
-                                    color={isDark ? 'whiteAlpha.700' : 'gray.600'}
+                                    color={textSecondary}
                                 />
                             )}
                         </Center>
@@ -786,49 +890,51 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             px={6}
                             py={connection.isConnectedWithPrivy ? 2 : 6}
                             borderRadius="xl"
-                            bg={isDark ? '#00000038' : 'gray.50'}
+                            bg={cardBg}
                         >
                             <Text
                                 fontSize="sm"
                                 fontWeight="medium"
-                                color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}
+                                color={textSecondary}
                                 mb={2}
                             >
                                 {t('To')}
                             </Text>
                             <VStack align="stretch" spacing={2}>
-                                <HStack justify="space-between" alignItems="center">
+                                <HStack
+                                    justify="space-between"
+                                    alignItems="center"
+                                >
                                     <Input
-                                        value={Number(outputAmount).toLocaleString(undefined, {
-                                            maximumFractionDigits: Number(outputAmount) > 10000 ? 0 : 2,
+                                        value={Number(
+                                            outputAmount,
+                                        ).toLocaleString(undefined, {
+                                            maximumFractionDigits:
+                                                Number(outputAmount) > 10000
+                                                    ? 0
+                                                    : 2,
                                         })}
                                         readOnly
                                         variant="unstyled"
                                         fontSize="4xl"
                                         fontWeight="bold"
                                         data-testid="swap-output-amount"
+                                        color={textPrimary}
                                     />
                                     {toTokenDisplay ? (
                                         <Button
-                                            onClick={() => setStep('select-to-token')}
+                                            onClick={() =>
+                                                setStep('select-to-token')
+                                            }
                                             variant="outline"
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
                                             }}
                                             leftIcon={
                                                 toTokenDisplay.logoComponent ? (
@@ -836,12 +942,15 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                         toTokenDisplay.logoComponent,
                                                         {
                                                             boxSize: '20px',
-                                                            borderRadius: 'full',
+                                                            borderRadius:
+                                                                'full',
                                                         },
                                                     )
                                                 ) : toTokenDisplay.logoUrl ? (
                                                     <Image
-                                                        src={toTokenDisplay.logoUrl}
+                                                        src={
+                                                            toTokenDisplay.logoUrl
+                                                        }
                                                         alt={`${toTokenDisplay.symbol} logo`}
                                                         boxSize="20px"
                                                         borderRadius="full"
@@ -857,6 +966,9 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                                 <Text
                                                                     fontSize="8px"
                                                                     fontWeight="bold"
+                                                                    color={
+                                                                        textPrimary
+                                                                    }
                                                                 >
                                                                     {toTokenDisplay.symbol.slice(
                                                                         0,
@@ -873,48 +985,31 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     ) : (
                                         <Button
-                                            onClick={() => setStep('select-to-token')}
+                                            onClick={() =>
+                                                setStep('select-to-token')
+                                            }
                                             variant="outline"
                                             size="sm"
                                             borderRadius="full"
                                             px={6}
-                                            color={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
-                                            borderColor={
-                                                isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700'
-                                            }
+                                            color={textSecondary}
+                                            borderColor={borderColor}
                                             _hover={{
-                                                bg: isDark
-                                                    ? 'whiteAlpha.300'
-                                                    : 'blackAlpha.300',
-                                                color: isDark
-                                                    ? 'whiteAlpha.700'
-                                                    : 'blackAlpha.700',
+                                                bg: cardBgHover,
+                                                borderColor: borderColor,
+                                                color: textSecondary,
                                             }}
                                         >
                                             {t('Select token')}
                                             <Icon
                                                 as={LuChevronDown}
                                                 boxSize={5}
-                                                color={
-                                                    isDark
-                                                        ? 'whiteAlpha.600'
-                                                        : 'blackAlpha.600'
-                                                }
+                                                color={textSecondary}
                                             />
                                         </Button>
                                     )}
@@ -924,18 +1019,18 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                         spacing={1}
                                         fontSize="sm"
                                         justifyContent={'space-between'}
-                                        color={
-                                            isDark
-                                                ? 'whiteAlpha.700'
-                                                : 'blackAlpha.700'
-                                        }
+                                        color={textSecondary}
                                     >
                                         <HStack spacing={2} alignItems="center">
                                             {toAmountFiatValue > 0 && (
-                                                <Text opacity={0.5}>
-                                                    ≈ {formatCompactCurrency(
+                                                <Text color={textSecondary}>
+                                                    ≈{' '}
+                                                    {formatCompactCurrency(
                                                         toAmountFiatValue,
-                                                        { currency: currentCurrency },
+                                                        {
+                                                            currency:
+                                                                currentCurrency,
+                                                        },
                                                     )}
                                                 </Text>
                                             )}
@@ -948,45 +1043,91 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
 
                         {/* Show More Section */}
                         <Collapse in={showMore && !!quote} animateOpacity>
-                            <VStack spacing={1} align="stretch" p={4} borderRadius="xl" bg={isDark ? '#00000038' : 'gray.50'}>
+                            <VStack
+                                spacing={1}
+                                align="stretch"
+                                p={4}
+                                borderRadius="xl"
+                                bg={cardBg}
+                            >
                                 {/* Source */}
                                 {quote && (
                                     <HStack justify="space-between">
-                                        <Text fontSize="xs" color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}>
+                                        <Text
+                                            fontSize="xs"
+                                            color={textSecondary}
+                                        >
                                             {t('Source')}:
                                         </Text>
                                         <HStack
                                             spacing={1.5}
                                             cursor="pointer"
-                                            onClick={() => setStep('select-quote')}
+                                            onClick={() =>
+                                                setStep('select-quote')
+                                            }
                                             _hover={{ opacity: 0.8 }}
                                             alignItems="center"
                                         >
                                             {quote.aggregator?.getIcon('12px')}
-                                            <Text fontSize="xs">{quote.aggregatorName}</Text>
+                                            <Text
+                                                fontSize="xs"
+                                                color={textPrimary}
+                                            >
+                                                {quote.aggregatorName}
+                                            </Text>
                                         </HStack>
                                     </HStack>
                                 )}
 
                                 {/* Slippage */}
                                 <VStack align="stretch" spacing={2}>
-                                    <HStack justify="space-between" cursor="pointer" onClick={() => setShowSlippageConfig(!showSlippageConfig)}>
-                                        <Text fontSize="xs" color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}>
+                                    <HStack
+                                        justify="space-between"
+                                        cursor="pointer"
+                                        onClick={() =>
+                                            setShowSlippageConfig(
+                                                !showSlippageConfig,
+                                            )
+                                        }
+                                    >
+                                        <Text
+                                            fontSize="xs"
+                                            color={textSecondary}
+                                        >
                                             {t('Slippage tolerance')}:
                                         </Text>
-                                        <Text fontSize="xs" fontWeight="medium">
+                                        <Text
+                                            fontSize="xs"
+                                            fontWeight="medium"
+                                            color={textPrimary}
+                                        >
                                             {slippageTolerance}%
                                         </Text>
                                     </HStack>
 
                                     {/* Slippage Configuration */}
-                                    <Collapse in={showSlippageConfig} animateOpacity>
-                                        <VStack spacing={3} align="stretch" pt={2}>
+                                    <Collapse
+                                        in={showSlippageConfig}
+                                        animateOpacity
+                                    >
+                                        <VStack
+                                            spacing={3}
+                                            align="stretch"
+                                            pt={2}
+                                        >
                                             <HStack spacing={2}>
                                                 <Button
                                                     size="sm"
-                                                    variant={isAutoMode ? 'solid' : 'outline'}
-                                                    colorScheme={isAutoMode ? 'blue' : 'gray'}
+                                                    variant={
+                                                        isAutoMode
+                                                            ? 'solid'
+                                                            : 'outline'
+                                                    }
+                                                    colorScheme={
+                                                        isAutoMode
+                                                            ? 'blue'
+                                                            : 'gray'
+                                                    }
                                                     onClick={() => {
                                                         setSlippageTolerance(1);
                                                     }}
@@ -994,27 +1135,49 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                     minW="60px"
                                                     borderRadius="md"
                                                     fontSize="xs"
+                                                    color={textPrimary}
                                                 >
                                                     Auto
                                                 </Button>
                                                 <Button
                                                     size="sm"
-                                                    variant={slippageTolerance === 0.5 ? 'solid' : 'outline'}
-                                                    colorScheme={slippageTolerance === 0.5 ? 'blue' : 'gray'}
+                                                    variant={
+                                                        slippageTolerance ===
+                                                        0.5
+                                                            ? 'solid'
+                                                            : 'outline'
+                                                    }
+                                                    colorScheme={
+                                                        slippageTolerance ===
+                                                        0.5
+                                                            ? 'blue'
+                                                            : 'gray'
+                                                    }
                                                     onClick={() => {
-                                                        setSlippageTolerance(0.5);
+                                                        setSlippageTolerance(
+                                                            0.5,
+                                                        );
                                                     }}
                                                     flex="0 0 auto"
                                                     minW="60px"
                                                     borderRadius="md"
                                                     fontSize="xs"
+                                                    color={textPrimary}
                                                 >
                                                     0.5%
                                                 </Button>
                                                 <Button
                                                     size="sm"
-                                                    variant={slippageTolerance === 3 ? 'solid' : 'outline'}
-                                                    colorScheme={slippageTolerance === 3 ? 'blue' : 'gray'}
+                                                    variant={
+                                                        slippageTolerance === 3
+                                                            ? 'solid'
+                                                            : 'outline'
+                                                    }
+                                                    colorScheme={
+                                                        slippageTolerance === 3
+                                                            ? 'blue'
+                                                            : 'gray'
+                                                    }
                                                     onClick={() => {
                                                         setSlippageTolerance(3);
                                                     }}
@@ -1022,21 +1185,47 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                     minW="60px"
                                                     borderRadius="md"
                                                     fontSize="xs"
+                                                    color={textPrimary}
                                                 >
                                                     3%
                                                 </Button>
                                                 <InputGroup size="sm" flex={1}>
                                                     <Input
-                                                        value={customSlippageValue}
+                                                        value={
+                                                            customSlippageValue
+                                                        }
                                                         onChange={(e) => {
-                                                            const value = e.target.value;
+                                                            const value =
+                                                                e.target.value;
                                                             // Allow numbers and decimal point
-                                                            if (/^\d*\.?\d*$/.test(value) || value === '') {
-                                                                setCustomSlippageValue(value);
-                                                                if (value !== '') {
-                                                                    const numValue = parseFloat(value);
-                                                                    if (!isNaN(numValue) && numValue >= 0 && numValue <= 100) {
-                                                                        setSlippageTolerance(numValue);
+                                                            if (
+                                                                /^\d*\.?\d*$/.test(
+                                                                    value,
+                                                                ) ||
+                                                                value === ''
+                                                            ) {
+                                                                setCustomSlippageValue(
+                                                                    value,
+                                                                );
+                                                                if (
+                                                                    value !== ''
+                                                                ) {
+                                                                    const numValue =
+                                                                        parseFloat(
+                                                                            value,
+                                                                        );
+                                                                    if (
+                                                                        !isNaN(
+                                                                            numValue,
+                                                                        ) &&
+                                                                        numValue >=
+                                                                            0 &&
+                                                                        numValue <=
+                                                                            100
+                                                                    ) {
+                                                                        setSlippageTolerance(
+                                                                            numValue,
+                                                                        );
                                                                     }
                                                                 }
                                                             }
@@ -1046,9 +1235,18 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                                         textAlign="right"
                                                         pr={8}
                                                         fontSize="xs"
+                                                        color={textPrimary}
                                                     />
-                                                    <InputRightElement width="2rem" pointerEvents="none">
-                                                        <Text fontSize="2xs" color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}>
+                                                    <InputRightElement
+                                                        width="2rem"
+                                                        pointerEvents="none"
+                                                    >
+                                                        <Text
+                                                            fontSize="2xs"
+                                                            color={
+                                                                textSecondary
+                                                            }
+                                                        >
                                                             %
                                                         </Text>
                                                     </InputRightElement>
@@ -1060,20 +1258,34 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
 
                                 {/* Gas Fee */}
                                 <HStack justify="space-between">
-                                    <Text fontSize="xs" color={isDark ? 'whiteAlpha.700' : 'blackAlpha.700'}>
+                                    <Text fontSize="xs" color={textSecondary}>
                                         {t('Gas fee')}:
                                     </Text>
-                                    <Text fontSize="xs" fontWeight="medium">
-                                        {gasCostVTHO > 0 ? `${gasCostVTHO.toLocaleString(undefined, {
-                                            maximumFractionDigits: 2,
-                                        })} VTHO` : '-'}
+                                    <Text
+                                        fontSize="xs"
+                                        fontWeight="medium"
+                                        color={textPrimary}
+                                    >
+                                        {gasCostVTHO > 0
+                                            ? `${gasCostVTHO.toLocaleString(
+                                                  undefined,
+                                                  {
+                                                      maximumFractionDigits: 2,
+                                                  },
+                                              )} VTHO`
+                                            : '-'}
                                     </Text>
                                 </HStack>
                             </VStack>
                         </Collapse>
 
                         {/* Show More Toggle - Always reserve space */}
-                        <Box minH="24px" display="flex" alignItems="center" justifyContent="center">
+                        <Box
+                            minH="24px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
                             {quote && (
                                 <Button
                                     variant="ghost"
@@ -1081,16 +1293,22 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                                     onClick={() => setShowMore(!showMore)}
                                     rightIcon={
                                         <Icon
-                                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                                            _hover={{ color: isDark ? 'whiteAlpha.800' : 'blackAlpha.800' }}
-                                            as={showMore ? LuArrowUp : LuArrowDown}
+                                            color={textTertiary}
+                                            _hover={{
+                                                color: textSecondary,
+                                            }}
+                                            as={
+                                                showMore
+                                                    ? LuArrowUp
+                                                    : LuArrowDown
+                                            }
                                         />
                                     }
                                     fontSize="xs"
                                     fontWeight="light"
-                                    color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
+                                    color={textTertiary}
                                     _hover={{
-                                        color: isDark ? 'whiteAlpha.800' : 'blackAlpha.800',
+                                        color: textSecondary,
                                     }}
                                 >
                                     {showMore ? t('Show Less') : t('Show More')}
@@ -1098,19 +1316,18 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                             )}
                         </Box>
 
-
-                        {swapClauses.length > 0 && connection.isConnectedWithPrivy && (
-                            <GasFeeSummary
-                                estimation={gasEstimation}
-                                isLoading={gasEstimationLoading}
-                                isLoadingTransaction={isTransactionPending}
-                                onTokenChange={handleGasTokenChange}
-                                clauses={swapClauses}
-                                userSelectedToken={userSelectedGasToken}
-                            />
-                        )}
+                        {swapClauses.length > 0 &&
+                            connection.isConnectedWithPrivy && (
+                                <GasFeeSummary
+                                    estimation={gasEstimation}
+                                    isLoading={gasEstimationLoading}
+                                    isLoadingTransaction={isTransactionPending}
+                                    onTokenChange={handleGasTokenChange}
+                                    clauses={swapClauses}
+                                    userSelectedToken={userSelectedGasToken}
+                                />
+                            )}
                     </VStack>
-
                 </ModalBody>
             </Container>
 
@@ -1135,7 +1352,12 @@ export const SwapTokenContent = ({ setCurrentContent, fromTokenAddress, toTokenA
                         isLoadingQuote ||
                         !quote ||
                         quote?.reverted === true ||
-                        Boolean(fromTokenDisplay && amount && Number(amount) > Number(fromTokenDisplay.balance)) ||
+                        Boolean(
+                            fromTokenDisplay &&
+                                amount &&
+                                Number(amount) >
+                                    Number(fromTokenDisplay.balance),
+                        ) ||
                         disableConfirmButtonDuringEstimation
                     }
                     gasEstimationError={gasEstimationError}

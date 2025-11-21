@@ -6,6 +6,7 @@ import {
     ModalHeader,
     Text,
     Box,
+    useToken,
 } from '@chakra-ui/react';
 import {
     usePrivy,
@@ -47,6 +48,8 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
     const { setWalletRecovery } = useSetWalletRecovery();
     const { connection, smartAccount, connectedWallet } = useWallet();
 
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+
     const { data: upgradeRequired } = useUpgradeRequired(
         smartAccount?.address ?? '',
         connectedWallet?.address ?? '',
@@ -84,7 +87,7 @@ export const AccessAndSecurityContent = ({ setCurrentContent }: Props) => {
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
                         <Text
                             fontSize={'sm'}
-                            opacity={0.5}
+                            color={textSecondary}
                             textAlign={'center'}
                         >
                             {t(

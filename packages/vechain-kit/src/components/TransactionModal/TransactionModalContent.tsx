@@ -11,12 +11,18 @@ import {
     Link,
     HStack,
     Spinner,
+    useToken,
 } from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { LuExternalLink, LuCircleCheck, LuCircleAlert, LuRefreshCw } from 'react-icons/lu';
+import {
+    LuExternalLink,
+    LuCircleCheck,
+    LuCircleAlert,
+    LuRefreshCw,
+} from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
 import { StickyHeaderContainer } from '../common';
 import { TransactionModalProps } from './TransactionModal';
@@ -37,6 +43,11 @@ export const TransactionModalContent = ({
 }: Omit<TransactionModalProps, 'isOpen'>) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
+
+    const errorColor = useToken('colors', 'vechain-kit-error');
+    const successColor = useToken('colors', 'vechain-kit-success');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const errorMessage = useMemo(() => {
         if (!txError) return null;
@@ -60,7 +71,12 @@ export const TransactionModalContent = ({
                         (isSendingTransaction
                             ? t('Sending Transaction...')
                             : t('Waiting for confirmation')),
-                    icon: uiConfig?.loadingIcon ?? <Spinner size="xl" data-testid="pending-spinner-modal" />,
+                    icon: uiConfig?.loadingIcon ?? (
+                        <Spinner
+                            size="xl"
+                            data-testid="pending-spinner-modal"
+                        />
+                    ),
                     description: isSendingTransaction
                         ? t(
                               'Transaction is being processed, it can take up to 15 seconds.',
@@ -74,7 +90,7 @@ export const TransactionModalContent = ({
                     icon: uiConfig?.errorIcon ?? (
                         <Icon
                             as={LuCircleAlert}
-                            color="#ef4444"
+                            color={errorColor}
                             fontSize="100px"
                             data-testid="error-icon-modal"
                         />
@@ -88,7 +104,7 @@ export const TransactionModalContent = ({
                     icon: uiConfig?.successIcon ?? (
                         <Icon
                             as={LuCircleCheck}
-                            color="#22c55e"
+                            color={successColor}
                             fontSize="100px"
                             data-testid="success-icon-modal"
                         />
@@ -137,7 +153,7 @@ export const TransactionModalContent = ({
                             <Text
                                 fontSize="sm"
                                 fontWeight={'bold'}
-                                opacity={0.5}
+                                color={textSecondary}
                             >
                                 {t('Share on')}
                             </Text>
@@ -151,7 +167,9 @@ export const TransactionModalContent = ({
                         <Text
                             fontSize={status === 'ready' ? 'md' : 'sm'}
                             textAlign="center"
-                            color={status === 'error' ? 'red.500' : 'inherit'}
+                            color={
+                                status === 'error' ? errorColor : textPrimary
+                            }
                             mt={5}
                             style={{
                                 lineBreak: 'anywhere',
@@ -167,7 +185,7 @@ export const TransactionModalContent = ({
                 <VStack width="full" spacing={4}>
                     {status === 'error' && !!onTryAgain && (
                         <Button
-                            variant="vechainKitPrimary"
+                            variant="vechainKitSecondary"
                             onClick={onTryAgain}
                             width="full"
                         >
@@ -179,7 +197,7 @@ export const TransactionModalContent = ({
                     {status === 'ready' && (
                         <Button
                             onClick={onTryAgain}
-                            variant="vechainKitPrimary"
+                            variant="vechainKitSecondary"
                             width="full"
                         >
                             {t('Confirm')}
@@ -214,10 +232,14 @@ export const TransactionModalContent = ({
                                 w="full"
                                 justifyContent="center"
                             >
-                                <Text>
+                                <Text color={textSecondary}>
                                     {t('View transaction on the explorer')}
                                 </Text>
-                                <Icon size="sm" as={LuExternalLink} />
+                                <Icon
+                                    size="sm"
+                                    as={LuExternalLink}
+                                    color={textSecondary}
+                                />
                             </HStack>
                         </Link>
                     )}

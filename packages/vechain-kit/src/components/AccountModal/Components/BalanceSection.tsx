@@ -5,6 +5,8 @@ import {
     Icon,
     IconButton,
     Box,
+    Button,
+    useToken,
 } from '@chakra-ui/react';
 import { useRefreshBalances, useWallet, useTotalBalance } from '@/hooks';
 import { useState } from 'react';
@@ -12,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 import { LuRefreshCw } from 'react-icons/lu';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { LuChevronRight } from 'react-icons/lu';
-import { useVeChainKitConfig } from '@/providers';
 
 export const BalanceSection = ({
     mb,
@@ -23,7 +24,6 @@ export const BalanceSection = ({
     mt?: number;
     onAssetsClick?: () => void;
 }) => {
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { t } = useTranslation();
     const { account } = useWallet();
     const { formattedBalance, isLoading } = useTotalBalance({
@@ -32,6 +32,7 @@ export const BalanceSection = ({
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleRefresh = async () => {
         setIsRefreshing(true);
@@ -50,7 +51,7 @@ export const BalanceSection = ({
                 spacing={2}
                 role="group"
             >
-                <Heading size={'xs'} fontWeight={'500'} opacity={0.5}>
+                <Heading size={'xs'} fontWeight={'500'} color={textSecondary}>
                     {t('Assets')}
                 </Heading>
 
@@ -81,52 +82,51 @@ export const BalanceSection = ({
                 </Box>
             </HStack>
 
-            <VStack
+            <Button
                 onClick={onAssetsClick}
-                width="100%"
-                mt={1}
-                backgroundColor={isDark ? '#ffffff0a' : 'blackAlpha.50'}
-                borderRadius="xl"
-                p={3}
-                cursor="pointer"
-                _hover={{
-                    backgroundColor: isDark ? '#ffffff12' : 'blackAlpha.200',
-                }}
-                justifyContent="flex-start"
-                alignItems="flex-start"
-                spacing={2}
+                h="fit-content"
+                variant="vechainKitSecondary"
             >
-                <Heading size={'2xl'} fontWeight={'700'}>
-                    {formattedBalance}
-                </Heading>
-
-                <HStack
-                    w={'full'}
-                    justifyContent={'flex-start'}
-                    data-testid="all-assets-button"
-                    mt={2}
+                <VStack
+                    spacing={2}
+                    w="full"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    mt={4}
+                    mb={4}
                 >
-                    <AssetIcons
-                        style={{
-                            width: '100%',
-                            justifyContent: 'space-between',
-                        }}
-                        maxIcons={10}
-                        iconSize={26}
-                        iconsGap={3}
-                        address={account?.address ?? ''}
-                        showNoAssetsWarning={true}
-                        rightIcon={
-                            <Icon
-                                as={LuChevronRight}
-                                boxSize={5}
-                                opacity={0.5}
-                                marginLeft={2}
-                            />
-                        }
-                    />
-                </HStack>
-            </VStack>
+                    <Heading size={'2xl'} fontWeight={'700'}>
+                        {formattedBalance}
+                    </Heading>
+
+                    <HStack
+                        w={'full'}
+                        justifyContent={'flex-start'}
+                        data-testid="all-assets-button"
+                        mt={2}
+                    >
+                        <AssetIcons
+                            style={{
+                                width: '100%',
+                                justifyContent: 'space-between',
+                            }}
+                            maxIcons={10}
+                            iconSize={26}
+                            iconsGap={3}
+                            address={account?.address ?? ''}
+                            showNoAssetsWarning={true}
+                            rightIcon={
+                                <Icon
+                                    as={LuChevronRight}
+                                    boxSize={5}
+                                    opacity={0.5}
+                                    marginLeft={2}
+                                />
+                            }
+                        />
+                    </HStack>
+                </VStack>
+            </Button>
         </VStack>
     );
 };

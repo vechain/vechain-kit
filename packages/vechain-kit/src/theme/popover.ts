@@ -1,18 +1,19 @@
 import { popoverAnatomy as parts } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
+import { ThemeTokens } from './tokens';
 
 const { definePartsStyle, defineMultiStyleConfig } =
     createMultiStyleConfigHelpers(parts.keys);
 
-const getPopoverVariants = (darkMode: boolean) => ({
+const getPopoverVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({
         popper: {
             zIndex: 1000,
         },
         content: {
-            borderRadius: '24px',
+            borderRadius: tokens.borders.radius.xl,
             border: 'none',
-            backgroundColor: darkMode ? '#1f1f1e' : 'white',
+            backgroundColor: tokens.colors.background.modal,
             boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.12)',
             minWidth: '380px',
         },
@@ -22,9 +23,9 @@ const getPopoverVariants = (darkMode: boolean) => ({
     }),
 });
 
-export const getPopoverTheme = (darkMode: boolean) =>
+export const getPopoverTheme = (tokens: ThemeTokens) =>
     defineMultiStyleConfig({
-        variants: getPopoverVariants(darkMode),
+        variants: getPopoverVariants(tokens),
         defaultProps: {
             variant: 'vechainKitBase',
         },

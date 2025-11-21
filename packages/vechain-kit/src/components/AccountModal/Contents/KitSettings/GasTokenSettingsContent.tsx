@@ -7,6 +7,7 @@ import {
     Alert,
     AlertIcon,
     AlertDescription,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -19,7 +20,6 @@ import { useGasTokenSelection } from '@/hooks';
 import { GasTokenType } from '@/types/gasToken';
 import { GasTokenDragList } from './GasTokenDragList';
 import { useCallback } from 'react';
-import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -32,7 +32,8 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
     const { preferences, reorderTokenPriority, toggleTokenExclusion } =
         useGasTokenSelection();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleReorder = useCallback(
         (newOrder: GasTokenType[]) => {
@@ -59,7 +60,11 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                     w="full"
                 >
                     <VStack w="full" justifyContent="center" spacing={3} mb={3}>
-                        <Text fontSize="sm" opacity={0.7} textAlign="center">
+                        <Text
+                            fontSize="sm"
+                            color={textSecondary}
+                            textAlign="center"
+                        >
                             {t(
                                 'Choose which tokens to use for transaction fees when the app is not covering them.',
                             )}
@@ -70,7 +75,10 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
                     {preferences.availableGasTokens.length === 0 && (
                         <Alert status="warning" borderRadius="md">
                             <AlertIcon />
-                            <AlertDescription fontSize="sm">
+                            <AlertDescription
+                                fontSize="sm"
+                                color={textSecondary}
+                            >
                                 {t(
                                     'You must enable at least one token to perform transactions. Without any enabled tokens, you will not be able to pay for gas fees.' as any,
                                 )}
@@ -80,13 +88,14 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
 
                     {/* Token Priority List */}
                     <VStack w="full" align="start" spacing={3}>
-                        <Text fontSize="md" fontWeight="semibold">
+                        <Text
+                            fontSize="md"
+                            fontWeight="semibold"
+                            color={textPrimary}
+                        >
                             {t('Token Priority Order')}
                         </Text>
-                        <Text
-                            fontSize="sm"
-                            color={isDark ? 'whiteAlpha.600' : 'blackAlpha.600'}
-                        >
+                        <Text fontSize="sm" color={textSecondary}>
                             {t(
                                 'Drag to reorder. The system will automatically use the highest priority token with sufficient balance.',
                             )}

@@ -55,7 +55,6 @@ export const EmailLoginButton = () => {
                             placeholder={t('your@email.com')}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            variant={'loginIn'}
                             fontSize={'16px'}
                             fontWeight={'400'}
                             backgroundColor={isDark ? 'transparent' : '#ffffff'}

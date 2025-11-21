@@ -6,6 +6,7 @@ import {
     VStack,
     Text,
     ModalFooter,
+    useToken,
 } from '@chakra-ui/react';
 import { QRCode } from 'react-qrcode-logo';
 import {
@@ -28,6 +29,9 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
     const { account } = useWallet();
     const { isolatedView } = useAccountModalOptions();
+
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
         <>
@@ -57,11 +61,19 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
 
                         <AddressDisplay wallet={account} style={{ w: '85%' }} />
 
-                        <Text fontSize="sm" textAlign="center">
+                        <Text
+                            fontSize="sm"
+                            textAlign="center"
+                            color={textPrimary}
+                        >
                             {t('Copy your address or scan this QR code')}
                         </Text>
 
-                        <Text fontSize="xs" textAlign="center" opacity={0.5}>
+                        <Text
+                            fontSize="xs"
+                            textAlign="center"
+                            color={textSecondary}
+                        >
                             {t('This address only supports VeChain assets.')}
                         </Text>
                     </VStack>

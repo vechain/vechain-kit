@@ -6,6 +6,7 @@ import {
     ModalFooter,
     ModalHeader,
     Text,
+    useToken,
 } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '@/providers';
 import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
@@ -26,12 +27,13 @@ type Props = {
 export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { t } = useTranslation();
 
-    const { darkMode: isDark } = useVeChainKitConfig();
     const { connection } = useWallet();
-    const { loginModalUI } = useVeChainKitConfig();
+    const { loginModalUI, darkMode: isDark } = useVeChainKitConfig();
     const { loginMethods, privyEcosystemAppIDS } = useVeChainKitConfig();
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
+    
+    const textColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleFAQClick = () => {
         setCurrentContent('faq');
@@ -77,7 +79,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                         px={4}
                     >
                         <Text
-                            color={isDark ? '#dfdfdd' : '#4d4d4d'}
+                            color={textColor}
                             fontSize={'sm'}
                             textAlign={'center'}
                         >
