@@ -333,7 +333,6 @@ export const CustomizationContent = ({
                                             ? t('Set a domain first')
                                             : t('Enter your display name')
                                     }
-                                    fontSize="sm"
                                     fontWeight="medium"
                                     color={textPrimary}
                                     data-testid="display-name-input"
@@ -371,7 +370,6 @@ export const CustomizationContent = ({
                                         },
                                     })}
                                     placeholder={t('Eg: DevRel @ ENS Labs')}
-                                    fontSize="sm"
                                     fontWeight="medium"
                                     color={textPrimary}
                                     data-testid="description-input"
