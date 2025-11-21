@@ -45,7 +45,7 @@ const DomainListItem = ({
     const borderColor = useToken('colors', 'vechain-kit-border');
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
-    const secondaryColor = useToken('colors', 'vechain-kit-secondary');
+    const buttonBg = useToken('colors', 'vechain-kit-card');
 
     return (
         <ListItem
@@ -87,7 +87,7 @@ const DomainListItem = ({
                 {isCurrentDomain && (
                     <Tag
                         size="sm"
-                        bg={secondaryColor}
+                        bg={buttonBg}
                         color={textPrimary}
                         px={3}
                         py={1}

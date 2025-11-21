@@ -8,28 +8,13 @@
  */
 export interface ThemeTokens {
     colors: {
+        // Main structural backgrounds for components
         background: {
-            modal: string;
-            overlay: string;
-            card: string;
-            cardElevated: string;
-            stickyHeader: string;
-        };
-        primary: {
-            base: string;
-            hover: string;
-            active: string;
-            disabled: string;
-        };
-        secondary: {
-            base: string;
-            hover: string;
-            active: string;
-        };
-        tertiary: {
-            base: string;
-            hover: string;
-            active: string;
+            modal: string; // Modal dialog background
+            overlay: string; // Modal overlay background
+            card: string; // Card container background
+            cardElevated: string; // Elevated card background
+            stickyHeader: string; // Sticky header background
         };
         text: {
             primary: string;
@@ -47,6 +32,7 @@ export interface ThemeTokens {
         error: string;
         warning: string;
     };
+    // Button-specific tokens - use these for button variants
     buttons: {
         button: {
             bg: string;
@@ -54,6 +40,11 @@ export interface ThemeTokens {
             border: string;
         };
         primaryButton: {
+            bg: string;
+            color: string;
+            border: string;
+        };
+        tertiaryButton: {
             bg: string;
             color: string;
             border: string;
@@ -113,20 +104,27 @@ export interface VechainKitThemeConfig {
         backgroundColor?: string; // Customize overlay background color
         blur?: string; // Customize overlay blur effect (e.g., "blur(10px)")
     };
-    button?: {
-        bg?: string;
-        color?: string;
-        border?: string; // Full CSS border string like "1px solid #color"
-    };
-    primaryButton?: {
-        bg?: string;
-        color?: string;
-        border?: string; // Full CSS border string like "1px solid #color"
-    };
-    loginButton?: {
-        bg?: string;
-        color?: string;
-        border?: string; // Full CSS border string like "1px solid #color"
+    buttons?: {
+        secondaryButton?: {
+            bg?: string;
+            color?: string;
+            border?: string; // Full CSS border string like "1px solid #color"
+        };
+        primaryButton?: {
+            bg?: string;
+            color?: string;
+            border?: string; // Full CSS border string like "1px solid #color"
+        };
+        tertiaryButton?: {
+            bg?: string;
+            color?: string;
+            border?: string; // Full CSS border string like "1px solid #color"
+        };
+        loginButton?: {
+            bg?: string;
+            color?: string;
+            border?: string; // Full CSS border string like "1px solid #color"
+        };
     };
     fonts?: {
         family?: string; // Font family for both body and headings (backward compatibility)
@@ -242,37 +240,6 @@ function deriveBackgroundColors(
 }
 
 /**
- * Derive secondary colors from background color with opacity
- */
-function deriveSecondaryColors(
-    baseColor: string,
-    darkMode: boolean,
-): ThemeTokens['colors']['secondary'] {
-    // For dark mode, use white overlay; for light mode, use black overlay
-    const overlayColor = darkMode ? '#ffffff' : '#000000';
-    return {
-        base: applyOpacity(overlayColor, 0.05),
-        hover: applyOpacity(overlayColor, 0.1),
-        active: applyOpacity(overlayColor, 0.15),
-    };
-}
-
-/**
- * Derive tertiary colors from background color with opacity
- */
-function deriveTertiaryColors(
-    baseColor: string,
-    darkMode: boolean,
-): ThemeTokens['colors']['tertiary'] {
-    const overlayColor = darkMode ? '#ffffff' : '#000000';
-    return {
-        base: 'transparent',
-        hover: applyOpacity(overlayColor, 0.05),
-        active: applyOpacity(overlayColor, 0.1),
-    };
-}
-
-/**
  * Derive text colors from base text color with opacity
  */
 function deriveTextColors(
@@ -303,14 +270,20 @@ function deriveBorderColors(
     };
 }
 
+type ButtonConfig = {
+    bg?: string;
+    color?: string;
+    border?: string;
+};
+
 /**
- * Derive button styles from backgroundColor and textColor
+ * Derive secondary button styles from backgroundColor and textColor
  */
-function deriveButtonStyles(
+function deriveSecondaryButtonStyles(
     backgroundColor: string | undefined,
     textColor: string | undefined,
     darkMode: boolean,
-    customConfig: VechainKitThemeConfig['button'] | undefined,
+    customConfig: ButtonConfig | undefined,
     defaultTokens: ThemeTokens,
 ): ThemeTokens['buttons']['button'] {
     // Use custom config if provided
@@ -343,7 +316,7 @@ function derivePrimaryButtonStyles(
     backgroundColor: string | undefined,
     textColor: string | undefined,
     darkMode: boolean,
-    customConfig: VechainKitThemeConfig['primaryButton'] | undefined,
+    customConfig: ButtonConfig | undefined,
     defaultTokens: ThemeTokens,
 ): ThemeTokens['buttons']['primaryButton'] {
     // Use custom config if provided
@@ -359,12 +332,12 @@ function derivePrimaryButtonStyles(
     }
 
     // Derive from backgroundColor and textColor if available
-    // Primary buttons typically use primary color from theme
+    // Primary buttons typically use a primary color (defaults to blue)
     if (backgroundColor && textColor) {
-        // Use primary color from tokens (which defaults to blue)
+        // Use default primary button color (which defaults to blue)
         // But allow customization via primaryButton config
         return {
-            bg: defaultTokens.colors.primary.base,
+            bg: defaultTokens.buttons.primaryButton.bg,
             color: 'white', // Primary buttons typically have white text
             border: 'none',
         };
@@ -375,13 +348,50 @@ function derivePrimaryButtonStyles(
 }
 
 /**
+ * Derive tertiary button styles
+ */
+function deriveTertiaryButtonStyles(
+    backgroundColor: string | undefined,
+    textColor: string | undefined,
+    darkMode: boolean,
+    customConfig: ButtonConfig | undefined,
+    defaultTokens: ThemeTokens,
+): ThemeTokens['buttons']['tertiaryButton'] {
+    // Use custom config if provided
+    if (customConfig) {
+        return {
+            bg: customConfig.bg || defaultTokens.buttons.tertiaryButton.bg,
+            color:
+                customConfig.color ||
+                defaultTokens.buttons.tertiaryButton.color,
+            border:
+                customConfig.border ||
+                defaultTokens.buttons.tertiaryButton.border,
+        };
+    }
+
+    // Derive from backgroundColor and textColor if available
+    if (backgroundColor && textColor) {
+        // Tertiary buttons are typically transparent with hover effects
+        return {
+            bg: 'transparent',
+            color: textColor,
+            border: 'none',
+        };
+    }
+
+    // Use defaults
+    return defaultTokens.buttons.tertiaryButton;
+}
+
+/**
  * Derive login button styles
  */
 function deriveLoginButtonStyles(
     backgroundColor: string | undefined,
     textColor: string | undefined,
     darkMode: boolean,
-    customConfig: VechainKitThemeConfig['loginButton'] | undefined,
+    customConfig: ButtonConfig | undefined,
     defaultTokens: ThemeTokens,
 ): ThemeTokens['buttons']['loginButton'] {
     // Use custom config if provided
@@ -463,22 +473,6 @@ const defaultLightTokens: ThemeTokens = {
             cardElevated: '#ffffff',
             stickyHeader: 'rgba(255, 255, 255, 0.69)',
         },
-        primary: {
-            base: 'rgb(96 66 221)',
-            hover: 'rgb(96 66 221 / 0.8)',
-            active: 'rgb(96 66 221 / 0.8)',
-            disabled: 'rgb(96 66 221 / 0.3)',
-        },
-        secondary: {
-            base: 'rgba(0, 0, 0, 0.1)',
-            hover: 'rgba(0, 0, 0, 0.15)',
-            active: 'rgba(0, 0, 0, 0.20)',
-        },
-        tertiary: {
-            base: 'transparent',
-            hover: 'rgba(0, 0, 0, 0.05)',
-            active: 'rgba(0, 0, 0, 0.1)',
-        },
         text: {
             primary: '#2e2e2e',
             secondary: '#4d4d4d',
@@ -504,6 +498,11 @@ const defaultLightTokens: ThemeTokens = {
         primaryButton: {
             bg: 'rgb(96 66 221)',
             color: 'white',
+            border: 'none',
+        },
+        tertiaryButton: {
+            bg: 'transparent',
+            color: '#2e2e2e',
             border: 'none',
         },
         loginButton: {
@@ -562,22 +561,6 @@ const defaultDarkTokens: ThemeTokens = {
             cardElevated: '#2a2a2a',
             stickyHeader: 'rgba(31, 31, 30, 0.9)',
         },
-        primary: {
-            base: 'rgb(96 66 221)',
-            hover: 'rgb(96 66 221 / 0.8)',
-            active: 'rgb(96 66 221 / 0.8)',
-            disabled: 'rgb(96 66 221 / 0.3)',
-        },
-        secondary: {
-            base: 'rgba(255, 255, 255, 0.05)',
-            hover: 'rgba(255, 255, 255, 0.1)',
-            active: 'rgba(255, 255, 255, 0.15)',
-        },
-        tertiary: {
-            base: 'transparent',
-            hover: 'rgba(255, 255, 255, 0.05)',
-            active: 'rgba(255, 255, 255, 0.1)',
-        },
         text: {
             primary: 'rgb(223, 223, 221)',
             secondary: 'rgba(223, 223, 221, 0.6)',
@@ -603,6 +586,11 @@ const defaultDarkTokens: ThemeTokens = {
         primaryButton: {
             bg: 'rgb(96 66 221)',
             color: 'white',
+            border: 'none',
+        },
+        tertiaryButton: {
+            bg: 'transparent',
+            color: 'rgb(223, 223, 221)',
             border: 'none',
         },
         loginButton: {
@@ -676,27 +664,6 @@ export function mergeTokens(
             merged.colors.background = {
                 ...defaultTokens.colors.background,
                 ...customTokens.colors.background,
-            };
-        }
-
-        if (customTokens.colors.primary) {
-            merged.colors.primary = {
-                ...defaultTokens.colors.primary,
-                ...customTokens.colors.primary,
-            };
-        }
-
-        if (customTokens.colors.secondary) {
-            merged.colors.secondary = {
-                ...defaultTokens.colors.secondary,
-                ...customTokens.colors.secondary,
-            };
-        }
-
-        if (customTokens.colors.tertiary) {
-            merged.colors.tertiary = {
-                ...defaultTokens.colors.tertiary,
-                ...customTokens.colors.tertiary,
             };
         }
 
@@ -804,6 +771,13 @@ export function mergeTokens(
             };
         }
 
+        if (customTokens.buttons.tertiaryButton) {
+            merged.buttons.tertiaryButton = {
+                ...defaultTokens.buttons.tertiaryButton,
+                ...customTokens.buttons.tertiaryButton,
+            };
+        }
+
         if (customTokens.buttons.loginButton) {
             merged.buttons.loginButton = {
                 ...defaultTokens.buttons.loginButton,
@@ -838,9 +812,7 @@ export function convertThemeConfigToTokens(
         config.backgroundColor ||
         config.textColor ||
         overlayBgColor ||
-        config.button ||
-        config.primaryButton ||
-        config.loginButton
+        config.buttons
     ) {
         tokens.colors = {} as ThemeTokens['colors'];
 
@@ -864,18 +836,6 @@ export function convertThemeConfigToTokens(
             tokens.colors.background = defaultTokens.colors.background;
         }
 
-        // Derive secondary and tertiary colors from backgroundColor
-        if (config.backgroundColor) {
-            tokens.colors.secondary = deriveSecondaryColors(
-                config.backgroundColor,
-                darkMode,
-            );
-            tokens.colors.tertiary = deriveTertiaryColors(
-                config.backgroundColor,
-                darkMode,
-            );
-        }
-
         // Derive text colors from textColor
         if (config.textColor) {
             tokens.colors.text = deriveTextColors(config.textColor, darkMode);
@@ -888,9 +848,6 @@ export function convertThemeConfigToTokens(
                 darkMode,
             );
         }
-
-        // Keep primary colors as defaults (or could derive from backgroundColor if needed)
-        tokens.colors.primary = defaultTokens.colors.primary;
 
         // Keep error/success/warning as defaults
         tokens.colors.error = defaultTokens.colors.error;
@@ -1037,25 +994,32 @@ export function convertThemeConfigToTokens(
 
     // Derive button styles
     tokens.buttons = {} as ThemeTokens['buttons'];
-    tokens.buttons.button = deriveButtonStyles(
+    tokens.buttons.button = deriveSecondaryButtonStyles(
         config.backgroundColor,
         config.textColor,
         darkMode,
-        config.button,
+        config.buttons?.secondaryButton,
         defaultTokens,
     );
     tokens.buttons.primaryButton = derivePrimaryButtonStyles(
         config.backgroundColor,
         config.textColor,
         darkMode,
-        config.primaryButton,
+        config.buttons?.primaryButton,
+        defaultTokens,
+    );
+    tokens.buttons.tertiaryButton = deriveTertiaryButtonStyles(
+        config.backgroundColor,
+        config.textColor,
+        darkMode,
+        config.buttons?.tertiaryButton,
         defaultTokens,
     );
     tokens.buttons.loginButton = deriveLoginButtonStyles(
         config.backgroundColor,
         config.textColor,
         darkMode,
-        config.loginButton,
+        config.buttons?.loginButton,
         defaultTokens,
     );
 

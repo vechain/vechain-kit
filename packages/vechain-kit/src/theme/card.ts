@@ -30,7 +30,7 @@ const getCardVariants = (tokens: ThemeTokens) => ({
 
     featureAnnouncement: definePartsStyle({
         body: {
-            backgroundColor: tokens.colors.secondary.base,
+            backgroundColor: tokens.buttons.button.bg,
             borderRadius: tokens.borders.radius.medium,
             color: tokens.colors.text.secondary,
         },

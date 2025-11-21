@@ -455,9 +455,11 @@ export const VeChainKitProvider = (
                                 theme: darkMode ? 'dark' : 'light',
                                 accentColor:
                                     privy?.appearance.accentColor ??
-                                    (tokens.colors.primary.base?.startsWith('#')
-                                        ? (tokens.colors.primary
-                                              .base as `#${string}`)
+                                    (tokens.buttons.primaryButton.bg?.startsWith(
+                                        '#',
+                                    )
+                                        ? (tokens.buttons.primaryButton
+                                              .bg as `#${string}`)
                                         : darkMode
                                         ? '#3182CE'
                                         : '#2B6CB0'),

@@ -34,10 +34,6 @@ const getVariants = (tokens: ThemeTokens) => ({
     loginWithVechain: defineStyle(() => ({
         color: 'white', // Note: Different from vechainKitPrimary which uses 'white'
         bg: '#1a1a1a',
-        _dark: {
-            color: '#1a1a1a',
-            bg: 'white',
-        },
         fontSize: tokens.fonts.sizes.medium,
         fontWeight: tokens.fonts.weights.normal,
         py: 6,
@@ -51,19 +47,19 @@ const getVariants = (tokens: ThemeTokens) => ({
                 bg: '#1a1a1a', // Ensure background stays
             },
         },
-        _dark: {
-            _hover: {
-                _disabled: {
-                    bg: 'white', // Ensure background stays in dark mode
-                },
-            },
-        },
         _disabled: {
             opacity: 0.5,
             cursor: 'not-allowed',
             bg: '#1a1a1a', // Explicitly set background
         },
         _dark: {
+            color: '#1a1a1a',
+            bg: 'white',
+            _hover: {
+                _disabled: {
+                    bg: 'white', // Ensure background stays in dark mode
+                },
+            },
             _disabled: {
                 bg: 'white', // Explicitly set background in dark mode
             },
@@ -99,22 +95,23 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         height: '60px',
         borderRadius: tokens.borders.radius.large,
-        bg: tokens.colors.secondary.base,
-        color: tokens.colors.text.primary,
+        bg: tokens.buttons.button.bg,
+        color: tokens.buttons.button.color,
         border:
             tokens.buttons.button.border === 'none'
                 ? 'none'
                 : tokens.buttons.button.border,
         _hover: {
-            bg: tokens.colors.secondary.hover,
+            opacity: 0.8, // Derive hover from bg with opacity
             _disabled: {
-                bg: tokens.colors.secondary.base, // Override hover bg when disabled
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: tokens.buttons.button.bg, // Ensure background stays
             },
         },
         _disabled: {
             opacity: 0.5,
             cursor: 'not-allowed',
-            bg: tokens.colors.secondary.base, // Explicitly set background
+            bg: tokens.buttons.button.bg, // Explicitly set background
         },
         transition: 'all 0.2s',
     })),
@@ -124,20 +121,24 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         height: '60px',
         borderRadius: tokens.borders.radius.large,
-        bg: tokens.colors.tertiary.base,
+        bg: tokens.buttons.tertiaryButton.bg,
+        color: tokens.buttons.tertiaryButton.color,
+        border:
+            tokens.buttons.tertiaryButton.border === 'none'
+                ? 'none'
+                : tokens.buttons.tertiaryButton.border,
         _hover: {
-            bg: tokens.colors.tertiary.hover,
+            opacity: 0.8, // Derive hover from bg with opacity
             _disabled: {
-                bg: tokens.colors.tertiary.base, // Override hover bg when disabled
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: tokens.buttons.tertiaryButton.bg, // Ensure background stays
             },
         },
         _disabled: {
             opacity: 0.5,
             cursor: 'not-allowed',
-            bg: tokens.colors.tertiary.base, // Explicitly set background
+            bg: tokens.buttons.tertiaryButton.bg, // Explicitly set background
         },
-        border: 'none',
-        color: tokens.colors.text.primary,
         transition: 'all 0.2s',
     })),
     vechainKitLogout: defineStyle(() => ({
@@ -158,21 +159,25 @@ const getVariants = (tokens: ThemeTokens) => ({
         width: 'full',
         minHeight: '50px',
         height: 'fit-content',
-        bg: tokens.colors.secondary.base,
+        bg: tokens.buttons.button.bg,
         borderRadius: tokens.borders.radius.xl,
         p: 0,
-        color: tokens.colors.text.primary,
-        border: `1px solid ${tokens.colors.border.button}`,
+        color: tokens.buttons.button.color,
+        border:
+            tokens.buttons.button.border === 'none'
+                ? `1px solid ${tokens.colors.border.button}`
+                : tokens.buttons.button.border,
         _hover: {
-            bg: tokens.colors.secondary.hover,
+            opacity: 0.8, // Derive hover from bg with opacity
             _disabled: {
-                bg: tokens.colors.secondary.base, // Override hover bg when disabled
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: tokens.buttons.button.bg, // Ensure background stays
             },
         },
         _disabled: {
             opacity: 0.5,
             cursor: 'not-allowed',
-            bg: tokens.colors.secondary.base, // Explicitly set background
+            bg: tokens.buttons.button.bg, // Explicitly set background
         },
         transition: 'all 0.2s',
     })),
@@ -181,10 +186,11 @@ const getVariants = (tokens: ThemeTokens) => ({
         color: tokens.colors.text.primary,
         border: 'none',
         _hover: {
-            bg: tokens.colors.secondary.base,
+            bg: tokens.buttons.button.bg,
         },
         _active: {
-            bg: tokens.colors.secondary.active,
+            bg: tokens.buttons.button.bg,
+            opacity: 0.8, // Use opacity for active state
         },
         transition: 'all 0.2s',
     })),
