@@ -16,11 +16,7 @@ import {
     FormLabel,
     useToken,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    StickyFooterContainer,
-    StickyHeaderContainer,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';
@@ -379,6 +375,7 @@ export const CustomizationContent = ({
                                     fontWeight="medium"
                                     color={textPrimary}
                                     data-testid="description-input"
+                                    minH="50px"
                                 />
                                 {errors.description && (
                                     <Text
@@ -414,20 +411,18 @@ export const CustomizationContent = ({
                 />
             </ModalBody>
 
-            <StickyFooterContainer>
-                <ModalFooter w="full" p={0}>
-                    <Button
-                        variant="vechainKitPrimary"
-                        onClick={handleSaveChanges}
-                        isDisabled={!hasDomain || !hasChanges || !isValid}
-                        isLoading={isUploading}
-                        loadingText={t('Preparing changes...')}
-                        data-testid="save-changes-button"
-                    >
-                        {t('Save Changes')}
-                    </Button>
-                </ModalFooter>
-            </StickyFooterContainer>
+            <ModalFooter w="full">
+                <Button
+                    variant="vechainKitPrimary"
+                    onClick={handleSaveChanges}
+                    isDisabled={!hasDomain || !hasChanges || !isValid}
+                    isLoading={isUploading}
+                    loadingText={t('Preparing changes...')}
+                    data-testid="save-changes-button"
+                >
+                    {t('Save Changes')}
+                </Button>
+            </ModalFooter>
         </Box>
     );
 };
