@@ -72,6 +72,15 @@ const LayerSetup = ({
                         --chakra-fonts-heading: unset !important;
                     }
 
+                    /* CRITICAL: Remove Chakra body background and text color CSS variables from :root, html, and body */
+                    /* These are automatically applied by Chakra UI and would override host app styles */
+                    :root,
+                    html,
+                    body {
+                        --chakra-body-bg: unset !important;
+                        --chakra-body-text: unset !important;
+                    }
+
                     /* Apply font family and CSS variables only to VeChain Kit components */
                     #vechain-kit-root,
                     [data-vechain-kit],
