@@ -38,11 +38,13 @@ export interface ThemeTokens {
             bg: string;
             color: string;
             border: string;
+            hoverBg?: string; // Optional custom hover background color
         };
         primaryButton: {
             bg: string;
             color: string;
             border: string;
+            hoverBg?: string; // Optional custom hover background color
         };
         tertiaryButton: {
             bg: string;
@@ -109,11 +111,13 @@ export interface VechainKitThemeConfig {
             bg?: string;
             color?: string;
             border?: string; // Full CSS border string like "1px solid #color"
+            hoverBg?: string; // Optional custom hover background color (if not provided, uses opacity)
         };
         primaryButton?: {
             bg?: string;
             color?: string;
             border?: string; // Full CSS border string like "1px solid #color"
+            hoverBg?: string; // Optional custom hover background color (if not provided, uses opacity)
         };
         tertiaryButton?: {
             bg?: string;
@@ -271,6 +275,7 @@ function deriveBorderColors(
 }
 
 type ButtonConfig = {
+    hoverBg?: string; // Optional custom hover background color
     bg?: string;
     color?: string;
     border?: string;
@@ -292,6 +297,7 @@ function deriveSecondaryButtonStyles(
             bg: customConfig.bg || defaultTokens.buttons.button.bg,
             color: customConfig.color || defaultTokens.buttons.button.color,
             border: customConfig.border || defaultTokens.buttons.button.border,
+            hoverBg: customConfig.hoverBg,
         };
     }
 
@@ -328,6 +334,7 @@ function derivePrimaryButtonStyles(
             border:
                 customConfig.border ||
                 defaultTokens.buttons.primaryButton.border,
+            hoverBg: customConfig.hoverBg,
         };
     }
 

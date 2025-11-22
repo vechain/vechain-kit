@@ -76,7 +76,9 @@ const getVariants = (tokens: ThemeTokens) => ({
         color: tokens.buttons.primaryButton.color,
         border: tokens.buttons.primaryButton.border,
         _hover: {
-            opacity: 0.8,
+            ...(tokens.buttons.primaryButton.hoverBg
+                ? { bg: tokens.buttons.primaryButton.hoverBg }
+                : { opacity: 0.8 }),
             _disabled: {
                 opacity: 0.5, // Override hover opacity when disabled
                 bg: tokens.buttons.primaryButton.bg, // Ensure background stays
@@ -102,7 +104,9 @@ const getVariants = (tokens: ThemeTokens) => ({
                 ? 'none'
                 : tokens.buttons.button.border,
         _hover: {
-            opacity: 0.8, // Derive hover from bg with opacity
+            ...(tokens.buttons.button.hoverBg
+                ? { bg: tokens.buttons.button.hoverBg }
+                : { opacity: 0.8 }), // Derive hover from bg with opacity if hoverBg not provided
             _disabled: {
                 opacity: 0.5, // Override hover opacity when disabled
                 bg: tokens.buttons.button.bg, // Ensure background stays
