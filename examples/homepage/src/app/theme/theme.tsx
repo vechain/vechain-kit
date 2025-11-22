@@ -11,18 +11,6 @@ const exampleTheme = {
         Modal: modalTheme,
     },
 
-    semanticTokens: {
-        colors: {
-            'chakra-body-text': {
-                _light: 'none',
-                _dark: '#F7FAFC', // Added dark mode text color
-            },
-            'chakra-body-bg': {
-                _light: '#FFFFFF',
-                _dark: 'none', // Added dark mode background color
-            },
-        },
-    },
     borderRadius: {
         card: '16px',
         button: '24px',
