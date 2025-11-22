@@ -1,5 +1,5 @@
 import { useUpgradeRequired, useWallet } from '@/hooks';
-import { IconButton, IconButtonProps, Box } from '@chakra-ui/react';
+import { IconButton, IconButtonProps, Box, Icon } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { LuSettings2 } from 'react-icons/lu';
 
@@ -47,7 +47,7 @@ export const ModalSettingsButton = ({
             onClick={handleOnClick}
             icon={
                 <Box position="relative">
-                    <LuSettings2 fontSize={'20px'} />
+                    <Icon as={LuSettings2} fontSize={'18px'} />
                     {showRedDot && (
                         <Box
                             position="absolute"

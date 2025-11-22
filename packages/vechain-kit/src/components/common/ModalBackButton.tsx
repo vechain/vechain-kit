@@ -1,4 +1,4 @@
-import { IconButton, IconButtonProps } from '@chakra-ui/react';
+import { IconButton, IconButtonProps, Icon } from '@chakra-ui/react';
 import { LuChevronLeft } from 'react-icons/lu';
 
 type BackButtonProps = {
@@ -9,7 +9,7 @@ export const ModalBackButton = ({ onClick, ...props }: BackButtonProps) => {
     return (
         <IconButton
             aria-label="Back"
-            icon={<LuChevronLeft fontSize={'20px'} />}
+            icon={<Icon as={LuChevronLeft} fontSize={'20px'} />}
             size="sm"
             variant="ghost"
             position="absolute"
