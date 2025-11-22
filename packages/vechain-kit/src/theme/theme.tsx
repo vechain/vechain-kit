@@ -35,8 +35,9 @@ const getThemeConfig = (
     // semantic tokens derived from ThemeTokens
     semanticTokens: {
         colors: {
-            'chakra-body-text': tokens.colors.text.primary,
-            'chakra-body-bg': tokens.colors.background.modal,
+            // Note: chakra-body-text and chakra-body-bg are intentionally omitted
+            // to prevent Chakra UI from applying global body/html styles that would override host apps
+            // These are unset globally in VechainKitThemeProvider LayerSetup CSS
             'chakra-border-color': tokens.colors.border.default,
             'chakra-placeholder-color': tokens.colors.text.tertiary,
             // VeChain Kit semantic tokens
