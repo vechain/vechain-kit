@@ -51,7 +51,6 @@ const ConditionalChakraProvider = ({
     // Check if Chakra provider already exists by trying to access emotion theme
     // This hook call is unconditional, which follows React's rules of hooks
     const emotionTheme = useEmotionTheme();
-    console.log('emotionTheme KIT', emotionTheme);
     // Generate the Chakra theme for VeChain Kit
     const chakraTheme = useMemo(
         () => getVechainKitTheme(darkMode, theme),

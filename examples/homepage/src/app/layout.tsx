@@ -113,7 +113,9 @@ export default function RootLayout({
                     height: '100%',
                 }}
             >
-                <AppContent>{children}</AppContent>
+                <ChakraProvider theme={darkTheme}>
+                    <AppContent>{children}</AppContent>
+                </ChakraProvider>
             </body>
         </html>
     );
