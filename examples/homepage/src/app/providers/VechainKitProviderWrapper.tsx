@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
 import { NETWORK_TYPE } from '@vechain-kit/config/network';
-
+import { useTheme as useEmotionTheme } from '@emotion/react';
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
 // 2. Code splitting - this component will only be loaded when needed, reducing initial bundle size
@@ -24,6 +24,9 @@ interface Props {
 export function VechainKitProviderWrapper({ children }: Props) {
     const { colorMode } = useColorMode();
     const { i18n } = useTranslation();
+    const emotionTheme = useEmotionTheme();
+
+    console.log('emotionTheme CONSUMER', emotionTheme);
 
     const isDarkMode = colorMode === 'dark';
 
