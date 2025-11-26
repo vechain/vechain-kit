@@ -35,10 +35,11 @@ const getThemeConfig = (
     // semantic tokens derived from ThemeTokens
     semanticTokens: {
         colors: {
-            // Note: chakra-body-text and chakra-body-bg are intentionally omitted
-            // to prevent Chakra UI from applying global body/html styles that would override host apps
-            // These are unset globally in VechainKitThemeProvider LayerSetup CSS
-            'chakra-border-color': tokens.colors.border.default,
+            // Note: chakra-body-text, chakra-body-bg, and chakra-border-color are intentionally omitted
+            // to prevent Chakra UI from applying global body/html/border styles that would override host apps
+            // Chakra injects: *, *::before, *::after { border-color: var(--chakra-colors-chakra-border-color) }
+            // which causes unwanted borders on consumer app elements (e.g., variant="link" buttons)
+            // Border colors are applied via scoped CSS in VechainKitThemeProvider LayerSetup instead
             'chakra-placeholder-color': tokens.colors.text.tertiary,
             // VeChain Kit semantic tokens
             // Main structural background tokens (for component backgrounds)
@@ -116,19 +117,12 @@ export const getVechainKitTheme = (
 
     const theme = extendTheme(themeConfig);
 
-    // CRITICAL: Override any global font CSS variables that Chakra might have created
-    // and ensure they don't leak to the host app
-    const originalGlobalStyles = theme.styles.global;
-    theme.styles.global = (props: any) => {
-        const originalStyles =
-            typeof originalGlobalStyles === 'function'
-                ? originalGlobalStyles(props)
-                : originalGlobalStyles || {};
-        return {
-            ...originalStyles,
-            // Don't set any global styles - fonts are handled via scoped CSS in VechainKitThemeProvider
-        };
-    };
+    // CRITICAL: Completely disable global styles to prevent Chakra from injecting
+    // *, *::before, *::after rules that would affect the consumer app
+    theme.styles.global = () => ({
+        // Return empty object - no global styles should leak to consumer app
+        // All VeChain Kit styles are scoped via LayerSetup in VechainKitThemeProvider
+    });
 
     // Override CSS variables to prevent them from being set globally
     // They will be set only within VeChain Kit containers via LayerSetup
