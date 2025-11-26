@@ -15,6 +15,10 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             borderRadius: tokens.borders.radius.xl,
             backgroundColor: tokens.colors.background.modal,
             backdropFilter: tokens.effects.backdropFilter.modal,
+            border:
+                tokens.colors.border.modal === 'none'
+                    ? 'none'
+                    : tokens.colors.border.modal,
         },
         overlay: {
             backgroundColor: tokens.colors.background.overlay,

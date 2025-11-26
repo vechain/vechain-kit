@@ -33,7 +33,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
     return (
         <VeChainKitProvider
             theme={{
-                backgroundColor: isDarkMode ? '#1b1d1e' : '#ffffff',
+                modal: {
+                    backgroundColor: isDarkMode ? '#1b1d1e' : '#ffffff',
+                },
                 textColor: isDarkMode ? '#ffffff' : '#272A2E',
                 buttons: {
                     secondaryButton: {
