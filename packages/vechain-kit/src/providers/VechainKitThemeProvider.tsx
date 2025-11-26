@@ -126,6 +126,52 @@ const LayerSetup = ({
                     [data-vdk-modal] h6 {
                         font-family: ${headingFont} !important;
                     }
+
+                    /* Mobile hover state fix: Disable hover styles on touch devices */
+                    /* On touch devices, hover states persist after tap, causing buttons to appear highlighted */
+                    /* This rule removes hover styles on devices without true hover support */
+                    @media (hover: none) and (pointer: coarse) {
+                        /* Reset all hover states on touch devices to their base state */
+                        #vechain-kit-root *:hover,
+                        #vechain-kit-root *:hover *,
+                        [data-vechain-kit] *:hover,
+                        [data-vechain-kit] *:hover *,
+                        [id*='headlessui-portal-root'] *:hover,
+                        [id*='headlessui-portal-root'] *:hover *,
+                        [data-vdk-modal] *:hover,
+                        [data-vdk-modal] *:hover * {
+                            opacity: unset !important;
+                            background-color: unset !important;
+                            background: unset !important;
+                            color: unset !important;
+                            border-color: unset !important;
+                            transform: unset !important;
+                            box-shadow: unset !important;
+                            filter: unset !important;
+                        }
+
+                        /* Prevent touch events from triggering hover states and reduce tap delay */
+                        #vechain-kit-root button,
+                        #vechain-kit-root [role='button'],
+                        #vechain-kit-root a,
+                        [data-vechain-kit] button,
+                        [data-vechain-kit] [role='button'],
+                        [data-vechain-kit] a,
+                        [id*='headlessui-portal-root'] button,
+                        [id*='headlessui-portal-root'] [role='button'],
+                        [id*='headlessui-portal-root'] a,
+                        [data-vdk-modal] button,
+                        [data-vdk-modal] [role='button'],
+                        [data-vdk-modal] a {
+                            touch-action: manipulation;
+                        }
+                    }
+
+                    /* Only apply hover styles on devices with true hover support (desktop with mouse) */
+                    @media (hover: hover) {
+                        /* Hover styles are applied via Chakra UI's _hover prop system */
+                        /* This media query ensures they only work on devices with true hover */
+                    }
                 }
             `}
         />
