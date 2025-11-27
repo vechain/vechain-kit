@@ -212,7 +212,7 @@ const validateConfig = (
     }
 
     // Validate network
-    if (!validatedProps?.network) {
+    if (!validatedProps.network) {
         validatedProps.network = {
             type: 'main' as NETWORK_TYPE,
         };
