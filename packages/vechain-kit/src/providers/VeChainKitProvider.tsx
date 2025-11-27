@@ -27,9 +27,10 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useState,
 } from 'react';
 
-import i18n from '../../i18n';
+import i18n, { supportedLanguages } from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { ModalProvider } from './ModalProvider';
@@ -126,10 +127,13 @@ type VeChainKitConfig = {
     darkMode: boolean;
     i18n?: VechainKitProviderProps['i18n'];
     language?: VechainKitProviderProps['language'];
+    currentLanguage: string;
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
+    currentCurrency: CURRENCY;
+    setCurrentCurrency: (currency: CURRENCY) => void;
 };
 
 /**
@@ -272,6 +276,50 @@ export const VeChainKitProvider = (
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
 
+    // Initialize currentLanguage from i18n or localStorage
+    const [currentLanguage, setCurrentLanguage] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('i18nextLng');
+            if (stored && supportedLanguages.includes(stored)) {
+                return stored;
+            }
+        }
+        return i18n.language || language || 'en';
+    });
+
+    // Initialize currentCurrency from localStorage or defaultCurrency
+    const CURRENCY_STORAGE_KEY = 'vechain_kit_currency';
+    const [currentCurrency, setCurrentCurrencyState] = useState<CURRENCY>(
+        () => {
+            if (typeof window !== 'undefined') {
+                try {
+                    const stored = localStorage.getItem(CURRENCY_STORAGE_KEY);
+                    if (stored && ['usd', 'eur', 'gbp'].includes(stored)) {
+                        return stored as CURRENCY;
+                    }
+                } catch (error) {
+                    console.error(
+                        'Failed to read currency from localStorage:',
+                        error,
+                    );
+                }
+            }
+            return defaultCurrency;
+        },
+    );
+
+    // Wrapper function to update currency state and localStorage
+    const setCurrentCurrency = (newCurrency: CURRENCY) => {
+        setCurrentCurrencyState(newCurrency);
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem(CURRENCY_STORAGE_KEY, newCurrency);
+            } catch (error) {
+                console.error('Failed to store currency preference:', error);
+            }
+        }
+    };
+
     const allowedEcosystemApps = useMemo(() => {
         const userEcosystemMethods = validatedLoginMethods?.find(
             (method) => method.method === 'ecosystem',
@@ -315,6 +363,25 @@ export const VeChainKitProvider = (
         }
     }, [language, i18nConfig]);
 
+    // Subscribe to i18n language changes to update currentLanguage state
+    useEffect(() => {
+        const handleLanguageChanged = (lng: string) => {
+            setCurrentLanguage(lng);
+        };
+
+        i18n.on('languageChanged', handleLanguageChanged);
+
+        // Initialize currentLanguage from i18n on mount
+        const initialLanguage = i18n.language || language || 'en';
+        if (initialLanguage !== currentLanguage) {
+            setCurrentLanguage(initialLanguage);
+        }
+
+        return () => {
+            i18n.off('languageChanged', handleLanguageChanged);
+        };
+    }, [language]);
+
     useEffect(() => {
         localStorage.setItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
     }, [network]);
@@ -334,10 +401,13 @@ export const VeChainKitProvider = (
                         darkMode,
                         i18n: i18nConfig,
                         language,
+                        currentLanguage,
                         network,
                         allowCustomTokens,
                         legalDocuments,
                         defaultCurrency,
+                        currentCurrency,
+                        setCurrentCurrency,
                     }}
                 >
                     <PrivyProvider
