@@ -70,6 +70,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             }}
             darkMode={isDarkMode}
             language={i18n.language}
+            defaultCurrency="usd"
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as NETWORK_TYPE,
             }}

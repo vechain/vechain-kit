@@ -8,6 +8,7 @@ import { ConnectionInfo } from '@/app/components/features/ConnectionInfo';
 import { DaoInfo } from '@/app/components/features/DaoInfo';
 import { UIControls } from '@/app/components/features/UIControls';
 import { LanguageSelector } from '@/app/components/features/LanguageSelector';
+import { KitSettingsSync } from '@/app/components/features/KitSettingsSync';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/SigningExample/SigningExample';
 import { WelcomeSection } from '../components/features/WelcomeSection';
@@ -47,6 +48,7 @@ export default function Home(): ReactElement {
                 <DaoInfo />
                 <UIControls />
                 <LanguageSelector />
+                <KitSettingsSync />
                 <TransactionExamples />
                 <SigningExample />
             </VStack>
