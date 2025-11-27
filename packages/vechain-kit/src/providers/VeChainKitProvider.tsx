@@ -317,10 +317,16 @@ export const VeChainKitProvider = (
         theme: customTheme,
     } = validatedProps;
 
-    // After validation, network and dappKit are guaranteed to be defined
-    const network = _network!;
+    // Explicitly check for undefined network and dappKit after validation
+    if (!_network) {
+        throw new Error("VeChainKitProvider: 'network' is undefined after validation.");
+    }
+    if (!_dappKit) {
+        throw new Error("VeChainKitProvider: 'dappKit' is undefined after validation.");
+    }
+    const network = _network;
     const networkType = network.type!;
-    const dappKit = _dappKit!;
+    const dappKit = _dappKit;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
