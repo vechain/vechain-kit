@@ -4,12 +4,14 @@ This guide explains how to customize the VeChain Kit theme to match your app's d
 
 ## Quick Start
 
-The theme system is designed to be simple - you only need to provide a base `backgroundColor` and `textColor`, and all other colors are automatically derived. You can optionally customize specific aspects like overlay, buttons, and glass effects.
+The theme system is designed to be simple - you only need to provide a base `modal.backgroundColor` and `textColor`, and all other colors are automatically derived. You can optionally customize specific aspects like overlay, buttons, and glass effects.
 
 ```tsx
 <VeChainKitProvider
     theme={{
-        backgroundColor: isDarkMode ? '#1f1f1e' : '#ffffff',
+        modal: {
+            backgroundColor: isDarkMode ? '#1f1f1e' : '#ffffff',
+        },
         textColor: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
         overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -41,7 +43,7 @@ The theme configuration has been simplified to focus on what matters most:
 
 ### Base Colors
 
--   **`backgroundColor`** (optional) - Base background color. Automatically derives:
+-   **`modal.backgroundColor`** (optional) - Base background color for the modal. Automatically derives:
 
     -   Modal background (100% opacity)
     -   Card background (80% opacity)
@@ -217,7 +219,9 @@ Here's a complete example with glass effects:
 import type { VechainKitThemeConfig } from '@vechain/vechain-kit';
 
 const theme: VechainKitThemeConfig = {
-    backgroundColor: isDarkMode ? '#1f1f1e' : '#ffffff',
+    modal: {
+        backgroundColor: isDarkMode ? '#1f1f1e' : '#ffffff',
+    },
     textColor: isDarkMode ? 'rgb(223, 223, 221)' : '#2e2e2e',
     overlay: {
         backgroundColor: isDarkMode
@@ -272,7 +276,7 @@ const theme: VechainKitThemeConfig = {
 
 ## How It Works
 
-1. **Simplified Input**: You provide only `backgroundColor` and `textColor`
+1. **Simplified Input**: You provide only `modal.backgroundColor` and `textColor`
 2. **Automatic Derivation**: The system derives all other colors (secondary, tertiary, borders) with appropriate opacity
 3. **Token System**: Your config is converted to internal `ThemeTokens`
 4. **Semantic Tokens**: Tokens are exposed as Chakra semantic tokens (e.g., `vechain-kit-modal`)
@@ -282,11 +286,11 @@ const theme: VechainKitThemeConfig = {
 
 ## Color Derivation
 
-When you provide `backgroundColor`:
+When you provide `modal.backgroundColor`:
 
--   **Modal**: Uses `backgroundColor` at 100% opacity
--   **Card**: Uses `backgroundColor` at 80% opacity
--   **Sticky Header**: Uses `backgroundColor` at 90% opacity
+-   **Modal**: Uses `modal.backgroundColor` at 100% opacity
+-   **Card**: Uses `modal.backgroundColor` at 80% opacity
+-   **Sticky Header**: Uses `modal.backgroundColor` at 90% opacity
 -   **Secondary Colors**: Derived from white (dark mode) or black (light mode) overlays with opacity
 -   **Borders**: Derived from white (dark mode) or black (light mode) overlays with low opacity
 
@@ -367,7 +371,9 @@ Import the type for full autocomplete:
 import type { VechainKitThemeConfig } from '@vechain/vechain-kit';
 
 const myTheme: VechainKitThemeConfig = {
-    backgroundColor: '#ffffff',
+    modal: {
+        backgroundColor: '#ffffff',
+    },
     textColor: '#2e2e2e',
     // ... your config
 };

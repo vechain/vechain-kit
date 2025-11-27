@@ -27,6 +27,7 @@ export interface ThemeTokens {
             hover: string;
             focus: string;
             button: string;
+            modal: string; // Modal dialog border
         };
         success: string;
         error: string;
@@ -96,15 +97,18 @@ export interface ThemeTokens {
 
 /**
  * Developer-facing theme configuration
- * Simplified interface - only backgroundColor and textColor required
+ * Simplified interface - only modal.backgroundColor and textColor required
  * All other colors are automatically derived from these base colors
  */
 export interface VechainKitThemeConfig {
-    backgroundColor?: string;
     textColor?: string;
     overlay?: {
         backgroundColor?: string; // Customize overlay background color
         blur?: string; // Customize overlay blur effect (e.g., "blur(10px)")
+    };
+    modal?: {
+        backgroundColor?: string; // Base background color for modal (used to derive card, stickyHeader, etc. via opacity)
+        border?: string; // Full CSS border string for modal dialog (e.g., "1px solid rgba(255, 255, 255, 0.1)")
     };
     buttons?: {
         secondaryButton?: {
@@ -264,6 +268,7 @@ function deriveTextColors(
 function deriveBorderColors(
     baseColor: string,
     darkMode: boolean,
+    modalBorder?: string,
 ): ThemeTokens['colors']['border'] {
     const overlayColor = darkMode ? '#ffffff' : '#000000';
     return {
@@ -271,6 +276,7 @@ function deriveBorderColors(
         hover: applyOpacity(overlayColor, 0.2),
         focus: darkMode ? '#3182CE' : '#2B6CB0',
         button: applyOpacity(overlayColor, 0.1),
+        modal: modalBorder || 'none', // Use custom modal border or default to 'none'
     };
 }
 
@@ -491,6 +497,7 @@ const defaultLightTokens: ThemeTokens = {
             hover: '#d0d0d0',
             focus: '#2B6CB0',
             button: '#ebebeb',
+            modal: 'none',
         },
         success: '#10ba3e',
         error: '#ef4444',
@@ -579,6 +586,7 @@ const defaultDarkTokens: ThemeTokens = {
             hover: 'rgba(255, 255, 255, 0.2)',
             focus: '#3182CE',
             button: 'rgba(255, 255, 255, 0.1)',
+            modal: 'none',
         },
         success: '#00ff45de',
         error: '#ef4444',
@@ -798,7 +806,7 @@ export function mergeTokens(
 
 /**
  * Convert developer-facing config to internal tokens
- * Derives all colors from backgroundColor and textColor
+ * Derives all colors from modal.backgroundColor and textColor
  */
 export function convertThemeConfigToTokens(
     config: VechainKitThemeConfig | undefined,
@@ -811,22 +819,25 @@ export function convertThemeConfigToTokens(
     const tokens: Partial<ThemeTokens> = {};
     const defaultTokens = getDefaultTokens(darkMode);
 
-    // Derive colors from backgroundColor and textColor
+    // Derive colors from modal.backgroundColor and textColor
     // Always initialize colors if any color-related config is provided
     const overlayBgColor = config.overlay?.backgroundColor;
 
+    const modalBgColor = config.modal?.backgroundColor;
+
     if (
-        config.backgroundColor ||
+        modalBgColor ||
         config.textColor ||
         overlayBgColor ||
-        config.buttons
+        config.buttons ||
+        config.modal
     ) {
         tokens.colors = {} as ThemeTokens['colors'];
 
-        // Derive background colors from backgroundColor
-        if (config.backgroundColor) {
+        // Derive background colors from modal.backgroundColor
+        if (modalBgColor) {
             tokens.colors.background = deriveBackgroundColors(
-                config.backgroundColor,
+                modalBgColor,
                 darkMode,
                 defaultTokens.colors.background.overlay, // Pass default overlay color
                 overlayBgColor, // Use custom overlay backgroundColor if provided
@@ -839,7 +850,7 @@ export function convertThemeConfigToTokens(
                 overlay: overlayBgColor,
             };
         } else {
-            // Use defaults if no backgroundColor or overlay backgroundColor provided
+            // Use defaults if no modal backgroundColor or overlay backgroundColor provided
             tokens.colors.background = defaultTokens.colors.background;
         }
 
@@ -848,12 +859,19 @@ export function convertThemeConfigToTokens(
             tokens.colors.text = deriveTextColors(config.textColor, darkMode);
         }
 
-        // Derive border colors from backgroundColor
-        if (config.backgroundColor) {
+        // Derive border colors from modal.backgroundColor or handle modal border customization
+        if (modalBgColor) {
             tokens.colors.border = deriveBorderColors(
-                config.backgroundColor,
+                modalBgColor,
                 darkMode,
+                config.modal?.border,
             );
+        } else if (config.modal?.border) {
+            // If only modal border is provided, use default borders but override modal border
+            tokens.colors.border = {
+                ...defaultTokens.colors.border,
+                modal: config.modal.border,
+            };
         }
 
         // Keep error/success/warning as defaults
@@ -920,14 +938,14 @@ export function convertThemeConfigToTokens(
                 };
             }
 
-            if (config.backgroundColor) {
-                // Use custom backgroundColor with glass opacity
+            if (modalBgColor) {
+                // Use custom modal.backgroundColor with glass opacity
                 tokens.colors.background.modal = applyOpacity(
-                    config.backgroundColor,
+                    modalBgColor,
                     glassSettings.modalOpacity,
                 );
                 tokens.colors.background.stickyHeader = applyOpacity(
-                    config.backgroundColor,
+                    modalBgColor,
                     glassSettings.stickyHeaderOpacity,
                 );
             } else {
@@ -1002,28 +1020,28 @@ export function convertThemeConfigToTokens(
     // Derive button styles
     tokens.buttons = {} as ThemeTokens['buttons'];
     tokens.buttons.button = deriveSecondaryButtonStyles(
-        config.backgroundColor,
+        modalBgColor,
         config.textColor,
         darkMode,
         config.buttons?.secondaryButton,
         defaultTokens,
     );
     tokens.buttons.primaryButton = derivePrimaryButtonStyles(
-        config.backgroundColor,
+        modalBgColor,
         config.textColor,
         darkMode,
         config.buttons?.primaryButton,
         defaultTokens,
     );
     tokens.buttons.tertiaryButton = deriveTertiaryButtonStyles(
-        config.backgroundColor,
+        modalBgColor,
         config.textColor,
         darkMode,
         config.buttons?.tertiaryButton,
         defaultTokens,
     );
     tokens.buttons.loginButton = deriveLoginButtonStyles(
-        config.backgroundColor,
+        modalBgColor,
         config.textColor,
         darkMode,
         config.buttons?.loginButton,
