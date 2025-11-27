@@ -101,7 +101,7 @@ export type VechainKitProviderProps = {
             minAmountInEther: number;
         };
     };
-    dappKit: {
+    dappKit?: {
         allowedWallets?: DAppKitWalletSource[];
         walletConnectOptions?: WalletConnectOptions;
         usePersistence?: boolean;
@@ -123,8 +123,8 @@ export type VechainKitProviderProps = {
     darkMode?: boolean;
     i18n?: I18n;
     language?: string;
-    network: {
-        type: NETWORK_TYPE;
+    network?: {
+        type?: NETWORK_TYPE;
         nodeUrl?: string;
         requireCertificate?: boolean;
         // TODO: migration check these types
@@ -179,6 +179,13 @@ const validateConfig = (
 
     const validatedProps = { ...props };
 
+    // Set default dappKit if not provided
+    if (!validatedProps.dappKit) {
+        validatedProps.dappKit = {
+            allowedWallets: ['veworld'],
+        };
+    }
+
     // Check if fee delegation is required based on conditions
     const requiresFeeDelegation =
         validatedProps.privy !== undefined ||
@@ -205,15 +212,26 @@ const validateConfig = (
     }
 
     // Validate network
-    if (!validatedProps.network) {
-        errors.push('network configuration is required');
+    if (!validatedProps?.network) {
+        validatedProps.network = {
+            type: 'main' as NETWORK_TYPE,
+        };
     } else {
         if (!validatedProps.network.type) {
             errors.push('network.type is required');
         }
-        if (!['main', 'test', 'solo'].includes(validatedProps.network.type)) {
+        if (!['main', 'test', 'solo'].includes(validatedProps.network.type!)) {
             errors.push('network.type must be either "main", "test" or "solo"');
         }
+    }
+
+    // Set default login methods if not provided
+    if (!validatedProps.loginMethods) {
+        validatedProps.loginMethods = [
+            { method: 'vechain', gridColumn: 4 },
+            { method: 'ecosystem', gridColumn: 4 },
+            { method: 'dappkit', gridColumn: 4 },
+        ];
     }
 
     // Validate login methods if Privy is not configured
@@ -288,18 +306,23 @@ export const VeChainKitProvider = (
         children,
         privy,
         feeDelegation,
-        dappKit,
+        dappKit: _dappKit,
         loginModalUI,
         loginMethods,
         darkMode = false,
         i18n: i18nConfig,
         language = 'en',
-        network,
+        network: _network,
         allowCustomTokens,
         legalDocuments,
         defaultCurrency = 'usd',
         theme: customTheme,
     } = validatedProps;
+
+    // After validation, network and dappKit are guaranteed to be defined
+    const network = _network!;
+    const networkType = network.type!;
+    const dappKit = _dappKit!;
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
@@ -348,8 +371,8 @@ export const VeChainKitProvider = (
     }, [language, i18nConfig]);
 
     useEffect(() => {
-        setLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
-    }, [network]);
+        setLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, networkType);
+    }, [networkType]);
 
     // Generate tokens from custom theme config
     const tokens = useMemo(() => {
@@ -428,7 +451,7 @@ export const VeChainKitProvider = (
                             ...network,
                             nodeUrl:
                                 network.nodeUrl ??
-                                getConfig(network?.type)?.nodeUrl,
+                                getConfig(networkType).nodeUrl,
                         },
                         allowCustomTokens,
                         legalDocuments,
@@ -480,7 +503,7 @@ export const VeChainKitProvider = (
                         <DAppKitProvider
                             node={
                                 network.nodeUrl ??
-                                getConfig(network.type).nodeUrl
+                                getConfig(networkType).nodeUrl
                             }
                             v2Api={{
                                 enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
@@ -507,7 +530,7 @@ export const VeChainKitProvider = (
                             <PrivyWalletProvider
                                 nodeUrl={
                                     network.nodeUrl ??
-                                    getConfig(network.type).nodeUrl
+                                    getConfig(networkType).nodeUrl
                                 }
                                 delegatorUrl={
                                     feeDelegation?.delegatorUrl ??
