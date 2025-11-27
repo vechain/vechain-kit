@@ -25,10 +25,16 @@ VeChain Kit is a comprehensive SDK designed to make building frontend applicatio
 #### Install dependencies
 
 ```bash
-yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp-kit-react@"2.1.0-rc.1" @vechain/vechain-kit
+yarn add @vechain/vechain-kit @chakra-ui/react@^2.8.2 @emotion/react@^11.14.0 @emotion/styled@^11.14.0 @tanstack/react-query@^5.64.2 @vechain/dapp-kit-react@2.1.0-rc.1 framer-motion@^11.15.0
 ```
 
-#### Basic Usage
+or with npm:
+
+```bash
+npm install @vechain/vechain-kit @chakra-ui/react@^2.8.2 @emotion/react@^11.14.0 @emotion/styled@^11.14.0 @tanstack/react-query@^5.64.2 @vechain/dapp-kit-react@2.1.0-rc.1 framer-motion@^11.15.0
+```
+
+#### Setup Provider
 
 Wrap your app with the VeChainKitProvider:
 
@@ -39,14 +45,16 @@ import { VeChainKitProvider } from '@vechain/vechain-kit';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <VeChainKitProvider network={{ type: 'test' }}>
+        <VeChainKitProvider>
             {children}
         </VeChainKitProvider>
     );
 }
 ```
 
-#### Login
+That's it! Your app is now ready to connect to VeChain mainnet with VeWorld wallet.
+
+#### Add Wallet Button
 
 ```typescript
 'use client';
@@ -57,6 +65,126 @@ export function Page() {
     return <WalletButton />;
 }
 ```
+
+You're all set! Your users can now connect their wallets and interact with VeChain.
+
+---
+
+### Customization (Optional)
+
+VeChain Kit comes with sensible defaults, but you can customize everything to fit your needs.
+
+#### Available Options
+
+<details>
+<summary><b>Network Configuration</b></summary>
+
+By default, VeChain Kit connects to **mainnet**. You can change this:
+
+```typescript
+<VeChainKitProvider network={{ type: 'test' }}>
+    {children}
+</VeChainKitProvider>
+```
+
+Options: `'main'` | `'test'` | `'solo'`
+
+</details>
+
+<details>
+<summary><b>Wallet Configuration</b></summary>
+
+By default, only **VeWorld** is enabled. Add more wallets:
+
+```typescript
+<VeChainKitProvider
+    dappKit={{
+        allowedWallets: ['veworld', 'wallet-connect', 'sync2'],
+        walletConnectOptions: {
+            projectId: 'your-project-id',
+            metadata: {
+                name: 'My App',
+                description: 'My VeChain App',
+                url: window.location.origin,
+                icons: ['https://myapp.com/icon.png'],
+            },
+        },
+    }}
+>
+    {children}
+</VeChainKitProvider>
+```
+
+Get your WalletConnect project ID at [cloud.walletconnect.com](https://cloud.walletconnect.com)
+
+</details>
+
+<details>
+<summary><b>Login Methods</b></summary>
+
+By default, **VeChain**, **DAppKit**, and **Ecosystem** login methods are enabled. Customize them:
+
+```typescript
+<VeChainKitProvider
+    loginMethods={[
+        { method: 'vechain', gridColumn: 4 },
+        { method: 'dappkit', gridColumn: 4 },
+        { method: 'ecosystem', gridColumn: 4 },
+        // Add social logins (requires Privy configuration)
+        // { method: 'email', gridColumn: 4 },
+        // { method: 'google', gridColumn: 4 },
+    ]}
+>
+    {children}
+</VeChainKitProvider>
+```
+
+</details>
+
+<details>
+<summary><b>Theme Customization</b></summary>
+
+Customize colors and appearance:
+
+```typescript
+<VeChainKitProvider
+    darkMode={true}
+    theme={{
+        modal: {
+            backgroundColor: '#1a1a1a',
+        },
+        textColor: '#ffffff',
+        buttons: {
+            primaryButton: {
+                bg: '#0066ff',
+            },
+        },
+    }}
+>
+    {children}
+</VeChainKitProvider>
+```
+
+</details>
+
+<details>
+<summary><b>Language Support</b></summary>
+
+VeChain Kit supports multiple languages:
+
+```typescript
+<VeChainKitProvider language="en">
+    {children}
+</VeChainKitProvider>
+```
+
+Supported languages: `'en'`, `'zh'`, `'es'`, `'fr'`, `'de'`, `'ja'`, `'ko'`
+
+</details>
+
+For complete configuration options, check the [full documentation](https://docs.vechainkit.vechain.org/).
+
+---
 
 # Troubleshooting
 
