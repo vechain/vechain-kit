@@ -216,13 +216,11 @@ const validateConfig = (
         validatedProps.network = {
             type: 'main' as NETWORK_TYPE,
         };
-    } else {
-        if (!validatedProps.network.type) {
-            errors.push('network.type is required');
-        }
-        if (!['main', 'test', 'solo'].includes(validatedProps.network.type!)) {
-            errors.push('network.type must be either "main", "test" or "solo"');
-        }
+    } else if (!validatedProps.network.type) {
+        // If network object exists but type is not specified, default to mainnet
+        validatedProps.network.type = 'main' as NETWORK_TYPE;
+    } else if (!['main', 'test', 'solo'].includes(validatedProps.network.type)) {
+        errors.push('network.type must be either "main", "test" or "solo"');
     }
 
     // Set default login methods if not provided
