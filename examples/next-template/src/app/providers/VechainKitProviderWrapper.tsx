@@ -4,7 +4,6 @@ import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
-import { NETWORK_TYPE } from '@vechain-kit/config/network';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -92,7 +91,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             darkMode={isDarkMode}
             language={i18n.language}
             network={{
-                type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as NETWORK_TYPE,
+                type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
             }}
             allowCustomTokens={true}
             legalDocuments={{

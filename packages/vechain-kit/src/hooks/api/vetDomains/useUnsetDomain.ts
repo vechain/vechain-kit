@@ -7,7 +7,7 @@ import { useCallback } from 'react';
 import { IReverseRegistrar__factory } from '@hooks/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig, VechainKitProviderProps } from '@/providers';
+import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
 import { Wallet } from '@/types';
@@ -25,7 +25,7 @@ type useUnsetDomainReturnValue = {
 
 const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
 
-const buildUnsetDomainClauses = (account: Wallet, network: VechainKitProviderProps['network']): TransactionClause[] => {
+const buildUnsetDomainClauses = (account: Wallet, network: VeChainKitConfig['network']): TransactionClause[] => {
     const clausesArray: any[] = [];
 
     // When unsetting domain, we only need to call setName with an empty string
