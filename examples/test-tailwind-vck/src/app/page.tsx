@@ -104,7 +104,7 @@ export default function ImageUploadApp() {
             darkMode={false}
             language={'en'}
             network={{
-                type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as 'test',
+                type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
             }}
             allowCustomTokens={true}
             legalDocuments={{

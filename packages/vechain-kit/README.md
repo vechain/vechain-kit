@@ -24,11 +24,21 @@ VeChain Kit is a comprehensive SDK designed to make building frontend applicatio
 
 #### Install dependencies
 
+Install the core package along with its peer dependencies:
+
+
 ```bash
-yarn add @tanstack/react-query@"^5.64.2" @chakra-ui/react@"^2.8.2" @vechain/dapp-kit-react@"2.1.0-rc.1" @vechain/vechain-kit
+yarn add @vechain/vechain-kit \
+  @chakra-ui/react@^2.8.2 \
+  @emotion/react@^11.14.0 \
+  @emotion/styled@^11.14.0 \
+  @tanstack/react-query@^5.64.2 \
+  @vechain/dapp-kit-react@2.1.0-rc.1 \
+  framer-motion@^11.15.0
 ```
 
-#### Basic Usage
+
+#### Setup Provider
 
 Wrap your app with the VeChainKitProvider:
 
@@ -39,14 +49,16 @@ import { VeChainKitProvider } from '@vechain/vechain-kit';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <VeChainKitProvider network={{ type: 'test' }}>
+        <VeChainKitProvider>
             {children}
         </VeChainKitProvider>
     );
 }
 ```
 
-#### Login
+That's it! Your app is now ready to connect to VeChain mainnet with VeWorld wallet.
+
+#### Add Wallet Button
 
 ```typescript
 'use client';
@@ -57,6 +69,11 @@ export function Page() {
     return <WalletButton />;
 }
 ```
+
+
+For complete configuration options, check the [full documentation](https://docs.vechainkit.vechain.org/).
+
+---
 
 # Troubleshooting
 
