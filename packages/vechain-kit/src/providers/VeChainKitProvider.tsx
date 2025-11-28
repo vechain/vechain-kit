@@ -124,7 +124,7 @@ export type VechainKitProviderProps = {
     i18n?: I18n;
     language?: string;
     network?: {
-        type?: NETWORK_TYPE;
+        type?: string; // Accepts any string, validated internally to 'main' | 'test' | 'solo'
         nodeUrl?: string;
         requireCertificate?: boolean;
         // TODO: migration check these types
@@ -139,7 +139,7 @@ export type VechainKitProviderProps = {
     theme?: VechainKitThemeConfig;
 };
 
-type VeChainKitConfig = {
+export type VeChainKitConfig = {
     privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
     feeDelegation?: VechainKitProviderProps['feeDelegation'];
@@ -149,7 +149,15 @@ type VeChainKitConfig = {
     darkMode: boolean;
     i18n?: VechainKitProviderProps['i18n'];
     language?: VechainKitProviderProps['language'];
-    network: VechainKitProviderProps['network'];
+    network: {
+        type: NETWORK_TYPE;
+        nodeUrl: string;
+        requireCertificate?: boolean;
+        connectionCertificate?: {
+            message?: Certificate;
+            options?: CertificateData;
+        };
+    };
     allowCustomTokens?: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
     defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
@@ -211,16 +219,18 @@ const validateConfig = (
         }
     }
 
-    // Validate network
-    if (!validatedProps.network) {
+    // Validate network - always ensure we have a valid network configuration
+    if (!validatedProps.network || !validatedProps.network.type) {
         validatedProps.network = {
-            type: 'main' as NETWORK_TYPE,
+            type: 'main',
         };
-    } else if (!validatedProps.network.type) {
-        // If network object exists but type is not specified, default to mainnet
-        validatedProps.network.type = 'main' as NETWORK_TYPE;
-    } else if (!['main', 'test', 'solo'].includes(validatedProps.network.type)) {
-        errors.push('network.type must be either "main", "test" or "solo"');
+    } else {
+        const networkType = validatedProps.network.type;
+        // Validate and narrow the network type
+        if (!['main', 'test', 'solo'].includes(networkType)) {
+            // Provide helpful error with the invalid value
+            errors.push('network.type must be either "main", "test" or "solo"');
+        }
     }
 
     // Set default login methods if not provided
@@ -317,16 +327,22 @@ export const VeChainKitProvider = (
         theme: customTheme,
     } = validatedProps;
 
-    // Explicitly check for undefined network and dappKit after validation
-    if (!_network) {
-        throw new Error("VeChainKitProvider: 'network' is undefined after validation.");
-    }
-    if (!_dappKit) {
-        throw new Error("VeChainKitProvider: 'dappKit' is undefined after validation.");
-    }
-    const network = _network;
-    const networkType = network.type!;
-    const dappKit = _dappKit;
+    // After validation, network and dappKit are guaranteed to be defined
+    // Cast the network type to NETWORK_TYPE since validation ensures it's valid
+    const networkType = (_network?.type ?? 'main') as NETWORK_TYPE;
+
+    //To avoid this fallback across the codebase, do it globally in the provider
+    const nodeUrl = _network?.nodeUrl ?? getConfig(networkType).nodeUrl;
+
+    const network = {
+        ..._network,
+        type: networkType,
+        nodeUrl,
+    };
+
+    const dappKit = _dappKit ?? {
+        allowedWallets: ['veworld'] as DAppKitWalletSource[],
+    };
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
@@ -451,12 +467,7 @@ export const VeChainKitProvider = (
                         darkMode,
                         i18n: i18nConfig,
                         language,
-                        network: {
-                            ...network,
-                            nodeUrl:
-                                network.nodeUrl ??
-                                getConfig(networkType).nodeUrl,
-                        },
+                        network,
                         allowCustomTokens,
                         legalDocuments,
                         defaultCurrency,
@@ -505,10 +516,7 @@ export const VeChainKitProvider = (
                         }}
                     >
                         <DAppKitProvider
-                            node={
-                                network.nodeUrl ??
-                                getConfig(networkType).nodeUrl
-                            }
+                            node={network.nodeUrl}
                             v2Api={{
                                 enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
                                 external: dappKit.v2Api?.external ?? false, //defaults to false
@@ -532,10 +540,7 @@ export const VeChainKitProvider = (
                             }
                         >
                             <PrivyWalletProvider
-                                nodeUrl={
-                                    network.nodeUrl ??
-                                    getConfig(networkType).nodeUrl
-                                }
+                                nodeUrl={network.nodeUrl}
                                 delegatorUrl={
                                     feeDelegation?.delegatorUrl ??
                                     feeDelegation?.genericDelegatorUrl
