@@ -1,7 +1,6 @@
 import { SwapAggregator } from '@/types/swap';
 import { NETWORK_TYPE } from '@/config/network';
 import { createBetterSwapAggregator } from '@/utils/swap/betterSwap';
-import { createVeTradeAggregator } from '@/utils/swap/veTrade';
 
 /**
  * Get swap aggregators for a specific network
@@ -14,6 +13,5 @@ import { createVeTradeAggregator } from '@/utils/swap/veTrade';
  */
 export const getSwapAggregators = (networkType: NETWORK_TYPE): SwapAggregator[] => [
     createBetterSwapAggregator(networkType),
-    createVeTradeAggregator(networkType),
 ];
 
