@@ -1,7 +1,8 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
-import { isValidUrl, setLocalStorageItem } from '@/utils';
+import { isValidUrl } from '@/utils';
+import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { initializeI18n } from '@/utils/i18n';
 import {
     LoginMethodOrderOption,
@@ -23,6 +24,8 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useState,
+    useRef,
 } from 'react';
 import { VechainKitThemeConfig } from '@/theme/tokens';
 import {
@@ -137,8 +140,13 @@ export type VechainKitProviderProps = {
     legalDocuments?: LegalDocumentOptions;
     defaultCurrency?: CURRENCY;
     theme?: VechainKitThemeConfig;
+    onLanguageChange?: (language: string) => void;
+    onCurrencyChange?: (currency: CURRENCY) => void;
 };
 
+/**
+ * Configuration object returned by useVeChainKitConfig hook
+ */
 type VeChainKitConfig = {
     privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
@@ -148,12 +156,18 @@ type VeChainKitConfig = {
     loginMethods?: VechainKitProviderProps['loginMethods'];
     darkMode: boolean;
     i18n?: VechainKitProviderProps['i18n'];
-    language?: VechainKitProviderProps['language'];
+    /** Current runtime language value. Reflects the active language in VeChainKit. */
+    currentLanguage: string;
     network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
-    defaultCurrency?: VechainKitProviderProps['defaultCurrency'];
+    /** Current runtime currency value. Reflects the active currency in VeChainKit. */
+    currentCurrency: CURRENCY;
     theme?: VechainKitThemeConfig;
+    /** Function to change the language from the host app. Changes will sync to VeChainKit. */
+    setLanguage: (language: string) => void;
+    /** Function to change the currency from the host app. Changes will sync to VeChainKit. */
+    setCurrency: (currency: CURRENCY) => void;
 };
 
 /**
@@ -162,7 +176,22 @@ type VeChainKitConfig = {
 export const VeChainKitContext = createContext<VeChainKitConfig | null>(null);
 
 /**
- * Hook to get the Privy and DAppKit configs
+ * Hook to get the VeChainKit configuration
+ *
+ * @returns VeChainKitConfig object containing:
+ * - `currentLanguage`: Current runtime language value
+ * - `currentCurrency`: Current runtime currency value
+ * - `setLanguage`: Function to change language from host app
+ * - `setCurrency`: Function to change currency from host app
+ * - Other configuration values (network, darkMode, etc.)
+ *
+ * @example
+ * ```tsx
+ * const config = useVeChainKitConfig();
+ * console.log(config.currentLanguage); // 'fr' (current value)
+ * console.log(config.currentCurrency); // 'eur' (current value)
+ * config.setLanguage('de'); // Change language
+ * ```
  */
 export const useVeChainKitConfig = () => {
     const context = useContext(VeChainKitContext);
@@ -279,6 +308,8 @@ const validateConfig = (
 /**
  * Provider to wrap the application with Privy and DAppKit
  */
+const CURRENCY_STORAGE_KEY = 'vechain_kit_currency';
+
 export const VeChainKitProvider = (
     props: Omit<VechainKitProviderProps, 'queryClient'>,
 ) => {
@@ -299,7 +330,34 @@ export const VeChainKitProvider = (
         legalDocuments,
         defaultCurrency = 'usd',
         theme: customTheme,
+        onLanguageChange,
+        onCurrencyChange,
     } = validatedProps;
+
+    // Initialize current language from i18n or prop
+    const [currentLanguage, setCurrentLanguageState] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = getLocalStorageItem('i18nextLng');
+            return stored || language;
+        }
+        return language;
+    });
+
+    // Initialize current currency from localStorage or prop
+    const [currentCurrency, setCurrentCurrencyState] = useState<CURRENCY>(
+        () => {
+            try {
+                const stored = getLocalStorageItem(CURRENCY_STORAGE_KEY);
+                return (stored as CURRENCY) || defaultCurrency;
+            } catch {
+                return defaultCurrency;
+            }
+        },
+    );
+
+    // Track if we're updating from prop to avoid loops
+    const isUpdatingFromPropRef = useRef(false);
+    const isUpdatingCurrencyFromPropRef = useRef(false);
 
     // Remove the validateLoginMethods call since it's now handled in validateConfig
     const validatedLoginMethods = loginMethods;
@@ -329,10 +387,6 @@ export const VeChainKitProvider = (
         // Initialize translations from VeChainKit
         initializeI18n(i18n);
 
-        if (language) {
-            i18n.changeLanguage(language);
-        }
-
         if (i18nConfig) {
             // Add custom translations from the app if provided
             Object.keys(i18nConfig).forEach((lang) => {
@@ -345,7 +399,102 @@ export const VeChainKitProvider = (
                 );
             });
         }
-    }, [language, i18nConfig]);
+    }, [i18nConfig]);
+
+    // Sync language prop changes to i18n and state
+    useEffect(() => {
+        if (language && language !== currentLanguage) {
+            isUpdatingFromPropRef.current = true;
+            i18n.changeLanguage(language);
+            setCurrentLanguageState(language);
+            isUpdatingFromPropRef.current = false;
+        }
+    }, [language]);
+
+    // Listen to i18n language changes (from kit settings)
+    useEffect(() => {
+        const handleLanguageChanged = (lng: string) => {
+            if (!isUpdatingFromPropRef.current && lng !== currentLanguage) {
+                setCurrentLanguageState(lng);
+                onLanguageChange?.(lng);
+            }
+        };
+
+        i18n.on('languageChanged', handleLanguageChanged);
+
+        return () => {
+            i18n.off('languageChanged', handleLanguageChanged);
+        };
+    }, [currentLanguage, onLanguageChange]);
+
+    // Sync currency prop changes to state
+    useEffect(() => {
+        if (defaultCurrency && defaultCurrency !== currentCurrency) {
+            // Only update if there's no stored currency preference
+            const stored = getLocalStorageItem(CURRENCY_STORAGE_KEY);
+            if (!stored) {
+                isUpdatingCurrencyFromPropRef.current = true;
+                setCurrentCurrencyState(defaultCurrency);
+                setLocalStorageItem(CURRENCY_STORAGE_KEY, defaultCurrency);
+                isUpdatingCurrencyFromPropRef.current = false;
+            }
+        }
+    }, [defaultCurrency]);
+
+    // Listen to currency localStorage changes (from kit settings)
+    useEffect(() => {
+        const checkCurrencyChange = () => {
+            try {
+                const stored = getLocalStorageItem(CURRENCY_STORAGE_KEY);
+                if (
+                    stored &&
+                    stored !== currentCurrency &&
+                    !isUpdatingCurrencyFromPropRef.current
+                ) {
+                    const newCurrency = stored as CURRENCY;
+                    setCurrentCurrencyState(newCurrency);
+                    onCurrencyChange?.(newCurrency);
+                }
+            } catch {
+                // Ignore errors
+            }
+        };
+
+        // Check on mount
+        checkCurrencyChange();
+
+        // Listen to storage events (for cross-tab sync)
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === CURRENCY_STORAGE_KEY && e.newValue) {
+                checkCurrencyChange();
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        // Poll for changes (in case storage event doesn't fire)
+        const interval = setInterval(checkCurrencyChange, 500);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            clearInterval(interval);
+        };
+    }, [currentCurrency, onCurrencyChange]);
+
+    // Functions to set language/currency from host app
+    const setLanguage = (lang: string) => {
+        isUpdatingFromPropRef.current = true;
+        i18n.changeLanguage(lang);
+        setCurrentLanguageState(lang);
+        isUpdatingFromPropRef.current = false;
+    };
+
+    const setCurrency = (currency: CURRENCY) => {
+        isUpdatingCurrencyFromPropRef.current = true;
+        setCurrentCurrencyState(currency);
+        setLocalStorageItem(CURRENCY_STORAGE_KEY, currency);
+        isUpdatingCurrencyFromPropRef.current = false;
+    };
 
     useEffect(() => {
         setLocalStorageItem(VECHAIN_KIT_STORAGE_KEYS.NETWORK, network.type);
@@ -423,7 +572,7 @@ export const VeChainKitProvider = (
                         loginMethods: validatedLoginMethods,
                         darkMode,
                         i18n: i18nConfig,
-                        language,
+                        currentLanguage,
                         network: {
                             ...network,
                             nodeUrl:
@@ -432,8 +581,10 @@ export const VeChainKitProvider = (
                         },
                         allowCustomTokens,
                         legalDocuments,
-                        defaultCurrency,
+                        currentCurrency,
                         theme: customTheme,
+                        setLanguage,
+                        setCurrency,
                     }}
                 >
                     <PrivyProvider
@@ -487,7 +638,7 @@ export const VeChainKitProvider = (
                                 external: dappKit.v2Api?.external ?? false, //defaults to false
                             }}
                             i18n={i18nConfig}
-                            language={language}
+                            language={currentLanguage}
                             logLevel={dappKit.logLevel}
                             modalParent={dappKit.modalParent}
                             onSourceClick={dappKit.onSourceClick}

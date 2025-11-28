@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect, useCallback } from 'react';
 import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
@@ -24,8 +25,45 @@ interface Props {
 export function VechainKitProviderWrapper({ children }: Props) {
     const { colorMode } = useColorMode();
     const { i18n } = useTranslation();
+    const [hostLanguage, setHostLanguage] = useState(i18n.language);
+    const [hostCurrency, setHostCurrency] = useState<'usd' | 'eur' | 'gbp'>(
+        'usd',
+    );
 
     const isDarkMode = colorMode === 'dark';
+
+    // Sync host app language changes to VeChainKit
+    useEffect(() => {
+        setHostLanguage(i18n.language);
+    }, [i18n.language]);
+
+    // Sync host app currency changes to VeChainKit
+    useEffect(() => {
+        const stored =
+            typeof window !== 'undefined'
+                ? localStorage.getItem('vechain_kit_currency')
+                : null;
+        if (stored && ['usd', 'eur', 'gbp'].includes(stored)) {
+            setHostCurrency(stored as 'usd' | 'eur' | 'gbp');
+        }
+    }, []);
+
+    // Listen to VeChainKit language changes
+    const handleLanguageChange = useCallback(
+        (language: string) => {
+            i18n.changeLanguage(language);
+            setHostLanguage(language);
+        },
+        [i18n],
+    );
+
+    // Listen to VeChainKit currency changes
+    const handleCurrencyChange = useCallback(
+        (currency: 'usd' | 'eur' | 'gbp') => {
+            setHostCurrency(currency);
+        },
+        [],
+    );
 
     const coloredLogo =
         'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
@@ -90,7 +128,10 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}
             darkMode={isDarkMode}
-            language={i18n.language}
+            language={hostLanguage}
+            defaultCurrency={hostCurrency}
+            onLanguageChange={handleLanguageChange}
+            onCurrencyChange={handleCurrencyChange}
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as NETWORK_TYPE,
             }}
