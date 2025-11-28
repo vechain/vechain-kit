@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement, useRef, useState } from 'react';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 import {
     Container,
     VStack,
@@ -10,23 +10,22 @@ import {
     useColorMode,
     IconButton,
     useMediaQuery,
+    Flex,
 } from '@chakra-ui/react';
-import { useWallet, WalletButton, VechainLogo } from '@vechain/vechain-kit';
+import { useWallet, WalletButton } from '@vechain/vechain-kit';
 import { UIControls } from '@/app/components/features/UIControls';
 import { TransactionExamples } from '@/app/components/features/TransactionExamples';
 import { SigningExample } from '@/app/components/features/Signing/SigningExample';
 import { Introduction } from '../components/features/Introduction';
 import { FAQSection } from '../components/features/FAQSection';
-import {
-    LuMoon,
-    LuSun,
-    LuMousePointerClick,
-    LuChevronDown,
-} from 'react-icons/lu';
+import { IoMdMoon } from 'react-icons/io';
+import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
+import { VechainLogo } from '@vechain/vechain-kit/assets';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
+import { trackEvent } from '@/app/lib/mixpanelClient';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -40,6 +39,10 @@ export default function Home(): ReactElement {
         setHasScrolled(true);
     };
 
+    useEffect(() => {
+        trackEvent('Home Page Viewed');
+    }, []);
+
     if (!account) {
         return (
             <Container
@@ -47,6 +50,8 @@ export default function Home(): ReactElement {
                 maxW="container.lg"
                 justifyContent={'center'}
                 wordBreak={'break-word'}
+                position="relative"
+                zIndex={1}
             >
                 <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
                     <HStack w={'full'} justifyContent={'space-between'}>
@@ -72,7 +77,7 @@ export default function Home(): ReactElement {
                                     },
                                 }}
                             >
-                                <LuMousePointerClick
+                                <FaHandPointLeft
                                     size={24}
                                     color={
                                         colorMode === 'light'
@@ -96,7 +101,7 @@ export default function Home(): ReactElement {
                         <IconButton
                             onClick={toggleColorMode}
                             icon={
-                                colorMode === 'light' ? <LuMoon /> : <LuSun />
+                                colorMode === 'light' ? <IoMdMoon /> : <FaSun />
                             }
                             aria-label="Toggle color mode"
                             borderRadius="xl"
@@ -123,6 +128,8 @@ export default function Home(): ReactElement {
             maxW="container.lg"
             justifyContent={'center'}
             wordBreak={'break-word'}
+            position="relative"
+            zIndex={1}
         >
             <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
                 <HStack w={'full'} justifyContent={'space-between'}>
@@ -133,7 +140,7 @@ export default function Home(): ReactElement {
 
                     <IconButton
                         onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <LuMoon /> : <LuSun />}
+                        icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}
                         aria-label="Toggle color mode"
                         borderRadius="xl"
                     />
@@ -152,7 +159,7 @@ export default function Home(): ReactElement {
                         <Text fontSize="sm" textAlign="center">
                             Scroll down to explore available features
                         </Text>
-                        <LuChevronDown
+                        <FaChevronDown
                             size={20}
                             color={
                                 colorMode === 'light'
@@ -201,10 +208,9 @@ export default function Home(): ReactElement {
 const Logo = () => {
     const { colorMode } = useColorMode();
     return (
-        <VStack
+        <HStack
             onClick={() => window.open('https://vechain.org', '_blank')}
             pt={10}
-            spacing={[8, 4]}
             justify={'center'}
             w={'full'}
             cursor={'pointer'}
@@ -213,17 +219,25 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <Text fontSize="md" fontWeight="bold">
-                Made by
-            </Text>
-            <VechainLogo
-                maxW="500px"
-                isDark={colorMode === 'dark'}
-                w="200px"
-                h="auto"
-                ml={{ base: 0, sm: -6 }}
-                mt={{ base: -6, md: 0 }}
-            />
-        </VStack>
+            <Flex
+                direction={{ base: 'column', md: 'row' }}
+                align="center"
+                wrap="wrap"
+                justify="center"
+                gap={2}
+            >
+                <Text fontSize="md" fontWeight="bold">
+                    Made by
+                </Text>
+                <VechainLogo
+                    maxW="200px"
+                    isDark={colorMode === 'dark'}
+                    w="200px"
+                    h="auto"
+                    ml={{ base: 0, sm: -6 }}
+                    mt={{ base: -6, md: 0 }}
+                />
+            </Flex>
+        </HStack>
     );
 };
