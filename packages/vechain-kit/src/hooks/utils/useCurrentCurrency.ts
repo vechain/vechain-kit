@@ -1,5 +1,4 @@
 import { useVeChainKitConfig } from '@/providers';
-import { CURRENCY } from '@/types';
 
 /**
  * Hook to get and set the current currency in VeChainKit

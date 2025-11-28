@@ -8,7 +8,7 @@ const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];
 
 /**
  * Hook for managing currency preferences
- * 
+ *
  * Note: This hook now uses the currency from VeChainKit context.
  * For setting currency, use the setCurrency function from useCurrentCurrency() hook instead.
  */
