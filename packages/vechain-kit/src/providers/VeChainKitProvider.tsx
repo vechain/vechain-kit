@@ -147,7 +147,7 @@ export type VechainKitProviderProps = {
 /**
  * Configuration object returned by useVeChainKitConfig hook
  */
-type VeChainKitConfig = {
+export type VeChainKitConfig = {
     privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
     feeDelegation?: VechainKitProviderProps['feeDelegation'];
@@ -167,7 +167,6 @@ type VeChainKitConfig = {
     };
     /** Current runtime language value. Reflects the active language in VeChainKit. */
     currentLanguage: string;
-    network: VechainKitProviderProps['network'];
     allowCustomTokens?: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
