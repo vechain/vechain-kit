@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement, useEffect, useRef, useState } from 'react';
+import { type ReactElement, useRef, useState } from 'react';
 import {
     Container,
     VStack,
@@ -19,7 +19,7 @@ import { SigningExample } from '@/app/components/features/Signing/SigningExample
 import { Introduction } from '../components/features/Introduction';
 import { FAQSection } from '../components/features/FAQSection';
 import { IoMdMoon } from 'react-icons/io';
-import { FaSun, FaHandPointLeft, FaChevronDown } from 'react-icons/fa';
+import { FaSun, FaChevronDown } from 'react-icons/fa';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
 import { DataReadingExample } from '../components/features/DataReading';
 import { VechainLogo } from '@vechain/vechain-kit/assets';
@@ -50,56 +50,9 @@ export default function Home(): ReactElement {
             >
                 <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
                     <HStack w={'full'} justifyContent={'space-between'}>
-                        <HStack spacing={2} align="center">
-                            <WalletButton
-                                mobileVariant="iconDomainAndAssets"
-                                desktopVariant="iconDomainAndAssets"
-                            />
-                            <HStack
-                                spacing={2}
-                                animation="bounce-left 1s infinite"
-                                transform="rotate(-10deg)"
-                                sx={{
-                                    '@keyframes bounce-left': {
-                                        '0%, 100%': {
-                                            transform:
-                                                'rotate(0deg) translateX(0)',
-                                        },
-                                        '50%': {
-                                            transform:
-                                                'rotate(0deg) translateX(-5px)',
-                                        },
-                                    },
-                                }}
-                            >
-                                <FaHandPointLeft
-                                    size={24}
-                                    color={
-                                        colorMode === 'light'
-                                            ? 'blackAlpha.600'
-                                            : 'whiteAlpha.400'
-                                    }
-                                    style={{ marginLeft: '8px' }}
-                                />
-                                <Text
-                                    fontSize="sm"
-                                    color={
-                                        colorMode === 'light'
-                                            ? 'blackAlpha.600'
-                                            : 'whiteAlpha.400'
-                                    }
-                                >
-                                    Click me!
-                                </Text>
-                            </HStack>
-                        </HStack>
-                        <IconButton
-                            onClick={toggleColorMode}
-                            icon={
-                                colorMode === 'light' ? <IoMdMoon /> : <FaSun />
-                            }
-                            aria-label="Toggle color mode"
-                            borderRadius="xl"
+                        <WalletButton
+                            mobileVariant="iconDomainAndAssets"
+                            desktopVariant="iconDomainAndAssets"
                         />
                     </HStack>
 
@@ -127,19 +80,10 @@ export default function Home(): ReactElement {
             zIndex={1}
         >
             <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
-                <HStack w={'full'} justifyContent={'space-between'}>
-                    <WalletButton
-                        mobileVariant="iconDomainAndAssets"
-                        desktopVariant="iconDomainAndAssets"
-                    />
-
-                    <IconButton
-                        onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <IoMdMoon /> : <FaSun />}
-                        aria-label="Toggle color mode"
-                        borderRadius="xl"
-                    />
-                </HStack>
+                <WalletButton
+                    mobileVariant="iconDomainAndAssets"
+                    desktopVariant="iconDomainAndAssets"
+                />
 
                 {account && !hasScrolled && !isDesktop && (
                     <VStack
