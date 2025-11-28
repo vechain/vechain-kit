@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { IReverseRegistrar__factory } from '@hooks/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
-import { useVeChainKitConfig, VechainKitProviderProps } from '@/providers';
+import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
 import { humanAddress } from '@/utils';
@@ -30,7 +30,12 @@ type useClaimVetDomainReturnValue = {
 
 const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
 
-export const buildVetDomainClauses = (domain: string, alreadyOwned: boolean, account: Wallet, network: VechainKitProviderProps['network']): TransactionClause[] => {
+export const buildVetDomainClauses = (
+    domain: string,
+    alreadyOwned: boolean,
+    account: Wallet,
+    network: VeChainKitConfig['network'],
+): TransactionClause[] => {
     const clausesArray: any[] = [];
 
     if (!domain) throw new Error('Invalid domain');
@@ -90,13 +95,16 @@ export const useClaimVetDomain = ({
     const { network } = useVeChainKitConfig();
     const queryClient = useQueryClient();
     const { account } = useWallet();
-    
+
     const { refresh: refreshMetadata } = useRefreshMetadata(
         domain,
         account?.address ?? '',
     );
 
-    const clauses = useCallback(() => buildVetDomainClauses(domain, alreadyOwned, account, network), [domain, alreadyOwned, account, network]);
+    const clauses = useCallback(
+        () => buildVetDomainClauses(domain, alreadyOwned, account, network),
+        [domain, alreadyOwned, account, network],
+    );
 
     // Refetch queries to update UI after the tx is confirmed
     const handleOnSuccess = useCallback(async () => {
