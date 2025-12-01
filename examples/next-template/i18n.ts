@@ -34,10 +34,18 @@ export const languageNames = {
     ja: '日本語',
 };
 
-// Custom language detector that checks prop first, then browser
+// Custom language detector that checks localStorage first, then prop, then browser
 const customLanguageDetector = {
     name: 'customDetector',
     lookup: (options?: { languages?: string[] } | undefined) => {
+        // Check localStorage first to preserve user's language preference
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('i18nextLng');
+            if (stored && supportedLanguages.includes(stored)) {
+                return stored;
+            }
+        }
+
         const propLanguage = options?.languages?.[0];
 
         if (propLanguage && supportedLanguages.includes(propLanguage)) {
