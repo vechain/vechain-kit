@@ -1,0 +1,129 @@
+'use client';
+
+import {
+    HStack,
+    useColorMode,
+    Link,
+    useMediaQuery,
+    Image,
+    Text,
+    Card,
+} from '@chakra-ui/react';
+import { WalletButton } from '@vechain/vechain-kit';
+
+const basePath = process.env.basePath ?? '';
+
+export function Header() {
+    const { colorMode } = useColorMode();
+    const [isMobile] = useMediaQuery('(max-width: 768px)');
+
+    return (
+        <HStack
+            w="full"
+            justifyContent="center"
+            position="sticky"
+            top={0}
+            zIndex={1000}
+            py={4}
+            px={{ base: 4, md: 8 }}
+        >
+            <Card
+                variant="base"
+                borderRadius="full"
+                px={{ base: 4, md: 6 }}
+                py={3}
+                maxW="4xl"
+                w="full"
+                boxShadow="sm"
+            >
+                <HStack w="full" justifyContent="space-between" spacing={8}>
+                    {/* Logo at start */}
+                    <HStack spacing={3} flexShrink={0}>
+                        <Image
+                            src={`${basePath}/images/logo.png`}
+                            alt="VeChain Kit"
+                            height={8}
+                            width="auto"
+                        />
+                        <Text
+                            fontSize="lg"
+                            fontWeight="bold"
+                            color={colorMode === 'dark' ? 'white' : 'gray.900'}
+                        >
+                            VeChain Kit
+                        </Text>
+                    </HStack>
+
+                    {/* Navigation links centered */}
+                    {!isMobile && (
+                        <HStack spacing={2} flex={1} justifyContent="center">
+                            <Link
+                                href="#features"
+                                px={4}
+                                py={2}
+                                fontSize="sm"
+                                fontWeight="medium"
+                                color={
+                                    colorMode === 'dark'
+                                        ? 'gray.200'
+                                        : 'gray.700'
+                                }
+                                borderRadius="md"
+                                bg="transparent"
+                                _hover={{
+                                    bg:
+                                        colorMode === 'dark'
+                                            ? 'whiteAlpha.100'
+                                            : 'gray.100',
+                                    color:
+                                        colorMode === 'dark'
+                                            ? 'white'
+                                            : 'gray.900',
+                                }}
+                                transition="all 0.2s"
+                            >
+                                Features
+                            </Link>
+                            <Link
+                                href="https://docs.vechainkit.vechain.org/"
+                                px={4}
+                                py={2}
+                                fontSize="sm"
+                                fontWeight="medium"
+                                color={
+                                    colorMode === 'dark'
+                                        ? 'gray.200'
+                                        : 'gray.700'
+                                }
+                                borderRadius="md"
+                                bg="transparent"
+                                _hover={{
+                                    bg:
+                                        colorMode === 'dark'
+                                            ? 'whiteAlpha.100'
+                                            : 'gray.100',
+                                    color:
+                                        colorMode === 'dark'
+                                            ? 'white'
+                                            : 'gray.900',
+                                }}
+                                transition="all 0.2s"
+                                isExternal
+                            >
+                                Docs
+                            </Link>
+                        </HStack>
+                    )}
+
+                    {/* WalletButton and Theme toggle at end */}
+                    <HStack spacing={3} flexShrink={0}>
+                        <WalletButton
+                            mobileVariant="iconDomainAndAssets"
+                            desktopVariant="iconDomainAndAssets"
+                        />
+                    </HStack>
+                </HStack>
+            </Card>
+        </HStack>
+    );
+}

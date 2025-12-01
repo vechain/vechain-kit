@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    Box,
+    Card,
     VStack,
     Heading,
     Accordion,
@@ -10,6 +10,7 @@ import {
     AccordionPanel,
     AccordionIcon,
     Text,
+    Box,
 } from '@chakra-ui/react';
 
 export function FAQSection() {
@@ -53,46 +54,37 @@ export function FAQSection() {
     ];
 
     return (
-        <Box
-            p={8}
-            borderRadius="lg"
-            boxShadow="xl"
-            bg="whiteAlpha.100"
-            backdropFilter="blur(10px)"
-            w="full"
-        >
-            <VStack spacing={6} align="stretch">
-                <Heading as="h2" size="lg" textAlign="center">
-                    Frequently Asked Questions
-                </Heading>
+        <VStack spacing={8} align="stretch" maxW="4xl" mx="auto" w="full">
+            <Heading as="h2" size="lg" textAlign="center">
+                Frequently Asked Questions
+            </Heading>
 
-                <Accordion allowToggle>
-                    {faqItems.map((item, index) => (
-                        <AccordionItem key={index} border="none" mb={4}>
-                            <h3>
-                                <AccordionButton
-                                    bg="whiteAlpha.100"
-                                    borderRadius="md"
-                                    _hover={{ bg: 'whiteAlpha.200' }}
+            <Accordion allowToggle>
+                {faqItems.map((item, index) => (
+                    <AccordionItem key={index} border="none" mb={4}>
+                        <h3>
+                            <AccordionButton
+                                bg="whiteAlpha.100"
+                                borderRadius="md"
+                                _hover={{ bg: 'whiteAlpha.200' }}
+                            >
+                                <Box
+                                    as="span"
+                                    flex="1"
+                                    textAlign="left"
+                                    fontWeight="medium"
                                 >
-                                    <Box
-                                        as="span"
-                                        flex="1"
-                                        textAlign="left"
-                                        fontWeight="medium"
-                                    >
-                                        {item.question}
-                                    </Box>
-                                    <AccordionIcon />
-                                </AccordionButton>
-                            </h3>
-                            <AccordionPanel pb={4} pt={4} px={6}>
-                                <Text>{item.answer}</Text>
-                            </AccordionPanel>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            </VStack>
-        </Box>
+                                    {item.question}
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                        </h3>
+                        <AccordionPanel pb={4} pt={4} px={6}>
+                            <Text>{item.answer}</Text>
+                        </AccordionPanel>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </VStack>
     );
 }

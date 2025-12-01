@@ -23,6 +23,16 @@ const exampleTheme = {
         heading: `"Satoshi", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
         body: `"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
     },
+    //@ts-ignore
+    fontSizes: {
+        hero: '4rem',
+        'hero-mobile': '2.5rem',
+    },
+    //@ts-ignore
+    space: {
+        section: '120px',
+        'section-mobile': '80px',
+    },
 };
 
 export const darkTheme = extendTheme({

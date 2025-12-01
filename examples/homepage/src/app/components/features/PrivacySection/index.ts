@@ -1,0 +1,2 @@
+export { PrivacySection } from './PrivacySection';
+

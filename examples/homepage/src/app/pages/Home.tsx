@@ -1,200 +1,132 @@
 'use client';
 
-import { type ReactElement, useRef, useState } from 'react';
-import {
-    Container,
-    VStack,
-    Text,
-    Link,
-    HStack,
-    useColorMode,
-    IconButton,
-    useMediaQuery,
-} from '@chakra-ui/react';
-import { useWallet, WalletButton, VechainLogo } from '@vechain/vechain-kit';
-import { UIControls } from '@/app/components/features/UIControls';
-import { TransactionExamples } from '@/app/components/features/TransactionExamples';
-import { SigningExample } from '@/app/components/features/Signing/SigningExample';
-import { Introduction } from '../components/features/Introduction';
+import { type ReactElement } from 'react';
+import { VStack, Text, Link, Card, useColorMode } from '@chakra-ui/react';
+import { useWallet, VechainLogo } from '@vechain/vechain-kit';
+import { Header } from '@/app/components/layout/Header';
+import { HeroSection } from '@/app/components/features/HeroSection';
+import { FeatureSection } from '@/app/components/features/FeatureSection';
+import { TestimonialSection } from '@/app/components/features/TestimonialSection';
+import { PlatformSection } from '@/app/components/features/PlatformSection';
+import { PrivacySection } from '@/app/components/features/PrivacySection';
 import { FAQSection } from '../components/features/FAQSection';
-import {
-    LuMoon,
-    LuSun,
-    LuMousePointerClick,
-    LuChevronDown,
-} from 'react-icons/lu';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
-import { DataReadingExample } from '../components/features/DataReading';
-import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
-import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
+import {
+    LuWallet,
+    LuCode,
+    LuPalette,
+    LuShield,
+    LuLock,
+    LuEye,
+    LuShieldCheck,
+} from 'react-icons/lu';
+
+const basePath = process.env.basePath ?? '';
+
+const platforms = [
+    { name: 'VeWorld', logo: `${basePath}/images/veworld-logo.png` },
+    { name: 'WalletConnect', logo: `${basePath}/images/wallet-connect-logo.png` },
+    { name: 'MetaMask', logo: `${basePath}/images/metamask-logo.png` },
+    { name: 'Rabby', logo: `${basePath}/images/rabby-logo.png` },
+    { name: 'Coinbase', logo: `${basePath}/images/coinbase-wallet-logo.webp` },
+    { name: 'Rainbow', logo: `${basePath}/images/rainbow-logo.webp` },
+];
+
+const privacyFeatures = [
+    {
+        title: 'Zero data retention',
+        description: 'Your wallet data is private with zero data retention. None of your data will be stored or used for model training.',
+        icon: LuLock,
+    },
+    {
+        title: 'Everything stays local',
+        description: 'All history stays local on your device. Your wallet operations are processed securely without exposing sensitive information.',
+        icon: LuEye,
+    },
+    {
+        title: 'Certified security',
+        description: 'Audited and verified by independent security experts to ensure the highest standards of privacy and security.',
+        icon: LuShieldCheck,
+    },
+];
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
-    const { colorMode, toggleColorMode } = useColorMode();
-    const featuresRef = useRef<HTMLDivElement>(null);
-    const [hasScrolled, setHasScrolled] = useState(false);
-    const [isDesktop] = useMediaQuery('(min-width: 768px)');
-
-    const scrollToFeatures = () => {
-        featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
-        setHasScrolled(true);
-    };
-
-    if (!account) {
-        return (
-            <Container
-                height={'full'}
-                maxW="container.lg"
-                justifyContent={'center'}
-                wordBreak={'break-word'}
-            >
-                <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
-                    <HStack w={'full'} justifyContent={'space-between'}>
-                        <HStack spacing={2} align="center">
-                            <WalletButton
-                                mobileVariant="iconDomainAndAssets"
-                                desktopVariant="iconDomainAndAssets"
-                            />
-                            <HStack
-                                spacing={2}
-                                animation="bounce-left 1s infinite"
-                                transform="rotate(-10deg)"
-                                sx={{
-                                    '@keyframes bounce-left': {
-                                        '0%, 100%': {
-                                            transform:
-                                                'rotate(0deg) translateX(0)',
-                                        },
-                                        '50%': {
-                                            transform:
-                                                'rotate(0deg) translateX(-5px)',
-                                        },
-                                    },
-                                }}
-                            >
-                                <LuMousePointerClick
-                                    size={24}
-                                    color={
-                                        colorMode === 'light'
-                                            ? 'blackAlpha.600'
-                                            : 'whiteAlpha.400'
-                                    }
-                                    style={{ marginLeft: '8px' }}
-                                />
-                                <Text
-                                    fontSize="sm"
-                                    color={
-                                        colorMode === 'light'
-                                            ? 'blackAlpha.600'
-                                            : 'whiteAlpha.400'
-                                    }
-                                >
-                                    Click me!
-                                </Text>
-                            </HStack>
-                        </HStack>
-                        <IconButton
-                            onClick={toggleColorMode}
-                            icon={
-                                colorMode === 'light' ? <LuMoon /> : <LuSun />
-                            }
-                            aria-label="Toggle color mode"
-                            borderRadius="xl"
-                        />
-                    </HStack>
-
-                    <Introduction />
-
-                    <LoginUIControl />
-
-                    <FAQSection />
-
-                    <LoginToContinueBox />
-
-                    <Logo />
-                </VStack>
-            </Container>
-        );
-    }
+    const { colorMode } = useColorMode();
 
     return (
-        <Container
-            height={'full'}
-            maxW="container.lg"
-            justifyContent={'center'}
-            wordBreak={'break-word'}
-        >
-            <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
-                <HStack w={'full'} justifyContent={'space-between'}>
-                    <WalletButton
-                        mobileVariant="iconDomainAndAssets"
-                        desktopVariant="iconDomainAndAssets"
-                    />
+        <VStack spacing={0} align="stretch" minH="100vh">
+            <Header />
+            
+            <HeroSection />
 
-                    <IconButton
-                        onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <LuMoon /> : <LuSun />}
-                        aria-label="Toggle color mode"
-                        borderRadius="xl"
-                    />
-                </HStack>
+            <FeatureSection
+                title="Seamless Wallet Integration"
+                description="Connect your users to your dApp with out-of-the-box wallet connection options. Support for VeWorld, Sync2, WalletConnect, and social logins including Google, Twitter, Email, and more."
+                icon={LuWallet}
+                variant="purple"
+            />
 
-                {account && !hasScrolled && !isDesktop && (
-                    <VStack
-                        w="full"
-                        cursor="pointer"
-                        onClick={scrollToFeatures}
-                        spacing={2}
-                        p={4}
-                        bg="whiteAlpha.100"
-                        rounded="md"
-                    >
-                        <Text fontSize="sm" textAlign="center">
-                            Scroll down to explore available features
-                        </Text>
-                        <LuChevronDown
-                            size={20}
-                            color={
-                                colorMode === 'light'
-                                    ? 'blackAlpha.400'
-                                    : 'whiteAlpha.600'
-                            }
-                        />
-                    </VStack>
-                )}
+            <FeatureSection
+                title="Boosted Development"
+                description="Use our hooks and components to speed up your development. No need to worry about the underlying VeChain infrastructure—we handle it for you. Focus on building your dApp, not the blockchain integration."
+                icon={LuCode}
+                variant="blue"
+                reverse
+            />
 
-                <Introduction />
+            <FeatureSection
+                title="Style Customization"
+                description="The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need."
+                icon={LuPalette}
+                variant="beige"
+            />
 
-                <div ref={featuresRef}>
+            {account && (
+                <Card id="features" variant="section" py={{ base: 12, md: 16 }} px={{ base: 4, md: 8 }}>
                     <FeaturesToTry />
-                </div>
+                </Card>
+            )}
 
-                <UIControls />
+            <TestimonialSection quote="Building on VeChain has never been easier. VeChain Kit handles all the complexity so I can focus on creating great user experiences." />
 
-                <TransactionExamples />
-                <SigningExample />
-                <DataReadingExample />
+            <PlatformSection platforms={platforms} />
+
+            <FeatureSection
+                title="Assets, Profile, and Wallet Management"
+                description="Use VeChain Kit to allow your users to have asset management, profile management, social login, wallet backup, MFA, and more. All out of the box, so you can focus on building your dApp."
+                icon={LuShield}
+                variant="green"
+                reverse
+            />
+
+            <PrivacySection features={privacyFeatures} />
+
+            <Card variant="section" py={{ base: 12, md: 16 }} px={{ base: 4, md: 8 }}>
                 <FAQSection />
-                <Text
-                    fontSize="sm"
-                    color="gray.600"
-                    w="full"
-                    textAlign="center"
-                    mt={4}
-                >
-                    Found a bug? Please open an issue on{' '}
-                    <Link
-                        href="https://github.com/vechain/vechain-kit/issues"
-                        color="blue.500"
-                        isExternal
-                    >
-                        GitHub
-                    </Link>
-                </Text>
+            </Card>
 
-                <Logo />
-            </VStack>
-        </Container>
+            <Card variant="section" py={{ base: 12, md: 16 }} px={{ base: 4, md: 8 }}>
+                <VStack spacing={4} align="center">
+                    <Text
+                        fontSize="sm"
+                        color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}
+                        textAlign="center"
+                    >
+                        Found a bug? Please open an issue on{' '}
+                        <Link
+                            href="https://github.com/vechain/vechain-kit/issues"
+                            color="primary.500"
+                            isExternal
+                            _hover={{ textDecoration: 'underline' }}
+                        >
+                            GitHub
+                        </Link>
+                    </Text>
+                    <Logo />
+                </VStack>
+            </Card>
+        </VStack>
     );
 }
 
@@ -203,8 +135,7 @@ const Logo = () => {
     return (
         <VStack
             onClick={() => window.open('https://vechain.org', '_blank')}
-            pt={10}
-            spacing={[8, 4]}
+            spacing={4}
             justify={'center'}
             w={'full'}
             cursor={'pointer'}
@@ -213,7 +144,7 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <Text fontSize="md" fontWeight="bold">
+            <Text fontSize="sm" fontWeight="medium" color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}>
                 Made by
             </Text>
             <VechainLogo
@@ -221,8 +152,6 @@ const Logo = () => {
                 isDark={colorMode === 'dark'}
                 w="200px"
                 h="auto"
-                ml={{ base: 0, sm: -6 }}
-                mt={{ base: -6, md: 0 }}
             />
         </VStack>
     );
