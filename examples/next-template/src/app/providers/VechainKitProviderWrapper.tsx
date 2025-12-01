@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
@@ -25,48 +25,21 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const { colorMode } = useColorMode();
     const { i18n } = useTranslation();
 
-    // Initialize hostLanguage from localStorage first, then i18n
-    const [hostLanguage, setHostLanguage] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('i18nextLng');
-            return stored || i18n.language;
-        }
-        return i18n.language;
-    });
-
-    // Initialize hostCurrency from localStorage first
-    const [hostCurrency, setHostCurrency] = useState<'usd' | 'eur' | 'gbp'>(
-        () => {
-            if (typeof window !== 'undefined') {
-                const stored = localStorage.getItem('vechain_kit_currency');
-                if (stored && ['usd', 'eur', 'gbp'].includes(stored)) {
-                    return stored as 'usd' | 'eur' | 'gbp';
-                }
-            }
-            return 'usd';
-        },
-    );
-
     const isDarkMode = colorMode === 'dark';
 
-    // Sync host app language changes to VeChainKit
-    useEffect(() => {
-        setHostLanguage(i18n.language);
-    }, [i18n.language]);
-
-    // Listen to VeChainKit language changes
+    // Listen to VeChainKit language changes and sync to host app's i18n
     const handleLanguageChange = useCallback(
         (language: string) => {
             i18n.changeLanguage(language);
-            setHostLanguage(language);
         },
         [i18n],
     );
 
-    // Listen to VeChainKit currency changes
+    // Listen to VeChainKit currency changes (can be used for host app state if needed)
     const handleCurrencyChange = useCallback(
-        (currency: 'usd' | 'eur' | 'gbp') => {
-            setHostCurrency(currency);
+        (_currency: 'usd' | 'eur' | 'gbp') => {
+            // Currency changes are handled by VeChainKit internally
+            // Add any host app-specific logic here if needed
         },
         [],
     );
@@ -134,8 +107,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}
             darkMode={isDarkMode}
-            language={hostLanguage}
-            defaultCurrency={hostCurrency}
             onLanguageChange={handleLanguageChange}
             onCurrencyChange={handleCurrencyChange}
             network={{
