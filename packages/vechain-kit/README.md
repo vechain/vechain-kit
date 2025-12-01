@@ -82,3 +82,7 @@ Are you having issues using the kit?
 -   Check our [Troubleshooting](https://docs.vechainkit.vechain.org/vechain-kit/troubleshooting) section.
 -   Contact us on [Discord](https://discord.gg/wGkQnPpRVq)
 -   Open an issue on [Github](https://github.com/vechain/vechain-kit/issues)
+
+
+
+
