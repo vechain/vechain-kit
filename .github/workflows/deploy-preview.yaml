@@ -18,7 +18,7 @@ jobs:
             pull-requests: write
         if: |
             github.event.pull_request.head.repo.full_name != github.repository &&
-            github.event.action == 'opened' && github.head_ref == 'main'
+            github.event.action == 'opened' && github.event.pull_request.head.ref == 'main'
         steps:
             - name: Comment on external PR
               uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
