@@ -16,6 +16,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
+import { useCurrentCurrency } from '@/hooks/api/wallet';
 import { useCurrency } from '@/hooks/api/wallet';
 import { BsCheck } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +32,8 @@ export const ChangeCurrencyContent = ({
     setCurrentContent,
 }: ChangeCurrencyContentProps) => {
     const { t } = useTranslation();
-    const { currentCurrency, changeCurrency, allCurrencies } = useCurrency();
+    const { currentCurrency, setCurrency } = useCurrentCurrency();
+    const { allCurrencies } = useCurrency();
 
     useEffect(() => {
         // Ensure we mark the currency settings as visited when this component mounts
@@ -44,7 +46,7 @@ export const ChangeCurrencyContent = ({
             w="full"
             variant="ghost"
             justifyContent="space-between"
-            onClick={() => changeCurrency(currency)}
+            onClick={() => setCurrency(currency)}
             py={6}
             px={4}
             _hover={{ bg: 'whiteAlpha.100' }}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
@@ -26,6 +27,23 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const { i18n } = useTranslation();
 
     const isDarkMode = colorMode === 'dark';
+
+    // Listen to VeChainKit language changes and sync to host app's i18n
+    const handleLanguageChange = useCallback(
+        (language: string) => {
+            i18n.changeLanguage(language);
+        },
+        [i18n],
+    );
+
+    // Listen to VeChainKit currency changes (host app can use this for its own state if needed)
+    const handleCurrencyChange = useCallback(
+        (currency: 'usd' | 'eur' | 'gbp') => {
+            // Host app can handle currency changes here if needed
+            // The kit already persists to localStorage
+        },
+        [],
+    );
 
     const coloredLogo =
         'https://i.ibb.co/7G4PQNZ/vechain-kit-logo-colored-circle.png';
@@ -69,8 +87,10 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     'Choose between social login through VeChain or by connecting your wallet.',
             }}
             darkMode={isDarkMode}
-            language={i18n.language}
+            language="en"
             defaultCurrency="usd"
+            onLanguageChange={handleLanguageChange}
+            onCurrencyChange={handleCurrencyChange}
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE! as NETWORK_TYPE,
             }}

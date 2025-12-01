@@ -9,3 +9,5 @@ export * from './useAccountBalance';
 export * from './useRefreshMetadata';
 export * from './useWalletMetadata';
 export * from './useCurrency';
+export * from './useCurrentLanguage';
+export * from './useCurrentCurrency';
