@@ -445,11 +445,12 @@ export const VeChainKitProvider = (
 
         // Initialize i18n with stored language or currentLanguage state
         // This ensures stored preferences are respected on page refresh
-        const storedLanguage = typeof window !== 'undefined' 
-            ? getLocalStorageItem('i18nextLng') 
-            : null;
+        const storedLanguage =
+            typeof window !== 'undefined'
+                ? getLocalStorageItem('i18nextLng')
+                : null;
         const initialLanguage = storedLanguage || currentLanguage;
-        
+
         if (initialLanguage && i18n.language !== initialLanguage) {
             isUpdatingFromPropRef.current = true;
             i18n.changeLanguage(initialLanguage);
@@ -463,10 +464,11 @@ export const VeChainKitProvider = (
     // Sync language prop changes to i18n and state (but only if no stored value exists)
     useEffect(() => {
         // Skip on initial mount - let the initialization effect handle it
-        const storedLanguage = typeof window !== 'undefined' 
-            ? getLocalStorageItem('i18nextLng') 
-            : null;
-        
+        const storedLanguage =
+            typeof window !== 'undefined'
+                ? getLocalStorageItem('i18nextLng')
+                : null;
+
         // Only sync prop if there's no stored preference and prop differs from current
         if (language && !storedLanguage && language !== currentLanguage) {
             isUpdatingFromPropRef.current = true;
@@ -495,7 +497,7 @@ export const VeChainKitProvider = (
     // Sync currency prop changes to state (but only if no stored value exists)
     useEffect(() => {
         const stored = getLocalStorageItem(CURRENCY_STORAGE_KEY);
-        
+
         // Only sync prop if there's no stored preference and prop differs from current
         if (defaultCurrency && !stored && defaultCurrency !== currentCurrency) {
             isUpdatingCurrencyFromPropRef.current = true;
