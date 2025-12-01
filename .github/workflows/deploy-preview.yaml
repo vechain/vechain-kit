@@ -18,7 +18,7 @@ jobs:
             pull-requests: write
         if: |
             github.event.pull_request.head.repo.full_name != github.repository &&
-            github.event.action == 'opened'
+            github.event.action == 'opened' && github.head_ref == 'main'
         steps:
             - name: Comment on external PR
               uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
@@ -28,6 +28,7 @@ jobs:
                       ## 👋 Thanks for your contribution!
                       
                       Since this PR comes from a forked repository, preview deployment requires approval from a maintainer for security reasons.
+                      Please ensure that your PR is coming from a meaningful branch name. Eg. feature/my-feature
                       
                       **Next steps:**
                       1. A maintainer will review your code
