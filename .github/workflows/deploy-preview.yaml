@@ -28,6 +28,7 @@ jobs:
                       ## 👋 Thanks for your contribution!
                       
                       Since this PR comes from a forked repository, preview deployment requires approval from a maintainer for security reasons.
+                      Please ensure that your PR is coming from a meaningful branch name. Eg. feature/my-feature **not main**
                       
                       **Next steps:**
                       1. A maintainer will review your code
@@ -45,7 +46,7 @@ jobs:
         # Security gate: Only run when 'safe-to-deploy' label is ADDED OR from internal branch
         if: |
             (github.event.label.name == 'safe-to-deploy') ||
-            (github.event.pull_request.head.repo.full_name == github.repository)
+            (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
         env:
             NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID }}
             NEXT_PUBLIC_PRIVY_APP_ID: ${{ secrets.NEXT_PUBLIC_PRIVY_APP_ID }}

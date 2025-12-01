@@ -1,28 +1,44 @@
 import { SwapAggregator } from '@/types/swap';
 import { NETWORK_TYPE } from '@/config/network';
-import { createApiAggregator } from './apiAggregator';
+import { zeroAddress, type Address } from 'viem';
+import { createUniswapV2Aggregator } from './uniswapV2Aggregator';
 import { VeTradeLogo } from '@/assets/icons';
 import React from 'react';
 
 /**
- * VeTrade aggregator configuration
- * 
- * VeTrade API: https://vetrade.vet/api
- * Fetches quotes and transaction clauses from the VeTrade API
+ * VeTrade router and wrapped VET addresses for different networks
  */
-const VETRADE_API_BASE_URL = 'https://vetrade.vet/api';
+const VETRADE_ADDRESSES: Record<NETWORK_TYPE, { routerAddress: Address; wrappedVET: Address }> = {
+    main: {
+        routerAddress: '0xE5fA980a6EfE5B79C2150a529da06AeF455963b6' as Address,
+        wrappedVET: zeroAddress
+    },
+    test: {
+        routerAddress: zeroAddress,
+        wrappedVET: zeroAddress,
+    },
+    solo: {
+        routerAddress: zeroAddress,
+        wrappedVET: zeroAddress,
+    },
+};
 
 /**
  * Create VeTrade aggregator instance for a specific network
+ * 
+ * VeTrade Router Contract addresses vary by network
+ * Uses Uniswap V2 compatible interface
  * 
  * @param networkType - The network type (main, test, or solo)
  * @returns SwapAggregator instance configured for the specified network
  */
 export const createVeTradeAggregator = (networkType: NETWORK_TYPE): SwapAggregator => {
-    return createApiAggregator({
+    const addresses = VETRADE_ADDRESSES[networkType] ?? VETRADE_ADDRESSES['main'];
+    
+    return createUniswapV2Aggregator({
         name: 'VeTrade.vet',
-        apiBaseUrl: VETRADE_API_BASE_URL,
-        network: networkType,
+        routerAddress: addresses.routerAddress,
+        wrappedVET: addresses.wrappedVET,
         getIcon: (boxSize = '20px') => React.createElement(VeTradeLogo, { boxSize }),
     });
 };

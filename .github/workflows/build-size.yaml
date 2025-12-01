@@ -32,8 +32,12 @@ jobs:
             ## 👋 Thanks for your contribution!
 
             Since this PR comes from a forked repository, the build size check will only run for internal PRs for security reasons.
+            Please ensure that your PR is coming from a meaningful branch name. Eg. feature/my-feature **not main**
 
-            A maintainer will review your changes and can manually verify the build size impact if needed.
+                      **Next steps:**
+                      1. A maintainer will review your code
+                      2. If approved, they'll add the `safe-to-deploy` label to trigger deployment
+                      3. **After each new commit**, the maintainer will need to remove and re-add the label for security
 
             Thank you for your patience! 🙏
 
@@ -43,10 +47,10 @@ jobs:
     permissions:
       pull-requests: write
       contents: read
-    # Security gate: Only run when 'safe-to-build' label is ADDED OR from internal branch
+    # Security gate: Only run when 'safe-to-deploy' label is ADDED OR from internal branch
     if: |
-      (github.event.label.name == 'safe-to-build') ||
-      (github.event.pull_request.head.repo.full_name == github.repository)
+      (github.event.label.name == 'safe-to-deploy') ||
+      (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
 
     steps:
       - name: Checkout PR branch
