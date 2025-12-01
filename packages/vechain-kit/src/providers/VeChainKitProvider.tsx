@@ -425,7 +425,7 @@ export const VeChainKitProvider = (
         privyClientId = privy.clientId;
     }
 
-    // Initialize i18n with the provided language and merge translations
+    // Initialize i18n with stored language or prop, and merge translations
     useEffect(() => {
         // Initialize translations from VeChainKit
         initializeI18n(i18n);
@@ -442,17 +442,39 @@ export const VeChainKitProvider = (
                 );
             });
         }
-    }, [i18nConfig]);
 
-    // Sync language prop changes to i18n and state
+        // Initialize i18n with stored language or currentLanguage state
+        // This ensures stored preferences are respected on page refresh
+        const storedLanguage = typeof window !== 'undefined' 
+            ? getLocalStorageItem('i18nextLng') 
+            : null;
+        const initialLanguage = storedLanguage || currentLanguage;
+        
+        if (initialLanguage && i18n.language !== initialLanguage) {
+            isUpdatingFromPropRef.current = true;
+            i18n.changeLanguage(initialLanguage);
+            if (initialLanguage !== currentLanguage) {
+                setCurrentLanguageState(initialLanguage);
+            }
+            isUpdatingFromPropRef.current = false;
+        }
+    }, []); // Only run once on mount
+
+    // Sync language prop changes to i18n and state (but only if no stored value exists)
     useEffect(() => {
-        if (language && language !== currentLanguage) {
+        // Skip on initial mount - let the initialization effect handle it
+        const storedLanguage = typeof window !== 'undefined' 
+            ? getLocalStorageItem('i18nextLng') 
+            : null;
+        
+        // Only sync prop if there's no stored preference and prop differs from current
+        if (language && !storedLanguage && language !== currentLanguage) {
             isUpdatingFromPropRef.current = true;
             i18n.changeLanguage(language);
             setCurrentLanguageState(language);
             isUpdatingFromPropRef.current = false;
         }
-    }, [language]);
+    }, [language, currentLanguage]);
 
     // Listen to i18n language changes (from kit settings)
     useEffect(() => {
@@ -470,19 +492,18 @@ export const VeChainKitProvider = (
         };
     }, [currentLanguage, onLanguageChange]);
 
-    // Sync currency prop changes to state
+    // Sync currency prop changes to state (but only if no stored value exists)
     useEffect(() => {
-        if (defaultCurrency && defaultCurrency !== currentCurrency) {
-            // Only update if there's no stored currency preference
-            const stored = getLocalStorageItem(CURRENCY_STORAGE_KEY);
-            if (!stored) {
-                isUpdatingCurrencyFromPropRef.current = true;
-                setCurrentCurrencyState(defaultCurrency);
-                setLocalStorageItem(CURRENCY_STORAGE_KEY, defaultCurrency);
-                isUpdatingCurrencyFromPropRef.current = false;
-            }
+        const stored = getLocalStorageItem(CURRENCY_STORAGE_KEY);
+        
+        // Only sync prop if there's no stored preference and prop differs from current
+        if (defaultCurrency && !stored && defaultCurrency !== currentCurrency) {
+            isUpdatingCurrencyFromPropRef.current = true;
+            setCurrentCurrencyState(defaultCurrency);
+            setLocalStorageItem(CURRENCY_STORAGE_KEY, defaultCurrency);
+            isUpdatingCurrencyFromPropRef.current = false;
         }
-    }, [defaultCurrency]);
+    }, [defaultCurrency, currentCurrency]);
 
     // Listen to currency localStorage changes (from kit settings)
     useEffect(() => {

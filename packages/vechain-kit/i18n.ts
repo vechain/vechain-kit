@@ -44,10 +44,18 @@ export const bcp47LanguageCodes: Record<string, string> = {
     ja: 'ja-JP',
 };
 
-// Custom language detector that checks prop first, then browser
+// Custom language detector that checks localStorage first, then prop, then browser
 const customLanguageDetector = {
     name: 'customDetector',
     lookup: (options?: { languages?: string[] } | undefined) => {
+        // Check localStorage first (for persistence across page refreshes)
+        if (typeof window !== 'undefined') {
+            const storedLanguage = localStorage.getItem('i18nextLng');
+            if (storedLanguage && supportedLanguages.includes(storedLanguage)) {
+                return storedLanguage;
+            }
+        }
+
         // Get language from VechainKitProvider prop
         const propLanguage = options?.languages?.[0];
 
