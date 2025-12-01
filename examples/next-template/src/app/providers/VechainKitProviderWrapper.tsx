@@ -24,9 +24,27 @@ interface Props {
 export function VechainKitProviderWrapper({ children }: Props) {
     const { colorMode } = useColorMode();
     const { i18n } = useTranslation();
-    const [hostLanguage, setHostLanguage] = useState(i18n.language);
+
+    // Initialize hostLanguage from localStorage first, then i18n
+    const [hostLanguage, setHostLanguage] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('i18nextLng');
+            return stored || i18n.language;
+        }
+        return i18n.language;
+    });
+
+    // Initialize hostCurrency from localStorage first
     const [hostCurrency, setHostCurrency] = useState<'usd' | 'eur' | 'gbp'>(
-        'usd',
+        () => {
+            if (typeof window !== 'undefined') {
+                const stored = localStorage.getItem('vechain_kit_currency');
+                if (stored && ['usd', 'eur', 'gbp'].includes(stored)) {
+                    return stored as 'usd' | 'eur' | 'gbp';
+                }
+            }
+            return 'usd';
+        },
     );
 
     const isDarkMode = colorMode === 'dark';
@@ -35,17 +53,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
     useEffect(() => {
         setHostLanguage(i18n.language);
     }, [i18n.language]);
-
-    // Sync host app currency changes to VeChainKit
-    useEffect(() => {
-        const stored =
-            typeof window !== 'undefined'
-                ? localStorage.getItem('vechain_kit_currency')
-                : null;
-        if (stored && ['usd', 'eur', 'gbp'].includes(stored)) {
-            setHostCurrency(stored as 'usd' | 'eur' | 'gbp');
-        }
-    }, []);
 
     // Listen to VeChainKit language changes
     const handleLanguageChange = useCallback(
