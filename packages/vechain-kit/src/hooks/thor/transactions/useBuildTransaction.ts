@@ -12,6 +12,7 @@ export type BuildTransactionProps<ClausesParams> = {
     suggestedMaxGas?: number;
     gasPadding?: number;
     onFailure?: () => void;
+    dAppSponsoredUrl?: string;
 };
 
 /**
@@ -23,6 +24,7 @@ export type BuildTransactionProps<ClausesParams> = {
  * @param onFailure - An optional callback function to be called after the transaction is failed or cancelled.
  * @param suggestedMaxGas - The suggested maximum gas for the transaction.
  * @param gasPadding - The padding to add to the suggested maximum gas.
+ * @param dAppSponsoredUrl - The dApp sponsored delegator url.
  * @returns An object containing the result of the `useSendTransaction` hook and a `sendTransaction` function.
  */
 export const useBuildTransaction = <ClausesParams>({
@@ -33,6 +35,7 @@ export const useBuildTransaction = <ClausesParams>({
     onFailure,
     suggestedMaxGas,
     gasPadding,
+    dAppSponsoredUrl,
 }: BuildTransactionProps<ClausesParams>) => {
     const { account } = useWallet();
     const queryClient = useQueryClient();
@@ -62,6 +65,7 @@ export const useBuildTransaction = <ClausesParams>({
         suggestedMaxGas,
         onTxFailedOrCancelled: onFailure,
         gasPadding,
+        dAppSponsoredUrl,
     });
 
     /**
@@ -70,9 +74,9 @@ export const useBuildTransaction = <ClausesParams>({
      */
     const sendTransaction = useCallback(
         async (props: ClausesParams) => {
-            result.sendTransaction(clauseBuilder(props));
+            result.sendTransaction(clauseBuilder(props), dAppSponsoredUrl);
         },
-        [clauseBuilder, result],
+        [clauseBuilder, result, dAppSponsoredUrl],
     );
 
     return { ...result, sendTransaction };

@@ -43,6 +43,7 @@ export function TransactionExamples() {
         onSuccess: () => {},
         onFailure: () => {},
         suggestedMaxGas: undefined,
+        // dAppSponsoredUrl: "",
     });
 
     const {
