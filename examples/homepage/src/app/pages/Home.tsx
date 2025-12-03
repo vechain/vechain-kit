@@ -1,7 +1,18 @@
 'use client';
 
 import { type ReactElement } from 'react';
-import { VStack, Text, Link, Card, useColorMode } from '@chakra-ui/react';
+import {
+    VStack,
+    Text,
+    Link,
+    Card,
+    useColorMode,
+    Box,
+    Heading,
+    Image,
+    HStack,
+    Button,
+} from '@chakra-ui/react';
 import { useWallet, VechainLogo } from '@vechain/vechain-kit';
 import { Header } from '@/app/components/layout/Header';
 import { HeroSection } from '@/app/components/features/HeroSection';
@@ -25,7 +36,10 @@ const basePath = process.env.basePath ?? '';
 
 const platforms = [
     { name: 'VeWorld', logo: `${basePath}/images/veworld-logo.png` },
-    { name: 'WalletConnect', logo: `${basePath}/images/wallet-connect-logo.png` },
+    {
+        name: 'WalletConnect',
+        logo: `${basePath}/images/wallet-connect-logo.png`,
+    },
     { name: 'MetaMask', logo: `${basePath}/images/metamask-logo.png` },
     { name: 'Rabby', logo: `${basePath}/images/rabby-logo.png` },
     { name: 'Coinbase', logo: `${basePath}/images/coinbase-wallet-logo.webp` },
@@ -35,17 +49,20 @@ const platforms = [
 const privacyFeatures = [
     {
         title: 'Zero data retention',
-        description: 'Your wallet data is private with zero data retention. None of your data will be stored or used for model training.',
+        description:
+            'Your wallet data is private with zero data retention. None of your data will be stored or used for model training.',
         icon: LuLock,
     },
     {
         title: 'Everything stays local',
-        description: 'All history stays local on your device. Your wallet operations are processed securely without exposing sensitive information.',
+        description:
+            'All history stays local on your device. Your wallet operations are processed securely without exposing sensitive information.',
         icon: LuEye,
     },
     {
         title: 'Certified security',
-        description: 'Audited and verified by independent security experts to ensure the highest standards of privacy and security.',
+        description:
+            'Audited and verified by independent security experts to ensure the highest standards of privacy and security.',
         icon: LuShieldCheck,
     },
 ];
@@ -56,8 +73,32 @@ export default function Home(): ReactElement {
 
     return (
         <VStack spacing={0} align="stretch" minH="100vh">
+            <Box h={[300, 250]} w="full" bg="#e4ebe1" borderBottomRadius={24}>
+                <VStack mt={100} justifyContent="center">
+                    <Heading
+                        fontSize="3xl"
+                        fontWeight="500"
+                        color="black"
+                        textAlign="center"
+                        py={10}
+                        px={4}
+                    >
+                        🎉​ Version 2 has been released!
+                    </Heading>
+
+                    <Button
+                        as={Link}
+                        href="https://github.com/vechain/vechain-kit/releases/tag/v2.0.0"
+                        isExternal
+                        variant="homepageSecondary"
+                    >
+                        View Release Notes 👇​
+                    </Button>
+                </VStack>
+            </Box>
+
             <Header />
-            
+
             <HeroSection />
 
             <FeatureSection
@@ -83,7 +124,12 @@ export default function Home(): ReactElement {
             />
 
             {account && (
-                <Card id="features" variant="section" py={{ base: 12, md: 16 }} px={{ base: 4, md: 8 }}>
+                <Card
+                    id="features"
+                    variant="section"
+                    py={{ base: 12, md: 16 }}
+                    px={{ base: 4, md: 8 }}
+                >
                     <FeaturesToTry />
                 </Card>
             )}
@@ -102,11 +148,19 @@ export default function Home(): ReactElement {
 
             <PrivacySection features={privacyFeatures} />
 
-            <Card variant="section" py={{ base: 12, md: 16 }} px={{ base: 4, md: 8 }}>
+            <Card
+                variant="section"
+                py={{ base: 12, md: 16 }}
+                px={{ base: 4, md: 8 }}
+            >
                 <FAQSection />
             </Card>
 
-            <Card variant="section" py={{ base: 12, md: 16 }} px={{ base: 4, md: 8 }}>
+            <Card
+                variant="section"
+                py={{ base: 12, md: 16 }}
+                px={{ base: 4, md: 8 }}
+            >
                 <VStack spacing={4} align="center">
                     <Text
                         fontSize="sm"
@@ -144,7 +198,11 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <Text fontSize="sm" fontWeight="medium" color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}>
+            <Text
+                fontSize="sm"
+                fontWeight="medium"
+                color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}
+            >
                 Made by
             </Text>
             <VechainLogo

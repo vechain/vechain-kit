@@ -6126,6 +6126,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/stargate-contracts-artifacts@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@vechain/stargate-contracts-artifacts@npm:3.0.0"
+  checksum: 10c0/404b1aa58731932e4eb57a0ad390dbdba02c3be6fe7a39b0bd63f23bb41c242da1980f117ba3662cd68e26a8730bf1fb2afee1bb1de204dde2e3971681bc412c
+  languageName: node
+  linkType: hard
+
 "@vechain/vechain-contract-types@npm:1.4.1":
   version: 1.4.1
   resolution: "@vechain/vechain-contract-types@npm:1.4.1"
@@ -15552,6 +15559,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:^18.0.0"
     "@vechain/sdk-core": "npm:2.0.5"
     "@vechain/sdk-network": "npm:2.0.5"
+    "@vechain/stargate-contracts-artifacts": "npm:^3.0.0"
     commitlint: "npm:^18.0.0"
     eslint: "npm:^9.12.0"
     husky: "npm:^8.0.0"

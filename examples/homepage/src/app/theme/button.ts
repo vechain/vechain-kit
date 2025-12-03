@@ -18,6 +18,36 @@ export const ButtonStyle: ComponentStyleConfig = {
             bg: 'primary.300',
             color: 'white',
         },
+        homepagePrimary: {
+            columnGap: '.825rem',
+            rowGap: '.825rem',
+            bg: '#000',
+            color: '#fff',
+            borderRadius: '9999px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            _hover: {
+                bg: '#000',
+                textDecoration: 'none',
+            },
+        },
+        homepageSecondary: {
+            columnGap: '8px',
+            rowGap: '8px',
+            bg: '#fff',
+            border: '1px solid #000',
+            borderRadius: '9999px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            px: '12px',
+            py: '6px',
+            display: 'flex',
+            position: 'relative',
+            _hover: {
+                textDecoration: 'none',
+            },
+        },
     },
     // default values for 'size', 'variant' and 'colorScheme'
     defaultProps: {

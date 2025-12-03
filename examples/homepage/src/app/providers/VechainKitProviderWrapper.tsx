@@ -31,20 +31,6 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            theme={{
-                modal: {
-                    backgroundColor: isDarkMode ? '#1b1d1e' : '#ffffff',
-                },
-                textColor: isDarkMode ? '#ffffff' : '#272A2E',
-                buttons: {
-                    secondaryButton: {
-                        border: 'none',
-                        bg: isDarkMode
-                            ? 'rgb(45, 45, 45)'
-                            : 'rgb(240, 240, 240)',
-                    },
-                },
-            }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
@@ -93,7 +79,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // { method: 'github', gridColumn: 4 },
                 { method: 'vechain', gridColumn: 4 },
                 { method: 'dappkit', gridColumn: 4 },
-                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'ecosystem', gridColumn: 4 },
                 // { method: 'passkey', gridColumn: 1 },
                 // { method: 'more', gridColumn: 1 },
             ]}

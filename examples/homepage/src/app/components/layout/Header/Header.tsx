@@ -21,7 +21,7 @@ export function Header() {
         <HStack
             w="full"
             justifyContent="center"
-            position="sticky"
+            position="fixed"
             top={0}
             zIndex={1000}
             py={4}
@@ -50,7 +50,7 @@ export function Header() {
                             fontWeight="bold"
                             color={colorMode === 'dark' ? 'white' : 'gray.900'}
                         >
-                            VeChain Kit
+                            VeKit
                         </Text>
                     </HStack>
 
@@ -118,8 +118,16 @@ export function Header() {
                     {/* WalletButton and Theme toggle at end */}
                     <HStack spacing={3} flexShrink={0}>
                         <WalletButton
-                            mobileVariant="iconDomainAndAssets"
-                            desktopVariant="iconDomainAndAssets"
+                            mobileVariant="icon"
+                            desktopVariant="icon"
+                            buttonStyle={{
+                                border: 'none',
+                                bg: 'transparent',
+                                _hover: {
+                                    bg: 'transparent',
+                                },
+                                transition: 'all 0.2s',
+                            }}
                         />
                     </HStack>
                 </HStack>
