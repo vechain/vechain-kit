@@ -9,8 +9,6 @@ import {
     useColorMode,
     Box,
     Heading,
-    Image,
-    HStack,
     Button,
 } from '@chakra-ui/react';
 import { useWallet, VechainLogo } from '@vechain/vechain-kit';
@@ -22,9 +20,8 @@ import { PlatformSection } from '@/app/components/features/PlatformSection';
 import { PrivacySection } from '@/app/components/features/PrivacySection';
 import { FAQSection } from '../components/features/FAQSection';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
+import { InfoSection } from '@/app/components/features/InfoSection';
 import {
-    LuWallet,
-    LuCode,
     LuPalette,
     LuShield,
     LuLock,
@@ -101,20 +98,23 @@ export default function Home(): ReactElement {
 
             <HeroSection />
 
-            <FeatureSection
-                title="Seamless Wallet Integration"
-                description="Connect your users to your dApp with out-of-the-box wallet connection options. Support for VeWorld, Sync2, WalletConnect, and social logins including Google, Twitter, Email, and more."
-                icon={LuWallet}
-                variant="purple"
-            />
+            <VStack spacing={12} align="stretch">
+                <InfoSection
+                    bg="#e0daea"
+                    title="Seamless Wallet Integration"
+                    content="Connect your users to your dApp with out-of-the-box wallet connection options. Support for VeWorld, Sync2, WalletConnect, and social logins including Google, Twitter, Email, and more."
+                    imageSrc="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png"
+                    imageAlt="VeChain Kit"
+                />
 
-            <FeatureSection
-                title="Boosted Development"
-                description="Use our hooks and components to speed up your development. No need to worry about the underlying VeChain infrastructure—we handle it for you. Focus on building your dApp, not the blockchain integration."
-                icon={LuCode}
-                variant="blue"
-                reverse
-            />
+                <InfoSection
+                    bg="#dae8fb"
+                    title="Boosted Development"
+                    content="Use our hooks and components to speed up your development. No need to worry about the underlying VeChain infrastructure—we handle it for you. Focus on building your dApp, not the blockchain integration."
+                    imageSrc="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png"
+                    imageAlt="VeChain Kit"
+                />
+            </VStack>
 
             <FeatureSection
                 title="Style Customization"
