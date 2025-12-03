@@ -37,9 +37,15 @@ export function InfoSection({
     const { colorMode } = useColorMode();
 
     return (
-        <Card px={20} py={40} mx={20} borderRadius={25} bg={bg}>
+        <Card
+            px={[0, 20]}
+            py={[0, 40]}
+            mx={[4, '250px']}
+            borderRadius={25}
+            bg={bg}
+        >
             <Grid
-                templateColumns="repeat(2, 1fr)"
+                templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
                 gap={4}
                 placeItems={'center stretch'}
             >

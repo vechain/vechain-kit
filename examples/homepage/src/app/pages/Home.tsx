@@ -14,55 +14,11 @@ import {
 import { useWallet, VechainLogo } from '@vechain/vechain-kit';
 import { Header } from '@/app/components/layout/Header';
 import { HeroSection } from '@/app/components/features/HeroSection';
-import { FeatureSection } from '@/app/components/features/FeatureSection';
 import { TestimonialSection } from '@/app/components/features/TestimonialSection';
 import { PlatformSection } from '@/app/components/features/PlatformSection';
-import { PrivacySection } from '@/app/components/features/PrivacySection';
 import { FAQSection } from '../components/features/FAQSection';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
-import { InfoSection } from '@/app/components/features/InfoSection';
-import {
-    LuPalette,
-    LuShield,
-    LuLock,
-    LuEye,
-    LuShieldCheck,
-} from 'react-icons/lu';
-
-const basePath = process.env.basePath ?? '';
-
-const platforms = [
-    { name: 'VeWorld', logo: `${basePath}/images/veworld-logo.png` },
-    {
-        name: 'WalletConnect',
-        logo: `${basePath}/images/wallet-connect-logo.png`,
-    },
-    { name: 'MetaMask', logo: `${basePath}/images/metamask-logo.png` },
-    { name: 'Rabby', logo: `${basePath}/images/rabby-logo.png` },
-    { name: 'Coinbase', logo: `${basePath}/images/coinbase-wallet-logo.webp` },
-    { name: 'Rainbow', logo: `${basePath}/images/rainbow-logo.webp` },
-];
-
-const privacyFeatures = [
-    {
-        title: 'Zero data retention',
-        description:
-            'Your wallet data is private with zero data retention. None of your data will be stored or used for model training.',
-        icon: LuLock,
-    },
-    {
-        title: 'Everything stays local',
-        description:
-            'All history stays local on your device. Your wallet operations are processed securely without exposing sensitive information.',
-        icon: LuEye,
-    },
-    {
-        title: 'Certified security',
-        description:
-            'Audited and verified by independent security experts to ensure the highest standards of privacy and security.',
-        icon: LuShieldCheck,
-    },
-];
+import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -98,30 +54,7 @@ export default function Home(): ReactElement {
 
             <HeroSection />
 
-            <VStack spacing={12} align="stretch">
-                <InfoSection
-                    bg="#e0daea"
-                    title="Seamless Wallet Integration"
-                    content="Connect your users to your dApp with out-of-the-box wallet connection options. Support for VeWorld, Sync2, WalletConnect, and social logins including Google, Twitter, Email, and more."
-                    imageSrc="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png"
-                    imageAlt="VeChain Kit"
-                />
-
-                <InfoSection
-                    bg="#dae8fb"
-                    title="Boosted Development"
-                    content="Use our hooks and components to speed up your development. No need to worry about the underlying VeChain infrastructure—we handle it for you. Focus on building your dApp, not the blockchain integration."
-                    imageSrc="https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png"
-                    imageAlt="VeChain Kit"
-                />
-            </VStack>
-
-            <FeatureSection
-                title="Style Customization"
-                description="The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need."
-                icon={LuPalette}
-                variant="beige"
-            />
+            <ScrollableInfoSections />
 
             {account && (
                 <Card
@@ -136,25 +69,9 @@ export default function Home(): ReactElement {
 
             <TestimonialSection quote="Building on VeChain has never been easier. VeChain Kit handles all the complexity so I can focus on creating great user experiences." />
 
-            <PlatformSection platforms={platforms} />
+            <PlatformSection />
 
-            <FeatureSection
-                title="Assets, Profile, and Wallet Management"
-                description="Use VeChain Kit to allow your users to have asset management, profile management, social login, wallet backup, MFA, and more. All out of the box, so you can focus on building your dApp."
-                icon={LuShield}
-                variant="green"
-                reverse
-            />
-
-            <PrivacySection features={privacyFeatures} />
-
-            <Card
-                variant="section"
-                py={{ base: 12, md: 16 }}
-                px={{ base: 4, md: 8 }}
-            >
-                <FAQSection />
-            </Card>
+            <FAQSection />
 
             <Card
                 variant="section"

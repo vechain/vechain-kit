@@ -1,19 +1,33 @@
 'use client';
 
-import { Card, VStack, Heading, SimpleGrid, Image, useColorMode } from '@chakra-ui/react';
-
-interface Platform {
-    name: string;
-    logo: string;
-}
+import {
+    Card,
+    VStack,
+    Heading,
+    SimpleGrid,
+    Image,
+    useColorMode,
+} from '@chakra-ui/react';
 
 interface PlatformSectionProps {
-    platforms: Platform[];
     title?: string;
 }
 
+const basePath = process.env.basePath ?? '';
+
+const platforms = [
+    { name: 'VeWorld', logo: `${basePath}/images/veworld-logo.png` },
+    {
+        name: 'WalletConnect',
+        logo: `${basePath}/images/wallet-connect-logo.png`,
+    },
+    { name: 'MetaMask', logo: `${basePath}/images/metamask-logo.png` },
+    { name: 'Rabby', logo: `${basePath}/images/rabby-logo.png` },
+    { name: 'Coinbase', logo: `${basePath}/images/coinbase-wallet-logo.webp` },
+    { name: 'Rainbow', logo: `${basePath}/images/rainbow-logo.webp` },
+];
+
 export function PlatformSection({
-    platforms,
     title = 'Works on all platforms',
 }: PlatformSectionProps) {
     const { colorMode } = useColorMode();
@@ -46,7 +60,10 @@ export function PlatformSection({
                             p={4}
                             borderRadius="lg"
                             _hover={{
-                                bg: colorMode === 'dark' ? 'whiteAlpha.100' : 'gray.50',
+                                bg:
+                                    colorMode === 'dark'
+                                        ? 'whiteAlpha.100'
+                                        : 'gray.50',
                                 transition: 'background-color 0.2s',
                             }}
                         >
@@ -57,7 +74,10 @@ export function PlatformSection({
                                 width="auto"
                                 objectFit="contain"
                                 opacity={0.8}
-                                _hover={{ opacity: 1, transition: 'opacity 0.2s' }}
+                                _hover={{
+                                    opacity: 1,
+                                    transition: 'opacity 0.2s',
+                                }}
                             />
                         </VStack>
                     ))}
@@ -66,4 +86,3 @@ export function PlatformSection({
         </Card>
     );
 }
-

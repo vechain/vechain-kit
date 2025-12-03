@@ -30,6 +30,7 @@ export const ButtonStyle: ComponentStyleConfig = {
             _hover: {
                 bg: '#000',
                 textDecoration: 'none',
+                transform: 'translateY(-2px)',
             },
         },
         homepageSecondary: {
