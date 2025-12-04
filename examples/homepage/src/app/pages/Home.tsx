@@ -67,7 +67,7 @@ export default function Home(): ReactElement {
                 </Card>
             )} */}
 
-            <TestimonialSection quote="Building on VeChain has never been easier. VeChain Kit handles all the complexity so I can focus on creating great user experiences." />
+            <TestimonialSection quote="The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components." />
 
             <PlatformSection />
 
