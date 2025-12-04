@@ -86,7 +86,7 @@ Each aggregator implements `buildSwapTransaction()` to construct VeChain transac
 
 Use direct contract calls to a Uniswap V2 compatible router.
 
-**For VET → Token swaps:**
+**For VET-to-Token swaps:**
 1. Single clause: `swapExactETHForTokens`
    - Sends VET as `value` in the clause
    - Parameters: `amountOutMin`, `path`, `recipient`, `deadline`
@@ -136,7 +136,7 @@ The API returns quotes in the following format:
 
 Sample from VeTrade.vet:
 
-```
+```text
 GET https://vetrade.vet/api/quote/vck?fromAddress={tokenAddress}&toAddress={tokenAddress}&amountIn={amount}&recipient={userAddress}&slippageBps={basisPoints}&network={networkType}
 ```
 
@@ -282,7 +282,7 @@ Network-specific addresses and endpoints are configured within each aggregator m
 ## Gas Estimation
 
 Gas costs are calculated during simulation:
-- Base gas: 200,000 units
+- Base gas: 200,000 units (VeChain transaction base cost)
 - Additional gas per clause: `gasUsed` from simulation result
 - Conversion: `gasCostVTHO = totalGas / 1e5`
 

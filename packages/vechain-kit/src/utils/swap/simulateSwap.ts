@@ -153,6 +153,7 @@ export const simulateSwapWithClauses = async (
 
         let reverted = false;
         let revertReason: string | undefined;
+        // Base gas cost for transaction overhead (VeChain transaction base cost)
         let totalGas = 200_000;
 
         const aggregatedFlows: Record<
