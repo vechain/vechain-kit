@@ -128,6 +128,7 @@ const calculateTokenFlowsFromEvents = (
  * - computes gas cost
  * - accumulates ERC20 inflow/outflow for the user
  * - verifies that flows match amountIn and minimumOutputAmount when applicable
+ * - verifies that no unexpected token outflows occur (only fromToken should have outflow)
  */
 export const simulateSwapWithClauses = async (
     params: SwapParams,
@@ -209,7 +210,7 @@ export const simulateSwapWithClauses = async (
 
         const expectedOutflow = BigInt(params.amountIn);
 
-        // Outflow check
+        // Outflow check: verify expected token outflow and ensure no other tokens have outflow
         if (fromIsVET) {
             const vetFlows = aggregatedFlows[zeroAddress] ?? {
                 inflow: 0n,
@@ -222,6 +223,17 @@ export const simulateSwapWithClauses = async (
                     success: false,
                     error: `VET outflow mismatch: expected ${expectedOutflow.toString()}, got ${vetFlows.outflow.toString()}`,
                 };
+            }
+
+            // Verify no other tokens have outflow, in case an approval was granted in a different transaction
+            for (const [tokenAddress, flows] of Object.entries(aggregatedFlows)) {
+                if (tokenAddress !== zeroAddress && flows.outflow > 0n) {
+                    return {
+                        gasCostVTHO,
+                        success: false,
+                        error: `Unexpected token outflow: token ${tokenAddress} has outflow ${flows.outflow.toString()}, expected 0`,
+                    };
+                }
             }
         } else {
             const fromTokenAddress = params.fromTokenAddress.toLowerCase();
@@ -236,6 +248,18 @@ export const simulateSwapWithClauses = async (
                     success: false,
                     error: `Token outflow mismatch: expected ${expectedOutflow.toString()}, got ${tokenFlows.outflow.toString()}`,
                 };
+            }
+
+            // Verify no other tokens (including VET) have outflow
+            for (const [tokenAddress, flows] of Object.entries(aggregatedFlows)) {
+                if (tokenAddress !== fromTokenAddress && flows.outflow > 0n) {
+                    const tokenName = tokenAddress === zeroAddress ? 'VET' : tokenAddress;
+                    return {
+                        gasCostVTHO,
+                        success: false,
+                        error: `Unexpected token outflow: ${tokenName} has outflow ${flows.outflow.toString()}, expected 0`,
+                    };
+                }
             }
         }
 
