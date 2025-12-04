@@ -1,9 +1,7 @@
 'use client';
 
-import { useColorMode } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import '../../../i18n';
-import { useTranslation } from 'react-i18next';
 
 // Dynamic import is used here for several reasons:
 // 1. The VechainKit component uses browser-specific APIs that aren't available during server-side rendering
@@ -21,27 +19,17 @@ interface Props {
 }
 
 export function VechainKitProviderWrapper({ children }: Props) {
-    const { colorMode } = useColorMode();
-    const { i18n } = useTranslation();
-
-    const isDarkMode = colorMode === 'dark';
-
     const logo =
         'https://vechain-brand-assets.s3.eu-north-1.amazonaws.com/VeChain_Logomark_Light.png';
 
     return (
         <VeChainKitProvider
             theme={{
-                modal: {
-                    backgroundColor: isDarkMode ? '#1b1d1e' : '#ffffff',
-                },
-                textColor: isDarkMode ? '#ffffff' : '#272A2E',
                 buttons: {
                     secondaryButton: {
+                        bg: 'rgb(243, 242, 242)',
+                        color: 'rgb(25, 25, 25)',
                         border: 'none',
-                        bg: isDarkMode
-                            ? 'rgb(45, 45, 45)'
-                            : 'rgb(240, 240, 240)',
                     },
                 },
             }}
@@ -93,12 +81,11 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // { method: 'github', gridColumn: 4 },
                 { method: 'vechain', gridColumn: 4 },
                 { method: 'dappkit', gridColumn: 4 },
-                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'ecosystem', gridColumn: 4 },
                 // { method: 'passkey', gridColumn: 1 },
                 // { method: 'more', gridColumn: 1 },
             ]}
-            darkMode={isDarkMode}
-            language={i18n.language}
+            darkMode={false}
             network={{
                 type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
                 // nodeUrl: 'http://localhost:8669',
