@@ -94,6 +94,7 @@
         "supports-color": "7.2.0",
         "wrap-ansi": "7.0.0",
         "elliptic": "6.6.1",
-        "es-toolkit": "1.39.4"
+        "es-toolkit": "1.39.4",
+        "next": "15.5.7"
     }
 }
