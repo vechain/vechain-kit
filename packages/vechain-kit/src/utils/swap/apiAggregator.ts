@@ -10,7 +10,7 @@ import { simulateSwapWithClauses } from './simulateSwap';
 /**
  * API response structure from VeTrade API
  */
-interface VeTradeQuoteResponse {
+interface APIQuoteResponse {
     amountOut: string;
     amountOutMin: string;
     clauses: Array<{
@@ -110,7 +110,7 @@ const buildFunctionABI = (
  * Normalize ABI to full function format if needed
  */
 const normalizeABI = (
-    abi: VeTradeQuoteResponse['clauses'][0]['functionCall']['abi'],
+    abi: APIQuoteResponse['clauses'][0]['functionCall']['abi'],
     functionName: string
 ): Abi => {
     // Check if ABI is already in full format (has function definitions)
@@ -151,7 +151,7 @@ const normalizeABI = (
 /**
  * Encode function call data using ABI, function name, and arguments
  */
-const encodeFunctionCallData = (functionCall: VeTradeQuoteResponse['clauses'][0]['functionCall']): string => {
+const encodeFunctionCallData = (functionCall: APIQuoteResponse['clauses'][0]['functionCall']): string => {
     try {
         // Get function name from either functionName or name field
         const functionName = functionCall.functionName || functionCall.name;
@@ -180,7 +180,7 @@ const encodeFunctionCallData = (functionCall: VeTradeQuoteResponse['clauses'][0]
  * Convert API clause format to TransactionClause format
  * Encodes function call data locally using the provided ABI, function name, and arguments
  */
-const convertApiClauseToTransactionClause = (apiClause: VeTradeQuoteResponse['clauses'][0]): TransactionClause => {
+const convertApiClauseToTransactionClause = (apiClause: APIQuoteResponse['clauses'][0]): TransactionClause => {
     // Encode the function call data locally
     const encodedData = encodeFunctionCallData(apiClause.functionCall);
 
@@ -219,7 +219,7 @@ export const createApiAggregator = (config: ApiAggregatorConfig): SwapAggregator
                     throw new Error(`API request failed: ${response.status} ${response.statusText}`);
                 }
 
-                const quoteData: VeTradeQuoteResponse = await response.json();
+                const quoteData: APIQuoteResponse = await response.json();
 
                 // Convert API clauses to TransactionClause format
                 const clauses = quoteData.clauses.map(convertApiClauseToTransactionClause);
