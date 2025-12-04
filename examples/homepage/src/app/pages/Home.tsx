@@ -56,7 +56,7 @@ export default function Home(): ReactElement {
 
             <ScrollableInfoSections />
 
-            {account && (
+            {/* {account && (
                 <Card
                     id="features"
                     variant="section"
@@ -65,7 +65,7 @@ export default function Home(): ReactElement {
                 >
                     <FeaturesToTry />
                 </Card>
-            )}
+            )} */}
 
             <TestimonialSection quote="Building on VeChain has never been easier. VeChain Kit handles all the complexity so I can focus on creating great user experiences." />
 
