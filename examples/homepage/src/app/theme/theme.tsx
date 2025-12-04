@@ -35,7 +35,7 @@ const exampleTheme = {
     },
 };
 
-export const darkTheme = extendTheme({
+export const theme = extendTheme({
     ...exampleTheme,
     config: {
         initialColorMode: 'dark',

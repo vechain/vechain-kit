@@ -10,12 +10,7 @@ interface ScrollableSection {
     content: string;
     imageSrc: string;
     imageAlt: string;
-    button?: {
-        text: string;
-        href?: string;
-        onClick?: () => void;
-        isExternal?: boolean;
-    };
+    imageWidth?: string;
 }
 
 export function ScrollableInfoSections() {
@@ -26,8 +21,9 @@ export function ScrollableInfoSections() {
             content:
                 'Connect your users to your dApp with out-of-the-box wallet connection options. Support for VeWorld, Sync2, WalletConnect, and social logins including Google, Twitter, Email, and more.',
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
             imageAlt: 'VeChain Kit',
+            imageWidth: '550px',
         },
         {
             bg: '#dae8fb',
@@ -35,8 +31,9 @@ export function ScrollableInfoSections() {
             content:
                 'Use our hooks and components to speed up your development. No need to worry about the underlying VeChain infrastructure—we handle it for you. Focus on building your dApp, not the blockchain integration.',
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/MyApp.png',
             imageAlt: 'VeChain Kit',
+            imageWidth: '550px',
         },
         {
             bg: '#eae3d1',
@@ -46,15 +43,17 @@ export function ScrollableInfoSections() {
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/vechain-kit-v2-shocase.png',
             imageAlt: 'VeChain Kit',
+            imageWidth: '400px',
         },
         {
-            bg: '#eae3d1',
+            bg: '#e1e5e4',
             title: 'Multiple language support',
             content:
                 'The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.',
             imageSrc:
                 'https://cdn.prod.website-files.com/685387e21f37b28674efb768/685c258fb5b73e62bd8de0c0_0e9040e92251da2f7c363a4f48682fee_5-4.webp',
             imageAlt: 'Multiple language support',
+            imageWidth: '400px',
         },
     ];
 
@@ -162,7 +161,7 @@ export function ScrollableInfoSections() {
                             content={section.content}
                             imageSrc={section.imageSrc}
                             imageAlt={section.imageAlt}
-                            button={section.button}
+                            imageWidth={section.imageWidth}
                         />
                     </Box>
                 );
@@ -170,4 +169,3 @@ export function ScrollableInfoSections() {
         </VStack>
     );
 }
-

@@ -8,8 +8,6 @@ import {
     Text,
     Image,
     useColorMode,
-    Button,
-    Link,
 } from '@chakra-ui/react';
 
 interface InfoSectionProps {
@@ -18,12 +16,7 @@ interface InfoSectionProps {
     content: string;
     imageSrc: string;
     imageAlt: string;
-    button?: {
-        text: string;
-        href?: string;
-        onClick?: () => void;
-        isExternal?: boolean;
-    };
+    imageWidth?: string;
 }
 
 export function InfoSection({
@@ -32,24 +25,25 @@ export function InfoSection({
     content,
     imageSrc,
     imageAlt,
-    button,
+    imageWidth = '450px',
 }: InfoSectionProps) {
     const { colorMode } = useColorMode();
 
     return (
         <Card
             px={[0, 20]}
-            py={[0, 40]}
-            mx={[4, '250px']}
+            py={[0, 20]}
+            mx={[4, '5%']}
             borderRadius={25}
             bg={bg}
         >
             <Grid
                 templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
                 gap={4}
-                placeItems={'center stretch'}
+                placeItems={'center center'}
+                alignItems={'center'}
             >
-                <VStack spacing={4} align="start" p={10}>
+                <VStack spacing={4} align="start" p={10} minH="400px">
                     <Heading
                         as="h2"
                         fontSize="3xl"
@@ -64,20 +58,9 @@ export function InfoSection({
                     >
                         {content}
                     </Text>
-                    {button && (
-                        <Button
-                            as={button.href ? Link : undefined}
-                            href={button.href}
-                            onClick={button.onClick}
-                            isExternal={button.isExternal}
-                            variant="homepageSecondary"
-                        >
-                            {button.text}
-                        </Button>
-                    )}
                 </VStack>
 
-                <Image src={imageSrc} alt={imageAlt} />
+                <Image src={imageSrc} alt={imageAlt} w={imageWidth} />
             </Grid>
         </Card>
     );
