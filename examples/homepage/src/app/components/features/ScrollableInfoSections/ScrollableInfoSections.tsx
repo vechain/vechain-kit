@@ -41,7 +41,7 @@ export function ScrollableInfoSections() {
             content:
                 "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/customize.gif',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/Group+1+(2).png',
             imageAlt: 'VeChain Kit',
             imageWidth: '400px',
         },
