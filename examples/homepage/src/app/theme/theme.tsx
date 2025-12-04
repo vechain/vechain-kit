@@ -38,9 +38,9 @@ const exampleTheme = {
 export const theme = extendTheme({
     ...exampleTheme,
     config: {
-        initialColorMode: 'dark',
+        initialColorMode: 'light',
         useSystemColorMode: false,
-        cssVarPrefix: 'example',
+        cssVarPrefix: 'vechain-kit-homepage',
     },
     colors: themeColors,
 });
