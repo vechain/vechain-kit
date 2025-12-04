@@ -62,7 +62,7 @@ export function InfoSection({
                     </Text>
                 </VStack>
 
-                <Image src={imageSrc} alt={imageAlt} w={imageWidth} />
+                <Image src={imageSrc} alt={imageAlt} w={['80%', imageWidth]} />
             </Grid>
         </Card>
     );
