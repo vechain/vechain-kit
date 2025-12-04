@@ -36,6 +36,8 @@ export function InfoSection({
             mx={[4, '5%']}
             borderRadius={25}
             bg={bg}
+            minH={'550px'}
+            justifyContent={'center'}
         >
             <Grid
                 templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
@@ -43,7 +45,7 @@ export function InfoSection({
                 placeItems={'center center'}
                 alignItems={'center'}
             >
-                <VStack spacing={4} align="start" p={10} minH="400px">
+                <VStack spacing={4} align="start" p={10}>
                     <Heading
                         as="h2"
                         fontSize="3xl"
