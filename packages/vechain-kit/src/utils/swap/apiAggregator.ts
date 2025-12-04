@@ -257,27 +257,20 @@ export const createApiAggregator = (config: ApiAggregatorConfig): SwapAggregator
         },
 
         async simulateSwap(params: SwapParams, quote: SwapQuote, thor: ThorClient): Promise<SwapSimulation> {
-            // Extract clauses from quote data
-            if (!quote.data || typeof quote.data !== 'object' || !('clauses' in quote.data)) {
+            try {
+                // Build transaction clauses using the same logic as buildSwapTransaction
+                // This ensures simulation uses the same filtered clauses that will be executed
+                const clauses = await this.buildSwapTransaction(params, quote);
+
+                // Delegate to shared simulation helper that also verifies ERC20 inflow/outflow
+                return simulateSwapWithClauses(params, quote, clauses, thor);
+            } catch (error) {
                 return {
                     gasCostVTHO: 0,
                     success: false,
-                    error: 'Invalid quote data: clauses not found',
+                    error: error instanceof Error ? error.message : 'Failed to build swap transaction for simulation',
                 };
             }
-
-            const clauses = quote.data.clauses as TransactionClause[];
-
-            if (clauses.length === 0) {
-                return {
-                    gasCostVTHO: 0,
-                    success: false,
-                    error: 'No clauses found in quote',
-                };
-            }
-
-            // Delegate to shared simulation helper that also verifies ERC20 inflow/outflow
-            return simulateSwapWithClauses(params, quote, clauses, thor);
         },
 
         async buildSwapTransaction(params: SwapParams, quote: SwapQuote): Promise<TransactionClause[]> {

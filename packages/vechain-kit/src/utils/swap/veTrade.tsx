@@ -7,6 +7,7 @@ import React from 'react';
 import { TransactionClause, ABIContract, Clause, Address as VeChainAddress, VET, Units } from '@vechain/sdk-core';
 import { ERC20__factory } from '@hooks/contracts';
 import { ThorClient } from '@vechain/sdk-network';
+import { simulateSwapWithClauses } from './simulateSwap';
 
 /**
  * VeTrade supported addresses for different networks
@@ -74,58 +75,11 @@ export const createVeTradeAggregator = (networkType: NETWORK_TYPE): SwapAggregat
         async simulateSwap(params: SwapParams, quote: SwapQuote, thor: ThorClient): Promise<SwapSimulation> {
             try {
                 // Build transaction clauses for simulation (includes approve clause if needed)
+                // This ensures simulation uses the same clauses that will be executed
                 const clauses = await this.buildSwapTransaction(params, quote);
 
-                if (clauses.length === 0) {
-                    return {
-                        gasCostVTHO: 0,
-                        success: false,
-                        error: 'Failed to build transaction clauses',
-                    };
-                }
-
-                // Simulate the transaction
-                const simulatedTx = await thor.transactions.simulateTransaction(
-                    clauses,
-                    {
-                        caller: params.userAddress,
-                    },
-                );
-
-                // Check if any clause reverted
-                let reverted = false;
-                let revertReason: string | undefined;
-                let totalGas = 200_000;
-
-                for (let i = 0; i < simulatedTx.length; i++) {
-                    const result = simulatedTx[i];
-
-                    if (result.reverted) {
-                        reverted = true;
-                        revertReason = result.vmError || 'Transaction reverted';
-                        break;
-                    }
-
-                    // Calculate gas cost for this clause
-                    totalGas += result.gasUsed;
-                }
-
-                // Convert gas units to VTHO
-                // On VeChain, 1 gas unit = 1e-18 VTHO (since 1 VTHO = 1e18 Wei)
-                const gasCostVTHO = totalGas / 1e5;
-
-                if (reverted) {
-                    return {
-                        gasCostVTHO: 0,
-                        success: false,
-                        error: revertReason || 'Transaction reverted',
-                    };
-                }
-
-                return {
-                    gasCostVTHO,
-                    success: true,
-                };
+                // Delegate to shared simulation helper that also verifies ERC20 inflow/outflow
+                return simulateSwapWithClauses(params, quote, clauses, thor);
             } catch (error) {
                 return {
                     gasCostVTHO: 0,
