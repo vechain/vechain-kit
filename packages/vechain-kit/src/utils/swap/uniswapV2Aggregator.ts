@@ -16,6 +16,7 @@ import {
 import { ThorClient } from '@vechain/sdk-network';
 import React from 'react';
 import { Address } from 'viem';
+import { simulateSwapWithClauses } from './simulateSwap';
 
 /**
  * Helper to check if token is VET (native token)
@@ -139,67 +140,11 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
         },
 
         async simulateSwap(params: SwapParams, quote: SwapQuote, thor: ThorClient): Promise<SwapSimulation> {
-            try {
-                // Build transaction clauses for simulation
-                const clauses = await this.buildSwapTransaction(params, quote);
+            // Build transaction clauses using existing logic
+            const clauses = await this.buildSwapTransaction(params, quote);
 
-                if (clauses.length === 0) {
-                    return {
-                        gasCostVTHO: 0,
-                        success: false,
-                        error: 'Failed to build transaction clauses',
-                    };
-                }
-
-                // Simulate the transaction
-                const simulatedTx = await thor.transactions.simulateTransaction(
-                    clauses,
-                    {
-                        caller: params.userAddress,
-                    },
-                );
-
-                // Check if any clause reverted
-                let reverted = false;
-                let revertReason: string | undefined;
-                let totalGas = 200_000;
-
-                for (let i = 0; i < simulatedTx.length; i++) {
-                    const result = simulatedTx[i];
-
-                    if (result.reverted) {
-                        reverted = true;
-                        revertReason = result.vmError || 'Transaction reverted';
-                        break;
-                    }
-
-                    // Calculate gas cost for this clause
-                    totalGas += result.gasUsed;
-                }
-
-                // Convert gas units to VTHO
-                // On VeChain, 1 gas unit = 1e-18 VTHO (since 1 VTHO = 1e18 Wei)
-                const gasCostVTHO = totalGas / 1e5;
-
-                if (reverted) {
-                    return {
-                        gasCostVTHO: 0,
-                        success: false,
-                        error: revertReason || 'Transaction reverted',
-                    };
-                }
-
-                return {
-                    gasCostVTHO,
-                    success: true,
-                };
-            } catch (error) {
-                return {
-                    gasCostVTHO: 0,
-                    success: false,
-                    error: error instanceof Error ? error.message : 'Simulation failed',
-                };
-            }
+            // Delegate to shared simulation helper that also verifies ERC20 inflow/outflow
+            return simulateSwapWithClauses(params, quote, clauses, thor);
         },
 
         async buildSwapTransaction(params: SwapParams, quote: SwapQuote): Promise<TransactionClause[]> {
