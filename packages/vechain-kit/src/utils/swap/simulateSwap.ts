@@ -200,7 +200,6 @@ export const simulateSwapWithClauses = async (
         }
 
         // Convert gas units to VTHO
-        // On VeChain, 1 gas unit = 1e-18 VTHO (since 1 VTHO = 1e18 Wei)
         const gasCostVTHO = totalGas / 1e5;
 
         // Verify inflow/outflow for both ERC20 tokens and native VET.
