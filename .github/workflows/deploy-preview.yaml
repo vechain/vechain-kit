@@ -25,7 +25,10 @@ jobs:
                 USER_NAME: ${{ github.event.pull_request.user.login }}
                 BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
               run: |
-                if [[ "${BRANCH_NAME,,}" != "${USER_NAME/,,}"* ]]; then
+                PREFIX="${BRANCH_NAME%%/*}"
+                lower_user_name="${USER_NAME,,}"
+                lower_prefix="${PREFIX,,}"
+                if [[ "$lower_prefix" != "$lower_user_name" ]]; then
                     echo "Invalid branch name. Please ensure that your PR branch name starts with your GitHub username in the format of <username>/<branch-name>. Eg. myusername/my-feature"
                     exit 1
                 fi
@@ -71,7 +74,10 @@ jobs:
               env:
                 USER_NAME: ${{ github.event.pull_request.user.login }}
               run: |
-                if [[ "${BRANCH_NAME,,}" != "${USER_NAME/,,}"* ]]; then
+                PREFIX="${BRANCH_NAME%%/*}"
+                lower_user_name="${USER_NAME,,}"
+                lower_prefix="${PREFIX,,}"
+                if [[ "$lower_prefix" != "$lower_user_name" ]]; then
                     echo "Invalid branch name. Please ensure that your PR branch name starts with your GitHub username in the format of <username>/<branch-name>. Eg. myusername/my-feature"
                     exit 1
                 fi
