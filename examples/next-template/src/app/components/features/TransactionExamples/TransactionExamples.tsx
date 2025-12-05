@@ -92,10 +92,10 @@ export function TransactionExamples() {
         await sendTransaction({});
     }, [sendTransaction, resetStatus]);
 
-    const handleTryAgainWithSponsoredModal = buildTransactionWithDAppSponsored ? useCallback(async () => {
+    const handleTryAgainWithSponsoredModal = useCallback(async () => {
         buildTransactionWithDAppSponsored.resetStatus();
         await buildTransactionWithDAppSponsored.sendTransaction({});
-    }, [buildTransactionWithDAppSponsored]) : null;
+    }, [buildTransactionWithDAppSponsored]);
 
     return (
         <>
