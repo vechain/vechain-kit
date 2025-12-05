@@ -84,7 +84,7 @@ export function TransactionExamples() {
 
     const handleTransactionWithModal = useCallback(async () => {
         openTransactionModal();
-        await (buildTransactionWithDAppSponsored.sendTransaction({}) ?? sendTransaction({}));
+        await (buildTransactionWithDAppSponsored.sendTransaction({}));
     }, [buildTransactionWithDAppSponsored, openTransactionModal, sendTransaction]);
 
     const handleTryAgain = useCallback(async () => {
