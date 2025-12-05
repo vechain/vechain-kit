@@ -17,6 +17,25 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Find Previous Deployment Comment
+        uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3.1.0
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '🚀 Preview environment deployed!'
+
+      - name: Remove Deployment PR Comment
+        run: |
+          if [[ -z "${COMMENT_ID}" ]]; then
+            echo "No deployment comment found. Please ensure that the preview environment was deployed before destroying it."
+            exit 1
+          fi
+          gh api --method DELETE /repos/${{ github.repository }}/issues/comments/${COMMENT_ID}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_ID: ${{ steps.find-comment.outputs.comment-id }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
         with:
@@ -34,16 +53,3 @@ jobs:
       - name: Remove Preview Environment from S3
         run: |
           aws s3 rm s3://${{ secrets.AWS_PREVIEW_BUCKET_NAME }}/${{ steps.process-branch-name.outputs.processedBranchName }} --recursive
-      
-      - name: Find Previous Deployment Comment
-        uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3.1.0
-        id: find-comment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: '🚀 Preview environment deployed!'
-
-      - name: Remove Deployment PR Comment
-        run: gh api --method DELETE /repos/${{ github.repository }}/issues/comments/${{ steps.find-comment.outputs.comment-id }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

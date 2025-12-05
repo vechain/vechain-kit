@@ -43,7 +43,26 @@ export function TransactionExamples() {
         onSuccess: () => {},
         onFailure: () => {},
         suggestedMaxGas: undefined,
-        // dAppSponsoredUrl: "",
+    });
+
+    const buildTransactionWithDAppSponsored = useBuildTransaction({
+        clauseBuilder: () => {
+            if (!account?.address) return [];
+
+            return [
+                {
+                    ...thor.contracts
+                        .load(b3trMainnetAddress, IB3TR__factory.abi)
+                        .clause.transfer(account.address, BigInt('0')).clause,
+                    comment: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
+                },
+            ];
+        },
+        refetchQueryKeys: [],
+        onSuccess: () => {},
+        onFailure: () => {},
+        suggestedMaxGas: undefined,
+        // dAppSponsoredUrl: "", <--- YOUR DELEGATOR URL HERE
     });
 
     const {
@@ -65,13 +84,18 @@ export function TransactionExamples() {
 
     const handleTransactionWithModal = useCallback(async () => {
         openTransactionModal();
-        await sendTransaction({});
-    }, [sendTransaction, openTransactionModal]);
+        await (buildTransactionWithDAppSponsored.sendTransaction({}) ?? sendTransaction({}));
+    }, [buildTransactionWithDAppSponsored, openTransactionModal, sendTransaction]);
 
     const handleTryAgain = useCallback(async () => {
         resetStatus();
         await sendTransaction({});
     }, [sendTransaction, resetStatus]);
+
+    const handleTryAgainWithSponsoredModal = buildTransactionWithDAppSponsored ? useCallback(async () => {
+        buildTransactionWithDAppSponsored.resetStatus();
+        await buildTransactionWithDAppSponsored.sendTransaction({});
+    }, [buildTransactionWithDAppSponsored]) : null;
 
     return (
         <>
@@ -90,8 +114,8 @@ export function TransactionExamples() {
                     </Button>
                     <Button
                         onClick={handleTransactionWithModal}
-                        isLoading={isTransactionPending}
-                        isDisabled={isTransactionPending}
+                        isLoading={buildTransactionWithDAppSponsored.isTransactionPending ?? isTransactionPending}
+                        isDisabled={buildTransactionWithDAppSponsored.isTransactionPending ?? isTransactionPending}
                         data-testid="tx-with-modal-button"
                     >
                         Tx with modal
@@ -114,12 +138,12 @@ export function TransactionExamples() {
             <TransactionModal
                 isOpen={isTransactionModalOpen}
                 onClose={closeTransactionModal}
-                status={status}
-                txReceipt={txReceipt}
-                txError={error}
-                onTryAgain={handleTryAgain}
+                status={buildTransactionWithDAppSponsored.status ?? status}
+                txReceipt={buildTransactionWithDAppSponsored.txReceipt ?? txReceipt}
+                txError={buildTransactionWithDAppSponsored.error ?? error}
+                onTryAgain={handleTryAgainWithSponsoredModal ?? handleTryAgain}
                 uiConfig={{
-                    title: 'Test Transaction',
+                    title: 'Test Transaction with DApp Sponsored',
                     description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
                         account?.address ?? '',
                     )}`,
