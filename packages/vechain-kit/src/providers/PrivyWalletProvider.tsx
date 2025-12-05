@@ -38,6 +38,7 @@ export interface PrivyWalletProviderContextType {
         description?: string;
         buttonText?: string;
         currentGasToken?: GasTokenType;
+        dAppSponsoredUrl?: string;
     }) => Promise<string>;
     signTypedData: (data: SignTypedDataParams) => Promise<string>;
     signMessage: (message: string) => Promise<string>;
@@ -102,6 +103,7 @@ export const PrivyWalletProvider = ({
     // Helper to sign and send transaction for regular fee delegation transactions
     const signAndSend = async (
         txBody: TransactionBody,
+        dAppSponsoredUrl?: string,
         walletOverride?: any,
         signerOverride?: any
     ) => {
@@ -119,7 +121,7 @@ export const PrivyWalletProvider = ({
                     address: randomTransactionUser.address,
                 },
             ],
-            { gasPayer: { gasPayerServiceUrl: delegatorUrl } },
+            { gasPayer: { gasPayerServiceUrl: dAppSponsoredUrl ?? delegatorUrl } },
         );
         const provider = new VeChainProvider(
             thor,
@@ -165,11 +167,13 @@ export const PrivyWalletProvider = ({
         title = 'Sign Transaction',
         description,
         buttonText = 'Sign',
+        dAppSponsoredUrl,
     }: {
         txClauses: TransactionClause[];
         title?: string;
         description?: string;
         buttonText?: string;
+        dAppSponsoredUrl?: string;
         currentGasToken?: GasTokenType;
         speed?: TransactionSpeed;
     }): Promise<string> => {
@@ -182,8 +186,8 @@ export const PrivyWalletProvider = ({
             throw new Error('Address or embedded wallet is missing');
         }
 
-        // if using generic delegator, use the useGenericDelegator hook, build the clauses, estimate the gas, build the tx body, sign and send
-        if (genericDelegator) {
+        // if using generic delegator, use the useGenericDelegator hook, build the clauses, estimate the gas, build the tx body, sign and send, if dAppSponsored is undefined use the generic delegator
+        if (genericDelegator && !dAppSponsoredUrl) {
             return await sendTransactionUsingGenericDelegator({
                 clauses: txClauses,
                 genericDelegatorUrl: delegatorUrl ?? '',
@@ -232,6 +236,7 @@ export const PrivyWalletProvider = ({
 
         return await signAndSend(
             txBody,
+            dAppSponsoredUrl,
         );
     }, [
         sendTransactionUsingGenericDelegator,
