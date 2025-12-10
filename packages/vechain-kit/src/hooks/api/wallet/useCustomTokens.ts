@@ -21,6 +21,7 @@ export const useCustomTokens = () => {
             const token: CustomTokenInfo = {
                 ...tokenInfo,
                 address,
+                icon: 'https://vechain.github.io/token-registry//assets/b74678c3e1d0cbdd76c81579f6d2b551c4704811.png', //TODO: THIS IS A PLACEHOLDER , SHOULD BE REPLACED
             };
 
             setCustomTokens([...customTokens, token]);
