@@ -22,7 +22,7 @@ export interface TokenRegistryInfo {
 }
 
 //TODO: Move to env or constants
-const TOKEN_REGISTRY_BASE_URL = 'https://vechain.github.io/token-registry';
+const TOKEN_REGISTRY_BASE_URL = 'https://vechain.github.io/token-registry/';
 const MAX_RETRY_COUNT = 3 as const;
 const CACHE_TIME = 1000 * 60 * 60 * 24; // 24 hours
 
