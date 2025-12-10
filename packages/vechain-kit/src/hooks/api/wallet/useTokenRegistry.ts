@@ -2,9 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 
-/**
- * Token information from VeChain token registry
- */
 export interface TokenRegistryInfo {
     name: string;
     symbol: string;
@@ -24,85 +21,54 @@ export interface TokenRegistryInfo {
     };
 }
 
-/**
- * Base URL for the VeChain token registry
- */
+//TODO: Move to env or constants
 const TOKEN_REGISTRY_BASE_URL = 'https://vechain.github.io/token-registry';
+const MAX_RETRY_COUNT = 3 as const;
+const CACHE_TIME = 1000 * 60 * 60 * 24; // 24 hours
 
-/**
- * Get the registry URL based on network type
- */
 const getRegistryUrl = (networkType: NETWORK_TYPE): string => {
     const registryFile = networkType === 'main' ? 'main.json' : 'test.json';
-    return `${TOKEN_REGISTRY_BASE_URL}/${registryFile}`;
+    return new URL(registryFile, TOKEN_REGISTRY_BASE_URL).href;
 };
 
-/**
- * Fetch tokens from the VeChain token registry
- */
-export const fetchTokenRegistry = async (
+const getTokenIconUrl = (iconPath?: string): string | undefined => {
+    if (!iconPath) return;
+    return new URL(`assets/${iconPath}`, TOKEN_REGISTRY_BASE_URL).href;
+};
+
+// Fetch tokens from VeChain registry and resolve icon URLs
+const fetchTokenRegistry = async (
     networkType: NETWORK_TYPE,
 ): Promise<TokenRegistryInfo[]> => {
     const url = getRegistryUrl(networkType);
+    const response = await fetch(url, {
+        headers: { Accept: 'application/json' },
+    });
 
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(
-                `Failed to fetch token registry: ${response.status} ${response.statusText}`,
-            );
-        }
-
-        const data = await response.json();
-
-        // Validate that we received an array
-        if (!Array.isArray(data)) {
-            throw new Error('Invalid token registry format: expected an array');
-        }
-
-        return data as TokenRegistryInfo[];
-    } catch (error) {
-        console.error('Error fetching token registry:', error);
-        throw error;
+    if (!response.ok) {
+        throw new Error(
+            `Failed to fetch token registry: ${response.status} ${response.statusText}`,
+        );
     }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data)) {
+        throw new Error('Invalid token registry format: expected an array');
+    }
+
+    return data.map((token) => ({
+        ...token,
+        icon: getTokenIconUrl(token.icon),
+    }));
 };
 
-/**
- * Query key factory for token registry
- */
 export const getTokenRegistryQueryKey = (networkType: NETWORK_TYPE) => [
     'VECHAIN_KIT_TOKEN_REGISTRY',
     networkType,
 ];
 
-/**
- * Hook to fetch and cache tokens from the VeChain token registry
- *
- * @returns Query result with token registry data
- *
- * @example
- * ```tsx
- * const { data: tokens, isLoading, error } = useTokenRegistry();
- *
- * if (isLoading) return <div>Loading tokens...</div>;
- * if (error) return <div>Error loading tokens</div>;
- *
- * return (
- *   <div>
- *     {tokens?.map(token => (
- *       <div key={token.address}>
- *         {token.symbol}: {token.name}
- *       </div>
- *     ))}
- *   </div>
- * );
- * ```
- */
+// Hook to fetch and cache tokens from VeChain registry
 export const useTokenRegistry = () => {
     const { network } = useVeChainKitConfig();
 
@@ -115,21 +81,8 @@ export const useTokenRegistry = () => {
             return fetchTokenRegistry(network.type);
         },
         enabled: !!network.type,
-        staleTime: 1000 * 60 * 60, // 1 hour - registry doesn't change often
-        gcTime: 1000 * 60 * 60 * 24, // 24 hours
-        retry: (failureCount, error) => {
-            // Don't retry on validation errors
-            if (error instanceof Error) {
-                const errorMessage = error.message.toLowerCase();
-                if (
-                    errorMessage.includes('network type is required') ||
-                    errorMessage.includes('invalid token registry format')
-                ) {
-                    return false;
-                }
-            }
-            // Retry network errors up to 3 times
-            return failureCount < 3;
-        },
+        gcTime: CACHE_TIME, // 24 hours
+        retry: (failureCount) => failureCount < MAX_RETRY_COUNT,
+        retryDelay: (failureCount) => failureCount * 1000, // 1 second per retry
     });
 };
