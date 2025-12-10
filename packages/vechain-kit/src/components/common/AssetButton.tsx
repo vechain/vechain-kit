@@ -8,8 +8,6 @@ import {
     ButtonProps,
     useToken,
 } from '@chakra-ui/react';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
-import React from 'react';
 import { CURRENCY } from '@/types';
 import {
     formatCompactCurrency,
@@ -21,6 +19,7 @@ type AssetButtonProps = ButtonProps & {
     amount: number;
     currencyValue: number;
     currentCurrency: CURRENCY;
+    icon?: string;
     isDisabled?: boolean;
     onClick?: () => void;
 };
@@ -30,6 +29,7 @@ export const AssetButton = ({
     amount,
     currencyValue,
     currentCurrency,
+    icon,
     isDisabled,
     onClick,
     ...buttonProps
@@ -54,37 +54,30 @@ export const AssetButton = ({
             {...buttonProps}
         >
             <HStack>
-                {TOKEN_LOGO_COMPONENTS[symbol] ? (
-                    React.cloneElement(TOKEN_LOGO_COMPONENTS[symbol], {
-                        boxSize: '24px',
-                        borderRadius: 'full',
-                    })
-                ) : (
-                    <Image
-                        src={TOKEN_LOGOS[symbol]}
-                        alt={`${symbol} logo`}
-                        boxSize="24px"
-                        borderRadius="full"
-                        fallback={
-                            <Box
-                                boxSize="24px"
-                                borderRadius="full"
-                                bg="whiteAlpha.200"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
+                <Image
+                    src={icon}
+                    alt={`${symbol} logo`}
+                    boxSize="24px"
+                    borderRadius="full"
+                    fallback={
+                        <Box
+                            boxSize="24px"
+                            borderRadius="full"
+                            bg="whiteAlpha.200"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Text
+                                fontSize="10px"
+                                fontWeight="bold"
+                                color={textPrimary}
                             >
-                                <Text
-                                    fontSize="10px"
-                                    fontWeight="bold"
-                                    color={textPrimary}
-                                >
-                                    {symbol.slice(0, 3)}
-                                </Text>
-                            </Box>
-                        }
-                    />
-                )}
+                                {symbol.slice(0, 3)}
+                            </Text>
+                        </Box>
+                    }
+                />
                 <Text color={textPrimary}>{symbol}</Text>
             </HStack>
             <VStack align="flex-end" spacing={0}>

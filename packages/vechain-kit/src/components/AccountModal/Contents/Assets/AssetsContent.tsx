@@ -39,7 +39,6 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { sortedTokens } = useTokensWithValues({ address: account?.address });
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
-    
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
@@ -106,6 +105,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                                     currentCurrency={
                                         currentCurrency as SupportedCurrency
                                     }
+                                    icon={token.icon}
                                     onClick={() => handleTokenSelect(token)}
                                     isDisabled={!hasBalance}
                                 />

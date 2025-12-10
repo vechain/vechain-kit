@@ -14,7 +14,7 @@ import { LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
-import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
+import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
 import { formatGasCost } from '@/types/gasEstimation';
 import {
     useWallet,
@@ -283,16 +283,17 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
                     _hover={{
                         bg: textSecondary,
                     }}
-                    leftIcon={React.cloneElement(
-                        TOKEN_LOGO_COMPONENTS[
-                            (displayToken as GasTokenType) ||
-                                preferences.availableGasTokens[0]
-                        ],
-                        {
-                            boxSize: '20px',
-                            borderRadius: 'full',
-                        },
-                    )}
+                    //TODO: CHECK IF COMPONENT IS NEEDED
+                    // leftIcon={React.cloneElement(
+                    //     TOKEN_LOGO_COMPONENTS[
+                    //         (displayToken as GasTokenType) ||
+                    //             preferences.availableGasTokens[0]
+                    //     ],
+                    //     {
+                    //         boxSize: '20px',
+                    //         borderRadius: 'full',
+                    //     },
+                    // )}
                 >
                     <Text fontSize="sm" fontWeight="semibold">
                         {displayToken || preferences.availableGasTokens[0]}

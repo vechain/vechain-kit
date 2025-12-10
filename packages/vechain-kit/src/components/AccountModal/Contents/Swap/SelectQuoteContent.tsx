@@ -24,8 +24,7 @@ import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } f
 import { useCurrency, useTokensWithValues, useWallet } from '@/hooks';
 import { useTokenPrices } from '@/hooks';
 import { useState, useMemo } from 'react';
-import { TOKEN_LOGO_COMPONENTS, TOKEN_LOGOS, compareAddresses } from '@/utils';
-import React from 'react';
+import { compareAddresses } from '@/utils';
 
 type Props = {
     quotes: SwapQuote[];
@@ -56,7 +55,6 @@ export const SelectQuoteContent = ({
         // Use compareAddresses for proper address comparison
         return tokens.find(t => compareAddresses(t.address, toTokenAddress)) || null;
     }, [toTokenAddress, tokens]);
-
 
     // Separate available and unavailable quotes
     const availableQuotes = quotes.filter(q => !q.reverted);
@@ -195,17 +193,11 @@ export const SelectQuoteContent = ({
                                                     <HStack align="center" spacing={1.5}>
                                                         {toToken && (
                                                             <>
-                                                                {TOKEN_LOGO_COMPONENTS[toToken.symbol] ? (
-                                                                    React.cloneElement(
-                                                                        TOKEN_LOGO_COMPONENTS[toToken.symbol],
-                                                                        {
-                                                                            boxSize: '24px',
-                                                                            borderRadius: 'full',
-                                                                        }
-                                                                    )
-                                                                ) : TOKEN_LOGOS[toToken.symbol] ? (
+                                                                {toToken.icon ? (
                                                                     <Image
-                                                                        src={TOKEN_LOGOS[toToken.symbol]}
+                                                                        src={
+                                                                            toToken.icon
+                                                                        }
                                                                         alt={`${toToken.symbol} logo`}
                                                                         boxSize="24px"
                                                                         borderRadius="full"
@@ -339,4 +331,3 @@ export const SelectQuoteContent = ({
         </>
     );
 };
-

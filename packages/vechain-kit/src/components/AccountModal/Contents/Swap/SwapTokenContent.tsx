@@ -40,7 +40,6 @@ import {
 import { SelectQuoteContent } from './SelectQuoteContent';
 import { SwapQuote } from '@/types/swap';
 import { useVeChainKitConfig } from '@/providers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { formatUnits, parseUnits } from 'viem';
 import { getConfig } from '@/config';
 import { compareAddresses } from '@/utils';
@@ -586,8 +585,8 @@ export const SwapTokenContent = ({
     // Get token display info
     const getTokenDisplay = (token: TokenWithValue | null) => {
         if (!token) return null;
-        const logoComponent = TOKEN_LOGO_COMPONENTS[token.symbol];
-        const logoUrl = TOKEN_LOGOS[token.symbol];
+        const logoComponent = <></>; //TODO: CHECK IF COMPONENT IS NEEDED
+        const logoUrl = token.icon;
         return {
             symbol: token.symbol,
             logoComponent,
