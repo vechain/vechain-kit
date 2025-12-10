@@ -14,6 +14,7 @@ export * from './useRefreshMetadata';
 export * from './useRoundXApps';
 export * from './useTokenBalances';
 export * from './useTokenPrices';
+export * from './useTokenRegistry';
 export * from './useTokensWithValues';
 export * from './useTotalBalance';
 export * from './useWallet';
