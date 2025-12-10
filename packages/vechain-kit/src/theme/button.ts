@@ -16,7 +16,9 @@ const getVariants = (tokens: ThemeTokens) => ({
         fontWeight: tokens.fonts.weights.normal,
         py: 6,
         px: 3,
-        borderRadius: tokens.borders.radius.large,
+        rounded:
+            tokens.buttons.loginButton.rounded ?? tokens.borders.radius.large,
+        backdropFilter: tokens.buttons.loginButton.backdropFilter,
         _hover: {
             opacity: 0.5,
             _disabled: {
@@ -71,10 +73,12 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.large,
+        rounded:
+            tokens.buttons.primaryButton.rounded ?? tokens.borders.radius.large,
         bg: tokens.buttons.primaryButton.bg,
         color: tokens.buttons.primaryButton.color,
         border: tokens.buttons.primaryButton.border,
+        backdropFilter: tokens.buttons.primaryButton.backdropFilter,
         _hover: {
             ...(tokens.buttons.primaryButton.hoverBg
                 ? { bg: tokens.buttons.primaryButton.hoverBg }
@@ -96,13 +100,14 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.large,
+        rounded: tokens.buttons.button.rounded ?? tokens.borders.radius.large,
         bg: tokens.buttons.button.bg,
         color: tokens.buttons.button.color,
         border:
             tokens.buttons.button.border === 'none'
                 ? 'none'
                 : tokens.buttons.button.border,
+        backdropFilter: tokens.buttons.button.backdropFilter,
         _hover: {
             ...(tokens.buttons.button.hoverBg
                 ? { bg: tokens.buttons.button.hoverBg }
@@ -124,13 +129,16 @@ const getVariants = (tokens: ThemeTokens) => ({
         px: 4,
         width: 'full',
         height: '60px',
-        borderRadius: tokens.borders.radius.large,
+        rounded:
+            tokens.buttons.tertiaryButton.rounded ??
+            tokens.borders.radius.large,
         bg: tokens.buttons.tertiaryButton.bg,
         color: tokens.buttons.tertiaryButton.color,
         border:
             tokens.buttons.tertiaryButton.border === 'none'
                 ? 'none'
                 : tokens.buttons.tertiaryButton.border,
+        backdropFilter: tokens.buttons.tertiaryButton.backdropFilter,
         _hover: {
             opacity: 0.8, // Derive hover from bg with opacity
             _disabled: {

@@ -46,15 +46,18 @@ export const BaseModal = ({
     const modalBg = useToken('colors', 'vechain-kit-modal');
     const overlayBg = useToken('colors', 'vechain-kit-overlay');
 
-    // Get backdrop filter from tokens context
+    // Get backdrop filter and modal width from tokens context
     const { tokens } = useVechainKitThemeConfig();
     const defaultBackdropFilter = tokens?.effects?.backdropFilter?.overlay;
     const modalBackdropFilter = tokens?.effects?.backdropFilter?.modal;
     const effectiveBackdropFilter =
         backdropFilter ?? defaultBackdropFilter ?? 'blur(3px)';
+    const modalWidth = tokens?.sizes?.modal;
 
     const modalContentProps: ModalContentProps = isDesktop
-        ? {}
+        ? modalWidth
+            ? { width: modalWidth, maxW: modalWidth }
+            : {}
         : {
               position: 'fixed',
               bottom: '0',

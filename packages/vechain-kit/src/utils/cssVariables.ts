@@ -54,7 +54,7 @@ export function generateDAppKitCSSVariables(
 ): CustomizedStyle {
     const vars: CustomizedStyle = {
         '--vdk-modal-z-index': '10000',
-        '--vdk-modal-width': '22rem',
+        '--vdk-modal-width': tokens.sizes.modal,
         '--vdk-modal-backdrop-filter': tokens.effects.backdropFilter.modal,
         '--vdk-border-dark-source-card': `1px solid ${tokens.colors.border.default}`,
         '--vdk-border-light-source-card': `1px solid ${tokens.colors.border.default}`,
@@ -279,6 +279,7 @@ export function applyPrivyCSSVariables(
     buttonHoverColor?: string,
     buttonActiveColor?: string,
     borderColor?: string,
+    modalWidth?: string,
 ): void {
     if (typeof document === 'undefined') return;
 
@@ -308,6 +309,17 @@ export function applyPrivyCSSVariables(
             .privy-dialog-content {
                 backdrop-filter: ${backdropFilter} !important;
                 -webkit-backdrop-filter: ${backdropFilter} !important;
+            }
+        `);
+    }
+
+    // Apply modal width to Privy modal containers
+    if (modalWidth) {
+        cssRules.push(`
+            [data-privy-dialog-content],
+            .privy-dialog-content {
+                width: ${modalWidth} !important;
+                max-width: ${modalWidth} !important;
             }
         `);
     }
