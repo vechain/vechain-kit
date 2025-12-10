@@ -42,7 +42,7 @@ import {
     useSwapTransaction,
     useCurrency,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
 import { SwapQuote } from '@/types/swap';
@@ -341,7 +341,7 @@ export const SwapTokenContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: swapClauses,
         tokens: selectedGasToken
             ? [selectedGasToken]
