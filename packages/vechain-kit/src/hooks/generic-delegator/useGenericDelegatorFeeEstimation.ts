@@ -5,7 +5,7 @@ import { useSmartAccount, useWallet, estimateGas, useTokenBalances, useGasTokenS
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';
 
-export interface UseGasEstimationParams {
+export interface useGenericDelegatorFeeEstimationParams {
     clauses: EnhancedClause[];
     enabled?: boolean;
     tokens: string[]; // Array of tokens to try in order
@@ -13,13 +13,13 @@ export interface UseGasEstimationParams {
     sendingTokenSymbol?: string; // Symbol of token being sent
 }
 
-export const useGasEstimation = ({
+export const useGenericDelegatorFeeEstimation = ({
     clauses,
     enabled = true,
     tokens,
     sendingAmount,
     sendingTokenSymbol,
-}: UseGasEstimationParams) => {
+}: useGenericDelegatorFeeEstimationParams) => {
     const { connectedWallet, account } = useWallet();
     const { data: smartAccount } = useSmartAccount(
         connectedWallet?.address ?? '',

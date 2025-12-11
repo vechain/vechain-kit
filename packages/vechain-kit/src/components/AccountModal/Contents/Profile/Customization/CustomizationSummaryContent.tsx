@@ -25,7 +25,7 @@ import {
     getAvatarOfAddressQueryKey,
     getTextRecordsQueryKey,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
@@ -187,7 +187,7 @@ export const CustomizationSummaryContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: clauses,
         tokens: selectedGasToken
             ? [selectedGasToken]

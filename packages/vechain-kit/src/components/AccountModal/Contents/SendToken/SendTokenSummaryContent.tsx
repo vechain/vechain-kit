@@ -26,7 +26,7 @@ import {
     useWallet,
     TokenWithValue,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -201,7 +201,7 @@ export const SendTokenSummaryContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: selectedToken.symbol === 'VET' ? vetClauses : erc20Clauses,
         tokens: selectedGasToken
             ? [selectedGasToken]
