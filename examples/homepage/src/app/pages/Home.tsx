@@ -1,200 +1,103 @@
 'use client';
 
-import { type ReactElement, useRef, useState } from 'react';
+import { type ReactElement } from 'react';
 import {
-    Container,
     VStack,
     Text,
     Link,
-    HStack,
+    Card,
     useColorMode,
-    IconButton,
-    useMediaQuery,
+    Box,
+    Heading,
+    Button,
 } from '@chakra-ui/react';
-import { useWallet, WalletButton, VechainLogo } from '@vechain/vechain-kit';
-import { UIControls } from '@/app/components/features/UIControls';
-import { TransactionExamples } from '@/app/components/features/TransactionExamples';
-import { SigningExample } from '@/app/components/features/Signing/SigningExample';
-import { Introduction } from '../components/features/Introduction';
+import { useWallet, VechainLogo } from '@vechain/vechain-kit';
+import { Header } from '@/app/components/layout/Header';
+import { HeroSection } from '@/app/components/features/HeroSection';
+import { TestimonialSection } from '@/app/components/features/TestimonialSection';
+import { PlatformSection } from '@/app/components/features/PlatformSection';
 import { FAQSection } from '../components/features/FAQSection';
-import {
-    LuMoon,
-    LuSun,
-    LuMousePointerClick,
-    LuChevronDown,
-} from 'react-icons/lu';
 import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesToTry';
-import { DataReadingExample } from '../components/features/DataReading';
-import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
-import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
+import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
-    const { colorMode, toggleColorMode } = useColorMode();
-    const featuresRef = useRef<HTMLDivElement>(null);
-    const [hasScrolled, setHasScrolled] = useState(false);
-    const [isDesktop] = useMediaQuery('(min-width: 768px)');
-
-    const scrollToFeatures = () => {
-        featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
-        setHasScrolled(true);
-    };
-
-    if (!account) {
-        return (
-            <Container
-                height={'full'}
-                maxW="container.lg"
-                justifyContent={'center'}
-                wordBreak={'break-word'}
-            >
-                <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
-                    <HStack w={'full'} justifyContent={'space-between'}>
-                        <HStack spacing={2} align="center">
-                            <WalletButton
-                                mobileVariant="iconDomainAndAssets"
-                                desktopVariant="iconDomainAndAssets"
-                            />
-                            <HStack
-                                spacing={2}
-                                animation="bounce-left 1s infinite"
-                                transform="rotate(-10deg)"
-                                sx={{
-                                    '@keyframes bounce-left': {
-                                        '0%, 100%': {
-                                            transform:
-                                                'rotate(0deg) translateX(0)',
-                                        },
-                                        '50%': {
-                                            transform:
-                                                'rotate(0deg) translateX(-5px)',
-                                        },
-                                    },
-                                }}
-                            >
-                                <LuMousePointerClick
-                                    size={24}
-                                    color={
-                                        colorMode === 'light'
-                                            ? 'blackAlpha.600'
-                                            : 'whiteAlpha.400'
-                                    }
-                                    style={{ marginLeft: '8px' }}
-                                />
-                                <Text
-                                    fontSize="sm"
-                                    color={
-                                        colorMode === 'light'
-                                            ? 'blackAlpha.600'
-                                            : 'whiteAlpha.400'
-                                    }
-                                >
-                                    Click me!
-                                </Text>
-                            </HStack>
-                        </HStack>
-                        <IconButton
-                            onClick={toggleColorMode}
-                            icon={
-                                colorMode === 'light' ? <LuMoon /> : <LuSun />
-                            }
-                            aria-label="Toggle color mode"
-                            borderRadius="xl"
-                        />
-                    </HStack>
-
-                    <Introduction />
-
-                    <LoginUIControl />
-
-                    <FAQSection />
-
-                    <LoginToContinueBox />
-
-                    <Logo />
-                </VStack>
-            </Container>
-        );
-    }
+    const { colorMode } = useColorMode();
 
     return (
-        <Container
-            height={'full'}
-            maxW="container.lg"
-            justifyContent={'center'}
-            wordBreak={'break-word'}
-        >
-            <VStack spacing={10} mt={10} pb={10} alignItems="flex-start">
-                <HStack w={'full'} justifyContent={'space-between'}>
-                    <WalletButton
-                        mobileVariant="iconDomainAndAssets"
-                        desktopVariant="iconDomainAndAssets"
-                    />
-
-                    <IconButton
-                        onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <LuMoon /> : <LuSun />}
-                        aria-label="Toggle color mode"
-                        borderRadius="xl"
-                    />
-                </HStack>
-
-                {account && !hasScrolled && !isDesktop && (
-                    <VStack
-                        w="full"
-                        cursor="pointer"
-                        onClick={scrollToFeatures}
-                        spacing={2}
-                        p={4}
-                        bg="whiteAlpha.100"
-                        rounded="md"
+        <VStack spacing={0} align="stretch" minH="100vh">
+            <Box h={[300, 250]} w="full" bg="#e4ebe1" borderBottomRadius={24}>
+                <VStack mt={100} justifyContent="center">
+                    <Heading
+                        fontSize="3xl"
+                        fontWeight="500"
+                        color="black"
+                        textAlign="center"
+                        py={10}
+                        px={4}
                     >
-                        <Text fontSize="sm" textAlign="center">
-                            Scroll down to explore available features
-                        </Text>
-                        <LuChevronDown
-                            size={20}
-                            color={
-                                colorMode === 'light'
-                                    ? 'blackAlpha.400'
-                                    : 'whiteAlpha.600'
-                            }
-                        />
-                    </VStack>
-                )}
+                        🎉​ Version 2 has been released!
+                    </Heading>
 
-                <Introduction />
-
-                <div ref={featuresRef}>
-                    <FeaturesToTry />
-                </div>
-
-                <UIControls />
-
-                <TransactionExamples />
-                <SigningExample />
-                <DataReadingExample />
-                <FAQSection />
-                <Text
-                    fontSize="sm"
-                    color="gray.600"
-                    w="full"
-                    textAlign="center"
-                    mt={4}
-                >
-                    Found a bug? Please open an issue on{' '}
-                    <Link
-                        href="https://github.com/vechain/vechain-kit/issues"
-                        color="blue.500"
+                    <Button
+                        as={Link}
+                        href="https://github.com/vechain/vechain-kit/releases/tag/v2.0.0"
                         isExternal
+                        variant="homepageSecondary"
                     >
-                        GitHub
-                    </Link>
-                </Text>
+                        View Release Notes 👇​
+                    </Button>
+                </VStack>
+            </Box>
 
-                <Logo />
-            </VStack>
-        </Container>
+            <Header />
+
+            <HeroSection />
+
+            <ScrollableInfoSections />
+
+            {/* {account && (
+                <Card
+                    id="features"
+                    variant="section"
+                    py={{ base: 12, md: 16 }}
+                    px={{ base: 4, md: 8 }}
+                >
+                    <FeaturesToTry />
+                </Card>
+            )} */}
+
+            <TestimonialSection quote="The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components." />
+
+            <PlatformSection />
+
+            <FAQSection />
+
+            <Card
+                variant="section"
+                py={{ base: 12, md: 16 }}
+                px={{ base: 4, md: 8 }}
+            >
+                <VStack spacing={4} align="center">
+                    <Text
+                        fontSize="sm"
+                        color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}
+                        textAlign="center"
+                    >
+                        Found a bug? Please open an issue on{' '}
+                        <Link
+                            href="https://github.com/vechain/vechain-kit/issues"
+                            color="primary.500"
+                            isExternal
+                            _hover={{ textDecoration: 'underline' }}
+                        >
+                            GitHub
+                        </Link>
+                    </Text>
+                    <Logo />
+                </VStack>
+            </Card>
+        </VStack>
     );
 }
 
@@ -203,8 +106,7 @@ const Logo = () => {
     return (
         <VStack
             onClick={() => window.open('https://vechain.org', '_blank')}
-            pt={10}
-            spacing={[8, 4]}
+            spacing={4}
             justify={'center'}
             w={'full'}
             cursor={'pointer'}
@@ -213,7 +115,11 @@ const Logo = () => {
                 transition: 'opacity 0.2s ease-in-out',
             }}
         >
-            <Text fontSize="md" fontWeight="bold">
+            <Text
+                fontSize="sm"
+                fontWeight="medium"
+                color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}
+            >
                 Made by
             </Text>
             <VechainLogo
@@ -221,8 +127,6 @@ const Logo = () => {
                 isDark={colorMode === 'dark'}
                 w="200px"
                 h="auto"
-                ml={{ base: 0, sm: -6 }}
-                mt={{ base: -6, md: 0 }}
             />
         </VStack>
     );

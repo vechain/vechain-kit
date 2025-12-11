@@ -1,9 +1,9 @@
 'use client';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
-import { darkTheme } from './theme';
+import { theme } from './theme';
 
 const VechainKitProviderWrapper = dynamic(
     async () =>
@@ -14,8 +14,20 @@ const VechainKitProviderWrapper = dynamic(
     },
 );
 
+const ForceLightMode = dynamic(
+    async () => (await import('./components/ForceLightMode')).ForceLightMode,
+    {
+        ssr: false,
+    },
+);
+
 function AppContent({ children }: { children: React.ReactNode }) {
-    return <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>;
+    return (
+        <>
+            <ForceLightMode />
+            <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>
+        </>
+    );
 }
 
 export default function RootLayout({
@@ -106,6 +118,29 @@ export default function RootLayout({
                     href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap"
                     rel="stylesheet"
                 />
+                <ColorModeScript initialColorMode="light" />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function() {
+                                // Clear any cached dark mode preferences before React hydrates
+                                const possibleKeys = [
+                                    'chakra-ui-color-mode-vechain-kit-homepage',
+                                    'chakra-ui-color-mode',
+                                    'vechain-kit-homepage-color-mode'
+                                ];
+                                possibleKeys.forEach(function(key) {
+                                    try {
+                                        var stored = localStorage.getItem(key);
+                                        if (stored && stored !== 'light') {
+                                            localStorage.setItem(key, 'light');
+                                        }
+                                    } catch(e) {}
+                                });
+                            })();
+                        `,
+                    }}
+                />
             </head>
             <body
                 style={{
@@ -113,7 +148,7 @@ export default function RootLayout({
                     height: '100%',
                 }}
             >
-                <ChakraProvider theme={darkTheme}>
+                <ChakraProvider theme={theme}>
                     <AppContent>{children}</AppContent>
                 </ChakraProvider>
             </body>

@@ -6,9 +6,6 @@ body {
 }
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: #FFFFFF;
   color: #272A2E;
 }
