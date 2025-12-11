@@ -5,11 +5,12 @@ import {
     useThor,
     useWallet as useDAppKitWallet,
 } from '@vechain/dapp-kit-react';
+import { TransactionMessage } from '@vechain/dapp-kit';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
 import { estimateTxGas } from './transactionUtils';
-import { signerUtils, TransactionReceipt } from '@vechain/sdk-network';
+import { TransactionReceipt } from '@vechain/sdk-network';
 import { Revision, TransactionClause } from '@vechain/sdk-core';
 
 /**
@@ -21,7 +22,7 @@ import { Revision, TransactionClause } from '@vechain/sdk-core';
  * @param suggestedMaxGas the suggested max gas for the transaction
  * @param privyUIOptions options to pass to the Privy UI
  * @param gasPadding the gas padding to use for the transaction (Eg. 0.1 for 10%)
- * @param dAppSponsoredUrl the dApp sponsored delegator url.
+ * @param delegationUrl the dApp sponsored delegator url.
  */
 type UseSendTransactionProps = {
     signerAccountAddress?: string | null;
@@ -35,7 +36,7 @@ type UseSendTransactionProps = {
         buttonText?: string;
     };
     gasPadding?: number;
-    dAppSponsoredUrl?: string;
+    delegationUrl?: string;
 };
 
 /**
@@ -51,7 +52,7 @@ type UseSendTransactionProps = {
 export type UseSendTransactionReturnValue = {
     sendTransaction: (
         clauses?: TransactionClause[],
-        dAppSponsoredUrl?: string,
+        delegationUrl?: string,
         privyUIOptions?: {
             title?: string;
             description?: string;
@@ -98,7 +99,7 @@ export type UseSendTransactionReturnValue = {
  * @param suggestedMaxGas the suggested max gas for the transaction
  * @param privyUIOptions options to pass to the Privy UI
  * @param gasPadding the gas padding to use for the transaction (Eg. 0.1 for 10%)
- * @param dAppSponsoredUrl the dApp sponsored delegator url.
+ * @param delegationUrl the dApp sponsored delegator url.
  * @returns see {@link UseSendTransactionReturnValue}
  */
 export const useSendTransaction = ({
@@ -109,10 +110,10 @@ export const useSendTransaction = ({
     suggestedMaxGas,
     privyUIOptions,
     gasPadding,
-    dAppSponsoredUrl,
+    delegationUrl,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const thor = useThor();
-    const { signer } = useDAppKitWallet();
+    const { signer, requestTransaction } = useDAppKitWallet();
     const { connection } = useWallet();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
@@ -129,7 +130,7 @@ export const useSendTransaction = ({
                 | TransactionClause[]
                 | (() => TransactionClause[])
                 | (() => Promise<TransactionClause[]>),
-            dAppSponsoredUrl?: string,
+            delegationUrl?: string,
             privyUIOptions?: {
                 title?: string;
                 description?: string;
@@ -142,7 +143,7 @@ export const useSendTransaction = ({
                 return await privyWalletProvider.sendTransaction({
                     txClauses: _clauses,
                     ...privyUIOptions,
-                    dAppSponsoredUrl,
+                    delegationUrl,
                 });
             }
 
@@ -165,27 +166,20 @@ export const useSendTransaction = ({
                 console.error('Gas estimation failed', e);
             }
 
-            const txBody = await thor.transactions.buildTransactionBody(
-                _clauses,
-                suggestedMaxGas ?? estimatedGas, //Provide either the suggested max gas (gas Limit) or the estimated gas
+            const response = await requestTransaction(
+                _clauses as TransactionMessage[],
                 {
-                    // TODO: kit-migration check how to pass the delegator url
-                    isDelegated: feeDelegation?.delegateAllTransactions,
-                },
+                    signer: signer.address,
+                    gas: suggestedMaxGas ?? estimatedGas,
+                    ...(feeDelegation?.delegateAllTransactions || delegationUrl ? {
+                        delegator: {
+                            url: delegationUrl ?? feeDelegation?.delegatorUrl ?? '',
+                            signer: signerAccountAddress,
+                        }
+                    } : {}),
+                }
             );
-
-            const txRequestInput =
-                signerUtils.transactionBodyToTransactionRequestInput(
-                    txBody,
-                    signerAccountAddress,
-                );
-
-            return signer.sendTransaction({
-                ...txRequestInput,
-                maxPriorityFeePerGas:
-                    txRequestInput.maxPriorityFeePerGas?.toString(),
-                maxFeePerGas: txRequestInput.maxFeePerGas?.toString(),
-            });
+            return response.txid;
         },
         [
             signerAccountAddress,
@@ -197,7 +191,7 @@ export const useSendTransaction = ({
             thor,
             signer,
             gasPadding,
-            dAppSponsoredUrl,
+            delegationUrl,
         ],
     );
 
@@ -212,14 +206,14 @@ export const useSendTransaction = ({
     >(null);
 
     const sendTransactionAdapter = useCallback(
-        async (_clauses?: TransactionClause[], _dAppSponsoredUrl?: string): Promise<void> => {
+        async (_clauses?: TransactionClause[], _delegationUrl?: string): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
             try {
                 setTxHash(null);
                 setSendTransactionPending(true);
                 setSendTransactionError(null);
                 setError(undefined);
-                const response = await sendTransaction(_clauses ?? [], _dAppSponsoredUrl, {
+                const response = await sendTransaction(_clauses ?? [], _delegationUrl, {
                     ...privyUIOptions,
                 });
 
@@ -237,7 +231,7 @@ export const useSendTransaction = ({
                 setSendTransactionPending(false);
             }
         },
-        [sendTransaction, clauses, privyUIOptions, dAppSponsoredUrl],
+        [sendTransaction, clauses, privyUIOptions, delegationUrl],
     );
 
     /**
