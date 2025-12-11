@@ -4,41 +4,6 @@
  */
 
 /**
- * Chakra UI modal size mappings
- */
-const CHAKRA_MODAL_SIZES: Record<string, string> = {
-    xs: '20rem',
-    sm: '24rem',
-    md: '28rem',
-    lg: '32rem',
-    xl: '36rem',
-    '2xl': '42rem',
-    '3xl': '48rem',
-    '4xl': '56rem',
-    '5xl': '64rem',
-    '6xl': '72rem',
-    full: '100%',
-};
-
-/**
- * Convert Chakra UI size string to rem/px value
- * If the value is already a valid CSS size (contains rem, px, %, etc.), return as-is
- * Otherwise, convert Chakra size strings (xs, sm, md, lg, xl, etc.) to rem values
- */
-function convertChakraSizeToRem(size: string | undefined): string | undefined {
-    if (!size) return undefined;
-
-    // If it's already a valid CSS size (contains rem, px, %, em, vw, vh, etc.), return as-is
-    if (/^\d+(\.\d+)?(rem|px|%|em|vw|vh|ch|ex)$/i.test(size.trim())) {
-        return size;
-    }
-
-    // Convert Chakra UI size strings to rem values
-    const normalizedSize = size.trim().toLowerCase();
-    return CHAKRA_MODAL_SIZES[normalizedSize] || size;
-}
-
-/**
  * Complete internal token type - all fields required
  */
 export interface ThemeTokens {
@@ -137,9 +102,6 @@ export interface ThemeTokens {
             modal: string; // Modal dialog border radius
         };
     };
-    sizes: {
-        modal: string; // Modal dialog width
-    };
     modal: {
         rounded?: string | number; // Optional border radius (Chakra UI rounded prop)
     };
@@ -160,7 +122,6 @@ export interface VechainKitThemeConfig {
         backgroundColor?: string; // Base background color for modal (used to derive card, stickyHeader, etc. via opacity)
         border?: string; // Full CSS border string for modal dialog (e.g., "1px solid rgba(255, 255, 255, 0.1)")
         backdropFilter?: string; // Backdrop filter for modal dialog (e.g., "blur(10px)")
-        width?: string; // Modal dialog width (e.g., "22rem", "400px")
         borderRadius?: string; // Modal dialog border radius (e.g., "24px", "1rem") - deprecated, use rounded instead
         rounded?: string | number; // Border radius (Chakra UI rounded prop: "sm", "md", "lg", "xl", "2xl", "3xl", "full", or number)
     };
@@ -634,9 +595,6 @@ const defaultLightTokens: ThemeTokens = {
             modal: '24px',
         },
     },
-    sizes: {
-        modal: '22rem',
-    },
     modal: {
         rounded: undefined,
     },
@@ -729,9 +687,6 @@ const defaultDarkTokens: ThemeTokens = {
             full: '9999px',
             modal: '24px',
         },
-    },
-    sizes: {
-        modal: '22rem',
     },
     modal: {
         rounded: undefined,
@@ -850,13 +805,6 @@ export function mergeTokens(
                 ...customTokens.borders.radius,
             };
         }
-    }
-
-    if (customTokens.sizes) {
-        merged.sizes = {
-            ...defaultTokens.sizes,
-            ...customTokens.sizes,
-        };
     }
 
     if (customTokens.buttons) {
@@ -1173,14 +1121,6 @@ export function convertThemeConfigToTokens(
         config.buttons?.loginButton,
         defaultTokens,
     );
-
-    // Handle modal width - convert Chakra UI sizes to rem/px if needed
-    const modalWidth = config.modal?.width
-        ? convertChakraSizeToRem(config.modal.width)
-        : defaultTokens.sizes.modal;
-    tokens.sizes = {
-        modal: modalWidth || defaultTokens.sizes.modal,
-    };
 
     return tokens;
 }
