@@ -52,7 +52,7 @@ export function TransactionExamples() {
 
     const buildTransactionNoDelegation = callUseBuildTransaction();
 
-    const delegationUrl = "https://sponsor-testnet.vechain.energy/by/848";
+    const delegationUrl = ""; // YOUR DELEGATION URL HERE
     
     const buildTransactionWithDelegation = callUseBuildTransaction(delegationUrl);
 
