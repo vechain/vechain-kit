@@ -52,7 +52,7 @@ export function TransactionExamples() {
 
     const buildTransactionNoDelegation = callUseBuildTransaction();
 
-    const delegationUrl = ""; // ADD DELEGATION URL HERE
+    const delegationUrl = "https://sponsor-testnet.vechain.energy/by/848";
     
     const buildTransactionWithDelegation = callUseBuildTransaction(delegationUrl);
 
@@ -67,40 +67,34 @@ export function TransactionExamples() {
     } = useTransactionToast();
 
     const {
-        open: openTransactionToastWithUseSendTransaction,
-        close: closeTransactionToastWithUseSendTransaction,
-        isOpen: isTransactionToastOpenWithUseSendTransaction,
-    } = useTransactionToast();
-
-    const {
         open: openTransactionModal,
         close: closeTransactionModal,
         isOpen: isTransactionModalOpen,
     } = useTransactionModal();
 
     // State to track which modal type is currently open
-    const [currentModalType, setCurrentModalType] = useState<'buildTransactionWithDelegation' | 'useSendTx' | null>(null);
+    const [currentModalType, setCurrentModalType] = useState<'useBuildTxWithDelegation' | 'useSendTxWithDelegation' | 'useBuildTxWithToast' | 'useSendTxWithToast' | null>(null);
 
     const handleTransactionWithToast = useCallback(async () => {
-        closeTransactionToastWithUseSendTransaction();
+        setCurrentModalType('useBuildTxWithToast');
         openTransactionToast();
         await buildTransactionNoDelegation.sendTransaction({});
-    }, [buildTransactionNoDelegation, openTransactionToast, closeTransactionToastWithUseSendTransaction]);
+    }, [buildTransactionNoDelegation, openTransactionToast]);
 
     const handleBuildTransactionDelegatedWithModal = useCallback(async () => {
-        setCurrentModalType('buildTransactionWithDelegation');
+        setCurrentModalType('useBuildTxWithDelegation');
         openTransactionModal();
         await (buildTransactionWithDelegation.sendTransaction({}));
     }, [buildTransactionWithDelegation.sendTransaction, openTransactionModal]);
 
     const handleUseSendTransactionWithToast = useCallback(async () => {
-        closeTransactionToast()
-        openTransactionToastWithUseSendTransaction();
+        setCurrentModalType('useSendTxWithToast');
+        openTransactionToast();
         await sendTransactionNoDelegation.sendTransaction(clauses);
-    }, [sendTransactionNoDelegation.sendTransaction, openTransactionToastWithUseSendTransaction, closeTransactionToast]);
+    }, [sendTransactionNoDelegation.sendTransaction, openTransactionToast]);
 
     const handleSendTransactionDelegatedWithModal = useCallback(async () => {
-        setCurrentModalType('useSendTx');
+        setCurrentModalType('useSendTxWithDelegation');
         openTransactionModal();
         await sendTransactionWithDelegation.sendTransaction(clauses, delegationUrl);
     }, [sendTransactionWithDelegation.sendTransaction, openTransactionModal]);
@@ -177,22 +171,29 @@ export function TransactionExamples() {
             <TransactionToast
                 isOpen={isTransactionToastOpen}
                 onClose={closeTransactionToast}
-                status={sendTransactionNoDelegation.status}
-                txError={sendTransactionNoDelegation.error}
-                txReceipt={sendTransactionNoDelegation.txReceipt}
-                onTryAgain={retryBuildTransactionNoDelegation}
+                status={
+                    currentModalType === 'useBuildTxWithToast'
+                        ? buildTransactionNoDelegation.status
+                        : sendTransactionNoDelegation.status
+                }
+                txError={
+                    currentModalType === 'useBuildTxWithToast'
+                        ? buildTransactionNoDelegation.error
+                        : sendTransactionNoDelegation.error
+                }
+                txReceipt={
+                    currentModalType === 'useBuildTxWithToast'
+                        ? buildTransactionNoDelegation.txReceipt
+                        : sendTransactionNoDelegation.txReceipt
+                }
+                onTryAgain={
+                    currentModalType === 'useBuildTxWithToast'
+                        ? retryBuildTransactionNoDelegation
+                        : retrySendTransactionNoDelegation
+                }
                 description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
                     account?.address ?? '',
                 )}`}
-            />
-
-            <TransactionToast
-                isOpen={isTransactionToastOpenWithUseSendTransaction}
-                onClose={closeTransactionToastWithUseSendTransaction}
-                status={sendTransactionNoDelegation.status}
-                txError={sendTransactionNoDelegation.error}
-                txReceipt={sendTransactionNoDelegation.txReceipt}
-                onTryAgain={retrySendTransactionNoDelegation}
             />
 
             {/* Single conditional modal that switches content based on currentModalType */}
@@ -200,28 +201,28 @@ export function TransactionExamples() {
                 isOpen={isTransactionModalOpen}
                 onClose={closeModalAndReset}
                 status={
-                    currentModalType === 'buildTransactionWithDelegation'
+                    currentModalType === 'useBuildTxWithDelegation'
                         ? buildTransactionWithDelegation.status ?? buildTransactionNoDelegation.status
                         : sendTransactionWithDelegation.status ?? sendTransactionNoDelegation.status
                 }
                 txReceipt={
-                    currentModalType === 'buildTransactionWithDelegation'
+                    currentModalType === 'useBuildTxWithDelegation'
                         ? buildTransactionWithDelegation.txReceipt ?? buildTransactionNoDelegation.txReceipt
                         : sendTransactionWithDelegation.txReceipt ?? sendTransactionNoDelegation.txReceipt
                 }
                 txError={
-                    currentModalType === 'buildTransactionWithDelegation'
+                    currentModalType === 'useBuildTxWithDelegation'
                         ? buildTransactionWithDelegation.error ?? buildTransactionNoDelegation.error
                         : sendTransactionWithDelegation.error ?? sendTransactionNoDelegation.error
                 }
                 onTryAgain={
-                    currentModalType === 'buildTransactionWithDelegation'
+                    currentModalType === 'useBuildTxWithDelegation'
                         ? retryBuildTransactionDelegated
                         : retrySendTransactionDelegated
                 }
                 uiConfig={{
                     title:
-                        currentModalType === 'buildTransactionWithDelegation'
+                        currentModalType === 'useBuildTxWithDelegation'
                             ? 'Test Transaction with DApp Sponsored'
                             : 'Test Transaction with useSendTransaction',
                     description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${humanAddress(
