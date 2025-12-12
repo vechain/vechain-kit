@@ -6,11 +6,32 @@ import {
     useGetAccountVersion,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { VStack, Text, Spinner, HStack, useToken } from '@chakra-ui/react';
+import {
+    VStack,
+    Text,
+    Spinner,
+    HStack,
+    useToken,
+    useClipboard,
+    Icon,
+    Divider,
+} from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { CrossAppConnectionCache } from '@/types';
 import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
 import packageJson from '../../../../../../package.json';
+import { humanAddress } from '@/utils';
+import { LuCheck, LuCopy } from 'react-icons/lu';
+
+// Get DAppKit version from package.json (this is the version constraint, not the installed version)
+const dappKitVersion =
+    packageJson.dependencies?.['@vechain/dapp-kit-react'] ||
+    packageJson.peerDependencies?.['@vechain/dapp-kit-react'] ||
+    'unknown';
+
+// Get Privy version from package.json
+const privyVersion =
+    packageJson.dependencies?.['@privy-io/react-auth'] || 'unknown';
 
 type Props = {
     connectionCache?: CrossAppConnectionCache;
@@ -25,6 +46,8 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
     const { data: appInfo, isLoading: isPrivyLoading } = useFetchAppInfo(
         privy?.appId ?? '',
     );
+
+    const { onCopy, hasCopied } = useClipboard('');
 
     const { data: privyStatus, isLoading: isPrivyStatusLoading } =
         useFetchPrivyStatus();
@@ -125,11 +148,39 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
                 value={connection.source.type}
                 isLoading={connection.isLoading}
             />
+
+            <Divider />
+
             <InfoRow label={t('Network')} value={network.type} />
             <InfoRow
                 label={t('Node URL')}
                 value={network.nodeUrl || getConfig(network.type).nodeUrl}
             />
+
+            {connection.isConnectedWithPrivy && <Divider />}
+
+            {connection.isConnectedWithPrivy && (
+                <HStack w="full" justifyContent="space-between">
+                    <Text fontSize="sm" color={textPrimary}>
+                        {t('Embedded wallet')}:
+                    </Text>
+
+                    <HStack>
+                        <Text fontSize="sm" color={textColorSecondary}>
+                            {humanAddress(connectedWallet?.address ?? '', 8, 7)}
+                        </Text>
+
+                        <Icon
+                            color={textColorSecondary}
+                            onClick={() =>
+                                onCopy(connectedWallet?.address ?? '')
+                            }
+                            cursor="pointer"
+                            as={hasCopied ? LuCheck : LuCopy}
+                        />
+                    </HStack>
+                </HStack>
+            )}
 
             {connection.isConnectedWithPrivy ? (
                 <>
@@ -156,11 +207,17 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
                 )
             )}
 
+            <Divider />
+
             <InfoRow
                 label={t('VeChain Kit')}
                 value={packageJson.version}
                 href={`https://github.com/vechain/vechain-kit/releases/tag/${packageJson.version}`}
             />
+
+            <InfoRow label={'DAppKit'} value={dappKitVersion} />
+
+            <InfoRow label={'Privy'} value={privyVersion} />
         </VStack>
     );
 };
