@@ -262,33 +262,22 @@ export const AccountModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
         >
-            <motion.div
-                layout
-                transition={{
-                    layout: {
-                        duration: 0.2,
-                        ease: [0.4, 0, 0.2, 1],
-                    },
-                }}
-                style={{ width: '100%', overflow: 'hidden' }}
-            >
-                <AnimatePresence mode="wait" initial={false}>
-                    {content && (
-                        <motion.div
-                            key={contentKey}
-                            custom={directionRef.current}
-                            variants={contentVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={transition}
-                            style={{ width: '100%' }}
-                        >
-                            {content}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </motion.div>
+            <AnimatePresence mode="wait" initial={false}>
+                {content && (
+                    <motion.div
+                        key={contentKey}
+                        custom={directionRef.current}
+                        variants={contentVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={transition}
+                        style={{ width: '100%' }}
+                    >
+                        {content}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </BaseModal>
     );
 };

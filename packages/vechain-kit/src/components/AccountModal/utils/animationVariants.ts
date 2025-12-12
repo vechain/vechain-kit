@@ -15,6 +15,6 @@ export const contentVariants = {
 };
 
 export const transition = {
-    duration: 0.2,
+    duration: 0.17,
     ease: [0.4, 0, 0.2, 1] as const,
 };
