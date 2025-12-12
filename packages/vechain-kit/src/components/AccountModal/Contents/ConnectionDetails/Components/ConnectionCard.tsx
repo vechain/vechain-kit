@@ -9,6 +9,7 @@ import { useVeChainKitConfig } from '@/providers';
 import {
     VStack,
     Text,
+    Spinner,
     HStack,
     useToken,
     useClipboard,
@@ -42,7 +43,9 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
     const { source: sourceDappKit } = useWalletDappKit();
     const { privy, network } = useVeChainKitConfig();
 
-    const { data: appInfo } = useFetchAppInfo(privy?.appId ?? '');
+    const { data: appInfo, isLoading: isPrivyLoading } = useFetchAppInfo(
+        privy?.appId ?? '',
+    );
 
     const { onCopy, hasCopied } = useClipboard('');
 
@@ -67,7 +70,7 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
             return connectionCache.ecosystemApp.name;
         }
         if (connection.isConnectedWithSocialLogin && appInfo) {
-            return Object.values(appInfo)[0].name || '-';
+            return Object.values(appInfo)[0].name;
         }
         if (connection.isConnectedWithDappKit && sourceDappKit) {
             return sourceDappKit;
@@ -76,6 +79,7 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
     };
 
     const connectionName = getConnectionName();
+    const isLoading = connection.isConnectedWithSocialLogin && isPrivyLoading;
 
     const InfoRow = ({
         label,
@@ -105,6 +109,22 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
             </Text>
         </HStack>
     );
+
+    if (isLoading) {
+        return (
+            <VStack
+                w="full"
+                h="full"
+                justify="center"
+                align="center"
+                minH="200px"
+                borderRadius={'xl'}
+                bg={cardBg}
+            >
+                <Spinner />
+            </VStack>
+        );
+    }
 
     if (!connectionName) {
         return null;
