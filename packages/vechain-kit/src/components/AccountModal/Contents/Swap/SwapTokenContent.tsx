@@ -15,9 +15,7 @@ import {
     InputGroup,
     InputRightElement,
     Image,
-    Spinner,
     Collapse,
-    Center,
     useToken,
 } from '@chakra-ui/react';
 import {
@@ -27,12 +25,7 @@ import {
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import {
-    LuArrowDown,
-    LuArrowUp,
-    LuChevronDown,
-    LuArrowDownUp,
-} from 'react-icons/lu';
+import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
     useWallet,
@@ -85,12 +78,10 @@ export const SwapTokenContent = ({
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const { network, feeDelegation } = useVeChainKitConfig();
+    const { network, feeDelegation, darkMode: isDark } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
 
     const cardBg = useToken('colors', 'vechain-kit-card');
-    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
-    const borderColor = useToken('colors', 'vechain-kit-border');
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
@@ -106,7 +97,6 @@ export const SwapTokenContent = ({
     const [amount, setAmount] = useState('');
     const [showMore, setShowMore] = useState(false);
     const [slippageTolerance, setSlippageTolerance] = useState(1);
-    const [showSlippageConfig, setShowSlippageConfig] = useState(false);
     const [customSlippageValue, setCustomSlippageValue] = useState('1');
     const [selectedQuote, setSelectedQuote] = useState<SwapQuote | null>(null);
     const [selectedGasToken, setSelectedGasToken] =
@@ -197,17 +187,6 @@ export const SwapTokenContent = ({
         toTokenAddress,
         network.type,
     ]);
-
-    // Toggle swap direction
-    const handleToggleDirection = useCallback(() => {
-        if (fromToken && toToken) {
-            const temp = fromToken;
-            setFromToken(toToken);
-            setToToken(temp);
-            // Reset amount when toggling
-            setAmount('');
-        }
-    }, [fromToken, toToken]);
 
     // Clear selected quote when quote parameters change
     // This ensures that when amount/token changes, we use the new best quote
@@ -667,29 +646,59 @@ export const SwapTokenContent = ({
                 {!isolatedView && (
                     <ModalBackButton
                         onClick={() => setCurrentContent('main')}
+                        isDisabled={
+                            isTransactionPending ||
+                            isWaitingForWalletConfirmation
+                        }
                     />
                 )}
-                <ModalCloseButton />
+                <ModalCloseButton
+                    isDisabled={
+                        isTransactionPending || isWaitingForWalletConfirmation
+                    }
+                />
             </StickyHeaderContainer>
 
             <Container maxW={'container.lg'} p={0}>
                 <ModalBody>
                     <VStack spacing={2} align="stretch" w="full">
                         {/* From Section */}
-                        <Box
-                            px={6}
-                            py={connection.isConnectedWithPrivy ? 2 : 6}
-                            borderRadius="xl"
-                            bg={cardBg}
-                        >
+                        <HStack justify="space-between">
                             <Text
-                                fontSize="sm"
-                                fontWeight="medium"
-                                color={textSecondary}
-                                mb={2}
+                                fontSize="md"
+                                fontWeight="bold"
+                                color={textPrimary}
                             >
                                 {t('From')}
                             </Text>
+
+                            {fromTokenDisplay && (
+                                <Text
+                                    cursor="pointer"
+                                    _hover={{
+                                        color: textSecondary,
+                                        textDecoration: 'underline',
+                                    }}
+                                    onClick={handleSetMaxAmount}
+                                    noOfLines={1}
+                                    overflow="hidden"
+                                    textOverflow="ellipsis"
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color={textSecondary}
+                                >
+                                    {t('Balance')}:{' '}
+                                    {Number(
+                                        fromTokenDisplay.balance ?? 0,
+                                    ).toLocaleString(undefined, {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}{' '}
+                                    {fromTokenDisplay.symbol ?? ''}
+                                </Text>
+                            )}
+                        </HStack>
+                        <Box p={6} borderRadius="2xl" bg={cardBg}>
                             <VStack align="stretch" spacing={2}>
                                 <HStack justify="space-between">
                                     <Input
@@ -723,10 +732,11 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={borderColor}
+                                            borderColor={textSecondary}
                                             _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
                                             }}
                                             leftIcon={
                                                 fromTokenDisplay.logoComponent ? (
@@ -790,11 +800,12 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={borderColor}
+                                            borderColor={textSecondary}
                                             _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
-                                                color: textSecondary,
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                                color: textTertiary,
                                             }}
                                         >
                                             {t('Select token')}
@@ -814,93 +825,39 @@ export const SwapTokenContent = ({
                                         color={textSecondary}
                                     >
                                         <HStack spacing={2} alignItems="center">
-                                            {fromAmountFiatValue > 0 && (
-                                                <Text color={textSecondary}>
-                                                    ≈{' '}
-                                                    {formatCompactCurrency(
-                                                        fromAmountFiatValue,
-                                                        {
-                                                            currency:
-                                                                currentCurrency,
-                                                        },
-                                                    )}
-                                                </Text>
-                                            )}
+                                            <Text color={textSecondary}>
+                                                ≈{' '}
+                                                {formatCompactCurrency(
+                                                    fromAmountFiatValue,
+                                                    {
+                                                        currency:
+                                                            currentCurrency,
+                                                    },
+                                                )}
+                                            </Text>
                                         </HStack>
-                                        <Text
-                                            cursor="pointer"
-                                            _hover={{
-                                                color: textSecondary,
-                                                textDecoration: 'underline',
-                                            }}
-                                            onClick={handleSetMaxAmount}
-                                            noOfLines={1}
-                                            overflow="hidden"
-                                            textOverflow="ellipsis"
-                                        >
-                                            {t('Swap all', {
-                                                defaultValue: 'Swap all',
-                                            })}
-                                        </Text>
                                     </HStack>
                                 )}
                             </VStack>
                         </Box>
 
-                        {/* Arrow Icon */}
-                        <Center
-                            position="relative"
-                            marginTop="-20px"
-                            marginBottom="-20px"
-                            marginX="auto"
-                            bg={cardBg}
-                            borderRadius="xl"
-                            w="40px"
-                            h="40px"
-                            zIndex={2}
-                            cursor={
-                                !fromToken || !toToken || isLoadingQuote
-                                    ? 'not-allowed'
-                                    : 'pointer'
-                            }
-                            onClick={
-                                !fromToken || !toToken || isLoadingQuote
-                                    ? undefined
-                                    : handleToggleDirection
-                            }
-                            opacity={
-                                !fromToken || !toToken || isLoadingQuote
-                                    ? 0.5
-                                    : 1
-                            }
-                        >
-                            {isLoadingQuote ? (
-                                <Spinner size="sm" />
-                            ) : (
-                                <Icon
-                                    as={LuArrowDownUp}
-                                    boxSize={5}
-                                    color={textSecondary}
-                                />
-                            )}
-                        </Center>
-
                         {/* To Section */}
-                        <Box
-                            px={6}
-                            py={connection.isConnectedWithPrivy ? 2 : 6}
-                            borderRadius="xl"
-                            bg={cardBg}
-                        >
+                        <HStack justify="space-between" mt={4}>
                             <Text
-                                fontSize="sm"
-                                fontWeight="medium"
-                                color={textSecondary}
-                                mb={2}
+                                fontSize="md"
+                                fontWeight="bold"
+                                color={textPrimary}
                             >
                                 {t('To')}
                             </Text>
-                            <VStack align="stretch" spacing={2}>
+                        </HStack>
+                        <Box borderRadius="2xl" bg={cardBg}>
+                            <VStack
+                                align="stretch"
+                                spacing={2}
+                                p={6}
+                                width="100%"
+                            >
                                 <HStack
                                     justify="space-between"
                                     alignItems="center"
@@ -931,10 +888,11 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={borderColor}
+                                            borderColor={textSecondary}
                                             _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
                                             }}
                                             leftIcon={
                                                 toTokenDisplay.logoComponent ? (
@@ -998,11 +956,12 @@ export const SwapTokenContent = ({
                                             borderRadius="full"
                                             px={6}
                                             color={textSecondary}
-                                            borderColor={borderColor}
+                                            borderColor={textSecondary}
                                             _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
-                                                color: textSecondary,
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                                color: textTertiary,
                                             }}
                                         >
                                             {t('Select token')}
@@ -1022,20 +981,37 @@ export const SwapTokenContent = ({
                                         color={textSecondary}
                                     >
                                         <HStack spacing={2} alignItems="center">
-                                            {toAmountFiatValue > 0 && (
-                                                <Text color={textSecondary}>
-                                                    ≈{' '}
-                                                    {formatCompactCurrency(
-                                                        toAmountFiatValue,
-                                                        {
-                                                            currency:
-                                                                currentCurrency,
-                                                        },
-                                                    )}
-                                                </Text>
-                                            )}
+                                            <Text color={textSecondary}>
+                                                ≈{' '}
+                                                {formatCompactCurrency(
+                                                    toAmountFiatValue,
+                                                    {
+                                                        currency:
+                                                            currentCurrency,
+                                                    },
+                                                )}
+                                            </Text>
                                         </HStack>
-                                        <Box />
+
+                                        {toTokenDisplay && (
+                                            <Text
+                                                noOfLines={1}
+                                                overflow="hidden"
+                                                textOverflow="ellipsis"
+                                                fontSize="sm"
+                                                fontWeight="medium"
+                                                color={textSecondary}
+                                            >
+                                                {t('Balance')}:{' '}
+                                                {Number(
+                                                    toTokenDisplay.balance ?? 0,
+                                                ).toLocaleString(undefined, {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                })}{' '}
+                                                {toTokenDisplay.symbol ?? ''}
+                                            </Text>
+                                        )}
                                     </HStack>
                                 )}
                             </VStack>
@@ -1047,7 +1023,7 @@ export const SwapTokenContent = ({
                                 spacing={1}
                                 align="stretch"
                                 p={4}
-                                borderRadius="xl"
+                                borderRadius="2xl"
                                 bg={cardBg}
                             >
                                 {/* Source */}
@@ -1059,37 +1035,41 @@ export const SwapTokenContent = ({
                                         >
                                             {t('Source')}:
                                         </Text>
-                                        <HStack
-                                            spacing={1.5}
+                                        <Button
+                                            variant="outline"
+                                            size="xs"
+                                            borderRadius="full"
+                                            px={3}
+                                            h="auto"
+                                            py={1}
                                             cursor="pointer"
                                             onClick={() =>
                                                 setStep('select-quote')
                                             }
-                                            _hover={{ opacity: 0.8 }}
-                                            alignItems="center"
+                                            color={textSecondary}
+                                            borderColor={textSecondary}
+                                            _hover={{
+                                                bg: isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                            }}
+                                            leftIcon={quote.aggregator?.getIcon(
+                                                '12px',
+                                            )}
                                         >
-                                            {quote.aggregator?.getIcon('12px')}
                                             <Text
                                                 fontSize="xs"
                                                 color={textPrimary}
                                             >
                                                 {quote.aggregatorName}
                                             </Text>
-                                        </HStack>
+                                        </Button>
                                     </HStack>
                                 )}
 
                                 {/* Slippage */}
                                 <VStack align="stretch" spacing={2}>
-                                    <HStack
-                                        justify="space-between"
-                                        cursor="pointer"
-                                        onClick={() =>
-                                            setShowSlippageConfig(
-                                                !showSlippageConfig,
-                                            )
-                                        }
-                                    >
+                                    <HStack justify="space-between">
                                         <Text
                                             fontSize="xs"
                                             color={textSecondary}
@@ -1106,160 +1086,192 @@ export const SwapTokenContent = ({
                                     </HStack>
 
                                     {/* Slippage Configuration */}
-                                    <Collapse
-                                        in={showSlippageConfig}
-                                        animateOpacity
-                                    >
-                                        <VStack
-                                            spacing={3}
-                                            align="stretch"
-                                            pt={2}
-                                        >
-                                            <HStack spacing={2}>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
-                                                        isAutoMode
-                                                            ? 'solid'
-                                                            : 'outline'
-                                                    }
-                                                    colorScheme={
-                                                        isAutoMode
-                                                            ? 'blue'
-                                                            : 'gray'
-                                                    }
-                                                    onClick={() => {
-                                                        setSlippageTolerance(1);
-                                                    }}
-                                                    flex="0 0 auto"
-                                                    minW="60px"
-                                                    borderRadius="md"
-                                                    fontSize="xs"
-                                                    color={textPrimary}
-                                                >
-                                                    Auto
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
+                                    <VStack spacing={3} align="stretch" pt={2}>
+                                        <HStack spacing={2}>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() => {
+                                                    setSlippageTolerance(1);
+                                                }}
+                                                flex="0 0 auto"
+                                                minW="60px"
+                                                borderRadius="md"
+                                                fontSize="xs"
+                                                bg={
+                                                    isAutoMode
+                                                        ? 'rgb(96 66 221)'
+                                                        : 'transparent'
+                                                }
+                                                color={
+                                                    isAutoMode
+                                                        ? 'white'
+                                                        : textSecondary
+                                                }
+                                                borderColor={
+                                                    isAutoMode
+                                                        ? 'rgb(96 66 221)'
+                                                        : textSecondary
+                                                }
+                                                _hover={{
+                                                    bg: isAutoMode
+                                                        ? 'rgb(96 66 221)'
+                                                        : isDark
+                                                        ? 'whiteAlpha.300'
+                                                        : 'blackAlpha.300',
+                                                    opacity: isAutoMode
+                                                        ? 0.8
+                                                        : 1,
+                                                }}
+                                            >
+                                                Auto
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() => {
+                                                    setSlippageTolerance(0.5);
+                                                }}
+                                                flex="0 0 auto"
+                                                minW="60px"
+                                                borderRadius="md"
+                                                fontSize="xs"
+                                                bg={
+                                                    slippageTolerance === 0.5
+                                                        ? 'rgb(96 66 221)'
+                                                        : 'transparent'
+                                                }
+                                                color={
+                                                    slippageTolerance === 0.5
+                                                        ? 'white'
+                                                        : textSecondary
+                                                }
+                                                borderColor={
+                                                    slippageTolerance === 0.5
+                                                        ? 'rgb(96 66 221)'
+                                                        : textSecondary
+                                                }
+                                                _hover={{
+                                                    bg:
                                                         slippageTolerance ===
                                                         0.5
-                                                            ? 'solid'
-                                                            : 'outline'
-                                                    }
-                                                    colorScheme={
+                                                            ? 'rgb(96 66 221)'
+                                                            : isDark
+                                                            ? 'whiteAlpha.300'
+                                                            : 'blackAlpha.300',
+                                                    opacity:
                                                         slippageTolerance ===
                                                         0.5
-                                                            ? 'blue'
-                                                            : 'gray'
-                                                    }
-                                                    onClick={() => {
-                                                        setSlippageTolerance(
-                                                            0.5,
-                                                        );
-                                                    }}
-                                                    flex="0 0 auto"
-                                                    minW="60px"
-                                                    borderRadius="md"
-                                                    fontSize="xs"
-                                                    color={textPrimary}
-                                                >
-                                                    0.5%
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
+                                                            ? 0.8
+                                                            : 1,
+                                                }}
+                                            >
+                                                0.5%
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() => {
+                                                    setSlippageTolerance(3);
+                                                }}
+                                                flex="0 0 auto"
+                                                minW="60px"
+                                                borderRadius="md"
+                                                fontSize="xs"
+                                                bg={
+                                                    slippageTolerance === 3
+                                                        ? 'rgb(96 66 221)'
+                                                        : 'transparent'
+                                                }
+                                                color={
+                                                    slippageTolerance === 3
+                                                        ? 'white'
+                                                        : textSecondary
+                                                }
+                                                borderColor={
+                                                    slippageTolerance === 3
+                                                        ? 'rgb(96 66 221)'
+                                                        : textSecondary
+                                                }
+                                                _hover={{
+                                                    bg:
                                                         slippageTolerance === 3
-                                                            ? 'solid'
-                                                            : 'outline'
-                                                    }
-                                                    colorScheme={
+                                                            ? 'rgb(96 66 221)'
+                                                            : isDark
+                                                            ? 'whiteAlpha.300'
+                                                            : 'blackAlpha.300',
+                                                    opacity:
                                                         slippageTolerance === 3
-                                                            ? 'blue'
-                                                            : 'gray'
-                                                    }
-                                                    onClick={() => {
-                                                        setSlippageTolerance(3);
-                                                    }}
-                                                    flex="0 0 auto"
-                                                    minW="60px"
-                                                    borderRadius="md"
-                                                    fontSize="xs"
-                                                    color={textPrimary}
-                                                >
-                                                    3%
-                                                </Button>
-                                                <InputGroup size="sm" flex={1}>
-                                                    <Input
-                                                        value={
-                                                            customSlippageValue
-                                                        }
-                                                        onChange={(e) => {
-                                                            const value =
-                                                                e.target.value;
-                                                            // Allow numbers and decimal point
-                                                            if (
-                                                                /^\d*\.?\d*$/.test(
-                                                                    value,
-                                                                ) ||
-                                                                value === ''
-                                                            ) {
-                                                                setCustomSlippageValue(
-                                                                    value,
-                                                                );
+                                                            ? 0.8
+                                                            : 1,
+                                                }}
+                                            >
+                                                3%
+                                            </Button>
+                                            <InputGroup size="sm" flex={1}>
+                                                <Input
+                                                    value={customSlippageValue}
+                                                    onChange={(e) => {
+                                                        const value =
+                                                            e.target.value;
+                                                        // Allow numbers and decimal point
+                                                        if (
+                                                            /^\d*\.?\d*$/.test(
+                                                                value,
+                                                            ) ||
+                                                            value === ''
+                                                        ) {
+                                                            setCustomSlippageValue(
+                                                                value,
+                                                            );
+                                                            if (value !== '') {
+                                                                const numValue =
+                                                                    parseFloat(
+                                                                        value,
+                                                                    );
                                                                 if (
-                                                                    value !== ''
+                                                                    !isNaN(
+                                                                        numValue,
+                                                                    ) &&
+                                                                    numValue >=
+                                                                        0 &&
+                                                                    numValue <=
+                                                                        100
                                                                 ) {
-                                                                    const numValue =
-                                                                        parseFloat(
-                                                                            value,
-                                                                        );
-                                                                    if (
-                                                                        !isNaN(
-                                                                            numValue,
-                                                                        ) &&
-                                                                        numValue >=
-                                                                            0 &&
-                                                                        numValue <=
-                                                                            100
-                                                                    ) {
-                                                                        setSlippageTolerance(
-                                                                            numValue,
-                                                                        );
-                                                                    }
+                                                                    setSlippageTolerance(
+                                                                        numValue,
+                                                                    );
                                                                 }
                                                             }
-                                                        }}
-                                                        placeholder="1"
-                                                        borderRadius="md"
-                                                        textAlign="right"
-                                                        pr={8}
-                                                        fontSize="xs"
-                                                        color={textPrimary}
-                                                    />
-                                                    <InputRightElement
-                                                        width="2rem"
-                                                        pointerEvents="none"
+                                                        }
+                                                    }}
+                                                    placeholder="1"
+                                                    borderRadius="md"
+                                                    textAlign="right"
+                                                    pr={8}
+                                                    fontSize="xs"
+                                                    color={textPrimary}
+                                                />
+                                                <InputRightElement
+                                                    width="2rem"
+                                                    pointerEvents="none"
+                                                >
+                                                    <Text
+                                                        fontSize="2xs"
+                                                        color={textSecondary}
                                                     >
-                                                        <Text
-                                                            fontSize="2xs"
-                                                            color={
-                                                                textSecondary
-                                                            }
-                                                        >
-                                                            %
-                                                        </Text>
-                                                    </InputRightElement>
-                                                </InputGroup>
-                                            </HStack>
-                                        </VStack>
-                                    </Collapse>
+                                                        %
+                                                    </Text>
+                                                </InputRightElement>
+                                            </InputGroup>
+                                        </HStack>
+                                    </VStack>
                                 </VStack>
 
                                 {/* Gas Fee */}
                                 <HStack justify="space-between">
                                     <Text fontSize="xs" color={textSecondary}>
-                                        {t('Gas fee')}:
+                                        {t('Fee')}:
                                     </Text>
                                     <Text
                                         fontSize="xs"
@@ -1280,13 +1292,13 @@ export const SwapTokenContent = ({
                         </Collapse>
 
                         {/* Show More Toggle - Always reserve space */}
-                        <Box
-                            minH="24px"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                        >
-                            {quote && (
+                        {quote && (
+                            <Box
+                                minH="24px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
                                 <Button
                                     variant="ghost"
                                     size="xs"
@@ -1311,10 +1323,12 @@ export const SwapTokenContent = ({
                                         color: textSecondary,
                                     }}
                                 >
-                                    {showMore ? t('Show Less') : t('Show More')}
+                                    {showMore
+                                        ? t('Hide')
+                                        : t('Show Advanced Options')}
                                 </Button>
-                            )}
-                        </Box>
+                            </Box>
+                        )}
 
                         {swapClauses.length > 0 &&
                             connection.isConnectedWithPrivy && (
@@ -1333,7 +1347,9 @@ export const SwapTokenContent = ({
 
             <ModalFooter>
                 <TransactionButtonAndStatus
-                    buttonText={t('Swap')}
+                    buttonText={
+                        isLoadingQuote ? t('Loading quote...') : t('Swap')
+                    }
                     onConfirm={executeSwap}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}

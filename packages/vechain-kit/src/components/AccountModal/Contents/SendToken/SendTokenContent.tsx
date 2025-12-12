@@ -278,7 +278,7 @@ export const SendTokenContent = ({
                             textOverflow="ellipsis"
                             fontSize="sm"
                             fontWeight="medium"
-                            color={textPrimary}
+                            color={textSecondary}
                         >
                             {t('Balance')}:{' '}
                             {Number(selectedToken?.balance ?? 0).toLocaleString(
