@@ -11,7 +11,7 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             scrollbarWidth: 'none',
             overflow: 'scroll',
             overflowX: 'hidden',
-            maxHeight: '550px',
+            maxHeight: '600px',
             rounded: tokens.modal.rounded ?? tokens.borders.radius.modal,
             backgroundColor: tokens.colors.background.modal,
             backdropFilter: tokens.effects.backdropFilter.modal,

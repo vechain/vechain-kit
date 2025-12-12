@@ -38,7 +38,7 @@ export type UpgradeSmartAccountContentProps = {
 export const UpgradeSmartAccountContent = ({
     setCurrentContent,
     handleClose,
-    initialContent = 'access-and-security',
+    initialContent = 'settings',
 }: UpgradeSmartAccountContentProps) => {
     const { t } = useTranslation();
     const { smartAccount, connectedWallet } = useWallet();

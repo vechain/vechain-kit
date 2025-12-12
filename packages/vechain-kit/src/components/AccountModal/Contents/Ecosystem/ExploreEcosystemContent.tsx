@@ -108,7 +108,7 @@ export const ExploreEcosystemContent = ({
     const { t } = useTranslation();
     const { darkMode: isDark, network } = useVeChainKitConfig();
     const { isolatedView } = useAccountModalOptions();
-    
+
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -206,7 +206,9 @@ export const ExploreEcosystemContent = ({
             <StickyHeaderContainer>
                 <ModalHeader>{t('Ecosystem')}</ModalHeader>
                 {!isolatedView && (
-                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('settings')}
+                    />
                 )}
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -236,9 +238,7 @@ export const ExploreEcosystemContent = ({
                             pl={12}
                         />
                         <InputLeftElement h="56px" w="56px" pl={4}>
-                            <LuSearch
-                                color={textTertiary}
-                            />
+                            <LuSearch color={textTertiary} />
                         </InputLeftElement>
                     </InputGroup>
 

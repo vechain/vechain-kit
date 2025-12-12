@@ -51,7 +51,6 @@ export const getXAppMetadata = async (
     networkType: NETWORK_TYPE,
 ): Promise<XAppMetadata | undefined> => {
     const url = convertUriToUrl(uri, networkType) || '';
-
     const response = await fetch(url, {
         signal: AbortSignal.timeout(20000),
     });
@@ -76,11 +75,14 @@ export const useXAppMetadata = (xAppId: string) => {
             const address = getConfig(network.type).x2EarnAppsContractAddress;
             const contract = thor.contracts.load(address, abi);
 
-            const [app] = await contract.read.app(xAppId as `0x${string}`);
-            const metadataURI = app.metadataURI || '';
+            const appDetailsResult = await contract.read.app(
+                xAppId as `0x${string}`,
+            );
+
+            const appDetails = appDetailsResult[0] as unknown as unknown[];
+            const metadataURI = appDetails[3]?.toString() || '';
 
             const [baseUri] = await contract.read.baseURI();
-
             const metadata = await getXAppMetadata(
                 `${baseUri}${metadataURI}`,
                 network.type,
@@ -88,5 +90,6 @@ export const useXAppMetadata = (xAppId: string) => {
 
             return metadata;
         },
+        enabled: !!xAppId,
     });
 };

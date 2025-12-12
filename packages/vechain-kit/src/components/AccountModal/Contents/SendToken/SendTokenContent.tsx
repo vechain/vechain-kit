@@ -256,16 +256,42 @@ export const SendTokenContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={1} align="stretch" position="relative">
-                    <Box p={6} borderRadius="xl" bg={cardBg}>
+                <VStack spacing={2} align="stretch" position="relative">
+                    <HStack justify="space-between">
                         <Text
-                            fontSize="sm"
-                            fontWeight="medium"
+                            fontSize="md"
+                            fontWeight="bold"
                             color={textPrimary}
-                            mb={2}
                         >
                             {t('Amount')}
                         </Text>
+
+                        <Text
+                            cursor="pointer"
+                            _hover={{
+                                color: textSecondary,
+                                textDecoration: 'underline',
+                            }}
+                            onClick={handleSetMaxAmount}
+                            noOfLines={1}
+                            overflow="hidden"
+                            textOverflow="ellipsis"
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={textSecondary}
+                        >
+                            {t('Balance')}:{' '}
+                            {Number(selectedToken?.balance ?? 0).toLocaleString(
+                                undefined,
+                                {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                },
+                            )}
+                        </Text>
+                    </HStack>
+
+                    <Box p={6} borderRadius="2xl" bg={cardBg}>
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.amount}>
                                 <HStack justify="space-between">
@@ -443,19 +469,6 @@ export const SendTokenContent = ({
                                         <Text color={textSecondary}>
                                             ≈ {formattedValue}
                                         </Text>
-                                        <Text
-                                            cursor="pointer"
-                                            _hover={{
-                                                color: textSecondary,
-                                                textDecoration: 'underline',
-                                            }}
-                                            onClick={handleSetMaxAmount}
-                                            noOfLines={1}
-                                            overflow="hidden"
-                                            textOverflow="ellipsis"
-                                        >
-                                            {t('Send all')}
-                                        </Text>
                                     </HStack>
                                 )}
                                 {errors.amount && (
@@ -472,24 +485,17 @@ export const SendTokenContent = ({
                         </VStack>
                     </Box>
 
-                    <Box borderRadius="xl" bg={cardBg}>
+                    <HStack justify="space-between" mt={2}>
                         <Text
-                            fontSize="sm"
-                            fontWeight="medium"
+                            fontSize="md"
+                            fontWeight="bold"
                             color={textPrimary}
-                            mb={2}
-                            px={6}
-                            pt={6}
                         >
                             {t('To')}
                         </Text>
-                        <VStack
-                            align="stretch"
-                            spacing={2}
-                            p={6}
-                            pt={2}
-                            width="100%"
-                        >
+                    </HStack>
+                    <Box borderRadius="2xl" bg={cardBg}>
+                        <VStack align="stretch" spacing={2} p={6} width="100%">
                             <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
                                     {...register('toAddressOrDomain', {

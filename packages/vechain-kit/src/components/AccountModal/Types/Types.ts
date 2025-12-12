@@ -6,7 +6,7 @@ import {
     CustomizationSummaryContentProps,
     UpgradeSmartAccountContentProps,
 } from '../Contents';
-import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
+import { DisconnectConfirmContentProps } from '../Contents/DisconnectConfirmation/DisconnectConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
 import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterSection';
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
@@ -20,8 +20,6 @@ export type AccountModalContentTypes =
     | 'main'
     | 'settings'
     | 'profile'
-    | 'access-and-security'
-    | 'embedded-wallet'
     | 'manage-mfa'
     | 'receive-token'
     | 'swap-token'
@@ -33,9 +31,7 @@ export type AccountModalContentTypes =
     | 'assets'
     | 'bridge'
     | 'change-currency'
-    | 'general-settings'
     | 'change-language'
-    | 'appearance-settings'
     | 'gas-token-settings'
     | {
           type: 'swap-token';

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -14,14 +15,10 @@ import {
     ChooseNameSearchContent,
     ChooseNameSummaryContent,
     FAQContent,
-    AccessAndSecurityContent,
-    EmbeddedWalletContent,
     ProfileContent,
     AssetsContent,
     BridgeContent,
-    GeneralSettingsContent,
     LanguageSettingsContent,
-    AppearanceSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
 } from './Contents';
@@ -31,7 +28,7 @@ import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
 import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
-import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
+import { DisconnectConfirmContent } from './Contents/DisconnectConfirmation';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
@@ -39,6 +36,8 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
+import { contentVariants, transition } from './utils/animationVariants';
+import { getContentKey } from './utils/getContentKey';
 
 type Props = {
     isOpen: boolean;
@@ -53,6 +52,8 @@ export const AccountModal = ({
 }: Props) => {
     useNotificationAlerts();
     const { account } = useWallet();
+    const previousContentRef = useRef<AccountModalContentTypes | null>(null);
+    const directionRef = useRef<'forward' | 'backward'>('forward');
 
     const {
         accountModalContent: currentContent,
@@ -64,6 +65,38 @@ export const AccountModal = ({
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);
+
+    // Track navigation direction (computed synchronously)
+    const direction = (() => {
+        if (
+            previousContentRef.current === null ||
+            previousContentRef.current === currentContent
+        ) {
+            return directionRef.current;
+        }
+        // Determine direction based on common navigation patterns
+        const prevKey = getContentKey(previousContentRef.current);
+        const currKey = getContentKey(currentContent);
+
+        // Common backward navigation patterns
+        const isBackward =
+            // Going back to main from any view
+            currKey === 'main' ||
+            // Going back to settings from sub-settings
+            (currKey === 'settings' && prevKey !== 'main') ||
+            // Going from summary/confirmation back to main content
+            prevKey.includes('summary') ||
+            prevKey.includes('confirm') ||
+            prevKey.includes('operation');
+
+        return isBackward ? 'backward' : 'forward';
+    })();
+
+    // Update refs after computing direction
+    useEffect(() => {
+        directionRef.current = direction;
+        previousContentRef.current = currentContent;
+    }, [currentContent, direction]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
@@ -110,9 +143,7 @@ export const AccountModal = ({
                         <SuccessfulOperationContent {...currentContent.props} />
                     );
                 case 'failed-operation':
-                    return (
-                        <FailedOperationContent {...currentContent.props} />
-                    );
+                    return <FailedOperationContent {...currentContent.props} />;
                 case 'upgrade-smart-account':
                     return (
                         <UpgradeSmartAccountContent {...currentContent.props} />
@@ -170,12 +201,6 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
-            case 'access-and-security':
-                return (
-                    <AccessAndSecurityContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
             case 'receive-token':
                 return (
                     <ReceiveTokenContent
@@ -195,18 +220,12 @@ export const AccountModal = ({
             case 'privy-linked-accounts':
                 return (
                     <PrivyLinkedAccounts
-                        onBack={() => setCurrentContent('access-and-security')}
+                        onBack={() => setCurrentContent('settings')}
                     />
                 );
             case 'ecosystem':
                 return (
                     <ExploreEcosystemContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'embedded-wallet':
-                return (
-                    <EmbeddedWalletContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -222,21 +241,9 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
-            case 'general-settings':
-                return (
-                    <GeneralSettingsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
             case 'change-language':
                 return (
                     <LanguageSettingsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'appearance-settings':
-                return (
-                    <AppearanceSettingsContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -251,6 +258,9 @@ export const AccountModal = ({
         }
     };
 
+    const content = renderContent();
+    const contentKey = getContentKey(currentContent);
+
     return (
         <BaseModal
             isOpen={isOpen}
@@ -258,7 +268,22 @@ export const AccountModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
         >
-            {renderContent()}
+            <AnimatePresence mode="wait" initial={false}>
+                {content && (
+                    <motion.div
+                        key={contentKey}
+                        custom={directionRef.current}
+                        variants={contentVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={transition}
+                        style={{ width: '100%' }}
+                    >
+                        {content}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </BaseModal>
     );
 };

@@ -1,4 +1,4 @@
-import { Box, useToken } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useEffect, useState, useRef } from 'react';
 import { useVechainKitThemeConfig } from '@/providers';
 
@@ -9,26 +9,53 @@ type Props = {
 export const StickyHeaderContainer = ({ children }: Props) => {
     const [hasContentBelow, setHasContentBelow] = useState(false);
     const observerRef = useRef<HTMLDivElement>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const isInitialMountRef = useRef(true);
 
     // Use semantic tokens for sticky header
     const { tokens } = useVechainKitThemeConfig();
     const backdropFilter =
-        tokens?.effects?.backdropFilter?.stickyHeader ?? 'blur(12px)';
-    const stickyHeaderBg = useToken('colors', 'vechain-kit-sticky-header');
+        tokens?.effects?.backdropFilter?.stickyHeader ?? 'blur(20px)';
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
+        // Ignore intersection changes during initial mount and transitions
+        // This prevents the glitch when content is animating in
+        const handleIntersection = ([entry]: IntersectionObserverEntry[]) => {
+            // Clear any pending timeout
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+
+            // Debounce the state update to prevent rapid changes during animations
+            timeoutRef.current = setTimeout(() => {
+                // On initial mount, always start with false to prevent glitch
+                if (isInitialMountRef.current) {
+                    isInitialMountRef.current = false;
+                    setHasContentBelow(false);
+                    return;
+                }
                 setHasContentBelow(!entry.isIntersecting);
-            },
-            { threshold: 0 },
-        );
+            }, 50); // Small debounce to let animations settle
+        };
 
-        if (observerRef.current) {
-            observer.observe(observerRef.current);
-        }
+        const observer = new IntersectionObserver(handleIntersection, {
+            threshold: 0,
+        });
 
-        return () => observer.disconnect();
+        // Delay observation slightly to avoid initial glitch
+        const observeTimeout = setTimeout(() => {
+            if (observerRef.current) {
+                observer.observe(observerRef.current);
+            }
+        }, 200); // Wait for animation to complete (0.17s + small buffer)
+
+        return () => {
+            clearTimeout(observeTimeout);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+            observer.disconnect();
+        };
     }, []);
 
     return (
@@ -39,7 +66,6 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                bg={hasContentBelow ? stickyHeaderBg : 'transparent'}
                 backdropFilter={hasContentBelow ? backdropFilter : 'none'}
                 style={{
                     WebkitBackdropFilter: hasContentBelow
