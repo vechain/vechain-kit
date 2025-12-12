@@ -14,7 +14,6 @@ export const StickyHeaderContainer = ({ children }: Props) => {
     const { tokens } = useVechainKitThemeConfig();
     const backdropFilter =
         tokens?.effects?.backdropFilter?.stickyHeader ?? 'blur(20px)';
-    // const stickyHeaderBg = useToken('colors', 'vechain-kit-sticky-header');
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -39,7 +38,6 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                // bg={hasContentBelow ? stickyHeaderBg : 'transparent'}
                 backdropFilter={hasContentBelow ? backdropFilter : 'none'}
                 style={{
                     WebkitBackdropFilter: hasContentBelow

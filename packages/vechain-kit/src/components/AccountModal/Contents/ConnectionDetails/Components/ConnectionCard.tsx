@@ -1,14 +1,31 @@
 import { getConfig } from '@/config';
-import { useWallet, useFetchPrivyStatus, useGetAccountVersion } from '@/hooks';
+import {
+    useFetchAppInfo,
+    useWallet,
+    useFetchPrivyStatus,
+    useGetAccountVersion,
+} from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { HStack, Text, useToken } from '@chakra-ui/react';
+import { VStack, Text, Spinner, HStack, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { CrossAppConnectionCache } from '@/types';
+import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
 import packageJson from '../../../../../../package.json';
 
-export const NetworkInfo = () => {
+type Props = {
+    connectionCache?: CrossAppConnectionCache;
+};
+
+export const ConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
-    const { network } = useVeChainKitConfig();
     const { connection, smartAccount, connectedWallet } = useWallet();
+    const { source: sourceDappKit } = useWalletDappKit();
+    const { privy, network } = useVeChainKitConfig();
+
+    const { data: appInfo, isLoading: isPrivyLoading } = useFetchAppInfo(
+        privy?.appId ?? '',
+    );
+
     const { data: privyStatus, isLoading: isPrivyStatusLoading } =
         useFetchPrivyStatus();
 
@@ -18,13 +35,33 @@ export const NetworkInfo = () => {
             connectedWallet?.address ?? '',
         );
 
-    const textColor = useToken('colors', 'vechain-kit-text-primary');
-    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const cardBg = useToken('colors', 'vechain-kit-card');
+    const textColorSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
+
+    const getConnectionName = (): string | null => {
+        if (
+            connection.isConnectedWithCrossApp &&
+            connectionCache?.ecosystemApp
+        ) {
+            return connectionCache.ecosystemApp.name;
+        }
+        if (connection.isConnectedWithSocialLogin && appInfo) {
+            return Object.values(appInfo)[0].name;
+        }
+        if (connection.isConnectedWithDappKit && sourceDappKit) {
+            return sourceDappKit;
+        }
+        return null;
+    };
+
+    const connectionName = getConnectionName();
+    const isLoading = connection.isConnectedWithSocialLogin && isPrivyLoading;
 
     const InfoRow = ({
         label,
         value,
-        isLoading = false,
+        isLoading: isLoadingRow = false,
         href,
     }: {
         label: string;
@@ -33,7 +70,7 @@ export const NetworkInfo = () => {
         href?: string;
     }) => (
         <HStack w="full" justifyContent="space-between">
-            <Text fontSize="sm" color={textColor}>
+            <Text fontSize="sm" color={textPrimary}>
                 {label}:
             </Text>
             <Text
@@ -43,15 +80,46 @@ export const NetworkInfo = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: href ? 'underline' : 'none' }}
-                color={textSecondary}
+                color={textColorSecondary}
             >
-                {isLoading ? 'Loading...' : value}
+                {isLoadingRow ? 'Loading...' : value}
             </Text>
         </HStack>
     );
 
+    if (isLoading) {
+        return (
+            <VStack w="full" h="full" justify="center" align="center">
+                <Spinner />
+            </VStack>
+        );
+    }
+
+    if (!connectionName) {
+        return null;
+    }
+
     return (
-        <>
+        <VStack
+            p={4}
+            bg={cardBg}
+            borderRadius={'xl'}
+            spacing={4}
+            w="full"
+            justifyContent="space-between"
+        >
+            <InfoRow label={t('Logged in with')} value={connectionName} />
+
+            {connection.isConnectedWithCrossApp &&
+                connectionCache?.timestamp && (
+                    <InfoRow
+                        label={t('At')}
+                        value={new Date(
+                            connectionCache.timestamp,
+                        ).toLocaleString()}
+                    />
+                )}
+
             <InfoRow
                 label={t('Connection Type')}
                 value={connection.source.type}
@@ -93,6 +161,6 @@ export const NetworkInfo = () => {
                 value={packageJson.version}
                 href={`https://github.com/vechain/vechain-kit/releases/tag/${packageJson.version}`}
             />
-        </>
+        </VStack>
     );
 };
