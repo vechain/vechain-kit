@@ -546,6 +546,7 @@ const defaultLightTokens: ThemeTokens = {
             bg: 'rgb(96 66 221)',
             color: 'white',
             border: 'none',
+            rounded: 'full',
         },
         tertiaryButton: {
             bg: 'transparent',
@@ -636,9 +637,10 @@ const defaultDarkTokens: ThemeTokens = {
             border: 'none',
         },
         primaryButton: {
-            bg: 'rgb(96 66 221)',
-            color: 'white',
+            bg: 'white',
+            color: 'blackAlpha.900',
             border: 'none',
+            rounded: 'full',
         },
         tertiaryButton: {
             bg: 'transparent',
