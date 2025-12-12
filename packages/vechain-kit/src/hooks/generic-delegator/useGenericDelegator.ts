@@ -72,13 +72,6 @@ export const estimateAndBuildTxBody = async (
         0,
     );
 
-    if (!isDelegated) {
-        return await thor.transactions.buildTransactionBody(
-            clauses,
-            parsedGasLimit,
-        );
-    }
-
     return await thor.transactions.buildTransactionBody(
         clauses,
         parsedGasLimit,
