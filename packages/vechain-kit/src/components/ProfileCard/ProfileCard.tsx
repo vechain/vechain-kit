@@ -1,13 +1,6 @@
 import {
     Box,
     Button,
-    Card,
-    CardBody,
-    CardBodyProps,
-    CardFooter,
-    CardFooterProps,
-    CardProps,
-    Divider,
     HStack,
     Icon,
     Link,
@@ -33,11 +26,6 @@ export type ProfileCardProps = {
     showDescription?: boolean;
     showDisplayName?: boolean;
     showEdit?: boolean;
-    style?: {
-        card?: CardProps;
-        body?: CardBodyProps;
-        footer?: CardFooterProps;
-    };
 };
 
 export const ProfileCard = ({
@@ -49,7 +37,6 @@ export const ProfileCard = ({
     showDescription = true,
     showDisplayName = true,
     showEdit = true,
-    style,
 }: ProfileCardProps) => {
     const { t } = useTranslation();
     const { account, disconnect } = useWallet();
@@ -70,27 +57,113 @@ export const ProfileCard = ({
         metadata?.records?.['com.x'] ||
         metadata?.records?.email;
 
+    const safeHttpUrl = (raw: string): string | null => {
+        try {
+            const u = new URL(raw);
+            return u.protocol === 'http:' || u.protocol === 'https:'
+                ? u.toString()
+                : null;
+        } catch {
+            return null;
+        }
+    };
+
     return (
-        <Card variant="vechainKitBase" {...style?.card}>
+        <VStack spacing={4} w="full">
             <Box
                 p={0}
                 backgroundSize="100% !important"
                 backgroundPosition="center"
                 position="relative"
-                h="80px"
+                // h="80px"
                 background={
                     showHeader ? `no-repeat url('${headerImageSvg}')` : 'none'
                 }
                 w="100%"
                 borderRadius="14px 14px 0 0"
             />
-            <Box
-                position="absolute"
-                top="30px"
-                left="50%"
-                transform="translateX(-50%)"
-            >
-                <AccountAvatar
+            <AccountAvatar
+                wallet={{
+                    address,
+                    domain: metadata?.domain,
+                    image: metadata?.image,
+                    isLoadingMetadata: metadata?.isLoading,
+                    metadata: metadata?.records,
+                }}
+                props={{
+                    width: '120px',
+                    height: '120px',
+                    // boxShadow: '0px 0px 3px 2px #00000024',
+                }}
+            />
+
+            <VStack w={'full'} spacing={2}>
+                {showDisplayName && metadata?.records?.display && (
+                    <Text
+                        fontSize="xl"
+                        color={textPrimary}
+                        fontWeight="bold"
+                        w="full"
+                        textAlign="center"
+                        mt={2}
+                        data-testid="display-name-val"
+                    >
+                        {metadata?.records?.display}
+                    </Text>
+                )}
+
+                {showDescription && metadata?.records?.description && (
+                    <Text
+                        fontSize="sm"
+                        color={textSecondary}
+                        w="full"
+                        textAlign="center"
+                        data-testid="description-val"
+                    >
+                        {metadata?.records?.description}
+                    </Text>
+                )}
+
+                {showLinks && hasLinks && (
+                    <HStack w={'full'} justify={'center'} spacing={5} mt={4}>
+                        {metadata?.records?.email && (
+                            <Link
+                                href={`mailto:${metadata?.records?.email}`}
+                                target="_blank"
+                                data-testid="mail-link"
+                            >
+                                <Icon as={LuMail} color={textPrimary} />
+                            </Link>
+                        )}
+                        {metadata?.records?.url && (
+                            <Link
+                                href={
+                                    safeHttpUrl(metadata.records.url) ??
+                                    undefined
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                data-testid="website-link"
+                            >
+                                <Icon as={LuGlobe} color={textPrimary} />
+                            </Link>
+                        )}
+                        {metadata?.records?.['com.x'] && (
+                            <Link
+                                href={`https://x.com/${encodeURIComponent(
+                                    String(metadata.records['com.x']),
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                data-testid="twitter-link"
+                            >
+                                <Icon as={FaXTwitter} color={textPrimary} />
+                            </Link>
+                        )}
+                    </HStack>
+                )}
+
+                <AddressDisplay
                     wallet={{
                         address,
                         domain: metadata?.domain,
@@ -98,153 +171,62 @@ export const ProfileCard = ({
                         isLoadingMetadata: metadata?.isLoading,
                         metadata: metadata?.records,
                     }}
-                    props={{
-                        width: '120px',
-                        height: '120px',
-                        // boxShadow: '0px 0px 3px 2px #00000024',
-                    }}
+                    style={{ mt: 4 }}
                 />
-            </Box>
-            <CardBody
-                mt={'60px'}
-                backgroundColor={'none'}
-                border={'none'}
-                {...style?.body}
-            >
-                <VStack w={'full'} spacing={2}>
-                    {showDisplayName && metadata?.records?.display && (
-                        <Text
-                            fontSize="xl"
-                            color={textPrimary}
-                            fontWeight="bold"
-                            w="full"
-                            textAlign="center"
-                            mt={2}
-                            data-testid="display-name-val"
-                        >
-                            {metadata?.records?.display}
-                        </Text>
-                    )}
+            </VStack>
 
-                    {showDescription && metadata?.records?.description && (
-                        <Text
-                            fontSize="sm"
-                            color={textSecondary}
-                            w="full"
-                            textAlign="center"
-                            data-testid="description-val"
-                        >
-                            {metadata?.records?.description}
-                        </Text>
-                    )}
-
-                    {showLinks && hasLinks && (
-                        <HStack
-                            w={'full'}
-                            justify={'center'}
-                            spacing={5}
-                            mt={4}
-                        >
-                            {metadata?.records?.email && (
-                                <Link
-                                    href={`mailto:${metadata?.records?.email}`}
-                                    target="_blank"
-                                    data-testid="mail-link"
-                                >
-                                    <Icon as={LuMail} color={textPrimary} />
-                                </Link>
-                            )}
-                            {metadata?.records?.url && (
-                                <Link
-                                    href={metadata?.records?.url}
-                                    target="_blank"
-                                    data-testid="website-link"
-                                >
-                                    <Icon as={LuGlobe} color={textPrimary} />
-                                </Link>
-                            )}
-                            {metadata?.records?.['com.x'] && (
-                                <Link
-                                    href={`https://x.com/${metadata?.records?.['com.x']}`}
-                                    target="_blank"
-                                    data-testid="twitter-link"
-                                >
-                                    <Icon as={FaXTwitter} color={textPrimary} />
-                                </Link>
-                            )}
-                        </HStack>
-                    )}
-
-                    <AddressDisplay
-                        wallet={{
-                            address,
-                            domain: metadata?.domain,
-                            image: metadata?.image,
-                            isLoadingMetadata: metadata?.isLoading,
-                            metadata: metadata?.records,
-                        }}
-                        style={{ mt: 4 }}
-                    />
-                </VStack>
-            </CardBody>
             {isConnectedAccount && showEdit && (
-                <CardFooter justify="space-between" {...style?.footer}>
-                    <VStack w="full" justify="space-between" spacing={4}>
-                        <Divider />
-                        <HStack w="full" justify="space-between">
-                            <Button
-                                size="md"
-                                width="full"
-                                height="40px"
-                                variant="ghost"
-                                leftIcon={<Icon as={LuPencil} />}
-                                onClick={
-                                    onEditClick ??
-                                    (() => {
-                                        openAccountModal({
-                                            type: 'account-customization',
-                                            props: {
-                                                setCurrentContent: () =>
-                                                    closeAccountModal(),
-                                            },
-                                        });
-                                    })
-                                }
-                                data-testid="customize-button"
-                            >
-                                {t('Customize')}
-                            </Button>
-                            <Button
-                                size="md"
-                                width="full"
-                                height="40px"
-                                variant="ghost"
-                                leftIcon={<Icon as={LuLogOut} />}
-                                colorScheme="red"
-                                onClick={
-                                    onLogout ??
-                                    (() => {
-                                        openAccountModal({
-                                            type: 'disconnect-confirm',
-                                            props: {
-                                                onDisconnect: () => {
-                                                    disconnect();
-                                                    closeAccountModal();
-                                                },
-                                                onBack: () =>
-                                                    closeAccountModal(),
-                                            },
-                                        });
-                                    })
-                                }
-                                data-testid="logout-button"
-                            >
-                                {t('Logout')}
-                            </Button>
-                        </HStack>
-                    </VStack>
-                </CardFooter>
+                <HStack w="full" justify="space-between" spacing={4} mt={4}>
+                    <Button
+                        size="md"
+                        width="full"
+                        height="40px"
+                        variant="vechainKitSecondary"
+                        leftIcon={<Icon as={LuPencil} />}
+                        onClick={
+                            onEditClick ??
+                            (() => {
+                                openAccountModal({
+                                    type: 'account-customization',
+                                    props: {
+                                        setCurrentContent: () =>
+                                            closeAccountModal(),
+                                    },
+                                });
+                            })
+                        }
+                        data-testid="customize-button"
+                    >
+                        {t('Customize')}
+                    </Button>
+                    <Button
+                        size="md"
+                        width="full"
+                        height="40px"
+                        variant="vechainKitSecondary"
+                        leftIcon={<Icon as={LuLogOut} />}
+                        colorScheme="red"
+                        onClick={
+                            onLogout ??
+                            (() => {
+                                openAccountModal({
+                                    type: 'disconnect-confirm',
+                                    props: {
+                                        onDisconnect: () => {
+                                            disconnect();
+                                            closeAccountModal();
+                                        },
+                                        onBack: () => closeAccountModal(),
+                                    },
+                                });
+                            })
+                        }
+                        data-testid="logout-button"
+                    >
+                        {t('Logout')}
+                    </Button>
+                </HStack>
             )}
-        </Card>
+        </VStack>
     );
 };

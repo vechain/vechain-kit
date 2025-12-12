@@ -14,6 +14,10 @@ export const WalletSecuredBy = () => {
     const connectionCache = getConnectionCache();
     const cardBg = useToken('colors', 'vechain-kit-card');
 
+    if (!connection.isConnectedWithPrivy) {
+        return null;
+    }
+
     return (
         <VStack
             w={'full'}

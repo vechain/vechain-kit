@@ -380,7 +380,7 @@ function derivePrimaryButtonStyles(
         // But allow customization via primaryButton config
         return {
             bg: defaultTokens.buttons.primaryButton.bg,
-            color: 'white', // Primary buttons typically have white text
+            color: defaultTokens.buttons.primaryButton.color,
             border: 'none',
         };
     }
@@ -471,7 +471,7 @@ function getGlassEffectSettings(
     const defaultBlur = {
         modal: 'blur(3px)',
         overlay: 'blur(3px)',
-        stickyHeader: 'blur(12px)',
+        stickyHeader: 'blur(20px)',
     };
 
     if (!enabled) {
@@ -543,8 +543,9 @@ const defaultLightTokens: ThemeTokens = {
             border: 'none',
         },
         primaryButton: {
-            bg: 'rgb(96 66 221)',
+            bg: '#272A2E',
             color: 'white',
+            rounded: 'full',
             border: 'none',
         },
         tertiaryButton: {
@@ -636,9 +637,10 @@ const defaultDarkTokens: ThemeTokens = {
             border: 'none',
         },
         primaryButton: {
-            bg: 'rgb(96 66 221)',
-            color: 'white',
+            bg: 'white',
+            color: 'blackAlpha.900',
             border: 'none',
+            rounded: 'full',
         },
         tertiaryButton: {
             bg: 'transparent',
