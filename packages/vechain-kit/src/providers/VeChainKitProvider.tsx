@@ -609,6 +609,7 @@ export const VeChainKitProvider = (
             privyButtonHoverBg,
             privyButtonActiveBg,
             tokens.colors.border.default,
+            tokens.modal.zIndex,
         );
     }, [
         privyCSSVariables,
@@ -616,6 +617,7 @@ export const VeChainKitProvider = (
         tokens.colors.background.card,
         tokens.colors.background.cardElevated,
         tokens.colors.border.default,
+        tokens.modal.zIndex,
         darkMode,
     ]);
 

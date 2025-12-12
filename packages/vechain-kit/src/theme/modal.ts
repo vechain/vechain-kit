@@ -16,6 +16,7 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             backgroundColor: tokens.colors.background.modal,
             backdropFilter: tokens.effects.backdropFilter.modal,
             border: tokens.colors.border.modal,
+            zIndex: tokens.modal.zIndex ?? 1000,
         },
         overlay: {
             backgroundColor: tokens.colors.background.overlay,
