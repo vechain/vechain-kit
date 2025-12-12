@@ -14,14 +14,10 @@ import {
     ChooseNameSearchContent,
     ChooseNameSummaryContent,
     FAQContent,
-    AccessAndSecurityContent,
-    EmbeddedWalletContent,
     ProfileContent,
     AssetsContent,
     BridgeContent,
-    GeneralSettingsContent,
     LanguageSettingsContent,
-    AppearanceSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
 } from './Contents';
@@ -168,12 +164,6 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
-            case 'access-and-security':
-                return (
-                    <AccessAndSecurityContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
             case 'receive-token':
                 return (
                     <ReceiveTokenContent
@@ -193,18 +183,12 @@ export const AccountModal = ({
             case 'privy-linked-accounts':
                 return (
                     <PrivyLinkedAccounts
-                        onBack={() => setCurrentContent('access-and-security')}
+                        onBack={() => setCurrentContent('settings')}
                     />
                 );
             case 'ecosystem':
                 return (
                     <ExploreEcosystemContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'embedded-wallet':
-                return (
-                    <EmbeddedWalletContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -220,21 +204,9 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
-            case 'general-settings':
-                return (
-                    <GeneralSettingsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
             case 'change-language':
                 return (
                     <LanguageSettingsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'appearance-settings':
-                return (
-                    <AppearanceSettingsContent
                         setCurrentContent={setCurrentContent}
                     />
                 );

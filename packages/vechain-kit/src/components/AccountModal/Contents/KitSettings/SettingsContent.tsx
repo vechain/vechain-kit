@@ -7,18 +7,27 @@ import {
     ModalCloseButton,
     Text,
     useToken,
+    Divider,
 } from '@chakra-ui/react';
-import { useUpgradeRequired, useWallet } from '@/hooks';
+import {
+    useMfaEnrollment,
+    usePrivy,
+    useUpgradeRequired,
+    useWallet,
+} from '@/hooks';
 import {
     LuChevronRight,
     LuCircleHelp,
     LuShield,
     LuLogOut,
-    LuSettings,
     LuDollarSign,
     LuLanguages,
     LuFuel,
     LuLayoutGrid,
+    LuUserCog,
+    LuKey,
+    LuShieldCheck,
+    LuSettings2,
 } from 'react-icons/lu';
 import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -44,6 +53,9 @@ export const SettingsContent = ({
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
+    const { exportWallet } = usePrivy();
+    const { showMfaEnrollmentModal } = useMfaEnrollment();
+
     const { feeDelegation } = useVeChainKitConfig();
 
     const { connection, disconnect, smartAccount, connectedWallet } =
@@ -55,22 +67,24 @@ export const SettingsContent = ({
         3,
     );
 
+    const handleUpgradeSmartAccountClick = () => {
+        setCurrentContent({
+            type: 'upgrade-smart-account',
+            props: {
+                setCurrentContent,
+                initialContent: 'settings',
+            },
+        });
+    };
+
     useEffect(() => {
         if (contentRef.current) {
             contentRef.current.scrollTop = 0;
         }
     }, []);
 
-    const handleAccessAndSecurity = () => {
-        setCurrentContent('access-and-security');
-    };
-
     const handleConnectionDetails = () => {
         setCurrentContent('connection-details');
-    };
-
-    const handleGeneralSettings = () => {
-        setCurrentContent('general-settings');
     };
 
     const handleLogout = () => {
@@ -153,44 +167,68 @@ export const SettingsContent = ({
                     />
                 </VStack>
 
-                <VStack w={'full'} spacing={2} mt={4}>
-                    <Text
-                        fontSize={'sm'}
-                        fontWeight={'bold'}
-                        color={textSecondary}
-                        textAlign={'left'}
-                        w={'full'}
-                    >
-                        {t('Access and security')}
-                    </Text>
-                    {connection.isConnectedWithPrivy && (
+                {upgradeRequired && (
+                    <VStack w={'full'} spacing={2} mt={4}>
                         <ActionButton
-                            title={t('Access and security')}
-                            onClick={handleAccessAndSecurity}
-                            leftIcon={LuShield}
-                            rightIcon={LuChevronRight}
+                            title={t('Upgrade Smart Account to V3')}
+                            description={t(
+                                'A new version is available for your account',
+                            )}
+                            onClick={handleUpgradeSmartAccountClick}
+                            leftIcon={LuSettings2}
                             extraContent={
-                                upgradeRequired && (
-                                    <Box
-                                        minWidth="8px"
-                                        height="8px"
-                                        bg="red.500"
-                                        borderRadius="full"
-                                        display="flex"
-                                        alignItems="center"
-                                        justifyContent="center"
-                                    />
-                                )
+                                <Box
+                                    minWidth="8px"
+                                    height="8px"
+                                    bg="red.500"
+                                    borderRadius="full"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    ml={2}
+                                />
                             }
                         />
-                    )}
-                    <ActionButton
-                        title={t('General')}
-                        onClick={handleGeneralSettings}
-                        leftIcon={LuSettings}
-                        rightIcon={LuChevronRight}
-                    />
-                </VStack>
+                    </VStack>
+                )}
+
+                {connection.isConnectedWithSocialLogin && (
+                    <VStack w={'full'} spacing={2} mt={4}>
+                        <Text
+                            fontSize={'sm'}
+                            fontWeight={'bold'}
+                            color={textSecondary}
+                            textAlign={'left'}
+                            w={'full'}
+                        >
+                            {t('Access and security')}
+                        </Text>
+                        <ActionButton
+                            title={t('Login methods and Passkeys')}
+                            onClick={() => {
+                                setCurrentContent('privy-linked-accounts');
+                            }}
+                            leftIcon={LuUserCog}
+                            rightIcon={LuChevronRight}
+                        />
+
+                        <ActionButton
+                            title={t('Backup your wallet')}
+                            onClick={() => {
+                                exportWallet();
+                            }}
+                            leftIcon={LuKey}
+                        />
+
+                        <ActionButton
+                            title={t('Manage MFA')}
+                            onClick={() => {
+                                showMfaEnrollmentModal();
+                            }}
+                            leftIcon={LuShieldCheck}
+                        />
+                    </VStack>
+                )}
 
                 <VStack w={'full'} spacing={2} mt={4}>
                     <Text
@@ -235,19 +273,22 @@ export const SettingsContent = ({
                 </VStack>
             </ModalBody>
             <ModalFooter w={'full'}>
-                <ActionButton
-                    title={t('Logout')}
-                    onClick={() =>
-                        setCurrentContent({
-                            type: 'disconnect-confirm',
-                            props: {
-                                onDisconnect: handleLogout,
-                                onBack: () => setCurrentContent('settings'),
-                            },
-                        })
-                    }
-                    leftIcon={LuLogOut}
-                />
+                <VStack w={'full'} spacing={4}>
+                    <Divider />
+                    <ActionButton
+                        title={t('Logout')}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: handleLogout,
+                                    onBack: () => setCurrentContent('settings'),
+                                },
+                            })
+                        }
+                        leftIcon={LuLogOut}
+                    />
+                </VStack>
             </ModalFooter>
         </Box>
     );

@@ -54,7 +54,7 @@ export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
                 <ModalHeader>{t('Select language')}</ModalHeader>
 
                 <ModalBackButton
-                    onClick={() => setCurrentContent('general-settings')}
+                    onClick={() => setCurrentContent('settings')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

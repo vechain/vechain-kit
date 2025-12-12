@@ -64,7 +64,7 @@ export const ChangeCurrencyContent = ({
             <StickyHeaderContainer>
                 <ModalHeader>{t('Select currency')}</ModalHeader>
                 <ModalBackButton
-                    onClick={() => setCurrentContent('general-settings')}
+                    onClick={() => setCurrentContent('settings')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>
