@@ -203,6 +203,9 @@ export const CustomizationContent = ({
                 <Box
                     cursor={hasDomain ? 'pointer' : 'default'}
                     pt={2}
+                    display="flex"
+                    justifyContent="center"
+                    position="relative"
                     onClick={() => hasDomain && fileInputRef.current?.click()}
                 >
                     <AccountAvatar
@@ -212,7 +215,6 @@ export const CustomizationContent = ({
                             height: '100px',
                             boxShadow: '0px 0px 3px 2px #00000024',
                             src: previewImageUrl ?? undefined,
-                            justifySelf: 'center',
                         }}
                     />
                     {hasDomain && (
