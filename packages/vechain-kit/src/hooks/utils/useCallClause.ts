@@ -37,6 +37,30 @@ export const getCallClauseQueryKey = <
     method: TMethod;
 }) => ['callClause', address, method];
 
+/**
+ * Serializes args for query key by converting BigInt values to strings
+ * This prevents JSON.stringify errors when React Query serializes the query key
+ */
+const serializeArgsForQueryKey = (args: unknown[]): unknown[] => {
+    return args.map((arg) => {
+        if (typeof arg === 'bigint') {
+            return arg.toString();
+        }
+        if (Array.isArray(arg)) {
+            return serializeArgsForQueryKey(arg);
+        }
+        if (arg && typeof arg === 'object') {
+            return Object.fromEntries(
+                Object.entries(arg).map(([key, value]) => [
+                    key,
+                    typeof value === 'bigint' ? value.toString() : value,
+                ]),
+            );
+        }
+        return arg;
+    });
+};
+
 export const getCallClauseQueryKeyWithArgs = <
     TAbi extends Abi,
     TMethod extends ExtractAbiFunctionNames<TAbi, 'pure' | 'view'>,
@@ -58,7 +82,7 @@ export const getCallClauseQueryKeyWithArgs = <
     'callClause',
     address,
     method,
-    ...(args?.length ? [args as unknown[]] : []),
+    ...(args?.length ? serializeArgsForQueryKey(args as unknown[]) : []),
 ];
 
 export const useCallClause = <
