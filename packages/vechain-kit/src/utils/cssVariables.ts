@@ -53,7 +53,7 @@ export function generateDAppKitCSSVariables(
     darkMode: boolean,
 ): CustomizedStyle {
     const vars: CustomizedStyle = {
-        '--vdk-modal-z-index': (tokens.modal.zIndex ?? 10000).toString(),
+        '--vdk-modal-z-index': '10000',
         '--vdk-modal-width': '22rem',
         '--vdk-modal-backdrop-filter': tokens.effects.backdropFilter.modal,
         '--vdk-border-dark-source-card': `1px solid ${tokens.colors.border.default}`,
@@ -279,7 +279,6 @@ export function applyPrivyCSSVariables(
     buttonHoverColor?: string,
     buttonActiveColor?: string,
     borderColor?: string,
-    zIndex?: number,
 ): void {
     if (typeof document === 'undefined') return;
 
@@ -309,18 +308,6 @@ export function applyPrivyCSSVariables(
             .privy-dialog-content {
                 backdrop-filter: ${backdropFilter} !important;
                 -webkit-backdrop-filter: ${backdropFilter} !important;
-            }
-        `);
-    }
-
-    // Apply z-index to Privy modal containers
-    if (zIndex !== undefined) {
-        cssRules.push(`
-            [data-privy-dialog-overlay],
-            [data-privy-dialog-content],
-            .privy-dialog-overlay,
-            .privy-dialog-content {
-                z-index: ${zIndex} !important;
             }
         `);
     }

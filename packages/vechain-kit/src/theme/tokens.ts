@@ -104,7 +104,6 @@ export interface ThemeTokens {
     };
     modal: {
         rounded?: string | number; // Optional border radius (Chakra UI rounded prop)
-        zIndex?: number; // Optional z-index for modal dialogs
     };
 }
 
@@ -125,7 +124,6 @@ export interface VechainKitThemeConfig {
         backdropFilter?: string; // Backdrop filter for modal dialog (e.g., "blur(10px)")
         borderRadius?: string; // Modal dialog border radius (e.g., "24px", "1rem") - deprecated, use rounded instead
         rounded?: string | number; // Border radius (Chakra UI rounded prop: "sm", "md", "lg", "xl", "2xl", "3xl", "full", or number)
-        zIndex?: number; // Z-index for modal dialogs (applies to VeChainKit, DAppKit, and Privy modals)
     };
     buttons?: {
         secondaryButton?: {
@@ -600,7 +598,6 @@ const defaultLightTokens: ThemeTokens = {
     },
     modal: {
         rounded: undefined,
-        zIndex: 1000,
     },
 };
 
@@ -695,7 +692,6 @@ const defaultDarkTokens: ThemeTokens = {
     },
     modal: {
         rounded: undefined,
-        zIndex: 1000,
     },
 };
 
@@ -848,13 +844,6 @@ export function mergeTokens(
         }
     }
 
-    if (customTokens.modal) {
-        merged.modal = {
-            ...defaultTokens.modal,
-            ...customTokens.modal,
-        };
-    }
-
     return merged;
 }
 
@@ -955,10 +944,9 @@ export function convertThemeConfigToTokens(
         };
     }
 
-    // Handle modal rounded property and zIndex
+    // Handle modal rounded property
     tokens.modal = {
         rounded: config.modal?.rounded ?? defaultTokens.modal.rounded,
-        zIndex: config.modal?.zIndex ?? defaultTokens.modal.zIndex,
     };
 
     // Handle glass effect settings
