@@ -471,7 +471,7 @@ function getGlassEffectSettings(
     const defaultBlur = {
         modal: 'blur(3px)',
         overlay: 'blur(3px)',
-        stickyHeader: 'blur(12px)',
+        stickyHeader: 'blur(20px)',
     };
 
     if (!enabled) {
