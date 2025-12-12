@@ -31,7 +31,7 @@ import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
 import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
-import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
+import { DisconnectConfirmContent } from './Contents/DisconnectConfirmation';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
@@ -110,9 +110,7 @@ export const AccountModal = ({
                         <SuccessfulOperationContent {...currentContent.props} />
                     );
                 case 'failed-operation':
-                    return (
-                        <FailedOperationContent {...currentContent.props} />
-                    );
+                    return <FailedOperationContent {...currentContent.props} />;
                 case 'upgrade-smart-account':
                     return (
                         <UpgradeSmartAccountContent {...currentContent.props} />

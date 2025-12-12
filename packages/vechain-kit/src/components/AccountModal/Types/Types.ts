@@ -6,7 +6,7 @@ import {
     CustomizationSummaryContentProps,
     UpgradeSmartAccountContentProps,
 } from '../Contents';
-import { DisconnectConfirmContentProps } from '../Contents/Account/DisconnectConfirmContent';
+import { DisconnectConfirmContentProps } from '../Contents/DisconnectConfirmation/DisconnectConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
 import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterSection';
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
