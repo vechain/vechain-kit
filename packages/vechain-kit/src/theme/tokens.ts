@@ -543,10 +543,10 @@ const defaultLightTokens: ThemeTokens = {
             border: 'none',
         },
         primaryButton: {
-            bg: 'rgb(96 66 221)',
+            bg: '#272A2E',
             color: 'white',
-            border: 'none',
             rounded: 'full',
+            border: 'none',
         },
         tertiaryButton: {
             bg: 'transparent',

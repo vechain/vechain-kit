@@ -29,32 +29,49 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const logo =
         'https://vechain-brand-assets.s3.eu-north-1.amazonaws.com/VeChain_Logomark_Light.png';
 
+    const theme = isDarkMode
+        ? {
+              textColor: 'white',
+              modal: {
+                  backgroundColor: 'rgba(21, 21, 21, 0.4)',
+                  border: '1px solid rgba(255, 255, 255, 0.20)',
+                  backdropFilter: 'blur(20px)',
+                  rounded: '32px',
+              },
+              overlay: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.24)',
+                  blur: 'blur(15px)',
+              },
+              buttons: {
+                  secondaryButton: {
+                      bg: 'rgb(255 255 255 / 4%)',
+                      color: 'white',
+                  },
+              },
+          }
+        : {
+              textColor: '#272A2E',
+              modal: {
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(39, 42, 46, 0.12)',
+                  backdropFilter: 'blur(20px)',
+                  rounded: '32px',
+              },
+              overlay: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.16)',
+                  blur: 'blur(15px)',
+              },
+              buttons: {
+                  secondaryButton: {
+                      bg: 'rgba(39, 42, 46, 0.08)',
+                      color: '#272A2E',
+                  },
+              },
+          };
+
     return (
         <VeChainKitProvider
-            theme={{
-                textColor: 'white',
-                modal: {
-                    backgroundColor: 'rgba(21, 21, 21, 0.4)',
-                    border: '1px solid rgba(255, 255, 255, 0.20)',
-                    backdropFilter: 'blur(20px)',
-                    rounded: '32px',
-                },
-                overlay: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.24)',
-                    blur: 'blur(15px)',
-                },
-                buttons: {
-                    primaryButton: {
-                        bg: 'white',
-                        color: 'blackAlpha.900',
-                        rounded: 'full',
-                    },
-                    secondaryButton: {
-                        bg: 'rgb(255 255 255 / 4%)',
-                        color: 'white',
-                    },
-                },
-            }}
+            theme={theme}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
