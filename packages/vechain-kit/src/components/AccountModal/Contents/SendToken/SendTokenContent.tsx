@@ -287,8 +287,7 @@ export const SendTokenContent = ({
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
                                 },
-                            )}{' '}
-                            {selectedToken?.symbol ?? ''}
+                            )}
                         </Text>
                     </HStack>
 

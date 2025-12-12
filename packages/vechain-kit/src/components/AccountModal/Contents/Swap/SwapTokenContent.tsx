@@ -693,8 +693,7 @@ export const SwapTokenContent = ({
                                     ).toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,
-                                    })}{' '}
-                                    {fromTokenDisplay.symbol ?? ''}
+                                    })}
                                 </Text>
                             )}
                         </HStack>
@@ -1008,8 +1007,7 @@ export const SwapTokenContent = ({
                                                 ).toLocaleString(undefined, {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2,
-                                                })}{' '}
-                                                {toTokenDisplay.symbol ?? ''}
+                                                })}
                                             </Text>
                                         )}
                                     </HStack>
