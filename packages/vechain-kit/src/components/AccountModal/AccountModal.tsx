@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet, useNotificationAlerts } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -35,6 +36,8 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
+import { contentVariants, transition } from './utils/animationVariants';
+import { getContentKey } from './utils/getContentKey';
 
 type Props = {
     isOpen: boolean;
@@ -49,6 +52,8 @@ export const AccountModal = ({
 }: Props) => {
     useNotificationAlerts();
     const { account } = useWallet();
+    const previousContentRef = useRef<AccountModalContentTypes | null>(null);
+    const directionRef = useRef<'forward' | 'backward'>('forward');
 
     const {
         accountModalContent: currentContent,
@@ -60,6 +65,32 @@ export const AccountModal = ({
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);
+
+    // Track navigation direction
+    useEffect(() => {
+        if (
+            previousContentRef.current !== null &&
+            previousContentRef.current !== currentContent
+        ) {
+            // Determine direction based on common navigation patterns
+            const prevKey = getContentKey(previousContentRef.current);
+            const currKey = getContentKey(currentContent);
+
+            // Common backward navigation patterns
+            const isBackward =
+                // Going back to main from any view
+                currKey === 'main' ||
+                // Going back to settings from sub-settings
+                (currKey === 'settings' && prevKey !== 'main') ||
+                // Going from summary/confirmation back to main content
+                prevKey.includes('summary') ||
+                prevKey.includes('confirm') ||
+                prevKey.includes('operation');
+
+            directionRef.current = isBackward ? 'backward' : 'forward';
+        }
+        previousContentRef.current = currentContent;
+    }, [currentContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
@@ -221,6 +252,9 @@ export const AccountModal = ({
         }
     };
 
+    const content = renderContent();
+    const contentKey = getContentKey(currentContent);
+
     return (
         <BaseModal
             isOpen={isOpen}
@@ -228,7 +262,33 @@ export const AccountModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
         >
-            {renderContent()}
+            <motion.div
+                layout
+                transition={{
+                    layout: {
+                        duration: 0.2,
+                        ease: [0.4, 0, 0.2, 1],
+                    },
+                }}
+                style={{ width: '100%', overflow: 'hidden' }}
+            >
+                <AnimatePresence mode="wait" initial={false}>
+                    {content && (
+                        <motion.div
+                            key={contentKey}
+                            custom={directionRef.current}
+                            variants={contentVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={transition}
+                            style={{ width: '100%' }}
+                        >
+                            {content}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
         </BaseModal>
     );
 };
