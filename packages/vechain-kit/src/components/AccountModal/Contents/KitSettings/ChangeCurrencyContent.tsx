@@ -8,6 +8,7 @@ import {
     Text,
     Icon,
     HStack,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -33,31 +34,39 @@ export const ChangeCurrencyContent = ({
 }: ChangeCurrencyContentProps) => {
     const { t } = useTranslation();
     const { currentCurrency, changeCurrency, allCurrencies } = useCurrency();
+    const selectedBg = useColorModeValue(
+        'rgba(0, 0, 0, 0.1)',
+        'rgba(255, 255, 255, 0.05)',
+    );
 
     useEffect(() => {
         // Ensure we mark the currency settings as visited when this component mounts
         setLocalStorageItem('settings-currency-visited', 'true');
     }, []);
 
-    const renderCurrencyButton = (currency: CURRENCY) => (
-        <Button
-            key={currency}
-            w="full"
-            variant="ghost"
-            justifyContent="space-between"
-            onClick={() => changeCurrency(currency)}
-            py={6}
-            px={4}
-        >
-            <HStack spacing={3}>
-                <Text fontSize="xl">{CURRENCY_SYMBOLS[currency]}</Text>
-                <Text>{currency.toUpperCase()}</Text>
-            </HStack>
-            {currentCurrency === currency && (
-                <Icon as={LuCheck} boxSize={5} color="blue.500" />
-            )}
-        </Button>
-    );
+    const renderCurrencyButton = (currency: CURRENCY) => {
+        const isSelected = currentCurrency === currency;
+        return (
+            <Button
+                key={currency}
+                w="full"
+                variant="ghost"
+                justifyContent="space-between"
+                onClick={() => changeCurrency(currency)}
+                py={6}
+                px={4}
+                bg={isSelected ? selectedBg : undefined}
+            >
+                <HStack spacing={3}>
+                    <Text fontSize="xl">{CURRENCY_SYMBOLS[currency]}</Text>
+                    <Text>{currency.toUpperCase()}</Text>
+                </HStack>
+                {isSelected && (
+                    <Icon as={LuCheck} boxSize={5} color="blue.500" />
+                )}
+            </Button>
+        );
+    };
 
     return (
         <ScrollToTopWrapper>
