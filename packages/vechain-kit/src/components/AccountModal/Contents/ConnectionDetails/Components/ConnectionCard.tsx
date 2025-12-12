@@ -43,8 +43,9 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
     const { source: sourceDappKit } = useWalletDappKit();
     const { privy, network } = useVeChainKitConfig();
 
+    const privyAppId = privy?.appId;
     const { data: appInfo, isLoading: isPrivyLoading } = useFetchAppInfo(
-        privy?.appId ?? '',
+        privyAppId ? privyAppId : [],
     );
 
     const { onCopy, hasCopied } = useClipboard('');
@@ -70,7 +71,8 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
             return connectionCache.ecosystemApp.name;
         }
         if (connection.isConnectedWithSocialLogin && appInfo) {
-            return Object.values(appInfo)[0].name;
+            const first = Object.values(appInfo)[0];
+            return first?.name ?? null;
         }
         if (connection.isConnectedWithDappKit && sourceDappKit) {
             return sourceDappKit;
@@ -175,13 +177,20 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
 
                     <HStack>
                         <Text fontSize="sm" color={textColorSecondary}>
-                            {humanAddress(connectedWallet?.address ?? '', 8, 7)}
+                            {connectedWallet?.address
+                                ? humanAddress(connectedWallet.address, 8, 7)
+                                : '-'}
                         </Text>
 
                         <Icon
                             color={textColorSecondary}
-                            onClick={() =>
-                                onCopy(connectedWallet?.address ?? '')
+                            onClick={() => {
+                                if (connectedWallet?.address)
+                                    onCopy(connectedWallet.address);
+                            }}
+                            opacity={connectedWallet?.address ? 1 : 0.4}
+                            pointerEvents={
+                                connectedWallet?.address ? 'auto' : 'none'
                             }
                             cursor="pointer"
                             as={hasCopied ? LuCheck : LuCopy}
