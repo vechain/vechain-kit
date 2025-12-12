@@ -54,29 +54,40 @@ export const AccountModal = ({
     const { account } = useWallet();
     const previousContentRef = useRef<AccountModalContentTypes | null>(null);
     const directionRef = useRef<'forward' | 'backward'>('forward');
+    const wasOpenRef = useRef(false);
 
     const {
         accountModalContent: currentContent,
         setAccountModalContent: setCurrentContent,
     } = useModal();
 
+    // Use initialContent when modal first opens, otherwise use currentContent
+    // This ensures we don't show old content when reopening
+    const isFirstOpen = !wasOpenRef.current && isOpen;
+    const displayContent = isFirstOpen ? initialContent : currentContent;
+
+    // Reset refs and set initial content when modal opens
     useEffect(() => {
-        if (isOpen && initialContent) {
+        if (isOpen && !wasOpenRef.current) {
+            // Modal just opened - reset everything and use initialContent
+            previousContentRef.current = null;
+            directionRef.current = 'forward';
             setCurrentContent(initialContent);
         }
+        wasOpenRef.current = isOpen;
     }, [isOpen, initialContent, setCurrentContent]);
 
     // Track navigation direction (computed synchronously)
     const direction = (() => {
         if (
             previousContentRef.current === null ||
-            previousContentRef.current === currentContent
+            previousContentRef.current === displayContent
         ) {
             return directionRef.current;
         }
         // Determine direction based on common navigation patterns
         const prevKey = getContentKey(previousContentRef.current);
-        const currKey = getContentKey(currentContent);
+        const currKey = getContentKey(displayContent);
 
         // Common backward navigation patterns
         const isBackward =
@@ -95,76 +106,76 @@ export const AccountModal = ({
     // Update refs after computing direction
     useEffect(() => {
         directionRef.current = direction;
-        previousContentRef.current = currentContent;
-    }, [currentContent, direction]);
+        previousContentRef.current = displayContent;
+    }, [displayContent, direction]);
 
     const renderContent = () => {
-        if (typeof currentContent === 'object') {
-            switch (currentContent.type) {
+        if (typeof displayContent === 'object') {
+            switch (displayContent.type) {
                 case 'send-token':
-                    return <SendTokenContent {...currentContent.props} />;
+                    return <SendTokenContent {...displayContent.props} />;
                 case 'send-token-summary':
                     return (
-                        <SendTokenSummaryContent {...currentContent.props} />
+                        <SendTokenSummaryContent {...displayContent.props} />
                     );
                 case 'swap-token':
-                    return <SwapTokenContent {...currentContent.props} />;
+                    return <SwapTokenContent {...displayContent.props} />;
                 case 'choose-name':
-                    return <ChooseNameContent {...currentContent.props} />;
+                    return <ChooseNameContent {...displayContent.props} />;
                 case 'choose-name-search':
                     return (
-                        <ChooseNameSearchContent {...currentContent.props} />
+                        <ChooseNameSearchContent {...displayContent.props} />
                     );
                 case 'choose-name-summary':
                     return (
-                        <ChooseNameSummaryContent {...currentContent.props} />
+                        <ChooseNameSummaryContent {...displayContent.props} />
                     );
                 case 'app-overview':
                     return (
                         <AppOverviewContent
-                            {...currentContent.props}
+                            {...displayContent.props}
                             setCurrentContent={setCurrentContent}
                         />
                     );
                 case 'disconnect-confirm':
                     return (
-                        <DisconnectConfirmContent {...currentContent.props} />
+                        <DisconnectConfirmContent {...displayContent.props} />
                     );
                 case 'account-customization':
-                    return <CustomizationContent {...currentContent.props} />;
+                    return <CustomizationContent {...displayContent.props} />;
                 case 'account-customization-summary':
                     return (
                         <CustomizationSummaryContent
-                            {...currentContent.props}
+                            {...displayContent.props}
                         />
                     );
                 case 'successful-operation':
                     return (
-                        <SuccessfulOperationContent {...currentContent.props} />
+                        <SuccessfulOperationContent {...displayContent.props} />
                     );
                 case 'failed-operation':
-                    return <FailedOperationContent {...currentContent.props} />;
+                    return <FailedOperationContent {...displayContent.props} />;
                 case 'upgrade-smart-account':
                     return (
-                        <UpgradeSmartAccountContent {...currentContent.props} />
+                        <UpgradeSmartAccountContent {...displayContent.props} />
                     );
                 case 'faq':
-                    return <FAQContent {...currentContent.props} />;
+                    return <FAQContent {...displayContent.props} />;
                 case 'terms-and-privacy':
-                    return <TermsAndPrivacyContent {...currentContent.props} />;
+                    return <TermsAndPrivacyContent {...displayContent.props} />;
                 case 'ecosystem-with-category':
                     return (
                         <ExploreEcosystemContent
                             setCurrentContent={setCurrentContent}
                             selectedCategory={
-                                currentContent.props.selectedCategory
+                                displayContent.props.selectedCategory
                             }
                         />
                     );
             }
         }
 
-        switch (currentContent) {
+        switch (displayContent) {
             case 'main':
                 return (
                     <AccountMainContent
@@ -259,7 +270,7 @@ export const AccountModal = ({
     };
 
     const content = renderContent();
-    const contentKey = getContentKey(currentContent);
+    const contentKey = getContentKey(displayContent);
 
     return (
         <BaseModal
@@ -268,8 +279,12 @@ export const AccountModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
         >
-            <AnimatePresence mode="wait" initial={false}>
-                {content && (
+            <AnimatePresence
+                mode="wait"
+                initial={false}
+                key={isOpen ? 'open' : 'closed'}
+            >
+                {isOpen && content && (
                     <motion.div
                         key={contentKey}
                         custom={directionRef.current}
