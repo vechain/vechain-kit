@@ -5,8 +5,6 @@ import {
     VStack,
     Text,
     Button,
-    Card,
-    CardBody,
     Box,
     ModalFooter,
     Icon,
@@ -202,193 +200,178 @@ export const CustomizationContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <Card
-                    variant="vechainKitBase"
-                    position="relative"
-                    overflow="visible"
-                    justifyContent="center"
-                    alignItems="center"
+                <Box
+                    cursor={hasDomain ? 'pointer' : 'default'}
+                    pt={2}
+                    onClick={() => hasDomain && fileInputRef.current?.click()}
                 >
-                    <Box
-                        cursor={hasDomain ? 'pointer' : 'default'}
-                        pt={2}
-                        onClick={() =>
-                            hasDomain && fileInputRef.current?.click()
-                        }
-                    >
-                        <AccountAvatar
-                            wallet={account}
-                            props={{
-                                width: '100px',
-                                height: '100px',
-                                boxShadow: '0px 0px 3px 2px #00000024',
-                                src: previewImageUrl ?? undefined,
-                            }}
+                    <AccountAvatar
+                        wallet={account}
+                        props={{
+                            width: '100px',
+                            height: '100px',
+                            boxShadow: '0px 0px 3px 2px #00000024',
+                            src: previewImageUrl ?? undefined,
+                            justifySelf: 'center',
+                        }}
+                    />
+                    {hasDomain && (
+                        <Icon
+                            as={LuCamera}
+                            position="absolute"
+                            top="80px"
+                            left="60%"
+                            bg={cardBg}
+                            color={textPrimary}
+                            p="1"
+                            borderRadius="full"
+                            boxSize="6"
                         />
-                        {hasDomain && (
-                            <Icon
-                                as={LuCamera}
-                                position="absolute"
-                                top="80px"
-                                left="60%"
-                                bg={cardBg}
-                                color={textPrimary}
-                                p="1"
-                                borderRadius="full"
-                                boxSize="6"
-                            />
-                        )}
-                        {isUploading && (
-                            <Box
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                backgroundColor="rgba(0, 0, 0, 0.5)"
-                                borderRadius="full"
-                            >
-                                <Text fontSize="xs" color="white">
-                                    {isUploading
-                                        ? 'Uploading...'
-                                        : 'Processing...'}
-                                </Text>
-                            </Box>
-                        )}
-                    </Box>
+                    )}
+                    {isUploading && (
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            backgroundColor="rgba(0, 0, 0, 0.5)"
+                            borderRadius="full"
+                        >
+                            <Text fontSize="xs" color="white">
+                                {isUploading ? 'Uploading...' : 'Processing...'}
+                            </Text>
+                        </Box>
+                    )}
+                </Box>
 
-                    <CardBody w="full" backgroundColor={'none'} border={'none'}>
-                        <VStack spacing={6}>
-                            {!hasDomain && <DomainRequiredAlert />}
+                <VStack spacing={6} mt={4}>
+                    {!hasDomain && <DomainRequiredAlert />}
 
-                            <ActionButton
-                                title={
-                                    account?.domain ?? t('Choose account name')
-                                }
-                                description={t(
-                                    'Choose a unique .vet domain name for your account.',
-                                )}
-                                onClick={() => {
-                                    if (account?.domain) {
-                                        setCurrentContent({
-                                            type: 'choose-name-search',
-                                            props: {
-                                                name: '',
-                                                setCurrentContent,
-                                                initialContentSource: {
-                                                    type: 'account-customization',
-                                                    props: {
-                                                        setCurrentContent,
-                                                    },
-                                                },
-                                            },
-                                        });
-                                    } else {
-                                        setCurrentContent({
-                                            type: 'choose-name',
+                    <ActionButton
+                        title={account?.domain ?? t('Choose account name')}
+                        description={t(
+                            'Choose a unique .vet domain name for your account.',
+                        )}
+                        onClick={() => {
+                            if (account?.domain) {
+                                setCurrentContent({
+                                    type: 'choose-name-search',
+                                    props: {
+                                        name: '',
+                                        setCurrentContent,
+                                        initialContentSource: {
+                                            type: 'account-customization',
                                             props: {
                                                 setCurrentContent,
-                                                initialContentSource: {
-                                                    type: 'account-customization',
-                                                    props: {
-                                                        setCurrentContent,
-                                                    },
-                                                },
-                                                onBack: () =>
-                                                    setCurrentContent({
-                                                        type: 'account-customization',
-                                                        props: {
-                                                            setCurrentContent,
-                                                        },
-                                                    }),
                                             },
-                                        });
-                                    }
-                                }}
-                                leftIcon={LuSquareUser}
-                                rightIcon={LuChevronRight}
-                                dataTestId="set-domain-name-button"
-                            />
-
-                            <FormControl
-                                isDisabled={!hasDomain}
-                                isInvalid={!!errors.displayName}
-                            >
-                                <FormLabel
-                                    fontSize="sm"
-                                    fontWeight="medium"
-                                    color={textPrimary}
-                                >
-                                    {t('Display Name')}
-                                </FormLabel>
-                                <Input
-                                    {...register('displayName', {
-                                        maxLength: {
-                                            value: 25,
-                                            message: t(
-                                                'Display name must be less than 25 characters',
-                                            ),
                                         },
-                                    })}
-                                    placeholder={
-                                        !hasDomain
-                                            ? t('Set a domain first')
-                                            : t('Enter your display name')
-                                    }
-                                    fontWeight="medium"
-                                    color={textPrimary}
-                                    data-testid="display-name-input"
-                                />
-                                {errors.displayName && (
-                                    <Text
-                                        color={errorColor}
-                                        fontSize="sm"
-                                        mt={1}
-                                        fontWeight="medium"
-                                    >
-                                        {errors.displayName.message}
-                                    </Text>
-                                )}
-                            </FormControl>
-
-                            <FormControl
-                                isDisabled={!hasDomain}
-                                isInvalid={!!errors.description}
-                            >
-                                <FormLabel
-                                    fontSize="sm"
-                                    fontWeight="medium"
-                                    color={textPrimary}
-                                >
-                                    {t('Description')}
-                                </FormLabel>
-                                <Textarea
-                                    {...register('description', {
-                                        maxLength: {
-                                            value: 100,
-                                            message: t(
-                                                'Description must be less than 100 characters',
-                                            ),
+                                    },
+                                });
+                            } else {
+                                setCurrentContent({
+                                    type: 'choose-name',
+                                    props: {
+                                        setCurrentContent,
+                                        initialContentSource: {
+                                            type: 'account-customization',
+                                            props: {
+                                                setCurrentContent,
+                                            },
                                         },
-                                    })}
-                                    placeholder={t('Eg: DevRel @ ENS Labs')}
-                                    fontWeight="medium"
-                                    color={textPrimary}
-                                    data-testid="description-input"
-                                    minH="50px"
-                                />
-                                {errors.description && (
-                                    <Text
-                                        color={errorColor}
-                                        mt={1}
-                                        fontSize="sm"
-                                        fontWeight="medium"
-                                    >
-                                        {errors.description.message}
-                                    </Text>
-                                )}
-                            </FormControl>
-                        </VStack>
-                    </CardBody>
-                </Card>
+                                        onBack: () =>
+                                            setCurrentContent({
+                                                type: 'account-customization',
+                                                props: {
+                                                    setCurrentContent,
+                                                },
+                                            }),
+                                    },
+                                });
+                            }
+                        }}
+                        leftIcon={LuSquareUser}
+                        rightIcon={LuChevronRight}
+                        dataTestId="set-domain-name-button"
+                    />
+
+                    <FormControl
+                        isDisabled={!hasDomain}
+                        isInvalid={!!errors.displayName}
+                    >
+                        <FormLabel
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={textPrimary}
+                        >
+                            {t('Display Name')}
+                        </FormLabel>
+                        <Input
+                            {...register('displayName', {
+                                maxLength: {
+                                    value: 25,
+                                    message: t(
+                                        'Display name must be less than 25 characters',
+                                    ),
+                                },
+                            })}
+                            placeholder={
+                                !hasDomain
+                                    ? t('Set a domain first')
+                                    : t('Enter your display name')
+                            }
+                            fontWeight="medium"
+                            color={textPrimary}
+                            data-testid="display-name-input"
+                        />
+                        {errors.displayName && (
+                            <Text
+                                color={errorColor}
+                                fontSize="sm"
+                                mt={1}
+                                fontWeight="medium"
+                            >
+                                {errors.displayName.message}
+                            </Text>
+                        )}
+                    </FormControl>
+
+                    <FormControl
+                        isDisabled={!hasDomain}
+                        isInvalid={!!errors.description}
+                    >
+                        <FormLabel
+                            fontSize="sm"
+                            fontWeight="medium"
+                            color={textPrimary}
+                        >
+                            {t('Description')}
+                        </FormLabel>
+                        <Textarea
+                            {...register('description', {
+                                maxLength: {
+                                    value: 100,
+                                    message: t(
+                                        'Description must be less than 100 characters',
+                                    ),
+                                },
+                            })}
+                            placeholder={t('Eg: DevRel @ ENS Labs')}
+                            fontWeight="medium"
+                            color={textPrimary}
+                            data-testid="description-input"
+                            minH="50px"
+                        />
+                        {errors.description && (
+                            <Text
+                                color={errorColor}
+                                mt={1}
+                                fontSize="sm"
+                                fontWeight="medium"
+                            >
+                                {errors.description.message}
+                            </Text>
+                        )}
+                    </FormControl>
+                </VStack>
 
                 <input
                     type="file"
