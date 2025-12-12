@@ -66,31 +66,37 @@ export const AccountModal = ({
         }
     }, [isOpen, initialContent, setCurrentContent]);
 
-    // Track navigation direction
-    useEffect(() => {
+    // Track navigation direction (computed synchronously)
+    const direction = (() => {
         if (
-            previousContentRef.current !== null &&
-            previousContentRef.current !== currentContent
+            previousContentRef.current === null ||
+            previousContentRef.current === currentContent
         ) {
-            // Determine direction based on common navigation patterns
-            const prevKey = getContentKey(previousContentRef.current);
-            const currKey = getContentKey(currentContent);
-
-            // Common backward navigation patterns
-            const isBackward =
-                // Going back to main from any view
-                currKey === 'main' ||
-                // Going back to settings from sub-settings
-                (currKey === 'settings' && prevKey !== 'main') ||
-                // Going from summary/confirmation back to main content
-                prevKey.includes('summary') ||
-                prevKey.includes('confirm') ||
-                prevKey.includes('operation');
-
-            directionRef.current = isBackward ? 'backward' : 'forward';
+            return directionRef.current;
         }
+        // Determine direction based on common navigation patterns
+        const prevKey = getContentKey(previousContentRef.current);
+        const currKey = getContentKey(currentContent);
+
+        // Common backward navigation patterns
+        const isBackward =
+            // Going back to main from any view
+            currKey === 'main' ||
+            // Going back to settings from sub-settings
+            (currKey === 'settings' && prevKey !== 'main') ||
+            // Going from summary/confirmation back to main content
+            prevKey.includes('summary') ||
+            prevKey.includes('confirm') ||
+            prevKey.includes('operation');
+
+        return isBackward ? 'backward' : 'forward';
+    })();
+
+    // Update refs after computing direction
+    useEffect(() => {
+        directionRef.current = direction;
         previousContentRef.current = currentContent;
-    }, [currentContent]);
+    }, [currentContent, direction]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {

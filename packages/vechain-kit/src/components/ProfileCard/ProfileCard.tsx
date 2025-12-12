@@ -57,6 +57,17 @@ export const ProfileCard = ({
         metadata?.records?.['com.x'] ||
         metadata?.records?.email;
 
+    const safeHttpUrl = (raw: string): string | null => {
+        try {
+            const u = new URL(raw);
+            return u.protocol === 'http:' || u.protocol === 'https:'
+                ? u.toString()
+                : null;
+        } catch {
+            return null;
+        }
+    };
+
     return (
         <VStack spacing={4} w="full">
             <Box
@@ -126,8 +137,12 @@ export const ProfileCard = ({
                         )}
                         {metadata?.records?.url && (
                             <Link
-                                href={metadata?.records?.url}
+                                href={
+                                    safeHttpUrl(metadata.records.url) ??
+                                    undefined
+                                }
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 data-testid="website-link"
                             >
                                 <Icon as={LuGlobe} color={textPrimary} />
@@ -135,8 +150,11 @@ export const ProfileCard = ({
                         )}
                         {metadata?.records?.['com.x'] && (
                             <Link
-                                href={`https://x.com/${metadata?.records?.['com.x']}`}
+                                href={`https://x.com/${encodeURIComponent(
+                                    String(metadata.records['com.x']),
+                                )}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 data-testid="twitter-link"
                             >
                                 <Icon as={FaXTwitter} color={textPrimary} />

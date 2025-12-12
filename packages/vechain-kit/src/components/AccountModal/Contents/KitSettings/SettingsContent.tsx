@@ -35,7 +35,6 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuUnlink } from 'react-icons/lu';
-import { useEffect, useRef } from 'react';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 import { useVeChainKitConfig } from '@/providers';
 
@@ -50,7 +49,6 @@ export const SettingsContent = ({
     setCurrentContent,
     onLogoutSuccess,
 }: SettingsContentProps) => {
-    const contentRef = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
@@ -77,12 +75,6 @@ export const SettingsContent = ({
             },
         });
     };
-
-    useEffect(() => {
-        if (contentRef.current) {
-            contentRef.current.scrollTop = 0;
-        }
-    }, []);
 
     const handleConnectionDetails = () => {
         setCurrentContent('connection-details');

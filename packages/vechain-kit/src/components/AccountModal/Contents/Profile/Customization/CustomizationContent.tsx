@@ -236,7 +236,12 @@ export const CustomizationContent = ({
                             alignItems="center"
                             justifyContent="center"
                             backgroundColor="rgba(0, 0, 0, 0.5)"
+                            position="absolute"
+                            transform="translateX(0%)"
+                            width="100px"
+                            height="100px"
                             borderRadius="full"
+                            zIndex={10}
                         >
                             <Text fontSize="xs" color="white">
                                 {isUploading ? 'Uploading...' : 'Processing...'}

@@ -90,5 +90,6 @@ export const useXAppMetadata = (xAppId: string) => {
 
             return metadata;
         },
+        enabled: !!xAppId,
     });
 };
