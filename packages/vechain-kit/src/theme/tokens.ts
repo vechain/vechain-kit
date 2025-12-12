@@ -380,7 +380,7 @@ function derivePrimaryButtonStyles(
         // But allow customization via primaryButton config
         return {
             bg: defaultTokens.buttons.primaryButton.bg,
-            color: 'white', // Primary buttons typically have white text
+            color: defaultTokens.buttons.primaryButton.color,
             border: 'none',
         };
     }
