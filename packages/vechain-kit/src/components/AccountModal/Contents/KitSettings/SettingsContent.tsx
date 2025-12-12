@@ -12,8 +12,6 @@ import {
     LuCircleHelp,
     LuShield,
     LuLogOut,
-    LuSquareUser,
-    LuUser,
     LuSettings,
 } from 'react-icons/lu';
 import { ActionButton } from '@/components';
@@ -39,7 +37,7 @@ export const SettingsContent = ({
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
-    const { connection, disconnect, smartAccount, connectedWallet, account } =
+    const { connection, disconnect, smartAccount, connectedWallet } =
         useWallet();
 
     const { data: upgradeRequired } = useUpgradeRequired(
@@ -53,38 +51,6 @@ export const SettingsContent = ({
             contentRef.current.scrollTop = 0;
         }
     }, []);
-
-    const handleCustomizeProfile = () => {
-        setCurrentContent({
-            type: 'account-customization',
-            props: {
-                setCurrentContent,
-                initialContentSource: 'settings',
-            },
-        });
-    };
-
-    const handleNameChange = () => {
-        if (account?.domain) {
-            setCurrentContent({
-                type: 'choose-name-search',
-                props: {
-                    name: '',
-                    setCurrentContent,
-                    initialContentSource: 'settings',
-                },
-            });
-        } else {
-            setCurrentContent({
-                type: 'choose-name',
-                props: {
-                    setCurrentContent,
-                    initialContentSource: 'settings',
-                    onBack: () => setCurrentContent('settings'),
-                },
-            });
-        }
-    };
 
     const handleAccessAndSecurity = () => {
         setCurrentContent('access-and-security');
@@ -118,30 +84,6 @@ export const SettingsContent = ({
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} spacing={4}>
-                    <VStack w={'full'} spacing={0}>
-                        <ActionButton
-                            style={{
-                                marginTop: '10px',
-                                borderBottomRadius: '0px',
-                            }}
-                            title={t('Customize profile')}
-                            onClick={handleCustomizeProfile}
-                            leftIcon={LuUser}
-                            rightIcon={LuChevronRight}
-                        />
-
-                        <ActionButton
-                            style={{
-                                borderTopRadius: '0px',
-                            }}
-                            title={t('Choose account name')}
-                            description={t('Choose a name for your account.')}
-                            onClick={handleNameChange}
-                            leftIcon={LuSquareUser}
-                            rightIcon={LuChevronRight}
-                        />
-                    </VStack>
-
                     <VStack w={'full'} spacing={0}>
                         {connection.isConnectedWithPrivy && (
                             <ActionButton
