@@ -28,6 +28,7 @@ import {
     LuKey,
     LuShieldCheck,
     LuSettings2,
+    LuFingerprint,
 } from 'react-icons/lu';
 import { ActionButton } from '@/components';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -53,7 +54,7 @@ export const SettingsContent = ({
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
-    const { exportWallet } = usePrivy();
+    const { exportWallet, linkPasskey } = usePrivy();
     const { showMfaEnrollmentModal } = useMfaEnrollment();
 
     const { feeDelegation } = useVeChainKitConfig();
@@ -204,16 +205,13 @@ export const SettingsContent = ({
                             {t('Access and security')}
                         </Text>
                         <ActionButton
-                            title={t('Login methods and Passkeys')}
-                            onClick={() => {
-                                setCurrentContent('privy-linked-accounts');
-                            }}
-                            leftIcon={LuUserCog}
-                            rightIcon={LuChevronRight}
+                            title={t('Passkey')}
+                            onClick={() => linkPasskey()}
+                            leftIcon={LuFingerprint}
                         />
 
                         <ActionButton
-                            title={t('Backup your wallet')}
+                            title={t('Backup')}
                             onClick={() => {
                                 exportWallet();
                             }}
@@ -226,6 +224,15 @@ export const SettingsContent = ({
                                 showMfaEnrollmentModal();
                             }}
                             leftIcon={LuShieldCheck}
+                        />
+
+                        <ActionButton
+                            title={t('Login methods')}
+                            onClick={() => {
+                                setCurrentContent('privy-linked-accounts');
+                            }}
+                            leftIcon={LuUserCog}
+                            rightIcon={LuChevronRight}
                         />
                     </VStack>
                 )}
