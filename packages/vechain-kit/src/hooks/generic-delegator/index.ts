@@ -1,4 +1,4 @@
 export * from './useGenericDelegator';
 export * from './useGasTokenSelection';
-export * from './useGasEstimation';
+export * from './useGenericDelegatorFeeEstimation';
 export * from './useEstimateAllTokens';

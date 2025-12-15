@@ -5,11 +5,12 @@ import {
     useThor,
     useWallet as useDAppKitWallet,
 } from '@vechain/dapp-kit-react';
+import { TransactionMessage } from '@vechain/dapp-kit';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
 import { estimateTxGas } from './transactionUtils';
-import { signerUtils, TransactionReceipt } from '@vechain/sdk-network';
+import { TransactionReceipt } from '@vechain/sdk-network';
 import { Revision, TransactionClause } from '@vechain/sdk-core';
 
 /**
@@ -21,6 +22,7 @@ import { Revision, TransactionClause } from '@vechain/sdk-core';
  * @param suggestedMaxGas the suggested max gas for the transaction
  * @param privyUIOptions options to pass to the Privy UI
  * @param gasPadding the gas padding to use for the transaction (Eg. 0.1 for 10%)
+ * @param delegationUrl the dApp sponsored delegator url.
  */
 type UseSendTransactionProps = {
     signerAccountAddress?: string | null;
@@ -34,6 +36,7 @@ type UseSendTransactionProps = {
         buttonText?: string;
     };
     gasPadding?: number;
+    delegationUrl?: string;
 };
 
 /**
@@ -47,7 +50,15 @@ type UseSendTransactionProps = {
  * @param error error that occurred while sending the transaction
  */
 export type UseSendTransactionReturnValue = {
-    sendTransaction: (clauses?: TransactionClause[]) => Promise<void>;
+    sendTransaction: (
+        clauses?: TransactionClause[],
+        delegationUrl?: string,
+        privyUIOptions?: {
+            title?: string;
+            description?: string;
+            buttonText?: string;
+        },
+    ) => Promise<void>;
     isTransactionPending: boolean;
     isWaitingForWalletConfirmation: boolean;
     txReceipt: TransactionReceipt | null;
@@ -88,6 +99,7 @@ export type UseSendTransactionReturnValue = {
  * @param suggestedMaxGas the suggested max gas for the transaction
  * @param privyUIOptions options to pass to the Privy UI
  * @param gasPadding the gas padding to use for the transaction (Eg. 0.1 for 10%)
+ * @param delegationUrl the dApp sponsored delegator url.
  * @returns see {@link UseSendTransactionReturnValue}
  */
 export const useSendTransaction = ({
@@ -98,9 +110,10 @@ export const useSendTransaction = ({
     suggestedMaxGas,
     privyUIOptions,
     gasPadding,
+    delegationUrl,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
     const thor = useThor();
-    const { signer } = useDAppKitWallet();
+    const { signer, requestTransaction } = useDAppKitWallet();
     const { connection } = useWallet();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
@@ -117,7 +130,8 @@ export const useSendTransaction = ({
                 | TransactionClause[]
                 | (() => TransactionClause[])
                 | (() => Promise<TransactionClause[]>),
-            options?: {
+            delegationUrl?: string,
+            privyUIOptions?: {
                 title?: string;
                 description?: string;
                 buttonText?: string;
@@ -129,7 +143,7 @@ export const useSendTransaction = ({
                 return await privyWalletProvider.sendTransaction({
                     txClauses: _clauses,
                     ...privyUIOptions,
-                    ...options,
+                    delegationUrl,
                 });
             }
 
@@ -152,27 +166,20 @@ export const useSendTransaction = ({
                 console.error('Gas estimation failed', e);
             }
 
-            const txBody = await thor.transactions.buildTransactionBody(
-                _clauses,
-                suggestedMaxGas ?? estimatedGas, //Provide either the suggested max gas (gas Limit) or the estimated gas
+            const response = await requestTransaction(
+                _clauses as TransactionMessage[],
                 {
-                    // TODO: kit-migration check how to pass the delegator url
-                    isDelegated: feeDelegation?.delegateAllTransactions,
-                },
+                    signer: signer.address,
+                    gas: suggestedMaxGas ?? estimatedGas,
+                    ...(feeDelegation?.delegateAllTransactions || delegationUrl ? {
+                        delegator: {
+                            url: delegationUrl ?? feeDelegation?.delegatorUrl ?? '',
+                            signer: signerAccountAddress,
+                        }
+                    } : {}),
+                }
             );
-
-            const txRequestInput =
-                signerUtils.transactionBodyToTransactionRequestInput(
-                    txBody,
-                    signerAccountAddress,
-                );
-
-            return signer.sendTransaction({
-                ...txRequestInput,
-                maxPriorityFeePerGas:
-                    txRequestInput.maxPriorityFeePerGas?.toString(),
-                maxFeePerGas: txRequestInput.maxFeePerGas?.toString(),
-            });
+            return response.txid;
         },
         [
             signerAccountAddress,
@@ -180,6 +187,11 @@ export const useSendTransaction = ({
             nodeUrl,
             privyWalletProvider,
             privyUIOptions,
+            feeDelegation,
+            thor,
+            signer,
+            gasPadding,
+            delegationUrl,
         ],
     );
 
@@ -194,14 +206,14 @@ export const useSendTransaction = ({
     >(null);
 
     const sendTransactionAdapter = useCallback(
-        async (_clauses?: TransactionClause[]): Promise<void> => {
+        async (_clauses?: TransactionClause[], _delegationUrl?: string): Promise<void> => {
             if (!_clauses && !clauses) throw new Error('clauses are required');
             try {
                 setTxHash(null);
                 setSendTransactionPending(true);
                 setSendTransactionError(null);
                 setError(undefined);
-                const response = await sendTransaction(_clauses ?? [], {
+                const response = await sendTransaction(_clauses ?? [], _delegationUrl, {
                     ...privyUIOptions,
                 });
 
@@ -219,7 +231,7 @@ export const useSendTransaction = ({
                 setSendTransactionPending(false);
             }
         },
-        [sendTransaction, clauses, privyUIOptions],
+        [sendTransaction, clauses, privyUIOptions, delegationUrl],
     );
 
     /**

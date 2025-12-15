@@ -29,22 +29,49 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const logo =
         'https://vechain-brand-assets.s3.eu-north-1.amazonaws.com/VeChain_Logomark_Light.png';
 
+    const theme = isDarkMode
+        ? {
+              textColor: 'white',
+              modal: {
+                  backgroundColor: 'rgba(21, 21, 21, 0.4)',
+                  border: '1px solid rgba(255, 255, 255, 0.20)',
+                  backdropFilter: 'blur(20px)',
+                  rounded: '32px',
+              },
+              overlay: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.24)',
+                  blur: 'blur(15px)',
+              },
+              buttons: {
+                  secondaryButton: {
+                      bg: 'rgb(255 255 255 / 4%)',
+                      color: 'white',
+                  },
+              },
+          }
+        : {
+              textColor: '#272A2E',
+              modal: {
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(39, 42, 46, 0.12)',
+                  backdropFilter: 'blur(20px)',
+                  rounded: '32px',
+              },
+              overlay: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.16)',
+                  blur: 'blur(15px)',
+              },
+              buttons: {
+                  secondaryButton: {
+                      bg: 'rgba(39, 42, 46, 0.08)',
+                      color: '#272A2E',
+                  },
+              },
+          };
+
     return (
         <VeChainKitProvider
-            theme={{
-                modal: {
-                    backgroundColor: isDarkMode ? '#1b1d1e' : '#ffffff',
-                },
-                textColor: isDarkMode ? '#ffffff' : '#272A2E',
-                buttons: {
-                    secondaryButton: {
-                        border: 'none',
-                        bg: isDarkMode
-                            ? 'rgb(45, 45, 45)'
-                            : 'rgb(240, 240, 240)',
-                    },
-                },
-            }}
+            theme={theme}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
@@ -100,7 +127,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             darkMode={isDarkMode}
             language={i18n.language}
             network={{
-                type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
+                type: 'main',
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}

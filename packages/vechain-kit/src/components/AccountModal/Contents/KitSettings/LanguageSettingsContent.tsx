@@ -7,6 +7,7 @@ import {
     Text,
     Button,
     Icon,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -26,27 +27,35 @@ type Props = {
 
 export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
     const { t, i18n } = useTranslation();
+    const selectedBg = useColorModeValue(
+        'rgba(0, 0, 0, 0.1)',
+        'rgba(255, 255, 255, 0.05)',
+    );
 
     const handleLanguageChange = (lang: string) => {
         i18n.changeLanguage(lang);
     };
 
-    const renderLanguageButton = (lang: string) => (
-        <Button
-            key={lang}
-            w="full"
-            variant="ghost"
-            justifyContent="space-between"
-            onClick={() => handleLanguageChange(lang)}
-            py={6}
-            px={4}
-        >
-            <Text>{languageNames[lang as keyof typeof languageNames]}</Text>
-            {i18n.language === lang && (
-                <Icon as={LuCheck} boxSize={5} color="blue.500" />
-            )}
-        </Button>
-    );
+    const renderLanguageButton = (lang: string) => {
+        const isSelected = i18n.language === lang;
+        return (
+            <Button
+                key={lang}
+                w="full"
+                variant="ghost"
+                justifyContent="space-between"
+                onClick={() => handleLanguageChange(lang)}
+                py={6}
+                px={4}
+                bg={isSelected ? selectedBg : undefined}
+            >
+                <Text>{languageNames[lang as keyof typeof languageNames]}</Text>
+                {isSelected && (
+                    <Icon as={LuCheck} boxSize={5} color="blue.500" />
+                )}
+            </Button>
+        );
+    };
 
     return (
         <ScrollToTopWrapper>
@@ -54,7 +63,7 @@ export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
                 <ModalHeader>{t('Select language')}</ModalHeader>
 
                 <ModalBackButton
-                    onClick={() => setCurrentContent('general-settings')}
+                    onClick={() => setCurrentContent('settings')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

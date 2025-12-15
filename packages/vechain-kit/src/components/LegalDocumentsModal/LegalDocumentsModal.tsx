@@ -3,7 +3,7 @@
 import { EnrichedLegalDocument } from '@/types';
 import { Step, StepModal } from '../StepModal/StepModal';
 import { useSteps } from '@chakra-ui/react';
-import { DisconnectConfirmContent } from '../AccountModal/Contents/Account/DisconnectConfirmContent';
+import { DisconnectConfirmContent } from '../AccountModal/Contents/DisconnectConfirmation/DisconnectConfirmContent';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

@@ -24,7 +24,7 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
@@ -171,7 +171,7 @@ export const ChooseNameSummaryContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: clauses(),
         tokens: selectedGasToken
             ? [selectedGasToken]

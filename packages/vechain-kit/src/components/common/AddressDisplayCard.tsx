@@ -67,7 +67,7 @@ export const AddressDisplayCard = ({
 
     if (isLoading) {
         return (
-            <Box w="full" p={2} borderRadius="lg" bg={cardBg}>
+            <Box w="full" p={2} borderRadius="2xl" bg={cardBg}>
                 <Text fontSize="sm" fontWeight="bold" mb={2} color={textColor}>
                     {label}
                 </Text>
@@ -119,7 +119,7 @@ export const AddressDisplayCard = ({
         <Box
             w="full"
             p={2}
-            borderRadius="lg"
+            borderRadius="2xl"
             bg={cardBg}
             wordBreak="break-word"
         >

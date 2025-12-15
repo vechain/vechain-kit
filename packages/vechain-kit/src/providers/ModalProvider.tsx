@@ -86,6 +86,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
     const [isolatedView, setIsolatedView] = useState(false);
+    const [accountModalContent, setAccountModalContent] =
+        useState<AccountModalContentTypes>('main');
+
     const openAccountModal = useCallback(
         (content?: AccountModalContentTypes, options?: AccountModalOptions) => {
             setAccountModalContent(content ?? 'main');
@@ -96,6 +99,8 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     );
     const closeAccountModal = useCallback(() => {
         setIsAccountModalOpen(false);
+        // Reset content to main when modal closes
+        setAccountModalContent('main');
         // Reset isolatedView after modal close animation completes
         setTimeout(() => {
             setIsolatedView(false);
@@ -137,8 +142,6 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         () => setIsUpgradeSmartAccountModalOpen(false),
         [],
     );
-    const [accountModalContent, setAccountModalContent] =
-        useState<AccountModalContentTypes>('main');
 
     return (
         <ModalContext.Provider
