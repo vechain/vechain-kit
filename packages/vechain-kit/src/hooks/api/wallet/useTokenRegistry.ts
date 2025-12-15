@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
+import { normalize } from '@/utils/hexUtils';
 
 export interface TokenRegistryInfo {
     name: string;
@@ -59,6 +60,7 @@ const fetchTokenRegistry = async (
 
     return data.map((token) => ({
         ...token,
+        address: normalize(token.address),
         icon: getTokenIconUrl(token.icon),
     }));
 };

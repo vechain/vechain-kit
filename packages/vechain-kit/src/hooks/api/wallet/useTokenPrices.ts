@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useGetTokenUsdPrice } from './useGetTokenUsdPrice';
+import { normalize } from '@/utils/hexUtils';
 
 export type ExchangeRates = {
     eurUsdPrice: number;
@@ -28,11 +29,11 @@ export const useTokenPrices = () => {
     const prices = useMemo(() => {
         const contractAddresses = {
             vet: '0x',
-            vtho: config.vthoContractAddress,
-            b3tr: config.b3trContractAddress,
-            vot3: config.vot3ContractAddress,
-            veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
+            vtho: normalize(config.vthoContractAddress),
+            b3tr: normalize(config.b3trContractAddress),
+            vot3: normalize(config.vot3ContractAddress),
+            veDelegate: normalize(config.veDelegate),
+            USDGLO: normalize(config.gloDollarContractAddress),
         };
 
         return {
