@@ -589,8 +589,8 @@ export const SwapTokenContent = ({
     // Get token display info
     const getTokenDisplay = (token: TokenWithValue | null) => {
         if (!token) return null;
-        const logoComponent = <></>; //TODO: CHECK IF COMPONENT IS NEEDED
-        const logoUrl = token.icon;
+        const logoComponent = null; //TODO: CHECK IF COMPONENT IS NEEDED
+        const logoUrl = ''; //TODO: ADD LOGO URL;
         return {
             symbol: token.symbol,
             logoComponent,
