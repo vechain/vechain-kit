@@ -260,7 +260,7 @@ export const SendTokenSummaryContent = ({
                             domain={account?.domain}
                             imageSrc={account?.image ?? ''}
                             imageAlt="From account"
-                            balance={Number(selectedToken.balance)}
+                            balance={Number(selectedToken.balance.scaled)}
                             tokenAddress={selectedToken.address}
                         />
 

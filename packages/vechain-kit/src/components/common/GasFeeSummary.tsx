@@ -156,7 +156,7 @@ export const GasFeeSummary: React.FC<GasFeeSummaryProps> = ({
         const balance = balances.find((b) => b.symbol === token);
         const est = tokenEstimations[token];
         if (!balance || !est || est.loading) return true;
-        return Number(balance.balance) < est.cost;
+        return Number(balance.balance.scaled) < est.cost;
     };
 
     // Determine display token and cost:

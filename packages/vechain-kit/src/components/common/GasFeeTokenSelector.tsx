@@ -72,7 +72,7 @@ export const GasFeeTokenSelector = ({
     const getTokenBalance = (tokenSymbol: string) => {
         const balance = balances.find((b) => b.symbol === tokenSymbol);
         return balance
-            ? Number(balance.balance).toLocaleString(undefined, {
+            ? Number(balance.balance.scaled).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
               })
@@ -88,7 +88,7 @@ export const GasFeeTokenSelector = ({
         const balance = balances.find((b) => b.symbol === tokenSymbol);
         const estimation = tokenEstimations[tokenSymbol];
         if (!balance || !estimation) return false;
-        return Number(balance.balance) < estimation.cost;
+        return Number(balance.balance.scaled) < estimation.cost;
     };
 
     return (

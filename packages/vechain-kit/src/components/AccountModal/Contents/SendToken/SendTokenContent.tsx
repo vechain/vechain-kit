@@ -148,7 +148,7 @@ export const SendTokenContent = ({
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            setValue('amount', selectedToken.balance);
+            setValue('amount', selectedToken.balance.scaled);
         }
     };
 
@@ -207,7 +207,7 @@ export const SendTokenContent = ({
                 }
             }
 
-            if (numericAmount > parseEther(selectedToken.balance)) {
+            if (numericAmount > parseEther(selectedToken.balance.scaled)) {
                 setError('amount', {
                     type: 'manual',
                     message: t(`Insufficient {{symbol}} balance`, {
@@ -280,7 +280,7 @@ export const SendTokenContent = ({
                             color={textSecondary}
                         >
                             {t('Balance')}:{' '}
-                            {Number(selectedToken?.balance ?? 0).toLocaleString(
+                            {Number(selectedToken?.balance.scaled ?? 0).toLocaleString(
                                 undefined,
                                 {
                                     minimumFractionDigits: 2,

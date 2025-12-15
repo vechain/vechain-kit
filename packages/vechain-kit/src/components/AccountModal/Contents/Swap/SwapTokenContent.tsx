@@ -578,7 +578,7 @@ export const SwapTokenContent = ({
 
     const handleSetMaxAmount = useCallback(() => {
         if (fromToken) {
-            setAmount(fromToken.balance);
+            setAmount(fromToken.balance.scaled);
         }
     }, [fromToken]);
 
@@ -591,7 +591,7 @@ export const SwapTokenContent = ({
             symbol: token.symbol,
             logoComponent,
             logoUrl,
-            balance: token.balance,
+            balance: token.balance.scaled,
             value: token.valueInCurrency,
         };
     };
@@ -688,7 +688,7 @@ export const SwapTokenContent = ({
                                 >
                                     {t('Balance')}:{' '}
                                     {Number(
-                                        fromTokenDisplay.balance ?? 0,
+                                        fromTokenDisplay.balance.scaled ?? 0,
                                     ).toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,
@@ -715,7 +715,7 @@ export const SwapTokenContent = ({
                                             fromTokenDisplay &&
                                             amount &&
                                             Number(amount) >
-                                                Number(fromTokenDisplay.balance)
+                                                Number(fromTokenDisplay.balance.scaled)
                                                 ? 'red.500'
                                                 : textPrimary
                                         }
@@ -1002,7 +1002,7 @@ export const SwapTokenContent = ({
                                             >
                                                 {t('Balance')}:{' '}
                                                 {Number(
-                                                    toTokenDisplay.balance ?? 0,
+                                                    toTokenDisplay.balance.scaled ?? 0,
                                                 ).toLocaleString(undefined, {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2,
@@ -1369,7 +1369,7 @@ export const SwapTokenContent = ({
                             fromTokenDisplay &&
                                 amount &&
                                 Number(amount) >
-                                    Number(fromTokenDisplay.balance),
+                                    Number(fromTokenDisplay.balance.scaled),
                         ) ||
                         disableConfirmButtonDuringEstimation
                     }
