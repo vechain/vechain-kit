@@ -9,6 +9,7 @@ import { getErc20Balance } from '@vechain/contract-getters';
 import { formatTokenBalance } from '@/utils';
 import { TokenRegistryInfo } from './useTokenRegistry';
 import { TokenBalance } from '@/types';
+import { useMemo } from 'react';
 
 export type WalletTokenBalance = TokenRegistryInfo & {
     balance: TokenBalance;
@@ -46,15 +47,20 @@ export const useTokenBalances = (address?: string) => {
         })),
     });
 
+    const balances = useMemo(() => {
+        // Return available balances while filtering out undefined/loading values
+        return tokenBalanceQueries
+            .map((query) => query.data)
+            .filter((data): data is WalletTokenBalance => Boolean(data));
+    }, [tokenBalanceQueries]);
+
     const isLoading =
         vetLoading ||
         registryLoading ||
         tokenBalanceQueries.some((query) => query.isLoading);
 
     return {
-        balances: tokenBalanceQueries.map(
-            (query) => query.data as WalletTokenBalance,
-        ),
+        balances,
         isLoading,
     };
 };
