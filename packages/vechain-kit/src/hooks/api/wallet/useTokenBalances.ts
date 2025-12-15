@@ -8,13 +8,10 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { getErc20Balance } from '@vechain/contract-getters';
 import { formatTokenBalance } from '@/utils';
+import { TokenRegistryInfo } from './useTokenRegistry';
 
-export type WalletTokenBalance = {
-    address: string;
-    symbol: string;
+export type WalletTokenBalance = TokenRegistryInfo & {
     balance: string;
-    name?: string;
-    decimals?: number;
 };
 
 export const useTokenBalances = (address?: string) => {
@@ -24,7 +21,8 @@ export const useTokenBalances = (address?: string) => {
     const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);
 
     // Get all tokens from registry
-    const { data: registryTokens, isLoading: registryLoading } = useTokenRegistry();
+    const { data: registryTokens, isLoading: registryLoading } =
+        useTokenRegistry();
 
     // Fetch balances for all registry tokens
     const tokenBalanceQueries = useQueries({
@@ -63,34 +61,17 @@ export const useTokenBalances = (address?: string) => {
             decimals: 18,
         });
 
-        // Add VTHO balance (from VET energy)
-        const vthoToken = registryTokens?.find(
-            (t) => t.symbol.toLowerCase() === 'vtho',
-        );
-        if (vthoToken) {
-            allBalances.push({
-                address: vthoToken.address,
-                symbol: vthoToken.symbol,
-                name: vthoToken.name,
-                balance: vetData?.energy || '0',
-                decimals: vthoToken.decimals,
-            });
-        }
-
         // Add all other token balances from registry
         tokenBalanceQueries.forEach((query) => {
             if (query.data && query.data.tokenInfo) {
                 const { tokenInfo, scaled } = query.data;
-                // Skip VTHO as we already added it from VET energy
-                if (tokenInfo.symbol.toLowerCase() !== 'vtho') {
-                    allBalances.push({
-                        address: tokenInfo.address,
-                        symbol: tokenInfo.symbol,
-                        name: tokenInfo.name,
-                        balance: scaled || '0',
-                        decimals: tokenInfo.decimals,
-                    });
-                }
+                allBalances.push({
+                    address: tokenInfo.address,
+                    symbol: tokenInfo.symbol,
+                    name: tokenInfo.name,
+                    balance: scaled || '0',
+                    decimals: tokenInfo.decimals,
+                });
             }
         });
 
