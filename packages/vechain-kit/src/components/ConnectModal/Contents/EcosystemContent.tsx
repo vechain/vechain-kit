@@ -12,21 +12,30 @@ import {
     useDisclosure,
     useToken,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useState } from 'react';
-import { LoginLoadingModal } from '../LoginLoadingModal';
+import { LoginLoadingModal } from '../../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { isRejectionError } from '@/utils/stringUtils';
+import { ConnectModalContentsTypes } from '../ConnectModal';
 type Props = {
     onClose: () => void;
     appsInfo: PrivyAppInfo[];
     isLoading: boolean;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<ConnectModalContentsTypes>
+    >;
 };
 
-export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
+export const EcosystemContent = ({
+    onClose,
+    appsInfo,
+    isLoading,
+    setCurrentContent,
+}: Props) => {
     const { t } = useTranslation();
 
     // Use semantic token for text color (buttons use variants now)
@@ -96,17 +105,16 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         }
     };
 
-    const handleClose = () => {
-        onClose();
-    };
-
     return (
         <Box>
             <>
                 <StickyHeaderContainer>
                     <ModalHeader>
+                        <ModalBackButton
+                            onClick={() => setCurrentContent('main')}
+                        />
                         {t('Already have an x2earn app wallet?')}
-                        <ModalCloseButton onClick={handleClose} />
+                        <ModalCloseButton onClick={onClose} />
                     </ModalHeader>
                 </StickyHeaderContainer>
 

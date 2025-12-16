@@ -32,7 +32,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { loginMethods, privyEcosystemAppIDS } = useVeChainKitConfig();
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
-    
+
     const textColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleFAQClick = () => {
@@ -97,6 +97,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                             isDark={isDark}
                             appsInfo={Object.values(appsInfo || {})}
                             isLoading={isEcosystemAppsLoading}
+                            setCurrentContent={setCurrentContent}
                         />
                     </HStack>
                 </ModalFooter>

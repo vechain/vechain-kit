@@ -5,7 +5,6 @@ export * from './TransactionToast';
 export * from './AccountModal';
 export * from './common';
 export * from './LoginLoadingModal';
-export * from './EcosystemModal';
 export { WalletButton as DAppKitWalletButton } from '@vechain/dapp-kit-react';
 export * from './UpgradeSmartAccountModal';
 export * from './LegalDocumentsModal';
