@@ -75,31 +75,31 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 ...theme,
                 modal: { ...theme.modal, useBottomSheetOnMobile: false },
             }}
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: [
-                    'google',
-                    'apple',
-                    'twitter',
-                    'github',
-                    'farcaster',
-                    // 'email',
-                    'discord',
-                    'tiktok',
-                    // 'rabby_wallet',
-                    // 'coinbase_wallet',
-                    // 'rainbow',
-                    // 'metamask',
-                ],
-                appearance: {
-                    loginMessage: 'Select a login method',
-                    logo: logo,
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
+            // privy={{
+            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+            //     loginMethods: [
+            //         'google',
+            //         'apple',
+            //         'twitter',
+            //         'github',
+            //         'farcaster',
+            //         // 'email',
+            //         'discord',
+            //         'tiktok',
+            //         // 'rabby_wallet',
+            //         // 'coinbase_wallet',
+            //         // 'rainbow',
+            //         // 'metamask',
+            //     ],
+            //     appearance: {
+            //         loginMessage: 'Select a login method',
+            //         logo: logo,
+            //     },
+            //     embeddedWallets: {
+            //         createOnLogin: 'all-users',
+            //     },
+            // }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
@@ -124,7 +124,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 { method: 'vechain', gridColumn: 4 },
                 { method: 'dappkit', gridColumn: 4 },
                 { method: 'ecosystem', gridColumn: 4 },
-                // { method: 'passkey', gridColumn: 1 },
+                // { method: 'passkey', gridColumn: 4 },
                 // { method: 'more', gridColumn: 1 },
             ]}
             darkMode={isDarkMode}

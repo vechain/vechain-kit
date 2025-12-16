@@ -87,7 +87,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                         </Text>
                     </HStack>
                 )}
-                <ConnectionOptionsStack />
+                <ConnectionOptionsStack setCurrentContent={setCurrentContent} />
             </ModalBody>
 
             {showEcosystemButton ? (

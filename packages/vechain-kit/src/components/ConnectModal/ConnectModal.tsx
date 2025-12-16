@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
-import { EcosystemContent } from './Contents/EcosystemContent';
+import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
 import { PrivyAppInfo } from '@/types';
 import {
     contentVariants,
     transition,
     getContentKey,
 } from '@/components/common';
+import { useWallet } from '@/hooks';
 
 type Props = {
     isOpen: boolean;
@@ -26,6 +27,21 @@ export type ConnectModalContentsTypes =
     | {
           type: 'ecosystem';
           props: { appsInfo: PrivyAppInfo[]; isLoading: boolean };
+      }
+    | {
+          type: 'loading';
+          props: {
+              title?: string;
+              loadingText?: string;
+              onTryAgain?: () => void;
+          };
+      }
+    | {
+          type: 'error';
+          props: {
+              error: string;
+              onTryAgain: () => void;
+          };
       };
 
 export const ConnectModal = ({
@@ -38,6 +54,7 @@ export const ConnectModal = ({
     const previousContentRef = useRef<ConnectModalContentsTypes | null>(null);
     const directionRef = useRef<'forward' | 'backward'>('forward');
     const wasOpenRef = useRef(false);
+    const { connection } = useWallet();
 
     // Use initialContent when modal first opens, otherwise use currentContent
     // This ensures we don't show old content when reopening
@@ -85,6 +102,13 @@ export const ConnectModal = ({
         previousContentRef.current = displayContent;
     }, [displayContent, direction]);
 
+    // Close modal when connection becomes connected (works for all content types)
+    useEffect(() => {
+        if (connection.isConnected && isOpen) {
+            onClose();
+        }
+    }, [connection.isConnected, isOpen, onClose]);
+
     const renderContent = () => {
         switch (displayContent) {
             case 'main':
@@ -109,6 +133,25 @@ export const ConnectModal = ({
                             appsInfo={displayContent.props.appsInfo}
                             isLoading={displayContent.props.isLoading}
                             setCurrentContent={setCurrentContent}
+                        />
+                    );
+                case 'loading':
+                    return (
+                        <LoadingContent
+                            title={displayContent.props.title}
+                            loadingText={displayContent.props.loadingText}
+                            onTryAgain={displayContent.props.onTryAgain}
+                            onClose={onClose}
+                            onGoBack={() => setCurrentContent('main')}
+                        />
+                    );
+                case 'error':
+                    return (
+                        <ErrorContent
+                            error={displayContent.props.error}
+                            onClose={onClose}
+                            onTryAgain={displayContent.props.onTryAgain}
+                            onGoBack={() => setCurrentContent('main')}
                         />
                     );
             }
