@@ -73,33 +73,33 @@ export function VechainKitProviderWrapper({ children }: Props) {
         <VeChainKitProvider
             theme={{
                 ...theme,
-                modal: { ...theme.modal, useBottomSheetOnMobile: false },
+                modal: { ...theme.modal, useBottomSheetOnMobile: true },
             }}
-            // privy={{
-            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-            //     loginMethods: [
-            //         'google',
-            //         'apple',
-            //         'twitter',
-            //         'github',
-            //         'farcaster',
-            //         // 'email',
-            //         'discord',
-            //         'tiktok',
-            //         // 'rabby_wallet',
-            //         // 'coinbase_wallet',
-            //         // 'rainbow',
-            //         // 'metamask',
-            //     ],
-            //     appearance: {
-            //         loginMessage: 'Select a login method',
-            //         logo: logo,
-            //     },
-            //     embeddedWallets: {
-            //         createOnLogin: 'all-users',
-            //     },
-            // }}
+            privy={{
+                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+                loginMethods: [
+                    'google',
+                    'apple',
+                    'twitter',
+                    'github',
+                    'farcaster',
+                    // 'email',
+                    'discord',
+                    'tiktok',
+                    // 'rabby_wallet',
+                    // 'coinbase_wallet',
+                    // 'rainbow',
+                    // 'metamask',
+                ],
+                appearance: {
+                    loginMessage: 'Select a login method',
+                    logo: logo,
+                },
+                embeddedWallets: {
+                    createOnLogin: 'all-users',
+                },
+            }}
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
