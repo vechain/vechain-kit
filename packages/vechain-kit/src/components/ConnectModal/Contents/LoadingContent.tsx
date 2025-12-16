@@ -20,6 +20,7 @@ type LoadingContentProps = {
     onTryAgain?: () => void;
     onClose: () => void;
     onGoBack: () => void;
+    showBackButton?: boolean;
 };
 
 export const LoadingContent = ({
@@ -28,6 +29,7 @@ export const LoadingContent = ({
     onTryAgain,
     onClose,
     onGoBack,
+    showBackButton = true,
 }: LoadingContentProps) => {
     const { t } = useTranslation();
     const [showTimeout, setShowTimeout] = React.useState(false);
@@ -44,7 +46,7 @@ export const LoadingContent = ({
         <>
             <StickyHeaderContainer>
                 <ModalHeader>
-                    <ModalBackButton onClick={onGoBack} />
+                    {showBackButton && <ModalBackButton onClick={onGoBack} />}
                     {title ?? t('Connecting...')}
                     <ModalCloseButton onClick={onClose} />
                 </ModalHeader>

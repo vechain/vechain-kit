@@ -14,7 +14,9 @@ import { useTranslation } from 'react-i18next';
 import { LuChevronDown } from 'react-icons/lu';
 import { EcosystemButton } from './Components';
 import { useVeChainKitConfig } from '@/providers';
-import { useFetchAppInfo } from '@/hooks';
+import { useFetchAppInfo, useConnectModal } from '@/hooks';
+import { ConnectModalContentsTypes } from './ConnectModal';
+import { useCallback } from 'react';
 
 type ConnectPopoverProps = {
     isLoading: boolean;
@@ -34,9 +36,34 @@ export const ConnectPopover = ({
     const showEcosystemButton = loginMethods?.some(
         ({ method }) => method === 'ecosystem',
     );
+    const { open: openConnectModal } = useConnectModal();
 
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
+
+    // Function to handle content changes from popover - opens ConnectModal
+    // When opened from popover, we don't show back button
+    const handleSetContent = useCallback(
+        (content: ConnectModalContentsTypes) => {
+            // If content is ecosystem or loading, set showBackButton to false
+            if (
+                typeof content === 'object' &&
+                'type' in content &&
+                (content.type === 'ecosystem' || content.type === 'loading')
+            ) {
+                openConnectModal({
+                    ...content,
+                    props: {
+                        ...content.props,
+                        showBackButton: false,
+                    },
+                });
+            } else {
+                openConnectModal(content);
+            }
+        },
+        [openConnectModal],
+    );
 
     return (
         <Popover
@@ -66,7 +93,9 @@ export const ConnectPopover = ({
                     </PopoverTrigger>
                     <PopoverContent>
                         <PopoverBody>
-                            <ConnectionOptionsStack />
+                            <ConnectionOptionsStack
+                                setCurrentContent={handleSetContent}
+                            />
                         </PopoverBody>
                         <PopoverFooter borderTop={'none'} pb={'15px'}>
                             {showEcosystemButton && (
@@ -75,6 +104,7 @@ export const ConnectPopover = ({
                                         isDark={isDark}
                                         appsInfo={Object.values(appsInfo || {})}
                                         isLoading={isEcosystemAppsLoading}
+                                        setCurrentContent={handleSetContent}
                                     />
                                 </HStack>
                             )}

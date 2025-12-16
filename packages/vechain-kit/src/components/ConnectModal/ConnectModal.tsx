@@ -26,7 +26,11 @@ export type ConnectModalContentsTypes =
     | 'faq'
     | {
           type: 'ecosystem';
-          props: { appsInfo: PrivyAppInfo[]; isLoading: boolean };
+          props: {
+              appsInfo: PrivyAppInfo[];
+              isLoading: boolean;
+              showBackButton?: boolean;
+          };
       }
     | {
           type: 'loading';
@@ -34,6 +38,7 @@ export type ConnectModalContentsTypes =
               title?: string;
               loadingText?: string;
               onTryAgain?: () => void;
+              showBackButton?: boolean;
           };
       }
     | {
@@ -50,16 +55,11 @@ export const ConnectModal = ({
     initialContent = 'main',
 }: Props) => {
     const [currentContent, setCurrentContent] =
-        useState<ConnectModalContentsTypes>('main');
+        useState<ConnectModalContentsTypes>(initialContent);
     const previousContentRef = useRef<ConnectModalContentsTypes | null>(null);
     const directionRef = useRef<'forward' | 'backward'>('forward');
     const wasOpenRef = useRef(false);
     const { connection } = useWallet();
-
-    // Use initialContent when modal first opens, otherwise use currentContent
-    // This ensures we don't show old content when reopening
-    const isFirstOpen = !wasOpenRef.current && isOpen;
-    const displayContent = isFirstOpen ? initialContent : currentContent;
 
     // Reset refs and set initial content when modal opens
     useEffect(() => {
@@ -67,10 +67,16 @@ export const ConnectModal = ({
             // Modal just opened - reset everything and use initialContent
             previousContentRef.current = null;
             directionRef.current = 'forward';
-            setCurrentContent(initialContent);
+            setCurrentContent(initialContent || 'main');
+            wasOpenRef.current = true;
+        } else if (!isOpen && wasOpenRef.current) {
+            // Modal just closed - reset the ref
+            wasOpenRef.current = false;
         }
-        wasOpenRef.current = isOpen;
     }, [isOpen, initialContent]);
+
+    // Use currentContent for display, with fallback to 'main'
+    const displayContent = currentContent || 'main';
 
     // Track navigation direction (computed synchronously)
     const direction = (() => {
@@ -110,6 +116,16 @@ export const ConnectModal = ({
     }, [connection.isConnected, isOpen, onClose]);
 
     const renderContent = () => {
+        // Ensure displayContent is valid
+        if (!displayContent) {
+            return (
+                <MainContent
+                    setCurrentContent={setCurrentContent}
+                    onClose={onClose}
+                />
+            );
+        }
+
         switch (displayContent) {
             case 'main':
                 return (
@@ -133,6 +149,7 @@ export const ConnectModal = ({
                             appsInfo={displayContent.props.appsInfo}
                             isLoading={displayContent.props.isLoading}
                             setCurrentContent={setCurrentContent}
+                            showBackButton={displayContent.props.showBackButton}
                         />
                     );
                 case 'loading':
@@ -143,6 +160,7 @@ export const ConnectModal = ({
                             onTryAgain={displayContent.props.onTryAgain}
                             onClose={onClose}
                             onGoBack={() => setCurrentContent('main')}
+                            showBackButton={displayContent.props.showBackButton}
                         />
                     );
                 case 'error':
@@ -163,6 +181,42 @@ export const ConnectModal = ({
     const content = renderContent();
     const contentKey = getContentKey(displayContent);
 
+    // Ensure we have valid content before rendering
+    if (!content) {
+        // Fallback to main content if renderContent returns null
+        const fallbackContent = (
+            <MainContent
+                setCurrentContent={setCurrentContent}
+                onClose={onClose}
+            />
+        );
+        return (
+            <BaseModal
+                isOpen={isOpen}
+                onClose={onClose}
+                allowExternalFocus={true}
+                blockScrollOnMount={true}
+            >
+                <AnimatePresence mode="wait" initial={false}>
+                    {isOpen && (
+                        <motion.div
+                            key="main-fallback"
+                            custom={directionRef.current}
+                            variants={contentVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={transition}
+                            style={{ width: '100%' }}
+                        >
+                            {fallbackContent}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </BaseModal>
+        );
+    }
+
     return (
         <BaseModal
             isOpen={isOpen}
@@ -175,9 +229,9 @@ export const ConnectModal = ({
                 initial={false}
                 key={isOpen ? 'open' : 'closed'}
             >
-                {isOpen && content && (
+                {isOpen && (
                     <motion.div
-                        key={contentKey}
+                        key={contentKey || 'main'}
                         custom={directionRef.current}
                         variants={contentVariants}
                         initial="enter"

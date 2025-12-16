@@ -25,6 +25,7 @@ type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<ConnectModalContentsTypes>
     >;
+    showBackButton?: boolean;
 };
 
 export const EcosystemContent = ({
@@ -32,6 +33,7 @@ export const EcosystemContent = ({
     appsInfo,
     isLoading,
     setCurrentContent,
+    showBackButton = true,
 }: Props) => {
     const { t } = useTranslation();
 
@@ -105,9 +107,11 @@ export const EcosystemContent = ({
             <>
                 <StickyHeaderContainer>
                     <ModalHeader>
-                        <ModalBackButton
-                            onClick={() => setCurrentContent('main')}
-                        />
+                        {showBackButton && (
+                            <ModalBackButton
+                                onClick={() => setCurrentContent('main')}
+                            />
+                        )}
                         {t('Already have an x2earn app wallet?')}
                         <ModalCloseButton onClick={onClose} />
                     </ModalHeader>

@@ -4,16 +4,19 @@
  * For object types, creates a key from the type and a hash of props.
  */
 export const getContentKey = <
-    T extends string | { type: string; props: unknown },
+    T extends string | { type: string; props: unknown } | null,
 >(
     content: T,
 ): string => {
+    if (content === null || content === undefined) {
+        return '';
+    }
     if (typeof content === 'string') {
         return content;
     }
     // For object types, create a key from the type and a hash of props
     const type = content.type;
-    const propsStr = JSON.stringify(content.props);
+    const propsStr = JSON.stringify(content.props ?? {});
     // Simple hash function for props
     let hash = 0;
     for (let i = 0; i < propsStr.length; i++) {
