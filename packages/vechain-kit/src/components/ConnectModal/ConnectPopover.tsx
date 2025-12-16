@@ -17,6 +17,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useFetchAppInfo, useConnectModal } from '@/hooks';
 import { ConnectModalContentsTypes } from './ConnectModal';
 import { useCallback } from 'react';
+import { SetStateAction } from 'react';
 
 type ConnectPopoverProps = {
     isLoading: boolean;
@@ -44,22 +45,33 @@ export const ConnectPopover = ({
     // Function to handle content changes from popover - opens ConnectModal
     // When opened from popover, we don't show back button
     const handleSetContent = useCallback(
-        (content: ConnectModalContentsTypes) => {
+        (
+            content:
+                | ConnectModalContentsTypes
+                | SetStateAction<ConnectModalContentsTypes>,
+        ) => {
+            // Handle function form of SetStateAction
+            const resolvedContent =
+                typeof content === 'function'
+                    ? content('main') // Use 'main' as previous state (won't be used anyway)
+                    : content;
+
             // If content is ecosystem or loading, set showBackButton to false
             if (
-                typeof content === 'object' &&
-                'type' in content &&
-                (content.type === 'ecosystem' || content.type === 'loading')
+                typeof resolvedContent === 'object' &&
+                'type' in resolvedContent &&
+                (resolvedContent.type === 'ecosystem' ||
+                    resolvedContent.type === 'loading')
             ) {
                 openConnectModal({
-                    ...content,
+                    ...resolvedContent,
                     props: {
-                        ...content.props,
+                        ...resolvedContent.props,
                         showBackButton: false,
                     },
                 });
             } else {
-                openConnectModal(content);
+                openConnectModal(resolvedContent);
             }
         },
         [openConnectModal],
