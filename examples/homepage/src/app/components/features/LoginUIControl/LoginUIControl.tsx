@@ -113,7 +113,7 @@ export const LoginUIControl = () => {
 
                         <VStack alignItems="flex-start" spacing={2}>
                             <Box w={'fit-content'}>
-                                <Button onClick={open}>
+                                <Button onClick={() => open()}>
                                     Click me to login
                                 </Button>
                             </Box>
