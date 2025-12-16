@@ -71,7 +71,10 @@ export function VechainKitProviderWrapper({ children }: Props) {
 
     return (
         <VeChainKitProvider
-            theme={theme}
+            theme={{
+                ...theme,
+                modal: { ...theme.modal, useBottomSheetOnMobile: true },
+            }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,

@@ -1,6 +1,7 @@
 import {
     Modal,
     ModalContent,
+    ModalContentProps,
     ModalOverlay,
     useMediaQuery,
     useToken,
@@ -24,6 +25,12 @@ type BaseModalProps = {
     allowExternalFocus?: boolean;
     backdropFilter?: string;
     isCloseable?: boolean;
+    /**
+     * Whether to use bottom sheet on mobile devices.
+     * When false (default), uses regular modal on all screen sizes.
+     * When true, uses bottom sheet on mobile (< 768px) and regular modal on desktop.
+     */
+    useBottomSheetOnMobile?: boolean;
 };
 
 export const BaseModal = ({
@@ -38,9 +45,17 @@ export const BaseModal = ({
     allowExternalFocus = false,
     backdropFilter,
     isCloseable = true,
+    useBottomSheetOnMobile,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
-    const { portalRootRef } = useVechainKitThemeConfig();
+    const { portalRootRef, themeConfig } = useVechainKitThemeConfig();
+
+    // Get useBottomSheetOnMobile from theme config if not provided as prop
+    // Prop takes precedence over theme config
+    const shouldUseBottomSheetOnMobile =
+        useBottomSheetOnMobile ??
+        themeConfig?.modal?.useBottomSheetOnMobile ??
+        false;
 
     // Use semantic tokens for modal and overlay colors
     const modalBg = useToken('colors', 'vechain-kit-modal');
@@ -52,6 +67,19 @@ export const BaseModal = ({
     const modalBackdropFilter = tokens?.effects?.backdropFilter?.modal;
     const effectiveBackdropFilter =
         backdropFilter ?? defaultBackdropFilter ?? 'blur(3px)';
+
+    const modalContentProps: ModalContentProps = isDesktop
+        ? {}
+        : {
+              position: 'fixed',
+              bottom: '0',
+              mb: '0',
+              maxW: '2xl',
+              borderRadius: '24px 24px 0px 0px !important',
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              scrollBehavior: 'smooth',
+          };
 
     const modalContent = (
         <Modal
@@ -81,6 +109,7 @@ export const BaseModal = ({
                     backdropFilter: modalBackdropFilter,
                     WebkitBackdropFilter: modalBackdropFilter,
                 }}
+                {...modalContentProps}
             >
                 {children}
             </ModalContent>
@@ -108,5 +137,9 @@ export const BaseModal = ({
         </Modal>
     );
 
-    return <>{isDesktop ? modalContent : bottomSheetContent}</>;
+    // Use bottom sheet only on mobile when explicitly enabled
+    // By default, use regular modal on all screen sizes
+    const shouldUseBottomSheet = !isDesktop && shouldUseBottomSheetOnMobile;
+
+    return <>{shouldUseBottomSheet ? bottomSheetContent : modalContent}</>;
 };
