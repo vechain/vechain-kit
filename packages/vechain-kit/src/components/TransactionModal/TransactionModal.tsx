@@ -34,6 +34,10 @@ export const TransactionModal = ({
     onTryAgain,
 }: TransactionModalProps) => {
     const { darkMode, theme } = useVeChainKitConfig();
+
+    // avoid deep nesting and unnecessary rendering
+    if (!isOpen) return null;
+
     return (
         <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
             <BaseModal
