@@ -1,5 +1,6 @@
-import { Box, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
+import { Box, useToken, VisuallyHidden } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
+import { useVechainKitThemeConfig } from '@/providers';
 
 type Props = {
     isOpen: boolean;
@@ -19,7 +20,14 @@ export const BaseBottomSheet = ({
     ariaDescription,
     isDismissable = true,
 }: Props) => {
-    const bgColor = useColorModeValue('#F9FAFB', '#1A1A1A');
+    // Use semantic tokens for bottom sheet and overlay colors
+    const modalBg = useToken('colors', 'vechain-kit-modal');
+    const overlayBg = useToken('colors', 'vechain-kit-overlay');
+    const handleBg = useToken('colors', 'vechain-kit-border');
+
+    // Get backdrop filter from tokens context
+    const { tokens } = useVechainKitThemeConfig();
+    const overlayBackdropFilter = tokens?.effects?.backdropFilter?.overlay;
 
     return (
         <Drawer.Root
@@ -42,7 +50,9 @@ export const BaseBottomSheet = ({
                         right: 0,
                         bottom: 0,
                         left: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.50)',
+                        backgroundColor: overlayBg,
+                        backdropFilter: overlayBackdropFilter,
+                        WebkitBackdropFilter: overlayBackdropFilter,
                     }}
                 />
                 <Drawer.Content
@@ -50,7 +60,7 @@ export const BaseBottomSheet = ({
                     aria-describedby={ariaTitle}
                     style={{
                         zIndex: 3,
-                        backgroundColor: bgColor,
+                        backgroundColor: modalBg,
                         borderRadius: '24px 24px 0 0',
                         position: 'fixed',
                         bottom: 0,
@@ -70,8 +80,8 @@ export const BaseBottomSheet = ({
                         mx={'auto'}
                         w={'34px'}
                         h={'5px'}
-                        bg={'#D7D6D4'}
-                        my={2}
+                        bg={handleBg}
+                        mt={4}
                         rounded={'full'}
                     />
 
