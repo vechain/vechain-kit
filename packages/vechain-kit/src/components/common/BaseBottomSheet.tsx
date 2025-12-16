@@ -44,7 +44,7 @@ export const BaseBottomSheet = ({
             <Drawer.Portal>
                 <Drawer.Overlay
                     style={{
-                        zIndex: 2,
+                        zIndex: 100,
                         position: 'fixed',
                         top: 0,
                         right: 0,
@@ -59,7 +59,7 @@ export const BaseBottomSheet = ({
                     aria-description={ariaDescription}
                     aria-describedby={ariaTitle}
                     style={{
-                        zIndex: 3,
+                        zIndex: 101,
                         backgroundColor: modalBg,
                         borderRadius: '24px 24px 0 0',
                         position: 'fixed',
