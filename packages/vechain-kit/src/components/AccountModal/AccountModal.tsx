@@ -36,8 +36,11 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
-import { contentVariants, transition } from './utils/animationVariants';
-import { getContentKey } from './utils/getContentKey';
+import {
+    contentVariants,
+    transition,
+    getContentKey,
+} from '@/components/common';
 
 type Props = {
     isOpen: boolean;

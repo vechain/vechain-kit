@@ -1,11 +1,13 @@
-import { AccountModalContentTypes } from '../Types/Types';
-
 /**
- * Generate a unique key from AccountModalContentTypes.
+ * Generate a unique key from modal content types.
  * For string types, returns the string directly.
  * For object types, creates a key from the type and a hash of props.
  */
-export const getContentKey = (content: AccountModalContentTypes): string => {
+export const getContentKey = <
+    T extends string | { type: string; props: unknown },
+>(
+    content: T,
+): string => {
     if (typeof content === 'string') {
         return content;
     }
@@ -21,4 +23,3 @@ export const getContentKey = (content: AccountModalContentTypes): string => {
     }
     return `${type}-${Math.abs(hash)}`;
 };
-
