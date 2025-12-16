@@ -1,13 +1,13 @@
 import {
     Modal,
     ModalContent,
-    ModalContentProps,
     ModalOverlay,
     useMediaQuery,
     useToken,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { useVechainKitThemeConfig } from '@/providers';
+import { BaseBottomSheet } from './BaseBottomSheet';
 
 type BaseModalProps = {
     isOpen: boolean;
@@ -53,27 +53,13 @@ export const BaseModal = ({
     const effectiveBackdropFilter =
         backdropFilter ?? defaultBackdropFilter ?? 'blur(3px)';
 
-    const modalContentProps: ModalContentProps = isDesktop
-        ? {}
-        : {
-              position: 'fixed',
-              bottom: '0',
-              mb: '0',
-              maxW: '2xl',
-              borderRadius: '24px 24px 0px 0px !important',
-              overflowY: 'auto',
-              overflowX: 'hidden',
-              scrollBehavior: 'smooth',
-          };
-
-    return (
+    const modalContent = (
         <Modal
             motionPreset={motionPreset}
             isOpen={isOpen}
             onClose={onClose}
             isCentered={isCentered}
             size={size}
-            // scrollBehavior="inside"
             returnFocusOnClose={false}
             blockScrollOnMount={blockScrollOnMount}
             closeOnOverlayClick={closeOnOverlayClick && isCloseable}
@@ -81,6 +67,7 @@ export const BaseModal = ({
             portalProps={{ containerRef: portalRootRef }}
             trapFocus={!allowExternalFocus}
             autoFocus={!allowExternalFocus}
+            variant="vechainKitBase"
         >
             <ModalOverlay
                 bg={overlayBg}
@@ -90,15 +77,34 @@ export const BaseModal = ({
                 role="dialog"
                 aria-modal={!allowExternalFocus}
                 bg={modalBg}
-                variant="vechainKitBase"
                 sx={{
                     backdropFilter: modalBackdropFilter,
                     WebkitBackdropFilter: modalBackdropFilter,
                 }}
-                {...modalContentProps}
             >
                 {children}
             </ModalContent>
         </Modal>
     );
+
+    const bottomSheetContent = (
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size={size}
+            blockScrollOnMount={blockScrollOnMount}
+        >
+            <BaseBottomSheet
+                isOpen={isOpen}
+                onClose={onClose}
+                ariaTitle={'Modal'}
+                ariaDescription={'Modal content'}
+                isDismissable={isCloseable}
+            >
+                {children}
+            </BaseBottomSheet>
+        </Modal>
+    );
+
+    return <>{isDesktop ? modalContent : bottomSheetContent}</>;
 };
