@@ -87,6 +87,8 @@ export const BaseModal = ({
         </Modal>
     );
 
+    // We still wrap the bottomsheet within the modal,
+    // because we need access to the modal context (eg: setCurrentContent())
     const bottomSheetContent = (
         <Modal
             isOpen={isOpen}

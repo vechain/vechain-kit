@@ -97,24 +97,27 @@ export const SendTokenSummaryContent = ({
         }
     };
 
-    const handleSuccess = (txId: string) => {
-        setCurrentContent({
-            type: 'successful-operation',
-            props: {
-                setCurrentContent,
-                txId,
-                title: t('Transaction successful'),
-                onDone: () => {
-                    if (isolatedView) {
-                        closeAccountModal();
-                    } else {
-                        setCurrentContent('main');
-                    }
+    const handleSuccess = React.useCallback(
+        (txId: string) => {
+            setCurrentContent({
+                type: 'successful-operation',
+                props: {
+                    setCurrentContent,
+                    txId,
+                    title: t('Transaction successful'),
+                    onDone: () => {
+                        if (isolatedView) {
+                            closeAccountModal();
+                        } else {
+                            setCurrentContent('main');
+                        }
+                    },
+                    showSocialButtons: true,
                 },
-                showSocialButtons: true,
-            },
-        });
-    };
+            });
+        },
+        [setCurrentContent, t, isolatedView, closeAccountModal],
+    );
 
     const {
         sendTransaction: transferERC20,
@@ -130,9 +133,6 @@ export const SendTokenSummaryContent = ({
         amount,
         tokenAddress: selectedToken.address,
         tokenName: selectedToken.symbol,
-        onSuccess: () => {
-            handleSuccess(transferERC20Receipt?.meta.txID ?? '');
-        },
         onError: (error) => {
             handleError(error ?? '');
         },
@@ -149,25 +149,44 @@ export const SendTokenSummaryContent = ({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
         amount,
-        onSuccess: () => {
-            handleSuccess(transferVETReceipt?.meta.txID ?? '');
-        },
         onError: (error) => {
             handleError(error ?? '');
         },
     });
 
-    const getTxReceipt = () => {
+    const getTxReceipt = React.useCallback(() => {
         return selectedToken.symbol === 'VET'
             ? transferVETReceipt
             : transferERC20Receipt;
-    };
+    }, [selectedToken.symbol, transferVETReceipt, transferERC20Receipt]);
 
     const isTxWaitingConfirmation =
         transferERC20WaitingForWalletConfirmation ||
         transferVETWaitingForWalletConfirmation;
     const isSubmitting =
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
+
+    // Track if we've already shown success to prevent duplicate calls
+    const [hasShownSuccess, setHasShownSuccess] = React.useState(false);
+
+    // Handle successful transaction via useEffect to avoid synchronous state updates
+    React.useEffect(() => {
+        const receipt = getTxReceipt();
+        if (receipt && !receipt.reverted && !hasShownSuccess && !isSubmitting) {
+            const txId = receipt.meta.txID;
+            if (txId) {
+                setHasShownSuccess(true);
+                handleSuccess(txId);
+            }
+        }
+    }, [getTxReceipt, hasShownSuccess, isSubmitting, handleSuccess]);
+
+    // Reset the flag when starting a new transaction
+    React.useEffect(() => {
+        if (isSubmitting) {
+            setHasShownSuccess(false);
+        }
+    }, [isSubmitting]);
 
     const handleBack = () => {
         setCurrentContent({
@@ -208,7 +227,7 @@ export const SendTokenSummaryContent = ({
             : preferences.availableGasTokens, // Use selected token or all available
         sendingAmount: amount,
         sendingTokenSymbol: selectedToken.symbol,
-        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
+        enabled: shouldEstimateGas && !!feeDelegation?.delegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
     const disableConfirmButtonDuringEstimation =
