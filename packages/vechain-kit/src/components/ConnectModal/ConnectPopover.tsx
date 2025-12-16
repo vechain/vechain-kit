@@ -59,18 +59,30 @@ export const ConnectPopover = ({
             // If content is ecosystem or loading, set showBackButton to false
             if (
                 typeof resolvedContent === 'object' &&
-                'type' in resolvedContent &&
-                (resolvedContent.type === 'ecosystem' ||
-                    resolvedContent.type === 'loading')
+                'type' in resolvedContent
             ) {
-                openConnectModal({
-                    ...resolvedContent,
-                    props: {
-                        ...resolvedContent.props,
-                        showBackButton: false,
-                    },
-                });
+                if (resolvedContent.type === 'ecosystem') {
+                    openConnectModal({
+                        type: 'ecosystem',
+                        props: {
+                            ...resolvedContent.props,
+                            showBackButton: false,
+                        },
+                    });
+                } else if (resolvedContent.type === 'loading') {
+                    openConnectModal({
+                        type: 'loading',
+                        props: {
+                            ...resolvedContent.props,
+                            showBackButton: false,
+                        },
+                    });
+                } else {
+                    // Error type or other - don't modify props
+                    openConnectModal(resolvedContent);
+                }
             } else {
+                // String type (main, faq, etc.)
                 openConnectModal(resolvedContent);
             }
         },
