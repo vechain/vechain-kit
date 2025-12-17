@@ -6,7 +6,6 @@ import {
     InputGroup,
     InputLeftElement,
     ModalBody,
-    ModalCloseButton,
     ModalFooter,
     ModalHeader,
     VStack,
@@ -17,6 +16,7 @@ import {
     AssetButton,
     ModalBackButton,
     StickyHeaderContainer,
+    ModalCloseButton,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +39,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { sortedTokens } = useTokensWithValues({ address: account?.address });
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
-    
+
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
@@ -87,9 +87,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                             data-testid="search-token-input"
                         />
                         <InputLeftElement h="56px" w="56px" pl={4}>
-                            <LuSearch
-                                color={textTertiary}
-                            />
+                            <LuSearch color={textTertiary} />
                         </InputLeftElement>
                     </InputGroup>
 

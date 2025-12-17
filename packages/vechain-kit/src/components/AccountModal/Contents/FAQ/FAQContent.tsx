@@ -2,7 +2,6 @@ import {
     Button,
     Link,
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Icon,
@@ -15,6 +14,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
+    ModalCloseButton,
 } from '@/components/common';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';

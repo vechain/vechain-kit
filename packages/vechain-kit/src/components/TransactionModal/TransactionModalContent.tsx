@@ -1,6 +1,5 @@
 import {
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -24,7 +23,7 @@ import {
     LuRefreshCw,
 } from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
-import { StickyHeaderContainer } from '../common';
+import { StickyHeaderContainer, ModalCloseButton } from '../common';
 import { TransactionModalProps } from './TransactionModal';
 
 type StatusConfig = {

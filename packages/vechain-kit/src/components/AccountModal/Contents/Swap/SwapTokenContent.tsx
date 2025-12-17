@@ -2,7 +2,6 @@ import React, { useState, useMemo, useCallback } from 'react';
 import {
     Container,
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     HStack,
@@ -23,6 +22,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
+    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';

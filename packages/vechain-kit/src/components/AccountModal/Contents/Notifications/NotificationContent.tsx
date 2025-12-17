@@ -1,7 +1,6 @@
 import {
     Container,
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Icon,
@@ -14,6 +13,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
+    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
@@ -92,7 +92,9 @@ export const NotificationsContent = ({ setCurrentContent }: Props) => {
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
                 {!isolatedView && (
-                    <ModalBackButton onClick={() => setCurrentContent('main')} />
+                    <ModalBackButton
+                        onClick={() => setCurrentContent('main')}
+                    />
                 )}
                 <ModalHeader data-testid="modal-title">
                     {isArchiveView

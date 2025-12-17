@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import {
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -15,6 +14,7 @@ import {
     AddressDisplayCard,
     TransactionButtonAndStatus,
     GasFeeSummary,
+    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '@/utils';

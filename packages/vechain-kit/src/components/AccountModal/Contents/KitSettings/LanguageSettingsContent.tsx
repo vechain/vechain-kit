@@ -1,6 +1,5 @@
 import {
     ModalBody,
-    ModalCloseButton,
     VStack,
     ModalFooter,
     ModalHeader,
@@ -13,6 +12,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
+    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';

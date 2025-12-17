@@ -9,12 +9,11 @@ import {
     ModalFooter,
     ModalBody,
     ModalHeader,
-    ModalCloseButton,
     Container,
     useToken,
 } from '@chakra-ui/react';
 import { LuMail } from 'react-icons/lu';
-import { BaseModal, StickyHeaderContainer } from '../common';
+import { BaseModal, StickyHeaderContainer, ModalCloseButton } from '../common';
 import { useEffect, useState } from 'react';
 import { useCreateWallet, useLoginWithEmail } from '@privy-io/react-auth';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +36,7 @@ export const EmailCodeVerificationModal = ({
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
-    
+
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const [code, setCode] = useState('');
     const [error, setError] = useState<string | null>(null);

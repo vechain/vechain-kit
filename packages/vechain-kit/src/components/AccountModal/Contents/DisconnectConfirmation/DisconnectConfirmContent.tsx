@@ -1,6 +1,5 @@
 import {
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Button,
@@ -12,6 +11,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
+    ModalCloseButton,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 

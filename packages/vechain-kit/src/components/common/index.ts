@@ -13,4 +13,5 @@ export * from './TransactionButtonAndStatus';
 export * from './ModalNotificationButton';
 export * from './GasFeeSummary';
 export * from './GasFeeTokenSelector';
+export * from './ModalCloseButton';
 export * from './utils';

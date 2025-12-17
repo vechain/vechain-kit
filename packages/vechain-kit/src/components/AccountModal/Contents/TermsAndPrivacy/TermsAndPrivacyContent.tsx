@@ -2,14 +2,9 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
-import {
-    ModalBody,
     ModalCloseButton,
-    ModalFooter,
-    ModalHeader,
-    VStack,
-} from '@chakra-ui/react';
+} from '@/components/common';
+import { ModalBody, ModalFooter, ModalHeader, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
 import { TermsAndPrivacyAccordion } from './TermsAndPrivacyAccordion';
