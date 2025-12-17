@@ -186,7 +186,7 @@ export const BaseBottomSheet = ({
                         left: 0,
                         right: 0,
                         // minHeight: '60vh',
-                        maxHeight: '95vh',
+                        maxHeight: '85vh',
                         display: 'flex',
                         flexDirection: 'column',
                     }}
@@ -223,7 +223,7 @@ export const BaseBottomSheet = ({
                             style={{
                                 height: '1px',
                                 width: '100%',
-                                pointerEvents: 'none',
+                                // pointerEvents: 'none',
                                 visibility: 'hidden',
                                 marginTop: '-1px',
                             }}
