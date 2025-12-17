@@ -697,7 +697,7 @@ export const SwapTokenContent = ({
                                 </Text>
                             )}
                         </HStack>
-                        <Box p={6} borderRadius="2xl" bg={cardBg}>
+                        <Box p={4} borderRadius="2xl" bg={cardBg}>
                             <VStack align="stretch" spacing={2}>
                                 <HStack justify="space-between">
                                     <Input
@@ -850,13 +850,8 @@ export const SwapTokenContent = ({
                                 {t('To')}
                             </Text>
                         </HStack>
-                        <Box borderRadius="2xl" bg={cardBg}>
-                            <VStack
-                                align="stretch"
-                                spacing={2}
-                                p={6}
-                                width="100%"
-                            >
+                        <Box borderRadius="2xl" bg={cardBg} p={4}>
+                            <VStack align="stretch" spacing={2} width="100%">
                                 <HStack
                                     justify="space-between"
                                     alignItems="center"

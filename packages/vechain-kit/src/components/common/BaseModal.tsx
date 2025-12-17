@@ -68,7 +68,11 @@ export const BaseModal = ({
         backdropFilter ?? defaultBackdropFilter ?? 'blur(3px)';
 
     const modalContentProps: ModalContentProps = isDesktop
-        ? {}
+        ? {
+              //   minHeight: '51vh',
+              maxHeight: '57vh',
+              transition: 'all 0.1s linear',
+          }
         : {
               position: 'fixed',
               bottom: '0',
@@ -78,6 +82,9 @@ export const BaseModal = ({
               overflowY: 'auto',
               overflowX: 'hidden',
               scrollBehavior: 'smooth',
+              transition: 'all 0.1s linear',
+              //   minHeight: '54vh',
+              maxHeight: '57vh',
           };
 
     const modalContent = (

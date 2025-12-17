@@ -72,7 +72,7 @@ export const AddressDisplayCard = ({
                 bg={cardBg}
             >
                 <HStack>
-                    <Skeleton boxSize="40px" borderRadius="xl" />
+                    <Skeleton boxSize="40px" borderRadius="full" />
                     <VStack align="start" spacing={0}>
                         <Skeleton
                             height="16px"
@@ -118,7 +118,7 @@ export const AddressDisplayCard = ({
                     src={imageSrc}
                     alt={imageAlt}
                     boxSize="40px"
-                    borderRadius="xl"
+                    borderRadius="full"
                     objectFit="cover"
                 />
                 <VStack align="start" spacing={0}>
