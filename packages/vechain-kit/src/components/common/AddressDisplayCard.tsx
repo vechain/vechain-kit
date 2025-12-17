@@ -68,7 +68,7 @@ export const AddressDisplayCard = ({
             <HStack
                 minH={'50px'}
                 justify="space-between"
-                p={2}
+                p={4}
                 borderRadius="2xl"
                 bg={cardBg}
             >
@@ -110,7 +110,7 @@ export const AddressDisplayCard = ({
         <HStack
             minH={'50px'}
             justify="space-between"
-            p={2}
+            p={4}
             borderRadius="2xl"
             bg={cardBg}
         >
