@@ -48,7 +48,7 @@ export const BaseModal = ({
     useBottomSheetOnMobile,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
-    const { portalRootRef, themeConfig } = useVechainKitThemeConfig();
+    const { portalRootRef, themeConfig, tokens } = useVechainKitThemeConfig();
 
     // Get useBottomSheetOnMobile from theme config if not provided as prop
     // Prop takes precedence over theme config
@@ -62,7 +62,6 @@ export const BaseModal = ({
     const overlayBg = useToken('colors', 'vechain-kit-overlay');
 
     // Get backdrop filter from tokens context
-    const { tokens } = useVechainKitThemeConfig();
     const defaultBackdropFilter = tokens?.effects?.backdropFilter?.overlay;
     const modalBackdropFilter = tokens?.effects?.backdropFilter?.modal;
     const effectiveBackdropFilter =

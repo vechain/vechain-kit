@@ -22,7 +22,6 @@ type Props = {
 
 export type ConnectModalContentsTypes =
     | 'main'
-    | 'email-verification'
     | 'faq'
     | {
           type: 'ecosystem';
@@ -69,6 +68,9 @@ export const ConnectModal = ({
             directionRef.current = 'forward';
             setCurrentContent(initialContent || 'main');
             wasOpenRef.current = true;
+        } else if (isOpen && wasOpenRef.current) {
+            // Modal is already open - update content if initialContent changed
+            setCurrentContent(initialContent || 'main');
         } else if (!isOpen && wasOpenRef.current) {
             // Modal just closed - reset the ref
             wasOpenRef.current = false;
