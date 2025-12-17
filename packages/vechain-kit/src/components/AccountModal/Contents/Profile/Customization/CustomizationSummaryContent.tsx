@@ -101,22 +101,6 @@ export const CustomizationSummaryContent = ({
         resolverAddress, // Pass the pre-fetched resolver address
         signerAccountAddress: account?.address ?? '',
         onSuccess: async () => {
-            // Set success content first
-            setCurrentContent({
-                type: 'successful-operation',
-                props: {
-                    setCurrentContent,
-                    txId: txReceipt?.meta.txID,
-                    title: t('Profile Updated'),
-                    description: t(
-                        'Your changes have been saved successfully.',
-                    ),
-                    onDone: () => {
-                        setCurrentContent(onDoneRedirectContent);
-                    },
-                },
-            });
-
             try {
                 await refresh();
             } catch (error) {
@@ -127,6 +111,49 @@ export const CustomizationSummaryContent = ({
             console.error('Error updating text record:', error);
         },
     });
+
+    // Track if we've already shown success to prevent duplicate calls
+    const [hasShownSuccess, setHasShownSuccess] = React.useState(false);
+
+    // Handle successful transaction via useEffect to avoid synchronous state updates
+    React.useEffect(() => {
+        // Guard clauses
+        if (!txReceipt) return;
+        if (txReceipt.reverted) return;
+        if (hasShownSuccess) return;
+        if (isTransactionPending) return;
+
+        const txId = txReceipt.meta.txID;
+        if (!txId) return;
+
+        setHasShownSuccess(true);
+        setCurrentContent({
+            type: 'successful-operation',
+            props: {
+                setCurrentContent,
+                txId,
+                title: t('Profile Updated'),
+                description: t('Your changes have been saved successfully.'),
+                onDone: () => {
+                    setCurrentContent(onDoneRedirectContent);
+                },
+            },
+        });
+    }, [
+        txReceipt,
+        hasShownSuccess,
+        isTransactionPending,
+        setCurrentContent,
+        t,
+        onDoneRedirectContent,
+    ]);
+
+    // Reset the flag when starting a new transaction
+    React.useEffect(() => {
+        if (isTransactionPending) {
+            setHasShownSuccess(false);
+        }
+    }, [isTransactionPending]);
 
     // Build the text record updates immediately
     const textRecordUpdates = useMemo(() => {
