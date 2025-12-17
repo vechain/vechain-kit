@@ -206,11 +206,7 @@ export const TransactionModalContent = ({
                     {(status === 'success' ||
                         status === 'error' ||
                         status === 'ready') && (
-                        <Button
-                            onClick={onClose}
-                            variant="vechainKitSecondary"
-                            width="full"
-                        >
+                        <Button onClick={onClose} variant="ghost" width="full">
                             {t('Close')}
                         </Button>
                     )}
