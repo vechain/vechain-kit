@@ -186,7 +186,7 @@ export const BaseBottomSheet = ({
                         left: 0,
                         right: 0,
                         // minHeight: '60vh',
-                        maxHeight: '85vh',
+                        maxHeight: '80vh',
                         display: 'flex',
                         flexDirection: 'column',
                     }}
