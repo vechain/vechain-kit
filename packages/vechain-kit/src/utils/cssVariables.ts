@@ -250,30 +250,24 @@ export function applyDAppKitButtonStyles(): void {
             const dappKitModals = document.querySelectorAll(
                 'vdk-modal, [data-vdk-modal], [id*="vdk-modal"]',
             );
-            dappKitModals.forEach((element) => {
-                if (element instanceof HTMLElement) {
-                    element.style.setProperty(
-                        'pointer-events',
-                        'all',
-                        'important',
-                    );
-                }
-            });
+            for (const element of dappKitModals) {
+                if (!(element instanceof HTMLElement)) continue;
+                element.style.setProperty('pointer-events', 'all', 'important');
+            }
 
             // Re-apply styles when DAppKit adds new elements
             const dappKitElements = document.querySelectorAll(
                 '[data-vdk-source-card], [class*="vdk-source-card"], [class*="source-card"], [data-vdk-modal] button, [data-vdk-modal] [role="button"]',
             );
-            dappKitElements.forEach((element) => {
-                if (element instanceof HTMLElement) {
-                    element.style.setProperty('opacity', '1', 'important');
-                    element.style.setProperty(
-                        'transition',
-                        'opacity 0.2s ease',
-                        'important',
-                    );
-                }
-            });
+            for (const element of dappKitElements) {
+                if (!(element instanceof HTMLElement)) continue;
+                element.style.setProperty('opacity', '1', 'important');
+                element.style.setProperty(
+                    'transition',
+                    'opacity 0.2s ease',
+                    'important',
+                );
+            }
         });
 
         // Observe the document body for DAppKit modal additions

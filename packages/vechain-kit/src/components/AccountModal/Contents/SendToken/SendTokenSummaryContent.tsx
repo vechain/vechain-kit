@@ -173,13 +173,18 @@ export const SendTokenSummaryContent = ({
     // Handle successful transaction via useEffect to avoid synchronous state updates
     React.useEffect(() => {
         const receipt = getTxReceipt();
-        if (receipt && !receipt.reverted && !hasShownSuccess && !isSubmitting) {
-            const txId = receipt.meta.txID;
-            if (txId) {
-                setHasShownSuccess(true);
-                handleSuccess(txId);
-            }
-        }
+
+        // Guard clauses
+        if (!receipt) return;
+        if (receipt.reverted) return;
+        if (hasShownSuccess) return;
+        if (isSubmitting) return;
+
+        const txId = receipt.meta.txID;
+        if (!txId) return;
+
+        setHasShownSuccess(true);
+        handleSuccess(txId);
     }, [getTxReceipt, hasShownSuccess, isSubmitting, handleSuccess]);
 
     // Reset the flag when starting a new transaction

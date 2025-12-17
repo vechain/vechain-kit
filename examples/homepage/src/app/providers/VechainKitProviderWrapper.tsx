@@ -66,6 +66,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
                       bg: 'rgba(39, 42, 46, 0.08)',
                       color: '#272A2E',
                   },
+                  loginButton: {
+                      border: '1px solid rgba(39, 42, 46, 0.12)',
+                  },
               },
           };
 
