@@ -144,6 +144,7 @@ export const BaseBottomSheet = ({
     // Get backdrop filter from tokens context
     const { tokens } = useVechainKitThemeConfig();
     const overlayBackdropFilter = tokens?.effects?.backdropFilter?.overlay;
+    const modalBorder = tokens?.colors?.border?.modal || 'none';
 
     return (
         <Drawer.Root
@@ -178,6 +179,7 @@ export const BaseBottomSheet = ({
                         zIndex: 101,
                         backgroundColor: modalBg,
                         borderRadius: '24px 24px 0 0',
+                        border: modalBorder,
                         position: 'fixed',
                         bottom: 0,
                         left: 0,
