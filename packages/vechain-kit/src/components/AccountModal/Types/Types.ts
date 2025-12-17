@@ -29,7 +29,6 @@ export type AccountModalContentTypes =
     | 'privy-linked-accounts'
     | 'add-custom-token'
     | 'assets'
-    | 'bridge'
     | 'change-currency'
     | 'change-language'
     | 'gas-token-settings'
