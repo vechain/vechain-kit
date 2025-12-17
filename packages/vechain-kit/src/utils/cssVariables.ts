@@ -164,6 +164,14 @@ export function applyDAppKitButtonStyles(): void {
     // Apply hover/active opacity to match loginIn variant style
     // Target all button-like elements (buttons, clickable divs, elements with cursor pointer)
     const cssRules = `
+        /* CRITICAL: Ensure dappkit modal always has pointer-events enabled */
+        /* This fixes an issue where the modal becomes unclickable when opened on top of bottom sheet */
+        vdk-modal,
+        [data-vdk-modal],
+        [id*="vdk-modal"] {
+            pointer-events: all !important;
+        }
+        
         /* DAppKit wallet source buttons - apply loginIn hover style */
         /* Target all button-like elements within DAppKit containers */
         [class*="vdk"] button,
@@ -238,6 +246,20 @@ export function applyDAppKitButtonStyles(): void {
     // Use MutationObserver to apply styles to dynamically added DAppKit elements
     if (typeof MutationObserver !== 'undefined') {
         const observer = new MutationObserver(() => {
+            // Ensure dappkit modal always has pointer-events enabled
+            const dappKitModals = document.querySelectorAll(
+                'vdk-modal, [data-vdk-modal], [id*="vdk-modal"]',
+            );
+            dappKitModals.forEach((element) => {
+                if (element instanceof HTMLElement) {
+                    element.style.setProperty(
+                        'pointer-events',
+                        'all',
+                        'important',
+                    );
+                }
+            });
+
             // Re-apply styles when DAppKit adds new elements
             const dappKitElements = document.querySelectorAll(
                 '[data-vdk-source-card], [class*="vdk-source-card"], [class*="source-card"], [data-vdk-modal] button, [data-vdk-modal] [role="button"]',
