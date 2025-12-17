@@ -7,6 +7,7 @@ import {
     HStack,
     ModalFooter,
     useToken,
+    Box,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -273,24 +274,32 @@ export const SendTokenSummaryContent = ({
                     {/* From/To Card */}
 
                     <VStack spacing={4} w="full">
-                        <AddressDisplayCard
-                            label={t('From')}
-                            address={account?.address ?? ''}
-                            domain={account?.domain}
-                            imageSrc={account?.image ?? ''}
-                            imageAlt="From account"
-                            balance={Number(selectedToken.balance)}
-                            tokenAddress={selectedToken.address}
-                        />
+                        <Box w="full">
+                            <Text fontSize="sm" mb={2} color={textSecondary}>
+                                {t('From')}
+                            </Text>
+                            <AddressDisplayCard
+                                address={account?.address ?? ''}
+                                domain={account?.domain}
+                                imageSrc={account?.image ?? ''}
+                                imageAlt="From account"
+                                balance={Number(selectedToken.balance)}
+                                tokenAddress={selectedToken.address}
+                            />
+                        </Box>
 
-                        <AddressDisplayCard
-                            label={t('To')}
-                            address={resolvedAddress || toAddressOrDomain}
-                            domain={resolvedDomain}
-                            imageSrc={toImageSrc ?? ''}
-                            imageAlt="To account"
-                            tokenAddress={selectedToken.address}
-                        />
+                        <Box w="full">
+                            <Text fontSize="sm" mb={2} color={textSecondary}>
+                                {t('To')}
+                            </Text>
+                            <AddressDisplayCard
+                                address={resolvedAddress || toAddressOrDomain}
+                                domain={resolvedDomain}
+                                imageSrc={toImageSrc ?? ''}
+                                imageAlt="To account"
+                                tokenAddress={selectedToken.address}
+                            />
+                        </Box>
 
                         {connection.isConnectedWithPrivy && (
                             <GasFeeSummary
