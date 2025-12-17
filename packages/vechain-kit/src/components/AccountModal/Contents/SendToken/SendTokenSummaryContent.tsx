@@ -227,7 +227,7 @@ export const SendTokenSummaryContent = ({
             : preferences.availableGasTokens, // Use selected token or all available
         sendingAmount: amount,
         sendingTokenSymbol: selectedToken.symbol,
-        enabled: shouldEstimateGas && !!feeDelegation?.delegatorUrl,
+        enabled: shouldEstimateGas && !!feeDelegation?.genericDelegatorUrl,
     });
     const usedGasToken = gasEstimation?.usedToken;
     const disableConfirmButtonDuringEstimation =
