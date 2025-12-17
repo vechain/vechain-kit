@@ -224,11 +224,7 @@ export const ConnectModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
         >
-            <AnimatePresence
-                mode="wait"
-                initial={false}
-                key={isOpen ? 'open' : 'closed'}
-            >
+            <AnimatePresence mode="wait" initial={false}>
                 {isOpen && (
                     <motion.div
                         key={contentKey || 'main'}

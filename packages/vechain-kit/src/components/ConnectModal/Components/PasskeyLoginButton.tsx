@@ -37,30 +37,21 @@ export const PasskeyLoginButton = ({
             const errorMsg =
                 error instanceof Error ? error.message.toLowerCase() : '';
 
+            // Log specific error types for debugging
             if (errorMsg.includes('not found')) {
                 console.error(error);
-                setCurrentContent({
-                    type: 'error',
-                    props: {
-                        error:
-                            error instanceof Error
-                                ? error.message
-                                : t('Failed to connect with Passkey'),
-                        onTryAgain: handleLoginWithPasskey,
-                    },
-                });
-            } else {
-                setCurrentContent({
-                    type: 'error',
-                    props: {
-                        error:
-                            error instanceof Error
-                                ? error.message
-                                : t('Failed to connect with Passkey'),
-                        onTryAgain: handleLoginWithPasskey,
-                    },
-                });
             }
+
+            setCurrentContent({
+                type: 'error',
+                props: {
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : t('Failed to connect with Passkey'),
+                    onTryAgain: handleLoginWithPasskey,
+                },
+            });
         }
     };
 

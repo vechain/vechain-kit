@@ -175,7 +175,7 @@ export const BaseBottomSheet = ({
                 />
                 <Drawer.Content
                     aria-description={ariaDescription}
-                    aria-describedby={ariaTitle}
+                    aria-labelledby={ariaTitle}
                     style={{
                         zIndex: 101,
                         backgroundColor: modalBg,
@@ -192,7 +192,7 @@ export const BaseBottomSheet = ({
                     }}
                 >
                     <VisuallyHidden>
-                        <Drawer.Title>{ariaTitle}</Drawer.Title>
+                        <Drawer.Title id={ariaTitle}>{ariaTitle}</Drawer.Title>
                     </VisuallyHidden>
 
                     {/* 

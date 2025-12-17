@@ -123,13 +123,14 @@ export const BaseModal = ({
             isOpen={isOpen}
             onClose={onClose}
             size={size}
-            blockScrollOnMount={blockScrollOnMount}
+            blockScrollOnMount={false}
+            trapFocus={false}
         >
             <BaseBottomSheet
                 isOpen={isOpen}
                 onClose={onClose}
-                ariaTitle={'Modal'}
-                ariaDescription={'Modal content'}
+                ariaTitle={'Dialog'}
+                ariaDescription={'Dialog content area'}
                 isDismissable={isCloseable}
             >
                 {children}

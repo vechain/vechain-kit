@@ -90,7 +90,7 @@ export const EcosystemContent = ({
                 error instanceof Error
                     ? error
                     : new Error(
-                          "'An unexpected issue occurred while logging in with this app. Please try again or contact support.',",
+                          'An unexpected issue occurred while logging in with this app. Please try again or contact support.',
                       );
 
             setCurrentContent({

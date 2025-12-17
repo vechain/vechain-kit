@@ -13,7 +13,7 @@ import {
     ModalCloseButton,
 } from '@/components/common';
 import { LuCircleAlert, LuRefreshCw } from 'react-icons/lu';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 type ErrorContentProps = {
@@ -30,6 +30,7 @@ export const ErrorContent = ({
     onGoBack,
 }: ErrorContentProps) => {
     const { t } = useTranslation();
+    const shouldReduceMotion = useReducedMotion();
 
     return (
         <>
@@ -54,10 +55,10 @@ export const ErrorContent = ({
                         transition={{
                             duration: 4,
                             ease: 'easeInOut',
-                            repeat: Infinity,
+                            repeat: shouldReduceMotion ? 0 : Infinity,
                         }}
                         animate={{
-                            scale: [1, 1.1, 1],
+                            scale: shouldReduceMotion ? [1] : [1, 1.1, 1],
                         }}
                     >
                         <Icon
