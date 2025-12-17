@@ -17,7 +17,6 @@ import {
     FAQContent,
     ProfileContent,
     AssetsContent,
-    BridgeContent,
     LanguageSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
@@ -207,8 +206,6 @@ export const AccountModal = ({
                 );
             case 'assets':
                 return <AssetsContent setCurrentContent={setCurrentContent} />;
-            case 'bridge':
-                return <BridgeContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent
