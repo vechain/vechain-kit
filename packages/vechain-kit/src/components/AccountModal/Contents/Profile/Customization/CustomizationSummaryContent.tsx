@@ -346,7 +346,7 @@ export const CustomizationSummaryContent = ({
                     />
                     <Text fontSize="md" textAlign="center" color={textPrimary}>
                         {t(
-                            'By confirming the following details attached to your name ({{domain}}) will be updated',
+                            'By confirming, the following details attached to your name ({{domain}}) will be updated',
                             {
                                 domain,
                             },
