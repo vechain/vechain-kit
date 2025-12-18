@@ -51,6 +51,13 @@ export const ConnectModal = ({
         useState<ConnectModalContentsTypes>(initialContent);
     const { connection } = useWallet();
 
+    // Sync currentContent with initialContent when it changes (e.g., when opening from popover)
+    useEffect(() => {
+        if (isOpen && initialContent) {
+            setCurrentContent(initialContent);
+        }
+    }, [isOpen, initialContent]);
+
     // Use currentContent for display, with fallback to 'main'
     const displayContent = currentContent || 'main';
 
