@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Input,
@@ -16,7 +15,11 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components';
+import {
+    ModalBackButton,
+    StickyHeaderContainer,
+    ModalCloseButton,
+} from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';

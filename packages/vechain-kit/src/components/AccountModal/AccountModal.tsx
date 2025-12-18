@@ -1,6 +1,6 @@
 'use client';
 
-import { useWallet, useNotificationAlerts } from '@/hooks';
+import { useWallet } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
@@ -33,6 +33,7 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
+import { useVechainKitThemeConfig } from '@/providers';
 
 type Props = {
     isOpen: boolean;
@@ -41,8 +42,8 @@ type Props = {
 };
 
 export const AccountModal = ({ isOpen, onClose }: Props) => {
-    useNotificationAlerts();
     const { account } = useWallet();
+    const { themeConfig } = useVechainKitThemeConfig();
 
     const {
         accountModalContent: currentContent,
@@ -213,9 +214,13 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
-            mobileMinHeight={'59vh'}
-            mobileMaxHeight={'60vh'}
-            desktopMinHeight={'46vh'}
+            mobileMinHeight={
+                themeConfig?.modal?.useBottomSheetOnMobile ? '64vh' : '60vh'
+            }
+            mobileMaxHeight={
+                themeConfig?.modal?.useBottomSheetOnMobile ? '64vh' : '60vh'
+            }
+            desktopMinHeight={'55vh'}
             desktopMaxHeight={'55vh'}
         >
             {renderContent()}

@@ -88,7 +88,7 @@ export const BalanceSection = ({
                 variant="vechainKitSecondary"
             >
                 <VStack
-                    spacing={2}
+                    spacing={4}
                     w="full"
                     justifyContent="flex-start"
                     alignItems="flex-start"
