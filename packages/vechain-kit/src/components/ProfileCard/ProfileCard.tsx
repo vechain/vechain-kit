@@ -69,7 +69,7 @@ export const ProfileCard = ({
     };
 
     return (
-        <VStack spacing={4} w="full">
+        <VStack spacing={0} w="full">
             <Box
                 p={0}
                 backgroundSize="100% !important"

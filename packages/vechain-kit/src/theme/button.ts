@@ -154,18 +154,22 @@ const getVariants = (tokens: ThemeTokens) => ({
         transition: 'all 0.2s',
     })),
     vechainKitLogout: defineStyle(() => ({
+        px: 4,
         width: 'full',
-        minHeight: '50px',
-        height: 'fit-content',
-        borderRadius: tokens.borders.radius.xl,
-        p: 0,
+        height: '60px',
+        rounded: tokens.buttons.button.rounded ?? tokens.borders.radius.large,
         bg: tokens.colors.error + '1f',
-        _hover: {
-            bg: tokens.colors.error + '5e',
-            color: tokens.colors.error,
+        color: tokens.colors.error,
+        border:
+            tokens.buttons.button.border === 'none'
+                ? 'none'
+                : tokens.buttons.button.border,
+        backdropFilter: tokens.buttons.button.backdropFilter,
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
         },
         transition: 'all 0.2s',
-        color: tokens.colors.error,
     })),
     actionButton: defineStyle(() => ({
         width: 'full',

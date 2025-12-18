@@ -12,6 +12,8 @@ type Props = {
     ariaTitle: string;
     ariaDescription: string;
     isDismissable?: boolean;
+    minHeight?: string;
+    maxHeight?: string;
 };
 
 /**
@@ -135,6 +137,8 @@ export const BaseBottomSheet = ({
     ariaTitle,
     ariaDescription,
     isDismissable = true,
+    minHeight,
+    maxHeight = '68vh',
 }: Props) => {
     // Use semantic tokens for bottom sheet and overlay colors
     const modalBg = useToken('colors', 'vechain-kit-modal');
@@ -185,8 +189,8 @@ export const BaseBottomSheet = ({
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        // minHeight: '54vh',
-                        maxHeight: '67vh',
+                        ...(minHeight && { minHeight }),
+                        maxHeight,
                         display: 'flex',
                         flexDirection: 'column',
                     }}

@@ -1,17 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
 import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
 import { PrivyAppInfo } from '@/types';
-import {
-    contentVariants,
-    transition,
-    getContentKey,
-} from '@/components/common';
 import { useWallet } from '@/hooks';
 
 type Props = {
@@ -55,60 +49,10 @@ export const ConnectModal = ({
 }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>(initialContent);
-    const previousContentRef = useRef<ConnectModalContentsTypes | null>(null);
-    const directionRef = useRef<'forward' | 'backward'>('forward');
-    const wasOpenRef = useRef(false);
     const { connection } = useWallet();
-
-    // Reset refs and set initial content when modal opens
-    useEffect(() => {
-        if (isOpen && !wasOpenRef.current) {
-            // Modal just opened - reset everything and use initialContent
-            previousContentRef.current = null;
-            directionRef.current = 'forward';
-            setCurrentContent(initialContent || 'main');
-            wasOpenRef.current = true;
-        } else if (isOpen && wasOpenRef.current) {
-            // Modal is already open - update content if initialContent changed
-            setCurrentContent(initialContent || 'main');
-        } else if (!isOpen && wasOpenRef.current) {
-            // Modal just closed - reset the ref
-            wasOpenRef.current = false;
-        }
-    }, [isOpen, initialContent]);
 
     // Use currentContent for display, with fallback to 'main'
     const displayContent = currentContent || 'main';
-
-    // Track navigation direction (computed synchronously)
-    const direction = (() => {
-        if (
-            previousContentRef.current === null ||
-            previousContentRef.current === displayContent
-        ) {
-            return directionRef.current;
-        }
-        // Determine direction based on common navigation patterns
-        const prevKey = getContentKey(previousContentRef.current);
-        const currKey = getContentKey(displayContent);
-
-        // Common backward navigation patterns
-        const isBackward =
-            // Going back to main from any view
-            currKey === 'main' ||
-            // Going from summary/confirmation back to main content
-            prevKey.includes('summary') ||
-            prevKey.includes('confirm') ||
-            prevKey.includes('operation');
-
-        return isBackward ? 'backward' : 'forward';
-    })();
-
-    // Update refs after computing direction
-    useEffect(() => {
-        directionRef.current = direction;
-        previousContentRef.current = displayContent;
-    }, [displayContent, direction]);
 
     // Close modal when connection becomes connected (works for all content types)
     useEffect(() => {
@@ -181,7 +125,6 @@ export const ConnectModal = ({
     };
 
     const content = renderContent();
-    const contentKey = getContentKey(displayContent);
 
     // Ensure we have valid content before rendering
     if (!content) {
@@ -199,22 +142,7 @@ export const ConnectModal = ({
                 allowExternalFocus={true}
                 blockScrollOnMount={true}
             >
-                <AnimatePresence mode="wait" initial={false}>
-                    {isOpen && (
-                        <motion.div
-                            key="main-fallback"
-                            custom={directionRef.current}
-                            variants={contentVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={transition}
-                            style={{ width: '100%' }}
-                        >
-                            {fallbackContent}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                {fallbackContent}
             </BaseModal>
         );
     }
@@ -225,23 +153,12 @@ export const ConnectModal = ({
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
+            mobileMinHeight={'30vh'}
+            mobileMaxHeight={'45vh'}
+            desktopMinHeight={'27vh'}
+            desktopMaxHeight={'45vh'}
         >
-            <AnimatePresence mode="wait" initial={false}>
-                {isOpen && (
-                    <motion.div
-                        key={contentKey || 'main'}
-                        custom={directionRef.current}
-                        variants={contentVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={transition}
-                        style={{ width: '100%' }}
-                    >
-                        {content}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {content}
         </BaseModal>
     );
 };

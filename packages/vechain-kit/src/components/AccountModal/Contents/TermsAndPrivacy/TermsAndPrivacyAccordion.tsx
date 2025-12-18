@@ -66,6 +66,26 @@ export const TermsAndPrivacyAccordion = () => {
     const accordionBg = isDark ? 'whiteAlpha.50' : 'blackAlpha.50';
     const accordionHoverBg = isDark ? 'whiteAlpha.100' : 'blackAlpha.100';
 
+    const defaultOpenIndices = useMemo(() => {
+        const indices: number[] = [];
+        let index = 0;
+
+        if (agreementsByDocumentType[LegalDocumentType.TERMS]?.length > 0) {
+            indices.push(index);
+            index++;
+        }
+        if (agreementsByDocumentType[LegalDocumentType.PRIVACY]?.length > 0) {
+            indices.push(index);
+            index++;
+        }
+        if (agreementsByDocumentType[LegalDocumentType.COOKIES]?.length > 0) {
+            indices.push(index);
+            index++;
+        }
+
+        return indices;
+    }, [agreementsByDocumentType]);
+
     if (!hasAgreements) {
         return (
             <EmptyContent
@@ -80,7 +100,7 @@ export const TermsAndPrivacyAccordion = () => {
 
     return (
         <VStack spacing={4} align="stretch">
-            <Accordion allowMultiple>
+            <Accordion allowMultiple defaultIndex={defaultOpenIndices}>
                 <PolicyAccordion
                     title={t('Terms and Conditions')}
                     description={t(

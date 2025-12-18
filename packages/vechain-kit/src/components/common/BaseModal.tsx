@@ -31,6 +31,13 @@ type BaseModalProps = {
      * When true, uses bottom sheet on mobile (< 768px) and regular modal on desktop.
      */
     useBottomSheetOnMobile?: boolean;
+    /**
+     * Minimum and maximum height for the modal on mobile devices.
+     */
+    mobileMinHeight?: string;
+    mobileMaxHeight?: string;
+    desktopMinHeight?: string;
+    desktopMaxHeight?: string;
 };
 
 export const BaseModal = ({
@@ -46,6 +53,10 @@ export const BaseModal = ({
     backdropFilter,
     isCloseable = true,
     useBottomSheetOnMobile,
+    mobileMinHeight,
+    mobileMaxHeight = '57vh',
+    desktopMinHeight,
+    desktopMaxHeight,
 }: BaseModalProps) => {
     const [isDesktop] = useMediaQuery('(min-width: 768px)');
     const { portalRootRef, themeConfig, tokens } = useVechainKitThemeConfig();
@@ -69,8 +80,8 @@ export const BaseModal = ({
 
     const modalContentProps: ModalContentProps = isDesktop
         ? {
-              //   minHeight: '51vh',
-              maxHeight: '57vh',
+              minHeight: desktopMinHeight,
+              maxHeight: desktopMaxHeight,
               transition: 'all 0.1s linear',
           }
         : {
@@ -83,8 +94,8 @@ export const BaseModal = ({
               overflowX: 'hidden',
               scrollBehavior: 'smooth',
               transition: 'all 0.1s linear',
-              //   minHeight: '54vh',
-              maxHeight: '57vh',
+              minHeight: mobileMinHeight,
+              maxHeight: mobileMaxHeight,
           };
 
     const modalContent = (
@@ -138,6 +149,8 @@ export const BaseModal = ({
                 ariaTitle={'Dialog'}
                 ariaDescription={'Dialog content area'}
                 isDismissable={isCloseable}
+                minHeight={mobileMinHeight}
+                maxHeight={mobileMaxHeight}
             >
                 {children}
             </BaseBottomSheet>
