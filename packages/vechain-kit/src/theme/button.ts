@@ -165,6 +165,13 @@ const getVariants = (tokens: ThemeTokens) => ({
                 ? 'none'
                 : tokens.buttons.button.border,
         backdropFilter: tokens.buttons.button.backdropFilter,
+        _hover: {
+            opacity: 0.8,
+            _disabled: {
+                opacity: 0.5,
+                bg: tokens.colors.error + '1f',
+            },
+        },
         _disabled: {
             opacity: 0.5,
             cursor: 'not-allowed',
