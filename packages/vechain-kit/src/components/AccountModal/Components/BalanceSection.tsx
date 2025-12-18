@@ -51,7 +51,14 @@ export const BalanceSection = ({
                 spacing={2}
                 role="group"
             >
-                <Heading size={'xs'} fontWeight={'500'} color={textSecondary}>
+                <Heading
+                    size={'xs'}
+                    fontWeight={'800'}
+                    color={textSecondary}
+                    textTransform={'uppercase'}
+                    letterSpacing={1.2}
+                    ml={'5px'}
+                >
                     {t('Assets')}
                 </Heading>
 
