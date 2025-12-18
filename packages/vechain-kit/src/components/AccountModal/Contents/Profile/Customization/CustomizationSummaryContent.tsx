@@ -6,6 +6,8 @@ import {
     Text,
     ModalFooter,
     Box,
+    Icon,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -33,6 +35,7 @@ import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddr
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
 import { GasTokenType } from '@/types/gasToken';
+import { LuFileText } from 'react-icons/lu';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -65,6 +68,7 @@ export const CustomizationSummaryContent = ({
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const { account, connectedWallet, connection } = useWallet();
     const { preferences } = useGasTokenSelection();
 
@@ -333,7 +337,23 @@ export const CustomizationSummaryContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={4} align="stretch">
+                <VStack spacing={6} align="center" mt={10}>
+                    <Icon
+                        as={LuFileText}
+                        color={textPrimary}
+                        fontSize={'60px'}
+                        opacity={0.5}
+                    />
+                    <Text fontSize="md" textAlign="center" color={textPrimary}>
+                        {t(
+                            'By confirming the following details attached to your name ({{domain}}) will be updated',
+                            {
+                                domain,
+                            },
+                        )}
+                    </Text>
+                </VStack>
+                <VStack spacing={4} align="stretch" mt={6}>
                     {changes.avatarIpfsHash && (
                         <VStack align="flex-start" w="full" spacing={1}>
                             <Text
