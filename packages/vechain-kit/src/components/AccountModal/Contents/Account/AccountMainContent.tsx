@@ -71,7 +71,7 @@ export const AccountMainContent = ({
                     w={'full'}
                     overflow={'hidden'}
                     justifyContent={'flex-start'}
-                    spacing={6}
+                    spacing={8}
                 >
                     <AccountSelector
                         style={{ justifyContent: 'flex-start' }}

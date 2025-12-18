@@ -213,8 +213,8 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
-            mobileMinHeight={'56vh'}
-            mobileMaxHeight={'56vh'}
+            mobileMinHeight={'59vh'}
+            mobileMaxHeight={'60vh'}
             desktopMinHeight={'46vh'}
             desktopMaxHeight={'55vh'}
         >

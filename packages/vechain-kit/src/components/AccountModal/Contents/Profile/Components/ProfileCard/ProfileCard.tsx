@@ -1,6 +1,5 @@
 import {
     Box,
-    Button,
     HStack,
     Icon,
     Link,
@@ -9,13 +8,11 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
-import { useWallet, useWalletMetadata } from '@/hooks';
-import { LuPencil, LuMail, LuGlobe, LuLogOut } from 'react-icons/lu';
+import { useWalletMetadata } from '@/hooks';
+import { LuMail, LuGlobe } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
-import { useTranslation } from 'react-i18next';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
-import { useModal } from '@/providers/ModalProvider';
 
 export type ProfileCardProps = {
     address: string;
@@ -29,19 +26,13 @@ export type ProfileCardProps = {
 };
 
 export const ProfileCard = ({
-    onEditClick,
     address,
     showHeader = true,
-    onLogout,
     showLinks = true,
     showDescription = true,
     showDisplayName = true,
-    showEdit = true,
 }: ProfileCardProps) => {
-    const { t } = useTranslation();
-    const { account, disconnect } = useWallet();
     const { network } = useVeChainKitConfig();
-    const { openAccountModal, closeAccountModal } = useModal();
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
@@ -49,8 +40,6 @@ export const ProfileCard = ({
     const metadata = useWalletMetadata(address, network.type);
 
     const headerImageSvg = getPicassoImage(address);
-
-    const isConnectedAccount = address === account?.address;
 
     const hasLinks =
         metadata?.records?.url ||
@@ -174,59 +163,6 @@ export const ProfileCard = ({
                     style={{ mt: 4 }}
                 />
             </VStack>
-
-            {isConnectedAccount && showEdit && (
-                <HStack w="full" justify="space-between" spacing={4} mt={4}>
-                    <Button
-                        size="md"
-                        width="full"
-                        height="40px"
-                        variant="vechainKitSecondary"
-                        leftIcon={<Icon as={LuPencil} />}
-                        onClick={
-                            onEditClick ??
-                            (() => {
-                                openAccountModal({
-                                    type: 'account-customization',
-                                    props: {
-                                        setCurrentContent: () =>
-                                            closeAccountModal(),
-                                    },
-                                });
-                            })
-                        }
-                        data-testid="customize-button"
-                    >
-                        {t('Customize')}
-                    </Button>
-                    <Button
-                        size="md"
-                        width="full"
-                        height="40px"
-                        variant="vechainKitSecondary"
-                        leftIcon={<Icon as={LuLogOut} />}
-                        colorScheme="red"
-                        onClick={
-                            onLogout ??
-                            (() => {
-                                openAccountModal({
-                                    type: 'disconnect-confirm',
-                                    props: {
-                                        onDisconnect: () => {
-                                            disconnect();
-                                            closeAccountModal();
-                                        },
-                                        onBack: () => closeAccountModal(),
-                                    },
-                                });
-                            })
-                        }
-                        data-testid="logout-button"
-                    >
-                        {t('Logout')}
-                    </Button>
-                </HStack>
-            )}
         </VStack>
     );
 };
