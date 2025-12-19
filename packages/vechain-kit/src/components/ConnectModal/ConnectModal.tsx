@@ -161,7 +161,7 @@ export const ConnectModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
             mobileMinHeight={'30vh'}
-            mobileMaxHeight={'45vh'}
+            mobileMaxHeight={'50vh'}
             desktopMinHeight={'27vh'}
             desktopMaxHeight={'45vh'}
         >
