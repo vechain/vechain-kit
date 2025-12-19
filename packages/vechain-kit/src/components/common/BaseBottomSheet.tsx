@@ -13,6 +13,7 @@ type Props = {
     isDismissable?: boolean;
     minHeight?: string;
     maxHeight?: string;
+    closeThreshold?: number;
 };
 
 /**
@@ -138,6 +139,7 @@ export const BaseBottomSheet = ({
     isDismissable = true,
     minHeight,
     maxHeight = '68vh',
+    closeThreshold = 0.5,
 }: Props) => {
     // Use semantic tokens for bottom sheet and overlay colors
     const modalBg = useToken('colors', 'vechain-kit-modal');
@@ -156,6 +158,7 @@ export const BaseBottomSheet = ({
             shouldScaleBackground
             repositionInputs={false}
             open={isOpen}
+            closeThreshold={closeThreshold}
             onOpenChange={(open) => {
                 if (!open) {
                     onClose();
