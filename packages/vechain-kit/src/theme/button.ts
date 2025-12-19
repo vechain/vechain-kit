@@ -178,7 +178,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         },
         transition: 'all 0.2s',
     })),
-    modalCloseButton: defineStyle(() => ({
+    vechainKitHeaderIconButtons: defineStyle(() => ({
         bg: tokens.buttons.button.bg,
         color: tokens.buttons.button.color,
         border:
@@ -273,6 +273,6 @@ export const getCloseButtonTheme = (tokens: ThemeTokens) =>
         baseStyle,
         variants: getVariants(tokens),
         defaultProps: {
-            variant: 'modalCloseButton',
+            variant: 'vechainKitHeaderIconButtons',
         },
     });

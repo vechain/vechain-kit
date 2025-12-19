@@ -39,7 +39,7 @@ export const ModalSettingsButton = ({
         <IconButton
             aria-label="Settings"
             size="sm"
-            variant="modalCloseButton"
+            variant="vechainKitHeaderIconButtons"
             position="absolute"
             left="10px"
             top="8px"

@@ -11,7 +11,7 @@ export const ModalBackButton = ({ onClick, ...props }: BackButtonProps) => {
             aria-label="Back"
             icon={<Icon as={LuChevronLeft} fontSize={'20px'} />}
             size="sm"
-            variant="modalCloseButton"
+            variant="vechainKitHeaderIconButtons"
             position="absolute"
             left="10px"
             top="8px"
