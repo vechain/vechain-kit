@@ -87,23 +87,35 @@ export const BaseModal = ({
         : {
               position: 'fixed',
               bottom: '0',
+              left: '0',
+              right: '0',
               mb: '0',
-              maxW: '2xl',
+              mx: '0',
+              maxW: '100%',
+              w: '100%',
               borderRadius: '24px 24px 0px 0px !important',
               overflowY: 'auto',
               overflowX: 'hidden',
               scrollBehavior: 'smooth',
-              transition: 'all 0.1s linear',
+              transition: 'all 0.2s ease-out',
               minHeight: mobileMinHeight,
               maxHeight: mobileMaxHeight,
           };
 
+    // On mobile, don't center the modal when using fixed bottom positioning
+    // This prevents conflicts between isCentered and position: fixed
+    const shouldCenterModal = isDesktop ? isCentered : false;
+
+    // Keep slideInBottom on mobile - Chakra UI handles the animation correctly
+    // when isCentered is false and position is fixed
+    const effectiveMotionPreset = motionPreset;
+
     const modalContent = (
         <Modal
-            motionPreset={motionPreset}
+            motionPreset={effectiveMotionPreset}
             isOpen={isOpen}
             onClose={onClose}
-            isCentered={isCentered}
+            isCentered={shouldCenterModal}
             size={size}
             returnFocusOnClose={false}
             blockScrollOnMount={blockScrollOnMount}
