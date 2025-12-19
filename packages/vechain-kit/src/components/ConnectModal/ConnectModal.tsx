@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
 import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
 import { PrivyAppInfo } from '@/types';
-import { useWallet } from '@/hooks';
 
 type Props = {
     isOpen: boolean;
@@ -49,28 +48,21 @@ export const ConnectModal = ({
 }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>(initialContent);
-    const { connection } = useWallet();
+    const previousContentRef = useRef<ConnectModalContentsTypes | null>(null);
+    const wasOpenRef = useRef(false);
 
     // Sync currentContent with initialContent when it changes (e.g., when opening from popover)
     useEffect(() => {
-        if (isOpen && initialContent) {
+        if (isOpen && !wasOpenRef.current) {
+            // Modal just opened - reset everything and use initialContent
+            previousContentRef.current = null;
             setCurrentContent(initialContent);
         }
-    }, [isOpen, initialContent]);
-
-    // Use currentContent for display, with fallback to 'main'
-    const displayContent = currentContent || 'main';
-
-    // Close modal when connection becomes connected (works for all content types)
-    useEffect(() => {
-        if (connection.isConnected && isOpen) {
-            onClose();
-        }
-    }, [connection.isConnected, isOpen, onClose]);
+    }, [isOpen, initialContent, setCurrentContent]);
 
     const renderContent = () => {
         // Ensure displayContent is valid
-        if (!displayContent) {
+        if (!currentContent) {
             return (
                 <MainContent
                     setCurrentContent={setCurrentContent}
@@ -79,7 +71,7 @@ export const ConnectModal = ({
             );
         }
 
-        switch (displayContent) {
+        switch (currentContent) {
             case 'main':
                 return (
                     <MainContent
@@ -93,35 +85,35 @@ export const ConnectModal = ({
                 );
         }
 
-        if (typeof displayContent === 'object' && 'type' in displayContent) {
-            switch (displayContent.type) {
+        if (typeof currentContent === 'object' && 'type' in currentContent) {
+            switch (currentContent.type) {
                 case 'ecosystem':
                     return (
                         <EcosystemContent
                             onClose={onClose}
-                            appsInfo={displayContent.props.appsInfo}
-                            isLoading={displayContent.props.isLoading}
+                            appsInfo={currentContent.props.appsInfo}
+                            isLoading={currentContent.props.isLoading}
                             setCurrentContent={setCurrentContent}
-                            showBackButton={displayContent.props.showBackButton}
+                            showBackButton={currentContent.props.showBackButton}
                         />
                     );
                 case 'loading':
                     return (
                         <LoadingContent
-                            title={displayContent.props.title}
-                            loadingText={displayContent.props.loadingText}
-                            onTryAgain={displayContent.props.onTryAgain}
+                            title={currentContent.props.title}
+                            loadingText={currentContent.props.loadingText}
+                            onTryAgain={currentContent.props.onTryAgain}
                             onClose={onClose}
                             onGoBack={() => setCurrentContent('main')}
-                            showBackButton={displayContent.props.showBackButton}
+                            showBackButton={currentContent.props.showBackButton}
                         />
                     );
                 case 'error':
                     return (
                         <ErrorContent
-                            error={displayContent.props.error}
+                            error={currentContent.props.error}
                             onClose={onClose}
-                            onTryAgain={displayContent.props.onTryAgain}
+                            onTryAgain={currentContent.props.onTryAgain}
                             onGoBack={() => setCurrentContent('main')}
                         />
                     );
