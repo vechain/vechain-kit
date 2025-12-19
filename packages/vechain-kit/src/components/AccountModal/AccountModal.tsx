@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -49,6 +50,13 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
         accountModalContent: currentContent,
         setAccountModalContent: setCurrentContent,
     } = useModal();
+
+    // Reset content to main when modal closes
+    useEffect(() => {
+        if (!isOpen) {
+            setCurrentContent('main');
+        }
+    }, [isOpen, setCurrentContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
