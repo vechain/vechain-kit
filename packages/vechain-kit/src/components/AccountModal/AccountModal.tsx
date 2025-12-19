@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
@@ -35,6 +34,7 @@ import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
 import { useVechainKitThemeConfig } from '@/providers';
+import { useEffect, useRef } from 'react';
 
 type Props = {
     isOpen: boolean;
@@ -42,21 +42,29 @@ type Props = {
     initialContent?: AccountModalContentTypes;
 };
 
-export const AccountModal = ({ isOpen, onClose }: Props) => {
+export const AccountModal = ({
+    isOpen,
+    onClose,
+    initialContent = 'main',
+}: Props) => {
     const { account } = useWallet();
     const { themeConfig } = useVechainKitThemeConfig();
+    const previousContentRef = useRef<AccountModalContentTypes | null>(null);
+    const wasOpenRef = useRef(false);
 
     const {
         accountModalContent: currentContent,
         setAccountModalContent: setCurrentContent,
     } = useModal();
 
-    // Reset content to main when modal closes
+    // Reset refs and set initial content when modal opens
     useEffect(() => {
-        if (!isOpen) {
-            setCurrentContent('main');
+        if (isOpen && !wasOpenRef.current) {
+            // Modal just opened - reset everything and use initialContent
+            previousContentRef.current = null;
+            setCurrentContent(initialContent);
         }
-    }, [isOpen, setCurrentContent]);
+    }, [isOpen, initialContent, setCurrentContent]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
