@@ -26,6 +26,7 @@ import {
     useMemo,
     useState,
     useRef,
+    useLayoutEffect,
 } from 'react';
 import { VechainKitThemeConfig } from '@/theme/tokens';
 import {
@@ -585,7 +586,7 @@ export const VeChainKitProvider = (
     );
 
     // Apply Privy CSS variables to document and inject backdrop filter + card styles
-    useEffect(() => {
+    useLayoutEffect(() => {
         // Prepare card backgrounds with readability improvements
         const privyCardBg = improvePrivyReadability(
             tokens.colors.background.card,
@@ -620,7 +621,7 @@ export const VeChainKitProvider = (
     ]);
 
     // Apply DAppKit button styles (hover opacity matching loginIn variant)
-    useEffect(() => {
+    useLayoutEffect(() => {
         applyDAppKitButtonStyles();
     }, []);
 

@@ -8,13 +8,25 @@ const { definePartsStyle, defineMultiStyleConfig } =
 const getModalVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({
         dialog: {
-            scrollbarWidth: 'none',
+            scrollBehavior: 'smooth',
             overflow: 'scroll',
             overflowX: 'hidden',
             rounded: tokens.modal.rounded ?? tokens.borders.radius.modal,
             backgroundColor: tokens.colors.background.modal,
             backdropFilter: tokens.effects.backdropFilter.modal,
             border: tokens.colors.border.modal,
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'transparent transparent',
+            // Hide webkit scrollbars for Chrome/Safari
+            '&::-webkit-scrollbar': {
+                width: '0px',
+            },
+            '&::-webkit-scrollbar-track': {
+                background: 'transparent',
+            },
+            '&::-webkit-scrollbar-thumb': {
+                background: 'transparent',
+            },
         },
         overlay: {
             backgroundColor: tokens.colors.background.overlay,

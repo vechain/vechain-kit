@@ -51,14 +51,18 @@ export const ConnectModal = ({
     const previousContentRef = useRef<ConnectModalContentsTypes | null>(null);
     const wasOpenRef = useRef(false);
 
-    // Sync currentContent with initialContent when it changes (e.g., when opening from popover)
+    // Sync currentContent with initialContent when it changes
     useEffect(() => {
         if (isOpen && !wasOpenRef.current) {
             // Modal just opened - reset everything and use initialContent
+            wasOpenRef.current = true;
             previousContentRef.current = null;
             setCurrentContent(initialContent);
+        } else if (!isOpen && wasOpenRef.current) {
+            // Modal just closed
+            wasOpenRef.current = false;
         }
-    }, [isOpen, initialContent, setCurrentContent]);
+    }, [isOpen, initialContent]);
 
     const renderContent = () => {
         // Ensure displayContent is valid

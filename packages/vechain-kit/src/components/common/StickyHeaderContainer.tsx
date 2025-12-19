@@ -50,21 +50,15 @@ export const StickyHeaderContainer = ({ children }: Props) => {
         // Ignore intersection changes during initial mount and transitions
         // This prevents the glitch when content is animating in
         const handleIntersection = ([entry]: IntersectionObserverEntry[]) => {
-            // Clear any pending timeout
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
+            // On initial mount, always start with false to prevent glitch
+            if (isInitialMountRef.current) {
+                isInitialMountRef.current = false;
+                setHasContentBelow(false);
+                return;
             }
-
-            // Debounce the state update to prevent rapid changes during animations
-            timeoutRef.current = setTimeout(() => {
-                // On initial mount, always start with false to prevent glitch
-                if (isInitialMountRef.current) {
-                    isInitialMountRef.current = false;
-                    setHasContentBelow(false);
-                    return;
-                }
-                setHasContentBelow(!entry.isIntersecting);
-            }, 50); // Small debounce to let animations settle
+            
+            // Update state immediately without debouncing to avoid flicker from delayed updates
+            setHasContentBelow(!entry.isIntersecting);
         };
 
         const scrollableContainer = findScrollableContainer(headerRef.current);
@@ -109,11 +103,9 @@ export const StickyHeaderContainer = ({ children }: Props) => {
                 left={'0'}
                 w={'full'}
                 borderRadius={'24px 24px 0px 0px'}
-                backdropFilter={hasContentBelow ? backdropFilter : 'none'}
+                backdropFilter={backdropFilter}
                 style={{
-                    WebkitBackdropFilter: hasContentBelow
-                        ? backdropFilter
-                        : 'none',
+                    WebkitBackdropFilter: backdropFilter,
                 }}
                 zIndex={1000}
                 boxShadow={

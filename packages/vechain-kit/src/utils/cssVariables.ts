@@ -162,10 +162,8 @@ export function applyDAppKitButtonStyles(): void {
 
     // Target DAppKit wallet source buttons/cards
     // Apply hover/active opacity to match loginIn variant style
-    // Target all button-like elements (buttons, clickable divs, elements with cursor pointer)
     const cssRules = `
         /* CRITICAL: Ensure dappkit modal always has pointer-events enabled */
-        /* This fixes an issue where the modal becomes unclickable when opened on top of bottom sheet */
         vdk-modal,
         [data-vdk-modal],
         [id*="vdk-modal"] {
@@ -173,7 +171,6 @@ export function applyDAppKitButtonStyles(): void {
         }
         
         /* DAppKit wallet source buttons - apply loginIn hover style */
-        /* Target all button-like elements within DAppKit containers */
         [class*="vdk"] button,
         [class*="vdk"] [role="button"],
         [class*="vdk"] [tabindex],
@@ -189,7 +186,6 @@ export function applyDAppKitButtonStyles(): void {
         button[class*="vdk"],
         [data-vdk-button],
         [class*="vdk-button"],
-        /* Target elements that are likely buttons based on styling */
         [class*="vdk"] [style*="cursor"][style*="pointer"],
         [id*="vdk"] [style*="cursor"][style*="pointer"],
         [data-vdk-modal] [style*="cursor"][style*="pointer"] {
@@ -242,45 +238,6 @@ export function applyDAppKitButtonStyles(): void {
     `;
 
     styleElement.textContent = cssRules;
-
-    // Use MutationObserver to apply styles to dynamically added DAppKit elements
-    if (typeof MutationObserver !== 'undefined') {
-        const observer = new MutationObserver(() => {
-            // Ensure dappkit modal always has pointer-events enabled
-            const dappKitModals = document.querySelectorAll(
-                'vdk-modal, [data-vdk-modal], [id*="vdk-modal"]',
-            );
-            for (const element of dappKitModals) {
-                if (!(element instanceof HTMLElement)) continue;
-                element.style.setProperty('pointer-events', 'all', 'important');
-            }
-
-            // Re-apply styles when DAppKit adds new elements
-            const dappKitElements = document.querySelectorAll(
-                '[data-vdk-source-card], [class*="vdk-source-card"], [class*="source-card"], [data-vdk-modal] button, [data-vdk-modal] [role="button"]',
-            );
-            for (const element of dappKitElements) {
-                if (!(element instanceof HTMLElement)) continue;
-                element.style.setProperty('opacity', '1', 'important');
-                element.style.setProperty(
-                    'transition',
-                    'opacity 0.2s ease',
-                    'important',
-                );
-            }
-        });
-
-        // Observe the document body for DAppKit modal additions
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
-
-        // Cleanup observer after a delay (DAppKit modals are typically short-lived)
-        setTimeout(() => {
-            observer.disconnect();
-        }, 60000); // Disconnect after 60 seconds
-    }
 }
 
 /**
@@ -314,6 +271,27 @@ export function applyPrivyCSSVariables(
     }
 
     const cssRules: string[] = [];
+
+    // Firefox-specific: Prevent backdrop-filter flicker during modal animations
+    cssRules.push(`
+        /* Firefox: Prevent backdrop-filter repainting */
+        @-moz-document url-prefix() {
+            [data-privy-dialog-overlay],
+            [data-privy-dialog-content],
+            .privy-dialog-overlay,
+            .privy-dialog-content {
+                backface-visibility: hidden;
+            }
+        }
+        
+        /* General performance - Privy modals only */
+        [data-privy-dialog-content],
+        .privy-dialog-content {
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+        }
+    `);
 
     // Apply backdrop filter to Privy modal containers
     if (backdropFilter) {

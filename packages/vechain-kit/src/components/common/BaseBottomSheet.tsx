@@ -1,6 +1,6 @@
 import { Box, useToken, VisuallyHidden } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useVechainKitThemeConfig } from '@/providers';
 
 type Props = {
@@ -31,7 +31,6 @@ type Props = {
  * If the handle were outside the scrollable container, the observer wouldn't detect scroll events.
  */
 const HandleArea = ({
-    scrollableContainerRef,
     observerRef,
 }: {
     scrollableContainerRef: React.RefObject<HTMLDivElement>;
@@ -41,80 +40,32 @@ const HandleArea = ({
     const { tokens } = useVechainKitThemeConfig();
     const backdropFilter =
         tokens?.effects?.backdropFilter?.stickyHeader ?? 'blur(20px)';
-    const [hasContentBelow, setHasContentBelow] = useState(false);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const isInitialMountRef = useRef(true);
 
     useEffect(() => {
-        /**
-         * IntersectionObserver callback that detects when the sentinel element
-         * (observerRef) scrolls out of view. When it's not intersecting, it means
-         * content has scrolled past the handle area, so we apply the backdrop filter.
-         */
-        const handleIntersection = ([entry]: IntersectionObserverEntry[]) => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-
-            // Debounce state updates to prevent rapid changes during animations
-            timeoutRef.current = setTimeout(() => {
-                // On initial mount, always start with false to prevent visual glitch
-                if (isInitialMountRef.current) {
-                    isInitialMountRef.current = false;
-                    setHasContentBelow(false);
-                    return;
-                }
-                // When sentinel is not intersecting, content has scrolled below
-                setHasContentBelow(!entry.isIntersecting);
-            }, 50);
-        };
-
-        const observerOptions: IntersectionObserverInit = {
-            threshold: 0,
-        };
-
-        // Use the scrollable container as the root for the observer
-        // This ensures we detect intersections relative to the scrollable viewport,
-        // not the document viewport
-        if (scrollableContainerRef.current) {
-            observerOptions.root = scrollableContainerRef.current;
-            observerOptions.rootMargin = '0px';
-        }
-
-        const observer = new IntersectionObserver(
-            handleIntersection,
-            observerOptions,
-        );
-
-        // Delay observation to avoid initial glitch when content is animating in
+        // Just clean up the observer refs to avoid memory leaks
+        // No state management needed - backdrop filter is always applied now
         const observeTimeout = setTimeout(() => {
             if (observerRef.current) {
-                observer.observe(observerRef.current);
+                // Observer kept for future use if needed
             }
         }, 200);
 
         return () => {
             clearTimeout(observeTimeout);
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-            observer.disconnect();
         };
-    }, [scrollableContainerRef, observerRef]);
+    }, [observerRef]);
 
     return (
         <Box
             position="sticky"
             top="0"
             w="full"
-            // Apply backdrop filter when content has scrolled below the handle
-            // This matches the effect applied to StickyHeaderContainer for visual consistency
-            backdropFilter={hasContentBelow ? backdropFilter : 'none'}
+            // Keep backdrop filter always applied (no toggling)
+            backdropFilter={backdropFilter}
             style={{
-                WebkitBackdropFilter: hasContentBelow ? backdropFilter : 'none',
+                WebkitBackdropFilter: backdropFilter,
             }}
             zIndex={999}
-            transition="backdrop-filter 0.2s ease-in-out"
         >
             {/* Drawer handle / drag indicator */}
             <Box

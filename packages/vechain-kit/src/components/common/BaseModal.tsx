@@ -82,7 +82,6 @@ export const BaseModal = ({
         ? {
               minHeight: desktopMinHeight,
               maxHeight: desktopMaxHeight,
-              transition: 'all 0.1s linear',
           }
         : {
               position: 'fixed',
@@ -93,7 +92,6 @@ export const BaseModal = ({
               overflowY: 'auto',
               overflowX: 'hidden',
               scrollBehavior: 'smooth',
-              transition: 'all 0.1s linear',
               minHeight: mobileMinHeight,
               maxHeight: mobileMaxHeight,
           };
