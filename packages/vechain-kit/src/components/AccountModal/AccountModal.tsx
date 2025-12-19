@@ -215,10 +215,10 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
             allowExternalFocus={true}
             blockScrollOnMount={true}
             mobileMinHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '64vh' : '60vh'
+                themeConfig?.modal?.useBottomSheetOnMobile ? '67vh' : '60vh'
             }
             mobileMaxHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '64vh' : '60vh'
+                themeConfig?.modal?.useBottomSheetOnMobile ? '67vh' : '60vh'
             }
             desktopMinHeight={'55vh'}
             desktopMaxHeight={'55vh'}
