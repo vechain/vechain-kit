@@ -13,13 +13,10 @@ import {
     Image,
     FormControl,
     useToken,
+    ModalCloseButton,
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    ModalCloseButton,
-} from '@/components';
+import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';
