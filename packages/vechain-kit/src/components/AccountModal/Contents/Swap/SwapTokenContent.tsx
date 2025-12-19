@@ -1206,6 +1206,11 @@ export const SwapTokenContent = ({
                                                                     numValue,
                                                                 );
                                                             }
+                                                        } else {
+                                                            // Reset to default when cleared
+                                                            setSlippageTolerance(
+                                                                1,
+                                                            );
                                                         }
                                                     }
                                                 }}

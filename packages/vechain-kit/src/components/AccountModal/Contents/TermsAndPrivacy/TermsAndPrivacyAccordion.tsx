@@ -68,19 +68,15 @@ export const TermsAndPrivacyAccordion = () => {
 
     const defaultOpenIndices = useMemo(() => {
         const indices: number[] = [];
-        let index = 0;
 
         if (agreementsByDocumentType[LegalDocumentType.TERMS]?.length > 0) {
-            indices.push(index);
-            index++;
+            indices.push(0);
         }
         if (agreementsByDocumentType[LegalDocumentType.PRIVACY]?.length > 0) {
-            indices.push(index);
-            index++;
+            indices.push(1);
         }
         if (agreementsByDocumentType[LegalDocumentType.COOKIES]?.length > 0) {
-            indices.push(index);
-            index++;
+            indices.push(2);
         }
 
         return indices;
