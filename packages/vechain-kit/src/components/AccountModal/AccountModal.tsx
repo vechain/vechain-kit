@@ -34,7 +34,7 @@ import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
 import { useVechainKitThemeConfig } from '@/providers';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 type Props = {
     isOpen: boolean;
@@ -49,8 +49,6 @@ export const AccountModal = ({
 }: Props) => {
     const { account } = useWallet();
     const { themeConfig } = useVechainKitThemeConfig();
-    const previousContentRef = useRef<AccountModalContentTypes | null>(null);
-    const wasOpenRef = useRef(false);
 
     const {
         accountModalContent: currentContent,
@@ -59,9 +57,8 @@ export const AccountModal = ({
 
     // Reset refs and set initial content when modal opens
     useEffect(() => {
-        if (isOpen && !wasOpenRef.current) {
+        if (isOpen) {
             // Modal just opened - reset everything and use initialContent
-            previousContentRef.current = null;
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);

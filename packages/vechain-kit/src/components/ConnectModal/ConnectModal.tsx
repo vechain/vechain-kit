@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
@@ -48,14 +48,10 @@ export const ConnectModal = ({
 }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>(initialContent);
-    const previousContentRef = useRef<ConnectModalContentsTypes | null>(null);
-    const wasOpenRef = useRef(false);
 
     // Sync currentContent with initialContent when it changes (e.g., when opening from popover)
     useEffect(() => {
-        if (isOpen && !wasOpenRef.current) {
-            // Modal just opened - reset everything and use initialContent
-            previousContentRef.current = null;
+        if (isOpen) {
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);
