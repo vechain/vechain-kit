@@ -67,6 +67,9 @@ const getThemeConfig = (
             'vechain-kit-success': tokens.colors.success,
             'vechain-kit-error': tokens.colors.error,
             'vechain-kit-warning': tokens.colors.warning,
+            'vechain-kit-button-primary-bg': tokens.buttons.primaryButton.bg,
+            'vechain-kit-button-primary-color':
+                tokens.buttons.primaryButton.color,
         },
         effects: {
             'vechain-kit-backdrop-filter-modal':

@@ -84,6 +84,11 @@ export const SwapTokenContent = ({
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
+    const primaryButtonBg = useToken('colors', 'vechain-kit-button-primary-bg');
+    const primaryButtonColor = useToken(
+        'colors',
+        'vechain-kit-button-primary-color',
+    );
 
     const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
@@ -1070,22 +1075,22 @@ export const SwapTokenContent = ({
                                             fontSize="xs"
                                             bg={
                                                 isAutoMode
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : 'transparent'
                                             }
                                             color={
                                                 isAutoMode
-                                                    ? 'white'
+                                                    ? primaryButtonColor
                                                     : textSecondary
                                             }
                                             borderColor={
                                                 isAutoMode
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : textSecondary
                                             }
                                             _hover={{
                                                 bg: isAutoMode
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : isDark
                                                     ? 'whiteAlpha.300'
                                                     : 'blackAlpha.300',
@@ -1106,23 +1111,23 @@ export const SwapTokenContent = ({
                                             fontSize="xs"
                                             bg={
                                                 slippageTolerance === 0.5
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : 'transparent'
                                             }
                                             color={
                                                 slippageTolerance === 0.5
-                                                    ? 'white'
+                                                    ? primaryButtonColor
                                                     : textSecondary
                                             }
                                             borderColor={
                                                 slippageTolerance === 0.5
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : textSecondary
                                             }
                                             _hover={{
                                                 bg:
                                                     slippageTolerance === 0.5
-                                                        ? 'rgb(96 66 221)'
+                                                        ? primaryButtonBg
                                                         : isDark
                                                         ? 'whiteAlpha.300'
                                                         : 'blackAlpha.300',
@@ -1146,23 +1151,23 @@ export const SwapTokenContent = ({
                                             fontSize="xs"
                                             bg={
                                                 slippageTolerance === 3
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : 'transparent'
                                             }
                                             color={
                                                 slippageTolerance === 3
-                                                    ? 'white'
+                                                    ? primaryButtonColor
                                                     : textSecondary
                                             }
                                             borderColor={
                                                 slippageTolerance === 3
-                                                    ? 'rgb(96 66 221)'
+                                                    ? primaryButtonBg
                                                     : textSecondary
                                             }
                                             _hover={{
                                                 bg:
                                                     slippageTolerance === 3
-                                                        ? 'rgb(96 66 221)'
+                                                        ? primaryButtonBg
                                                         : isDark
                                                         ? 'whiteAlpha.300'
                                                         : 'blackAlpha.300',

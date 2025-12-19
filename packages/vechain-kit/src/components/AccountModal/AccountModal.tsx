@@ -229,7 +229,7 @@ export const AccountModal = ({ isOpen, onClose }: Props) => {
                 themeConfig?.modal?.useBottomSheetOnMobile ? '69vh' : '60vh'
             }
             desktopMinHeight={'55vh'}
-            desktopMaxHeight={'55vh'}
+            desktopMaxHeight={'60vh'}
         >
             {renderContent()}
         </BaseModal>
