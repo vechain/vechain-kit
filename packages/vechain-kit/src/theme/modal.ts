@@ -36,9 +36,11 @@ const getModalVariants = (tokens: ThemeTokens) => ({
         header: {
             w: 'full',
             color: tokens.colors.text.primary,
-            fontSize: tokens.fonts.sizes.medium,
+            fontSize: tokens.fonts.sizes.large,
             fontWeight: tokens.fonts.weights.bold,
             textAlign: 'center',
+            paddingBottom: 5,
+            paddingTop: 5,
         },
     }),
 });
