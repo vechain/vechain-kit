@@ -2,6 +2,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 import { useDAppKitWalletModal } from '..';
+import { ConnectModalContentsTypes } from '@/components';
 
 export const useConnectModal = () => {
     const { loginMethods } = useVeChainKitConfig();
@@ -14,7 +15,10 @@ export const useConnectModal = () => {
     const { open: openDappKit, close: closeDappKit } = useDAppKitWalletModal();
 
     return {
-        open: hasOnlyDappKit ? openDappKit : openConnectModal,
+        open: hasOnlyDappKit
+            ? openDappKit
+            : (initialContent?: ConnectModalContentsTypes) =>
+                  openConnectModal(initialContent),
         close: hasOnlyDappKit ? closeDappKit : closeConnectModal,
         isOpen: hasOnlyDappKit ? false : isConnectModalOpen,
     };

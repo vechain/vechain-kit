@@ -9,6 +9,7 @@ import {
     AccountModal,
     AccountModalContentTypes,
     ConnectModal,
+    ConnectModalContentsTypes,
     UpgradeSmartAccountModal,
     UpgradeSmartAccountModalStyle,
 } from '../components';
@@ -23,9 +24,13 @@ export type AccountModalOptions = {
 
 type ModalContextType = {
     // Connect Modal
-    openConnectModal: () => void;
+    openConnectModal: (initialContent?: ConnectModalContentsTypes) => void;
     closeConnectModal: () => void;
     isConnectModalOpen: boolean;
+    connectModalContent: ConnectModalContentsTypes;
+    setConnectModalContent: React.Dispatch<
+        React.SetStateAction<ConnectModalContentsTypes>
+    >;
     // Account Modal
     openAccountModal: (
         content?: AccountModalContentTypes,
@@ -69,20 +74,32 @@ export const useModal = () => {
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const { darkMode, theme } = useVeChainKitConfig();
     const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
+    const [connectModalContent, setConnectModalContent] =
+        useState<ConnectModalContentsTypes>('main');
     const { setSource, connectV2 } = useDAppKitWallet();
-    const openConnectModal = useCallback(() => {
-        // If the user is in the veworld app, connect to the wallet
-        if (isBrowser() && window.vechain && window.vechain.isInAppBrowser) {
-            setSource('veworld');
-            connectV2(null);
-        } else {
-            setIsConnectModalOpen(true);
-        }
-    }, []);
-    const closeConnectModal = useCallback(
-        () => setIsConnectModalOpen(false),
+    const openConnectModal = useCallback(
+        (initialContent?: ConnectModalContentsTypes) => {
+            // If the user is in the veworld app, connect to the wallet
+            if (
+                isBrowser() &&
+                window.vechain &&
+                window.vechain.isInAppBrowser
+            ) {
+                setSource('veworld');
+                connectV2(null);
+            } else {
+                // Always set the content - default to 'main' if not provided
+                setConnectModalContent(initialContent ?? 'main');
+                setIsConnectModalOpen(true);
+            }
+        },
         [],
     );
+    const closeConnectModal = useCallback(() => {
+        setIsConnectModalOpen(false);
+        // Reset content to main when modal closes
+        setConnectModalContent('main');
+    }, []);
 
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
     const [isolatedView, setIsolatedView] = useState(false);
@@ -149,6 +166,8 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 openConnectModal,
                 closeConnectModal,
                 isConnectModalOpen,
+                connectModalContent,
+                setConnectModalContent,
                 openAccountModal,
                 closeAccountModal,
                 isAccountModalOpen,
@@ -171,6 +190,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                 <ConnectModal
                     isOpen={isConnectModalOpen}
                     onClose={closeConnectModal}
+                    initialContent={connectModalContent}
                 />
                 <AccountModal
                     isOpen={isAccountModalOpen}

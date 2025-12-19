@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     ModalBody,
-    ModalCloseButton,
     ModalHeader,
     VStack,
     Input,
@@ -14,6 +13,7 @@ import {
     Image,
     FormControl,
     useToken,
+    ModalCloseButton,
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components';
@@ -291,7 +291,7 @@ export const SendTokenContent = ({
                         </Text>
                     </HStack>
 
-                    <Box p={6} borderRadius="2xl" bg={cardBg}>
+                    <Box p={4} borderRadius="2xl" bg={cardBg}>
                         <VStack align="stretch" spacing={2}>
                             <FormControl isInvalid={!!errors.amount}>
                                 <HStack justify="space-between">
@@ -495,7 +495,7 @@ export const SendTokenContent = ({
                         </Text>
                     </HStack>
                     <Box borderRadius="2xl" bg={cardBg}>
-                        <VStack align="stretch" spacing={2} p={6} width="100%">
+                        <VStack align="stretch" spacing={2} p={4} width="100%">
                             <FormControl isInvalid={!!errors.toAddressOrDomain}>
                                 <Input
                                     {...register('toAddressOrDomain', {

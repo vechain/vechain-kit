@@ -37,13 +37,13 @@ export const ModalSettingsButton = ({
 
     return (
         <IconButton
-            aria-label="Notifications"
+            aria-label="Settings"
             size="sm"
-            variant="ghost"
+            variant="vechainKitHeaderIconButtons"
             position="absolute"
-            borderRadius={'50%'}
             left="10px"
-            top="10px"
+            top="8px"
+            lineHeight={'0'}
             onClick={handleOnClick}
             icon={
                 <Box position="relative">

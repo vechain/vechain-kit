@@ -33,7 +33,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
         ? {
               textColor: 'white',
               modal: {
-                  backgroundColor: 'rgba(21, 21, 21, 0.4)',
+                  backgroundColor: 'rgba(21, 21, 21)',
                   border: '1px solid rgba(255, 255, 255, 0.20)',
                   backdropFilter: 'blur(20px)',
                   rounded: '32px',
@@ -52,7 +52,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
         : {
               textColor: '#272A2E',
               modal: {
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backgroundColor: 'rgba(255, 255, 255)',
                   border: '1px solid rgba(39, 42, 46, 0.12)',
                   backdropFilter: 'blur(20px)',
                   rounded: '32px',
@@ -66,12 +66,18 @@ export function VechainKitProviderWrapper({ children }: Props) {
                       bg: 'rgba(39, 42, 46, 0.08)',
                       color: '#272A2E',
                   },
+                  loginButton: {
+                      border: '1px solid rgba(39, 42, 46, 0.12)',
+                  },
               },
           };
 
     return (
         <VeChainKitProvider
-            theme={theme}
+            theme={{
+                ...theme,
+                modal: { ...theme.modal, useBottomSheetOnMobile: true },
+            }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
                 clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
@@ -121,7 +127,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 { method: 'vechain', gridColumn: 4 },
                 { method: 'dappkit', gridColumn: 4 },
                 { method: 'ecosystem', gridColumn: 4 },
-                // { method: 'passkey', gridColumn: 1 },
+                // { method: 'passkey', gridColumn: 4 },
                 // { method: 'more', gridColumn: 1 },
             ]}
             darkMode={isDarkMode}

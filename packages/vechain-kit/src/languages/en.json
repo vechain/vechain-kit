@@ -408,5 +408,9 @@
     "Backup": "Backup",
     "Loading quote...": "Loading quote...",
     "Show Advanced Options": "Show Advanced Options",
-    "Hide": "Hide"
+    "Hide": "Hide",
+    "Checking...": "Checking...",
+    "By confirming, your current domain will be unset": "By confirming, your current domain will be unset",
+    "By confirming, your address will be set to {{domain}}": "By confirming, your address will be set to {{domain}}",
+    "By confirming, the following details attached to your name ({{domain}}) will be updated": "By confirming, the following details attached to your name ({{domain}}) will be updated"
 }

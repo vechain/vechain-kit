@@ -241,6 +241,20 @@ export const SettingsContent = ({
                     </Text>
 
                     <ActionButton
+                        title={t('Connection details')}
+                        onClick={handleConnectionDetails}
+                        leftIcon={LuUnlink}
+                        rightIcon={LuChevronRight}
+                    />
+
+                    <ActionButton
+                        title={t('Explore ecosystem')}
+                        onClick={() => setCurrentContent('ecosystem')}
+                        leftIcon={LuLayoutGrid}
+                        rightIcon={LuChevronRight}
+                    />
+
+                    <ActionButton
                         title={t('Frequently asked questions')}
                         onClick={() =>
                             setCurrentContent({
@@ -253,20 +267,6 @@ export const SettingsContent = ({
                             })
                         }
                         leftIcon={LuCircleHelp}
-                        rightIcon={LuChevronRight}
-                    />
-
-                    <ActionButton
-                        title={t('Connection details')}
-                        onClick={handleConnectionDetails}
-                        leftIcon={LuUnlink}
-                        rightIcon={LuChevronRight}
-                    />
-
-                    <ActionButton
-                        title={t('Explore ecosystem')}
-                        onClick={() => setCurrentContent('ecosystem')}
-                        leftIcon={LuLayoutGrid}
                         rightIcon={LuChevronRight}
                     />
                 </VStack>

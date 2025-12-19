@@ -182,9 +182,11 @@ const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
 const VechainKitThemeContext = createContext<{
     portalRootRef?: React.RefObject<HTMLDivElement | null>;
     tokens?: ThemeTokens;
+    themeConfig?: VechainKitThemeConfig;
 }>({
     portalRootRef: undefined,
     tokens: undefined,
+    themeConfig: undefined,
 });
 
 export const useVechainKitThemeConfig = () => {
@@ -243,7 +245,9 @@ export const VechainKitThemeProvider = ({
     );
 
     return (
-        <VechainKitThemeContext.Provider value={{ portalRootRef, tokens }}>
+        <VechainKitThemeContext.Provider
+            value={{ portalRootRef, tokens, themeConfig: effectiveTheme }}
+        >
             <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider
                 theme={theme}

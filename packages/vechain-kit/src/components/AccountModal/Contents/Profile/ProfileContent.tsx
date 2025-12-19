@@ -5,14 +5,18 @@ import {
     Box,
     ModalFooter,
     VStack,
+    HStack,
+    Button,
+    Icon,
 } from '@chakra-ui/react';
 import { useWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
-import { ProfileCard } from '@/components/ProfileCard/ProfileCard';
+import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { LuLogOut, LuPencil } from 'react-icons/lu';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -80,7 +84,53 @@ export const ProfileContent = ({
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter pt={0} />
+            <ModalFooter w="full">
+                <HStack w="full" justify="space-between" spacing={4} mt={4}>
+                    <Button
+                        size="md"
+                        width="full"
+                        height="40px"
+                        variant="vechainKitSecondary"
+                        leftIcon={<Icon as={LuPencil} />}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'account-customization',
+                                props: {
+                                    setCurrentContent,
+                                    initialContentSource: 'profile',
+                                },
+                            })
+                        }
+                        data-testid="customize-button"
+                    >
+                        {t('Customize')}
+                    </Button>
+                    <Button
+                        size="md"
+                        width="full"
+                        height="40px"
+                        variant="vechainKitSecondary"
+                        leftIcon={<Icon as={LuLogOut} />}
+                        colorScheme="red"
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: () => {
+                                        disconnect();
+                                        onLogoutSuccess?.();
+                                    },
+                                    onBack: () =>
+                                        setCurrentContent?.('profile'),
+                                },
+                            })
+                        }
+                        data-testid="logout-button"
+                    >
+                        {t('Logout')}
+                    </Button>
+                </HStack>
+            </ModalFooter>
         </Box>
     );
 };

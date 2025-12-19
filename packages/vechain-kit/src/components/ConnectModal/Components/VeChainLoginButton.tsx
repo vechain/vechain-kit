@@ -1,74 +1,70 @@
 import { GridItem } from '@chakra-ui/react';
-import { useState } from 'react';
 import { VechainLogoDark, VechainLogoLight } from '@/assets';
-import { ConnectionButton, LoginLoadingModal, SocialIcons } from '@/components';
+import { ConnectionButton, SocialIcons } from '@/components';
 import { useLoginWithVeChain } from '@/hooks';
-import { useDisclosure } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
+import { ConnectModalContentsTypes } from '../ConnectModal';
+import React from 'react';
 
 type Props = {
     isDark: boolean;
     gridColumn?: number;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<ConnectModalContentsTypes>
+    >;
 };
 
-export const VeChainLoginButton = ({ isDark, gridColumn }: Props) => {
+export const VeChainLoginButton = ({
+    isDark,
+    gridColumn,
+    setCurrentContent,
+}: Props) => {
     const { t } = useTranslation();
     const { login: loginWithVeChain } = useLoginWithVeChain();
-    const [loginError, setLoginError] = useState<string>();
-    const loginLoadingModal = useDisclosure();
 
     const handleLoginWithVeChain = async () => {
-        loginLoadingModal.onOpen();
+        setCurrentContent({
+            type: 'loading',
+            props: {
+                title: t('Connecting to VeChain'),
+                loadingText: t(
+                    'Please approve the request in the connection request window...',
+                ),
+                onTryAgain: handleLoginWithVeChain,
+            },
+        });
         try {
-            setLoginError(undefined);
-
             await loginWithVeChain();
-
-            loginLoadingModal.onClose();
         } catch (error) {
             console.error(t('Login failed:'), error);
-            setLoginError(
-                error instanceof Error
-                    ? error.message
-                    : t('Failed to connect with VeChain'),
-            );
+            setCurrentContent({
+                type: 'error',
+                props: {
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : t('Failed to connect with VeChain'),
+                    onTryAgain: handleLoginWithVeChain,
+                },
+            });
         }
     };
 
-    const tryAgain = () => {
-        handleLoginWithVeChain();
-    };
-
     return (
-        <>
-            <GridItem colSpan={gridColumn ? gridColumn : 4} w={'full'}>
-                <ConnectionButton
-                    isDark={isDark}
-                    onClick={handleLoginWithVeChain}
-                    icon={
-                        isDark
-                            ? (VechainLogoLight as IconType)
-                            : (VechainLogoDark as IconType)
-                    }
-                    text={t('Use social login with VeChain')}
-                    variant={'loginWithVechain'}
-                    rightIcon={<SocialIcons />}
-                />
-            </GridItem>
-
-            <LoginLoadingModal
-                isOpen={loginLoadingModal.isOpen}
-                onClose={() => {
-                    loginLoadingModal.onClose();
-                }}
-                onTryAgain={tryAgain}
-                error={loginError}
-                title={t('Connecting to VeChain')}
-                loadingText={t(
-                    'Please approve the request in the connection request window...',
-                )}
+        <GridItem colSpan={gridColumn ? gridColumn : 4} w={'full'}>
+            <ConnectionButton
+                isDark={isDark}
+                onClick={handleLoginWithVeChain}
+                icon={
+                    isDark
+                        ? (VechainLogoLight as IconType)
+                        : (VechainLogoDark as IconType)
+                }
+                text={t('Use social login with VeChain')}
+                variant={'loginWithVechain'}
+                rightIcon={<SocialIcons />}
             />
-        </>
+        </GridItem>
     );
 };
