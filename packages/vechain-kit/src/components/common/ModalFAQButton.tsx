@@ -11,7 +11,7 @@ export const ModalFAQButton = ({ onClick, ...props }: FAQButtonProps) => {
             aria-label="FAQ"
             icon={<Icon as={LuCircleHelp} fontSize={'17px'} />}
             size="sm"
-            variant="modalCloseButton"
+            variant="vechainKitHeaderIconButtons"
             position="absolute"
             lineHeight={'normal'}
             left="10px"
