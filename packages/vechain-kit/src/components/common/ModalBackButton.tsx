@@ -16,7 +16,7 @@ export const ModalBackButton = ({ onClick, ...props }: BackButtonProps) => {
             left="10px"
             top="8px"
             onClick={onClick}
-            display={'block'}
+            lineHeight={'0'}
             {...props}
         />
     );

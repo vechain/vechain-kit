@@ -202,6 +202,7 @@ const getVariants = (tokens: ThemeTokens) => ({
         },
         transition: 'all 0.2s',
         rounded: 'full',
+        mt: '8px',
     })),
     actionButton: defineStyle(() => ({
         width: 'full',
@@ -271,4 +272,7 @@ export const getCloseButtonTheme = (tokens: ThemeTokens) =>
     defineStyleConfig({
         baseStyle,
         variants: getVariants(tokens),
+        defaultProps: {
+            variant: 'modalCloseButton',
+        },
     });
