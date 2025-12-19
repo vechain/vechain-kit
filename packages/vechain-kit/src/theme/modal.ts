@@ -24,7 +24,9 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             borderRadius: tokens.borders.radius.full,
             color: tokens.colors.text.primary,
             _hover: {
-                bg: tokens.buttons.button.bg,
+                ...(tokens.buttons.button.hoverBg
+                    ? { bg: tokens.buttons.button.hoverBg }
+                    : { opacity: 0.8 }),
             },
             _active: {
                 bg: tokens.buttons.button.bg,

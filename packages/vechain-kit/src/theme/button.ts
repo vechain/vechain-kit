@@ -178,6 +178,31 @@ const getVariants = (tokens: ThemeTokens) => ({
         },
         transition: 'all 0.2s',
     })),
+    modalCloseButton: defineStyle(() => ({
+        bg: tokens.buttons.button.bg,
+        color: tokens.buttons.button.color,
+        border:
+            tokens.buttons.button.border === 'none'
+                ? 'none'
+                : tokens.buttons.button.border,
+        backdropFilter: tokens.buttons.button.backdropFilter,
+        _hover: {
+            ...(tokens.buttons.button.hoverBg
+                ? { bg: tokens.buttons.button.hoverBg }
+                : { opacity: 0.8 }), // Derive hover from bg with opacity if hoverBg not provided
+            _disabled: {
+                opacity: 0.5, // Override hover opacity when disabled
+                bg: tokens.buttons.button.bg, // Ensure background stays
+            },
+        },
+        _disabled: {
+            opacity: 0.5,
+            cursor: 'not-allowed',
+            bg: tokens.buttons.button.bg, // Explicitly set background
+        },
+        transition: 'all 0.2s',
+        rounded: 'full',
+    })),
     actionButton: defineStyle(() => ({
         width: 'full',
         minHeight: '50px',
@@ -231,6 +256,18 @@ const getVariants = (tokens: ThemeTokens) => ({
 });
 
 export const getButtonTheme = (tokens: ThemeTokens) =>
+    defineStyleConfig({
+        baseStyle,
+        variants: getVariants(tokens),
+    });
+
+export const getIconButtonTheme = (tokens: ThemeTokens) =>
+    defineStyleConfig({
+        baseStyle,
+        variants: getVariants(tokens),
+    });
+
+export const getCloseButtonTheme = (tokens: ThemeTokens) =>
     defineStyleConfig({
         baseStyle,
         variants: getVariants(tokens),
