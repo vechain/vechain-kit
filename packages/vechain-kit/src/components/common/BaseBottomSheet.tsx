@@ -2,7 +2,6 @@ import { Box, useToken, VisuallyHidden } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
 import { useEffect, useState, useRef } from 'react';
 import { useVechainKitThemeConfig } from '@/providers';
-import { BottomSheetProvider } from './BottomSheetContext';
 
 type Props = {
     isOpen: boolean;
@@ -232,7 +231,7 @@ export const BaseBottomSheet = ({
                                 marginTop: '-1px',
                             }}
                         />
-                        <BottomSheetProvider>{children}</BottomSheetProvider>
+                        {children}
                     </Box>
                 </Drawer.Content>
             </Drawer.Portal>

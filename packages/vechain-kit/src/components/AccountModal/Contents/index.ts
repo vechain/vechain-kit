@@ -7,6 +7,7 @@ export * from './FAQ';
 export * from './Profile';
 export * from './UpgradeSmartAccount';
 export * from './Assets';
+export * from './Bridge';
 export * from './KitSettings';
 export * from './TermsAndPrivacy';
 export * from './DisconnectConfirmation';

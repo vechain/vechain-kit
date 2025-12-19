@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -14,7 +15,6 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
     GasFeeSummary,
-    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';

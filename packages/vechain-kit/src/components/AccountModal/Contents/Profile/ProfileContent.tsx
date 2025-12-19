@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     Box,
     ModalFooter,
@@ -11,11 +12,7 @@ import {
 import { useWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    ModalCloseButton,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';

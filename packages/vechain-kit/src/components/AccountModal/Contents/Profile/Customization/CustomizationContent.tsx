@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -13,11 +14,7 @@ import {
     FormLabel,
     useToken,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    ModalCloseButton,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useWallet } from '@/hooks';

@@ -9,6 +9,7 @@ import {
     AlertTitle,
     AlertDescription,
     Box,
+    ModalCloseButton,
     Button,
     HStack,
     Circle,
@@ -21,7 +22,6 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';

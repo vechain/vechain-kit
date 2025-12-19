@@ -5,14 +5,10 @@ import {
     CardBody,
     Text,
     useMediaQuery,
+    ModalCloseButton,
     ModalHeader,
 } from '@chakra-ui/react';
-import {
-    BaseModal,
-    StickyHeaderContainer,
-    ModalBackButton,
-    ModalCloseButton,
-} from '../common';
+import { BaseModal, StickyHeaderContainer, ModalBackButton } from '../common';
 
 export type Step<T extends string> = {
     key: T;

@@ -4,6 +4,7 @@ import {
     ModalFooter,
     ModalHeader,
     Box,
+    ModalCloseButton,
     Text,
     useToken,
     Divider,
@@ -30,11 +31,7 @@ import {
     LuFingerprint,
 } from 'react-icons/lu';
 import { ActionButton } from '@/components';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    ModalCloseButton,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuUnlink } from 'react-icons/lu';

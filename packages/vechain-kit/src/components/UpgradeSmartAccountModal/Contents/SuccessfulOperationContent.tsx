@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -11,7 +12,7 @@ import {
     HStack,
     useToken,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ModalCloseButton } from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { motion } from 'framer-motion';
@@ -42,7 +43,7 @@ export const SuccessfulOperationContent = ({
     const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const socialDescription = `${explorerUrl}/${txId}`;
-
+    
     const successColor = useToken('colors', 'vechain-kit-success');
 
     return (

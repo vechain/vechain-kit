@@ -4,6 +4,7 @@ import {
     Icon,
     Image,
     ModalBody,
+    ModalCloseButton,
     ModalFooter,
     ModalHeader,
     Text,
@@ -11,11 +12,7 @@ import {
     Flex,
     HStack,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    StickyHeaderContainer,
-    ModalCloseButton,
-} from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuExternalLink } from 'react-icons/lu';

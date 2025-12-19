@@ -1,15 +1,12 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Tag,
     ModalFooter,
 } from '@chakra-ui/react';
-import {
-    StickyHeaderContainer,
-    ScrollToTopWrapper,
-    ModalCloseButton,
-} from '@/components/common';
+import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,

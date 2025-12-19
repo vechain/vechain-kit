@@ -9,6 +9,7 @@ import {
     AlertTitle,
     AlertDescription,
     Box,
+    ModalCloseButton,
     HStack,
     Circle,
     Image,
@@ -19,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-    ModalCloseButton,
 } from '@/components/common';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
 import {

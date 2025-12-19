@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Button,
@@ -13,7 +14,6 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';

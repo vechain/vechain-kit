@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Button,
@@ -11,7 +12,6 @@ import {
 import {
     ModalBackButton,
     StickyHeaderContainer,
-    ModalCloseButton,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { LuLogOut } from 'react-icons/lu';

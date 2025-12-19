@@ -1,6 +1,7 @@
 import {
     Container,
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -12,7 +13,6 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplay,
-    ModalCloseButton,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '@/hooks';

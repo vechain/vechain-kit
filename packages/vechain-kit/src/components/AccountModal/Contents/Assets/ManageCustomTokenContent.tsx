@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Input,
@@ -13,11 +14,7 @@ import {
     Image,
     useToken,
 } from '@chakra-ui/react';
-import {
-    ModalBackButton,
-    ModalCloseButton,
-    StickyHeaderContainer,
-} from '@/components';
+import { ModalBackButton, StickyHeaderContainer } from '@/components';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';

@@ -1,6 +1,7 @@
 import {
     ModalBody,
     ModalHeader,
+    ModalCloseButton,
     Spinner,
     VStack,
     Text,
@@ -8,11 +9,7 @@ import {
     Icon,
     Button,
 } from '@chakra-ui/react';
-import {
-    StickyHeaderContainer,
-    ModalBackButton,
-    ModalCloseButton,
-} from '@/components/common';
+import { StickyHeaderContainer, ModalBackButton } from '@/components/common';
 import { LuRefreshCw } from 'react-icons/lu';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

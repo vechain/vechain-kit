@@ -1,5 +1,6 @@
 import {
     ModalBody,
+    ModalCloseButton,
     ModalHeader,
     VStack,
     Text,
@@ -10,7 +11,7 @@ import {
     Link,
     HStack,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ModalCloseButton } from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
@@ -97,3 +98,4 @@ export const FailedOperationContent = ({
         </Box>
     );
 };
+

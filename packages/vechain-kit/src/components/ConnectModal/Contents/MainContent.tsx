@@ -2,17 +2,14 @@ import {
     HStack,
     Image,
     ModalBody,
+    ModalCloseButton,
     ModalFooter,
     ModalHeader,
     Text,
     useToken,
 } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '@/providers';
-import {
-    ModalFAQButton,
-    StickyHeaderContainer,
-    ModalCloseButton,
-} from '@/components/common';
+import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
 import { useWallet, useFetchAppInfo } from '@/hooks';
