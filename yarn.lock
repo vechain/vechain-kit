@@ -5953,14 +5953,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/contract-getters@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@vechain/contract-getters@npm:1.0.3"
+"@vechain/contract-getters@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@vechain/contract-getters@npm:1.0.4"
   peerDependencies:
-    "@vechain/sdk-network": ^2.0.5
-    "@vechain/vechain-contract-types": ^1.4.1
+    "@vechain/sdk-network": ^2.0.7
+    "@vechain/vechain-contract-types": ^1.5.0
     ethers: ^6.0.0
-  checksum: 10c0/ea63ab758db5c06fccb1ce28a73d40d3b41f1abda67bcba425a1ddbdc503a672a75bd6896109084076c32e999260996710d554fe76cd112c19b4e05b5d257c93
+  checksum: 10c0/114071733e795989e645ca9e498f76223c67d913b4c704e41d4a7728cedebd9f05565c1f4ac5f1780521bf197215931ae03190978aee9fbc9e0e73baaa1eca3d
   languageName: node
   linkType: hard
 
@@ -6022,27 +6022,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-core@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-core@npm:2.0.5"
-  dependencies:
-    "@ethereumjs/rlp": "npm:^5.0.2"
-    "@noble/ciphers": "npm:^1.1.1"
-    "@noble/curves": "npm:^1.6.0"
-    "@noble/hashes": "npm:^1.5.0"
-    "@scure/base": "npm:^1.2.4"
-    "@scure/bip32": "npm:^1.4.0"
-    "@scure/bip39": "npm:^1.5.1"
-    "@vechain/sdk-errors": "npm:2.0.5"
-    "@vechain/sdk-logging": "npm:2.0.5"
-    abitype: "npm:^1.0.6"
-    ethers: "npm:^6.14.0"
-    fast-json-stable-stringify: "npm:^2.1.0"
-    viem: "npm:^2.21.45"
-  checksum: 10c0/969a01a4ba11482ddf59b34e3bcd8dd00997958a1347d652692eced9c620eb50dab386f1cf4f00b9d6f058a8e9583cd601ad47718ba50d77ddbeee28e90a1895
-  languageName: node
-  linkType: hard
-
 "@vechain/sdk-core@npm:2.0.6, @vechain/sdk-core@npm:^2.0.0":
   version: 2.0.6
   resolution: "@vechain/sdk-core@npm:2.0.6"
@@ -6064,10 +6043,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-errors@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-errors@npm:2.0.5"
-  checksum: 10c0/c991e6346b2b392816479cb8faa5b95b74827262f303960c2ac12b578977f6d6b92bdc9aa43035bd54c6a2ebe81cbb9bf9f76eb91f3419d1a022d91b3ba81c67
+"@vechain/sdk-core@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-core@npm:2.0.7"
+  dependencies:
+    "@ethereumjs/rlp": "npm:^5.0.2"
+    "@noble/ciphers": "npm:^1.1.1"
+    "@noble/curves": "npm:^1.6.0"
+    "@noble/hashes": "npm:^1.5.0"
+    "@scure/base": "npm:^1.2.4"
+    "@scure/bip32": "npm:^1.4.0"
+    "@scure/bip39": "npm:^1.5.1"
+    "@vechain/sdk-errors": "npm:2.0.7"
+    "@vechain/sdk-logging": "npm:2.0.7"
+    abitype: "npm:^1.0.6"
+    ethers: "npm:^6.14.0"
+    fast-json-stable-stringify: "npm:^2.1.0"
+    viem: "npm:^2.21.45"
+  checksum: 10c0/7286fb045b07938cfe28b3eb17295691fe1f4eb19df8afc8c406e548e8f23632a13a4703033be26ff2adf36e04c977a6c40ec763262b8d6c92209db3e9f532ba
   languageName: node
   linkType: hard
 
@@ -6078,12 +6071,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-logging@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-logging@npm:2.0.5"
-  dependencies:
-    "@vechain/sdk-errors": "npm:2.0.5"
-  checksum: 10c0/e88ede9f2e6fd11c5b0951972b8ba215c5a438d16fa1df8e17d9e79c3bb1c68d6dea6c50b2b1c8df2a0d04edf1703398ae0c8d1c5dca71f5f556f4da43bce4f1
+"@vechain/sdk-errors@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-errors@npm:2.0.7"
+  checksum: 10c0/9408bf926cd5662b6f5c96bd309e24f8b18b3dae0dc094621431aa8b607a90c325c3b5c14c609df665556432f43da1be81ba14fa0b6fa2d166c61b31eef53e2b
   languageName: node
   linkType: hard
 
@@ -6096,18 +6087,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-network@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-network@npm:2.0.5"
+"@vechain/sdk-logging@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-logging@npm:2.0.7"
+  dependencies:
+    "@vechain/sdk-errors": "npm:2.0.7"
+  checksum: 10c0/0b1c589f8a833ea4e17f0d176273a9508d6314f0ed7cf97a531c83df827d3540d50f54511cdd2f7238a73b6e1cd6617b47ed823117bce76784cad842e0b89712
+  languageName: node
+  linkType: hard
+
+"@vechain/sdk-network@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-network@npm:2.0.7"
   dependencies:
     "@noble/curves": "npm:^1.6.0"
-    "@vechain/sdk-core": "npm:2.0.5"
-    "@vechain/sdk-errors": "npm:2.0.5"
-    "@vechain/sdk-logging": "npm:2.0.5"
+    "@vechain/sdk-core": "npm:2.0.7"
+    "@vechain/sdk-errors": "npm:2.0.7"
+    "@vechain/sdk-logging": "npm:2.0.7"
     abitype: "npm:1.0.8"
     ethers: "npm:^6.14.0"
     viem: "npm:^2.21.54"
-  checksum: 10c0/6cc89acf72ba60ea1b67fc7bd6aaeb9c4269d68cdc7d413842a4cf5a18a8b717660ae904b72fcbf3d081898835343a5d9b94b8f045c1da5cac3b81971cd2b459
+  checksum: 10c0/dbf67ec161bdb200a807f308945a811c6ee12d120bf18da9b685796e222ef3985dc5bebf2639d0c0f33bea3b8b50827e0ad9690ba348bd2fde1e9aeb9a3a616e
   languageName: node
   linkType: hard
 
@@ -6137,6 +6137,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/vechain-contract-types@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@vechain/vechain-contract-types@npm:1.5.0"
+  dependencies:
+    ethers: "npm:^6.13.5"
+  peerDependencies:
+    ethers: ^6.0.0
+  checksum: 10c0/b33ae8e047ab2468f3c4ba2598489e14e689b771446f913e252bd31f29c36c626335b4d989aeeb2d9d05063af7aa767414477c8bb6d68ed5ad6ef5f0311307a4
+  languageName: node
+  linkType: hard
+
 "@vechain/vechain-kit@workspace:*, @vechain/vechain-kit@workspace:packages/vechain-kit":
   version: 0.0.0-use.local
   resolution: "@vechain/vechain-kit@workspace:packages/vechain-kit"
@@ -6151,10 +6162,10 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.64.1"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
-    "@vechain/contract-getters": "npm:1.0.3"
+    "@vechain/contract-getters": "npm:1.0.4"
     "@vechain/dapp-kit-react": "npm:2.1.0-rc.2"
     "@vechain/picasso": "npm:^2.1.1"
-    "@vechain/vechain-contract-types": "npm:1.4.1"
+    "@vechain/vechain-contract-types": "npm:1.5.0"
     "@wagmi/core": "npm:^2.17.2"
     bignumber.js: "npm:^9.1.2"
     browser-image-compression: "npm:^2.0.2"
@@ -15550,8 +15561,8 @@ __metadata:
   dependencies:
     "@changesets/cli": "npm:^2.27.1"
     "@commitlint/config-conventional": "npm:^18.0.0"
-    "@vechain/sdk-core": "npm:2.0.5"
-    "@vechain/sdk-network": "npm:2.0.5"
+    "@vechain/sdk-core": "npm:2.0.7"
+    "@vechain/sdk-network": "npm:2.0.7"
     commitlint: "npm:^18.0.0"
     eslint: "npm:^9.12.0"
     husky: "npm:^8.0.0"

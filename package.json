@@ -65,8 +65,8 @@
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
         "@commitlint/config-conventional": "^18.0.0",
-        "@vechain/sdk-core": "2.0.5",
-        "@vechain/sdk-network": "2.0.5",
+        "@vechain/sdk-core": "2.0.7",
+        "@vechain/sdk-network": "2.0.7",
         "commitlint": "^18.0.0",
         "eslint": "^9.12.0",
         "husky": "^8.0.0",
