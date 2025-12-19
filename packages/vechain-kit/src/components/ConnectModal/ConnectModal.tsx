@@ -140,10 +140,10 @@ export const ConnectModal = ({
                 onClose={onClose}
                 allowExternalFocus={true}
                 blockScrollOnMount={true}
-                mobileMinHeight={'30vh'}
-                mobileMaxHeight={'50vh'}
-                desktopMinHeight={'27vh'}
-                desktopMaxHeight={'45vh'}
+                mobileMinHeight={'260px'}
+                mobileMaxHeight={'400px'}
+                desktopMinHeight={'250px'}
+                desktopMaxHeight={'400px'}
             >
                 {fallbackContent}
             </BaseModal>
@@ -156,10 +156,10 @@ export const ConnectModal = ({
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
-            mobileMinHeight={'30vh'}
-            mobileMaxHeight={'50vh'}
-            desktopMinHeight={'27vh'}
-            desktopMaxHeight={'45vh'}
+            mobileMinHeight={'260px'}
+            mobileMaxHeight={'400px'}
+            desktopMinHeight={'250px'}
+            desktopMaxHeight={'400px'}
         >
             {content}
         </BaseModal>
