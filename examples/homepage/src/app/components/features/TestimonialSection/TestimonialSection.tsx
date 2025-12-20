@@ -7,14 +7,30 @@ import { Icon } from '@chakra-ui/react';
 interface TestimonialSectionProps {
     quote: string;
     author?: string;
+    mt?: number;
 }
 
-export function TestimonialSection({ quote, author }: TestimonialSectionProps) {
+export function TestimonialSection({
+    quote,
+    author,
+    mt,
+}: TestimonialSectionProps) {
     const { colorMode } = useColorMode();
 
     return (
-        <Card variant="section" py={{ base: 16, md: 20 }} px={{ base: 4, md: 8 }}>
-            <VStack spacing={6} align="center" maxW="4xl" mx="auto" textAlign="center">
+        <Card
+            variant="section"
+            py={{ base: 16, md: 20 }}
+            px={{ base: 4, md: 8 }}
+            mt={mt}
+        >
+            <VStack
+                spacing={6}
+                align="center"
+                maxW="4xl"
+                mx="auto"
+                textAlign="center"
+            >
                 <Icon
                     as={LuQuote}
                     boxSize={12}
@@ -41,4 +57,3 @@ export function TestimonialSection({ quote, author }: TestimonialSectionProps) {
         </Card>
     );
 }
-

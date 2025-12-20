@@ -63,7 +63,7 @@ export function Header() {
                     </HStack>
 
                     {/* Navigation links centered */}
-                    {!isMobile && (
+                    {/* {!isMobile && (
                         <HStack spacing={2} flex={1} justifyContent="center">
                             <Link
                                 href="#features"
@@ -121,7 +121,7 @@ export function Header() {
                                 Docs
                             </Link>
                         </HStack>
-                    )}
+                    )} */}
 
                     {/* WalletButton and Theme toggle at end */}
                     <HStack spacing={3} flexShrink={0}>

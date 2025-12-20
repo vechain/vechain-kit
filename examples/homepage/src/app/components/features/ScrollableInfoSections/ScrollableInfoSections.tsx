@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Box, VStack } from '@chakra-ui/react';
 import { InfoSection } from '@/app/components/features/InfoSection';
+import { LoginMethodsSection } from '../LoginMethodsSection';
 
 interface ScrollableSection {
     bg?: string;
@@ -11,15 +12,16 @@ interface ScrollableSection {
     imageSrc: string;
     imageAlt: string;
     imageWidth?: string;
+    isLoginMethods?: boolean;
 }
 
 export function ScrollableInfoSections() {
     const sections: ScrollableSection[] = [
         {
             bg: '#e0daea',
-            title: 'Seamless Wallet Integration',
+            title: 'Out of the box',
             content:
-                'Connect your users to your dApp with out-of-the-box wallet connection options. Support for VeWorld, Sync2, WalletConnect, and social logins including Google, Twitter, Email, and more.',
+                'Forget about the underlying blockchain infrastructure. We handle it for you.',
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
             imageAlt: 'VeChain Kit',
@@ -29,7 +31,7 @@ export function ScrollableInfoSections() {
             bg: '#dae8fb',
             title: 'Boosted Development',
             content:
-                'Use our hooks and components to speed up your development. No need to worry about the underlying VeChain infrastructure—we handle it for you. Focus on building your dApp, not the blockchain integration.',
+                'Use our hooks and components to speed up your development and interact with the blockchain.',
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/MyApp.png',
             imageAlt: 'VeChain Kit',
@@ -37,7 +39,7 @@ export function ScrollableInfoSections() {
         },
         {
             bg: '#eae3d1',
-            title: 'Style Customization',
+            title: 'Customizable',
             content:
                 "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
             imageSrc:
@@ -46,8 +48,19 @@ export function ScrollableInfoSections() {
             imageWidth: '400px',
         },
         {
+            bg: '#f0e8d8',
+            title: 'Login Methods',
+            content:
+                "Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need.",
+            imageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
+            imageAlt: 'Login methods',
+            imageWidth: '550px',
+            isLoginMethods: true,
+        },
+        {
             bg: '#e1e5e4',
-            title: 'Multiple language support',
+            title: 'Multi-language',
             content:
                 'The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.',
             imageSrc:
@@ -155,14 +168,22 @@ export function ScrollableInfoSections() {
                         zIndex={zIndex}
                         style={getSectionStyle(index)}
                     >
-                        <InfoSection
-                            bg={section.bg}
-                            title={section.title}
-                            content={section.content}
-                            imageSrc={section.imageSrc}
-                            imageAlt={section.imageAlt}
-                            imageWidth={section.imageWidth}
-                        />
+                        {section.isLoginMethods ? (
+                            <LoginMethodsSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                            />
+                        ) : (
+                            <InfoSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                                imageSrc={section.imageSrc}
+                                imageAlt={section.imageAlt}
+                                imageWidth={section.imageWidth}
+                            />
+                        )}
                     </Box>
                 );
             })}

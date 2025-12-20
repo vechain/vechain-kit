@@ -1,2 +1,0 @@
-export { PlatformSection } from './PlatformSection';
-
