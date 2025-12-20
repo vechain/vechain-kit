@@ -15,6 +15,7 @@ import { VechainLogo } from '@vechain/vechain-kit';
 import { Header } from '@/app/components/layout/Header';
 import { HeroSection } from '@/app/components/features/HeroSection';
 import { TestimonialSection } from '@/app/components/features/TestimonialSection';
+import { AppShowcase } from '@/app/components/features/AppShowcase';
 import { FAQSection } from '../components/features/FAQSection';
 import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetStartedButton/FloatingGetStartedButton';
@@ -69,6 +70,8 @@ export default function Home(): ReactElement {
                 mt={10}
                 quote="The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components."
             />
+
+            <AppShowcase />
 
             <FAQSection />
 
