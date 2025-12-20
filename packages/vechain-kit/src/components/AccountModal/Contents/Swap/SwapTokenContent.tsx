@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-    Container,
     ModalBody,
     ModalCloseButton,
     ModalHeader,
@@ -15,9 +14,7 @@ import {
     InputGroup,
     InputRightElement,
     Image,
-    Spinner,
     Collapse,
-    Center,
     useToken,
 } from '@chakra-ui/react';
 import {
@@ -27,12 +24,7 @@ import {
     TransactionButtonAndStatus,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import {
-    LuArrowDown,
-    LuArrowUp,
-    LuChevronDown,
-    LuArrowDownUp,
-} from 'react-icons/lu';
+import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
     useWallet,
@@ -42,7 +34,7 @@ import {
     useSwapTransaction,
     useCurrency,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
 import { SwapQuote } from '@/types/swap';
@@ -85,15 +77,18 @@ export const SwapTokenContent = ({
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const { network, feeDelegation } = useVeChainKitConfig();
+    const { network, feeDelegation, darkMode: isDark } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
 
     const cardBg = useToken('colors', 'vechain-kit-card');
-    const cardBgHover = useToken('colors', 'vechain-kit-card-hover');
-    const borderColor = useToken('colors', 'vechain-kit-border');
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
+    const primaryButtonBg = useToken('colors', 'vechain-kit-button-primary-bg');
+    const primaryButtonColor = useToken(
+        'colors',
+        'vechain-kit-button-primary-color',
+    );
 
     const { preferences } = useGasTokenSelection();
     const { sortedTokens } = useTokensWithValues({
@@ -106,7 +101,6 @@ export const SwapTokenContent = ({
     const [amount, setAmount] = useState('');
     const [showMore, setShowMore] = useState(false);
     const [slippageTolerance, setSlippageTolerance] = useState(1);
-    const [showSlippageConfig, setShowSlippageConfig] = useState(false);
     const [customSlippageValue, setCustomSlippageValue] = useState('1');
     const [selectedQuote, setSelectedQuote] = useState<SwapQuote | null>(null);
     const [selectedGasToken, setSelectedGasToken] =
@@ -197,17 +191,6 @@ export const SwapTokenContent = ({
         toTokenAddress,
         network.type,
     ]);
-
-    // Toggle swap direction
-    const handleToggleDirection = useCallback(() => {
-        if (fromToken && toToken) {
-            const temp = fromToken;
-            setFromToken(toToken);
-            setToToken(temp);
-            // Reset amount when toggling
-            setAmount('');
-        }
-    }, [fromToken, toToken]);
 
     // Clear selected quote when quote parameters change
     // This ensures that when amount/token changes, we use the new best quote
@@ -341,7 +324,7 @@ export const SwapTokenContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: swapClauses,
         tokens: selectedGasToken
             ? [selectedGasToken]
@@ -667,673 +650,675 @@ export const SwapTokenContent = ({
                 {!isolatedView && (
                     <ModalBackButton
                         onClick={() => setCurrentContent('main')}
+                        isDisabled={
+                            isTransactionPending ||
+                            isWaitingForWalletConfirmation
+                        }
                     />
                 )}
-                <ModalCloseButton />
+                <ModalCloseButton
+                    isDisabled={
+                        isTransactionPending || isWaitingForWalletConfirmation
+                    }
+                />
             </StickyHeaderContainer>
 
-            <Container maxW={'container.lg'} p={0}>
-                <ModalBody>
-                    <VStack spacing={2} align="stretch" w="full">
-                        {/* From Section */}
-                        <Box
-                            px={6}
-                            py={connection.isConnectedWithPrivy ? 2 : 6}
-                            borderRadius="xl"
-                            bg={cardBg}
+            <ModalBody>
+                <VStack spacing={2} align="stretch" w="full">
+                    {/* From Section */}
+                    <HStack justify="space-between">
+                        <Text
+                            fontSize="md"
+                            fontWeight="bold"
+                            color={textPrimary}
                         >
+                            {t('From')}
+                        </Text>
+
+                        {fromTokenDisplay && (
                             <Text
+                                cursor="pointer"
+                                _hover={{
+                                    color: textSecondary,
+                                    textDecoration: 'underline',
+                                }}
+                                onClick={handleSetMaxAmount}
+                                noOfLines={1}
+                                overflow="hidden"
+                                textOverflow="ellipsis"
                                 fontSize="sm"
                                 fontWeight="medium"
                                 color={textSecondary}
-                                mb={2}
                             >
-                                {t('From')}
+                                {t('Balance')}:{' '}
+                                {Number(
+                                    fromTokenDisplay.balance ?? 0,
+                                ).toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                })}
                             </Text>
-                            <VStack align="stretch" spacing={2}>
-                                <HStack justify="space-between">
-                                    <Input
-                                        placeholder="0"
-                                        value={amount}
-                                        onChange={(e) =>
-                                            handleAmountChange(e.target.value)
-                                        }
-                                        fontSize="4xl"
-                                        fontWeight="bold"
-                                        variant="unstyled"
-                                        data-testid="swap-amount-input"
-                                        type="number"
-                                        inputMode="decimal"
-                                        color={
-                                            fromTokenDisplay &&
-                                            amount &&
-                                            Number(amount) >
-                                                Number(fromTokenDisplay.balance)
-                                                ? 'red.500'
-                                                : textPrimary
-                                        }
-                                    />
-                                    {fromTokenDisplay ? (
-                                        <Button
-                                            onClick={() =>
-                                                setStep('select-from-token')
-                                            }
-                                            variant="outline"
-                                            size="sm"
-                                            borderRadius="full"
-                                            px={6}
-                                            color={textSecondary}
-                                            borderColor={borderColor}
-                                            _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
-                                            }}
-                                            leftIcon={
-                                                fromTokenDisplay.logoComponent ? (
-                                                    React.cloneElement(
-                                                        fromTokenDisplay.logoComponent,
-                                                        {
-                                                            boxSize: '20px',
-                                                            borderRadius:
-                                                                'full',
-                                                        },
-                                                    )
-                                                ) : fromTokenDisplay.logoUrl ? (
-                                                    <Image
-                                                        src={
-                                                            fromTokenDisplay.logoUrl
-                                                        }
-                                                        alt={`${fromTokenDisplay.symbol} logo`}
-                                                        boxSize="20px"
-                                                        borderRadius="full"
-                                                        fallback={
-                                                            <Box
-                                                                boxSize="20px"
-                                                                borderRadius="full"
-                                                                bg="whiteAlpha.200"
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                justifyContent="center"
-                                                            >
-                                                                <Text
-                                                                    fontSize="8px"
-                                                                    fontWeight="bold"
-                                                                    color={
-                                                                        textPrimary
-                                                                    }
-                                                                >
-                                                                    {fromTokenDisplay.symbol.slice(
-                                                                        0,
-                                                                        3,
-                                                                    )}
-                                                                </Text>
-                                                            </Box>
-                                                        }
-                                                    />
-                                                ) : undefined
-                                            }
-                                        >
-                                            {fromTokenDisplay.symbol}
-                                            <Icon
-                                                as={LuChevronDown}
-                                                boxSize={5}
-                                                color={textSecondary}
-                                            />
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            onClick={() =>
-                                                setStep('select-from-token')
-                                            }
-                                            variant="outline"
-                                            size="sm"
-                                            borderRadius="full"
-                                            px={6}
-                                            color={textSecondary}
-                                            borderColor={borderColor}
-                                            _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
-                                                color: textSecondary,
-                                            }}
-                                        >
-                                            {t('Select token')}
-                                            <Icon
-                                                as={LuChevronDown}
-                                                boxSize={5}
-                                                color={textSecondary}
-                                            />
-                                        </Button>
-                                    )}
-                                </HStack>
-                                {fromTokenDisplay && (
-                                    <HStack
-                                        spacing={1}
-                                        fontSize="sm"
-                                        justifyContent={'space-between'}
-                                        color={textSecondary}
-                                    >
-                                        <HStack spacing={2} alignItems="center">
-                                            {fromAmountFiatValue > 0 && (
-                                                <Text color={textSecondary}>
-                                                    ≈{' '}
-                                                    {formatCompactCurrency(
-                                                        fromAmountFiatValue,
-                                                        {
-                                                            currency:
-                                                                currentCurrency,
-                                                        },
-                                                    )}
-                                                </Text>
-                                            )}
-                                        </HStack>
-                                        <Text
-                                            cursor="pointer"
-                                            _hover={{
-                                                color: textSecondary,
-                                                textDecoration: 'underline',
-                                            }}
-                                            onClick={handleSetMaxAmount}
-                                            noOfLines={1}
-                                            overflow="hidden"
-                                            textOverflow="ellipsis"
-                                        >
-                                            {t('Swap all', {
-                                                defaultValue: 'Swap all',
-                                            })}
-                                        </Text>
-                                    </HStack>
-                                )}
-                            </VStack>
-                        </Box>
-
-                        {/* Arrow Icon */}
-                        <Center
-                            position="relative"
-                            marginTop="-20px"
-                            marginBottom="-20px"
-                            marginX="auto"
-                            bg={cardBg}
-                            borderRadius="xl"
-                            w="40px"
-                            h="40px"
-                            zIndex={2}
-                            cursor={
-                                !fromToken || !toToken || isLoadingQuote
-                                    ? 'not-allowed'
-                                    : 'pointer'
-                            }
-                            onClick={
-                                !fromToken || !toToken || isLoadingQuote
-                                    ? undefined
-                                    : handleToggleDirection
-                            }
-                            opacity={
-                                !fromToken || !toToken || isLoadingQuote
-                                    ? 0.5
-                                    : 1
-                            }
-                        >
-                            {isLoadingQuote ? (
-                                <Spinner size="sm" />
-                            ) : (
-                                <Icon
-                                    as={LuArrowDownUp}
-                                    boxSize={5}
-                                    color={textSecondary}
+                        )}
+                    </HStack>
+                    <Box p={4} borderRadius="2xl" bg={cardBg}>
+                        <VStack align="stretch" spacing={2}>
+                            <HStack justify="space-between">
+                                <Input
+                                    placeholder="0"
+                                    value={amount}
+                                    onChange={(e) =>
+                                        handleAmountChange(e.target.value)
+                                    }
+                                    fontSize="4xl"
+                                    fontWeight="bold"
+                                    variant="unstyled"
+                                    data-testid="swap-amount-input"
+                                    type="number"
+                                    inputMode="decimal"
+                                    color={
+                                        fromTokenDisplay &&
+                                        amount &&
+                                        Number(amount) >
+                                            Number(fromTokenDisplay.balance)
+                                            ? 'red.500'
+                                            : textPrimary
+                                    }
                                 />
-                            )}
-                        </Center>
+                                {fromTokenDisplay ? (
+                                    <Button
+                                        onClick={() =>
+                                            setStep('select-from-token')
+                                        }
+                                        variant="outline"
+                                        size="sm"
+                                        borderRadius="full"
+                                        px={6}
+                                        color={textSecondary}
+                                        borderColor={textSecondary}
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.300'
+                                                : 'blackAlpha.300',
+                                        }}
+                                        leftIcon={
+                                            fromTokenDisplay.logoComponent ? (
+                                                React.cloneElement(
+                                                    fromTokenDisplay.logoComponent,
+                                                    {
+                                                        boxSize: '20px',
+                                                        borderRadius: 'full',
+                                                    },
+                                                )
+                                            ) : fromTokenDisplay.logoUrl ? (
+                                                <Image
+                                                    src={
+                                                        fromTokenDisplay.logoUrl
+                                                    }
+                                                    alt={`${fromTokenDisplay.symbol} logo`}
+                                                    boxSize="20px"
+                                                    borderRadius="full"
+                                                    fallback={
+                                                        <Box
+                                                            boxSize="20px"
+                                                            borderRadius="full"
+                                                            bg="whiteAlpha.200"
+                                                            display="flex"
+                                                            alignItems="center"
+                                                            justifyContent="center"
+                                                        >
+                                                            <Text
+                                                                fontSize="8px"
+                                                                fontWeight="bold"
+                                                                color={
+                                                                    textPrimary
+                                                                }
+                                                            >
+                                                                {fromTokenDisplay.symbol.slice(
+                                                                    0,
+                                                                    3,
+                                                                )}
+                                                            </Text>
+                                                        </Box>
+                                                    }
+                                                />
+                                            ) : undefined
+                                        }
+                                    >
+                                        {fromTokenDisplay.symbol}
+                                        <Icon
+                                            as={LuChevronDown}
+                                            boxSize={5}
+                                            color={textSecondary}
+                                        />
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={() =>
+                                            setStep('select-from-token')
+                                        }
+                                        variant="outline"
+                                        size="sm"
+                                        borderRadius="full"
+                                        px={6}
+                                        color={textSecondary}
+                                        borderColor={textSecondary}
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.300'
+                                                : 'blackAlpha.300',
+                                            color: textTertiary,
+                                        }}
+                                    >
+                                        {t('Select token')}
+                                        <Icon
+                                            as={LuChevronDown}
+                                            boxSize={5}
+                                            color={textSecondary}
+                                        />
+                                    </Button>
+                                )}
+                            </HStack>
 
-                        {/* To Section */}
-                        <Box
-                            px={6}
-                            py={connection.isConnectedWithPrivy ? 2 : 6}
-                            borderRadius="xl"
-                            bg={cardBg}
-                        >
-                            <Text
+                            <HStack
+                                spacing={1}
                                 fontSize="sm"
-                                fontWeight="medium"
+                                justifyContent={'space-between'}
                                 color={textSecondary}
-                                mb={2}
                             >
-                                {t('To')}
-                            </Text>
-                            <VStack align="stretch" spacing={2}>
-                                <HStack
-                                    justify="space-between"
-                                    alignItems="center"
-                                >
-                                    <Input
-                                        value={Number(
-                                            outputAmount,
-                                        ).toLocaleString(undefined, {
+                                <HStack spacing={2} alignItems="center">
+                                    <Text color={textSecondary}>
+                                        ≈{' '}
+                                        {formatCompactCurrency(
+                                            fromAmountFiatValue ?? 0,
+                                            {
+                                                currency: currentCurrency,
+                                            },
+                                        )}
+                                    </Text>
+                                </HStack>
+                            </HStack>
+                        </VStack>
+                    </Box>
+
+                    {/* To Section */}
+                    <HStack justify="space-between" mt={4}>
+                        <Text
+                            fontSize="md"
+                            fontWeight="bold"
+                            color={textPrimary}
+                        >
+                            {t('To')}
+                        </Text>
+                    </HStack>
+                    <Box borderRadius="2xl" bg={cardBg} p={4}>
+                        <VStack align="stretch" spacing={2} width="100%">
+                            <HStack justify="space-between" alignItems="center">
+                                <Input
+                                    value={Number(outputAmount).toLocaleString(
+                                        undefined,
+                                        {
                                             maximumFractionDigits:
                                                 Number(outputAmount) > 10000
                                                     ? 0
                                                     : 2,
-                                        })}
-                                        readOnly
-                                        variant="unstyled"
-                                        fontSize="4xl"
-                                        fontWeight="bold"
-                                        data-testid="swap-output-amount"
-                                        color={textPrimary}
-                                    />
-                                    {toTokenDisplay ? (
-                                        <Button
-                                            onClick={() =>
-                                                setStep('select-to-token')
-                                            }
-                                            variant="outline"
-                                            size="sm"
-                                            borderRadius="full"
-                                            px={6}
-                                            color={textSecondary}
-                                            borderColor={borderColor}
-                                            _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
-                                            }}
-                                            leftIcon={
-                                                toTokenDisplay.logoComponent ? (
-                                                    React.cloneElement(
-                                                        toTokenDisplay.logoComponent,
-                                                        {
-                                                            boxSize: '20px',
-                                                            borderRadius:
-                                                                'full',
-                                                        },
-                                                    )
-                                                ) : toTokenDisplay.logoUrl ? (
-                                                    <Image
-                                                        src={
-                                                            toTokenDisplay.logoUrl
-                                                        }
-                                                        alt={`${toTokenDisplay.symbol} logo`}
-                                                        boxSize="20px"
-                                                        borderRadius="full"
-                                                        fallback={
-                                                            <Box
-                                                                boxSize="20px"
-                                                                borderRadius="full"
-                                                                bg="whiteAlpha.200"
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                justifyContent="center"
-                                                            >
-                                                                <Text
-                                                                    fontSize="8px"
-                                                                    fontWeight="bold"
-                                                                    color={
-                                                                        textPrimary
-                                                                    }
-                                                                >
-                                                                    {toTokenDisplay.symbol.slice(
-                                                                        0,
-                                                                        3,
-                                                                    )}
-                                                                </Text>
-                                                            </Box>
-                                                        }
-                                                    />
-                                                ) : undefined
-                                            }
-                                        >
-                                            {toTokenDisplay.symbol}
-                                            <Icon
-                                                as={LuChevronDown}
-                                                boxSize={5}
-                                                color={textSecondary}
-                                            />
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            onClick={() =>
-                                                setStep('select-to-token')
-                                            }
-                                            variant="outline"
-                                            size="sm"
-                                            borderRadius="full"
-                                            px={6}
-                                            color={textSecondary}
-                                            borderColor={borderColor}
-                                            _hover={{
-                                                bg: cardBgHover,
-                                                borderColor: borderColor,
-                                                color: textSecondary,
-                                            }}
-                                        >
-                                            {t('Select token')}
-                                            <Icon
-                                                as={LuChevronDown}
-                                                boxSize={5}
-                                                color={textSecondary}
-                                            />
-                                        </Button>
+                                        },
                                     )}
-                                </HStack>
-                                {toTokenDisplay && (
-                                    <HStack
-                                        spacing={1}
-                                        fontSize="sm"
-                                        justifyContent={'space-between'}
-                                        color={textSecondary}
-                                    >
-                                        <HStack spacing={2} alignItems="center">
-                                            {toAmountFiatValue > 0 && (
-                                                <Text color={textSecondary}>
-                                                    ≈{' '}
-                                                    {formatCompactCurrency(
-                                                        toAmountFiatValue,
-                                                        {
-                                                            currency:
-                                                                currentCurrency,
-                                                        },
-                                                    )}
-                                                </Text>
-                                            )}
-                                        </HStack>
-                                        <Box />
-                                    </HStack>
-                                )}
-                            </VStack>
-                        </Box>
-
-                        {/* Show More Section */}
-                        <Collapse in={showMore && !!quote} animateOpacity>
-                            <VStack
-                                spacing={1}
-                                align="stretch"
-                                p={4}
-                                borderRadius="xl"
-                                bg={cardBg}
-                            >
-                                {/* Source */}
-                                {quote && (
-                                    <HStack justify="space-between">
-                                        <Text
-                                            fontSize="xs"
-                                            color={textSecondary}
-                                        >
-                                            {t('Source')}:
-                                        </Text>
-                                        <HStack
-                                            spacing={1.5}
-                                            cursor="pointer"
-                                            onClick={() =>
-                                                setStep('select-quote')
-                                            }
-                                            _hover={{ opacity: 0.8 }}
-                                            alignItems="center"
-                                        >
-                                            {quote.aggregator?.getIcon('12px')}
-                                            <Text
-                                                fontSize="xs"
-                                                color={textPrimary}
-                                            >
-                                                {quote.aggregatorName}
-                                            </Text>
-                                        </HStack>
-                                    </HStack>
-                                )}
-
-                                {/* Slippage */}
-                                <VStack align="stretch" spacing={2}>
-                                    <HStack
-                                        justify="space-between"
-                                        cursor="pointer"
+                                    readOnly
+                                    variant="unstyled"
+                                    fontSize="4xl"
+                                    fontWeight="bold"
+                                    data-testid="swap-output-amount"
+                                    color={textPrimary}
+                                />
+                                {toTokenDisplay ? (
+                                    <Button
                                         onClick={() =>
-                                            setShowSlippageConfig(
-                                                !showSlippageConfig,
-                                            )
+                                            setStep('select-to-token')
+                                        }
+                                        variant="outline"
+                                        size="sm"
+                                        borderRadius="full"
+                                        px={6}
+                                        color={textSecondary}
+                                        borderColor={textSecondary}
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.300'
+                                                : 'blackAlpha.300',
+                                        }}
+                                        leftIcon={
+                                            toTokenDisplay.logoComponent ? (
+                                                React.cloneElement(
+                                                    toTokenDisplay.logoComponent,
+                                                    {
+                                                        boxSize: '20px',
+                                                        borderRadius: 'full',
+                                                    },
+                                                )
+                                            ) : toTokenDisplay.logoUrl ? (
+                                                <Image
+                                                    src={toTokenDisplay.logoUrl}
+                                                    alt={`${toTokenDisplay.symbol} logo`}
+                                                    boxSize="20px"
+                                                    borderRadius="full"
+                                                    fallback={
+                                                        <Box
+                                                            boxSize="20px"
+                                                            borderRadius="full"
+                                                            bg="whiteAlpha.200"
+                                                            display="flex"
+                                                            alignItems="center"
+                                                            justifyContent="center"
+                                                        >
+                                                            <Text
+                                                                fontSize="8px"
+                                                                fontWeight="bold"
+                                                                color={
+                                                                    textPrimary
+                                                                }
+                                                            >
+                                                                {toTokenDisplay.symbol.slice(
+                                                                    0,
+                                                                    3,
+                                                                )}
+                                                            </Text>
+                                                        </Box>
+                                                    }
+                                                />
+                                            ) : undefined
                                         }
                                     >
-                                        <Text
-                                            fontSize="xs"
+                                        {toTokenDisplay.symbol}
+                                        <Icon
+                                            as={LuChevronDown}
+                                            boxSize={5}
                                             color={textSecondary}
-                                        >
-                                            {t('Slippage tolerance')}:
-                                        </Text>
-                                        <Text
-                                            fontSize="xs"
-                                            fontWeight="medium"
-                                            color={textPrimary}
-                                        >
-                                            {slippageTolerance}%
-                                        </Text>
-                                    </HStack>
-
-                                    {/* Slippage Configuration */}
-                                    <Collapse
-                                        in={showSlippageConfig}
-                                        animateOpacity
+                                        />
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={() =>
+                                            setStep('select-to-token')
+                                        }
+                                        variant="outline"
+                                        size="sm"
+                                        borderRadius="full"
+                                        px={6}
+                                        color={textSecondary}
+                                        borderColor={textSecondary}
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.300'
+                                                : 'blackAlpha.300',
+                                            color: textTertiary,
+                                        }}
                                     >
-                                        <VStack
-                                            spacing={3}
-                                            align="stretch"
-                                            pt={2}
-                                        >
-                                            <HStack spacing={2}>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
-                                                        isAutoMode
-                                                            ? 'solid'
-                                                            : 'outline'
-                                                    }
-                                                    colorScheme={
-                                                        isAutoMode
-                                                            ? 'blue'
-                                                            : 'gray'
-                                                    }
-                                                    onClick={() => {
-                                                        setSlippageTolerance(1);
-                                                    }}
-                                                    flex="0 0 auto"
-                                                    minW="60px"
-                                                    borderRadius="md"
-                                                    fontSize="xs"
-                                                    color={textPrimary}
-                                                >
-                                                    Auto
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
-                                                        slippageTolerance ===
-                                                        0.5
-                                                            ? 'solid'
-                                                            : 'outline'
-                                                    }
-                                                    colorScheme={
-                                                        slippageTolerance ===
-                                                        0.5
-                                                            ? 'blue'
-                                                            : 'gray'
-                                                    }
-                                                    onClick={() => {
-                                                        setSlippageTolerance(
-                                                            0.5,
-                                                        );
-                                                    }}
-                                                    flex="0 0 auto"
-                                                    minW="60px"
-                                                    borderRadius="md"
-                                                    fontSize="xs"
-                                                    color={textPrimary}
-                                                >
-                                                    0.5%
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant={
-                                                        slippageTolerance === 3
-                                                            ? 'solid'
-                                                            : 'outline'
-                                                    }
-                                                    colorScheme={
-                                                        slippageTolerance === 3
-                                                            ? 'blue'
-                                                            : 'gray'
-                                                    }
-                                                    onClick={() => {
-                                                        setSlippageTolerance(3);
-                                                    }}
-                                                    flex="0 0 auto"
-                                                    minW="60px"
-                                                    borderRadius="md"
-                                                    fontSize="xs"
-                                                    color={textPrimary}
-                                                >
-                                                    3%
-                                                </Button>
-                                                <InputGroup size="sm" flex={1}>
-                                                    <Input
-                                                        value={
-                                                            customSlippageValue
-                                                        }
-                                                        onChange={(e) => {
-                                                            const value =
-                                                                e.target.value;
-                                                            // Allow numbers and decimal point
-                                                            if (
-                                                                /^\d*\.?\d*$/.test(
-                                                                    value,
-                                                                ) ||
-                                                                value === ''
-                                                            ) {
-                                                                setCustomSlippageValue(
-                                                                    value,
-                                                                );
-                                                                if (
-                                                                    value !== ''
-                                                                ) {
-                                                                    const numValue =
-                                                                        parseFloat(
-                                                                            value,
-                                                                        );
-                                                                    if (
-                                                                        !isNaN(
-                                                                            numValue,
-                                                                        ) &&
-                                                                        numValue >=
-                                                                            0 &&
-                                                                        numValue <=
-                                                                            100
-                                                                    ) {
-                                                                        setSlippageTolerance(
-                                                                            numValue,
-                                                                        );
-                                                                    }
-                                                                }
-                                                            }
-                                                        }}
-                                                        placeholder="1"
-                                                        borderRadius="md"
-                                                        textAlign="right"
-                                                        pr={8}
-                                                        fontSize="xs"
-                                                        color={textPrimary}
-                                                    />
-                                                    <InputRightElement
-                                                        width="2rem"
-                                                        pointerEvents="none"
-                                                    >
-                                                        <Text
-                                                            fontSize="2xs"
-                                                            color={
-                                                                textSecondary
-                                                            }
-                                                        >
-                                                            %
-                                                        </Text>
-                                                    </InputRightElement>
-                                                </InputGroup>
-                                            </HStack>
-                                        </VStack>
-                                    </Collapse>
-                                </VStack>
+                                        {t('Select token')}
+                                        <Icon
+                                            as={LuChevronDown}
+                                            boxSize={5}
+                                            color={textSecondary}
+                                        />
+                                    </Button>
+                                )}
+                            </HStack>
 
-                                {/* Gas Fee */}
+                            <HStack
+                                spacing={1}
+                                fontSize="sm"
+                                justifyContent={'space-between'}
+                                color={textSecondary}
+                            >
+                                <HStack spacing={2} alignItems="center">
+                                    <Text color={textSecondary}>
+                                        ≈{' '}
+                                        {formatCompactCurrency(
+                                            toAmountFiatValue ?? 0,
+                                            {
+                                                currency: currentCurrency,
+                                            },
+                                        )}
+                                    </Text>
+                                </HStack>
+
+                                {toTokenDisplay && (
+                                    <Text
+                                        noOfLines={1}
+                                        overflow="hidden"
+                                        textOverflow="ellipsis"
+                                        fontSize="sm"
+                                        fontWeight="medium"
+                                        color={textSecondary}
+                                    >
+                                        {t('Balance')}:{' '}
+                                        {Number(
+                                            toTokenDisplay.balance ?? 0,
+                                        ).toLocaleString(undefined, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
+                                    </Text>
+                                )}
+                            </HStack>
+                        </VStack>
+                    </Box>
+
+                    {/* Show More Section */}
+                    <Collapse in={showMore && !!quote} animateOpacity>
+                        <VStack
+                            spacing={1}
+                            align="stretch"
+                            p={4}
+                            borderRadius="2xl"
+                            bg={cardBg}
+                        >
+                            {/* Source */}
+                            {quote && (
                                 <HStack justify="space-between">
                                     <Text fontSize="xs" color={textSecondary}>
-                                        {t('Gas fee')}:
+                                        {t('Source')}:
+                                    </Text>
+                                    <Button
+                                        variant="outline"
+                                        size="xs"
+                                        borderRadius="full"
+                                        px={3}
+                                        h="auto"
+                                        py={1}
+                                        cursor="pointer"
+                                        onClick={() => setStep('select-quote')}
+                                        color={textSecondary}
+                                        borderColor={textSecondary}
+                                        _hover={{
+                                            bg: isDark
+                                                ? 'whiteAlpha.300'
+                                                : 'blackAlpha.300',
+                                        }}
+                                        leftIcon={quote.aggregator?.getIcon(
+                                            '12px',
+                                        )}
+                                    >
+                                        <Text fontSize="xs" color={textPrimary}>
+                                            {quote.aggregatorName}
+                                        </Text>
+                                    </Button>
+                                </HStack>
+                            )}
+
+                            {/* Slippage */}
+                            <VStack align="stretch" spacing={2}>
+                                <HStack justify="space-between">
+                                    <Text fontSize="xs" color={textSecondary}>
+                                        {t('Slippage tolerance')}:
                                     </Text>
                                     <Text
                                         fontSize="xs"
                                         fontWeight="medium"
                                         color={textPrimary}
                                     >
-                                        {gasCostVTHO > 0
-                                            ? `${gasCostVTHO.toLocaleString(
-                                                  undefined,
-                                                  {
-                                                      maximumFractionDigits: 2,
-                                                  },
-                                              )} VTHO`
-                                            : '-'}
+                                        {slippageTolerance}%
                                     </Text>
                                 </HStack>
-                            </VStack>
-                        </Collapse>
 
-                        {/* Show More Toggle - Always reserve space */}
+                                {/* Slippage Configuration */}
+                                <VStack spacing={3} align="stretch" pt={2}>
+                                    <HStack spacing={2}>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                                setSlippageTolerance(1);
+                                            }}
+                                            flex="0 0 auto"
+                                            minW="60px"
+                                            borderRadius="md"
+                                            fontSize="xs"
+                                            bg={
+                                                isAutoMode
+                                                    ? primaryButtonBg
+                                                    : 'transparent'
+                                            }
+                                            color={
+                                                isAutoMode
+                                                    ? primaryButtonColor
+                                                    : textSecondary
+                                            }
+                                            borderColor={
+                                                isAutoMode
+                                                    ? primaryButtonBg
+                                                    : textSecondary
+                                            }
+                                            _hover={{
+                                                bg: isAutoMode
+                                                    ? primaryButtonBg
+                                                    : isDark
+                                                    ? 'whiteAlpha.300'
+                                                    : 'blackAlpha.300',
+                                                opacity: isAutoMode ? 0.8 : 1,
+                                            }}
+                                        >
+                                            Auto
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                                setSlippageTolerance(0.5);
+                                            }}
+                                            flex="0 0 auto"
+                                            minW="60px"
+                                            borderRadius="md"
+                                            fontSize="xs"
+                                            bg={
+                                                slippageTolerance === 0.5
+                                                    ? primaryButtonBg
+                                                    : 'transparent'
+                                            }
+                                            color={
+                                                slippageTolerance === 0.5
+                                                    ? primaryButtonColor
+                                                    : textSecondary
+                                            }
+                                            borderColor={
+                                                slippageTolerance === 0.5
+                                                    ? primaryButtonBg
+                                                    : textSecondary
+                                            }
+                                            _hover={{
+                                                bg:
+                                                    slippageTolerance === 0.5
+                                                        ? primaryButtonBg
+                                                        : isDark
+                                                        ? 'whiteAlpha.300'
+                                                        : 'blackAlpha.300',
+                                                opacity:
+                                                    slippageTolerance === 0.5
+                                                        ? 0.8
+                                                        : 1,
+                                            }}
+                                        >
+                                            0.5%
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                                setSlippageTolerance(3);
+                                            }}
+                                            flex="0 0 auto"
+                                            minW="60px"
+                                            borderRadius="md"
+                                            fontSize="xs"
+                                            bg={
+                                                slippageTolerance === 3
+                                                    ? primaryButtonBg
+                                                    : 'transparent'
+                                            }
+                                            color={
+                                                slippageTolerance === 3
+                                                    ? primaryButtonColor
+                                                    : textSecondary
+                                            }
+                                            borderColor={
+                                                slippageTolerance === 3
+                                                    ? primaryButtonBg
+                                                    : textSecondary
+                                            }
+                                            _hover={{
+                                                bg:
+                                                    slippageTolerance === 3
+                                                        ? primaryButtonBg
+                                                        : isDark
+                                                        ? 'whiteAlpha.300'
+                                                        : 'blackAlpha.300',
+                                                opacity:
+                                                    slippageTolerance === 3
+                                                        ? 0.8
+                                                        : 1,
+                                            }}
+                                        >
+                                            3%
+                                        </Button>
+                                        <InputGroup size="sm" flex={1}>
+                                            <Input
+                                                value={customSlippageValue}
+                                                onChange={(e) => {
+                                                    const value =
+                                                        e.target.value;
+                                                    // Allow numbers and decimal point
+                                                    if (
+                                                        /^\d*\.?\d*$/.test(
+                                                            value,
+                                                        ) ||
+                                                        value === ''
+                                                    ) {
+                                                        setCustomSlippageValue(
+                                                            value,
+                                                        );
+                                                        if (value !== '') {
+                                                            const numValue =
+                                                                parseFloat(
+                                                                    value,
+                                                                );
+                                                            if (
+                                                                !isNaN(
+                                                                    numValue,
+                                                                ) &&
+                                                                numValue >= 0 &&
+                                                                numValue <= 100
+                                                            ) {
+                                                                setSlippageTolerance(
+                                                                    numValue,
+                                                                );
+                                                            }
+                                                        } else {
+                                                            // Reset to default when cleared
+                                                            setSlippageTolerance(
+                                                                1,
+                                                            );
+                                                        }
+                                                    }
+                                                }}
+                                                placeholder="1"
+                                                borderRadius="md"
+                                                textAlign="right"
+                                                pr={8}
+                                                fontSize="xs"
+                                                color={textPrimary}
+                                            />
+                                            <InputRightElement
+                                                width="2rem"
+                                                pointerEvents="none"
+                                            >
+                                                <Text
+                                                    fontSize="2xs"
+                                                    color={textSecondary}
+                                                >
+                                                    %
+                                                </Text>
+                                            </InputRightElement>
+                                        </InputGroup>
+                                    </HStack>
+                                </VStack>
+                            </VStack>
+
+                            {/* Gas Fee */}
+                            <HStack justify="space-between">
+                                <Text fontSize="xs" color={textSecondary}>
+                                    {t('Fee')}:
+                                </Text>
+                                <Text
+                                    fontSize="xs"
+                                    fontWeight="medium"
+                                    color={textPrimary}
+                                >
+                                    {gasCostVTHO > 0
+                                        ? `${gasCostVTHO.toLocaleString(
+                                              undefined,
+                                              {
+                                                  maximumFractionDigits: 2,
+                                              },
+                                          )} VTHO`
+                                        : '-'}
+                                </Text>
+                            </HStack>
+                        </VStack>
+                    </Collapse>
+
+                    {/* Show More Toggle - Always reserve space */}
+                    {quote && (
                         <Box
                             minH="24px"
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
                         >
-                            {quote && (
-                                <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    onClick={() => setShowMore(!showMore)}
-                                    rightIcon={
-                                        <Icon
-                                            color={textTertiary}
-                                            _hover={{
-                                                color: textSecondary,
-                                            }}
-                                            as={
-                                                showMore
-                                                    ? LuArrowUp
-                                                    : LuArrowDown
-                                            }
-                                        />
-                                    }
-                                    fontSize="xs"
-                                    fontWeight="light"
-                                    color={textTertiary}
-                                    _hover={{
-                                        color: textSecondary,
-                                    }}
-                                >
-                                    {showMore ? t('Show Less') : t('Show More')}
-                                </Button>
-                            )}
+                            <Button
+                                variant="ghost"
+                                size="xs"
+                                onClick={() => setShowMore(!showMore)}
+                                rightIcon={
+                                    <Icon
+                                        color={textTertiary}
+                                        _hover={{
+                                            color: textSecondary,
+                                        }}
+                                        as={showMore ? LuArrowUp : LuArrowDown}
+                                    />
+                                }
+                                fontSize="xs"
+                                fontWeight="light"
+                                color={textTertiary}
+                                _hover={{
+                                    color: textSecondary,
+                                }}
+                            >
+                                {showMore
+                                    ? t('Hide')
+                                    : t('Show Advanced Options')}
+                            </Button>
                         </Box>
+                    )}
 
-                        {swapClauses.length > 0 &&
-                            connection.isConnectedWithPrivy && (
-                                <GasFeeSummary
-                                    estimation={gasEstimation}
-                                    isLoading={gasEstimationLoading}
-                                    isLoadingTransaction={isTransactionPending}
-                                    onTokenChange={handleGasTokenChange}
-                                    clauses={swapClauses}
-                                    userSelectedToken={userSelectedGasToken}
-                                />
-                            )}
-                    </VStack>
-                </ModalBody>
-            </Container>
+                    {swapClauses.length > 0 &&
+                        connection.isConnectedWithPrivy && (
+                            <GasFeeSummary
+                                estimation={gasEstimation}
+                                isLoading={gasEstimationLoading}
+                                isLoadingTransaction={isTransactionPending}
+                                onTokenChange={handleGasTokenChange}
+                                clauses={swapClauses}
+                                userSelectedToken={userSelectedGasToken}
+                            />
+                        )}
+                </VStack>
+            </ModalBody>
 
             <ModalFooter>
                 <TransactionButtonAndStatus
-                    buttonText={t('Swap')}
+                    buttonText={
+                        isLoadingQuote ? t('Loading quote...') : t('Swap')
+                    }
                     onConfirm={executeSwap}
                     isSubmitting={isTransactionPending}
                     isTxWaitingConfirmation={isWaitingForWalletConfirmation}

@@ -9,32 +9,36 @@ import {
     Spinner,
     Text,
     VStack,
-    useDisclosure,
     useToken,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useState } from 'react';
-import { LoginLoadingModal } from '../LoginLoadingModal';
 import { useTranslation } from 'react-i18next';
 import { PrivyAppInfo } from '@/types';
 import { isRejectionError } from '@/utils/stringUtils';
+import { ConnectModalContentsTypes } from '../ConnectModal';
 type Props = {
     onClose: () => void;
     appsInfo: PrivyAppInfo[];
     isLoading: boolean;
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<ConnectModalContentsTypes>
+    >;
+    showBackButton?: boolean;
 };
 
-export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
+export const EcosystemContent = ({
+    onClose,
+    appsInfo,
+    isLoading,
+    setCurrentContent,
+    showBackButton = true,
+}: Props) => {
     const { t } = useTranslation();
 
     // Use semantic token for text color (buttons use variants now)
     const textColor = useToken('colors', 'vechain-kit-text-primary');
-
-    const [loginError, setLoginError] = useState<string>();
-    const [selectedApp, setSelectedApp] = useState<string>();
-    const loginLoadingModal = useDisclosure();
 
     const { setConnectionCache } = useCrossAppConnectionCache();
 
@@ -45,59 +49,57 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
         appId: string,
         appName: string,
     ) => {
-        loginLoadingModal.onOpen();
+        setCurrentContent({
+            type: 'loading',
+            props: {
+                title: `${t('Connecting with')} ${appName}`,
+                loadingText: t(
+                    'Please approve the request in the connection request window...',
+                ),
+                onTryAgain: () => {
+                    connectWithVebetterDaoApps(appId, appName);
+                },
+            },
+        });
         try {
-            setLoginError(undefined);
-            setSelectedApp(appName);
-            try {
-                await loginWithCrossApp(appId);
-                loginLoadingModal.onClose();
-                setConnectionCache({
-                    name: appName,
-                    logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
-                    appId: appId,
-                    website: appsInfo.find((app) => app.id === appId)?.website,
-                });
-                onClose();
-            } catch (error) {
-                const errorMsg = (error as { message?: string })?.message;
-
-                // Handle user rejection or other errors
-                if (errorMsg && isRejectionError(errorMsg)) {
-                    return new Error('Login request was cancelled.');
-                }
-
-                // If it's an Error instance, return it, otherwise create new Error
-                const errorToShow =
-                    error instanceof Error
-                        ? error
-                        : new Error(
-                              "'An unexpected issue occurred while logging in with this app. Please try again or contact support.',",
-                          );
-
-                setLoginError(errorToShow.message);
-            }
+            await loginWithCrossApp(appId);
+            setConnectionCache({
+                name: appName,
+                logoUrl: appsInfo.find((app) => app.id === appId)?.logo_url,
+                appId: appId,
+                website: appsInfo.find((app) => app.id === appId)?.website,
+            });
+            onClose();
         } catch (error) {
-            console.error(t('Login failed:'), error);
-            setLoginError(
-                error instanceof Error
-                    ? error.message
-                    : t('Failed to connect with ecosystem app'),
-            );
-        }
-    };
+            const errorMsg = (error as { message?: string })?.message;
 
-    const handleTryAgain = () => {
-        if (selectedApp) {
-            const app = appsInfo.find((app) => app.name === selectedApp);
-            if (app) {
-                connectWithVebetterDaoApps(app.id, app.name);
+            // Handle user rejection or other errors
+            if (errorMsg && isRejectionError(errorMsg)) {
+                setCurrentContent({
+                    type: 'ecosystem',
+                    props: { appsInfo, isLoading: false },
+                });
+                return;
             }
-        }
-    };
 
-    const handleClose = () => {
-        onClose();
+            // If it's an Error instance, return it, otherwise create new Error
+            const errorToShow =
+                error instanceof Error
+                    ? error
+                    : new Error(
+                          'An unexpected issue occurred while logging in with this app. Please try again or contact support.',
+                      );
+
+            setCurrentContent({
+                type: 'error',
+                props: {
+                    error: errorToShow.message,
+                    onTryAgain: () => {
+                        connectWithVebetterDaoApps(appId, appName);
+                    },
+                },
+            });
+        }
     };
 
     return (
@@ -105,8 +107,13 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
             <>
                 <StickyHeaderContainer>
                     <ModalHeader>
+                        {showBackButton && (
+                            <ModalBackButton
+                                onClick={() => setCurrentContent('main')}
+                            />
+                        )}
                         {t('Already have an x2earn app wallet?')}
-                        <ModalCloseButton onClick={handleClose} />
+                        <ModalCloseButton onClick={onClose} />
                     </ModalHeader>
                 </StickyHeaderContainer>
 
@@ -161,19 +168,6 @@ export const EcosystemContent = ({ onClose, appsInfo, isLoading }: Props) => {
                 </ModalBody>
                 <ModalFooter pt={0} />
             </>
-
-            <LoginLoadingModal
-                isOpen={loginLoadingModal.isOpen}
-                onClose={() => {
-                    loginLoadingModal.onClose();
-                }}
-                error={loginError}
-                title={`${t('Connecting with')} ${selectedApp}`}
-                loadingText={t(
-                    'Please approve the request in the connection request window...',
-                )}
-                onTryAgain={handleTryAgain}
-            />
         </Box>
     );
 };

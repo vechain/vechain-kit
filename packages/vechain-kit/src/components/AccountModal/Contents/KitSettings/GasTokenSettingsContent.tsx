@@ -47,7 +47,7 @@ export const GasTokenSettingsContent = ({ setCurrentContent }: Props) => {
             <StickyHeaderContainer>
                 <ModalHeader>{t('Gas Token Preferences')}</ModalHeader>
                 <ModalBackButton
-                    onClick={() => setCurrentContent('general-settings')}
+                    onClick={() => setCurrentContent('settings')}
                 />
                 <ModalCloseButton />
             </StickyHeaderContainer>

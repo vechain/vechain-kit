@@ -2,6 +2,45 @@ import { useQuery } from '@tanstack/react-query';
 import { getPicassoImage } from '@/utils';
 import { getAddressDomain, getAvatar } from '@vechain/contract-getters';
 import { useVeChainKitConfig } from '@/providers';
+import { getLocalStorageItem } from '@/utils/ssrUtils';
+import { CrossAppConnectionCache } from '@/types';
+
+/**
+ * Avatar resolution priority:
+ * 1. Avatar from VET domain (if address has a domain with avatar set)
+ * 2. Cross-app avatar (if user is connected via cross-app and no domain avatar exists)
+ * 3. Picasso generated image (fallback)
+ *
+ * Cross-app avatars are app-specific defaults used when a user connects via
+ * the VeChain cross-app ecosystem (e.g., Mugshot, Greencart, Cleanify, EVearn)
+ * and doesn't have a custom avatar set on their domain.
+ */
+
+const CROSSAPP_AVATAR_MAP: Record<string, string> = {
+    Mugshot:
+        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/mugshot.png',
+    Greencart:
+        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/greencart.png',
+    Cleanify:
+        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/cleanify.png',
+    EVearn: 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/evearn.png',
+};
+
+const CACHE_KEY = 'vechain_kit_cross_app_connection';
+
+const getCrossAppAvatar = (): string | null => {
+    const cached = getLocalStorageItem(CACHE_KEY);
+    if (!cached) return null;
+
+    try {
+        const connectionCache = JSON.parse(cached) as CrossAppConnectionCache;
+        const appName = connectionCache?.ecosystemApp?.name;
+        if (!appName) return null;
+        return CROSSAPP_AVATAR_MAP[appName] ?? null;
+    } catch {
+        return null;
+    }
+};
 
 export const getAvatarOfAddressQueryKey = (address?: string) => [
     'VECHAIN_KIT',
@@ -21,28 +60,37 @@ export const useGetAvatarOfAddress = (address?: string) => {
     return useQuery({
         queryKey: getAvatarOfAddressQueryKey(address),
         queryFn: async () => {
-            if (!address || !network.nodeUrl) return getPicassoImage(address ?? '');
+            if (!address || !network.nodeUrl) {
+                const crossAppAvatar = getCrossAppAvatar();
+                return crossAppAvatar ?? getPicassoImage(address ?? '');
+            }
 
             const addressDomain = await getAddressDomain(address, {
                 networkUrl: network.nodeUrl,
             });
-            if (!addressDomain) return getPicassoImage(address ?? '');
+            if (!addressDomain) {
+                const crossAppAvatar = getCrossAppAvatar();
+                return crossAppAvatar ?? getPicassoImage(address ?? '');
+            }
 
             const avatar = await getAvatar(addressDomain, {
                 networkUrl: network.nodeUrl,
             });
-            if (!avatar) return getPicassoImage(address ?? '');
+            if (!avatar) {
+                const crossAppAvatar = getCrossAppAvatar();
+                return crossAppAvatar ?? getPicassoImage(address ?? '');
+            }
             return avatar;
-
         },
-        enabled:
-            !!address &&
-            !!network.nodeUrl,
+        enabled: !!address && !!network.nodeUrl,
         retry: (failureCount, error) => {
             // Don't retry on cancellation errors
             if (error instanceof Error) {
                 const errorMessage = error.message.toLowerCase();
-                if (errorMessage.includes('cancel') || errorMessage.includes('abort')) {
+                if (
+                    errorMessage.includes('cancel') ||
+                    errorMessage.includes('abort')
+                ) {
                     return false;
                 }
             }

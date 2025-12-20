@@ -3,7 +3,6 @@
 import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
 import { LuSend, LuCode } from 'react-icons/lu';
 import { useCallback } from 'react';
-import { CollapsibleCard } from '../../ui/CollapsibleCard';
 import {
     useWallet,
     useThor,
@@ -71,105 +70,88 @@ export function TransactionExamples() {
     }, [sendTransaction, resetStatus]);
 
     return (
-        <CollapsibleCard
-            defaultIsOpen={false}
-            title="Transaction Examples"
-            icon={LuSend}
-            style={{ bg: 'whiteAlpha.100' }}
-        >
-            <VStack spacing={6} align="stretch">
-                <Text textAlign="center">
-                    VeChain Kit provides built-in transaction handling with UI
-                    components. Try these examples to see the transaction flow
-                    in action.
-                </Text>
+        <VStack spacing={6} align="stretch">
+            <Text textAlign="center">
+                VeChain Kit provides built-in transaction handling with UI
+                components. Try these examples to see the transaction flow in
+                action.
+            </Text>
 
-                <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6}>
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Text fontWeight="bold">Test Transactions</Text>
-                        <VStack spacing={4} w="full">
-                            <Button
-                                onClick={handleTransactionWithToast}
-                                isLoading={isTransactionPending}
-                                isDisabled={isTransactionPending}
-                                w="full"
-                            >
-                                Test with Toast
-                            </Button>
-                            <Button
-                                onClick={handleTransactionWithModal}
-                                isLoading={isTransactionPending}
-                                isDisabled={isTransactionPending}
-                                w="full"
-                            >
-                                Test with Modal
-                            </Button>
-                        </VStack>
-                    </VStack>
-
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Text my={2} fontWeight="bold">
-                            Implementation
-                        </Text>
+            <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6}>
+                <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
+                    <Text fontWeight="bold">Test Transactions</Text>
+                    <VStack spacing={4} w="full">
                         <Button
-                            as={Link}
-                            isExternal
-                            href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/TransactionExamples/TransactionExamples.tsx"
+                            onClick={handleTransactionWithToast}
+                            isLoading={isTransactionPending}
+                            isDisabled={isTransactionPending}
                             w="full"
-                            variant="outline"
-                            rightIcon={<LuCode />}
                         >
-                            View Code Example
+                            Test with Toast
                         </Button>
                         <Button
-                            as={Link}
-                            isExternal
-                            href="https://docs.vechainkit.vechain.org/vechain-kit/send-transactions"
+                            onClick={handleTransactionWithModal}
+                            isLoading={isTransactionPending}
+                            isDisabled={isTransactionPending}
                             w="full"
-                            variant="outline"
-                            rightIcon={<LuSend />}
                         >
-                            Read Docs
+                            Test with Modal
                         </Button>
                     </VStack>
-                </SimpleGrid>
+                </VStack>
 
-                <TransactionToast
-                    isOpen={isTransactionToastOpen}
-                    onClose={closeTransactionToast}
-                    status={status}
-                    txError={error}
-                    txReceipt={txReceipt}
-                    onTryAgain={handleTryAgain}
-                    description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`}
-                />
+                <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
+                    <Text my={2} fontWeight="bold">
+                        Implementation
+                    </Text>
+                    <Button
+                        as={Link}
+                        isExternal
+                        href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/TransactionExamples/TransactionExamples.tsx"
+                        w="full"
+                        variant="outline"
+                        rightIcon={<LuCode />}
+                    >
+                        View Code Example
+                    </Button>
+                    <Button
+                        as={Link}
+                        isExternal
+                        href="https://docs.vechainkit.vechain.org/vechain-kit/send-transactions"
+                        w="full"
+                        variant="outline"
+                        rightIcon={<LuSend />}
+                    >
+                        Read Docs
+                    </Button>
+                </VStack>
+            </SimpleGrid>
 
-                <TransactionModal
-                    isOpen={isTransactionModalOpen}
-                    onClose={closeTransactionModal}
-                    status={status}
-                    txReceipt={txReceipt}
-                    onTryAgain={handleTryAgain}
-                    txError={error}
-                    uiConfig={{
-                        title: 'Test Transaction',
-                        description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
-                        showShareOnSocials: true,
-                        showExplorerButton: true,
-                        isClosable: true,
-                    }}
-                />
-            </VStack>
-        </CollapsibleCard>
+            <TransactionToast
+                isOpen={isTransactionToastOpen}
+                onClose={closeTransactionToast}
+                status={status}
+                txError={error}
+                txReceipt={txReceipt}
+                onTryAgain={handleTryAgain}
+                description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`}
+            />
+
+            <TransactionModal
+                isOpen={isTransactionModalOpen}
+                onClose={closeTransactionModal}
+                status={status}
+                txReceipt={txReceipt}
+                onTryAgain={handleTryAgain}
+                txError={error}
+                uiConfig={{
+                    title: 'Test Transaction',
+                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
+                    showShareOnSocials: true,
+                    showExplorerButton: true,
+                    isClosable: true,
+                }}
+            />
+        </VStack>
     );
 }

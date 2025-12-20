@@ -7,6 +7,8 @@ import {
     Text,
     ModalFooter,
     Box,
+    Icon,
+    useToken,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -25,7 +27,7 @@ import {
     getAvatarOfAddressQueryKey,
     getTextRecordsQueryKey,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
@@ -33,6 +35,7 @@ import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddr
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
 import { GasTokenType } from '@/types/gasToken';
+import { LuFileText } from 'react-icons/lu';
 
 export type CustomizationSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -65,6 +68,7 @@ export const CustomizationSummaryContent = ({
 }: CustomizationSummaryContentProps) => {
     const { t } = useTranslation();
     const { darkMode: isDark, network, feeDelegation } = useVeChainKitConfig();
+    const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const { account, connectedWallet, connection } = useWallet();
     const { preferences } = useGasTokenSelection();
 
@@ -101,22 +105,6 @@ export const CustomizationSummaryContent = ({
         resolverAddress, // Pass the pre-fetched resolver address
         signerAccountAddress: account?.address ?? '',
         onSuccess: async () => {
-            // Set success content first
-            setCurrentContent({
-                type: 'successful-operation',
-                props: {
-                    setCurrentContent,
-                    txId: txReceipt?.meta.txID,
-                    title: t('Profile Updated'),
-                    description: t(
-                        'Your changes have been saved successfully.',
-                    ),
-                    onDone: () => {
-                        setCurrentContent(onDoneRedirectContent);
-                    },
-                },
-            });
-
             try {
                 await refresh();
             } catch (error) {
@@ -127,6 +115,49 @@ export const CustomizationSummaryContent = ({
             console.error('Error updating text record:', error);
         },
     });
+
+    // Track if we've already shown success to prevent duplicate calls
+    const [hasShownSuccess, setHasShownSuccess] = React.useState(false);
+
+    // Handle successful transaction via useEffect to avoid synchronous state updates
+    React.useEffect(() => {
+        // Guard clauses
+        if (!txReceipt) return;
+        if (txReceipt.reverted) return;
+        if (hasShownSuccess) return;
+        if (isTransactionPending) return;
+
+        const txId = txReceipt.meta.txID;
+        if (!txId) return;
+
+        setHasShownSuccess(true);
+        setCurrentContent({
+            type: 'successful-operation',
+            props: {
+                setCurrentContent,
+                txId,
+                title: t('Profile Updated'),
+                description: t('Your changes have been saved successfully.'),
+                onDone: () => {
+                    setCurrentContent(onDoneRedirectContent);
+                },
+            },
+        });
+    }, [
+        txReceipt,
+        hasShownSuccess,
+        isTransactionPending,
+        setCurrentContent,
+        t,
+        onDoneRedirectContent,
+    ]);
+
+    // Reset the flag when starting a new transaction
+    React.useEffect(() => {
+        if (isTransactionPending) {
+            setHasShownSuccess(false);
+        }
+    }, [isTransactionPending]);
 
     // Build the text record updates immediately
     const textRecordUpdates = useMemo(() => {
@@ -187,7 +218,7 @@ export const CustomizationSummaryContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: clauses,
         tokens: selectedGasToken
             ? [selectedGasToken]
@@ -306,7 +337,23 @@ export const CustomizationSummaryContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={4} align="stretch">
+                <VStack spacing={6} align="center" mt={10}>
+                    <Icon
+                        as={LuFileText}
+                        color={textPrimary}
+                        fontSize={'60px'}
+                        opacity={0.5}
+                    />
+                    <Text fontSize="md" textAlign="center" color={textPrimary}>
+                        {t(
+                            'By confirming, the following details attached to your name ({{domain}}) will be updated',
+                            {
+                                domain,
+                            },
+                        )}
+                    </Text>
+                </VStack>
+                <VStack spacing={4} align="stretch" mt={6}>
                     {changes.avatarIpfsHash && (
                         <VStack align="flex-start" w="full" spacing={1}>
                             <Text

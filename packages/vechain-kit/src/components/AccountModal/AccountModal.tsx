@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useWallet, useNotificationAlerts } from '@/hooks';
+import { useWallet } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
@@ -14,14 +13,9 @@ import {
     ChooseNameSearchContent,
     ChooseNameSummaryContent,
     FAQContent,
-    AccessAndSecurityContent,
-    EmbeddedWalletContent,
     ProfileContent,
     AssetsContent,
-    BridgeContent,
-    GeneralSettingsContent,
     LanguageSettingsContent,
-    AppearanceSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
 } from './Contents';
@@ -31,7 +25,7 @@ import { PrivyLinkedAccounts } from './Contents/PrivyLinkedAccounts';
 import { NotificationsContent } from './Contents/Notifications/NotificationContent';
 import { ExploreEcosystemContent } from './Contents/Ecosystem/ExploreEcosystemContent';
 import { AppOverviewContent } from './Contents/Ecosystem/AppOverviewContent';
-import { DisconnectConfirmContent } from './Contents/Account/DisconnectConfirmContent';
+import { DisconnectConfirmContent } from './Contents/DisconnectConfirmation';
 import { CustomizationContent, CustomizationSummaryContent } from './Contents';
 import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
@@ -39,6 +33,8 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
+import { useVechainKitThemeConfig } from '@/providers';
+import { useEffect } from 'react';
 
 type Props = {
     isOpen: boolean;
@@ -51,16 +47,18 @@ export const AccountModal = ({
     onClose,
     initialContent = 'main',
 }: Props) => {
-    useNotificationAlerts();
     const { account } = useWallet();
+    const { themeConfig } = useVechainKitThemeConfig();
 
     const {
         accountModalContent: currentContent,
         setAccountModalContent: setCurrentContent,
     } = useModal();
 
+    // Reset refs and set initial content when modal opens
     useEffect(() => {
-        if (isOpen && initialContent) {
+        if (isOpen) {
+            // Modal just opened - reset everything and use initialContent
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);
@@ -110,9 +108,7 @@ export const AccountModal = ({
                         <SuccessfulOperationContent {...currentContent.props} />
                     );
                 case 'failed-operation':
-                    return (
-                        <FailedOperationContent {...currentContent.props} />
-                    );
+                    return <FailedOperationContent {...currentContent.props} />;
                 case 'upgrade-smart-account':
                     return (
                         <UpgradeSmartAccountContent {...currentContent.props} />
@@ -162,17 +158,9 @@ export const AccountModal = ({
                 );
             case 'assets':
                 return <AssetsContent setCurrentContent={setCurrentContent} />;
-            case 'bridge':
-                return <BridgeContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'access-and-security':
-                return (
-                    <AccessAndSecurityContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -195,18 +183,12 @@ export const AccountModal = ({
             case 'privy-linked-accounts':
                 return (
                     <PrivyLinkedAccounts
-                        onBack={() => setCurrentContent('access-and-security')}
+                        onBack={() => setCurrentContent('settings')}
                     />
                 );
             case 'ecosystem':
                 return (
                     <ExploreEcosystemContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'embedded-wallet':
-                return (
-                    <EmbeddedWalletContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -222,21 +204,9 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
-            case 'general-settings':
-                return (
-                    <GeneralSettingsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
             case 'change-language':
                 return (
                     <LanguageSettingsContent
-                        setCurrentContent={setCurrentContent}
-                    />
-                );
-            case 'appearance-settings':
-                return (
-                    <AppearanceSettingsContent
                         setCurrentContent={setCurrentContent}
                     />
                 );
@@ -257,6 +227,14 @@ export const AccountModal = ({
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
+            mobileMinHeight={
+                themeConfig?.modal?.useBottomSheetOnMobile ? '510px' : '500px'
+            }
+            mobileMaxHeight={
+                themeConfig?.modal?.useBottomSheetOnMobile ? '510px' : '500px'
+            }
+            desktopMinHeight={'475px'}
+            desktopMaxHeight={'475px'}
         >
             {renderContent()}
         </BaseModal>

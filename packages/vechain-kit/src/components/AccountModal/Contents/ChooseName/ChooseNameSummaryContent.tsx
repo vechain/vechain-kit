@@ -7,6 +7,7 @@ import {
     ModalFooter,
     Text,
     useToken,
+    Icon,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
@@ -24,11 +25,12 @@ import {
     useUpgradeSmartAccountModal,
     useWallet,
     useGasTokenSelection,
-    useGasEstimation,
+    useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { GasTokenType } from '@/types/gasToken';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { LuSquareUser } from 'react-icons/lu';
 
 export type ChooseNameSummaryContentProps = {
     setCurrentContent: React.Dispatch<
@@ -171,7 +173,7 @@ export const ChooseNameSummaryContent = ({
         isLoading: gasEstimationLoading,
         error: gasEstimationError,
         refetch: refetchGasEstimation,
-    } = useGasEstimation({
+    } = useGenericDelegatorFeeEstimation({
         clauses: clauses(),
         tokens: selectedGasToken
             ? [selectedGasToken]
@@ -221,27 +223,39 @@ export const ChooseNameSummaryContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={4} w="full" textAlign="center">
-                    <Text fontSize="lg" color={textPrimary}>
+                <VStack spacing={6} align="center" mt={10}>
+                    <Icon
+                        as={LuSquareUser}
+                        color={textPrimary}
+                        fontSize={'60px'}
+                        opacity={0.5}
+                    />
+                    <Text fontSize="md" textAlign="center" color={textPrimary}>
                         {isUnsetting
                             ? t(
-                                  'Are you sure you want to unset your current domain?',
+                                  'By confirming, your current domain will be unset',
                               )
                             : t(
-                                  'Are you sure you want to set your domain name to',
+                                  'By confirming, your address will be set to {{domain}}',
+                                  {
+                                      domain: fullDomain,
+                                  },
                               )}
                     </Text>
-                    {!isUnsetting && (
+                </VStack>
+                {!isUnsetting && (
+                    <VStack spacing={4} align="stretch" mt={6}>
                         <Text
                             fontSize="xl"
                             fontWeight="bold"
                             color={textPrimary}
+                            textAlign="center"
                             data-testid="preconfirm-domain-val"
                         >
-                            {`${fullDomain}`}
+                            {fullDomain}
                         </Text>
-                    )}
-                </VStack>
+                    </VStack>
+                )}
                 {connection.isConnectedWithPrivy && (
                     <GasFeeSummary
                         estimation={gasEstimation}

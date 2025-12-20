@@ -4,7 +4,6 @@ import { VStack, Text, SimpleGrid } from '@chakra-ui/react';
 import {
     LuSquareUser,
     LuArrowLeftRight,
-    LuShield,
     LuUserCog,
     LuBell,
     LuCircleHelp,
@@ -17,7 +16,6 @@ import {
 import {
     useChooseNameModal,
     useSendTokenModal,
-    useAccessAndSecurityModal,
     useExploreEcosystemModal,
     useNotificationsModal,
     useProfileModal,
@@ -31,13 +29,12 @@ import { ThemeCard } from './ThemeCard';
 import { LuUser, LuArrowDownToLine, LuRefreshCw } from 'react-icons/lu';
 
 export function FeaturesToTry() {
-    const { account, connection } = useWallet();
+    const { account } = useWallet();
 
     // Use the modal hooks
     const { open: openChooseNameModal } = useChooseNameModal();
     const { open: openProfileModal } = useProfileModal();
     const { open: openSendTokenModal } = useSendTokenModal();
-    const { open: openAccessAndSecurityModal } = useAccessAndSecurityModal();
     const { open: openExploreEcosystemModal } = useExploreEcosystemModal();
     const { open: openNotificationsModal } = useNotificationsModal();
     const { open: openFAQModal } = useFAQModal();
@@ -80,14 +77,6 @@ export function FeaturesToTry() {
             description: 'Receive VET, VTHO, and other tokens from anyone',
             icon: LuArrowDownToLine,
             content: () => openReceiveModal({ isolatedView: true }),
-        },
-        {
-            title: 'Access & Security',
-            description:
-                'Allow the user to secure his embedded wallet with proper backup procedures, update his login methods, add MFA and more.',
-            icon: LuShield,
-            content: () => openAccessAndSecurityModal({ isolatedView: true }),
-            disabled: !connection.isConnectedWithPrivy,
         },
         {
             title: 'Explore Ecosystem',

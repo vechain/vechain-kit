@@ -5,15 +5,16 @@ import {
     VStack,
     Button,
     Text,
-    ModalFooter,
     useToken,
+    Icon,
+    ModalFooter,
 } from '@chakra-ui/react';
 import {
     ModalBackButton,
-    ScrollToTopWrapper,
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
+import { LuLogOut } from 'react-icons/lu';
 
 export type DisconnectConfirmContentProps = {
     onDisconnect: () => void;
@@ -31,11 +32,12 @@ export const DisconnectConfirmContent = ({
     text,
 }: DisconnectConfirmContentProps) => {
     const { t } = useTranslation();
+
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textTitle =
         text ?? t('Are you sure you want to disconnect your wallet?');
     return (
-        <ScrollToTopWrapper>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Logout')}</ModalHeader>
                 <ModalBackButton onClick={onBack} />
@@ -45,20 +47,24 @@ export const DisconnectConfirmContent = ({
             </StickyHeaderContainer>
 
             <ModalBody>
-                <VStack spacing={6} align="stretch">
+                <VStack spacing={6} align="center" mt={10}>
+                    <Icon
+                        as={LuLogOut}
+                        color={'#ef4444'}
+                        fontSize={'60px'}
+                        opacity={0.5}
+                    />
                     <Text fontSize="md" textAlign="center" color={textPrimary}>
                         {textTitle}
                     </Text>
                 </VStack>
             </ModalBody>
-            <ModalFooter w="full">
+            <ModalFooter w="full" mt={4}>
                 <VStack spacing={3} w="full">
                     <Button
-                        height="60px"
-                        colorScheme="red"
-                        w="full"
                         onClick={onDisconnect}
                         data-testid="disconnect-button"
+                        variant="vechainKitLogout"
                     >
                         {t('Confirm')}
                     </Button>
@@ -71,6 +77,6 @@ export const DisconnectConfirmContent = ({
                     </Button>
                 </VStack>
             </ModalFooter>
-        </ScrollToTopWrapper>
+        </>
     );
 };

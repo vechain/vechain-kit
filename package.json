@@ -65,9 +65,8 @@
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
         "@commitlint/config-conventional": "^18.0.0",
-        "@vechain/sdk-core": "2.0.5",
-        "@vechain/sdk-network": "2.0.5",
-        "@vechain/stargate-contracts-artifacts": "^3.0.0",
+        "@vechain/sdk-core": "2.0.7",
+        "@vechain/sdk-network": "2.0.7",
         "commitlint": "^18.0.0",
         "eslint": "^9.12.0",
         "husky": "^8.0.0",
@@ -95,6 +94,7 @@
         "supports-color": "7.2.0",
         "wrap-ansi": "7.0.0",
         "elliptic": "6.6.1",
-        "es-toolkit": "1.39.4"
+        "es-toolkit": "1.39.4",
+        "next": "15.5.7"
     }
 }

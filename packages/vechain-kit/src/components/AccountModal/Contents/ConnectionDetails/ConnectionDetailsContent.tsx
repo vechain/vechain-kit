@@ -10,12 +10,8 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache, useWallet } from '@/hooks';
-import {
-    CrossAppConnectionCard,
-    DappKitConnectionCard,
-    PrivyConnectionCard,
-} from './Components';
+import { useCrossAppConnectionCache } from '@/hooks';
+import { ConnectionCard, WalletSecuredBy } from './Components';
 
 type Props = {
     onGoBack: () => void;
@@ -25,9 +21,7 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
     const { t } = useTranslation();
     const { getConnectionCache } = useCrossAppConnectionCache();
 
-    const { connection } = useWallet();
-
-    const connectionCache = getConnectionCache();
+    const connectionCache = getConnectionCache() ?? undefined;
 
     return (
         <ScrollToTopWrapper>
@@ -43,15 +37,8 @@ export const ConnectionDetailsContent = ({ onGoBack }: Props) => {
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                {connection.isConnectedWithCrossApp && connectionCache && (
-                    <CrossAppConnectionCard connectionCache={connectionCache} />
-                )}
-
-                {connection.isConnectedWithSocialLogin && (
-                    <PrivyConnectionCard />
-                )}
-
-                {connection.isConnectedWithDappKit && <DappKitConnectionCard />}
+                <ConnectionCard connectionCache={connectionCache} />
+                <WalletSecuredBy />
             </ModalBody>
             <ModalFooter pt={0} />
         </ScrollToTopWrapper>

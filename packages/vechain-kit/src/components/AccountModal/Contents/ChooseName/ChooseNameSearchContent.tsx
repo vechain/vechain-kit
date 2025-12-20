@@ -264,7 +264,9 @@ export const ChooseNameSearchContent = ({
                         isProtected ||
                         isFetchingDomainInfo
                     }
+                    isLoading={isFetchingDomainInfo}
                     onClick={handleContinue}
+                    loadingText={t('Checking...')}
                     data-testid="continue-button"
                 >
                     {t('Continue')}

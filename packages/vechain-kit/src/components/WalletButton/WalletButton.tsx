@@ -26,7 +26,7 @@ export const WalletButton = ({
     connectionVariant = 'modal',
 }: WalletButtonProps) => {
     const { t } = useTranslation();
-    const { darkMode, loginMethods } = useVeChainKitConfig();
+    const { darkMode, loginMethods, theme } = useVeChainKitConfig();
 
     const hasOnlyDappKit =
         loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
@@ -52,7 +52,7 @@ export const WalletButton = ({
     };
 
     return (
-        <VechainKitThemeProvider darkMode={darkMode}>
+        <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
             {connection.isConnected && !!account ? (
                 <ConnectedWallet
                     mobileVariant={mobileVariant}
