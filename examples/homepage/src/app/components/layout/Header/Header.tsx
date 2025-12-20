@@ -1,21 +1,15 @@
 'use client';
 
-import {
-    HStack,
-    useColorMode,
-    Link,
-    useMediaQuery,
-    Image,
-    Text,
-    Card,
-} from '@chakra-ui/react';
-import { WalletButton } from '@vechain/vechain-kit';
+import { HStack, Image, Text, Card } from '@chakra-ui/react';
+import { WalletButton, useWallet } from '@vechain/vechain-kit';
 
 const basePath = process.env.basePath ?? '';
 
 export function Header() {
-    const { colorMode } = useColorMode();
-    const [isMobile] = useMediaQuery('(max-width: 768px)');
+    // const { colorMode } = useColorMode();
+    // const [isMobile] = useMediaQuery('(max-width: 768px)');
+
+    const { connection } = useWallet();
 
     return (
         <HStack
@@ -129,7 +123,9 @@ export function Header() {
                             mobileVariant="iconAndDomain"
                             desktopVariant="iconAndDomain"
                             buttonStyle={{
-                                bg: 'rgb(243, 243, 243)',
+                                bg: connection.isConnected
+                                    ? 'rgb(243, 243, 243)'
+                                    : 'transparent',
                                 rounded: 'full',
                                 _hover: {
                                     bg: 'rgba(243, 243, 243, 0.67)',
