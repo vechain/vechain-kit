@@ -1,7 +1,7 @@
 'use client';
 
 import { HStack, Image, Text, Card } from '@chakra-ui/react';
-import { WalletButton } from '@vechain/vechain-kit';
+import { WalletButton, useWallet } from '@vechain/vechain-kit';
 import { LanguageDropdown } from './LanguageDropdown';
 
 const basePath = process.env.basePath ?? '';
@@ -9,6 +9,8 @@ const basePath = process.env.basePath ?? '';
 export function Header() {
     // const { colorMode } = useColorMode();
     // const [isMobile] = useMediaQuery('(max-width: 768px)');
+
+    const { connection } = useWallet();
 
     return (
         <HStack
@@ -130,7 +132,8 @@ export function Header() {
                                 transition: 'all 0.2s',
                             }}
                         />
-                        <LanguageDropdown />
+                        {/* Show this only when not connected */}
+                        {!connection.isConnected && <LanguageDropdown />}
                     </HStack>
                 </HStack>
             </Card>
