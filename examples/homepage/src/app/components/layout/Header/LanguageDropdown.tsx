@@ -10,9 +10,9 @@ import {
     Text,
     Icon,
 } from '@chakra-ui/react';
-import { LuChevronDown } from 'react-icons/lu';
 import { useCurrentLanguage } from '@vechain/vechain-kit';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
+import { LuChevronDown } from 'react-icons/lu';
 
 // Map language codes to country codes for flag icons
 const languageToCountryCode: Record<string, string> = {
@@ -43,16 +43,12 @@ export function LanguageDropdown() {
         <Menu>
             <MenuButton
                 as="button"
-                px={3}
-                py={2}
-                borderRadius="full"
-                bg="transparent"
-                _hover={{
-                    bg: 'rgba(243, 243, 243, 0.67)',
+                style={{
+                    backgroundColor: 'rgb(243, 243, 243)',
+                    transition: 'all 0.2s',
+                    borderRadius: '25px',
+                    padding: '11px 16px',
                 }}
-                transition="all 0.2s"
-                display="flex"
-                alignItems="center"
             >
                 <HStack spacing={2}>
                     <Image
@@ -65,9 +61,9 @@ export function LanguageDropdown() {
                         border="1px solid"
                         borderColor="gray.200"
                     />
-                    <Text fontSize="sm" fontWeight="medium" color="gray.900">
+                    {/* <Text fontSize="sm" fontWeight="medium" color="gray.900">
                         {currentLanguageName}
-                    </Text>
+                    </Text> */}
                     <Icon as={LuChevronDown} boxSize={4} color="gray.600" />
                 </HStack>
             </MenuButton>
@@ -82,14 +78,19 @@ export function LanguageDropdown() {
                 {supportedLanguages.map((lang) => {
                     const flagUrl = getFlagUrl(lang);
                     const langName =
-                        languageNames[lang as keyof typeof languageNames] || lang;
+                        languageNames[lang as keyof typeof languageNames] ||
+                        lang;
                     const isSelected = lang === currentLanguage;
 
                     return (
                         <MenuItem
                             key={lang}
                             onClick={() => setLanguage(lang)}
-                            bg={isSelected ? 'rgba(0, 0, 0, 0.05)' : 'transparent'}
+                            bg={
+                                isSelected
+                                    ? 'rgba(0, 0, 0, 0.05)'
+                                    : 'transparent'
+                            }
                             _hover={{
                                 bg: 'rgba(0, 0, 0, 0.08)',
                             }}
@@ -107,7 +108,12 @@ export function LanguageDropdown() {
                                     border="1px solid"
                                     borderColor="gray.200"
                                 />
-                                <Text fontSize="sm" fontWeight={isSelected ? 'semibold' : 'normal'}>
+                                <Text
+                                    fontSize="sm"
+                                    fontWeight={
+                                        isSelected ? 'semibold' : 'normal'
+                                    }
+                                >
                                     {langName}
                                 </Text>
                             </HStack>
@@ -118,4 +124,3 @@ export function LanguageDropdown() {
         </Menu>
     );
 }
-

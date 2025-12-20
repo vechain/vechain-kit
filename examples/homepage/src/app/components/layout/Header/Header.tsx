@@ -120,14 +120,11 @@ export function Header() {
 
                     {/* Language dropdown and WalletButton at end */}
                     <HStack spacing={3} flexShrink={0}>
-                        <LanguageDropdown />
                         <WalletButton
                             mobileVariant="iconAndDomain"
                             desktopVariant="iconAndDomain"
                             buttonStyle={{
-                                bg: connection.isConnected
-                                    ? 'rgb(243, 243, 243)'
-                                    : 'transparent',
+                                bg: 'rgb(243, 243, 243)',
                                 rounded: 'full',
                                 _hover: {
                                     bg: 'rgba(243, 243, 243, 0.67)',
@@ -135,6 +132,7 @@ export function Header() {
                                 transition: 'all 0.2s',
                             }}
                         />
+                        <LanguageDropdown />
                     </HStack>
                 </HStack>
             </Card>
