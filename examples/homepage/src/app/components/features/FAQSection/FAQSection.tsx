@@ -60,11 +60,11 @@ over the login experience, you can connect your own Privy account (Privy pricing
                     <AccordionItem key={index} border="none" mb={4}>
                         <h3>
                             <AccordionButton
-                                bg="#e1e5e4"
+                                bg="#e3ebe1"
                                 color="black"
                                 borderRadius="md"
                                 rounded="xl"
-                                _hover={{ bg: '#e1e5e4' }}
+                                _hover={{ bg: '#e2eae0' }}
                             >
                                 <Box
                                     as="span"
