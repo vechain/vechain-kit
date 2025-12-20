@@ -22,54 +22,31 @@ export function VechainKitProviderWrapper({ children }: Props) {
     const logo =
         'https://vechain-brand-assets.s3.eu-north-1.amazonaws.com/VeChain_Logomark_Light.png';
 
-    const theme = isDarkMode
-        ? {
-              textColor: 'white',
-              modal: {
-                  backgroundColor: 'rgba(21, 21, 21)',
-                  border: '1px solid rgba(255, 255, 255, 0.20)',
-                  backdropFilter: 'blur(20px)',
-                  rounded: '32px',
-              },
-              overlay: {
-                  backgroundColor: 'rgba(0, 0, 0, 0.24)',
-                  blur: 'blur(15px)',
-              },
-              buttons: {
-                  secondaryButton: {
-                      bg: 'rgb(255 255 255 / 4%)',
-                      color: 'white',
-                  },
-              },
-          }
-        : {
-              textColor: '#272A2E',
-              modal: {
-                  backgroundColor: 'rgba(255, 255, 255)',
-                  border: '1px solid rgba(39, 42, 46, 0.12)',
-                  backdropFilter: 'blur(20px)',
-                  rounded: '32px',
-              },
-              overlay: {
-                  backgroundColor: 'rgba(0, 0, 0, 0.16)',
-                  blur: 'blur(15px)',
-              },
-              buttons: {
-                  secondaryButton: {
-                      bg: 'rgba(39, 42, 46, 0.08)',
-                      color: '#272A2E',
-                  },
-                  loginButton: {
-                      border: '1px solid rgba(39, 42, 46, 0.12)',
-                  },
-              },
-          };
-
     return (
         <VeChainKitProvider
             theme={{
-                ...theme,
-                modal: { ...theme.modal, useBottomSheetOnMobile: true },
+                textColor: '#272A2E',
+                modal: {
+                    backgroundColor: 'rgba(255, 255, 255)',
+                    border: '1px solid rgba(39, 42, 46, 0.12)',
+                    backdropFilter: 'blur(20px)',
+                    rounded: '32px',
+                    useBottomSheetOnMobile: true,
+                },
+                overlay: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.16)',
+                    blur: 'blur(15px)',
+                },
+                buttons: {
+                    secondaryButton: {
+                        bg: 'rgb(243, 242, 242)',
+                        color: 'rgb(25, 25, 25)',
+                        border: 'none',
+                    },
+                    loginButton: {
+                        border: '1px solid rgba(39, 42, 46, 0.12)',
+                    },
+                },
             }}
             privy={{
                 appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,

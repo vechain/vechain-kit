@@ -34,7 +34,8 @@ export function Header() {
                 py={3}
                 maxW="4xl"
                 w="full"
-                boxShadow="sm"
+                bg={'rgb(255, 255, 255)'}
+                boxShadow={'0px 2px 4px 1px rgb(0 0 0 / 10%)'}
             >
                 <HStack w="full" justifyContent="space-between" spacing={8}>
                     {/* Logo at start */}
@@ -118,13 +119,13 @@ export function Header() {
                     {/* WalletButton and Theme toggle at end */}
                     <HStack spacing={3} flexShrink={0}>
                         <WalletButton
-                            mobileVariant="icon"
-                            desktopVariant="icon"
+                            mobileVariant="iconAndDomain"
+                            desktopVariant="iconAndDomain"
                             buttonStyle={{
-                                border: 'none',
-                                bg: 'transparent',
+                                bg: 'rgb(243, 243, 243)',
+                                rounded: 'full',
                                 _hover: {
-                                    bg: 'transparent',
+                                    bg: 'rgba(243, 243, 243, 0.67)',
                                 },
                                 transition: 'all 0.2s',
                             }}
