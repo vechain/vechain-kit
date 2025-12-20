@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-
 // Import all language JSON files
 import en from './src/app/languages/en.json';
 import de from './src/app/languages/de.json';
@@ -34,14 +33,53 @@ export const languageNames = {
     ja: '日本語',
 };
 
-// Simplified initialization without language detection
-i18n.use(initReactI18next).init({
-    resources,
-    lng: 'en', // Force English as default
-    fallbackLng: 'en',
-    interpolation: {
-        escapeValue: false,
+// Custom language detector that checks localStorage first, then browser
+const customLanguageDetector = {
+    name: 'customDetector',
+    lookup: () => {
+        // Check localStorage first (for persistence across page refreshes)
+        if (typeof window !== 'undefined') {
+            const storedLanguage = localStorage.getItem('i18nextLng');
+            if (storedLanguage && supportedLanguages.includes(storedLanguage)) {
+                return storedLanguage;
+            }
+        }
+
+        // Check if we're in a browser environment
+        if (typeof window !== 'undefined') {
+            // Get browser language
+            const browserLang = navigator.language.split('-')[0];
+            if (browserLang && supportedLanguages.includes(browserLang)) {
+                return browserLang;
+            }
+        }
+
+        return 'en'; // fallback
     },
-});
+    cacheUserLanguage: (lng: string) => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('i18nextLng', lng);
+        }
+    },
+};
+
+i18n.use({
+    type: 'languageDetector',
+    async: false,
+    init: () => {},
+    detect: customLanguageDetector.lookup,
+    cacheUserLanguage: customLanguageDetector.cacheUserLanguage,
+})
+    .use(initReactI18next)
+    .init({
+        resources,
+        supportedLngs: supportedLanguages,
+        fallbackLng: 'en',
+        interpolation: {
+            escapeValue: false,
+        },
+        returnNull: false,
+        returnEmptyString: false,
+    });
 
 export default i18n;

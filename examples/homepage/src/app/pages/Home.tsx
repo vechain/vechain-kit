@@ -11,6 +11,7 @@ import {
     Heading,
     Button,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { VechainLogo } from '@vechain/vechain-kit';
 import { Header } from '@/app/components/layout/Header';
 import { HeroSection } from '@/app/components/features/HeroSection';
@@ -22,6 +23,7 @@ import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetS
 
 export default function Home(): ReactElement {
     const { colorMode } = useColorMode();
+    const { t } = useTranslation();
     const heroSectionRef = useRef<HTMLDivElement>(null);
     const scrollableSectionsRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,7 @@ export default function Home(): ReactElement {
                         py={10}
                         px={4}
                     >
-                        🎉​ Version 2 has been released!
+                        🎉​ {t('Version 2 has been released!')}
                     </Heading>
 
                     <Button
@@ -46,7 +48,7 @@ export default function Home(): ReactElement {
                         isExternal
                         variant="homepageSecondary"
                     >
-                        View Release Notes 👇​
+                        {t('View Release Notes')} 👇​
                     </Button>
                 </VStack>
             </Box>
@@ -68,7 +70,9 @@ export default function Home(): ReactElement {
 
             <TestimonialSection
                 mt={10}
-                quote="The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components."
+                quote={t(
+                    'The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components.',
+                )}
             />
 
             <AppShowcase />
@@ -93,7 +97,7 @@ export default function Home(): ReactElement {
                         color={'gray.900'}
                         textAlign="center"
                     >
-                        By developers, for developers.
+                        {t('By developers, for developers.')}
                     </Text>
                 </VStack>
             </Card>

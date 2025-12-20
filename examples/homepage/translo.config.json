@@ -1,0 +1,16 @@
+{
+    "translationPath": "./src/app/languages",
+    "languages": [
+        { "name": "English", "code": "en" },
+        { "name": "German", "code": "de" },
+        { "name": "Italian", "code": "it" },
+        { "name": "French", "code": "fr" },
+        { "name": "Spanish", "code": "es" },
+        { "name": "Chinese", "code": "zh" },
+        { "name": "Japanese", "code": "ja" }
+    ],
+    "mainLanguage": "en",
+    "sortMainLanguageFileAlphabetically": true,
+    "sortTargetLanguageFilesAlphabetically": true
+}
+

@@ -1,9 +1,11 @@
 'use client';
 
 import { VStack, Text, Heading, useColorMode, Button } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 export function HeroSection() {
     const { colorMode } = useColorMode();
+    const { t } = useTranslation();
 
     return (
         <VStack
@@ -25,7 +27,7 @@ export function HeroSection() {
                 }
                 color={colorMode === 'dark' ? 'white' : 'gray.900'}
             >
-                Build on VeChain, effortlessly
+                {t('Build on VeChain, effortlessly')}
             </Heading>
             <Text
                 fontSize={{ base: 'lg', md: 'xl' }}
@@ -33,9 +35,9 @@ export function HeroSection() {
                 maxW="2xl"
                 lineHeight="1.6"
             >
-                VeChain Kit is an all-in-one SDK for building frontend
-                applications on VeChain blockchain, supporting wallet
-                integration, developer hooks, pre-built UI components, and more.
+                {t(
+                    'VeChain Kit is an all-in-one SDK for building frontend applications on VeChain blockchain, supporting wallet integration, developer hooks, pre-built UI components, and more.',
+                )}
             </Text>
 
             <Button
@@ -45,7 +47,7 @@ export function HeroSection() {
                 variant="homepagePrimary"
                 size="lg"
             >
-                Get Started Now 🚀
+                {t('Get Started Now')} 🚀
             </Button>
         </VStack>
     );

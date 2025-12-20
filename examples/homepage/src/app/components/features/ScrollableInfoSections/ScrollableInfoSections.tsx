@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { Box, VStack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { InfoSection } from '@/app/components/features/InfoSection';
 import { LoginMethodsSection } from '../LoginMethodsSection';
 
@@ -16,56 +17,52 @@ interface ScrollableSection {
 }
 
 export function ScrollableInfoSections() {
+    const { t } = useTranslation();
     const sections: ScrollableSection[] = [
         {
             bg: '#e0daea',
-            title: 'Out of the box',
-            content:
-                'Forget about the underlying blockchain infrastructure. We handle it for you.',
+            title: t('Out of the box'),
+            content: t('Forget about the underlying blockchain infrastructure. We handle it for you.'),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
-            imageAlt: 'VeChain Kit',
+            imageAlt: t('VeChain Kit'),
             imageWidth: '550px',
         },
         {
             bg: '#dae8fb',
-            title: 'Boosted Development',
-            content:
-                'Use our hooks and components to speed up your development and interact with the blockchain.',
+            title: t('Boosted Development'),
+            content: t('Use our hooks and components to speed up your development and interact with the blockchain.'),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/MyApp.png',
-            imageAlt: 'VeChain Kit',
+            imageAlt: t('VeChain Kit'),
             imageWidth: '550px',
         },
         {
             bg: '#eae3d1',
-            title: 'Customizable',
-            content:
-                "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
+            title: t('Customizable'),
+            content: t("The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need."),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/Group+1+(2).png',
-            imageAlt: 'VeChain Kit',
+            imageAlt: t('VeChain Kit'),
             imageWidth: '400px',
         },
         {
             bg: '#f0e8d8',
-            title: 'Login Methods',
-            content:
-                "Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need.",
+            title: t('Login Methods'),
+            content: t("Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need."),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
-            imageAlt: 'Login methods',
+            imageAlt: t('Login methods'),
             imageWidth: '550px',
             isLoginMethods: true,
         },
         {
             bg: '#e1e5e4',
-            title: 'Multi-language',
-            content:
-                'The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.',
+            title: t('Multi-language'),
+            content: t('The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.'),
             imageSrc:
                 'https://cdn.prod.website-files.com/685387e21f37b28674efb768/685c258fb5b73e62bd8de0c0_0e9040e92251da2f7c363a4f48682fee_5-4.webp',
-            imageAlt: 'Multiple language support',
+            imageAlt: t('Multiple language support'),
             imageWidth: '400px',
         },
     ];

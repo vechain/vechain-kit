@@ -1,11 +1,14 @@
 'use client';
 
 import { Card, Heading, Text, VStack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { Carousel } from '@/app/components/ui/Carousel';
 import { AppCard } from './AppCard';
-import { apps, AppData } from './appData';
+import { getApps, AppData } from './appData';
 
 export function AppShowcase() {
+    const { t } = useTranslation();
+    const apps = getApps(t);
     return (
         <Card
             variant="section"
@@ -14,12 +17,13 @@ export function AppShowcase() {
         >
             <VStack spacing={8} align="stretch" maxW="7xl" mx="auto" w="full">
                 <Heading as="h2" size="lg" textAlign="center">
-                    Apps Built with VeChain Kit
+                    {t('Apps Built with VeChain Kit')}
                 </Heading>
 
                 <Text textAlign="center" fontSize="lg" color="gray.500">
-                    Discover all the possible ways to use the VeChain Kit to
-                    build your next dApp.
+                    {t(
+                        'Discover all the possible ways to use the VeChain Kit to build your next dApp.',
+                    )}
                 </Text>
 
                 <Carousel<AppData>

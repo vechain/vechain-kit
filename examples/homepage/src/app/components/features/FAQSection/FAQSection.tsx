@@ -11,33 +11,44 @@ import {
     Text,
     Box,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 export function FAQSection() {
+    const { t } = useTranslation();
     const faqItems = [
         {
-            question: 'Is the kit free to use?',
-            answer: ` Yes. VeChain Kit is free to use. If you want full control
-over the login experience, you can connect your own Privy account (Privy pricing applies). If you use the shared VeChain + Privy integration, you don't pay anything to get started.`,
+            question: t('Is the kit free to use?'),
+            answer: t(
+                "Yes. VeChain Kit is free to use. If you want full control over the login experience, you can connect your own Privy account (Privy pricing applies). If you use the shared VeChain + Privy integration, you don't pay anything to get started.",
+            ),
         },
         {
-            question: 'What are the limitations?',
-            answer: "To support all login methods, you need to use the kit's own hooks (useSendTransaction and useSignMessage). To fully customize the login experience, you need to use your own Privy account. The VeChain shared Privy integration has some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions.",
+            question: t('What are the limitations?'),
+            answer: t(
+                "To support all login methods, you need to use the kit's own hooks (useSendTransaction and useSignMessage). To fully customize the login experience, you need to use your own Privy account. The VeChain shared Privy integration has some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions.",
+            ),
         },
         {
-            question: 'What are the supported frameworks?',
-            answer: 'The kit supports Next.js and React.',
+            question: t('What are the supported frameworks?'),
+            answer: t('The kit supports Next.js and React.'),
         },
         {
-            question: 'Can I customize the login methods shown to users?',
-            answer: 'Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeChain Kit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.',
+            question: t('Can I customize the login methods shown to users?'),
+            answer: t(
+                'Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeChain Kit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.',
+            ),
         },
         {
-            question: 'What can I customize?',
-            answer: 'Color, fonts, background color, etc. You can create your own login button, and modal or use the provided one. You can decide to show or not the wallet or transaction modal, or show only specific contents (Send, Receive, Assets, Profile, etc.).',
+            question: t('What can I customize?'),
+            answer: t(
+                'Color, fonts, background color, etc. You can create your own login button, and modal or use the provided one. You can decide to show or not the wallet or transaction modal, or show only specific contents (Send, Receive, Assets, Profile, etc.).',
+            ),
         },
         {
-            question: 'Who pays for the transactions?',
-            answer: 'The user pays for the transactions. However, if you want to sponsor them (always or only in specific scenarios), you can use the fee delegation feature.',
+            question: t('Who pays for the transactions?'),
+            answer: t(
+                'The user pays for the transactions. However, if you want to sponsor them (always or only in specific scenarios), you can use the fee delegation feature.',
+            ),
         },
     ];
 
@@ -52,7 +63,7 @@ over the login experience, you can connect your own Privy account (Privy pricing
             w="full"
         >
             <Heading as="h2" size="lg" textAlign="center">
-                Frequently Asked Questions
+                {t('Frequently Asked Questions')}
             </Heading>
 
             <Accordion allowMultiple defaultIndex={[0]}>

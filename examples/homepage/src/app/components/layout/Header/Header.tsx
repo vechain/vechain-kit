@@ -2,6 +2,7 @@
 
 import { HStack, Image, Text, Card } from '@chakra-ui/react';
 import { WalletButton, useWallet } from '@vechain/vechain-kit';
+import { LanguageDropdown } from './LanguageDropdown';
 
 const basePath = process.env.basePath ?? '';
 
@@ -117,8 +118,9 @@ export function Header() {
                         </HStack>
                     )} */}
 
-                    {/* WalletButton and Theme toggle at end */}
+                    {/* Language dropdown and WalletButton at end */}
                     <HStack spacing={3} flexShrink={0}>
+                        <LanguageDropdown />
                         <WalletButton
                             mobileVariant="iconAndDomain"
                             desktopVariant="iconAndDomain"

@@ -4,6 +4,8 @@ import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
 import { theme } from './theme';
+// Initialize i18n
+import '../../i18n';
 
 const VechainKitProviderWrapper = dynamic(
     async () =>

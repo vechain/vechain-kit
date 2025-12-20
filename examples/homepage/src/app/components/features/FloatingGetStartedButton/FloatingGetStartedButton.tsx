@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { Button, Box } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 interface FloatingGetStartedButtonProps {
     heroSectionRef: React.RefObject<HTMLDivElement>;
@@ -12,6 +13,7 @@ export function FloatingGetStartedButton({
     heroSectionRef,
     scrollableSectionsRef,
 }: FloatingGetStartedButtonProps) {
+    const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(false);
     const buttonRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +77,7 @@ export function FloatingGetStartedButton({
                 href="https://docs.vechainkit.vechain.org/quickstart/installation"
                 rel="noopener noreferrer"
             >
-                Get Started Now 🚀
+                {t('Get Started Now')} 🚀
             </Button>
         </Box>
     );

@@ -11,6 +11,7 @@ import {
     Icon,
     useColorMode,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { LuMail, LuApple, LuGithub } from 'react-icons/lu';
 import { FaXTwitter, FaDiscord } from 'react-icons/fa6';
 import { SiFarcaster } from 'react-icons/si';
@@ -30,6 +31,7 @@ export function LoginMethodsSection({
     content,
 }: LoginMethodsSectionProps) {
     const { colorMode } = useColorMode();
+    const { t } = useTranslation();
 
     return (
         <Card
@@ -125,7 +127,7 @@ export function LoginMethodsSection({
                         color={colorMode === 'dark' ? 'gray.400' : 'gray.600'}
                         fontStyle="italic"
                     >
-                        and more...
+                        {t('and more...')}
                     </Text>
                 </HStack>
             </Grid>

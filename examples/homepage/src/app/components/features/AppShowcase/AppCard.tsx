@@ -11,6 +11,7 @@ import {
     Badge,
     Card,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 import { AppData } from './appData';
 
 interface AppCardProps {
@@ -44,6 +45,7 @@ const getCardBgColor = (appId: string): string => {
 };
 
 export function AppCard({ app }: AppCardProps) {
+    const { t } = useTranslation();
     const cardBg = getCardBgColor(app.id);
 
     return (
@@ -143,7 +145,7 @@ export function AppCard({ app }: AppCardProps) {
                     textDecoration="none"
                     mt={4}
                 >
-                    Visit
+                    {t('Visit')}
                 </Button>
             </VStack>
         </Card>
