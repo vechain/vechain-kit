@@ -39,7 +39,7 @@ export function HeroSection() {
             </Text>
 
             <Button variant="homepagePrimary" size="lg">
-                Get Started
+                Get Started Now 🚀
             </Button>
         </VStack>
     );

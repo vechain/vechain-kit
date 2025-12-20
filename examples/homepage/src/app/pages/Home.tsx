@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactElement } from 'react';
+import { type ReactElement, useRef } from 'react';
 import {
     VStack,
     Text,
@@ -17,9 +17,12 @@ import { HeroSection } from '@/app/components/features/HeroSection';
 import { TestimonialSection } from '@/app/components/features/TestimonialSection';
 import { FAQSection } from '../components/features/FAQSection';
 import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
+import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetStartedButton/FloatingGetStartedButton';
 
 export default function Home(): ReactElement {
     const { colorMode } = useColorMode();
+    const heroSectionRef = useRef<HTMLDivElement>(null);
+    const scrollableSectionsRef = useRef<HTMLDivElement>(null);
 
     return (
         <VStack spacing={0} align="stretch" minH="100vh">
@@ -49,9 +52,18 @@ export default function Home(): ReactElement {
 
             <Header />
 
-            <HeroSection />
+            <Box ref={heroSectionRef}>
+                <HeroSection />
+            </Box>
 
-            <ScrollableInfoSections />
+            <Box ref={scrollableSectionsRef}>
+                <ScrollableInfoSections />
+            </Box>
+
+            <FloatingGetStartedButton
+                heroSectionRef={heroSectionRef}
+                scrollableSectionsRef={scrollableSectionsRef}
+            />
 
             <TestimonialSection
                 mt={10}
@@ -62,7 +74,8 @@ export default function Home(): ReactElement {
 
             <Card
                 variant="section"
-                py={{ base: 12, md: 16 }}
+                pt={'50px'}
+                pb={{ base: '100px', md: '100px' }}
                 px={{ base: 4, md: 8 }}
             >
                 <VStack spacing={4} align="center">
