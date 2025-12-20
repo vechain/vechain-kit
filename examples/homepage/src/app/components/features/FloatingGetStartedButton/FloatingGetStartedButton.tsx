@@ -53,7 +53,7 @@ export function FloatingGetStartedButton({
             bottom={0}
             left={0}
             right={0}
-            zIndex={1000}
+            zIndex={100}
             px={4}
             pb={4}
             pointerEvents={isVisible ? 'auto' : 'none'}
