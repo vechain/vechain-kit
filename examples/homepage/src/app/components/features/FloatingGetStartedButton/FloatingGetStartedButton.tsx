@@ -71,6 +71,9 @@ export function FloatingGetStartedButton({
                 _hover={{
                     transform: 'translateY(-2px)',
                 }}
+                as="a"
+                href="https://docs.vechainkit.vechain.org/quickstart/installation"
+                rel="noopener noreferrer"
             >
                 Get Started Now 🚀
             </Button>

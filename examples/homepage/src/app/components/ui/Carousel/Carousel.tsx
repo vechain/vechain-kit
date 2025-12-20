@@ -123,6 +123,28 @@ export const Carousel = <T,>({
     // Calculate item size
     const itemSize = itemWidth + itemSpacing;
 
+    /**
+     * Infinite-loop mode renders 3 copies of the list and sets `activeIndex` to the middle copy
+     * (`infiniteOffset`). We must also align the DOM scroll position to that offset on mount,
+     * otherwise the first navigation animates from 0 → middle copy (looks like a full rotation).
+     */
+    useEffect(() => {
+        if (!infiniteLoop || items.length <= 1 || !carouselRef.current) return;
+
+        const targetScrollLeft = infiniteOffset * itemSize;
+        const el = carouselRef.current;
+
+        // If we're already aligned (or close enough), do nothing.
+        if (Math.abs(el.scrollLeft - targetScrollLeft) < 1) return;
+
+        // Force an immediate jump without smooth scrolling for initial alignment.
+        const previousScrollBehavior = el.style.scrollBehavior;
+        el.style.scrollBehavior = 'auto';
+        el.scrollLeft = targetScrollLeft;
+        lastScrollPositionRef.current = targetScrollLeft;
+        el.style.scrollBehavior = previousScrollBehavior;
+    }, [infiniteLoop, items.length, infiniteOffset, itemSize]);
+
     // Get the real index for pagination display
     const realActiveIndex = useMemo(() => {
         return getRealIndex(activeIndex);

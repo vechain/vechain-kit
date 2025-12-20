@@ -38,7 +38,13 @@ export function HeroSection() {
                 integration, developer hooks, pre-built UI components, and more.
             </Text>
 
-            <Button variant="homepagePrimary" size="lg">
+            <Button
+                as="a"
+                href="https://docs.vechainkit.vechain.org/quickstart/installation"
+                rel="noopener noreferrer"
+                variant="homepagePrimary"
+                size="lg"
+            >
                 Get Started Now 🚀
             </Button>
         </VStack>
