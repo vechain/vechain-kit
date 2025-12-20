@@ -96,7 +96,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // { method: 'github', gridColumn: 4 },
                 { method: 'vechain', gridColumn: 4 },
                 { method: 'dappkit', gridColumn: 4 },
-                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'ecosystem', gridColumn: 4 },
                 // { method: 'passkey', gridColumn: 4 },
                 // { method: 'more', gridColumn: 1 },
             ]}

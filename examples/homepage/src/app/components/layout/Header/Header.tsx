@@ -39,7 +39,14 @@ export function Header() {
             >
                 <HStack w="full" justifyContent="space-between" spacing={8}>
                     {/* Logo at start */}
-                    <HStack spacing={3} flexShrink={0}>
+                    <HStack
+                        spacing={3}
+                        flexShrink={0}
+                        cursor="pointer"
+                        onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                    >
                         <Image
                             src={`${basePath}/images/logo.png`}
                             alt="VeChain Kit"
@@ -49,7 +56,7 @@ export function Header() {
                         <Text
                             fontSize="lg"
                             fontWeight="bold"
-                            color={colorMode === 'dark' ? 'white' : 'gray.900'}
+                            color={'gray.900'}
                         >
                             VeKit
                         </Text>
