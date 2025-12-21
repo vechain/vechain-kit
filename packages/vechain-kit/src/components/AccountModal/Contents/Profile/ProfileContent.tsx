@@ -16,7 +16,7 @@ import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import { LuLogOut, LuPencil, LuWallet, LuSettings } from 'react-icons/lu';
+import { LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 export type ProfileContentProps = {
@@ -72,6 +72,7 @@ export const ProfileContent = ({
                         }}
                         address={account?.address ?? ''}
                         showHeader={false}
+                        setCurrentContent={setCurrentContent}
                         onLogout={() => {
                             setCurrentContent?.({
                                 type: 'disconnect-confirm',
@@ -95,7 +96,7 @@ export const ProfileContent = ({
                         width="full"
                         height="40px"
                         variant="vechainKitSecondary"
-                        leftIcon={<Icon as={LuWallet} />}
+                        leftIcon={<Icon as={LuWalletCards} />}
                         onClick={() => setCurrentContent('main')}
                         data-testid="wallet-button"
                     >

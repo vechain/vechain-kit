@@ -13,6 +13,7 @@ import { LuMail, LuGlobe } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
+import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 
 export type ProfileCardProps = {
     address: string;
@@ -23,6 +24,9 @@ export type ProfileCardProps = {
     showDescription?: boolean;
     showDisplayName?: boolean;
     showEdit?: boolean;
+    setCurrentContent?: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
 };
 
 export const ProfileCard = ({
@@ -31,6 +35,7 @@ export const ProfileCard = ({
     showLinks = true,
     showDescription = true,
     showDisplayName = true,
+    setCurrentContent,
 }: ProfileCardProps) => {
     const { network } = useVeChainKitConfig();
 
@@ -161,6 +166,7 @@ export const ProfileCard = ({
                         metadata: metadata?.records,
                     }}
                     style={{ mt: 4 }}
+                    setCurrentContent={setCurrentContent}
                 />
             </VStack>
         </VStack>
