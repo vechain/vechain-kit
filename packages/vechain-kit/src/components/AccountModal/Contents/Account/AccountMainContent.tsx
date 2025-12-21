@@ -11,7 +11,6 @@ import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     BalanceSection,
-    ModalBackButton,
     QuickActionsSection,
 } from '@/components';
 import { Wallet } from '@/types';
@@ -37,10 +36,6 @@ export const AccountMainContent = ({
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                {/* <ModalBackButton
-                    label={t('Profile')}
-                    onClick={() => setCurrentContent('profile')}
-                /> */}
                 <ModalHeader>
                     {t('Wallet')}
 
