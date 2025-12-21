@@ -8,7 +8,6 @@ import {
     Tag,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { useFeatureAnnouncement } from '@/hooks/utils/useFeatureAnnouncement';
 import { AccountModalContentTypes } from '../../Types';
 
 type FeatureAnnouncementCardProps = {
@@ -20,7 +19,7 @@ export const FeatureAnnouncementCard = ({
     setCurrentContent,
 }: FeatureAnnouncementCardProps) => {
     const { t } = useTranslation();
-    const { closeAnnouncement } = useFeatureAnnouncement();
+    // const { closeAnnouncement } = useFeatureAnnouncement();
 
     const titleColor = useToken('colors', 'vechain-kit-text-primary');
     const descriptionColor = useToken('colors', 'vechain-kit-text-secondary');
@@ -30,11 +29,11 @@ export const FeatureAnnouncementCard = ({
             type: 'choose-name',
             props: {
                 setCurrentContent,
-                onBack: () => setCurrentContent('main'),
-                initialContentSource: 'main',
+                onBack: () => setCurrentContent('profile'),
+                initialContentSource: 'profile',
             },
         });
-        closeAnnouncement();
+        // closeAnnouncement();
     };
 
     // We always show the announcement card for now
