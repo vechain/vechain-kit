@@ -28,9 +28,9 @@ export function ScrollableInfoSections() {
                 'Forget about the underlying blockchain infrastructure. We handle it for you.',
             ),
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/image1+3.png',
             imageAlt: t('VeChain Kit'),
-            imageWidth: '550px',
+            imageWidth: '850px',
         },
         {
             bg: '#dae8fb',
@@ -39,9 +39,9 @@ export function ScrollableInfoSections() {
                 'Use our hooks and components to speed up your development and interact with the blockchain.',
             ),
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/MyApp.png',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/My-App+(1).png',
             imageAlt: t('VeChain Kit'),
-            imageWidth: '550px',
+            imageWidth: '750px',
         },
         {
             bg: '#eae3d1',
@@ -50,7 +50,7 @@ export function ScrollableInfoSections() {
                 "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
             ),
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/Group+1+(2).png',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/Group+1126.png',
             imageAlt: t('VeChain Kit'),
             imageWidth: '400px',
         },
