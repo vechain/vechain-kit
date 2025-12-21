@@ -30,7 +30,7 @@ export function ScrollableInfoSections() {
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
             imageAlt: t('VeChain Kit'),
-            imageWidth: '850px',
+            imageWidth: '950px',
         },
         {
             bg: '#dae8fb',

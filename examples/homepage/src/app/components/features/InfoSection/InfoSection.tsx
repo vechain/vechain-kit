@@ -76,14 +76,19 @@ export function InfoSection({
                         loop
                         muted
                         playsInline
-                        w={['80%', imageWidth]}
+                        w={['100%', imageWidth]}
                         borderRadius="md"
+                        sx={{
+                            backgroundColor: 'transparent',
+                            background: 'transparent',
+                            display: 'block',
+                        }}
                     />
                 ) : (
                     <Image
                         src={imageSrc}
                         alt={imageAlt}
-                        w={['80%', imageWidth]}
+                        w={['100%', imageWidth]}
                         sx={{
                             width: '100%',
                             height: 'auto',
