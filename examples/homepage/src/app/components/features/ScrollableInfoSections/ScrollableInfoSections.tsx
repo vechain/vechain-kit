@@ -22,7 +22,9 @@ export function ScrollableInfoSections() {
         {
             bg: '#e0daea',
             title: t('Out of the box'),
-            content: t('Forget about the underlying blockchain infrastructure. We handle it for you.'),
+            content: t(
+                'Forget about the underlying blockchain infrastructure. We handle it for you.',
+            ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
             imageAlt: t('VeChain Kit'),
@@ -31,7 +33,9 @@ export function ScrollableInfoSections() {
         {
             bg: '#dae8fb',
             title: t('Boosted Development'),
-            content: t('Use our hooks and components to speed up your development and interact with the blockchain.'),
+            content: t(
+                'Use our hooks and components to speed up your development and interact with the blockchain.',
+            ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/MyApp.png',
             imageAlt: t('VeChain Kit'),
@@ -40,16 +44,20 @@ export function ScrollableInfoSections() {
         {
             bg: '#eae3d1',
             title: t('Customizable'),
-            content: t("The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need."),
+            content: t(
+                "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
+            ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/Group+1+(2).png',
             imageAlt: t('VeChain Kit'),
             imageWidth: '400px',
         },
         {
-            bg: '#f0e8d8',
-            title: t('Login Methods'),
-            content: t("Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need."),
+            bg: '#dae8fb',
+            title: t('Multiple Login Methods'),
+            content: t(
+                "Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need.",
+            ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
             imageAlt: t('Login methods'),
@@ -59,7 +67,9 @@ export function ScrollableInfoSections() {
         {
             bg: '#e1e5e4',
             title: t('Multi-language'),
-            content: t('The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.'),
+            content: t(
+                'The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.',
+            ),
             imageSrc:
                 'https://cdn.prod.website-files.com/685387e21f37b28674efb768/685c258fb5b73e62bd8de0c0_0e9040e92251da2f7c363a4f48682fee_5-4.webp',
             imageAlt: t('Multiple language support'),

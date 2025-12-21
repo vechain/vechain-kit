@@ -5,11 +5,10 @@ import {
     VStack,
     Icon,
     PropsOf,
-    Input,
-    InputGroup,
-    InputRightElement,
-    InputLeftElement,
     useToken,
+    IconButton,
+    HStack,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import {
@@ -46,6 +45,8 @@ export const AddressDisplay = ({
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const borderColor = useColorModeValue('#ebebeb', '#ffffff0a');
+    const bgColor = useColorModeValue('#ffffff', 'transparent');
 
     const copyToClipboard = async (
         textToCopy: string,
@@ -92,114 +93,97 @@ export const AddressDisplay = ({
                         {label}
                     </Text>
                 )}
-                {wallet?.domain ? (
-                    <VStack spacing={2} w={'full'}>
-                        <InputGroup>
-                            <InputLeftElement>
-                                <Icon as={LuSquareUser} color={textSecondary} />
-                            </InputLeftElement>
-                            <Input
-                                value={wallet.domain}
-                                readOnly
+
+                <VStack spacing={2} w={'full'}>
+                    {wallet?.domain && (
+                        <HStack
+                            w={'full'}
+                            spacing={3}
+                            px={4}
+                            py={2}
+                            borderWidth={1}
+                            borderColor={borderColor}
+                            borderRadius="md"
+                            bg={bgColor}
+                        >
+                            <Icon as={LuSquareUser} color={textSecondary} />
+                            <Text
+                                flex={1}
                                 fontSize={'sm'}
                                 fontWeight={'700'}
                                 color={textPrimary}
-                            />
-                            <InputRightElement mr={'40px'}>
+                                noOfLines={1}
+                            >
+                                {wallet.domain}
+                            </Text>
+                            <HStack spacing={2}>
                                 {setCurrentContent && (
-                                    <Icon
-                                        color={textSecondary}
-                                        cursor="pointer"
-                                        as={LuPencil}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDomainEdit();
-                                        }}
+                                    <IconButton
+                                        icon={<LuPencil />}
+                                        height="30px"
+                                        borderRadius="5px"
+                                        variant="vechainKitSecondary"
+                                        onClick={handleDomainEdit}
+                                        aria-label="Edit domain"
                                     />
                                 )}
-                            </InputRightElement>
-                            <InputRightElement>
-                                <Icon
-                                    color={textSecondary}
-                                    cursor="pointer"
-                                    as={copiedDomain ? LuCheck : LuCopy}
+                                <IconButton
+                                    icon={
+                                        copiedDomain ? <LuCheck /> : <LuCopy />
+                                    }
+                                    height="30px"
+                                    borderRadius="5px"
+                                    variant="vechainKitSecondary"
                                     onClick={() =>
                                         copyToClipboard(
                                             wallet.domain || '',
                                             setCopiedDomain,
                                         )
                                     }
+                                    aria-label="Copy domain"
                                 />
-                            </InputRightElement>
-                        </InputGroup>
+                            </HStack>
+                        </HStack>
+                    )}
 
-                        <InputGroup>
-                            <InputLeftElement>
-                                <Icon as={LuWallet} color={textSecondary} />
-                            </InputLeftElement>
-                            <Input
-                                value={
-                                    showHumanAddress
-                                        ? humanAddress(
-                                              wallet.address ?? '',
-                                              8,
-                                              7,
-                                          )
-                                        : wallet.address
-                                }
-                                readOnly
-                                fontSize={'sm'}
-                                fontWeight={'700'}
-                                color={textPrimary}
-                            />
-                            <InputRightElement
-                                onClick={() =>
-                                    copyToClipboard(
-                                        wallet.address ?? '',
-                                        setCopied,
-                                    )
-                                }
-                            >
-                                <Icon
-                                    color={textSecondary}
-                                    cursor="pointer"
-                                    as={copied ? LuCheck : LuCopy}
-                                />
-                            </InputRightElement>
-                        </InputGroup>
-                    </VStack>
-                ) : (
-                    <InputGroup>
-                        <InputLeftElement>
-                            <Icon as={LuWallet} color={textSecondary} />
-                        </InputLeftElement>
-                        <Input
-                            value={
-                                showHumanAddress
-                                    ? humanAddress(wallet?.address ?? '', 6, 4)
-                                    : wallet?.address
-                            }
-                            readOnly
+                    <HStack
+                        w={'full'}
+                        spacing={3}
+                        px={4}
+                        py={2}
+                        borderWidth={1}
+                        borderColor={borderColor}
+                        borderRadius="md"
+                        bg={bgColor}
+                    >
+                        <Icon as={LuWallet} color={textSecondary} />
+                        <Text
+                            flex={1}
                             fontSize={'sm'}
                             fontWeight={'700'}
                             color={textPrimary}
-                        />
-                        <InputRightElement
+                            noOfLines={1}
+                        >
+                            {showHumanAddress
+                                ? humanAddress(wallet?.address ?? '', 8, 7)
+                                : wallet?.address}
+                        </Text>
+                        <IconButton
+                            icon={copied ? <LuCheck /> : <LuCopy />}
                             onClick={() =>
                                 copyToClipboard(
                                     wallet?.address ?? '',
                                     setCopied,
                                 )
                             }
-                        >
-                            <Icon
-                                color={textSecondary}
-                                cursor="pointer"
-                                as={copied ? LuCheck : LuCopy}
-                            />
-                        </InputRightElement>
-                    </InputGroup>
-                )}
+                            variant="vechainKitSecondary"
+                            height="30px"
+                            w="30px"
+                            borderRadius="5px"
+                            aria-label="Copy address"
+                        />
+                    </HStack>
+                </VStack>
             </VStack>
         </VStack>
     );
