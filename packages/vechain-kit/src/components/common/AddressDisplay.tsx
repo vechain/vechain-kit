@@ -59,32 +59,25 @@ export const AddressDisplay = ({
                 )}
                 {wallet?.domain ? (
                     <VStack spacing={2} w={'full'}>
-                        <InputGroup
-                            onClick={() =>
-                                copyToClipboard(
-                                    wallet.domain || '',
-                                    setCopiedDomain,
-                                )
-                            }
-                        >
+                        <InputGroup>
                             <InputLeftElement>
                                 <Icon as={LuSquareUser} color={textSecondary} />
                             </InputLeftElement>
                             <Input
-                                cursor="pointer"
                                 value={wallet.domain}
                                 readOnly
                                 fontSize={'sm'}
                                 fontWeight={'700'}
                                 color={textPrimary}
+                            />
+                            <InputRightElement
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet.domain || '',
                                         setCopiedDomain,
                                     )
                                 }
-                            />
-                            <InputRightElement>
+                            >
                                 <Icon
                                     color={textSecondary}
                                     cursor="pointer"
@@ -93,16 +86,11 @@ export const AddressDisplay = ({
                             </InputRightElement>
                         </InputGroup>
 
-                        <InputGroup
-                            onClick={() =>
-                                copyToClipboard(wallet.address ?? '', setCopied)
-                            }
-                        >
+                        <InputGroup>
                             <InputLeftElement>
                                 <Icon as={LuWallet} color={textSecondary} />
                             </InputLeftElement>
                             <Input
-                                cursor="pointer"
                                 value={
                                     showHumanAddress
                                         ? humanAddress(
@@ -116,14 +104,15 @@ export const AddressDisplay = ({
                                 fontSize={'sm'}
                                 fontWeight={'700'}
                                 color={textPrimary}
+                            />
+                            <InputRightElement
                                 onClick={() =>
                                     copyToClipboard(
                                         wallet.address ?? '',
                                         setCopied,
                                     )
                                 }
-                            />
-                            <InputRightElement>
+                            >
                                 <Icon
                                     color={textSecondary}
                                     cursor="pointer"
@@ -133,16 +122,11 @@ export const AddressDisplay = ({
                         </InputGroup>
                     </VStack>
                 ) : (
-                    <InputGroup
-                        onClick={() =>
-                            copyToClipboard(wallet?.address ?? '', setCopied)
-                        }
-                    >
+                    <InputGroup>
                         <InputLeftElement>
                             <Icon as={LuWallet} color={textSecondary} />
                         </InputLeftElement>
                         <Input
-                            cursor="pointer"
                             value={
                                 showHumanAddress
                                     ? humanAddress(wallet?.address ?? '', 6, 4)
@@ -153,7 +137,14 @@ export const AddressDisplay = ({
                             fontWeight={'700'}
                             color={textPrimary}
                         />
-                        <InputRightElement>
+                        <InputRightElement
+                            onClick={() =>
+                                copyToClipboard(
+                                    wallet?.address ?? '',
+                                    setCopied,
+                                )
+                            }
+                        >
                             <Icon
                                 color={textSecondary}
                                 onClick={() =>
@@ -162,7 +153,6 @@ export const AddressDisplay = ({
                                         setCopied,
                                     )
                                 }
-                                cursor="pointer"
                                 as={copied ? LuCheck : LuCopy}
                             />
                         </InputRightElement>
