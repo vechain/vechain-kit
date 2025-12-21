@@ -57,11 +57,13 @@ export const AccountSelector = ({
     // Debug: Show connection state in UI for mobile debugging
     useEffect(() => {
         if (isBrowser() && window.vechain) {
+            const vechainAny = window.vechain as any;
             const info = [
                 `isInAppBrowser: ${connection.isInAppBrowser}`,
                 `window.vechain exists: ${!!window.vechain}`,
                 `window.vechain.isInAppBrowser: ${window.vechain.isInAppBrowser}`,
-                `has request method: ${!!(window.vechain as any).request}`,
+                `has send method: ${!!vechainAny.send}`,
+                `has request method: ${!!vechainAny.request}`,
                 `window.vechain keys: ${Object.keys(window.vechain).join(
                     ', ',
                 )}`,
@@ -111,40 +113,15 @@ export const AccountSelector = ({
             return;
         }
 
-        // Type assertion to access request method
-        const vechainRequest = (window.vechain as any).request;
+        // Try to access send method (VeWorld uses 'send' instead of 'request')
+        const vechainSend = (window.vechain as any).send;
 
-        if (!vechainRequest) {
-            // Try to check available methods using alternative approach
-            let methodsInfo = 'Could not check methods';
-            try {
-                // Try different ways to access the API
-                const vechainAny = window.vechain as any;
-                if (vechainAny.request) {
-                    const methods = await vechainAny.request('thor_methods');
-                    methodsInfo = `Available methods: ${
-                        methods?.join(', ') || 'none'
-                    }`;
-                } else if (vechainAny.methods) {
-                    methodsInfo = `Methods property: ${JSON.stringify(
-                        vechainAny.methods,
-                    )}`;
-                } else {
-                    methodsInfo = `No request or methods found. Keys: ${Object.keys(
-                        vechainAny,
-                    ).join(', ')}`;
-                }
-            } catch (e) {
-                methodsInfo = `Error checking methods: ${
-                    e instanceof Error ? e.message : String(e)
-                }`;
-            }
-
+        if (!vechainSend) {
             toast({
-                title: 'Error: request method not found',
-                description: `window.vechain.request is not available.\n\n${methodsInfo}\n\nAll window.vechain keys: ${Object.keys(
+                title: 'Error: send method not found',
+                description: `window.vechain.send is not available.\n\nAvailable keys: ${Object.keys(
                     window.vechain,
-                ).join(', ')}`,
+                ).join(', ')}\n\nDebug info:\n${debugInfo || 'N/A'}`,
                 status: 'error',
                 duration: 15000,
                 isClosable: true,
@@ -154,7 +131,50 @@ export const AccountSelector = ({
 
         setIsSwitching(true);
         try {
-            const newAddress = await vechainRequest('thor_switchWallet');
+            // Try different formats for the send method
+            // The VeWorld API might use different formats, so we try multiple
+            const formats = [
+                { method: 'thor_switchWallet' }, // Format 1: object with method
+                'thor_switchWallet', // Format 2: direct string
+                { type: 'thor_switchWallet' }, // Format 3: object with type
+            ];
+
+            let newAddress: string | null = null;
+            let lastError: Error | null = null;
+
+            for (const format of formats) {
+                try {
+                    const result = await vechainSend(format);
+                    
+                    // Extract address from different possible result formats
+                    if (typeof result === 'string' && result) {
+                        newAddress = result;
+                        break; // Success, stop trying other formats
+                    } else if (result && typeof result === 'object') {
+                        if (result.address) {
+                            newAddress = result.address;
+                            break;
+                        } else if (result.result) {
+                            newAddress = result.result;
+                            break;
+                        } else if (result.data) {
+                            newAddress = result.data;
+                            break;
+                        }
+                    }
+                } catch (e) {
+                    lastError = e instanceof Error ? e : new Error(String(e));
+                    // Continue to next format
+                }
+            }
+
+            if (!newAddress) {
+                if (lastError) {
+                    throw lastError;
+                } else {
+                    throw new Error('All formats tried but no address returned');
+                }
+            }
 
             if (newAddress) {
                 toast({

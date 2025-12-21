@@ -14,6 +14,7 @@ interface ScrollableSection {
     imageSrc: string;
     imageAlt: string;
     imageWidth?: string;
+    mobileImageSrc?: string;
     isLoginMethods?: boolean;
     isLanguages?: boolean;
 }
@@ -28,7 +29,9 @@ export function ScrollableInfoSections() {
                 'Forget about the underlying blockchain infrastructure. We handle it for you.',
             ),
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/animation-kit.gif',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
+            mobileImageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/previewed+(2).png',
             imageAlt: t('VeChain Kit'),
             imageWidth: '950px',
         },
@@ -198,6 +201,7 @@ export function ScrollableInfoSections() {
                                 imageSrc={section.imageSrc}
                                 imageAlt={section.imageAlt}
                                 imageWidth={section.imageWidth}
+                                mobileImageSrc={section.mobileImageSrc}
                             />
                         )}
                     </Box>

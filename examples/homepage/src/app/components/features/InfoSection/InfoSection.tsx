@@ -9,6 +9,7 @@ import {
     Image,
     Box,
     useColorMode,
+    useBreakpointValue,
 } from '@chakra-ui/react';
 
 interface InfoSectionProps {
@@ -18,6 +19,7 @@ interface InfoSectionProps {
     imageSrc: string;
     imageAlt: string;
     imageWidth?: string;
+    mobileImageSrc?: string;
 }
 
 const isVideoFile = (src: string): boolean => {
@@ -31,9 +33,14 @@ export function InfoSection({
     imageSrc,
     imageAlt,
     imageWidth = '450px',
+    mobileImageSrc,
 }: InfoSectionProps) {
     const { colorMode } = useColorMode();
-    const isVideo = isVideoFile(imageSrc);
+    const finalImageSrc = useBreakpointValue({
+        base: mobileImageSrc || imageSrc,
+        md: imageSrc,
+    });
+    const isVideo = isVideoFile(finalImageSrc || imageSrc);
 
     return (
         <Card
@@ -71,7 +78,7 @@ export function InfoSection({
                 {isVideo ? (
                     <Box
                         as="video"
-                        src={imageSrc}
+                        src={finalImageSrc || imageSrc}
                         autoPlay
                         loop
                         muted
@@ -86,7 +93,7 @@ export function InfoSection({
                     />
                 ) : (
                     <Image
-                        src={imageSrc}
+                        src={finalImageSrc || imageSrc}
                         alt={imageAlt}
                         w={['100%', imageWidth]}
                         sx={{
