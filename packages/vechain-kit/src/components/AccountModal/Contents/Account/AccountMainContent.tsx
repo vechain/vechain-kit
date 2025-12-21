@@ -11,11 +11,13 @@ import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     BalanceSection,
+    ModalBackButton,
     QuickActionsSection,
 } from '@/components';
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useAccountModalOptions } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -32,10 +34,18 @@ export const AccountMainContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
+    const { isolatedView } = useAccountModalOptions();
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
+                {!isolatedView && (
+                    <ModalBackButton
+                        onClick={() => {
+                            setCurrentContent('profile');
+                        }}
+                    />
+                )}
                 <ModalHeader>
                     {t('Wallet')}
 

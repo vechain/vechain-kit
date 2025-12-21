@@ -14,7 +14,6 @@ import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 import { LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
@@ -30,7 +29,6 @@ export const ProfileContent = ({
     onLogoutSuccess,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
-    const { isolatedView } = useAccountModalOptions();
     const { account, disconnect } = useWallet();
 
     return (
@@ -40,14 +38,13 @@ export const ProfileContent = ({
                     {t('Profile')}
                 </ModalHeader>
 
-                {!isolatedView && (
-                    <ModalSettingsButton
-                        onClick={() => {
-                            setCurrentContent('settings');
-                        }}
-                        data-testid="settings-button"
-                    />
-                )}
+                <ModalSettingsButton
+                    onClick={() => {
+                        setCurrentContent('settings');
+                    }}
+                    data-testid="settings-button"
+                />
+
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
