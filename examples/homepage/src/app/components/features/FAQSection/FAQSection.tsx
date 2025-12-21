@@ -23,9 +23,9 @@ export function FAQSection() {
             ),
         },
         {
-            question: t('What are the limitations?'),
+            question: t('Are there any limitations?'),
             answer: t(
-                "To support all login methods, you need to use the kit's own hooks (useSendTransaction and useSignMessage). To fully customize the login experience, you need to use your own Privy account. The VeChain shared Privy integration has some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions.",
+                "Yes. You need to use the kit's own hooks (useSendTransaction and useSignMessage) to support all login methods. And, to fully customize the login experience, you need to open your own Privy account, since with the shared VeChain + Privy integration you cannot target only specific social login methods and users' signatures are always requested when doing transactions.",
             ),
         },
         {
