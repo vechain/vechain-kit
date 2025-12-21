@@ -5,6 +5,7 @@ import { Box, VStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { InfoSection } from '@/app/components/features/InfoSection';
 import { LoginMethodsSection } from '../LoginMethodsSection';
+import { LanguagesSection } from '../LanguagesSection';
 
 interface ScrollableSection {
     bg?: string;
@@ -14,6 +15,7 @@ interface ScrollableSection {
     imageAlt: string;
     imageWidth?: string;
     isLoginMethods?: boolean;
+    isLanguages?: boolean;
 }
 
 export function ScrollableInfoSections() {
@@ -74,6 +76,7 @@ export function ScrollableInfoSections() {
                 'https://cdn.prod.website-files.com/685387e21f37b28674efb768/685c258fb5b73e62bd8de0c0_0e9040e92251da2f7c363a4f48682fee_5-4.webp',
             imageAlt: t('Multiple language support'),
             imageWidth: '400px',
+            isLanguages: true,
         },
     ];
 
@@ -177,6 +180,12 @@ export function ScrollableInfoSections() {
                     >
                         {section.isLoginMethods ? (
                             <LoginMethodsSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                            />
+                        ) : section.isLanguages ? (
+                            <LanguagesSection
                                 bg={section.bg}
                                 title={section.title}
                                 content={section.content}
