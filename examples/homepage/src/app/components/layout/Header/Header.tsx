@@ -125,7 +125,7 @@ export function Header() {
                     <HStack spacing={3} flexShrink={0}>
                         <WalletButton
                             mobileVariant="iconAndDomain"
-                            desktopVariant="iconDomainAndAssets"
+                            desktopVariant="iconAndDomain"
                             buttonStyle={{
                                 bg: 'rgb(243, 243, 243)',
                                 rounded: 'full',

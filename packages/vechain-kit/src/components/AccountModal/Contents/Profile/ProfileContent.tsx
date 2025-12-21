@@ -2,7 +2,6 @@ import {
     ModalBody,
     ModalCloseButton,
     ModalHeader,
-    Box,
     ModalFooter,
     VStack,
     HStack,
