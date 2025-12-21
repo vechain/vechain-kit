@@ -15,6 +15,7 @@ import { LuChevronRight, LuCheck, LuCopy } from 'react-icons/lu';
 import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
+import { useTranslation } from 'react-i18next';
 // import { useWallet } from '@/hooks';
 
 type Props = {
@@ -38,6 +39,8 @@ export const AccountSelector = ({
     mt,
     style,
 }: Props) => {
+    const { t } = useTranslation();
+
     const [copied, setCopied] = useState(false);
     // const { disconnect } = useWallet();
 
@@ -87,8 +90,10 @@ export const AccountSelector = ({
                             props={{ width: 7, height: 7 }}
                         />
                         <Text fontSize={size} fontWeight="500">
-                            {humanDomain(wallet?.domain ?? '', 22, 0) ||
-                                humanAddress(wallet?.address ?? '', 6, 4)}
+                            {copied
+                                ? t('Copied!')
+                                : humanDomain(wallet?.domain ?? '', 22, 0) ||
+                                  humanAddress(wallet?.address ?? '', 6, 4)}
                         </Text>
                     </HStack>
 

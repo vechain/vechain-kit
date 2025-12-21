@@ -200,7 +200,7 @@ export const ProfileCard = ({
                         isLoadingMetadata: metadata?.isLoading,
                         metadata: metadata?.records,
                     }}
-                    style={{ mt: 8 }}
+                    style={{ mt: 4 }}
                     setCurrentContent={setCurrentContent}
                 />
             </VStack>

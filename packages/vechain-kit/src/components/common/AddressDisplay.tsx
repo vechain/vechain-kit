@@ -22,6 +22,7 @@ import { humanAddress } from '@/utils';
 import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     wallet: Wallet;
@@ -40,6 +41,8 @@ export const AddressDisplay = ({
     showHumanAddress = true,
     setCurrentContent,
 }: Props) => {
+    const { t } = useTranslation();
+
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
@@ -114,7 +117,7 @@ export const AddressDisplay = ({
                                 color={textPrimary}
                                 noOfLines={1}
                             >
-                                {wallet.domain}
+                                {copiedDomain ? t('Copied!') : wallet.domain}
                             </Text>
                             <HStack spacing={2}>
                                 {setCurrentContent && (
@@ -164,7 +167,9 @@ export const AddressDisplay = ({
                             color={textPrimary}
                             noOfLines={1}
                         >
-                            {showHumanAddress
+                            {copied
+                                ? t('Copied!')
+                                : showHumanAddress
                                 ? humanAddress(wallet?.address ?? '', 8, 7)
                                 : wallet?.address}
                         </Text>

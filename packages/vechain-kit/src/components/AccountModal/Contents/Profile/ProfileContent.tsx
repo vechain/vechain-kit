@@ -52,7 +52,7 @@ export const ProfileContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack w={'full'} spacing={8}>
+                <VStack w={'full'} spacing={6}>
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
