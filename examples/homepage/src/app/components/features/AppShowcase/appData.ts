@@ -12,6 +12,28 @@ export interface AppData {
 
 export const getApps = (t: TFunction): AppData[] => [
     {
+        id: 'velottery',
+        name: 'VeLottery',
+        logo: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeigtlombd3jplbq33k2m2p5cbrbniznv4fnr3bbh2hxxackh5bpcqy/media/logo.png',
+        image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeigtlombd3jplbq33k2m2p5cbrbniznv4fnr3bbh2hxxackh5bpcqy/media/ve_world_banner.png',
+        tag: t('Gaming'),
+        description: t(
+            '• Uses VeChain Kit end-to-end: login, wallet, hooks, and transaction components.',
+        ),
+        url: 'https://velottery.vet/',
+    },
+    {
+        id: 'cleanify',
+        name: 'Cleanify',
+        logo: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeicvr6ivkwv2iygkgcijbmjaorfyi4gui2bjskhwuitop7n3tqo24m/media/logo.png',
+        image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeicvr6ivkwv2iygkgcijbmjaorfyi4gui2bjskhwuitop7n3tqo24m/media/ve_world_featured_image.png',
+        tag: t('Sustainability'),
+        description: t(
+            '• Uses its own Privy setup.\n• Supports Google OAuth login and VeWorld login.\n• Implements custom login, wallet management, and transaction flows (no VeChain Kit UI).\n• Uses VeChain Kit UI only for the "Receive" and "Send" screens.\n• Uses VeChain Kit hooks for transaction management.',
+        ),
+        url: 'https://cleanify.vet/',
+    },
+    {
         id: 'stargate',
         name: 'StarGate',
         logo: 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/stargate-icon.png',
@@ -33,17 +55,7 @@ export const getApps = (t: TFunction): AppData[] => [
         ),
         url: 'https://governance.vebetterdao.org/',
     },
-    {
-        id: 'cleanify',
-        name: 'Cleanify',
-        logo: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeicvr6ivkwv2iygkgcijbmjaorfyi4gui2bjskhwuitop7n3tqo24m/media/logo.png',
-        image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeicvr6ivkwv2iygkgcijbmjaorfyi4gui2bjskhwuitop7n3tqo24m/media/ve_world_featured_image.png',
-        tag: t('Sustainability'),
-        description: t(
-            '• Uses its own Privy setup.\n• Supports Google OAuth login and VeWorld login.\n• Implements custom login, wallet management, and transaction flows (no VeChain Kit UI).\n• Uses VeChain Kit UI only for the "Receive" and "Send" screens.\n• Uses VeChain Kit hooks for transaction management.',
-        ),
-        url: 'https://cleanify.vet/',
-    },
+
     {
         id: 'betterswap',
         name: 'BetterSwap',
@@ -65,17 +77,6 @@ export const getApps = (t: TFunction): AppData[] => [
             '• Uses VeChain Kit UI only for the "Login" screen.\n• Uses VeChain Kit hooks.',
         ),
         url: 'https://vetrade.vet/',
-    },
-    {
-        id: 'velottery',
-        name: 'VeLottery',
-        logo: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeigtlombd3jplbq33k2m2p5cbrbniznv4fnr3bbh2hxxackh5bpcqy/media/logo.png',
-        image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeigtlombd3jplbq33k2m2p5cbrbniznv4fnr3bbh2hxxackh5bpcqy/media/ve_world_banner.png',
-        tag: t('Gaming'),
-        description: t(
-            '• Uses VeChain Kit end-to-end: login, wallet, hooks, and transaction components.',
-        ),
-        url: 'https://velottery.vet/',
     },
     {
         id: 'solarwise',

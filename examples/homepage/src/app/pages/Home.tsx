@@ -44,7 +44,7 @@ export default function Home(): ReactElement {
 
                     <Button
                         as={Link}
-                        href="https://github.com/vechain/vechain-kit/releases/tag/v2.0.0"
+                        href="https://github.com/vechain/vechain-kit/releases"
                         isExternal
                         variant="homepageSecondary"
                     >

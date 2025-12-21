@@ -3,6 +3,7 @@
 import { HStack, Image, Text, Card } from '@chakra-ui/react';
 import { WalletButton, useWallet } from '@vechain/vechain-kit';
 import { LanguageDropdown } from './LanguageDropdown';
+import { useTranslation } from 'react-i18next';
 
 const basePath = process.env.basePath ?? '';
 
@@ -11,6 +12,8 @@ export function Header() {
     // const [isMobile] = useMediaQuery('(max-width: 768px)');
 
     const { connection } = useWallet();
+
+    const { t } = useTranslation();
 
     return (
         <HStack
@@ -122,7 +125,7 @@ export function Header() {
                     <HStack spacing={3} flexShrink={0}>
                         <WalletButton
                             mobileVariant="iconAndDomain"
-                            desktopVariant="iconAndDomain"
+                            desktopVariant="iconDomainAndAssets"
                             buttonStyle={{
                                 bg: 'rgb(243, 243, 243)',
                                 rounded: 'full',
@@ -131,6 +134,7 @@ export function Header() {
                                 },
                                 transition: 'all 0.2s',
                             }}
+                            label={t('Try me!')}
                         />
                         {/* Show this only when not connected */}
                         {!connection.isConnected && <LanguageDropdown />}
