@@ -7,6 +7,7 @@ import {
     Heading,
     Text,
     Image,
+    Box,
     useColorMode,
 } from '@chakra-ui/react';
 
@@ -19,6 +20,10 @@ interface InfoSectionProps {
     imageWidth?: string;
 }
 
+const isVideoFile = (src: string): boolean => {
+    return /\.(mp4|webm|ogg|mov)$/i.test(src);
+};
+
 export function InfoSection({
     bg = '#e0daea',
     title,
@@ -28,6 +33,7 @@ export function InfoSection({
     imageWidth = '450px',
 }: InfoSectionProps) {
     const { colorMode } = useColorMode();
+    const isVideo = isVideoFile(imageSrc);
 
     return (
         <Card
@@ -62,7 +68,33 @@ export function InfoSection({
                     </Text>
                 </VStack>
 
-                <Image src={imageSrc} alt={imageAlt} w={['80%', imageWidth]} />
+                {isVideo ? (
+                    <Box
+                        as="video"
+                        src={imageSrc}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        w={['80%', imageWidth]}
+                        borderRadius="md"
+                    />
+                ) : (
+                    <Image
+                        src={imageSrc}
+                        alt={imageAlt}
+                        w={['80%', imageWidth]}
+                        sx={{
+                            width: '100%',
+                            height: 'auto',
+                            display: 'block',
+                            WebkitMaskImage:
+                                'radial-gradient(ellipse at center, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 99%, rgba(0,0,0,0) 95%)',
+                            maskImage:
+                                'radial-gradient(ellipse at center, rgba(0,0,0,1) 80%,rgba(0,0,0,0) 99%, rgba(0,0,0,0) 95%)',
+                        }}
+                    />
+                )}
             </Grid>
         </Card>
     );

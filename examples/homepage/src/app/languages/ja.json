@@ -34,6 +34,7 @@
   "The user pays for the transactions. However, if you want to sponsor them (always or only in specific scenarios), you can use the fee delegation feature.": "ユーザーがトランザクションの手数料を支払いますが、常にまたは特定の状況でユーザーの手数料を肩代わりしたい場合は、フィー・デリゲーション機能を利用できます。",
   "To support all login methods, you need to use the kit's own hooks (useSendTransaction and useSignMessage). To fully customize the login experience, you need to use your own Privy account. The VeChain shared Privy integration has some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions.": "すべてのログイン方法をサポートするには、キット独自のフック（useSendTransactionおよびuseSignMessage）を使用する必要があります。ログイン体験を完全にカスタマイズするには、ご自身のPrivyアカウントを使用してください。VeChainの共有Privy統合にはいくつか制限があり、特定のソーシャルログイン方法だけを指定できない、ログインUXを完全にはカスタマイズできない（ユーザーはポップアップウィンドウを経由する必要がある）、トランザクション時には必ず署名要求が発生するといった点があります。",
   "Trading": "トレーディング",
+  "Try me!": "試してみて！",
   "Use our hooks and components to speed up your development and interact with the blockchain.": "当社のフックやコンポーネントを活用して、開発のスピードアップやブロックチェーンとのやり取りが可能です。",
   "Uses VeChain Kit end-to-end: login, wallet, hooks, and transaction components.": "VeChain Kitをエンドツーエンドで使用：ログイン、ウォレット、フック、トランザクションコンポーネント。",
   "Uses VeChain Kit only for the login flow and for the hooks to manage transactions.": "VeChain Kitはログインフローと、トランザクション管理用フックのみに使用します。",

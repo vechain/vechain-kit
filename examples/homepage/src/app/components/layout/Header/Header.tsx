@@ -21,7 +21,7 @@ export function Header() {
             justifyContent="center"
             position="fixed"
             top={0}
-            zIndex={1000}
+            zIndex={10}
             py={4}
             px={{ base: 4, md: 8 }}
         >

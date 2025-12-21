@@ -34,6 +34,7 @@
   "The user pays for the transactions. However, if you want to sponsor them (always or only in specific scenarios), you can use the fee delegation feature.": "用户需要为交易支付费用。不过，如果你想为用户支付费用（始终或仅在特定场景下），可以使用手续费委托功能。",
   "To support all login methods, you need to use the kit's own hooks (useSendTransaction and useSignMessage). To fully customize the login experience, you need to use your own Privy account. The VeChain shared Privy integration has some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions.": "为了支持所有登录方式，你需要使用工具包自带的 hooks（useSendTransaction 和 useSignMessage）。如需完全自定义登录体验，你需要配置自己的 Privy 账户。VeChain 共享的 Privy 集成存在一些限制：无法仅针对特定社交登录方式进行定制，无法完全自定义登录界面（用户需要通过弹窗进行登录），并且每次交易都需要请求用户签名。",
   "Trading": "交易",
+  "Try me!": "试试我！",
   "Use our hooks and components to speed up your development and interact with the blockchain.": "使用我们的 hooks 和组件可以加快开发效率，并便捷地与区块链交互。",
   "Uses VeChain Kit end-to-end: login, wallet, hooks, and transaction components.": "端到端使用 VeChain Kit：包含登录、钱包、hooks 以及交易组件。",
   "Uses VeChain Kit only for the login flow and for the hooks to manage transactions.": "仅在登录流程和管理交易的 hooks 中使用 VeChain Kit。",
