@@ -6,13 +6,14 @@ import {
     VStack,
     HStack,
     Text,
-    Button,
     Image,
     Badge,
     Card,
+    Icon,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { AppData } from './appData';
+import { LuExternalLink } from 'react-icons/lu';
 
 interface AppCardProps {
     app: AppData;
@@ -128,7 +129,7 @@ export function AppCard({ app }: AppCardProps) {
                 </VStack>
 
                 {/* Visit Button */}
-                <Button
+                <Box
                     as="a"
                     href={app.url}
                     target="_blank"
@@ -139,14 +140,22 @@ export function AppCard({ app }: AppCardProps) {
                         bg: 'gray.800',
                     }}
                     borderRadius="xl"
-                    size="md"
+                    px={4}
+                    py={2}
                     width="100%"
                     fontWeight="medium"
                     textDecoration="none"
                     mt={4}
+                    cursor="pointer"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    gap={2}
+                    transition="background-color 0.2s"
                 >
                     {t('Visit')}
-                </Button>
+                    <Icon as={LuExternalLink} />
+                </Box>
             </VStack>
         </Card>
     );

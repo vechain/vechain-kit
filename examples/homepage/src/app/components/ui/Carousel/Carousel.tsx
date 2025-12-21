@@ -344,9 +344,11 @@ export const Carousel = <T,>({
 
         const target = e.target as HTMLElement;
         const isButton = target.closest('button') !== null;
-        setClickedOnButton(isButton);
+        const isLink = target.closest('a') !== null;
+        const isInteractive = isButton || isLink;
+        setClickedOnButton(isInteractive);
 
-        if (isButton) {
+        if (isInteractive) {
             return;
         }
 
