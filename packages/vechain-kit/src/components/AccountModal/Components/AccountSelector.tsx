@@ -19,7 +19,7 @@ import {
     LuArrowLeftRight,
 } from 'react-icons/lu';
 import { AccountAvatar } from '@/components/common';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@/hooks';
@@ -51,7 +51,28 @@ export const AccountSelector = ({
 
     const [copied, setCopied] = useState(false);
     const [isSwitching, setIsSwitching] = useState(false);
+    const [debugInfo, setDebugInfo] = useState<string | null>(null);
     // const { disconnect } = useWallet();
+
+    // Debug: Show connection state in UI for mobile debugging
+    useEffect(() => {
+        if (isBrowser() && window.vechain) {
+            const info = [
+                `isInAppBrowser: ${connection.isInAppBrowser}`,
+                `window.vechain exists: ${!!window.vechain}`,
+                `window.vechain.isInAppBrowser: ${window.vechain.isInAppBrowser}`,
+                `has request method: ${!!(window.vechain as any).request}`,
+                `window.vechain keys: ${Object.keys(window.vechain).join(
+                    ', ',
+                )}`,
+            ].join('\n');
+            setDebugInfo(info);
+        } else {
+            setDebugInfo(
+                `isBrowser: ${isBrowser()}\nwindow.vechain: ${!!window.vechain}`,
+            );
+        }
+    }, [connection.isInAppBrowser]);
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
@@ -66,25 +87,93 @@ export const AccountSelector = ({
     };
 
     const handleSwitchWallet = async () => {
-        if (!isBrowser() || !window.vechain) {
+        if (!isBrowser()) {
+            toast({
+                title: 'Error',
+                description: 'Not in browser environment',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
+
+        if (!window.vechain) {
+            toast({
+                title: 'Error',
+                description: `VeWorld API not available.\n\nDebug info:\n${
+                    debugInfo || 'No debug info available'
+                }`,
+                status: 'error',
+                duration: 10000,
+                isClosable: true,
+            });
             return;
         }
 
         // Type assertion to access request method
         const vechainRequest = (window.vechain as any).request;
+
         if (!vechainRequest) {
+            // Try to check available methods using alternative approach
+            let methodsInfo = 'Could not check methods';
+            try {
+                // Try different ways to access the API
+                const vechainAny = window.vechain as any;
+                if (vechainAny.request) {
+                    const methods = await vechainAny.request('thor_methods');
+                    methodsInfo = `Available methods: ${
+                        methods?.join(', ') || 'none'
+                    }`;
+                } else if (vechainAny.methods) {
+                    methodsInfo = `Methods property: ${JSON.stringify(
+                        vechainAny.methods,
+                    )}`;
+                } else {
+                    methodsInfo = `No request or methods found. Keys: ${Object.keys(
+                        vechainAny,
+                    ).join(', ')}`;
+                }
+            } catch (e) {
+                methodsInfo = `Error checking methods: ${
+                    e instanceof Error ? e.message : String(e)
+                }`;
+            }
+
+            toast({
+                title: 'Error: request method not found',
+                description: `window.vechain.request is not available.\n\n${methodsInfo}\n\nAll window.vechain keys: ${Object.keys(
+                    window.vechain,
+                ).join(', ')}`,
+                status: 'error',
+                duration: 15000,
+                isClosable: true,
+            });
             return;
         }
 
         setIsSwitching(true);
         try {
             const newAddress = await vechainRequest('thor_switchWallet');
+
             if (newAddress) {
                 toast({
                     title: 'Wallet switched',
-                    description: 'Successfully switched to a new wallet',
+                    description: `Successfully switched to: ${newAddress.slice(
+                        0,
+                        6,
+                    )}...${newAddress.slice(-4)}`,
                     status: 'success',
                     duration: 3000,
+                    isClosable: true,
+                });
+            } else {
+                toast({
+                    title: 'Warning',
+                    description:
+                        'Switch wallet returned no address. The method completed but returned null/undefined.',
+                    status: 'warning',
+                    duration: 5000,
                     isClosable: true,
                 });
             }
@@ -93,6 +182,13 @@ export const AccountSelector = ({
                 error instanceof Error
                     ? error.message
                     : String(error) || 'Failed to switch wallet';
+
+            const fullErrorDetails =
+                error instanceof Error
+                    ? `Message: ${error.message}\nName: ${
+                          error.name
+                      }\nStack: ${error.stack?.substring(0, 200)}`
+                    : `Error: ${String(error)}`;
 
             // Check if error is about "remember me" not being enabled
             if (
@@ -111,10 +207,10 @@ export const AccountSelector = ({
                 });
             } else {
                 toast({
-                    title: 'Error',
-                    description: errorMessage,
+                    title: 'Error switching wallet',
+                    description: `${errorMessage}\n\nFull error:\n${fullErrorDetails}`,
                     status: 'error',
-                    duration: 5000,
+                    duration: 15000,
                     isClosable: true,
                 });
             }
@@ -184,6 +280,7 @@ export const AccountSelector = ({
                     p={3}
                     isLoading={isSwitching}
                     isDisabled={isSwitching}
+                    data-testid="switch-wallet-button"
                 />
             ) : (
                 <IconButton

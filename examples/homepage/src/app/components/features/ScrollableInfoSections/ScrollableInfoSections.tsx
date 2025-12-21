@@ -28,7 +28,7 @@ export function ScrollableInfoSections() {
                 'Forget about the underlying blockchain infrastructure. We handle it for you.',
             ),
             imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/animation-kit.gif',
             imageAlt: t('VeChain Kit'),
             imageWidth: '950px',
         },

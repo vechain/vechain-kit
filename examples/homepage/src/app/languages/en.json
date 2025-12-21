@@ -40,6 +40,7 @@
   "Uses VeChain Kit only for the login flow and for the hooks to manage transactions.": "Uses VeChain Kit only for the login flow and for the hooks to manage transactions.",
   "Uses VeChain Kit to allow social login users to trade on the platform.": "Uses VeChain Kit to allow social login users to trade on the platform.",
   "Uses its own Privy setup for social login OAuth2 based methods like Google and Apple": "Uses its own Privy setup for social login OAuth2 based methods like Google and Apple",
+  "Uses its own Privy setup for social login OAuth2 based methods like Google and Apple.": "Uses its own Privy setup for social login OAuth2 based methods like Google and Apple.",
   "VeChain Kit": "VeChain Kit",
   "VeChain Kit UI is fully integrated into the app, using a bottom sheet UX on mobile to enhance the user experience.": "VeChain Kit UI is fully integrated into the app, using a bottom sheet UX on mobile to enhance the user experience.",
   "VeChain Kit is an all-in-one SDK for building frontend applications on VeChain blockchain, supporting wallet integration, developer hooks, pre-built UI components, and more.": "VeChain Kit is an all-in-one SDK for building frontend applications on VeChain blockchain, supporting wallet integration, developer hooks, pre-built UI components, and more.",

@@ -1,6 +1,6 @@
 'use client';
 
-import { HStack, Image, Text, Card } from '@chakra-ui/react';
+import { HStack, Image, Text, Card, useMediaQuery } from '@chakra-ui/react';
 import { WalletButton, useWallet } from '@vechain/vechain-kit';
 import { LanguageDropdown } from './LanguageDropdown';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ const basePath = process.env.basePath ?? '';
 
 export function Header() {
     // const { colorMode } = useColorMode();
-    // const [isMobile] = useMediaQuery('(max-width: 768px)');
+    const [isMobile] = useMediaQuery('(max-width: 768px)');
 
     const { connection } = useWallet();
 
@@ -136,8 +136,10 @@ export function Header() {
                             }}
                             label={t('Try me!')}
                         />
-                        {/* Show this only when not connected */}
-                        {!connection.isConnected && <LanguageDropdown />}
+                        {/* Show on desktop always, on mobile only when not connected */}
+                        {(!isMobile || !connection.isConnected) && (
+                            <LanguageDropdown />
+                        )}
                     </HStack>
                 </HStack>
             </Card>

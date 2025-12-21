@@ -11,6 +11,24 @@
     ],
     "mainLanguage": "en",
     "sortMainLanguageFileAlphabetically": true,
-    "sortTargetLanguageFilesAlphabetically": true
+    "sortTargetLanguageFilesAlphabetically": true,
+    "fixedWords": {
+        "all": {
+            "staking": "staking",
+            "stake": "stake",
+            "validator": "validator",
+            "validators": "validators",
+            "APY": "APY",
+            "NFT": "NFT",
+            "VET": "VET",
+            "VTHO": "VTHO",
+            "B3TR": "B3TR",
+            "VeChain": "VeChain",
+            "vechain": "vechain"
+        },
+        "it": {
+            "maturity": "maturazione",
+            "build": "sviluppare"
+        }
+    }
 }
-
