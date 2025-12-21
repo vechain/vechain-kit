@@ -5,7 +5,6 @@ import {
     VStack,
     Text,
     Button,
-    Box,
     ModalFooter,
     Icon,
     Link,
@@ -136,7 +135,7 @@ export const TransactionModalContent = ({
     }`;
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{statusConfig.title}</ModalHeader>
                 <ModalCloseButton
@@ -241,6 +240,6 @@ export const TransactionModalContent = ({
                     )}
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

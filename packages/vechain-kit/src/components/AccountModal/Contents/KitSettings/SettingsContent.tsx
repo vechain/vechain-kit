@@ -92,7 +92,7 @@ export const SettingsContent = ({
     };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Settings')}</ModalHeader>
 
@@ -289,6 +289,6 @@ export const SettingsContent = ({
                     />
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

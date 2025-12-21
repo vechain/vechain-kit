@@ -35,7 +35,7 @@ export const ProfileContent = ({
     const { account, disconnect } = useWallet();
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader data-testid="modal-title">
                     {t('Profile')}
@@ -53,7 +53,7 @@ export const ProfileContent = ({
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack w={'full'} spacing={2}>
+                <VStack w={'full'} spacing={8}>
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
@@ -128,6 +128,6 @@ export const ProfileContent = ({
                     </Button>
                 </HStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

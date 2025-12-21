@@ -6,7 +6,6 @@ import {
     VStack,
     Text,
     ModalFooter,
-    Box,
     Icon,
     useToken,
 } from '@chakra-ui/react';
@@ -326,7 +325,7 @@ export const CustomizationSummaryContent = ({
     };
 
     return (
-        <Box as="form" onSubmit={handleSubmit(onSubmit)}>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Confirm Changes')}</ModalHeader>
                 <ModalBackButton
@@ -414,6 +413,6 @@ export const CustomizationSummaryContent = ({
                     context="customization"
                 />
             </ModalFooter>
-        </Box>
+        </>
     );
 };

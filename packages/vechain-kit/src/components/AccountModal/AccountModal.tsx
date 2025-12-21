@@ -228,13 +228,13 @@ export const AccountModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
             mobileMinHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '510px' : '500px'
+                themeConfig?.modal?.useBottomSheetOnMobile ? '515px' : '505px'
             }
             mobileMaxHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '510px' : '500px'
+                themeConfig?.modal?.useBottomSheetOnMobile ? '515px' : '505px'
             }
-            desktopMinHeight={'475px'}
-            desktopMaxHeight={'475px'}
+            desktopMinHeight={'480px'}
+            desktopMaxHeight={'480px'}
         >
             {renderContent()}
         </BaseModal>

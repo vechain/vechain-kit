@@ -39,7 +39,8 @@ export const FeatureAnnouncementCard = ({
         closeAnnouncement();
     };
 
-    if (!isVisible) return null;
+    // We always show the announcement card for now
+    // if (!isVisible) return null;
 
     return (
         <Card
@@ -71,7 +72,7 @@ export const FeatureAnnouncementCard = ({
                             )}
                         </Text>
                     </VStack>
-                    <IconButton
+                    {/* <IconButton
                         size="sm"
                         variant="ghost"
                         colorScheme="gray"
@@ -81,7 +82,7 @@ export const FeatureAnnouncementCard = ({
                             closeAnnouncement();
                         }}
                         aria-label={t('Close announcement')}
-                    />
+                    /> */}
                 </HStack>
             </CardBody>
         </Card>

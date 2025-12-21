@@ -5,7 +5,6 @@ import {
     VStack,
     Text,
     Button,
-    Box,
     ModalFooter,
     Icon,
     Link,
@@ -43,11 +42,11 @@ export const SuccessfulOperationContent = ({
     const { network } = useVeChainKitConfig();
     const explorerUrl = getConfig(network.type).explorerUrl;
     const socialDescription = `${explorerUrl}/${txId}`;
-    
+
     const successColor = useToken('colors', 'vechain-kit-success');
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
@@ -122,6 +121,6 @@ export const SuccessfulOperationContent = ({
                     )}
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

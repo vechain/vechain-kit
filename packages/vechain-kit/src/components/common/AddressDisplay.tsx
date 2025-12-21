@@ -9,7 +9,6 @@ import {
     InputGroup,
     InputRightElement,
     InputLeftElement,
-    HStack,
     useToken,
 } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -24,7 +23,6 @@ import { humanAddress } from '@/utils';
 import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
-import { useTranslation } from 'react-i18next';
 
 type Props = {
     wallet: Wallet;
@@ -43,7 +41,6 @@ export const AddressDisplay = ({
     showHumanAddress = true,
     setCurrentContent,
 }: Props) => {
-    const { t } = useTranslation();
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
@@ -95,48 +92,33 @@ export const AddressDisplay = ({
                         {label}
                     </Text>
                 )}
-                <VStack spacing={2} w={'full'}>
-                    <InputGroup>
-                        <InputLeftElement>
-                            <Icon as={LuSquareUser} color={textSecondary} />
-                        </InputLeftElement>
-                        <Input
-                            value={wallet?.domain || ''}
-                            placeholder={
-                                setCurrentContent
-                                    ? t('Choose account name')
-                                    : ''
-                            }
-                            readOnly
-                            cursor={
-                                setCurrentContent && !wallet?.domain
-                                    ? 'pointer'
-                                    : 'default'
-                            }
-                            onClick={
-                                setCurrentContent && !wallet?.domain
-                                    ? handleDomainEdit
-                                    : undefined
-                            }
-                            fontSize={'sm'}
-                            fontWeight={'700'}
-                            color={textPrimary}
-                        />
-                        <InputRightElement mr={'40px'}>
-                            {setCurrentContent && (
-                                <Icon
-                                    color={textSecondary}
-                                    cursor="pointer"
-                                    as={LuPencil}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDomainEdit();
-                                    }}
-                                />
-                            )}
-                        </InputRightElement>
-                        <InputRightElement>
-                            {wallet?.domain && (
+                {wallet?.domain ? (
+                    <VStack spacing={2} w={'full'}>
+                        <InputGroup>
+                            <InputLeftElement>
+                                <Icon as={LuSquareUser} color={textSecondary} />
+                            </InputLeftElement>
+                            <Input
+                                value={wallet.domain}
+                                readOnly
+                                fontSize={'sm'}
+                                fontWeight={'700'}
+                                color={textPrimary}
+                            />
+                            <InputRightElement mr={'40px'}>
+                                {setCurrentContent && (
+                                    <Icon
+                                        color={textSecondary}
+                                        cursor="pointer"
+                                        as={LuPencil}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDomainEdit();
+                                        }}
+                                    />
+                                )}
+                            </InputRightElement>
+                            <InputRightElement>
                                 <Icon
                                     color={textSecondary}
                                     cursor="pointer"
@@ -148,10 +130,45 @@ export const AddressDisplay = ({
                                         )
                                     }
                                 />
-                            )}
-                        </InputRightElement>
-                    </InputGroup>
+                            </InputRightElement>
+                        </InputGroup>
 
+                        <InputGroup>
+                            <InputLeftElement>
+                                <Icon as={LuWallet} color={textSecondary} />
+                            </InputLeftElement>
+                            <Input
+                                value={
+                                    showHumanAddress
+                                        ? humanAddress(
+                                              wallet.address ?? '',
+                                              8,
+                                              7,
+                                          )
+                                        : wallet.address
+                                }
+                                readOnly
+                                fontSize={'sm'}
+                                fontWeight={'700'}
+                                color={textPrimary}
+                            />
+                            <InputRightElement
+                                onClick={() =>
+                                    copyToClipboard(
+                                        wallet.address ?? '',
+                                        setCopied,
+                                    )
+                                }
+                            >
+                                <Icon
+                                    color={textSecondary}
+                                    cursor="pointer"
+                                    as={copied ? LuCheck : LuCopy}
+                                />
+                            </InputRightElement>
+                        </InputGroup>
+                    </VStack>
+                ) : (
                     <InputGroup>
                         <InputLeftElement>
                             <Icon as={LuWallet} color={textSecondary} />
@@ -159,17 +176,7 @@ export const AddressDisplay = ({
                         <Input
                             value={
                                 showHumanAddress
-                                    ? wallet?.domain
-                                        ? humanAddress(
-                                              wallet.address ?? '',
-                                              8,
-                                              7,
-                                          )
-                                        : humanAddress(
-                                              wallet?.address ?? '',
-                                              6,
-                                              4,
-                                          )
+                                    ? humanAddress(wallet?.address ?? '', 6, 4)
                                     : wallet?.address
                             }
                             readOnly
@@ -192,7 +199,7 @@ export const AddressDisplay = ({
                             />
                         </InputRightElement>
                     </InputGroup>
-                </VStack>
+                )}
             </VStack>
         </VStack>
     );
