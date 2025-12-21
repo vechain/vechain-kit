@@ -45,7 +45,7 @@ type Props = {
 export const AccountModal = ({
     isOpen,
     onClose,
-    initialContent = 'main',
+    initialContent = 'profile',
 }: Props) => {
     const { account } = useWallet();
     const { themeConfig } = useVechainKitThemeConfig();

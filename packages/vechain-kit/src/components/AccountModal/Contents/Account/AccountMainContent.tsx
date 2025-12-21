@@ -11,12 +11,12 @@ import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     BalanceSection,
+    ModalBackButton,
     QuickActionsSection,
 } from '@/components';
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -37,12 +37,10 @@ export const AccountMainContent = ({
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalSettingsButton
-                    onClick={() => {
-                        setCurrentContent('settings');
-                    }}
-                    data-testid="settings-button"
-                />
+                {/* <ModalBackButton
+                    label={t('Profile')}
+                    onClick={() => setCurrentContent('profile')}
+                /> */}
                 <ModalHeader>
                     {t('Wallet')}
 

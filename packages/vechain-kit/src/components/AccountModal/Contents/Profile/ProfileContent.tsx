@@ -12,11 +12,12 @@ import {
 import { useWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import { LuLogOut, LuPencil } from 'react-icons/lu';
+import { LuLogOut, LuPencil, LuWallet, LuSettings } from 'react-icons/lu';
+import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -41,8 +42,11 @@ export const ProfileContent = ({
                 </ModalHeader>
 
                 {!isolatedView && (
-                    <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
+                    <ModalSettingsButton
+                        onClick={() => {
+                            setCurrentContent('settings');
+                        }}
+                        data-testid="settings-button"
                     />
                 )}
                 <ModalCloseButton />
@@ -91,19 +95,11 @@ export const ProfileContent = ({
                         width="full"
                         height="40px"
                         variant="vechainKitSecondary"
-                        leftIcon={<Icon as={LuPencil} />}
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'account-customization',
-                                props: {
-                                    setCurrentContent,
-                                    initialContentSource: 'profile',
-                                },
-                            })
-                        }
-                        data-testid="customize-button"
+                        leftIcon={<Icon as={LuWallet} />}
+                        onClick={() => setCurrentContent('main')}
+                        data-testid="wallet-button"
                     >
-                        {t('Customize')}
+                        {t('Wallet')}
                     </Button>
                     <Button
                         size="md"

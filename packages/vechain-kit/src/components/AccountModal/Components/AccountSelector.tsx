@@ -11,11 +11,11 @@ import {
 import { humanAddress, humanDomain } from '../../../utils';
 import { copyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
-import { LuChevronRight, LuCheck, LuCopy, LuLogOut } from 'react-icons/lu';
+import { LuChevronRight, LuCheck, LuCopy } from 'react-icons/lu';
 import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
-import { useWallet } from '@/hooks';
+// import { useWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
@@ -31,15 +31,15 @@ type Props = {
 
 export const AccountSelector = ({
     wallet,
-    setCurrentContent,
+    // setCurrentContent,
     size = 'md',
     onClick,
-    onClose,
+    // onClose,
     mt,
     style,
 }: Props) => {
     const [copied, setCopied] = useState(false);
-    const { disconnect } = useWallet();
+    // const { disconnect } = useWallet();
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
@@ -53,10 +53,10 @@ export const AccountSelector = ({
         }
     };
 
-    const handleLogout = () => {
-        disconnect();
-        onClose();
-    };
+    // const handleLogout = () => {
+    //     disconnect();
+    //     onClose();
+    // };
 
     return (
         <HStack
@@ -111,7 +111,7 @@ export const AccountSelector = ({
                 _hover={{ opacity: 0.8 }}
             />
 
-            <IconButton
+            {/* <IconButton
                 aria-label="Logout"
                 icon={<Icon as={LuLogOut} />}
                 onClick={() =>
@@ -128,7 +128,7 @@ export const AccountSelector = ({
                 opacity={0.5}
                 _hover={{ opacity: 0.8 }}
                 colorScheme="red"
-            />
+            /> */}
         </HStack>
     );
 };

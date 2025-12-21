@@ -98,7 +98,7 @@ export const SettingsContent = ({
 
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
+                        onClick={() => setCurrentContent('profile')}
                     />
                 )}
                 <ModalCloseButton />
