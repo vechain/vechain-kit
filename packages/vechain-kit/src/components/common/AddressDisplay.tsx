@@ -17,14 +17,12 @@ import {
     LuWallet,
     LuSquareUser,
     LuPencil,
-    LuArrowLeftRight,
 } from 'react-icons/lu';
 import { humanAddress } from '@/utils';
 import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { useTranslation } from 'react-i18next';
-import { useWallet, useSwitchWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
@@ -44,9 +42,6 @@ export const AddressDisplay = ({
     setCurrentContent,
 }: Props) => {
     const { t } = useTranslation();
-    const { connection } = useWallet();
-    const { switchWallet, isSwitching } = useSwitchWallet();
-
     const [copied, setCopied] = useState(false);
     const [copiedDomain, setCopiedDomain] = useState(false);
 
@@ -178,19 +173,6 @@ export const AddressDisplay = ({
                                 : wallet?.address}
                         </Text>
                         <HStack spacing={2}>
-                            {connection.isInAppBrowser && (
-                                <IconButton
-                                    icon={<LuArrowLeftRight />}
-                                    onClick={switchWallet}
-                                    variant="vechainKitSecondary"
-                                    height="30px"
-                                    w="30px"
-                                    borderRadius="5px"
-                                    aria-label="Switch wallet"
-                                    isLoading={isSwitching}
-                                    isDisabled={isSwitching}
-                                />
-                            )}
                             <IconButton
                                 icon={copied ? <LuCheck /> : <LuCopy />}
                                 onClick={() =>

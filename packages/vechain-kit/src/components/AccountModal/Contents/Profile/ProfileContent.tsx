@@ -8,13 +8,13 @@ import {
     Button,
     Icon,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
+import { useSwitchWallet, useWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { LuLogOut, LuWalletCards } from 'react-icons/lu';
+import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 export type ProfileContentProps = {
@@ -29,7 +29,8 @@ export const ProfileContent = ({
     onLogoutSuccess,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
-    const { account, disconnect } = useWallet();
+    const { account, disconnect, connection } = useWallet();
+    const { switchWallet, isSwitching } = useSwitchWallet();
 
     return (
         <>
@@ -98,30 +99,49 @@ export const ProfileContent = ({
                     >
                         {t('Wallet')}
                     </Button>
-                    <Button
-                        size="md"
-                        width="full"
-                        height="40px"
-                        variant="vechainKitSecondary"
-                        leftIcon={<Icon as={LuLogOut} />}
-                        colorScheme="red"
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: () => {
-                                        disconnect();
-                                        onLogoutSuccess?.();
+                    {connection.isInAppBrowser ? (
+                        <Button
+                            size="md"
+                            width="full"
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuArrowLeftRight} />}
+                            colorScheme="red"
+                            onClick={() => {
+                                switchWallet();
+                            }}
+                            isLoading={isSwitching}
+                            isDisabled={isSwitching}
+                            data-testid="switch-wallet-button"
+                        >
+                            {t('Switch')}
+                        </Button>
+                    ) : (
+                        <Button
+                            size="md"
+                            width="full"
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuLogOut} />}
+                            colorScheme="red"
+                            onClick={() =>
+                                setCurrentContent({
+                                    type: 'disconnect-confirm',
+                                    props: {
+                                        onDisconnect: () => {
+                                            disconnect();
+                                            onLogoutSuccess?.();
+                                        },
+                                        onBack: () =>
+                                            setCurrentContent?.('profile'),
                                     },
-                                    onBack: () =>
-                                        setCurrentContent?.('profile'),
-                                },
-                            })
-                        }
-                        data-testid="logout-button"
-                    >
-                        {t('Logout')}
-                    </Button>
+                                })
+                            }
+                            data-testid="logout-button"
+                        >
+                            {t('Logout')}
+                        </Button>
+                    )}
                 </HStack>
             </ModalFooter>
         </>
