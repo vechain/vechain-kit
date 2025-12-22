@@ -7,6 +7,7 @@ import {
     useDAppKitWalletModal,
     useLoginWithOAuth,
 } from '@vechain/vechain-kit';
+import { useTranslation } from 'react-i18next';
 import { FcGoogle } from 'react-icons/fc';
 import { LuGithub } from 'react-icons/lu';
 
@@ -14,16 +15,17 @@ export const LoginUIControl = () => {
     const { open } = useConnectModal();
     const { open: openWalletModal } = useDAppKitWalletModal();
     const { initOAuth } = useLoginWithOAuth();
+    const { t } = useTranslation();
 
     return (
         <VStack spacing={6} align="stretch" w={'full'}>
             <Text fontSize="xl" fontWeight="bold">
-                Login UI Control Examples
+                {t('Login UI Control Examples')}
             </Text>
             <Text fontSize="sm" opacity={0.5}>
-                VeChain Kit provides multiple ways to customize the login button
-                and how we show the login options. Here are some examples of
-                different login button variants.
+                {t(
+                    'VeChain Kit provides multiple ways to customize the login button and how we show the login options. Here are some examples of different login button variants.',
+                )}
             </Text>
 
             <VStack
@@ -33,7 +35,7 @@ export const LoginUIControl = () => {
                 borderRadius="md"
                 bg="whiteAlpha.50"
             >
-                <Text fontWeight="bold">Login Button Variants</Text>
+                <Text fontWeight="bold">{t('Login Button Variants')}</Text>
                 <Grid
                     templateColumns={{
                         base: '1fr',
@@ -155,9 +157,9 @@ export const LoginUIControl = () => {
                 </Grid>
 
                 <Text fontSize="sm" fontWeight="medium" color="blue.300">
-                    Note: The modal variant is the default login button variant.
-                    You can pass an additional description and Image to the
-                    modal when configuring you the VeChainKitProvider.
+                    {t(
+                        'Note: The modal variant is the default login button variant. You can pass an additional description and Image to the modal when configuring you the VeChainKitProvider.',
+                    )}
                 </Text>
             </VStack>
 
@@ -194,7 +196,7 @@ export const LoginUIControl = () => {
                                     borderColor: 'gray.400',
                                 }}
                             >
-                                Login with Google
+                                {t('Login with Google')}
                             </Button>
                         </Box>
                         <Text
@@ -226,7 +228,7 @@ export const LoginUIControl = () => {
                                     borderColor: 'gray.400',
                                 }}
                             >
-                                Login with GitHub
+                                {t('Login with GitHub')}
                             </Button>
                         </Box>
                         <Text
@@ -244,10 +246,9 @@ export const LoginUIControl = () => {
                 </Grid>
 
                 <Text fontSize="sm" fontWeight="medium" color="blue.300">
-                    Note: These buttons use the useLoginWithOAuth hook to
-                    initiate OAuth authentication flows with social providers.
-                    Make sure the providers are configured in your Privy
-                    dashboard.
+                    {t(
+                        'Note: These buttons use the useLoginWithOAuth hook to initiate OAuth authentication flows with social providers. Make sure the providers are configured in your Privy dashboard.',
+                    )}
                 </Text>
             </VStack>
         </VStack>

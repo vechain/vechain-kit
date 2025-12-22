@@ -17,10 +17,12 @@ import { DataReadingExample } from '../components/features/DataReading';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
 import { LanguageDropdown } from '../components/layout/Header';
+import { useTranslation } from 'react-i18next';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
     const { colorMode, toggleColorMode } = useColorMode();
+    const { t } = useTranslation();
 
     if (!account) {
         return (
@@ -35,6 +37,7 @@ export default function Home(): ReactElement {
                         <WalletButton
                             mobileVariant="iconDomainAndAssets"
                             desktopVariant="iconDomainAndAssets"
+                            label={t('Login or sign up')}
                         />
 
                         <HStack spacing={2}>

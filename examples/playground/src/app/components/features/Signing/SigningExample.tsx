@@ -15,6 +15,7 @@ import {
     useSignTypedData,
     WalletButton,
 } from '@vechain/vechain-kit';
+import { useTranslation } from 'react-i18next';
 
 // Example EIP-712 typed data
 const exampleTypedData = {
@@ -37,6 +38,7 @@ const exampleTypedData = {
 };
 
 export function SigningExample(): ReactElement {
+    const { t } = useTranslation();
     const { connection, account } = useWallet();
     const toast = useToast();
 
@@ -101,7 +103,9 @@ export function SigningExample(): ReactElement {
     if (!connection.isConnected) {
         return (
             <VStack spacing={4}>
-                <Text>Connect your wallet to start signing messages</Text>
+                <Text>
+                    {t('Connect your wallet to start signing messages')}
+                </Text>
                 <WalletButton />
             </VStack>
         );
@@ -110,11 +114,12 @@ export function SigningExample(): ReactElement {
     return (
         <VStack spacing={6} align="stretch" w="full">
             <Text fontSize="xl" fontWeight="bold">
-                Message Signing Examples
+                {t('Message Signing Examples')}
             </Text>
             <Text fontSize="sm" opacity={0.5}>
-                VeChain Kit provides hooks for signing messages and typed data.
-                Try these examples to see signing in action.
+                {t(
+                    'VeChain Kit provides hooks for signing messages and typed data. Try these examples to see signing in action.',
+                )}
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>

@@ -9,8 +9,10 @@ import {
     useGetTokenUsdPrice,
     useCurrentAllocationsRoundId,
 } from '@vechain/vechain-kit';
+import { useTranslation } from 'react-i18next';
 
 export function DataReadingExample(): ReactElement {
+    const { t } = useTranslation();
     const { account } = useWallet();
     const address = account?.address || '';
 
@@ -26,21 +28,21 @@ export function DataReadingExample(): ReactElement {
     return (
         <VStack spacing={6} align="stretch" w="full">
             <Text fontSize="xl" fontWeight="bold">
-                Reading Blockchain Data Examples
+                {t('Reading Blockchain Data Examples')}
             </Text>
             <Text fontSize="sm" opacity={0.5}>
-                Hooks to easily read data from the blockchain. Here are some
-                examples using built-in hooks. These hooks use react-query under
-                the hood for efficient data fetching and caching.
+                {t(
+                    'Hooks to easily read data from the blockchain. Here are some examples using built-in hooks. These hooks use react-query under the hood for efficient data fetching and caching.',
+                )}
             </Text>
 
             {/* Live Data Display */}
             <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
-                <Text fontWeight="bold">Live Blockchain Data</Text>
+                <Text fontWeight="bold">{t('Live Blockchain Data')}</Text>
                 <VStack spacing={3} align="start" w="full">
                     <Text>
                         <Text as="span" fontWeight="bold">
-                            B3TR Balance:{' '}
+                            {t('B3TR Balance')}:{' '}
                         </Text>
                         {isLoadingB3tr
                             ? 'Loading...'
@@ -48,7 +50,7 @@ export function DataReadingExample(): ReactElement {
                     </Text>
                     <Text>
                         <Text as="span" fontWeight="bold">
-                            VOT3 Balance:{' '}
+                            {t('VOT3 Balance')}:{' '}
                         </Text>
                         {isLoadingVot3
                             ? 'Loading...'
@@ -56,16 +58,16 @@ export function DataReadingExample(): ReactElement {
                     </Text>
                     <Text>
                         <Text as="span" fontWeight="bold">
-                            VET Price:{' '}
+                            {t('VET Price')}:{' '}
                         </Text>
                         {isLoadingVetPrice
                             ? 'Loading...'
                             : `$${vetPrice?.toFixed(4) || '0'}`}
                     </Text>
                     <VStack mt={4} align="start" spacing={1}>
-                        <Heading size="sm">VeBetterDAO</Heading>
+                        <Heading size="sm">{t('VeBetterDAO')}</Heading>
                         <Text fontWeight="bold">
-                            Current round: {vbdCurrentRoundId}
+                            {t('Current round')}: {vbdCurrentRoundId}
                         </Text>
                     </VStack>
                 </VStack>

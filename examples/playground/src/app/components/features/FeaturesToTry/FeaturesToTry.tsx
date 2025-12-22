@@ -35,9 +35,11 @@ import {
     LuSettings,
     LuWallet,
 } from 'react-icons/lu';
+import { useTranslation } from 'react-i18next';
 
 export function FeaturesToTry() {
     const { account } = useWallet();
+    const { t } = useTranslation();
 
     // Use the modal hooks
     const { open: openChooseNameModal } = useChooseNameModal();
@@ -55,80 +57,85 @@ export function FeaturesToTry() {
 
     const features = [
         {
-            title: 'Wallet',
-            description: 'Manage your wallet and your assets',
+            title: t('Wallet'),
+            description: t('Manage your wallet and your assets'),
             icon: LuWallet,
             content: () => openWalletModal({ isolatedView: true }),
         },
         {
-            title: 'Profile',
-            description: 'Manage your profile and customize it',
+            title: t('Profile'),
+            description: t('Manage your profile and customize it'),
             icon: LuUser,
             content: () => openProfileModal({ isolatedView: true }),
         },
         {
-            title: 'Settings',
-            description: 'Manage your settings and your preferences',
+            title: t('Settings'),
+            description: t('Manage your settings and your preferences'),
             icon: LuSettings,
             content: () => openSettingsModal({ isolatedView: true }),
         },
         {
-            title: 'Set VET Domain',
-            description:
+            title: t('Set VET Domain'),
+            description: t(
                 'Replace your complex address with a memorable .vet domain name',
+            ),
             icon: LuSquareUser,
             highlight: !account?.domain,
             content: () => openChooseNameModal({ isolatedView: true }),
         },
         {
-            title: 'Customize Profile',
-            description:
+            title: t('Customize Profile'),
+            description: t(
                 'Show the user his profile and allow them to customize it with a profile image, display name, bio and more to enhance their identity across VeChain applications.',
+            ),
             icon: LuUser,
             content: () => openProfileModal({ isolatedView: true }),
         },
         {
-            title: 'Transfer Assets',
-            description:
+            title: t('Transfer Assets'),
+            description: t(
                 'Send and receive VET, VTHO, and other tokens seamlessly',
+            ),
             icon: LuArrowLeftRight,
             content: () => openSendTokenModal({ isolatedView: true }),
         },
         {
-            title: 'Swap Tokens',
-            description: 'Swap between tokens with best available rates',
+            title: t('Swap Tokens'),
+            description: t('Swap between tokens with best available rates'),
             icon: LuArrowLeftRight,
             content: () => openSwapTokenModal({ isolatedView: true }),
         },
         {
-            title: 'Receive Assets',
-            description: 'Receive VET, VTHO, and other tokens from anyone',
+            title: t('Receive Assets'),
+            description: t('Receive VET, VTHO, and other tokens from anyone'),
             icon: LuArrowDownToLine,
             content: () => openReceiveModal({ isolatedView: true }),
         },
         {
-            title: 'Explore Ecosystem',
-            description:
+            title: t('Explore Ecosystem'),
+            description: t(
                 'Explore other apps built on VeChain, and add shortcuts for faster access.',
+            ),
             icon: LuUserCog,
             content: () => openExploreEcosystemModal({ isolatedView: true }),
         },
         {
-            title: 'Notifications',
-            description:
+            title: t('Notifications'),
+            description: t(
                 'Stay updated with the kit or ecosystem updates, and account alerts',
+            ),
             icon: LuBell,
             content: () => openNotificationsModal({ isolatedView: true }),
         },
         {
-            title: 'FAQ',
-            description: 'Find answers to common questions about VeChain',
+            title: t('FAQ'),
+            description: t('Find answers to common questions about VeChain'),
             icon: LuCircleHelp,
             content: () => openFAQModal({ isolatedView: true }),
         },
         {
-            title: 'Upgrade Smart Account',
-            description: 'Upgrade your smart account to the latest version',
+            title: t('Upgrade Smart Account'),
+            description: t('Upgrade your smart account to the latest version'),
             icon: LuRefreshCw,
             content: openUpgradeSmartAccountModal,
         },
@@ -137,14 +144,12 @@ export function FeaturesToTry() {
     return (
         <VStack spacing={6} align="stretch">
             <Text fontSize="xl" fontWeight="bold">
-                Features
+                {t('Features')}
             </Text>
             <Text fontSize="sm" opacity={0.5}>
-                The following features are available for your users and for you
-                both accessible by using the VeChain Kit main modal or by adding
-                custom call to action buttons to your app and opening the
-                content you need on demand. Try them out by clicking on the
-                cards below.
+                {t(
+                    'The following features are available for your users and for you both accessible by using the VeChain Kit main modal or by adding custom call to action buttons to your app and opening the content you need on demand. Try them out by clicking on the cards below.',
+                )}
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>

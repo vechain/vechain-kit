@@ -13,8 +13,10 @@ import {
 } from '@vechain/vechain-kit';
 import { IB3TR__factory } from '@vechain/vechain-contract-types';
 import { b3trMainnetAddress } from '../../../constants';
+import { useTranslation } from 'react-i18next';
 
 export function TransactionExamples() {
+    const { t } = useTranslation();
     const { account } = useWallet();
     const thor = useThor();
 
@@ -71,13 +73,13 @@ export function TransactionExamples() {
     return (
         <VStack spacing={6} align="stretch" w="full">
             <Text fontSize="xl" fontWeight="bold">
-                Transaction Handling Examples
+                {t('Transaction Handling Examples')}
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6}>
                 <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
                     <Text fontWeight="bold">
-                        Test a transaction sending 0 value to yourself.
+                        {t('Test a transaction sending 0 value to yourself.')}
                     </Text>
                     <HStack spacing={4} w="full" justifyContent="space-between">
                         <Button
@@ -86,7 +88,7 @@ export function TransactionExamples() {
                             isDisabled={isTransactionPending}
                             w="full"
                         >
-                            Test with Toast
+                            {t('Test with Toast')}
                         </Button>
                         <Button
                             onClick={handleTransactionWithModal}
@@ -94,7 +96,7 @@ export function TransactionExamples() {
                             isDisabled={isTransactionPending}
                             w="full"
                         >
-                            Test with Modal
+                            {t('Test with Modal')}
                         </Button>
                     </HStack>
                 </VStack>
@@ -107,7 +109,9 @@ export function TransactionExamples() {
                 txError={error}
                 txReceipt={txReceipt}
                 onTryAgain={handleTryAgain}
-                description={`This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`}
+                description={t(
+                    'This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}',
+                )}
             />
 
             <TransactionModal
@@ -118,8 +122,10 @@ export function TransactionExamples() {
                 onTryAgain={handleTryAgain}
                 txError={error}
                 uiConfig={{
-                    title: 'Test Transaction',
-                    description: `This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}`,
+                    title: t('Test Transaction'),
+                    description: t(
+                        'This is a dummy transaction to test the transaction modal. Confirm to transfer 0 B3TR to ${account?.address}',
+                    ),
                     showShareOnSocials: true,
                     showExplorerButton: true,
                     isClosable: true,

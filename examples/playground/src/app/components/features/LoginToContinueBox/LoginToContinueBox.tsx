@@ -18,7 +18,6 @@ export function LoginToContinueBox() {
             borderRadius="lg"
             boxShadow="xl"
             bg="whiteAlpha.100"
-            backdropFilter="blur(10px)"
         >
             <Text fontSize="lg" fontWeight="medium" textAlign="center">
                 {t('Connect your wallet to explore all features')}
