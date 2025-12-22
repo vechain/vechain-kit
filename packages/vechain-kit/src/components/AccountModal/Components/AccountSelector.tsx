@@ -21,7 +21,7 @@ import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';
-import { useWallet, useSwitchWallet } from '@/hooks';
+import { useWallet, useSwitchWallet, useDAppKitWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
@@ -37,19 +37,19 @@ type Props = {
 
 export const AccountSelector = ({
     wallet,
-    // setCurrentContent,
+    setCurrentContent,
     size = 'md',
     onClick,
-    // onClose,
+    onClose,
     mt,
     style,
 }: Props) => {
     const { t } = useTranslation();
     const { connection } = useWallet();
-    const { switchWallet, isSwitching } = useSwitchWallet();
+    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
+    const { isSwitchWalletEnabled } = useDAppKitWallet();
 
     const [copied, setCopied] = useState(false);
-    // const { disconnect } = useWallet();
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
@@ -63,10 +63,21 @@ export const AccountSelector = ({
         }
     };
 
-    // const handleLogout = () => {
-    //     disconnect();
-    //     onClose();
-    // };
+    const handleSwitchWallet = () => {
+        if (isInAppBrowser) {
+            switchWallet();
+        } else {
+            // Desktop: navigate to select wallet screen
+            setCurrentContent?.({
+                type: 'select-wallet',
+                props: {
+                    setCurrentContent: setCurrentContent!,
+                    onClose,
+                    returnTo: 'main',
+                },
+            });
+        }
+    };
 
     return (
         <HStack
@@ -113,11 +124,12 @@ export const AccountSelector = ({
                 </HStack>
             </Button>
 
-            {connection.isInAppBrowser ? (
+            {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
+            connection.isConnectedWithDappKit ? (
                 <IconButton
                     aria-label="Switch wallet"
                     icon={<Icon as={LuArrowLeftRight} />}
-                    onClick={switchWallet}
+                    onClick={handleSwitchWallet}
                     w="60px"
                     h={12}
                     variant="vechainKitSecondary"

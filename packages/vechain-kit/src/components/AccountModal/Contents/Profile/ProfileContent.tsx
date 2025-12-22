@@ -8,31 +8,52 @@ import {
     Button,
     Icon,
 } from '@chakra-ui/react';
-import { useSwitchWallet, useWallet } from '@/hooks';
+import { useSwitchWallet, useWallet, useDAppKitWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
-import { StickyHeaderContainer } from '@/components/common';
+import {
+    StickyHeaderContainer,
+    WalletSwitchFeedback,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
-import { useAccountModalOptions } from '../../../../hooks/modals';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
     onLogoutSuccess: () => void;
+    switchFeedback?: { showFeedback: boolean };
 };
 
 export const ProfileContent = ({
     setCurrentContent,
     onLogoutSuccess,
+    switchFeedback,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
-    const { switchWallet, isSwitching } = useSwitchWallet();
-    const { isolatedView } = useAccountModalOptions();
+    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
+    const { isSwitchWalletEnabled } = useDAppKitWallet();
+
+    const handleSwitchWallet = () => {
+        if (isInAppBrowser) {
+            switchWallet();
+        } else {
+            // Desktop: navigate to select wallet screen
+            setCurrentContent({
+                type: 'select-wallet',
+                props: {
+                    setCurrentContent,
+                    onClose: () => {},
+                    returnTo: 'profile',
+                    onLogoutSuccess,
+                },
+            });
+        }
+    };
 
     return (
         <>
@@ -41,20 +62,21 @@ export const ProfileContent = ({
                     {t('Profile')}
                 </ModalHeader>
 
-                {!isolatedView && (
-                    <ModalSettingsButton
-                        onClick={() => {
-                            setCurrentContent('settings');
-                        }}
-                        data-testid="settings-button"
-                    />
-                )}
+                <ModalSettingsButton
+                    onClick={() => {
+                        setCurrentContent('settings');
+                    }}
+                    data-testid="settings-button"
+                />
 
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} spacing={6}>
+                    <WalletSwitchFeedback
+                        showFeedback={switchFeedback?.showFeedback}
+                    />
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
@@ -103,7 +125,7 @@ export const ProfileContent = ({
                     >
                         {t('Wallet')}
                     </Button>
-                    {connection.isInAppBrowser ? (
+                    {connection.isInAppBrowser && isSwitchWalletEnabled ? (
                         <Button
                             size="md"
                             width="full"
@@ -111,11 +133,26 @@ export const ProfileContent = ({
                             variant="vechainKitSecondary"
                             leftIcon={<Icon as={LuArrowLeftRight} />}
                             colorScheme="red"
-                            onClick={() => {
-                                switchWallet();
+                            onClick={async () => {
+                                await switchWallet();
+                                // For VeWorld in-app browser, the wallet_switched event will be dispatched
+                                // by the dapp-kit when the wallet actually changes
                             }}
                             isLoading={isSwitching}
                             isDisabled={isSwitching}
+                            data-testid="switch-wallet-button"
+                        >
+                            {t('Switch')}
+                        </Button>
+                    ) : connection.isConnectedWithDappKit ? (
+                        <Button
+                            size="md"
+                            width="full"
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuArrowLeftRight} />}
+                            colorScheme="red"
+                            onClick={handleSwitchWallet}
                             data-testid="switch-wallet-button"
                         >
                             {t('Switch')}

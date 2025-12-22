@@ -166,10 +166,16 @@ export const useSendTransaction = ({
                 console.error('Gas estimation failed', e);
             }
 
+            // Use signerAccountAddress (stored active wallet) as signer when on desktop with dappkit
+            // This ensures the extension uses the correct wallet that the user selected
+            const signerAddress = connection.isConnectedWithDappKit && !connection.isInAppBrowser && signerAccountAddress
+                ? signerAccountAddress
+                : signer.address;
+
             const response = await requestTransaction(
                 _clauses as TransactionMessage[],
                 {
-                    signer: signer.address,
+                    signer: signerAddress,
                     gas: suggestedMaxGas ?? estimatedGas,
                     ...(feeDelegation?.delegateAllTransactions || delegationUrl ? {
                         delegator: {
@@ -192,6 +198,8 @@ export const useSendTransaction = ({
             signer,
             gasPadding,
             delegationUrl,
+            connection.isConnectedWithDappKit,
+            connection.isInAppBrowser,
         ],
     );
 
