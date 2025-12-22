@@ -50,7 +50,9 @@ export const WalletCard = ({
             borderWidth={isActive ? '2px' : '1px'}
             borderColor={isActive ? 'vechain-kit-primary' : borderColor}
             _hover={{
-                borderColor: isActive ? 'vechain-kit-primary' : 'vechain-kit-text-secondary',
+                borderColor: isActive
+                    ? 'vechain-kit-primary'
+                    : 'vechain-kit-text-secondary',
             }}
         >
             <CardBody p={4}>
@@ -64,7 +66,12 @@ export const WalletCard = ({
                             }}
                             props={{ width: 10, height: 10 }}
                         />
-                        <VStack spacing={0} alignItems="flex-start" flex={1} minW={0}>
+                        <VStack
+                            spacing={0}
+                            alignItems="flex-start"
+                            flex={1}
+                            minW={0}
+                        >
                             <Text
                                 fontSize="sm"
                                 fontWeight="medium"
@@ -80,9 +87,7 @@ export const WalletCard = ({
                                 color={textSecondary}
                                 noOfLines={1}
                             >
-                                {isLoading
-                                    ? t('Loading...')
-                                    : formattedBalance}
+                                {isLoading ? t('Loading...') : formattedBalance}
                             </Text>
                         </VStack>
                     </HStack>
@@ -115,4 +120,3 @@ export const WalletCard = ({
         </Card>
     );
 };
-

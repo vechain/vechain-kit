@@ -19,6 +19,7 @@ import {
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
     SelectWalletContent,
+    RemoveWalletConfirmContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -95,6 +96,10 @@ export const AccountModal = ({
                 case 'disconnect-confirm':
                     return (
                         <DisconnectConfirmContent {...currentContent.props} />
+                    );
+                case 'remove-wallet-confirm':
+                    return (
+                        <RemoveWalletConfirmContent {...currentContent.props} />
                     );
                 case 'account-customization':
                     return <CustomizationContent {...currentContent.props} />;

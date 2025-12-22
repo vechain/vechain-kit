@@ -5,9 +5,7 @@ import {
     VStack,
     Button,
     Heading,
-    useToast,
     useToken,
-    Text,
 } from '@chakra-ui/react';
 import {
     StickyHeaderContainer,
@@ -24,9 +22,8 @@ import {
 } from '@/hooks';
 import { useWalletStorage } from '@/hooks/api/wallet/useWalletStorage';
 import { useModal } from '@/providers/ModalProvider';
-import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
 import { LuPlus } from 'react-icons/lu';
 
@@ -44,7 +41,6 @@ export const SelectWalletContent = ({
     returnTo = 'main',
     onLogoutSuccess: _onLogoutSuccess,
 }: Props) => {
-    const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
     const { account, connection } = useWallet();
     const { disconnect: dappKitDisconnect } = useDAppKitWallet();
@@ -53,9 +49,6 @@ export const SelectWalletContent = ({
     const { saveWallet } = useWalletStorage();
     const { openConnectModal } = useModal();
     const { refresh } = useRefreshBalances();
-    const toast = useToast();
-    const undoTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const removedWalletRef = useRef<StoredWallet | null>(null);
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
@@ -166,82 +159,50 @@ export const SelectWalletContent = ({
 
     const handleRemoveWallet = useCallback(
         (wallet: StoredWallet) => {
-            // Store wallet for potential undo
-            removedWalletRef.current = wallet;
-
-            // Remove wallet temporarily
-            removeWallet(wallet.address);
-
-            // Refresh wallets list after removal
-            setTimeout(() => {
-                refreshWallets();
-            }, 50);
-
-            // Show toast with undo option
-            const toastId = toast({
-                title: 'Wallet removed',
-                description: 'Wallet has been removed from your list',
-                status: 'info',
-                duration: 8000,
-                isClosable: true,
-                position: 'bottom',
-                render: ({ onClose: onToastClose }) => (
-                    <VStack
-                        bg="vechain-kit-card"
-                        p={4}
-                        borderRadius="md"
-                        spacing={2}
-                        align="stretch"
-                    >
-                        <Heading size="sm">Wallet removed</Heading>
-                        <Text fontSize="sm" color="vechain-kit-text-secondary">
-                            Wallet has been removed from your list
-                        </Text>
-                        <Button
-                            size="sm"
-                            variant="solid"
-                            onClick={() => {
-                                // Restore wallet
-                                if (removedWalletRef.current) {
-                                    saveWallet({
-                                        address:
-                                            removedWalletRef.current.address,
-                                        domain:
-                                            removedWalletRef.current.domain ??
-                                            undefined,
-                                        avatar:
-                                            removedWalletRef.current.avatar ??
-                                            undefined,
-                                    });
-                                    removedWalletRef.current = null;
-                                    if (undoTimeoutRef.current) {
-                                        clearTimeout(undoTimeoutRef.current);
-                                        undoTimeoutRef.current = null;
-                                    }
-                                    // Refresh wallets list after undo
-                                    setTimeout(() => {
-                                        refreshWallets();
-                                    }, 50);
-                                }
-                                onToastClose();
-                            }}
-                        >
-                            Undo
-                        </Button>
-                    </VStack>
-                ),
+            // Navigate to remove wallet confirmation screen
+            setCurrentContent({
+                type: 'remove-wallet-confirm',
+                props: {
+                    walletAddress: wallet.address,
+                    walletDomain: wallet.domain,
+                    onConfirm: () => {
+                        removeWallet(wallet.address);
+                        // Refresh wallets list after removal
+                        setTimeout(() => {
+                            refreshWallets();
+                        }, 50);
+                        // Go back to select wallet screen
+                        setCurrentContent({
+                            type: 'select-wallet',
+                            props: {
+                                setCurrentContent,
+                                onClose: () => {},
+                                returnTo,
+                                onLogoutSuccess: _onLogoutSuccess,
+                            },
+                        });
+                    },
+                    onBack: () => {
+                        setCurrentContent({
+                            type: 'select-wallet',
+                            props: {
+                                setCurrentContent,
+                                onClose: () => {},
+                                returnTo,
+                                onLogoutSuccess: _onLogoutSuccess,
+                            },
+                        });
+                    },
+                },
             });
-
-            // Set timeout to permanently remove if not undone
-            if (undoTimeoutRef.current) {
-                clearTimeout(undoTimeoutRef.current);
-            }
-            undoTimeoutRef.current = setTimeout(() => {
-                removedWalletRef.current = null;
-                toast.close(toastId);
-            }, 8000);
         },
-        [removeWallet, toast, t, refreshWallets, saveWallet],
+        [
+            removeWallet,
+            refreshWallets,
+            setCurrentContent,
+            returnTo,
+            _onLogoutSuccess,
+        ],
     );
 
     const handleAddNewWallet = useCallback(async () => {
@@ -266,15 +227,6 @@ export const SelectWalletContent = ({
         connection.isInAppBrowser,
         dappKitDisconnect,
     ]);
-
-    // Cleanup timeout on unmount
-    useEffect(() => {
-        return () => {
-            if (undoTimeoutRef.current) {
-                clearTimeout(undoTimeoutRef.current);
-            }
-        };
-    }, []);
 
     return (
         <ScrollToTopWrapper>

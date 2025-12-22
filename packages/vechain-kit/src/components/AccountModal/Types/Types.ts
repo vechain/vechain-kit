@@ -7,6 +7,7 @@ import {
     UpgradeSmartAccountContentProps,
 } from '../Contents';
 import { DisconnectConfirmContentProps } from '../Contents/DisconnectConfirmation/DisconnectConfirmContent';
+import { RemoveWalletConfirmContentProps } from '../Contents/SelectWallet/RemoveWalletConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
 import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterSection';
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
@@ -99,6 +100,10 @@ export type AccountModalContentTypes =
     | {
           type: 'disconnect-confirm';
           props: DisconnectConfirmContentProps;
+      }
+    | {
+          type: 'remove-wallet-confirm';
+          props: RemoveWalletConfirmContentProps;
       }
     | {
           type: 'upgrade-smart-account';
