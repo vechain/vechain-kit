@@ -7,7 +7,6 @@ import {
     ModalCloseButton,
     Text,
     useToken,
-    Divider,
 } from '@chakra-ui/react';
 import {
     useMfaEnrollment,
@@ -158,6 +157,20 @@ export const SettingsContent = ({
                         leftIcon={LuShield}
                         rightIcon={LuChevronRight}
                     />
+
+                    <ActionButton
+                        title={t('Logout')}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: handleLogout,
+                                    onBack: () => setCurrentContent('settings'),
+                                },
+                            })
+                        }
+                        leftIcon={LuLogOut}
+                    />
                 </VStack>
 
                 {upgradeRequired && (
@@ -271,24 +284,7 @@ export const SettingsContent = ({
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter w={'full'}>
-                <VStack w={'full'} spacing={4}>
-                    <Divider />
-                    <ActionButton
-                        title={t('Logout')}
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: handleLogout,
-                                    onBack: () => setCurrentContent('settings'),
-                                },
-                            })
-                        }
-                        leftIcon={LuLogOut}
-                    />
-                </VStack>
-            </ModalFooter>
+            <ModalFooter p={0} />
         </>
     );
 };

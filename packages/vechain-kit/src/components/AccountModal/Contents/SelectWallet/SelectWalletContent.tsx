@@ -22,7 +22,7 @@ import { useModal } from '@/providers/ModalProvider';
 import { useAccountModalOptions } from '@/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
-import { LuPlus } from 'react-icons/lu';
+import { LuLogOut, LuPlus } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -41,7 +41,7 @@ export const SelectWalletContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
-    const { account, connection } = useWallet();
+    const { account, connection, disconnect } = useWallet();
     const { disconnect: dappKitDisconnect } = useDAppKitWallet();
     const { getStoredWallets, setActiveWallet, removeWallet } =
         useSwitchWallet();
@@ -262,6 +262,11 @@ export const SelectWalletContent = ({
         dappKitDisconnect,
     ]);
 
+    const handleLogout = () => {
+        disconnect();
+        _onLogoutSuccess?.();
+    };
+
     return (
         <>
             <StickyHeaderContainer>
@@ -317,15 +322,42 @@ export const SelectWalletContent = ({
                 </VStack>
             </ModalBody>
             <ModalFooter w="full">
-                <Button
-                    w="full"
-                    leftIcon={<LuPlus />}
-                    variant="vechainKitSecondary"
-                    onClick={handleAddNewWallet}
-                    mt={4}
-                >
-                    {t('Add New Wallet')}
-                </Button>
+                <VStack w="full" spacing={2}>
+                    <Button
+                        w="full"
+                        leftIcon={<LuPlus />}
+                        variant="vechainKitSecondary"
+                        onClick={handleAddNewWallet}
+                    >
+                        {t('Add New Wallet')}
+                    </Button>
+                    <Button
+                        w="full"
+                        leftIcon={<LuLogOut />}
+                        variant="vechainKitLogout"
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: handleLogout,
+                                    onBack: () =>
+                                        setCurrentContent({
+                                            type: 'select-wallet',
+                                            props: {
+                                                setCurrentContent,
+                                                onClose: () => {},
+                                                returnTo: returnTo,
+                                                onLogoutSuccess:
+                                                    _onLogoutSuccess,
+                                            },
+                                        }),
+                                },
+                            })
+                        }
+                    >
+                        {t('Logout')}
+                    </Button>
+                </VStack>
             </ModalFooter>
         </>
     );
