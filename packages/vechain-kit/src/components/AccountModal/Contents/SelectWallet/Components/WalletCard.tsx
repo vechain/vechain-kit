@@ -51,11 +51,8 @@ export const WalletCard = ({
 
     return (
         <Card
-            w="full"
-            variant="vechainKitSecondary"
-            cursor="pointer"
+            variant="vechainKitWalletCard"
             onClick={onSelect}
-            position="relative"
             borderWidth={isActive ? '2px' : '1px'}
             borderColor={isActive ? 'vechain-kit-primary' : borderColor}
             _hover={{
@@ -114,15 +111,14 @@ export const WalletCard = ({
                         <IconButton
                             aria-label={t('Remove wallet')}
                             icon={<Icon as={LuTrash2} />}
-                            size="sm"
-                            variant="ghost"
-                            colorScheme="red"
+                            variant="vechainKitSecondary"
+                            height="30px"
+                            w="30px"
+                            borderRadius="5px"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onRemove();
                             }}
-                            opacity={0.6}
-                            _hover={{ opacity: 1 }}
                         />
                     )}
                 </HStack>
