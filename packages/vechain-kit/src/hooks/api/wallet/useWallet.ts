@@ -179,6 +179,10 @@ export const useWallet = (): UseWalletReturnType => {
         }
     }, [isConnectedWithDappKit, isInAppBrowser, getActiveWallet]);
 
+    // Track if a wallet switch is in progress to prevent overriding the user's selection
+    const [isWalletSwitchInProgress, setIsWalletSwitchInProgress] =
+        useState(false);
+
     // Listen for wallet switch events
     useEffect(() => {
         if (!isBrowser() || !isConnectedWithDappKit || isInAppBrowser) return;
@@ -186,7 +190,12 @@ export const useWallet = (): UseWalletReturnType => {
         const handleWalletSwitch = (
             event: CustomEvent<{ address: string }>,
         ) => {
+            setIsWalletSwitchInProgress(true);
             setStoredActiveWalletAddress(event.detail.address);
+            // Reset the flag after a short delay to allow the connection to update
+            setTimeout(() => {
+                setIsWalletSwitchInProgress(false);
+            }, 1000);
         };
 
         window.addEventListener(
@@ -235,7 +244,7 @@ export const useWallet = (): UseWalletReturnType => {
     const { setActiveWallet: setActiveWalletStorage } = useWalletStorage();
 
     // Save/initialize wallet in storage when connected via dappkit and not in-app browser
-    // Save the connected wallet but don't override the active wallet if one already exists
+    // Set the connected wallet as active only if it's a new connection (not a switch)
     useEffect(() => {
         if (
             isConnectedWithDappKit &&
@@ -248,10 +257,25 @@ export const useWallet = (): UseWalletReturnType => {
             initializeCurrentWallet(connectedWalletAddress);
             // Always save/update the wallet (in case it already exists or is a new connection)
             saveWallet(connectedWalletAddress);
-            // Only set as active if there's no stored active wallet
-            // This preserves user's wallet selection when switching
-            const currentActiveWallet = getActiveWallet();
-            if (!currentActiveWallet) {
+
+            // Check if this is a new connection or a switch
+            // When switching, storedActiveWalletAddress is updated immediately via wallet_switched event
+            // and isWalletSwitchInProgress is set to true
+            // We should NOT override the stored active wallet when switching
+            const isNewConnection = !storedActiveWalletAddress;
+            const isSameAsStoredActive =
+                storedActiveWalletAddress &&
+                storedActiveWalletAddress.toLowerCase() ===
+                    connectedWalletAddress.toLowerCase();
+
+            // Only set as active if:
+            // 1. It's a new connection (no stored active wallet), OR
+            // 2. The connected wallet matches the stored active wallet (same wallet, just ensuring it's saved), AND
+            // 3. A wallet switch is NOT in progress (to prevent overriding user's selection during switch)
+            if (
+                (isNewConnection || isSameAsStoredActive) &&
+                !isWalletSwitchInProgress
+            ) {
                 setActiveWalletStorage(connectedWalletAddress);
             }
         }
@@ -265,7 +289,7 @@ export const useWallet = (): UseWalletReturnType => {
         initializeCurrentWallet,
         saveWallet,
         setActiveWalletStorage,
-        getActiveWallet,
+        storedActiveWalletAddress,
     ]);
 
     // Ensure the stored active wallet is saved when it changes
