@@ -38,16 +38,14 @@ const customLanguageDetector = {
     name: 'customDetector',
     lookup: () => {
         // Check localStorage first (for persistence across page refreshes)
-lookup: () => {
-    if (typeof window === 'undefined') return 'en';
 
-    const stored = localStorage.getItem('i18nextLng');
-    const browser = navigator.language?.split('-')[0];
+        if (typeof window === 'undefined') return 'en';
 
-    if (stored && supportedLanguages.includes(stored)) return stored;
-    if (browser && supportedLanguages.includes(browser)) return browser;
-}
+        const stored = localStorage.getItem('i18nextLng');
+        const browser = navigator.language?.split('-')[0];
 
+        if (stored && supportedLanguages.includes(stored)) return stored;
+        if (browser && supportedLanguages.includes(browser)) return browser;
 
         return 'en'; // fallback
     },

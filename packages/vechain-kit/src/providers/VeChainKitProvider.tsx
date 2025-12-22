@@ -695,7 +695,6 @@ export const VeChainKitProvider = (
                                 enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
                                 external: dappKit.v2Api?.external ?? false, //defaults to false
                             }}
-                            i18n={i18nConfig}
                             language={currentLanguage}
                             logLevel={dappKit.logLevel}
                             modalParent={dappKit.modalParent}
