@@ -37,10 +37,10 @@ type Props = {
 
 export const AccountSelector = ({
     wallet,
-    // setCurrentContent,
+    setCurrentContent,
     size = 'md',
     onClick,
-    // onClose,
+    onClose,
     mt,
     style,
 }: Props) => {
@@ -77,11 +77,6 @@ export const AccountSelector = ({
             });
         }
     };
-
-    // const handleLogout = () => {
-    //     disconnect();
-    //     onClose();
-    // };
 
     return (
         <HStack
@@ -128,20 +123,7 @@ export const AccountSelector = ({
                 </HStack>
             </Button>
 
-            {connection.isInAppBrowser ? (
-                <IconButton
-                    aria-label="Switch wallet"
-                    icon={<Icon as={LuArrowLeftRight} />}
-                    onClick={switchWallet}
-                    w="60px"
-                    h={12}
-                    variant="vechainKitSecondary"
-                    p={3}
-                    isLoading={isSwitching}
-                    isDisabled={isSwitching}
-                    data-testid="switch-wallet-button"
-                />
-            ) : connection.isConnectedWithDappKit ? (
+            {connection.isInAppBrowser || connection.isConnectedWithDappKit ? (
                 <IconButton
                     aria-label="Switch wallet"
                     icon={<Icon as={LuArrowLeftRight} />}
@@ -150,6 +132,8 @@ export const AccountSelector = ({
                     h={12}
                     variant="vechainKitSecondary"
                     p={3}
+                    isLoading={isSwitching}
+                    isDisabled={isSwitching}
                     data-testid="switch-wallet-button"
                 />
             ) : (
