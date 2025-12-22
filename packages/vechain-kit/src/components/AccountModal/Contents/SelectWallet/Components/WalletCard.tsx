@@ -45,7 +45,6 @@ export const WalletCard = ({
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
-    const cardBg = useToken('colors', 'vechain-kit-card');
     const borderColor = useToken('colors', 'vechain-kit-border');
 
     const isLoading = isLoadingBalance || isLoadingMetadata;

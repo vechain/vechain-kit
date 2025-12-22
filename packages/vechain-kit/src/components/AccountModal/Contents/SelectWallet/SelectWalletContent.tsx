@@ -26,6 +26,7 @@ import { useAccountModalOptions } from '@/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
 import { LuPlus } from 'react-icons/lu';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -41,6 +42,7 @@ export const SelectWalletContent = ({
     returnTo = 'main',
     onLogoutSuccess: _onLogoutSuccess,
 }: Props) => {
+    const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
     const { account, connection } = useWallet();
     const { disconnect: dappKitDisconnect } = useDAppKitWallet();
@@ -226,7 +228,7 @@ export const SelectWalletContent = ({
                         }}
                     />
                 )}
-                <ModalHeader>Select Wallet</ModalHeader>
+                <ModalHeader>{t('Select Wallet')}</ModalHeader>
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
@@ -235,7 +237,7 @@ export const SelectWalletContent = ({
                     {activeWallet && (
                         <VStack w={'full'} spacing={2} alignItems="flex-start">
                             <Heading size="sm" color={textSecondary}>
-                                Active Wallet
+                                {t('Active Wallet')}
                             </Heading>
                             <WalletCard
                                 wallet={activeWallet}
@@ -250,7 +252,7 @@ export const SelectWalletContent = ({
                     {otherWallets.length > 0 && (
                         <VStack w={'full'} spacing={2} alignItems="flex-start">
                             <Heading size="sm" color={textSecondary}>
-                                Other Wallets
+                                {t('Other Wallets')}
                             </Heading>
                             {otherWallets.map((wallet) => (
                                 <WalletCard
@@ -274,7 +276,7 @@ export const SelectWalletContent = ({
                         onClick={handleAddNewWallet}
                         mt={4}
                     >
-                        Add New Wallet
+                        {t('Add New Wallet')}
                     </Button>
                 </VStack>
             </ModalBody>
