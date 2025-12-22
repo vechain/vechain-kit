@@ -6,12 +6,9 @@ import {
     Button,
     Heading,
     useToken,
+    ModalFooter,
 } from '@chakra-ui/react';
-import {
-    StickyHeaderContainer,
-    ScrollToTopWrapper,
-    ModalBackButton,
-} from '@/components/common';
+import { StickyHeaderContainer, ModalBackButton } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { WalletCard } from './Components/WalletCard';
 import {
@@ -149,7 +146,9 @@ export const SelectWalletContent = ({
 
     const handleRemoveWallet = useCallback(
         (wallet: StoredWallet) => {
-            const isActiveWallet = wallet.address.toLowerCase() === activeWalletAddress?.toLowerCase();
+            const isActiveWallet =
+                wallet.address.toLowerCase() ===
+                activeWalletAddress?.toLowerCase();
             const remainingWallets = wallets.filter(
                 (w) => w.address.toLowerCase() !== wallet.address.toLowerCase(),
             );
@@ -165,7 +164,10 @@ export const SelectWalletContent = ({
                         if (isActiveWallet && remainingWallets.length > 0) {
                             const nextActiveWallet = remainingWallets[0];
                             setActiveWallet(nextActiveWallet.address);
-                        } else if (isActiveWallet && remainingWallets.length === 0) {
+                        } else if (
+                            isActiveWallet &&
+                            remainingWallets.length === 0
+                        ) {
                             // If removing the last wallet, disconnect
                             try {
                                 await dappKitDisconnect();
@@ -175,7 +177,7 @@ export const SelectWalletContent = ({
                         }
 
                         removeWallet(wallet.address);
-                        
+
                         // Refresh wallets list after removal
                         setTimeout(() => {
                             refreshWallets();
@@ -251,7 +253,7 @@ export const SelectWalletContent = ({
     ]);
 
     return (
-        <ScrollToTopWrapper>
+        <>
             <StickyHeaderContainer>
                 {!isolatedView && (
                     <ModalBackButton
@@ -275,7 +277,9 @@ export const SelectWalletContent = ({
                                 wallet={activeWallet}
                                 isActive={true}
                                 onSelect={() => {}}
-                                onRemove={() => handleRemoveWallet(activeWallet)}
+                                onRemove={() =>
+                                    handleRemoveWallet(activeWallet)
+                                }
                                 showRemove={wallets.length > 1}
                             />
                         </VStack>
@@ -300,18 +304,19 @@ export const SelectWalletContent = ({
                             ))}
                         </VStack>
                     )}
-
-                    <Button
-                        w="full"
-                        leftIcon={<LuPlus />}
-                        variant="vechainKitSecondary"
-                        onClick={handleAddNewWallet}
-                        mt={4}
-                    >
-                        {t('Add New Wallet')}
-                    </Button>
                 </VStack>
             </ModalBody>
-        </ScrollToTopWrapper>
+            <ModalFooter w="full">
+                <Button
+                    w="full"
+                    leftIcon={<LuPlus />}
+                    variant="vechainKitSecondary"
+                    onClick={handleAddNewWallet}
+                    mt={4}
+                >
+                    {t('Add New Wallet')}
+                </Button>
+            </ModalFooter>
+        </>
     );
 };
