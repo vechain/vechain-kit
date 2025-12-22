@@ -33,6 +33,17 @@ export type AccountModalContentTypes =
     | 'change-language'
     | 'gas-token-settings'
     | {
+          type: 'select-wallet';
+          props: {
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+              onClose: () => void;
+              returnTo?: 'main' | 'profile';
+              onLogoutSuccess?: () => void;
+          };
+      }
+    | {
           type: 'swap-token';
           props: {
               setCurrentContent: React.Dispatch<

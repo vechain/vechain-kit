@@ -18,6 +18,7 @@ import {
     LanguageSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
+    SelectWalletContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -123,6 +124,17 @@ export const AccountModal = ({
                             setCurrentContent={setCurrentContent}
                             selectedCategory={
                                 currentContent.props.selectedCategory
+                            }
+                        />
+                    );
+                case 'select-wallet':
+                    return (
+                        <SelectWalletContent
+                            setCurrentContent={setCurrentContent}
+                            onClose={onClose}
+                            returnTo={currentContent.props.returnTo}
+                            onLogoutSuccess={
+                                currentContent.props.onLogoutSuccess
                             }
                         />
                     );

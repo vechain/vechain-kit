@@ -37,19 +37,18 @@ type Props = {
 
 export const AccountSelector = ({
     wallet,
-    // setCurrentContent,
+    setCurrentContent,
     size = 'md',
     onClick,
-    // onClose,
+    onClose,
     mt,
     style,
 }: Props) => {
     const { t } = useTranslation();
     const { connection } = useWallet();
-    const { switchWallet, isSwitching } = useSwitchWallet();
+    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
 
     const [copied, setCopied] = useState(false);
-    // const { disconnect } = useWallet();
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
@@ -60,6 +59,22 @@ export const AccountSelector = ({
             setTimeout(() => {
                 setCopied(false);
             }, 2000);
+        }
+    };
+
+    const handleSwitchWallet = () => {
+        if (isInAppBrowser) {
+            switchWallet();
+        } else {
+            // Desktop: navigate to select wallet screen
+            setCurrentContent?.({
+                type: 'select-wallet',
+                props: {
+                    setCurrentContent: setCurrentContent!,
+                    onClose,
+                    returnTo: 'main',
+                },
+            });
         }
     };
 
@@ -124,6 +139,17 @@ export const AccountSelector = ({
                     p={3}
                     isLoading={isSwitching}
                     isDisabled={isSwitching}
+                    data-testid="switch-wallet-button"
+                />
+            ) : connection.isConnectedWithDappKit ? (
+                <IconButton
+                    aria-label="Switch wallet"
+                    icon={<Icon as={LuArrowLeftRight} />}
+                    onClick={handleSwitchWallet}
+                    w="60px"
+                    h={12}
+                    variant="vechainKitSecondary"
+                    p={3}
                     data-testid="switch-wallet-button"
                 />
             ) : (
