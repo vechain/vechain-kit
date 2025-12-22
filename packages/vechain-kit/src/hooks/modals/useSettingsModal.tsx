@@ -20,6 +20,8 @@ export const useSettingsModal = () => {
     };
 };
 
-export const FAQModalProvider = ({ children }: { children: ReactNode }) => (
-    <>{children}</>
-);
+export const SettingsModalProvider = ({
+    children,
+}: {
+    children: ReactNode;
+}) => <>{children}</>;

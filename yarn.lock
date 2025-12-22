@@ -15901,9 +15901,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"vechain-kit-old-homepage@workspace:examples/old-homepage":
+"vechain-kit-playground@workspace:examples/playground":
   version: 0.0.0-use.local
-  resolution: "vechain-kit-old-homepage@workspace:examples/old-homepage"
+  resolution: "vechain-kit-playground@workspace:examples/playground"
   dependencies:
     "@chakra-ui/react": "npm:2.8.2"
     "@emotion/react": "npm:^11.13.5"
