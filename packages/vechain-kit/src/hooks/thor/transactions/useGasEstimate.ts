@@ -1,7 +1,7 @@
 import type { Revision, TransactionClause } from '@vechain/sdk-core';
 import type { ThorClient } from '@vechain/sdk-network';
 
-export const estimateTxGas = async (
+export const useGasEstimate = async (
     thor: ThorClient,
     clauses: TransactionClause[],
     caller: string,

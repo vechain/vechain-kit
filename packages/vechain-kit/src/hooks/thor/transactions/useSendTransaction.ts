@@ -9,7 +9,7 @@ import { TransactionMessage } from '@vechain/dapp-kit';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
-import { estimateTxGas } from './transactionUtils';
+import { useGasEstimate } from './useGasEstimate';
 import { TransactionReceipt } from '@vechain/sdk-network';
 import { Revision, TransactionClause } from '@vechain/sdk-core';
 
@@ -153,7 +153,7 @@ export const useSendTransaction = ({
 
             let estimatedGas = 0;
             try {
-                estimatedGas = await estimateTxGas(
+                estimatedGas = await useGasEstimate(
                     thor,
                     [..._clauses],
                     signerAccountAddress,
@@ -192,6 +192,7 @@ export const useSendTransaction = ({
             signer,
             gasPadding,
             delegationUrl,
+            requestTransaction,
         ],
     );
 
