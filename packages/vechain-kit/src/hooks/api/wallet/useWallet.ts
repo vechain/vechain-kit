@@ -20,7 +20,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
 import { isBrowser } from '@/utils/ssrUtils';
@@ -84,6 +84,12 @@ export const useWallet = (): UseWalletReturnType => {
     } = useWalletStorage();
 
     const nodeUrl = useGetNodeUrl();
+
+    // Check if in-app browser (calculate before using in useState)
+    const isInAppBrowser = useMemo(
+        () => (isBrowser() ? Boolean(window.vechain?.isInAppBrowser) : false),
+        [],
+    );
 
     // Connection states
     const isConnectedWithDappKit = !!dappKitAccount;
@@ -162,16 +168,16 @@ export const useWallet = (): UseWalletReturnType => {
         ? crossAppAddress
         : privyEmbeddedWalletAddress;
 
-    // Check if in-app browser
-    const isInAppBrowser =
-        (isBrowser() && window.vechain && window.vechain.isInAppBrowser) ??
-        false;
-
     // For desktop dappkit wallets, check if there's a stored active wallet
     // Use state to track active wallet so it updates immediately on switch
     const [storedActiveWalletAddress, setStoredActiveWalletAddress] = useState<
         string | null
-    >(isConnectedWithDappKit && !isInAppBrowser ? getActiveWallet() : null);
+    >(() => {
+        if (isConnectedWithDappKit && !isInAppBrowser) {
+            return getActiveWallet();
+        }
+        return null;
+    });
 
     // Update stored active wallet when it changes in storage
     // Also reset when disconnecting
