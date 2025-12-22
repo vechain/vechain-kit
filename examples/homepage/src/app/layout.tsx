@@ -47,7 +47,7 @@ export default function RootLayout({
             }}
         >
             <head>
-                <title>VeChain Kit</title>
+                <title>VeKit</title>
                 <meta
                     name="description"
                     content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
@@ -73,7 +73,7 @@ export default function RootLayout({
                 />
 
                 {/* Open Graph Metadata */}
-                <meta name="title" property="og:title" content="VeChain Kit" />
+                <meta name="title" property="og:title" content="VeKit" />
                 <meta name="type" property="og:type" content="website" />
                 <meta
                     property="og:url"
