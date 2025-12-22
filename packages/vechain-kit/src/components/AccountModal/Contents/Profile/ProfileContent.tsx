@@ -16,6 +16,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
+import { useAccountModalOptions } from '../../../../hooks/modals';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -30,24 +31,8 @@ export const ProfileContent = ({
 }: ProfileContentProps) => {
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
-    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-
-    const handleSwitchWallet = () => {
-        if (isInAppBrowser) {
-            switchWallet();
-        } else {
-            // Desktop: navigate to select wallet screen
-            setCurrentContent({
-                type: 'select-wallet',
-                props: {
-                    setCurrentContent,
-                    onClose: () => {},
-                    returnTo: 'profile',
-                    onLogoutSuccess,
-                },
-            });
-        }
-    };
+    const { switchWallet, isSwitching } = useSwitchWallet();
+    const { isolatedView } = useAccountModalOptions();
 
     return (
         <>
@@ -56,12 +41,14 @@ export const ProfileContent = ({
                     {t('Profile')}
                 </ModalHeader>
 
-                <ModalSettingsButton
-                    onClick={() => {
-                        setCurrentContent('settings');
-                    }}
-                    data-testid="settings-button"
-                />
+                {!isolatedView && (
+                    <ModalSettingsButton
+                        onClick={() => {
+                            setCurrentContent('settings');
+                        }}
+                        data-testid="settings-button"
+                    />
+                )}
 
                 <ModalCloseButton />
             </StickyHeaderContainer>
@@ -129,19 +116,6 @@ export const ProfileContent = ({
                             }}
                             isLoading={isSwitching}
                             isDisabled={isSwitching}
-                            data-testid="switch-wallet-button"
-                        >
-                            {t('Switch')}
-                        </Button>
-                    ) : connection.isConnectedWithDappKit ? (
-                        <Button
-                            size="md"
-                            width="full"
-                            height="40px"
-                            variant="vechainKitSecondary"
-                            leftIcon={<Icon as={LuArrowLeftRight} />}
-                            colorScheme="red"
-                            onClick={handleSwitchWallet}
                             data-testid="switch-wallet-button"
                         >
                             {t('Switch')}

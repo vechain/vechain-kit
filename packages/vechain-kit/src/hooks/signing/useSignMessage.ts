@@ -69,7 +69,7 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
                 setIsSigningPending(false);
             }
         },
-        [connection, privyWalletProvider, account?.address],
+        [connection, privyWalletProvider],
     );
 
     const reset = useCallback(() => {

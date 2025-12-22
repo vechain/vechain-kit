@@ -22,10 +22,9 @@ type Props = {
         React.SetStateAction<ConnectModalContentsTypes>
     >;
     onClose: () => void;
-    preventAutoClose?: boolean;
 };
 
-export const MainContent = ({ setCurrentContent, onClose, preventAutoClose = false }: Props) => {
+export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { t } = useTranslation();
     const { connection } = useWallet();
 
@@ -45,10 +44,10 @@ export const MainContent = ({ setCurrentContent, onClose, preventAutoClose = fal
     );
 
     useEffect(() => {
-        if (connection.isConnected && !preventAutoClose) {
+        if (connection.isConnected) {
             onClose();
         }
-    }, [connection.isConnected, onClose, preventAutoClose]);
+    }, [connection.isConnected, onClose]);
 
     return (
         <>

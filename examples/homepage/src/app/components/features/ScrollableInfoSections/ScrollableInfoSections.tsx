@@ -31,7 +31,7 @@ export function ScrollableInfoSections() {
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
             mobileImageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/previewed+(3).png',
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/previewed+(4).png',
             imageAlt: t('VeChain Kit'),
             imageWidth: '950px',
         },
