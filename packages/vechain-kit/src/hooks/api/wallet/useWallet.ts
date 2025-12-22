@@ -76,8 +76,12 @@ export const useWallet = (): UseWalletReturnType => {
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
-    const { initializeCurrentWallet, getActiveWallet, saveWallet } =
-        useWalletStorage();
+    const {
+        initializeCurrentWallet,
+        getActiveWallet,
+        saveWallet,
+        getStoredWallets,
+    } = useWalletStorage();
 
     const nodeUrl = useGetNodeUrl();
 
@@ -170,11 +174,13 @@ export const useWallet = (): UseWalletReturnType => {
     >(isConnectedWithDappKit && !isInAppBrowser ? getActiveWallet() : null);
 
     // Update stored active wallet when it changes in storage
+    // Also reset when disconnecting
     useEffect(() => {
         if (isConnectedWithDappKit && !isInAppBrowser) {
             const activeWallet = getActiveWallet();
             setStoredActiveWalletAddress(activeWallet);
         } else {
+            // Reset when disconnected or in-app browser
             setStoredActiveWalletAddress(null);
         }
     }, [isConnectedWithDappKit, isInAppBrowser, getActiveWallet]);
@@ -210,12 +216,26 @@ export const useWallet = (): UseWalletReturnType => {
         };
     }, [isConnectedWithDappKit, isInAppBrowser]);
 
-    // Always prioritize the stored active wallet from cache
-    // Only use connected wallet if no stored active wallet exists
-    // This allows switching between stored wallets
-    const effectiveConnectedWalletAddress = storedActiveWalletAddress
-        ? storedActiveWalletAddress // Use stored active wallet (user's choice)
-        : connectedWalletAddress; // Fallback to connected wallet (new connection, no stored active)
+    // Always prioritize the stored active wallet from cache when switching
+    // Use connected wallet when:
+    // 1. No stored active wallet exists (new connection)
+    // 2. Connected wallet is not in stored wallets list (new wallet after disconnect)
+    // 3. A switch is NOT in progress AND connected wallet differs from stored (reconnection with different wallet)
+    const storedWallets = getStoredWallets();
+    const isConnectedWalletInStoredList = storedWallets.some(
+        (w) =>
+            w.address.toLowerCase() === connectedWalletAddress?.toLowerCase(),
+    );
+
+    const effectiveConnectedWalletAddress =
+        // If switch is in progress, always use stored active wallet
+        isWalletSwitchInProgress && storedActiveWalletAddress
+            ? storedActiveWalletAddress
+            : // If stored active wallet exists and connected wallet is in stored list, use stored (switch scenario)
+            storedActiveWalletAddress && isConnectedWalletInStoredList
+            ? storedActiveWalletAddress
+            : // Otherwise use connected wallet (new connection or reconnection with different wallet)
+              connectedWalletAddress;
 
     // Get smart account
     const { data: smartAccount } = useSmartAccount(
