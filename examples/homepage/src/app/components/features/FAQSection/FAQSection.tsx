@@ -1,7 +1,6 @@
 'use client';
 
 import {
-    Box,
     VStack,
     Heading,
     Accordion,
@@ -10,89 +9,91 @@ import {
     AccordionPanel,
     AccordionIcon,
     Text,
+    Box,
 } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 export function FAQSection() {
+    const { t } = useTranslation();
     const faqItems = [
         {
-            question: 'What is the VeChain Kit?',
-            answer: 'The VeChain Kit is a powerful widget that enables developers to integrate blockchain functionality into their applications. It provides multiple login options, including both wallet connections and social logins. End users gain access to essential tools including asset management, wallet services, and profile customization (VET domain claiming, avatar, display name, description, social links). The Kit also offers access to valuable resources such as FAQs, ecosystem applications, decentralized exchanges, and cross-chain bridges.',
+            question: t('Is the kit free to use?'),
+            answer: t(
+                "Yes. VeChain Kit is free to use. If you want full control over the login experience, you can connect your own Privy account (Privy pricing applies). If you use the shared VeChain + Privy integration, you don't pay anything to get started.",
+            ),
         },
         {
-            question: 'Who is the VeChain Kit designed for?',
-            answer: "The VeChain Kit serves both developers and end users. For developers, it's a powerful toolkit that accelerates blockchain integration and reduces development time. For end users, it functions as a seamless onboarding platform and comprehensive asset management solution directly within applications they already use.",
+            question: t('Are there any limitations?'),
+            answer: t(
+                "Yes. You need to use the kit's own hooks (useSendTransaction and useSignMessage) to support all login methods. And, to fully customize the login experience, you need to open your own Privy account, since with the shared VeChain + Privy integration you cannot target only specific social login methods and users' signatures are always requested when doing transactions.",
+            ),
         },
         {
-            question: 'What are the benefits of using the VeChain Kit?',
-            answer: 'For developers, the VeChain Kit eliminates the need to build blockchain functionality from scratch, offering pre-built components, social login capabilities, and seamless integration. For users, it provides a frictionless experience with blockchain technology, allowing them to manage digital assets and engage with decentralized applications without requiring technical knowledge of VeChain or blockchain concepts, and by having the same user experience on all apps.',
+            question: t('What are the supported frameworks?'),
+            answer: t('The kit supports Next.js and React.'),
         },
         {
-            question: 'How is the VeChain Kit implemented?',
-            answer: "Developers can easily implement the VeChain Kit by installing the package, customizing its appearance and functionality to match their application's needs, and utilizing the provided hooks and components. End users interact with the Kit to authenticate, manage digital assets, and access important blockchain tools—all within the familiar environment of their favorite applications, without needing to understand the underlying blockchain technology.",
+            question: t('Can I customize the login methods shown to users?'),
+            answer: t(
+                'Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeChain Kit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.',
+            ),
         },
         {
-            question: 'Is VeChain Kit free to use?',
-            answer: "Yes, VeChain Kit is completely free to use. You only need to pay if you want to use your own Privy account for additional customization and control. The shared VeChain Privy integration doesn't incur any costs for developers.",
+            question: t('What can I customize?'),
+            answer: t(
+                'Color, fonts, background color, etc. You can create your own login button, and modal or use the provided one. You can decide to show or not the wallet or transaction modal, or show only specific contents (Send, Receive, Assets, Profile, etc.).',
+            ),
         },
         {
-            question: 'What are the limitations when using VeChain Kit?',
-            answer: "When using the shared VeChain Kit integration, there are some limitations: you cannot target only specific social login methods, you cannot fully customize the login UX (users will need to go through a popup window), and users' signatures are always requested when doing transactions. For full customization freedom, you would need to create your own Privy account.",
-        },
-        {
-            question: 'Which dApps are currently using VeChain Kit?',
-            answer: 'Several dApps are already using VeChain Kit, including: scoopup, vetrade, betterswap, solarwise, vepet, velottery, and eatgreen. You can see an example of how it looks with a custom Privy setup at governance.vebetterdao.org.',
-        },
-        {
-            question: 'Can I customize the login methods shown to users?',
-            answer: 'With the shared VeChain Kit integration, you cannot limit the login methods to specific options (like email-only). All available login options will be shown to users. If you need to target specific login methods, you would need to use your own Privy account.',
-        },
-        {
-            question: 'Do users need to sign transactions to receive rewards?',
-            answer: 'It depends on how you structure your application. In many cases, users should not need to sign anything to receive rewards - this can be handled on the backend. However, users will need to confirm transactions and signings when they initiate actions, similar to how they would with a normal wallet connection.',
+            question: t('Who pays for the transactions?'),
+            answer: t(
+                'The user pays for the transactions. However, if you want to sponsor them (always or only in specific scenarios), you can use the fee delegation feature.',
+            ),
         },
     ];
 
     return (
-        <Box
-            p={8}
-            borderRadius="lg"
-            boxShadow="xl"
-            bg="whiteAlpha.100"
-            backdropFilter="blur(10px)"
+        <VStack
+            py={{ base: 12, md: 16 }}
+            px={{ base: 4, md: 8 }}
+            spacing={8}
+            align="stretch"
+            maxW="4xl"
+            mx="auto"
             w="full"
         >
-            <VStack spacing={6} align="stretch">
-                <Heading as="h2" size="lg" textAlign="center">
-                    Frequently Asked Questions
-                </Heading>
+            <Heading as="h2" size="lg" textAlign="center">
+                {t('Frequently Asked Questions')}
+            </Heading>
 
-                <Accordion allowToggle>
-                    {faqItems.map((item, index) => (
-                        <AccordionItem key={index} border="none" mb={4}>
-                            <h3>
-                                <AccordionButton
-                                    bg="whiteAlpha.100"
-                                    borderRadius="md"
-                                    _hover={{ bg: 'whiteAlpha.200' }}
+            <Accordion allowMultiple defaultIndex={[0]}>
+                {faqItems.map((item, index) => (
+                    <AccordionItem key={index} border="none" mb={4}>
+                        <h3>
+                            <AccordionButton
+                                bg="#e3ebe1"
+                                color="black"
+                                borderRadius="md"
+                                rounded="xl"
+                                _hover={{ bg: '#e2eae0' }}
+                            >
+                                <Box
+                                    as="span"
+                                    flex="1"
+                                    textAlign="left"
+                                    fontWeight="medium"
                                 >
-                                    <Box
-                                        as="span"
-                                        flex="1"
-                                        textAlign="left"
-                                        fontWeight="medium"
-                                    >
-                                        {item.question}
-                                    </Box>
-                                    <AccordionIcon />
-                                </AccordionButton>
-                            </h3>
-                            <AccordionPanel pb={4} pt={4} px={6}>
-                                <Text>{item.answer}</Text>
-                            </AccordionPanel>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            </VStack>
-        </Box>
+                                    {item.question}
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                        </h3>
+                        <AccordionPanel pb={4} pt={4} px={6}>
+                            <Text>{item.answer}</Text>
+                        </AccordionPanel>
+                    </AccordionItem>
+                ))}
+            </Accordion>
+        </VStack>
     );
 }

@@ -45,7 +45,7 @@ type Props = {
 export const AccountModal = ({
     isOpen,
     onClose,
-    initialContent = 'main',
+    initialContent = 'profile',
 }: Props) => {
     const { account } = useWallet();
     const { themeConfig } = useVechainKitThemeConfig();
@@ -228,13 +228,13 @@ export const AccountModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
             mobileMinHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '510px' : '500px'
+                themeConfig?.modal?.useBottomSheetOnMobile ? '520px' : '510px'
             }
             mobileMaxHeight={
-                themeConfig?.modal?.useBottomSheetOnMobile ? '510px' : '500px'
+                themeConfig?.modal?.useBottomSheetOnMobile ? '520px' : '510px'
             }
-            desktopMinHeight={'475px'}
-            desktopMaxHeight={'475px'}
+            desktopMinHeight={'485px'}
+            desktopMaxHeight={'485px'}
         >
             {renderContent()}
         </BaseModal>

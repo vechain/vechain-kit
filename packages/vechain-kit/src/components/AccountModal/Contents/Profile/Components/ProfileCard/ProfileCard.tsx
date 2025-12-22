@@ -9,10 +9,11 @@ import {
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWalletMetadata } from '@/hooks';
-import { LuMail, LuGlobe } from 'react-icons/lu';
+import { LuMail, LuGlobe, LuPencil } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
+import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 
 export type ProfileCardProps = {
     address: string;
@@ -23,6 +24,9 @@ export type ProfileCardProps = {
     showDescription?: boolean;
     showDisplayName?: boolean;
     showEdit?: boolean;
+    setCurrentContent?: React.Dispatch<
+        React.SetStateAction<AccountModalContentTypes>
+    >;
 };
 
 export const ProfileCard = ({
@@ -31,11 +35,13 @@ export const ProfileCard = ({
     showLinks = true,
     showDescription = true,
     showDisplayName = true,
+    setCurrentContent,
 }: ProfileCardProps) => {
     const { network } = useVeChainKitConfig();
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const cardBg = useToken('colors', 'vechain-kit-card');
 
     const metadata = useWalletMetadata(address, network.type);
 
@@ -71,20 +77,54 @@ export const ProfileCard = ({
                 w="100%"
                 borderRadius="14px 14px 0 0"
             />
-            <AccountAvatar
-                wallet={{
-                    address,
-                    domain: metadata?.domain,
-                    image: metadata?.image,
-                    isLoadingMetadata: metadata?.isLoading,
-                    metadata: metadata?.records,
-                }}
-                props={{
-                    width: '120px',
-                    height: '120px',
-                    // boxShadow: '0px 0px 3px 2px #00000024',
-                }}
-            />
+            <Box
+                position="relative"
+                display="inline-block"
+                cursor={setCurrentContent ? 'pointer' : 'default'}
+                onClick={
+                    setCurrentContent
+                        ? () => {
+                              setCurrentContent({
+                                  type: 'account-customization',
+                                  props: {
+                                      setCurrentContent,
+                                      initialContentSource: 'profile',
+                                  },
+                              });
+                          }
+                        : undefined
+                }
+            >
+                <AccountAvatar
+                    wallet={{
+                        address,
+                        domain: metadata?.domain,
+                        image: metadata?.image,
+                        isLoadingMetadata: metadata?.isLoading,
+                        metadata: metadata?.records,
+                    }}
+                    props={{
+                        width: '120px',
+                        height: '120px',
+                        // boxShadow: '0px 0px 3px 2px #00000024',
+                    }}
+                />
+                {setCurrentContent && (
+                    <Icon
+                        as={LuPencil}
+                        position="absolute"
+                        bottom="0"
+                        right="0"
+                        bg={cardBg}
+                        color={textPrimary}
+                        p="1"
+                        borderRadius="full"
+                        boxSize="6"
+                        border="2px solid"
+                        borderColor={cardBg}
+                    />
+                )}
+            </Box>
 
             <VStack w={'full'} spacing={2}>
                 {showDisplayName && metadata?.records?.display && (
@@ -161,6 +201,7 @@ export const ProfileCard = ({
                         metadata: metadata?.records,
                     }}
                     style={{ mt: 4 }}
+                    setCurrentContent={setCurrentContent}
                 />
             </VStack>
         </VStack>

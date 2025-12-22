@@ -190,7 +190,7 @@ export const CustomizationContent = ({
     };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader data-testid="modal-title">
                     {t('Customization')}
@@ -411,6 +411,6 @@ export const CustomizationContent = ({
                     {t('Save Changes')}
                 </Button>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

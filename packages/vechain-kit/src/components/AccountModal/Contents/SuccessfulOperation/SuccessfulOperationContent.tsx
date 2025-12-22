@@ -5,7 +5,6 @@ import {
     VStack,
     Text,
     Button,
-    Box,
     ModalFooter,
     Icon,
     Link,
@@ -48,7 +47,7 @@ export const SuccessfulOperationContent = ({
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
@@ -123,6 +122,6 @@ export const SuccessfulOperationContent = ({
                     )}
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

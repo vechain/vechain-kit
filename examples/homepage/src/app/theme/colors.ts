@@ -37,8 +37,20 @@ export const lightTertiary = {
     900: '#00b7e0',
 };
 
+// Feature section background colors (inspired by Typeless design)
+export const featureBackgrounds = {
+    lightPurple: '#F5F3FF',
+    lightBlue: '#EFF6FF',
+    lightBeige: '#FEF9F3',
+    lightGreen: '#F0FDF4',
+    lightGrey: '#F9FAFB',
+    white: '#FFFFFF',
+    dark: '#1A1A1A',
+};
+
 export const themeColors = {
     primary: lightPrimary,
     secondary: lightSecondary,
     tertiary: lightTertiary,
+    featureBackgrounds,
 };

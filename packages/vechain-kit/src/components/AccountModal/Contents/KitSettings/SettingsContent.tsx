@@ -92,13 +92,13 @@ export const SettingsContent = ({
     };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Settings')}</ModalHeader>
 
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
+                        onClick={() => setCurrentContent('profile')}
                     />
                 )}
                 <ModalCloseButton />
@@ -289,6 +289,6 @@ export const SettingsContent = ({
                     />
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

@@ -11,8 +11,8 @@ import {
 import { useVeChainKitConfig } from '@/providers';
 import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
-import React from 'react';
-import { useFetchAppInfo } from '@/hooks';
+import React, { useEffect } from 'react';
+import { useFetchAppInfo, useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
 import { EcosystemButton } from '../Components/EcosystemButton';
@@ -24,8 +24,9 @@ type Props = {
     onClose: () => void;
 };
 
-export const MainContent = ({ setCurrentContent }: Props) => {
+export const MainContent = ({ setCurrentContent, onClose }: Props) => {
     const { t } = useTranslation();
+    const { connection } = useWallet();
 
     const { loginModalUI, darkMode: isDark } = useVeChainKitConfig();
     const { loginMethods, privyEcosystemAppIDS } = useVeChainKitConfig();
@@ -41,6 +42,12 @@ export const MainContent = ({ setCurrentContent }: Props) => {
     const showEcosystemButton = loginMethods?.some(
         ({ method }) => method === 'ecosystem',
     );
+
+    useEffect(() => {
+        if (connection.isConnected) {
+            onClose();
+        }
+    }, [connection.isConnected, onClose]);
 
     return (
         <>

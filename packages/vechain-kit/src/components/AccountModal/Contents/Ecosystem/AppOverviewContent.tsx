@@ -1,5 +1,4 @@
 import {
-    Box,
     Button,
     Icon,
     Image,
@@ -64,7 +63,7 @@ export const AppOverviewContent = ({
     };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{name}</ModalHeader>
                 <ModalBackButton onClick={handleBackClick} />
@@ -125,6 +124,6 @@ export const AppOverviewContent = ({
                     />
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };

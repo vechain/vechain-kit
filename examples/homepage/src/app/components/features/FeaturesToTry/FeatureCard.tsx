@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    Box,
+    Card,
     VStack,
     Text,
     Icon,
@@ -33,7 +33,7 @@ export function FeatureCard({
     const { colorMode } = useColorMode();
 
     return (
-        <Box
+        <Card
             onClick={(e) => {
                 if (disabled) {
                     e.preventDefault();
@@ -42,11 +42,9 @@ export function FeatureCard({
                 content();
             }}
             p={4}
-            borderRadius="md"
-            borderWidth="1px"
-            backdropFilter="blur(10px)"
-            borderColor={highlight ? 'blue.500' : 'transparent'}
-            bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
+            variant={highlight ? 'baseWithBorder' : 'filled'}
+            borderColor={highlight ? 'primary.500' : undefined}
+            borderWidth={highlight ? '2px' : undefined}
             _hover={{
                 transform: disabled ? 'translateY(0)' : 'translateY(-2px)',
                 transition: 'transform 0.2s',
@@ -117,6 +115,6 @@ export function FeatureCard({
                     </Text>
                 )}
             </VStack>
-        </Box>
+        </Card>
     );
 }

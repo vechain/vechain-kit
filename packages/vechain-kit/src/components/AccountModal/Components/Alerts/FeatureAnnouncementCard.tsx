@@ -5,12 +5,9 @@ import {
     VStack,
     Text,
     useToken,
-    IconButton,
     Tag,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { LuCircleX } from 'react-icons/lu';
-import { useFeatureAnnouncement } from '@/hooks/utils/useFeatureAnnouncement';
 import { AccountModalContentTypes } from '../../Types';
 
 type FeatureAnnouncementCardProps = {
@@ -22,7 +19,7 @@ export const FeatureAnnouncementCard = ({
     setCurrentContent,
 }: FeatureAnnouncementCardProps) => {
     const { t } = useTranslation();
-    const { isVisible, closeAnnouncement } = useFeatureAnnouncement();
+    // const { closeAnnouncement } = useFeatureAnnouncement();
 
     const titleColor = useToken('colors', 'vechain-kit-text-primary');
     const descriptionColor = useToken('colors', 'vechain-kit-text-secondary');
@@ -32,14 +29,15 @@ export const FeatureAnnouncementCard = ({
             type: 'choose-name',
             props: {
                 setCurrentContent,
-                onBack: () => setCurrentContent('main'),
-                initialContentSource: 'main',
+                onBack: () => setCurrentContent('profile'),
+                initialContentSource: 'profile',
             },
         });
-        closeAnnouncement();
+        // closeAnnouncement();
     };
 
-    if (!isVisible) return null;
+    // We always show the announcement card for now
+    // if (!isVisible) return null;
 
     return (
         <Card
@@ -71,17 +69,6 @@ export const FeatureAnnouncementCard = ({
                             )}
                         </Text>
                     </VStack>
-                    <IconButton
-                        size="sm"
-                        variant="ghost"
-                        colorScheme="gray"
-                        icon={<LuCircleX />}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            closeAnnouncement();
-                        }}
-                        aria-label={t('Close announcement')}
-                    />
                 </HStack>
             </CardBody>
         </Card>

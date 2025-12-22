@@ -18,5 +18,6 @@ export * from './useTokensWithValues';
 export * from './useTotalBalance';
 export * from './useWallet';
 export * from './useWalletMetadata';
+export * from './useSwitchWallet';
 export * from './useXAppMetadata';
 export * from './useXAppShares';

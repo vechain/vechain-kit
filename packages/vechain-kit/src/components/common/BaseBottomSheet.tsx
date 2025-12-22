@@ -1,4 +1,4 @@
-import { Box, useToken, VisuallyHidden } from '@chakra-ui/react';
+import { Box, useToken } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
 import { useEffect, useState, useRef } from 'react';
 import { useVechainKitThemeConfig } from '@/providers';
@@ -181,7 +181,6 @@ export const BaseBottomSheet = ({
                 />
                 <Drawer.Content
                     aria-description={ariaDescription}
-                    aria-labelledby={ariaTitle}
                     style={{
                         zIndex: 101,
                         backgroundColor: modalBg,
@@ -197,9 +196,21 @@ export const BaseBottomSheet = ({
                         flexDirection: 'column',
                     }}
                 >
-                    <VisuallyHidden>
-                        <Drawer.Title id={ariaTitle}>{ariaTitle}</Drawer.Title>
-                    </VisuallyHidden>
+                    <Drawer.Title
+                        style={{
+                            position: 'absolute',
+                            width: '1px',
+                            height: '1px',
+                            padding: 0,
+                            margin: '-1px',
+                            overflow: 'hidden',
+                            clip: 'rect(0, 0, 0, 0)',
+                            whiteSpace: 'nowrap',
+                            borderWidth: 0,
+                        }}
+                    >
+                        {ariaTitle}
+                    </Drawer.Title>
 
                     {/* 
                         Scrollable container that wraps all content.

@@ -6247,24 +6247,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-react@npm:2.1.0-rc.2":
-  version: 2.1.0-rc.2
-  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.2"
+"@vechain/dapp-kit-react@npm:2.1.0-rc.4":
+  version: 2.1.0-rc.4
+  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.4"
   dependencies:
     "@lit/react": "npm:^1.0.7"
-    "@vechain/dapp-kit": "npm:2.1.0-rc.2"
-    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.2"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.4"
+    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.4"
     "@vechain/sdk-core": "npm:^2.0.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/60bec14c66310f0560a03c63e3aeaa0113dc3e43a28bd3501d8cf45eccc9d63f90e46d9b5f0f05fd74a3c50c88d62817a00bda2893983fd73461dc7ba3490726
+  checksum: 10c0/a842d4562a54d97c6a8224f03facb9b40e181f73cb124f18c47fd335c764126e3388510ccce47e044282afa7c9d82f8632f4047321cd5aa8c8bbea8d6eed6bf3
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-ui@npm:2.1.0-rc.2":
-  version: 2.1.0-rc.2
-  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.2"
+"@vechain/dapp-kit-ui@npm:2.1.0-rc.4":
+  version: 2.1.0-rc.4
+  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.4"
   dependencies:
-    "@vechain/dapp-kit": "npm:2.1.0-rc.2"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.4"
     "@vechain/picasso": "npm:2.1.1"
     "@vechain/sdk-core": "npm:^2.0.0"
     "@vechain/sdk-network": "npm:^2.0.0"
@@ -6274,13 +6274,13 @@ __metadata:
     lit: "npm:3.2.1"
     qrcode: "npm:1.5.4"
     valtio: "npm:1.13.2"
-  checksum: 10c0/45ef18b5ff480bd6e0fb673a8a84ae78885628bc0bb586c5ea2e1448f97bbbbac22637838b037baf934aca9ad90b7db6c9790191441fbd1da9bb37b7b6c34b89
+  checksum: 10c0/0912c1dd4a5b5e4d2732beb0729e1fb74c5c1346b2cfc4d5b4e72918a7df43e2eb1013d5515185cc2abef0c85d832d71fdebb0cc4db273b00c403111c9fe7634
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit@npm:2.1.0-rc.2":
-  version: 2.1.0-rc.2
-  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.2"
+"@vechain/dapp-kit@npm:2.1.0-rc.4":
+  version: 2.1.0-rc.4
+  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.4"
   dependencies:
     "@vechain/connex-wallet-buddy": "npm:^0.1.11"
     "@vechain/sdk-core": "npm:^2.0.0"
@@ -6292,7 +6292,7 @@ __metadata:
     events: "npm:^3.3.0"
     valtio: "npm:1.13.2"
     viem: "npm:2.23.2"
-  checksum: 10c0/4067b9891424721acf12ccf635b80446179ca7ea757f4b37c11ee9bdb81130239434cfd9dbd5a2b448557d3de2a302102c9fc9e494b8b75c73a923f264055d34
+  checksum: 10c0/c4f84ddc263a623b4067d7ac4d51c73998e8e79ce90910f82128498805e31a3106068619b5626be0790cadf1f58ecf95a7438a34bf5f95e627af7a3b0b5f84ad
   languageName: node
   linkType: hard
 
@@ -6446,7 +6446,7 @@ __metadata:
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
     "@vechain/contract-getters": "npm:1.0.4"
-    "@vechain/dapp-kit-react": "npm:2.1.0-rc.2"
+    "@vechain/dapp-kit-react": "npm:2.1.0-rc.4"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vechain-contract-types": "npm:1.5.0"
     "@wagmi/core": "npm:^2.17.2"
@@ -6480,7 +6480,7 @@ __metadata:
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@tanstack/react-query": ^5.64.2
-    "@vechain/dapp-kit-react": 2.1.0-rc.2
+    "@vechain/dapp-kit-react": 2.1.0-rc.3
     framer-motion: ^11.0.0
     react: ^18.0.0
     react-dom: ^18.0.0
@@ -8915,6 +8915,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv-cli@npm:latest":
+  version: 11.0.0
+  resolution: "dotenv-cli@npm:11.0.0"
+  dependencies:
+    cross-spawn: "npm:^7.0.6"
+    dotenv: "npm:^17.1.0"
+    dotenv-expand: "npm:^12.0.0"
+    minimist: "npm:^1.2.6"
+  bin:
+    dotenv: cli.js
+  checksum: 10c0/c3e6e58a484b3204eeb167a8f78c9cb04c4bae951069e7860eccbbbf96964e3bd808b3632dfe841e5d882b2c5d77c447f20abd06edd4db623ce719d94a7fb44e
+  languageName: node
+  linkType: hard
+
 "dotenv-expand@npm:^10.0.0":
   version: 10.0.0
   resolution: "dotenv-expand@npm:10.0.0"
@@ -8922,10 +8936,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.3, dotenv@npm:^16.3.0, dotenv@npm:^16.4.7":
+"dotenv-expand@npm:^12.0.0":
+  version: 12.0.3
+  resolution: "dotenv-expand@npm:12.0.3"
+  dependencies:
+    dotenv: "npm:^16.4.5"
+  checksum: 10c0/0824bdc74fc816a28b0744b7853a23e046602e9616c82121dfdae21ebc13c6e89afeb773e794e97c35d48be2be0a990fbca721ee3869a49c04210a58a3cf296f
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.3, dotenv@npm:^16.3.0, dotenv@npm:^16.4.5, dotenv@npm:^16.4.7":
   version: 16.6.1
   resolution: "dotenv@npm:16.6.1"
   checksum: 10c0/15ce56608326ea0d1d9414a5c8ee6dcf0fffc79d2c16422b4ac2268e7e2d76ff5a572d37ffe747c377de12005f14b3cc22361e79fc7f1061cce81f77d2c973dc
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^17.1.0":
+  version: 17.2.3
+  resolution: "dotenv@npm:17.2.3"
+  checksum: 10c0/c884403209f713214a1b64d4d1defa4934c2aa5b0002f5a670ae298a51e3c3ad3ba79dfee2f8df49f01ae74290fcd9acdb1ab1d09c7bfb42b539036108bb2ba0
   languageName: node
   linkType: hard
 
@@ -15858,6 +15888,34 @@ __metadata:
     "@types/react-dom": "npm:^18"
     "@vechain/vechain-contract-types": "npm:1.4.1"
     "@vechain/vechain-kit": "workspace:*"
+    dotenv-cli: "npm:latest"
+    eslint: "npm:^9.12.0"
+    eslint-config-next: "npm:14.1.4"
+    i18next: "npm:^24.2.1"
+    i18next-browser-languagedetector: "npm:^8.0.2"
+    next: "npm:>=15.2.3"
+    react: "npm:^18"
+    react-dom: "npm:^18"
+    react-i18next: "npm:^15.4.0"
+    typescript: "npm:5.3.3"
+  languageName: unknown
+  linkType: soft
+
+"vechain-kit-playground@workspace:examples/playground":
+  version: 0.0.0-use.local
+  resolution: "vechain-kit-playground@workspace:examples/playground"
+  dependencies:
+    "@chakra-ui/react": "npm:2.8.2"
+    "@emotion/react": "npm:^11.13.5"
+    "@emotion/styled": "npm:^11.13.5"
+    "@next/eslint-plugin-next": "npm:^14.1.4"
+    "@tanstack/react-query": "npm:^5.64.2"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^18"
+    "@types/react-dom": "npm:^18"
+    "@vechain/vechain-contract-types": "npm:1.4.1"
+    "@vechain/vechain-kit": "workspace:*"
+    dotenv-cli: "npm:latest"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
     i18next: "npm:^24.2.1"
