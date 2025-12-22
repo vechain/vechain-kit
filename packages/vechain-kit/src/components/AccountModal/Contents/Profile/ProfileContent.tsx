@@ -16,6 +16,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
+import { useAccountModalOptions } from '../../../../hooks/modals';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -31,6 +32,7 @@ export const ProfileContent = ({
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
     const { switchWallet, isSwitching } = useSwitchWallet();
+    const { isolatedView } = useAccountModalOptions();
 
     return (
         <>
@@ -39,12 +41,14 @@ export const ProfileContent = ({
                     {t('Profile')}
                 </ModalHeader>
 
-                <ModalSettingsButton
-                    onClick={() => {
-                        setCurrentContent('settings');
-                    }}
-                    data-testid="settings-button"
-                />
+                {!isolatedView && (
+                    <ModalSettingsButton
+                        onClick={() => {
+                            setCurrentContent('settings');
+                        }}
+                        data-testid="settings-button"
+                    />
+                )}
 
                 <ModalCloseButton />
             </StickyHeaderContainer>

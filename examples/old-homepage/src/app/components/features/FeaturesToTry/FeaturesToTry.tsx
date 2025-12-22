@@ -21,12 +21,20 @@ import {
     useProfileModal,
     useFAQModal,
     useReceiveModal,
+    useWalletModal,
+    useSettingsModal,
 } from '@vechain/vechain-kit';
 import { FeatureCard } from './FeatureCard';
 import { GithubCard } from './GithubCard';
 import { LanguageCard } from './LanguageCard';
 import { ThemeCard } from './ThemeCard';
-import { LuUser, LuArrowDownToLine, LuRefreshCw } from 'react-icons/lu';
+import {
+    LuUser,
+    LuArrowDownToLine,
+    LuRefreshCw,
+    LuSettings,
+    LuWallet,
+} from 'react-icons/lu';
 
 export function FeaturesToTry() {
     const { account } = useWallet();
@@ -42,8 +50,28 @@ export function FeaturesToTry() {
     const { open: openUpgradeSmartAccountModal } =
         useUpgradeSmartAccountModal();
     const { open: openSwapTokenModal } = useSwapTokenModal();
+    const { open: openWalletModal } = useWalletModal();
+    const { open: openSettingsModal } = useSettingsModal();
 
     const features = [
+        {
+            title: 'Wallet',
+            description: 'Manage your wallet and your assets',
+            icon: LuWallet,
+            content: () => openWalletModal({ isolatedView: true }),
+        },
+        {
+            title: 'Profile',
+            description: 'Manage your profile and customize it',
+            icon: LuUser,
+            content: () => openProfileModal({ isolatedView: true }),
+        },
+        {
+            title: 'Settings',
+            description: 'Manage your settings and your preferences',
+            icon: LuSettings,
+            content: () => openSettingsModal({ isolatedView: true }),
+        },
         {
             title: 'Set VET Domain',
             description:
