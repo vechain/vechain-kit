@@ -15,9 +15,6 @@ import {
     useSignTypedData,
     WalletButton,
 } from '@vechain/vechain-kit';
-import { LuFingerprint, LuCode } from 'react-icons/lu';
-import { CollapsibleCard } from '../../ui/CollapsibleCard';
-import { Link } from '@chakra-ui/react';
 
 // Example EIP-712 typed data
 const exampleTypedData = {
@@ -103,113 +100,58 @@ export function SigningExample(): ReactElement {
 
     if (!connection.isConnected) {
         return (
-            <CollapsibleCard
-                title="Message Signing"
-                icon={LuFingerprint}
-                style={{ bg: 'whiteAlpha.100' }}
-            >
-                <VStack spacing={4}>
-                    <Text>Connect your wallet to start signing messages</Text>
-                    <WalletButton />
-                </VStack>
-            </CollapsibleCard>
+            <VStack spacing={4}>
+                <Text>Connect your wallet to start signing messages</Text>
+                <WalletButton />
+            </VStack>
         );
     }
 
     return (
-        <CollapsibleCard
-            defaultIsOpen={false}
-            title="Message Signing"
-            icon={LuFingerprint}
-            style={{ bg: 'whiteAlpha.100' }}
-        >
-            <VStack spacing={6} align="stretch">
-                <Text textAlign="center">
-                    VeChain Kit provides hooks for signing messages and typed
-                    data. Try these examples to see signing in action.
-                </Text>
+        <VStack spacing={6} align="stretch" w="full">
+            <Text fontSize="xl" fontWeight="bold">
+                Message Signing Examples
+            </Text>
+            <Text fontSize="sm" opacity={0.5}>
+                VeChain Kit provides hooks for signing messages and typed data.
+                Try these examples to see signing in action.
+            </Text>
 
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-                    {/* Message Signing */}
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Text fontWeight="bold">Sign Message</Text>
-                        <Button
-                            onClick={handleSignMessage}
-                            isLoading={isMessageSignPending}
-                            w="full"
-                        >
-                            Sign "Hello VeChain!"
-                        </Button>
-                        {messageSignature && (
-                            <Code
-                                p={2}
-                                borderRadius="md"
-                                w="full"
-                                fontSize="sm"
-                            >
-                                {messageSignature}
-                            </Code>
-                        )}
-                    </VStack>
-
-                    {/* Typed Data Signing */}
-                    <VStack
-                        spacing={4}
-                        p={6}
-                        borderRadius="md"
-                        bg="whiteAlpha.50"
-                    >
-                        <Text fontWeight="bold">Sign Typed Data</Text>
-                        <Button
-                            onClick={handleSignTypedData}
-                            isLoading={isTypedDataSignPending}
-                            w="full"
-                        >
-                            Sign Typed Data
-                        </Button>
-                        {typedDataSignature && (
-                            <Code
-                                p={2}
-                                borderRadius="md"
-                                w="full"
-                                fontSize="sm"
-                            >
-                                {typedDataSignature}
-                            </Code>
-                        )}
-                    </VStack>
-                </SimpleGrid>
-
-                {/* Implementation Example */}
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                {/* Message Signing */}
                 <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
-                    <Text fontWeight="bold">Implementation</Text>
+                    <Text fontWeight="bold">Sign Message</Text>
                     <Button
-                        as={Link}
-                        isExternal
-                        href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/SigningExample/SigningExample.tsx"
+                        onClick={handleSignMessage}
+                        isLoading={isMessageSignPending}
                         w="full"
-                        variant="outline"
-                        rightIcon={<LuCode />}
                     >
-                        View Code Example
+                        Sign "Hello VeChain!"
                     </Button>
-                    <Button
-                        as={Link}
-                        isExternal
-                        href="https://docs.vechainkit.vechain.org/vechain-kit/sign-messages"
-                        w="full"
-                        variant="outline"
-                        rightIcon={<LuFingerprint />}
-                    >
-                        Read Documentation
-                    </Button>
+                    {messageSignature && (
+                        <Code p={2} borderRadius="md" w="full" fontSize="sm">
+                            {messageSignature}
+                        </Code>
+                    )}
                 </VStack>
-            </VStack>
-        </CollapsibleCard>
+
+                {/* Typed Data Signing */}
+                <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
+                    <Text fontWeight="bold">Sign Typed Data</Text>
+                    <Button
+                        onClick={handleSignTypedData}
+                        isLoading={isTypedDataSignPending}
+                        w="full"
+                    >
+                        Sign Typed Data
+                    </Button>
+                    {typedDataSignature && (
+                        <Code p={2} borderRadius="md" w="full" fontSize="sm">
+                            {typedDataSignature}
+                        </Code>
+                    )}
+                </VStack>
+            </SimpleGrid>
+        </VStack>
     );
 }

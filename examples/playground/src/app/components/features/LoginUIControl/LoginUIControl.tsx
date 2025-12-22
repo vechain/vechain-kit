@@ -17,7 +17,10 @@ export const LoginUIControl = () => {
 
     return (
         <VStack spacing={6} align="stretch" w={'full'}>
-            <Text textAlign="center">
+            <Text fontSize="xl" fontWeight="bold">
+                Login UI Control Examples
+            </Text>
+            <Text fontSize="sm" opacity={0.5}>
                 VeChain Kit provides multiple ways to customize the login button
                 and how we show the login options. Here are some examples of
                 different login button variants.

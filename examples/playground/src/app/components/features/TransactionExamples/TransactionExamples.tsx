@@ -1,7 +1,6 @@
 'use client';
 
-import { VStack, Text, SimpleGrid, Button, Link } from '@chakra-ui/react';
-import { LuSend, LuCode } from 'react-icons/lu';
+import { VStack, Text, SimpleGrid, Button, HStack } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import {
     useWallet,
@@ -70,17 +69,17 @@ export function TransactionExamples() {
     }, [sendTransaction, resetStatus]);
 
     return (
-        <VStack spacing={6} align="stretch">
-            <Text textAlign="center">
-                VeChain Kit provides built-in transaction handling with UI
-                components. Try these examples to see the transaction flow in
-                action.
+        <VStack spacing={6} align="stretch" w="full">
+            <Text fontSize="xl" fontWeight="bold">
+                Transaction Handling Examples
             </Text>
 
             <SimpleGrid columns={{ base: 1, md: 1 }} spacing={6}>
                 <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
-                    <Text fontWeight="bold">Test Transactions</Text>
-                    <VStack spacing={4} w="full">
+                    <Text fontWeight="bold">
+                        Test a transaction sending 0 value to yourself.
+                    </Text>
+                    <HStack spacing={4} w="full" justifyContent="space-between">
                         <Button
                             onClick={handleTransactionWithToast}
                             isLoading={isTransactionPending}
@@ -97,33 +96,7 @@ export function TransactionExamples() {
                         >
                             Test with Modal
                         </Button>
-                    </VStack>
-                </VStack>
-
-                <VStack spacing={4} p={6} borderRadius="md" bg="whiteAlpha.50">
-                    <Text my={2} fontWeight="bold">
-                        Implementation
-                    </Text>
-                    <Button
-                        as={Link}
-                        isExternal
-                        href="https://github.com/vechain/vechain-kit/blob/main/examples/next-template/src/app/components/features/TransactionExamples/TransactionExamples.tsx"
-                        w="full"
-                        variant="outline"
-                        rightIcon={<LuCode />}
-                    >
-                        View Code Example
-                    </Button>
-                    <Button
-                        as={Link}
-                        isExternal
-                        href="https://docs.vechainkit.vechain.org/vechain-kit/send-transactions"
-                        w="full"
-                        variant="outline"
-                        rightIcon={<LuSend />}
-                    >
-                        Read Docs
-                    </Button>
+                    </HStack>
                 </VStack>
             </SimpleGrid>
 
