@@ -47,7 +47,7 @@ export const AccountSelector = ({
     const { t } = useTranslation();
     const { connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { availableMethods } = useDAppKitWallet();
+    const { isSwitchWalletEnabled } = useDAppKitWallet();
 
     const [copied, setCopied] = useState(false);
 
@@ -124,8 +124,7 @@ export const AccountSelector = ({
                 </HStack>
             </Button>
 
-            {(connection.isInAppBrowser &&
-                availableMethods?.includes('switchWallet')) ||
+            {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
             connection.isConnectedWithDappKit ? (
                 <IconButton
                     aria-label="Switch wallet"

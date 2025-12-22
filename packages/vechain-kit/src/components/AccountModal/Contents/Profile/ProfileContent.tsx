@@ -31,7 +31,7 @@ export const ProfileContent = ({
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { availableMethods } = useDAppKitWallet();
+    const { isSwitchWalletEnabled } = useDAppKitWallet();
 
     const handleSwitchWallet = () => {
         if (isInAppBrowser) {
@@ -117,8 +117,7 @@ export const ProfileContent = ({
                     >
                         {t('Wallet')}
                     </Button>
-                    {connection.isInAppBrowser &&
-                    availableMethods?.includes('switchWallet') ? (
+                    {connection.isInAppBrowser && isSwitchWalletEnabled ? (
                         <Button
                             size="md"
                             width="full"
