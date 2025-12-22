@@ -44,7 +44,6 @@ export function FeatureCard({
             p={4}
             borderRadius="md"
             borderWidth="1px"
-            backdropFilter="blur(10px)"
             borderColor={highlight ? 'blue.500' : 'transparent'}
             bg={colorMode === 'light' ? 'gray.50' : 'whiteAlpha.50'}
             _hover={{
