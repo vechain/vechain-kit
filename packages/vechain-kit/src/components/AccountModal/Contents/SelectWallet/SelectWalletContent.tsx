@@ -117,22 +117,10 @@ export const SelectWalletContent = ({
                 return;
             }
 
-            // Update the wallet that was previously active to ensure it has latest metadata
-            // This ensures "other wallets" show correct data
-            // Save the previously active wallet BEFORE switching to preserve its current metadata
-            if (activeWallet && account?.address) {
-                // If the account matches the currently active wallet, save its metadata
-                // This ensures the wallet that becomes "other wallet" has correct avatar
-                if (
-                    account.address.toLowerCase() ===
-                    activeWallet.address.toLowerCase()
-                ) {
-                    saveWallet({
-                        address: activeWallet.address,
-                        domain: account.domain ?? undefined,
-                        avatar: account.image ?? undefined,
-                    });
-                }
+            // Ensure the wallet that was previously active is saved
+            // Metadata will be fetched dynamically when needed
+            if (activeWallet) {
+                saveWallet(activeWallet.address);
             }
 
             setActiveWallet(address);
@@ -164,7 +152,7 @@ export const SelectWalletContent = ({
                 type: 'remove-wallet-confirm',
                 props: {
                     walletAddress: wallet.address,
-                    walletDomain: wallet.domain,
+                    walletDomain: null, // Domain will be fetched dynamically in RemoveWalletConfirmContent
                     onConfirm: () => {
                         removeWallet(wallet.address);
                         // Refresh wallets list after removal

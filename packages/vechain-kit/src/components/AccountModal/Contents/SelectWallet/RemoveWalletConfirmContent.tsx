@@ -13,10 +13,12 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { LuTrash2 } from 'react-icons/lu';
 import { humanAddress, humanDomain } from '@/utils';
+import { useWalletMetadata } from '@/hooks';
+import { useVeChainKitConfig } from '@/providers';
 
 export type RemoveWalletConfirmContentProps = {
     walletAddress: string;
-    walletDomain: string | null;
+    walletDomain: string | null; // Kept for backward compatibility but will be fetched dynamically
     onConfirm: () => void;
     onBack: () => void;
     onClose?: () => void;
@@ -24,16 +26,18 @@ export type RemoveWalletConfirmContentProps = {
 
 export const RemoveWalletConfirmContent = ({
     walletAddress,
-    walletDomain,
+    walletDomain: _walletDomain,
     onConfirm,
     onBack,
     onClose,
 }: RemoveWalletConfirmContentProps) => {
     const { t } = useTranslation();
+    const { network } = useVeChainKitConfig();
+    const { domain } = useWalletMetadata(walletAddress, network.type);
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
 
-    const displayName = walletDomain
-        ? humanDomain(walletDomain, 20, 0)
+    const displayName = domain
+        ? humanDomain(domain, 20, 0)
         : humanAddress(walletAddress, 6, 4);
 
     return (

@@ -11,10 +11,11 @@ import {
 } from '@chakra-ui/react';
 import { AccountAvatar } from '@/components/common';
 import { humanAddress, humanDomain } from '@/utils';
-import { useTotalBalance } from '@/hooks';
+import { useTotalBalance, useWalletMetadata } from '@/hooks';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
 import { LuTrash2, LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     wallet: StoredWallet;
@@ -32,17 +33,26 @@ export const WalletCard = ({
     showRemove = true,
 }: Props) => {
     const { t } = useTranslation();
-    const { formattedBalance, isLoading } = useTotalBalance({
+    const { network } = useVeChainKitConfig();
+    const { formattedBalance, isLoading: isLoadingBalance } = useTotalBalance({
         address: wallet.address,
     });
+    const {
+        domain,
+        image,
+        isLoading: isLoadingMetadata,
+    } = useWalletMetadata(wallet.address, network.type);
 
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const cardBg = useToken('colors', 'vechain-kit-card');
     const borderColor = useToken('colors', 'vechain-kit-border');
 
+    const isLoading = isLoadingBalance || isLoadingMetadata;
+
     return (
         <Card
+            w="full"
             variant="vechainKitSecondary"
             cursor="pointer"
             onClick={onSelect}
@@ -61,8 +71,9 @@ export const WalletCard = ({
                         <AccountAvatar
                             wallet={{
                                 address: wallet.address,
-                                domain: wallet.domain ?? undefined,
-                                image: wallet.avatar ?? undefined,
+                                domain: domain ?? undefined,
+                                image: image ?? undefined,
+                                isLoadingMetadata,
                             }}
                             props={{ width: 10, height: 10 }}
                         />
@@ -78,8 +89,8 @@ export const WalletCard = ({
                                 color={textPrimary}
                                 noOfLines={1}
                             >
-                                {wallet.domain
-                                    ? humanDomain(wallet.domain, 22, 0)
+                                {domain
+                                    ? humanDomain(domain, 22, 0)
                                     : humanAddress(wallet.address, 6, 4)}
                             </Text>
                             <Text

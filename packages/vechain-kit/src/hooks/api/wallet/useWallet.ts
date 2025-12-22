@@ -245,17 +245,9 @@ export const useWallet = (): UseWalletReturnType => {
             !activeAccountMetadata.isLoading
         ) {
             // First try to initialize (only saves if no wallets exist and sets as active)
-            initializeCurrentWallet({
-                address: connectedWalletAddress,
-                domain: activeAccountMetadata.domain ?? undefined,
-                avatar: activeAccountMetadata.image ?? undefined,
-            });
+            initializeCurrentWallet(connectedWalletAddress);
             // Always save/update the wallet (in case it already exists or is a new connection)
-            saveWallet({
-                address: connectedWalletAddress,
-                domain: activeAccountMetadata.domain ?? undefined,
-                avatar: activeAccountMetadata.image ?? undefined,
-            });
+            saveWallet(connectedWalletAddress);
             // Only set as active if there's no stored active wallet
             // This preserves user's wallet selection when switching
             const currentActiveWallet = getActiveWallet();
@@ -276,33 +268,24 @@ export const useWallet = (): UseWalletReturnType => {
         getActiveWallet,
     ]);
 
-    // Update the stored active wallet metadata when it changes
-    // This ensures "other wallets" show correct data when they become active
+    // Ensure the stored active wallet is saved when it changes
+    // Metadata will be fetched dynamically when needed
     useEffect(() => {
         if (
             isConnectedWithDappKit &&
             !isInAppBrowser &&
             storedActiveWalletAddress &&
-            activeAccountMetadata &&
-            !activeAccountMetadata.isLoading &&
             storedActiveWalletAddress.toLowerCase() ===
                 effectiveConnectedWalletAddress?.toLowerCase()
         ) {
-            // Update the stored active wallet with latest metadata
-            saveWallet({
-                address: storedActiveWalletAddress,
-                domain: activeAccountMetadata.domain ?? undefined,
-                avatar: activeAccountMetadata.image ?? undefined,
-            });
+            // Ensure the stored active wallet is saved
+            saveWallet(storedActiveWalletAddress);
         }
     }, [
         isConnectedWithDappKit,
         isInAppBrowser,
         storedActiveWalletAddress,
         effectiveConnectedWalletAddress,
-        activeAccountMetadata?.domain,
-        activeAccountMetadata?.image,
-        activeAccountMetadata?.isLoading,
         saveWallet,
     ]);
 

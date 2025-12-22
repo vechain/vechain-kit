@@ -10,8 +10,6 @@ import {
 
 export type StoredWallet = {
     address: string;
-    domain: string | null;
-    avatar: string | null;
     connectedAt: number;
     isActive: boolean;
 };
@@ -19,15 +17,12 @@ export type StoredWallet = {
 export const useWalletStorage = () => {
     const { network } = useVeChainKitConfig();
 
-    const getStorageKeys = useCallback(
-        (networkType: NETWORK_TYPE) => {
-            return {
-                wallets: `vechain_kit_wallets_${networkType}`,
-                activeWallet: `vechain_kit_active_wallet_${networkType}`,
-            };
-        },
-        [],
-    );
+    const getStorageKeys = useCallback((networkType: NETWORK_TYPE) => {
+        return {
+            wallets: `vechain_kit_wallets_${networkType}`,
+            activeWallet: `vechain_kit_active_wallet_${networkType}`,
+        };
+    }, []);
 
     const getStoredWallets = useCallback((): StoredWallet[] => {
         if (!isBrowser()) return [];
@@ -46,23 +41,17 @@ export const useWalletStorage = () => {
     }, [network.type, getStorageKeys]);
 
     const saveWallet = useCallback(
-        (wallet: {
-            address: string;
-            domain?: string | null;
-            avatar?: string | null;
-        }) => {
+        (address: string) => {
             if (!isBrowser()) return;
 
             const keys = getStorageKeys(network.type);
             const wallets = getStoredWallets();
             const existingIndex = wallets.findIndex(
-                (w) => w.address.toLowerCase() === wallet.address.toLowerCase(),
+                (w) => w.address.toLowerCase() === address.toLowerCase(),
             );
 
             const walletToSave: StoredWallet = {
-                address: wallet.address,
-                domain: wallet.domain ?? null,
-                avatar: wallet.avatar ?? null,
+                address: address,
                 connectedAt:
                     existingIndex >= 0
                         ? wallets[existingIndex].connectedAt
@@ -91,8 +80,7 @@ export const useWalletStorage = () => {
             // Update all wallets to set isActive
             const updatedWallets = wallets.map((w) => ({
                 ...w,
-                isActive:
-                    w.address.toLowerCase() === address.toLowerCase(),
+                isActive: w.address.toLowerCase() === address.toLowerCase(),
             }));
 
             setLocalStorageItem(keys.wallets, JSON.stringify(updatedWallets));
@@ -126,18 +114,14 @@ export const useWalletStorage = () => {
     );
 
     const initializeCurrentWallet = useCallback(
-        (wallet: {
-            address: string;
-            domain?: string | null;
-            avatar?: string | null;
-        }) => {
+        (address: string) => {
             if (!isBrowser()) return;
 
             const wallets = getStoredWallets();
             if (wallets.length === 0) {
                 // No wallets stored, save current wallet
-                saveWallet(wallet);
-                setActiveWallet(wallet.address);
+                saveWallet(address);
+                setActiveWallet(address);
             }
         },
         [getStoredWallets, saveWallet, setActiveWallet],
@@ -152,4 +136,3 @@ export const useWalletStorage = () => {
         initializeCurrentWallet,
     };
 };
-
