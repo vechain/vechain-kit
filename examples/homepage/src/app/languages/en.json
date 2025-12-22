@@ -56,5 +56,9 @@
     "Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeChain Kit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.": "Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeChain Kit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.",
     "Yes. You need to use the kit's own hooks (useSendTransaction and useSignMessage) to support all login methods. And, to fully customize the login experience, you need to open your own Privy account, since with the shared VeChain + Privy integration you cannot target only specific social login methods and users' signatures are always requested when doing transactions.": "Yes. You need to use the kit's own hooks (useSendTransaction and useSignMessage) to support all login methods. And, to fully customize the login experience, you need to open your own Privy account, since with the shared VeChain + Privy integration you cannot target only specific social login methods and users' signatures are always requested when doing transactions.",
     "and more...": "and more...",
-    "connect-wallet": "Connetti"
+    "connect-wallet": "Connetti",
+    "Start building your new app now": "Start building your new app now",
+    "Only one command to setup": "Only one command to setup",
+    "Includes VeChain Kit, Chakra UI, React Query, SDK and more": "Includes VeChain Kit, Chakra UI, React Query, SDK and more",
+    "Copy command": "Copy command"
 }

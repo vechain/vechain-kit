@@ -18,6 +18,7 @@ import { HeroSection } from '@/app/components/features/HeroSection';
 import { TestimonialSection } from '@/app/components/features/TestimonialSection';
 import { AppShowcase } from '@/app/components/features/AppShowcase';
 import { FAQSection } from '../components/features/FAQSection';
+import { QuickStartSection } from '../components/features/QuickStartSection';
 import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetStartedButton/FloatingGetStartedButton';
 
@@ -76,6 +77,8 @@ export default function Home(): ReactElement {
             />
 
             <AppShowcase />
+
+            <QuickStartSection />
 
             <FAQSection />
 
