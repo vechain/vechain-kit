@@ -16,6 +16,7 @@ import { FeaturesToTry } from '@/app/components/features/FeaturesToTry/FeaturesT
 import { DataReadingExample } from '../components/features/DataReading';
 import { LoginUIControl } from '../components/features/LoginUIControl/LoginUIControl';
 import { LoginToContinueBox } from '../components/features/LoginToContinueBox';
+import { LanguageDropdown } from '../components/layout/Header';
 
 export default function Home(): ReactElement {
     const { account } = useWallet();
@@ -36,14 +37,21 @@ export default function Home(): ReactElement {
                             desktopVariant="iconDomainAndAssets"
                         />
 
-                        <IconButton
-                            onClick={toggleColorMode}
-                            icon={
-                                colorMode === 'light' ? <LuMoon /> : <LuSun />
-                            }
-                            aria-label="Toggle color mode"
-                            borderRadius="xl"
-                        />
+                        <HStack spacing={2}>
+                            <LanguageDropdown />
+                            <IconButton
+                                onClick={toggleColorMode}
+                                icon={
+                                    colorMode === 'light' ? (
+                                        <LuMoon />
+                                    ) : (
+                                        <LuSun />
+                                    )
+                                }
+                                aria-label="Toggle color mode"
+                                borderRadius="xl"
+                            />
+                        </HStack>
                     </HStack>
 
                     <LoginToContinueBox />
@@ -68,12 +76,17 @@ export default function Home(): ReactElement {
                         desktopVariant="iconDomainAndAssets"
                     />
 
-                    <IconButton
-                        onClick={toggleColorMode}
-                        icon={colorMode === 'light' ? <LuMoon /> : <LuSun />}
-                        aria-label="Toggle color mode"
-                        borderRadius="xl"
-                    />
+                    <HStack spacing={2}>
+                        <LanguageDropdown />
+                        <IconButton
+                            onClick={toggleColorMode}
+                            icon={
+                                colorMode === 'light' ? <LuMoon /> : <LuSun />
+                            }
+                            aria-label="Toggle color mode"
+                            borderRadius="xl"
+                        />
+                    </HStack>
                 </HStack>
 
                 <FeaturesToTry />

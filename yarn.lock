@@ -15915,6 +15915,7 @@ __metadata:
     "@types/react-dom": "npm:^18"
     "@vechain/vechain-contract-types": "npm:1.4.1"
     "@vechain/vechain-kit": "workspace:*"
+    dotenv-cli: "npm:latest"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
     i18next: "npm:^24.2.1"
