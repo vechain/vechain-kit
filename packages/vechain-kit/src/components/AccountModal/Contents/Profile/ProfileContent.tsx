@@ -30,24 +30,7 @@ export const ProfileContent = ({
 }: ProfileContentProps) => {
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
-    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-
-    const handleSwitchWallet = () => {
-        if (isInAppBrowser) {
-            switchWallet();
-        } else {
-            // Desktop: navigate to select wallet screen
-            setCurrentContent({
-                type: 'select-wallet',
-                props: {
-                    setCurrentContent,
-                    onClose: () => {},
-                    returnTo: 'profile',
-                    onLogoutSuccess,
-                },
-            });
-        }
-    };
+    const { switchWallet, isSwitching } = useSwitchWallet();
 
     return (
         <>
@@ -129,19 +112,6 @@ export const ProfileContent = ({
                             }}
                             isLoading={isSwitching}
                             isDisabled={isSwitching}
-                            data-testid="switch-wallet-button"
-                        >
-                            {t('Switch')}
-                        </Button>
-                    ) : connection.isConnectedWithDappKit ? (
-                        <Button
-                            size="md"
-                            width="full"
-                            height="40px"
-                            variant="vechainKitSecondary"
-                            leftIcon={<Icon as={LuArrowLeftRight} />}
-                            colorScheme="red"
-                            onClick={handleSwitchWallet}
                             data-testid="switch-wallet-button"
                         >
                             {t('Switch')}

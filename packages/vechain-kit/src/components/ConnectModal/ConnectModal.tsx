@@ -11,7 +11,6 @@ type Props = {
     isOpen: boolean;
     onClose: () => void;
     initialContent?: ConnectModalContentsTypes;
-    preventAutoClose?: boolean;
 };
 
 export type ConnectModalContentsTypes =
@@ -46,7 +45,6 @@ export const ConnectModal = ({
     isOpen,
     onClose,
     initialContent = 'main',
-    preventAutoClose = false,
 }: Props) => {
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>(initialContent);
@@ -61,13 +59,12 @@ export const ConnectModal = ({
     const renderContent = () => {
         // Ensure displayContent is valid
         if (!currentContent) {
-                return (
-                    <MainContent
-                        setCurrentContent={setCurrentContent}
-                        onClose={onClose}
-                        preventAutoClose={preventAutoClose}
-                    />
-                );
+            return (
+                <MainContent
+                    setCurrentContent={setCurrentContent}
+                    onClose={onClose}
+                />
+            );
         }
 
         switch (currentContent) {
@@ -76,7 +73,6 @@ export const ConnectModal = ({
                     <MainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        preventAutoClose={preventAutoClose}
                     />
                 );
             case 'faq':
