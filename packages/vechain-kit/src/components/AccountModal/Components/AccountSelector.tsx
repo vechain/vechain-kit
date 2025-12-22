@@ -21,7 +21,7 @@ import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';
-import { useWallet, useSwitchWallet } from '@/hooks';
+import { useWallet, useSwitchWallet, useDAppKitWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
@@ -47,6 +47,7 @@ export const AccountSelector = ({
     const { t } = useTranslation();
     const { connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
+    const { getAvailableMethods } = useDAppKitWallet();
 
     const [copied, setCopied] = useState(false);
 
@@ -123,7 +124,9 @@ export const AccountSelector = ({
                 </HStack>
             </Button>
 
-            {connection.isInAppBrowser || connection.isConnectedWithDappKit ? (
+            {(connection.isInAppBrowser &&
+                getAvailableMethods?.()?.includes('switchWallet')) ||
+            connection.isConnectedWithDappKit ? (
                 <IconButton
                     aria-label="Switch wallet"
                     icon={<Icon as={LuArrowLeftRight} />}

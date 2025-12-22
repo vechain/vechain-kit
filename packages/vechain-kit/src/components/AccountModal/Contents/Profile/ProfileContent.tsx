@@ -8,7 +8,7 @@ import {
     Button,
     Icon,
 } from '@chakra-ui/react';
-import { useSwitchWallet, useWallet } from '@/hooks';
+import { useSwitchWallet, useWallet, useDAppKitWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import { StickyHeaderContainer } from '@/components/common';
@@ -31,6 +31,7 @@ export const ProfileContent = ({
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
+    const { getAvailableMethods } = useDAppKitWallet();
 
     const handleSwitchWallet = () => {
         if (isInAppBrowser) {
@@ -116,7 +117,8 @@ export const ProfileContent = ({
                     >
                         {t('Wallet')}
                     </Button>
-                    {connection.isInAppBrowser ? (
+                    {connection.isInAppBrowser &&
+                    getAvailableMethods?.()?.includes('switchWallet') ? (
                         <Button
                             size="md"
                             width="full"
