@@ -149,18 +149,46 @@ export const SelectWalletContent = ({
 
     const handleRemoveWallet = useCallback(
         (wallet: StoredWallet) => {
+            const isActiveWallet = wallet.address.toLowerCase() === activeWalletAddress?.toLowerCase();
+            const remainingWallets = wallets.filter(
+                (w) => w.address.toLowerCase() !== wallet.address.toLowerCase(),
+            );
+
             // Navigate to remove wallet confirmation screen
             setCurrentContent({
                 type: 'remove-wallet-confirm',
                 props: {
                     walletAddress: wallet.address,
                     walletDomain: null, // Domain will be fetched dynamically in RemoveWalletConfirmContent
-                    onConfirm: () => {
+                    onConfirm: async () => {
+                        // If removing the active wallet and there are other wallets, switch to the first one
+                        if (isActiveWallet && remainingWallets.length > 0) {
+                            const nextActiveWallet = remainingWallets[0];
+                            setActiveWallet(nextActiveWallet.address);
+                        } else if (isActiveWallet && remainingWallets.length === 0) {
+                            // If removing the last wallet, disconnect
+                            try {
+                                await dappKitDisconnect();
+                            } catch (error) {
+                                console.error('Error disconnecting:', error);
+                            }
+                        }
+
                         removeWallet(wallet.address);
+                        
                         // Refresh wallets list after removal
                         setTimeout(() => {
                             refreshWallets();
                         }, 50);
+
+                        // If no wallets remain, close the modal
+                        if (remainingWallets.length === 0) {
+                            if (_onLogoutSuccess) {
+                                _onLogoutSuccess();
+                            }
+                            return;
+                        }
+
                         // Go back to select wallet screen
                         setCurrentContent({
                             type: 'select-wallet',
@@ -192,6 +220,10 @@ export const SelectWalletContent = ({
             setCurrentContent,
             returnTo,
             _onLogoutSuccess,
+            activeWalletAddress,
+            wallets,
+            setActiveWallet,
+            dappKitDisconnect,
         ],
     );
 
@@ -243,8 +275,8 @@ export const SelectWalletContent = ({
                                 wallet={activeWallet}
                                 isActive={true}
                                 onSelect={() => {}}
-                                onRemove={() => {}}
-                                showRemove={false}
+                                onRemove={() => handleRemoveWallet(activeWallet)}
+                                showRemove={wallets.length > 1}
                             />
                         </VStack>
                     )}
