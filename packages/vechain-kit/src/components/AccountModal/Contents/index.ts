@@ -11,3 +11,4 @@ export * from './Bridge';
 export * from './KitSettings';
 export * from './TermsAndPrivacy';
 export * from './DisconnectConfirmation';
+export * from './SelectWallet';
