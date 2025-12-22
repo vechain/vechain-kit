@@ -37,10 +37,10 @@ type Props = {
 
 export const AccountSelector = ({
     wallet,
-    setCurrentContent,
+    // setCurrentContent,
     size = 'md',
     onClick,
-    onClose,
+    // onClose,
     mt,
     style,
 }: Props) => {

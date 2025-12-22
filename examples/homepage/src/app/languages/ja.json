@@ -43,6 +43,7 @@
   "Uses its own Privy setup for social login OAuth2 based methods like Google and Apple.": "Google や Apple などの OAuth2 ベースのソーシャルログインには独自の Privy 設定を使用します。",
   "VeChain Kit": "VeChain Kit",
   "VeChain Kit UI is fully integrated into the app, using a bottom sheet UX on mobile to enhance the user experience.": "VeChain Kit の UI はアプリに完全統合されており、モバイルではボトムシート UX を採用してユーザー体験を向上させています。",
+  "VeChain Kit is a toolkit for building applications on VeChain, supporting wallet integration, developer hooks, pre-built UI components, and more.": "VeChain Kitは、VeChain上でアプリケーションを構築するためのツールキットであり、ウォレット連携、開発者向けフック、あらかじめ用意されたUIコンポーネントなどをサポートしています。",
   "VeChain Kit is an all-in-one SDK for building frontend applications on VeChain blockchain, supporting wallet integration, developer hooks, pre-built UI components, and more.": "VeChain Kit は VeChain ブロックチェーン上でフロントエンドアプリを構築するためのオールインワン SDK です。ウォレット統合、開発者向けフック、事前構築済み UI コンポーネントなどをサポートします。",
   "Version 2 has been released!": "バージョン2がリリースされました！",
   "View Release Notes": "リリースノートを見る",

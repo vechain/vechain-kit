@@ -47,15 +47,16 @@ export default function RootLayout({
             }}
         >
             <head>
-                <title>VeChain Kit</title>
+                <title>VeKit</title>
                 <meta
                     name="description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
                 />
+
                 <link
                     rel="icon"
                     href={`${basePath}/images/logo.png`}
@@ -72,7 +73,7 @@ export default function RootLayout({
                 />
 
                 {/* Open Graph Metadata */}
-                <meta name="title" property="og:title" content="VeChain Kit" />
+                <meta name="title" property="og:title" content="VeKit" />
                 <meta name="type" property="og:type" content="website" />
                 <meta
                     property="og:url"
@@ -80,12 +81,12 @@ export default function RootLayout({
                 />
                 <meta
                     property="og:description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta property="og:site_name" content="VeChain Kit" />
                 <meta
                     property="og:image"
-                    content={`${basePath}/images/vechain-kit-long.png`}
+                    content={`https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png`}
                 />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
@@ -97,11 +98,11 @@ export default function RootLayout({
                 <meta name="twitter:title" content="VeChain Kit" />
                 <meta
                     name="twitter:description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta
                     name="twitter:image"
-                    content={`${basePath}/images/vechain-kit-long.png`}
+                    content={`https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png`}
                 />
                 <meta name="twitter:image:alt" content="VeChain Kit" />
 

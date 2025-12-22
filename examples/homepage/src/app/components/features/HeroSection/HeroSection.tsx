@@ -36,7 +36,7 @@ export function HeroSection() {
                 lineHeight="1.6"
             >
                 {t(
-                    'VeChain Kit is an all-in-one SDK for building frontend applications on VeChain blockchain, supporting wallet integration, developer hooks, pre-built UI components, and more.',
+                    'VeChain Kit is a toolkit for building applications on VeChain, supporting wallet integration, developer hooks, pre-built UI components, and more.',
                 )}
             </Text>
 
