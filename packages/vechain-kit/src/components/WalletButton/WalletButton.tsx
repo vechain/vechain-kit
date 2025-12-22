@@ -8,7 +8,6 @@ import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '@/hooks';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
-import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 import { ConnectPopover } from '../ConnectModal';
 
@@ -17,6 +16,7 @@ export type WalletButtonProps = {
     desktopVariant?: WalletDisplayVariant;
     buttonStyle?: ButtonProps;
     connectionVariant?: 'modal' | 'popover';
+    label?: string;
 };
 
 export const WalletButton = ({
@@ -24,9 +24,9 @@ export const WalletButton = ({
     desktopVariant = 'iconDomainAndAddress',
     buttonStyle,
     connectionVariant = 'modal',
+    label = 'Login',
 }: WalletButtonProps) => {
-    const { t } = useTranslation();
-    const { darkMode, loginMethods } = useVeChainKitConfig();
+    const { darkMode, loginMethods, theme } = useVeChainKitConfig();
 
     const hasOnlyDappKit =
         loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
@@ -52,7 +52,7 @@ export const WalletButton = ({
     };
 
     return (
-        <VechainKitThemeProvider darkMode={darkMode}>
+        <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
             {connection.isConnected && !!account ? (
                 <ConnectedWallet
                     mobileVariant={mobileVariant}
@@ -71,7 +71,7 @@ export const WalletButton = ({
                     onClick={handleConnect}
                     {...buttonStyle}
                 >
-                    {t('Login')}
+                    {label}
                 </Button>
             )}
 

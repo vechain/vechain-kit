@@ -1,9 +1,11 @@
 'use client';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import './globals.css';
 import dynamic from 'next/dynamic';
-import { darkTheme } from './theme';
+import { theme } from './theme';
+// Initialize i18n
+import '../../i18n';
 
 const VechainKitProviderWrapper = dynamic(
     async () =>
@@ -14,8 +16,20 @@ const VechainKitProviderWrapper = dynamic(
     },
 );
 
+const ForceLightMode = dynamic(
+    async () => (await import('./components/ForceLightMode')).ForceLightMode,
+    {
+        ssr: false,
+    },
+);
+
 function AppContent({ children }: { children: React.ReactNode }) {
-    return <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>;
+    return (
+        <>
+            <ForceLightMode />
+            <VechainKitProviderWrapper>{children}</VechainKitProviderWrapper>
+        </>
+    );
 }
 
 export default function RootLayout({
@@ -33,15 +47,16 @@ export default function RootLayout({
             }}
         >
             <head>
-                <title>VeChain Kit</title>
+                <title>VeKit</title>
                 <meta
                     name="description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                 />
+
                 <link
                     rel="icon"
                     href={`${basePath}/images/logo.png`}
@@ -58,7 +73,7 @@ export default function RootLayout({
                 />
 
                 {/* Open Graph Metadata */}
-                <meta name="title" property="og:title" content="VeChain Kit" />
+                <meta name="title" property="og:title" content="VeKit" />
                 <meta name="type" property="og:type" content="website" />
                 <meta
                     property="og:url"
@@ -66,12 +81,12 @@ export default function RootLayout({
                 />
                 <meta
                     property="og:description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta property="og:site_name" content="VeChain Kit" />
                 <meta
                     property="og:image"
-                    content={`${basePath}/images/vechain-kit-long.png`}
+                    content={`https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png`}
                 />
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
@@ -83,11 +98,11 @@ export default function RootLayout({
                 <meta name="twitter:title" content="VeChain Kit" />
                 <meta
                     name="twitter:description"
-                    content="VeChain Kit - A powerful and intuitive toolkit for building and interacting with decentralized applications on VeChain blockchain."
+                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta
                     name="twitter:image"
-                    content={`${basePath}/images/vechain-kit-long.png`}
+                    content={`https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png`}
                 />
                 <meta name="twitter:image:alt" content="VeChain Kit" />
 
@@ -106,6 +121,29 @@ export default function RootLayout({
                     href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap"
                     rel="stylesheet"
                 />
+                <ColorModeScript initialColorMode="light" />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function() {
+                                // Clear any cached dark mode preferences before React hydrates
+                                const possibleKeys = [
+                                    'chakra-ui-color-mode-vechain-kit-homepage',
+                                    'chakra-ui-color-mode',
+                                    'vechain-kit-homepage-color-mode'
+                                ];
+                                possibleKeys.forEach(function(key) {
+                                    try {
+                                        var stored = localStorage.getItem(key);
+                                        if (stored && stored !== 'light') {
+                                            localStorage.setItem(key, 'light');
+                                        }
+                                    } catch(e) {}
+                                });
+                            })();
+                        `,
+                    }}
+                />
             </head>
             <body
                 style={{
@@ -113,7 +151,7 @@ export default function RootLayout({
                     height: '100%',
                 }}
             >
-                <ChakraProvider theme={darkTheme}>
+                <ChakraProvider theme={theme}>
                     <AppContent>{children}</AppContent>
                 </ChakraProvider>
             </body>

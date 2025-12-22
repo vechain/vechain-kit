@@ -5,7 +5,6 @@ import {
     VStack,
     Text,
     Button,
-    Box,
     ModalFooter,
     Icon,
     Link,
@@ -39,7 +38,7 @@ export const FailedOperationContent = ({
     const explorerUrl = getConfig(network.type).explorerUrl;
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
@@ -95,7 +94,6 @@ export const FailedOperationContent = ({
                     )}
                 </VStack>
             </ModalFooter>
-        </Box>
+        </>
     );
 };
-

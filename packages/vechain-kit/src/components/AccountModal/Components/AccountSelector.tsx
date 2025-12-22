@@ -11,11 +11,17 @@ import {
 import { humanAddress, humanDomain } from '../../../utils';
 import { copyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
-import { LuChevronRight, LuCheck, LuCopy, LuLogOut } from 'react-icons/lu';
+import {
+    LuChevronRight,
+    LuCheck,
+    LuCopy,
+    LuArrowLeftRight,
+} from 'react-icons/lu';
 import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
-import { useWallet } from '@/hooks';
+import { useTranslation } from 'react-i18next';
+import { useWallet, useSwitchWallet, useDAppKitWallet } from '@/hooks';
 
 type Props = {
     wallet: Wallet;
@@ -38,8 +44,12 @@ export const AccountSelector = ({
     mt,
     style,
 }: Props) => {
+    const { t } = useTranslation();
+    const { connection } = useWallet();
+    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
+    const { isSwitchWalletEnabled } = useDAppKitWallet();
+
     const [copied, setCopied] = useState(false);
-    const { disconnect } = useWallet();
 
     const handleCopyToClipboard = async () => {
         const success = await copyToClipboard(
@@ -53,9 +63,20 @@ export const AccountSelector = ({
         }
     };
 
-    const handleLogout = () => {
-        disconnect();
-        onClose();
+    const handleSwitchWallet = () => {
+        if (isInAppBrowser) {
+            switchWallet();
+        } else {
+            // Desktop: navigate to select wallet screen
+            setCurrentContent?.({
+                type: 'select-wallet',
+                props: {
+                    setCurrentContent: setCurrentContent!,
+                    onClose,
+                    returnTo: 'main',
+                },
+            });
+        }
     };
 
     return (
@@ -87,8 +108,10 @@ export const AccountSelector = ({
                             props={{ width: 7, height: 7 }}
                         />
                         <Text fontSize={size} fontWeight="500">
-                            {humanDomain(wallet?.domain ?? '', 22, 0) ||
-                                humanAddress(wallet?.address ?? '', 6, 4)}
+                            {copied
+                                ? t('Copied!')
+                                : humanDomain(wallet?.domain ?? '', 22, 0) ||
+                                  humanAddress(wallet?.address ?? '', 6, 4)}
                         </Text>
                     </HStack>
 
@@ -101,17 +124,33 @@ export const AccountSelector = ({
                 </HStack>
             </Button>
 
-            <IconButton
-                aria-label="Copy address"
-                icon={<Icon as={copied ? LuCheck : LuCopy} />}
-                onClick={handleCopyToClipboard}
-                variant="ghost"
-                size="sm"
-                opacity={0.5}
-                _hover={{ opacity: 0.8 }}
-            />
+            {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
+            connection.isConnectedWithDappKit ? (
+                <IconButton
+                    aria-label="Switch wallet"
+                    icon={<Icon as={LuArrowLeftRight} />}
+                    onClick={handleSwitchWallet}
+                    w="60px"
+                    h={12}
+                    variant="vechainKitSecondary"
+                    p={3}
+                    isLoading={isSwitching}
+                    isDisabled={isSwitching}
+                    data-testid="switch-wallet-button"
+                />
+            ) : (
+                <IconButton
+                    aria-label="Copy address"
+                    icon={<Icon as={copied ? LuCheck : LuCopy} />}
+                    onClick={handleCopyToClipboard}
+                    w="60px"
+                    h={12}
+                    variant="vechainKitSecondary"
+                    p={3}
+                />
+            )}
 
-            <IconButton
+            {/* <IconButton
                 aria-label="Logout"
                 icon={<Icon as={LuLogOut} />}
                 onClick={() =>
@@ -128,7 +167,7 @@ export const AccountSelector = ({
                 opacity={0.5}
                 _hover={{ opacity: 0.8 }}
                 colorScheme="red"
-            />
+            /> */}
         </HStack>
     );
 };

@@ -12,8 +12,9 @@ const getPopoverVariants = (tokens: ThemeTokens) => ({
         },
         content: {
             borderRadius: tokens.borders.radius.xl,
-            border: 'none',
+            border: tokens.colors.border.modal,
             backgroundColor: tokens.colors.background.modal,
+            backdropFilter: tokens.effects.backdropFilter.modal,
             boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.12)',
             minWidth: '380px',
         },

@@ -28,6 +28,16 @@ const getCardVariants = (tokens: ThemeTokens) => ({
         },
     }),
 
+    vechainKitWalletCard: definePartsStyle({
+        container: {
+            backgroundColor: tokens.colors.background.card,
+            borderRadius: tokens.borders.radius.medium,
+            width: 'full',
+            cursor: 'pointer',
+            position: 'relative',
+        },
+    }),
+
     featureAnnouncement: definePartsStyle({
         body: {
             backgroundColor: tokens.buttons.button.bg,

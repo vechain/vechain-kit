@@ -9,7 +9,17 @@ type AccountAvatarProps = {
 
 export const AccountAvatar = ({ wallet, props }: AccountAvatarProps) => {
     // Store the previous image URL to maintain during loading
+    // Use wallet address as key to ensure ref is reset when wallet changes
     const previousImageRef = useRef<string | undefined>(wallet?.image);
+    const walletAddressRef = useRef<string | undefined>(wallet?.address);
+
+    // Reset ref when wallet address changes
+    useEffect(() => {
+        if (walletAddressRef.current !== wallet?.address) {
+            previousImageRef.current = wallet?.image;
+            walletAddressRef.current = wallet?.address;
+        }
+    }, [wallet?.address]);
 
     // Update the ref when we have a valid image and it's not loading
     useEffect(() => {

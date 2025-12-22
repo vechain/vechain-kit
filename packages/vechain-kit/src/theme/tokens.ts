@@ -124,6 +124,12 @@ export interface VechainKitThemeConfig {
         backdropFilter?: string; // Backdrop filter for modal dialog (e.g., "blur(10px)")
         borderRadius?: string; // Modal dialog border radius (e.g., "24px", "1rem") - deprecated, use rounded instead
         rounded?: string | number; // Border radius (Chakra UI rounded prop: "sm", "md", "lg", "xl", "2xl", "3xl", "full", or number)
+        /**
+         * Whether to use bottom sheet on mobile devices.
+         * When false (default), uses regular modal on all screen sizes.
+         * When true, uses bottom sheet on mobile (< 768px) and regular modal on desktop.
+         */
+        useBottomSheetOnMobile?: boolean;
     };
     buttons?: {
         secondaryButton?: {

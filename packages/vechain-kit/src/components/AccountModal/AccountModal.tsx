@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useWallet, useNotificationAlerts } from '@/hooks';
+import { useWallet } from '@/hooks';
 import { BaseModal } from '@/components/common';
 import {
     AccountMainContent,
@@ -17,10 +15,11 @@ import {
     FAQContent,
     ProfileContent,
     AssetsContent,
-    BridgeContent,
     LanguageSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
+    SelectWalletContent,
+    RemoveWalletConfirmContent,
 } from './Contents';
 import { AccountModalContentTypes } from './Types/Types';
 import { ConnectionDetailsContent } from './Contents/ConnectionDetails';
@@ -36,8 +35,8 @@ import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenCon
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 import { useModal } from '@/providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
-import { contentVariants, transition } from './utils/animationVariants';
-import { getContentKey } from './utils/getContentKey';
+import { useVechainKitThemeConfig } from '@/providers';
+import { useEffect } from 'react';
 
 type Props = {
     isOpen: boolean;
@@ -48,55 +47,23 @@ type Props = {
 export const AccountModal = ({
     isOpen,
     onClose,
-    initialContent = 'main',
+    initialContent = 'profile',
 }: Props) => {
-    useNotificationAlerts();
     const { account } = useWallet();
-    const previousContentRef = useRef<AccountModalContentTypes | null>(null);
-    const directionRef = useRef<'forward' | 'backward'>('forward');
+    const { themeConfig } = useVechainKitThemeConfig();
 
     const {
         accountModalContent: currentContent,
         setAccountModalContent: setCurrentContent,
     } = useModal();
 
+    // Reset refs and set initial content when modal opens
     useEffect(() => {
-        if (isOpen && initialContent) {
+        if (isOpen) {
+            // Modal just opened - reset everything and use initialContent
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);
-
-    // Track navigation direction (computed synchronously)
-    const direction = (() => {
-        if (
-            previousContentRef.current === null ||
-            previousContentRef.current === currentContent
-        ) {
-            return directionRef.current;
-        }
-        // Determine direction based on common navigation patterns
-        const prevKey = getContentKey(previousContentRef.current);
-        const currKey = getContentKey(currentContent);
-
-        // Common backward navigation patterns
-        const isBackward =
-            // Going back to main from any view
-            currKey === 'main' ||
-            // Going back to settings from sub-settings
-            (currKey === 'settings' && prevKey !== 'main') ||
-            // Going from summary/confirmation back to main content
-            prevKey.includes('summary') ||
-            prevKey.includes('confirm') ||
-            prevKey.includes('operation');
-
-        return isBackward ? 'backward' : 'forward';
-    })();
-
-    // Update refs after computing direction
-    useEffect(() => {
-        directionRef.current = direction;
-        previousContentRef.current = currentContent;
-    }, [currentContent, direction]);
 
     const renderContent = () => {
         if (typeof currentContent === 'object') {
@@ -130,6 +97,10 @@ export const AccountModal = ({
                     return (
                         <DisconnectConfirmContent {...currentContent.props} />
                     );
+                case 'remove-wallet-confirm':
+                    return (
+                        <RemoveWalletConfirmContent {...currentContent.props} />
+                    );
                 case 'account-customization':
                     return <CustomizationContent {...currentContent.props} />;
                 case 'account-customization-summary':
@@ -159,6 +130,36 @@ export const AccountModal = ({
                             selectedCategory={
                                 currentContent.props.selectedCategory
                             }
+                        />
+                    );
+                case 'select-wallet':
+                    return (
+                        <SelectWalletContent
+                            setCurrentContent={setCurrentContent}
+                            onClose={onClose}
+                            returnTo={currentContent.props.returnTo}
+                            onLogoutSuccess={
+                                currentContent.props.onLogoutSuccess
+                            }
+                        />
+                    );
+                case 'main':
+                    return (
+                        <AccountMainContent
+                            setCurrentContent={setCurrentContent}
+                            onClose={onClose}
+                            wallet={account}
+                            switchFeedback={currentContent.props?.switchFeedback}
+                        />
+                    );
+                case 'profile':
+                    return (
+                        <ProfileContent
+                            setCurrentContent={setCurrentContent}
+                            onLogoutSuccess={() => {
+                                onClose();
+                            }}
+                            switchFeedback={currentContent.props?.switchFeedback}
                         />
                     );
             }
@@ -193,8 +194,6 @@ export const AccountModal = ({
                 );
             case 'assets':
                 return <AssetsContent setCurrentContent={setCurrentContent} />;
-            case 'bridge':
-                return <BridgeContent setCurrentContent={setCurrentContent} />;
             case 'notifications':
                 return (
                     <NotificationsContent
@@ -258,32 +257,22 @@ export const AccountModal = ({
         }
     };
 
-    const content = renderContent();
-    const contentKey = getContentKey(currentContent);
-
     return (
         <BaseModal
             isOpen={isOpen}
             onClose={onClose}
             allowExternalFocus={true}
             blockScrollOnMount={true}
+            mobileMinHeight={
+                themeConfig?.modal?.useBottomSheetOnMobile ? '520px' : '510px'
+            }
+            mobileMaxHeight={
+                themeConfig?.modal?.useBottomSheetOnMobile ? '520px' : '510px'
+            }
+            desktopMinHeight={'485px'}
+            desktopMaxHeight={'485px'}
         >
-            <AnimatePresence mode="wait" initial={false}>
-                {content && (
-                    <motion.div
-                        key={contentKey}
-                        custom={directionRef.current}
-                        variants={contentVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={transition}
-                        style={{ width: '100%' }}
-                    >
-                        {content}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {renderContent()}
         </BaseModal>
     );
 };

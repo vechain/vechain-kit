@@ -11,7 +11,6 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             scrollbarWidth: 'none',
             overflow: 'scroll',
             overflowX: 'hidden',
-            maxHeight: '600px',
             rounded: tokens.modal.rounded ?? tokens.borders.radius.modal,
             backgroundColor: tokens.colors.background.modal,
             backdropFilter: tokens.effects.backdropFilter.modal,
@@ -25,7 +24,9 @@ const getModalVariants = (tokens: ThemeTokens) => ({
             borderRadius: tokens.borders.radius.full,
             color: tokens.colors.text.primary,
             _hover: {
-                bg: tokens.buttons.button.bg,
+                ...(tokens.buttons.button.hoverBg
+                    ? { bg: tokens.buttons.button.hoverBg }
+                    : { opacity: 0.8 }),
             },
             _active: {
                 bg: tokens.buttons.button.bg,
@@ -35,9 +36,11 @@ const getModalVariants = (tokens: ThemeTokens) => ({
         header: {
             w: 'full',
             color: tokens.colors.text.primary,
-            fontSize: tokens.fonts.sizes.medium,
+            fontSize: tokens.fonts.sizes.large,
             fontWeight: tokens.fonts.weights.bold,
             textAlign: 'center',
+            paddingBottom: 5,
+            paddingTop: 5,
         },
     }),
 });

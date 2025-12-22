@@ -12,7 +12,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
-import { useWallet, useFetchAppInfo } from '@/hooks';
+import { useFetchAppInfo, useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
 import { EcosystemButton } from '../Components/EcosystemButton';
@@ -22,32 +22,33 @@ type Props = {
         React.SetStateAction<ConnectModalContentsTypes>
     >;
     onClose: () => void;
+    preventAutoClose?: boolean;
 };
 
-export const MainContent = ({ setCurrentContent, onClose }: Props) => {
+export const MainContent = ({ setCurrentContent, onClose, preventAutoClose = false }: Props) => {
     const { t } = useTranslation();
-
     const { connection } = useWallet();
+
     const { loginModalUI, darkMode: isDark } = useVeChainKitConfig();
     const { loginMethods, privyEcosystemAppIDS } = useVeChainKitConfig();
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
-    
+
     const textColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const handleFAQClick = () => {
         setCurrentContent('faq');
     };
 
-    useEffect(() => {
-        if (connection.isConnected) {
-            onClose();
-        }
-    }, [connection.isConnected, onClose]);
-
     const showEcosystemButton = loginMethods?.some(
         ({ method }) => method === 'ecosystem',
     );
+
+    useEffect(() => {
+        if (connection.isConnected && !preventAutoClose) {
+            onClose();
+        }
+    }, [connection.isConnected, onClose, preventAutoClose]);
 
     return (
         <>
@@ -87,7 +88,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                         </Text>
                     </HStack>
                 )}
-                <ConnectionOptionsStack />
+                <ConnectionOptionsStack setCurrentContent={setCurrentContent} />
             </ModalBody>
 
             {showEcosystemButton ? (
@@ -97,6 +98,7 @@ export const MainContent = ({ setCurrentContent, onClose }: Props) => {
                             isDark={isDark}
                             appsInfo={Object.values(appsInfo || {})}
                             isLoading={isEcosystemAppsLoading}
+                            setCurrentContent={setCurrentContent}
                         />
                     </HStack>
                 </ModalFooter>

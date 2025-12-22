@@ -11,7 +11,13 @@ import {
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { LuX, LuExternalLink, LuCircleAlert, LuCircleCheck } from 'react-icons/lu';
+import {
+    LuX,
+    LuExternalLink,
+    LuCircleAlert,
+    LuCircleCheck,
+    LuRefreshCw,
+} from 'react-icons/lu';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { useTranslation } from 'react-i18next';
@@ -157,9 +163,14 @@ export const TransactionToastContent = ({
 
                         {(status === 'error' || status === 'ready') && (
                             <Button size="xs" onClick={onTryAgain}>
-                                {status === 'error'
-                                    ? t('Try again')
-                                    : t('Confirm')}
+                                {status === 'error' ? (
+                                    <>
+                                        <Icon mr={2} as={LuRefreshCw} />
+                                        {t('Try again')}
+                                    </>
+                                ) : (
+                                    t('Confirm')
+                                )}
                             </Button>
                         )}
 
@@ -180,7 +191,6 @@ export const TransactionToastContent = ({
             {!config.closeDisabled && (
                 <IconButton
                     onClick={onClose}
-                    variant="ghost"
                     size="sm"
                     borderRadius={'full'}
                     aria-label="Close"

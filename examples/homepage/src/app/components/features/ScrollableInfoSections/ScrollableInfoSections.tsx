@@ -1,0 +1,212 @@
+'use client';
+
+import { useRef, useEffect, useState } from 'react';
+import { Box, VStack } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
+import { InfoSection } from '@/app/components/features/InfoSection';
+import { LoginMethodsSection } from '../LoginMethodsSection';
+import { LanguagesSection } from '../LanguagesSection';
+
+interface ScrollableSection {
+    bg?: string;
+    title: string;
+    content: string;
+    imageSrc: string;
+    imageAlt: string;
+    imageWidth?: string;
+    mobileImageSrc?: string;
+    isLoginMethods?: boolean;
+    isLanguages?: boolean;
+}
+
+export function ScrollableInfoSections() {
+    const { t } = useTranslation();
+    const sections: ScrollableSection[] = [
+        {
+            bg: '#e0daea',
+            title: t('Out of the box'),
+            content: t(
+                'Forget about the underlying blockchain infrastructure. We handle it for you.',
+            ),
+            imageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
+            mobileImageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/previewed+(4).png',
+            imageAlt: t('VeChain Kit'),
+            imageWidth: '950px',
+        },
+        {
+            bg: '#dae8fb',
+            title: t('Boosted Development'),
+            content: t(
+                'Use our hooks and components to speed up your development and interact with the blockchain.',
+            ),
+            imageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/My-App+(1).png',
+            imageAlt: t('VeChain Kit'),
+            imageWidth: '750px',
+        },
+        {
+            bg: '#eae3d1',
+            title: t('Customizable'),
+            content: t(
+                "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
+            ),
+            imageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/image1+4.png',
+            imageAlt: t('VeChain Kit'),
+            imageWidth: '600px',
+        },
+        {
+            bg: '#dae8fb',
+            title: t('Multiple Login Methods'),
+            content: t(
+                "Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need.",
+            ),
+            imageSrc:
+                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
+            imageAlt: t('Login methods'),
+            imageWidth: '550px',
+            isLoginMethods: true,
+        },
+        {
+            bg: '#e1e5e4',
+            title: t('Multi-language'),
+            content: t(
+                'The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.',
+            ),
+            imageSrc:
+                'https://cdn.prod.website-files.com/685387e21f37b28674efb768/685c258fb5b73e62bd8de0c0_0e9040e92251da2f7c363a4f48682fee_5-4.webp',
+            imageAlt: t('Multiple language support'),
+            imageWidth: '400px',
+            isLanguages: true,
+        },
+    ];
+
+    const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const [scrollProgresses, setScrollProgresses] = useState<number[]>(
+        new Array(sections.length - 1).fill(0),
+    );
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        const checkDesktop = () => {
+            setIsDesktop(window.innerWidth >= 768);
+        };
+
+        checkDesktop();
+        window.addEventListener('resize', checkDesktop);
+
+        return () => window.removeEventListener('resize', checkDesktop);
+    }, []);
+
+    useEffect(() => {
+        if (!isDesktop || sectionRefs.current.length < sections.length) {
+            return;
+        }
+
+        const handleScroll = () => {
+            const windowHeight = window.innerHeight;
+            const newProgresses: number[] = [];
+
+            // Calculate progress for each section pair
+            for (let i = 0; i < sections.length - 1; i++) {
+                const currentSection = sectionRefs.current[i];
+                const nextSection = sectionRefs.current[i + 1];
+
+                if (!currentSection || !nextSection) {
+                    newProgresses.push(0);
+                    continue;
+                }
+
+                const nextRect = nextSection.getBoundingClientRect();
+                const nextSectionTop = nextRect.top;
+
+                // Calculate progress: fade starts when next section enters viewport
+                // and completes when it reaches the top
+                const progress = Math.max(
+                    0,
+                    Math.min(1, (windowHeight - nextSectionTop) / windowHeight),
+                );
+
+                newProgresses.push(progress);
+            }
+
+            setScrollProgresses(newProgresses);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Initial calculation
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isDesktop, sections.length]);
+
+    const getSectionStyle = (index: number) => {
+        const isLast = index === sections.length - 1;
+        // Only the section being covered should fade
+        // scrollProgresses[index] tracks how much the NEXT section has scrolled over this one
+        const progress = isLast ? 0 : scrollProgresses[index];
+
+        // Each section (except last) fades out and scales down as next section scrolls over it
+        // The section scrolling over stays at opacity 1 (it's not affected by this progress value)
+        const opacity = isDesktop && !isLast ? 1 - progress : 1;
+        const scale = isDesktop && !isLast ? 1 - (1 - 0.85231) * progress : 1;
+        const transform = isDesktop
+            ? `translate3d(0px, 0px, 0px) scale3d(${scale}, ${scale}, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg)`
+            : 'none';
+
+        return {
+            willChange: isDesktop ? ('opacity, transform' as const) : 'auto',
+            opacity,
+            transform,
+            ...(isDesktop && { transformStyle: 'preserve-3d' as const }),
+        };
+    };
+
+    return (
+        <VStack spacing={12} align="stretch">
+            {sections.map((section, index) => {
+                const isLast = index === sections.length - 1;
+                // Later sections should have higher z-index so they can scroll over earlier ones
+                const zIndex = isDesktop ? index + 1 : 'auto';
+
+                return (
+                    <Box
+                        key={index}
+                        ref={(el) => {
+                            sectionRefs.current[index] = el;
+                        }}
+                        position={isDesktop && !isLast ? 'sticky' : 'relative'}
+                        top={isDesktop && !isLast ? 0 : 'auto'}
+                        zIndex={zIndex}
+                        style={getSectionStyle(index)}
+                    >
+                        {section.isLoginMethods ? (
+                            <LoginMethodsSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                            />
+                        ) : section.isLanguages ? (
+                            <LanguagesSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                            />
+                        ) : (
+                            <InfoSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                                imageSrc={section.imageSrc}
+                                imageAlt={section.imageAlt}
+                                imageWidth={section.imageWidth}
+                                mobileImageSrc={section.mobileImageSrc}
+                            />
+                        )}
+                    </Box>
+                );
+            })}
+        </VStack>
+    );
+}

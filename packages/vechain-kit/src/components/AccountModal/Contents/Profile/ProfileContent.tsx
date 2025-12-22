@@ -2,50 +2,81 @@ import {
     ModalBody,
     ModalCloseButton,
     ModalHeader,
-    Box,
     ModalFooter,
     VStack,
+    HStack,
+    Button,
+    Icon,
 } from '@chakra-ui/react';
-import { useWallet } from '@/hooks';
+import { useSwitchWallet, useWallet, useDAppKitWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
-import { ProfileCard } from '@/components/ProfileCard/ProfileCard';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ProfileCard } from './Components/ProfileCard/ProfileCard';
+import {
+    StickyHeaderContainer,
+    WalletSwitchFeedback,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
+import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
     onLogoutSuccess: () => void;
+    switchFeedback?: { showFeedback: boolean };
 };
 
 export const ProfileContent = ({
     setCurrentContent,
     onLogoutSuccess,
+    switchFeedback,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
-    const { isolatedView } = useAccountModalOptions();
-    const { account, disconnect } = useWallet();
+    const { account, disconnect, connection } = useWallet();
+    const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
+    const { isSwitchWalletEnabled } = useDAppKitWallet();
+
+    const handleSwitchWallet = () => {
+        if (isInAppBrowser) {
+            switchWallet();
+        } else {
+            // Desktop: navigate to select wallet screen
+            setCurrentContent({
+                type: 'select-wallet',
+                props: {
+                    setCurrentContent,
+                    onClose: () => {},
+                    returnTo: 'profile',
+                    onLogoutSuccess,
+                },
+            });
+        }
+    };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader data-testid="modal-title">
                     {t('Profile')}
                 </ModalHeader>
 
-                {!isolatedView && (
-                    <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
-                    />
-                )}
+                <ModalSettingsButton
+                    onClick={() => {
+                        setCurrentContent('settings');
+                    }}
+                    data-testid="settings-button"
+                />
+
                 <ModalCloseButton />
             </StickyHeaderContainer>
 
             <ModalBody w={'full'}>
-                <VStack w={'full'} spacing={2}>
+                <VStack w={'full'} spacing={6}>
+                    <WalletSwitchFeedback
+                        showFeedback={switchFeedback?.showFeedback}
+                    />
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
@@ -64,6 +95,7 @@ export const ProfileContent = ({
                         }}
                         address={account?.address ?? ''}
                         showHeader={false}
+                        setCurrentContent={setCurrentContent}
                         onLogout={() => {
                             setCurrentContent?.({
                                 type: 'disconnect-confirm',
@@ -80,7 +112,79 @@ export const ProfileContent = ({
                     />
                 </VStack>
             </ModalBody>
-            <ModalFooter pt={0} />
-        </Box>
+            <ModalFooter w="full">
+                <HStack w="full" justify="space-between" spacing={4} mt={4}>
+                    <Button
+                        size="md"
+                        width="full"
+                        height="40px"
+                        variant="vechainKitSecondary"
+                        leftIcon={<Icon as={LuWalletCards} />}
+                        onClick={() => setCurrentContent('main')}
+                        data-testid="wallet-button"
+                    >
+                        {t('Wallet')}
+                    </Button>
+                    {connection.isInAppBrowser && isSwitchWalletEnabled ? (
+                        <Button
+                            size="md"
+                            width="full"
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuArrowLeftRight} />}
+                            colorScheme="red"
+                            onClick={async () => {
+                                await switchWallet();
+                                // For VeWorld in-app browser, the wallet_switched event will be dispatched
+                                // by the dapp-kit when the wallet actually changes
+                            }}
+                            isLoading={isSwitching}
+                            isDisabled={isSwitching}
+                            data-testid="switch-wallet-button"
+                        >
+                            {t('Switch')}
+                        </Button>
+                    ) : connection.isConnectedWithDappKit ? (
+                        <Button
+                            size="md"
+                            width="full"
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuArrowLeftRight} />}
+                            colorScheme="red"
+                            onClick={handleSwitchWallet}
+                            data-testid="switch-wallet-button"
+                        >
+                            {t('Switch')}
+                        </Button>
+                    ) : (
+                        <Button
+                            size="md"
+                            width="full"
+                            height="40px"
+                            variant="vechainKitSecondary"
+                            leftIcon={<Icon as={LuLogOut} />}
+                            colorScheme="red"
+                            onClick={() =>
+                                setCurrentContent({
+                                    type: 'disconnect-confirm',
+                                    props: {
+                                        onDisconnect: () => {
+                                            disconnect();
+                                            onLogoutSuccess?.();
+                                        },
+                                        onBack: () =>
+                                            setCurrentContent?.('profile'),
+                                    },
+                                })
+                            }
+                            data-testid="logout-button"
+                        >
+                            {t('Logout')}
+                        </Button>
+                    )}
+                </HStack>
+            </ModalFooter>
+        </>
     );
 };
