@@ -95,9 +95,9 @@ export function InfoSection({
                     <Image
                         src={finalImageSrc || imageSrc}
                         alt={imageAlt}
-                        w={['100%', imageWidth]}
+                        w={['80%', imageWidth]}
+                        mb={['20px', '0']}
                         sx={{
-                            width: '100%',
                             height: 'auto',
                             display: 'block',
                             WebkitMaskImage:
