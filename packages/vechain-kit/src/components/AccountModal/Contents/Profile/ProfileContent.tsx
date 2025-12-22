@@ -11,7 +11,10 @@ import {
 import { useSwitchWallet, useWallet, useDAppKitWallet } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
-import { StickyHeaderContainer } from '@/components/common';
+import {
+    StickyHeaderContainer,
+    WalletSwitchFeedback,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
@@ -22,11 +25,13 @@ export type ProfileContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     onLogoutSuccess: () => void;
+    switchFeedback?: { showFeedback: boolean };
 };
 
 export const ProfileContent = ({
     setCurrentContent,
     onLogoutSuccess,
+    switchFeedback,
 }: ProfileContentProps) => {
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
@@ -69,6 +74,9 @@ export const ProfileContent = ({
 
             <ModalBody w={'full'}>
                 <VStack w={'full'} spacing={6}>
+                    <WalletSwitchFeedback
+                        showFeedback={switchFeedback?.showFeedback}
+                    />
                     {!account?.domain && (
                         <FeatureAnnouncementCard
                             setCurrentContent={setCurrentContent}
@@ -125,8 +133,10 @@ export const ProfileContent = ({
                             variant="vechainKitSecondary"
                             leftIcon={<Icon as={LuArrowLeftRight} />}
                             colorScheme="red"
-                            onClick={() => {
-                                switchWallet();
+                            onClick={async () => {
+                                await switchWallet();
+                                // For VeWorld in-app browser, the wallet_switched event will be dispatched
+                                // by the dapp-kit when the wallet actually changes
                             }}
                             isLoading={isSwitching}
                             isDisabled={isSwitching}

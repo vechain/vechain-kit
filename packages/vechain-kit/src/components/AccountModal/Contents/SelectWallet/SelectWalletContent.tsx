@@ -123,14 +123,24 @@ export const SelectWalletContent = ({
             }
 
             setActiveWallet(address);
+
             // Refresh wallets list immediately after switch
             setTimeout(() => {
                 refreshWallets();
             }, 50);
             // Refresh balances after switching
             refresh();
+
             // Close modal and go back to the screen we came from
-            setCurrentContent(returnTo);
+            // Pass feedback flag through content props
+            setCurrentContent({
+                type: returnTo,
+                props: {
+                    switchFeedback: {
+                        showFeedback: true,
+                    },
+                },
+            });
         },
         [
             activeWalletAddress,

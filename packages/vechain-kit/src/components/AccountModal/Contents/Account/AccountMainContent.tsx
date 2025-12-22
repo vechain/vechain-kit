@@ -6,7 +6,11 @@ import {
     Tag,
     ModalFooter,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
+import {
+    StickyHeaderContainer,
+    ScrollToTopWrapper,
+    WalletSwitchFeedback,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
@@ -25,12 +29,14 @@ type Props = {
     >;
     onClose: () => void;
     wallet: Wallet;
+    switchFeedback?: { showFeedback: boolean };
 };
 
 export const AccountMainContent = ({
     setCurrentContent,
     wallet,
     onClose,
+    switchFeedback,
 }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
@@ -73,6 +79,9 @@ export const AccountMainContent = ({
                     justifyContent={'flex-start'}
                     spacing={8}
                 >
+                    <WalletSwitchFeedback
+                        showFeedback={switchFeedback?.showFeedback}
+                    />
                     <AccountSelector
                         style={{ justifyContent: 'flex-start' }}
                         onClick={() => {

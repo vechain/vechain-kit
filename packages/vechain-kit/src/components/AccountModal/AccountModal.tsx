@@ -143,6 +143,25 @@ export const AccountModal = ({
                             }
                         />
                     );
+                case 'main':
+                    return (
+                        <AccountMainContent
+                            setCurrentContent={setCurrentContent}
+                            onClose={onClose}
+                            wallet={account}
+                            switchFeedback={currentContent.props?.switchFeedback}
+                        />
+                    );
+                case 'profile':
+                    return (
+                        <ProfileContent
+                            setCurrentContent={setCurrentContent}
+                            onLogoutSuccess={() => {
+                                onClose();
+                            }}
+                            switchFeedback={currentContent.props?.switchFeedback}
+                        />
+                    );
             }
         }
 

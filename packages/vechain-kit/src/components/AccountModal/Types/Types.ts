@@ -17,10 +17,26 @@ import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation
 import { FailedOperationContentProps } from '../Contents/FailedOperation/FailedOperationContent';
 import { TermsAndPrivacyContentProps } from '../Contents/TermsAndPrivacy/TermsAndPrivacyContent';
 
+export type SwitchFeedback = {
+    showFeedback: boolean;
+};
+
 export type AccountModalContentTypes =
     | 'main'
     | 'settings'
     | 'profile'
+    | {
+          type: 'main';
+          props?: {
+              switchFeedback?: SwitchFeedback;
+          };
+      }
+    | {
+          type: 'profile';
+          props?: {
+              switchFeedback?: SwitchFeedback;
+          };
+      }
     | 'manage-mfa'
     | 'receive-token'
     | 'swap-token'
