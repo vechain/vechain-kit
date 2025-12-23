@@ -7,8 +7,14 @@ import {
     HStack,
     Button,
     Icon,
+    Text,
 } from '@chakra-ui/react';
-import { useSwitchWallet, useWallet, useDAppKitWallet } from '@/hooks';
+import {
+    useSwitchWallet,
+    useWallet,
+    useDAppKitWallet,
+    useTotalBalance,
+} from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import {
@@ -38,6 +44,9 @@ export const ProfileContent = ({
     const { account, disconnect, connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
     const { isSwitchWalletEnabled } = useDAppKitWallet();
+    const { hasAnyBalance, formattedBalance } = useTotalBalance({
+        address: account?.address,
+    });
 
     const handleSwitchWallet = () => {
         if (isInAppBrowser) {
@@ -111,16 +120,25 @@ export const ProfileContent = ({
                         width="full"
                         height="40px"
                         variant="vechainKitSecondary"
-                        leftIcon={<Icon as={LuWalletCards} />}
+                        leftIcon={
+                            hasAnyBalance ? undefined : (
+                                <Icon as={LuWalletCards} />
+                            )
+                        }
                         onClick={() => setCurrentContent('main')}
                         data-testid="wallet-button"
                     >
-                        {t('Wallet')}
-                        <AssetIcons
-                            address={account?.address ?? ''}
-                            maxIcons={2}
-                            ml={2}
-                        />
+                        {hasAnyBalance ? (
+                            <HStack spacing={2} w="full" justify="center">
+                                <AssetIcons
+                                    address={account?.address ?? ''}
+                                    maxIcons={2}
+                                />
+                                <Text fontWeight="600">{formattedBalance}</Text>
+                            </HStack>
+                        ) : (
+                            t('Wallet')
+                        )}
                     </Button>
 
                     {/* In VeWorld mobile we call switchWallet

@@ -24,7 +24,6 @@ import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { useTranslation } from 'react-i18next';
-import { disconnect } from '@wagmi/core';
 
 type Props = {
     wallet: Wallet;
