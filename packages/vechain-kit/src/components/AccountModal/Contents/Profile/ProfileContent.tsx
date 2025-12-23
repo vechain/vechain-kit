@@ -19,6 +19,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
+import { isBrowser } from '@/utils';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -125,6 +126,11 @@ export const ProfileContent = ({
                     >
                         {t('Wallet')}
                     </Button>
+
+                    {/* In VeWorld mobile we call switchWallet
+                    on the desktop we call setCurrentContent to select-wallet
+                    otherwise we show logout button
+                    */}
                     {connection.isInAppBrowser && isSwitchWalletEnabled ? (
                         <Button
                             size="md"
@@ -144,7 +150,7 @@ export const ProfileContent = ({
                         >
                             {t('Switch')}
                         </Button>
-                    ) : connection.isConnectedWithDappKit ? (
+                    ) : isBrowser() && connection.isConnectedWithDappKit ? (
                         <Button
                             size="md"
                             width="full"
