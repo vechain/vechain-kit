@@ -130,7 +130,9 @@ export const ProfileContent = ({
                     on the desktop we call setCurrentContent to select-wallet
                     otherwise we show logout button
                     */}
-                    {connection.isInAppBrowser && isSwitchWalletEnabled ? (
+                    {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
+                    (!connection.isInAppBrowser &&
+                        connection.isConnectedWithDappKit) ? (
                         <Button
                             size="md"
                             width="full"
@@ -139,26 +141,10 @@ export const ProfileContent = ({
                             leftIcon={<Icon as={LuArrowLeftRight} />}
                             colorScheme="red"
                             onClick={async () => {
-                                await switchWallet();
-                                // For VeWorld in-app browser, the wallet_switched event will be dispatched
-                                // by the dapp-kit when the wallet actually changes
+                                handleSwitchWallet();
                             }}
                             isLoading={isSwitching}
                             isDisabled={isSwitching}
-                            data-testid="switch-wallet-button"
-                        >
-                            {t('Switch')}
-                        </Button>
-                    ) : !connection.isInAppBrowser &&
-                      connection.isConnectedWithDappKit ? (
-                        <Button
-                            size="md"
-                            width="full"
-                            height="40px"
-                            variant="vechainKitSecondary"
-                            leftIcon={<Icon as={LuArrowLeftRight} />}
-                            colorScheme="red"
-                            onClick={handleSwitchWallet}
                             data-testid="switch-wallet-button"
                         >
                             {t('Switch')}

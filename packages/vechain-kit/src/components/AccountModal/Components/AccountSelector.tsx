@@ -74,6 +74,7 @@ export const AccountSelector = ({
                     setCurrentContent: setCurrentContent!,
                     onClose,
                     returnTo: 'main',
+                    onLogoutSuccess: onClose,
                 },
             });
         }
