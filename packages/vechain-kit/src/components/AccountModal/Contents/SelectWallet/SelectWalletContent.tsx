@@ -243,7 +243,7 @@ export const SelectWalletContent = ({
         // Disconnect from dappkit first if connected
         if (connection.isConnectedWithDappKit && !connection.isInAppBrowser) {
             try {
-                dappKitDisconnect();
+                // dappKitDisconnect();
             } catch (error) {
                 console.error('Error disconnecting from dappkit:', error);
             }
@@ -253,7 +253,7 @@ export const SelectWalletContent = ({
         setTimeout(() => {
             // Open ConnectModal without preventAutoClose so it closes automatically
             // when a new wallet is connected after disconnect
-            openConnectModal('main', false);
+            openConnectModal('main', true);
         }, 100);
     }, [
         openConnectModal,
