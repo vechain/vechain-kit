@@ -36,6 +36,7 @@ export const ProfileCard = ({
     showDescription = true,
     showDisplayName = true,
     setCurrentContent,
+    onLogout,
 }: ProfileCardProps) => {
     const { network } = useVeChainKitConfig();
 
@@ -193,6 +194,7 @@ export const ProfileCard = ({
                 )}
 
                 <AddressDisplay
+                    onLogout={onLogout}
                     wallet={{
                         address,
                         domain: metadata?.domain,

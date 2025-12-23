@@ -19,6 +19,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
+import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -97,17 +98,8 @@ export const ProfileContent = ({
                         showHeader={false}
                         setCurrentContent={setCurrentContent}
                         onLogout={() => {
-                            setCurrentContent?.({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: () => {
-                                        disconnect();
-                                        onLogoutSuccess?.();
-                                    },
-                                    onBack: () =>
-                                        setCurrentContent?.('profile'),
-                                },
-                            });
+                            disconnect();
+                            onLogoutSuccess?.();
                         }}
                     />
                 </VStack>
@@ -124,6 +116,11 @@ export const ProfileContent = ({
                         data-testid="wallet-button"
                     >
                         {t('Wallet')}
+                        <AssetIcons
+                            address={account?.address ?? ''}
+                            maxIcons={2}
+                            ml={2}
+                        />
                     </Button>
 
                     {/* In VeWorld mobile we call switchWallet
