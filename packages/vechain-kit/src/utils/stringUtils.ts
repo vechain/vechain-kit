@@ -10,3 +10,18 @@ export const isRejectionError = (errorMessage: string): boolean => {
         errorMessage.toLowerCase().includes(term.toLowerCase()),
     );
 };
+
+/**
+ * Generates a simple hash from a string using a 32-bit hash algorithm
+ * @param input The string to hash
+ * @returns A base-36 string representation of the hash
+ */
+export const simpleHash = (input: string): string => {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        const char = input.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString(36);
+};

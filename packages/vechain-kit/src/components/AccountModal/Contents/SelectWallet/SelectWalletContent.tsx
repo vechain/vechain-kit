@@ -20,10 +20,19 @@ import {
 } from '@/hooks';
 import { useWalletStorage } from '@/hooks/api/wallet/useWalletStorage';
 import { useAccountModalOptions } from '@/hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
 import { LuLogOut, LuPlus } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
+import { simpleHash } from '@/utils';
+
+const hashWallets = (wallets: StoredWallet[]): string => {
+    const addresses = wallets
+        .map((w) => w.address.toLowerCase())
+        .sort()
+        .join('|');
+    return simpleHash(addresses);
+};
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -52,11 +61,13 @@ export const SelectWalletContent = ({
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const [wallets, setWallets] = useState(getStoredWallets());
+    const walletsHashRef = useRef(hashWallets(getStoredWallets()));
 
     // Function to refresh wallets list
     const refreshWallets = useCallback(() => {
         const updatedWallets = getStoredWallets();
         setWallets(updatedWallets);
+        walletsHashRef.current = hashWallets(updatedWallets);
     }, [getStoredWallets]);
 
     // Refresh wallets list when account changes (new wallet connected) or when wallets are updated
@@ -89,29 +100,16 @@ export const SelectWalletContent = ({
     useEffect(() => {
         const interval = setInterval(() => {
             const currentWallets = getStoredWallets();
-            const currentWalletsCount = currentWallets.length;
-            const currentWalletsAddresses = currentWallets
-                .map((w) => w.address.toLowerCase())
-                .sort()
-                .join(',');
+            const currentHash = hashWallets(currentWallets);
 
-            const stateWalletsCount = wallets.length;
-            const stateWalletsAddresses = wallets
-                .map((w) => w.address.toLowerCase())
-                .sort()
-                .join(',');
-
-            // If wallets changed (count or addresses), refresh
-            if (
-                currentWalletsCount !== stateWalletsCount ||
-                currentWalletsAddresses !== stateWalletsAddresses
-            ) {
+            // If wallet hash changed, refresh
+            if (currentHash !== walletsHashRef.current) {
                 refreshWallets();
             }
         }, 200); // Check every 200ms
 
         return () => clearInterval(interval);
-    }, [wallets, getStoredWallets, refreshWallets]);
+    }, [getStoredWallets, refreshWallets]);
 
     // Always use the stored active wallet from cache
     // This is the wallet the user has selected as active
