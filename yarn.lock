@@ -6247,24 +6247,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-react@npm:2.1.0-rc.4":
-  version: 2.1.0-rc.4
-  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.4"
+"@vechain/dapp-kit-react@npm:2.1.0-rc.5":
+  version: 2.1.0-rc.5
+  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.5"
   dependencies:
     "@lit/react": "npm:^1.0.7"
-    "@vechain/dapp-kit": "npm:2.1.0-rc.4"
-    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.4"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.5"
+    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.5"
     "@vechain/sdk-core": "npm:^2.0.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/a842d4562a54d97c6a8224f03facb9b40e181f73cb124f18c47fd335c764126e3388510ccce47e044282afa7c9d82f8632f4047321cd5aa8c8bbea8d6eed6bf3
+  checksum: 10c0/bb3b612c9d9f986ce8b186a1df596017821fd6da3f2a0fd4bd1a7cc5b2e4ee459be711f25e7337d8813c845952e410206baad11806f0c91ac53cef55e0dfcaa0
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-ui@npm:2.1.0-rc.4":
-  version: 2.1.0-rc.4
-  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.4"
+"@vechain/dapp-kit-ui@npm:2.1.0-rc.5":
+  version: 2.1.0-rc.5
+  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.5"
   dependencies:
-    "@vechain/dapp-kit": "npm:2.1.0-rc.4"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.5"
     "@vechain/picasso": "npm:2.1.1"
     "@vechain/sdk-core": "npm:^2.0.0"
     "@vechain/sdk-network": "npm:^2.0.0"
@@ -6274,13 +6274,13 @@ __metadata:
     lit: "npm:3.2.1"
     qrcode: "npm:1.5.4"
     valtio: "npm:1.13.2"
-  checksum: 10c0/0912c1dd4a5b5e4d2732beb0729e1fb74c5c1346b2cfc4d5b4e72918a7df43e2eb1013d5515185cc2abef0c85d832d71fdebb0cc4db273b00c403111c9fe7634
+  checksum: 10c0/acdf827019ee53624c0a6f20df458deb6e39f84937c7e723f2cd4c19d4d46281199e55713f2ea9de7db84a28d2863aad50ad4058c81f2e6e126bb45e6bb57d58
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit@npm:2.1.0-rc.4":
-  version: 2.1.0-rc.4
-  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.4"
+"@vechain/dapp-kit@npm:2.1.0-rc.5":
+  version: 2.1.0-rc.5
+  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.5"
   dependencies:
     "@vechain/connex-wallet-buddy": "npm:^0.1.11"
     "@vechain/sdk-core": "npm:^2.0.0"
@@ -6292,7 +6292,7 @@ __metadata:
     events: "npm:^3.3.0"
     valtio: "npm:1.13.2"
     viem: "npm:2.23.2"
-  checksum: 10c0/c4f84ddc263a623b4067d7ac4d51c73998e8e79ce90910f82128498805e31a3106068619b5626be0790cadf1f58ecf95a7438a34bf5f95e627af7a3b0b5f84ad
+  checksum: 10c0/65a348a0eda7a1c41f29a78baea1197cea089a72abb2234fff68c2bee10cdc6468c639af69552963f1270a0d269aba7edf4ca3930749fe77a28ba0d730c0d5dc
   languageName: node
   linkType: hard
 
@@ -6446,7 +6446,7 @@ __metadata:
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
     "@vechain/contract-getters": "npm:1.0.4"
-    "@vechain/dapp-kit-react": "npm:2.1.0-rc.4"
+    "@vechain/dapp-kit-react": "npm:2.1.0-rc.5"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vechain-contract-types": "npm:1.5.0"
     "@wagmi/core": "npm:^2.17.2"
@@ -6480,7 +6480,7 @@ __metadata:
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@tanstack/react-query": ^5.64.2
-    "@vechain/dapp-kit-react": 2.1.0-rc.3
+    "@vechain/dapp-kit-react": 2.1.0-rc.5
     framer-motion: ^11.0.0
     react: ^18.0.0
     react-dom: ^18.0.0

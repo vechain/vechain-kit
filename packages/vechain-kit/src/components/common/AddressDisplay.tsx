@@ -17,6 +17,7 @@ import {
     LuWallet,
     LuSquareUser,
     LuPencil,
+    LuLogOut,
 } from 'react-icons/lu';
 import { humanAddress } from '@/utils';
 import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
@@ -32,6 +33,7 @@ type Props = {
     setCurrentContent?: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    onLogout?: () => void;
 };
 
 export const AddressDisplay = ({
@@ -40,6 +42,7 @@ export const AddressDisplay = ({
     style,
     showHumanAddress = true,
     setCurrentContent,
+    onLogout,
 }: Props) => {
     const { t } = useTranslation();
     const [copied, setCopied] = useState(false);
@@ -173,6 +176,25 @@ export const AddressDisplay = ({
                                 : wallet?.address}
                         </Text>
                         <HStack spacing={2}>
+                            <IconButton
+                                icon={<LuLogOut />}
+                                onClick={() =>
+                                    setCurrentContent?.({
+                                        type: 'disconnect-confirm',
+                                        props: {
+                                            onDisconnect: () => onLogout?.(),
+                                            onBack: () =>
+                                                setCurrentContent?.('profile'),
+                                        },
+                                    })
+                                }
+                                variant="vechainKitSecondary"
+                                height="30px"
+                                w="30px"
+                                borderRadius="5px"
+                                aria-label="Copy address"
+                            />
+
                             <IconButton
                                 icon={copied ? <LuCheck /> : <LuCopy />}
                                 onClick={() =>

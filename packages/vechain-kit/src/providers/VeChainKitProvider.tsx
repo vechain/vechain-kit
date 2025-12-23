@@ -691,6 +691,7 @@ export const VeChainKitProvider = (
                     >
                         <DAppKitProvider
                             node={network.nodeUrl}
+                            alwaysShowConnect={true}
                             v2Api={{
                                 enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
                                 external: dappKit.v2Api?.external ?? false, //defaults to false

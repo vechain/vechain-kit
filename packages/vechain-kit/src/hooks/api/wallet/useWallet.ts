@@ -20,7 +20,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
 import { isBrowser } from '@/utils/ssrUtils';
@@ -233,13 +233,18 @@ export const useWallet = (): UseWalletReturnType => {
             w.address.toLowerCase() === connectedWalletAddress?.toLowerCase(),
     );
 
+    // Always read the stored active wallet directly from storage to ensure consistency
+    // This avoids race conditions with state updates
+    const currentStoredActiveWallet =
+        isConnectedWithDappKit && !isInAppBrowser ? getActiveWallet() : null;
+
     const effectiveConnectedWalletAddress =
         // If switch is in progress, always use stored active wallet
-        isWalletSwitchInProgress && storedActiveWalletAddress
-            ? storedActiveWalletAddress
+        isWalletSwitchInProgress && currentStoredActiveWallet
+            ? currentStoredActiveWallet
             : // If stored active wallet exists and connected wallet is in stored list, use stored (switch scenario)
-            storedActiveWalletAddress && isConnectedWalletInStoredList
-            ? storedActiveWalletAddress
+            currentStoredActiveWallet && isConnectedWalletInStoredList
+            ? currentStoredActiveWallet
             : // Otherwise use connected wallet (new connection or reconnection with different wallet)
               connectedWalletAddress;
 
@@ -269,8 +274,41 @@ export const useWallet = (): UseWalletReturnType => {
 
     const { setActiveWallet: setActiveWalletStorage } = useWalletStorage();
 
+    // Track recently removed wallets to prevent them from being set as active again
+    const recentlyRemovedWalletsRef = useRef<Set<string>>(new Set());
+
+    // Listen for wallet removal events
+    useEffect(() => {
+        if (!isBrowser() || !isConnectedWithDappKit || isInAppBrowser) return;
+
+        const handleWalletRemoved = (
+            event: CustomEvent<{ address: string }>,
+        ) => {
+            // Track removed wallet for 5 seconds to prevent it from being set as active
+            recentlyRemovedWalletsRef.current.add(
+                event.detail.address.toLowerCase(),
+            );
+            setTimeout(() => {
+                recentlyRemovedWalletsRef.current.delete(
+                    event.detail.address.toLowerCase(),
+                );
+            }, 5000);
+        };
+
+        window.addEventListener(
+            'wallet_removed',
+            handleWalletRemoved as EventListener,
+        );
+        return () => {
+            window.removeEventListener(
+                'wallet_removed',
+                handleWalletRemoved as EventListener,
+            );
+        };
+    }, [isConnectedWithDappKit, isInAppBrowser]);
+
     // Save/initialize wallet in storage when connected via dappkit and not in-app browser
-    // Set the connected wallet as active only if it's a new connection (not a switch)
+    // Set the connected wallet as active when it's a new wallet or new connection
     useEffect(() => {
         if (
             isConnectedWithDappKit &&
@@ -279,6 +317,23 @@ export const useWallet = (): UseWalletReturnType => {
             activeAccountMetadata &&
             !activeAccountMetadata.isLoading
         ) {
+            // Don't save or set as active if this wallet was recently removed
+            // This prevents re-adding wallets that the user just removed
+            const wasRecentlyRemoved = recentlyRemovedWalletsRef.current.has(
+                connectedWalletAddress.toLowerCase(),
+            );
+            if (wasRecentlyRemoved) {
+                return;
+            }
+
+            // Check if this is a new wallet BEFORE saving (since saveWallet adds it to storage)
+            const currentStoredWallets = getStoredWallets();
+            const isNewWallet = !currentStoredWallets.some(
+                (w) =>
+                    w.address.toLowerCase() ===
+                    connectedWalletAddress.toLowerCase(),
+            );
+
             // First try to initialize (only saves if no wallets exist and sets as active)
             initializeCurrentWallet(connectedWalletAddress);
             // Always save/update the wallet (in case it already exists or is a new connection)
@@ -294,12 +349,13 @@ export const useWallet = (): UseWalletReturnType => {
                 storedActiveWalletAddress.toLowerCase() ===
                     connectedWalletAddress.toLowerCase();
 
-            // Only set as active if:
-            // 1. It's a new connection (no stored active wallet), OR
-            // 2. The connected wallet matches the stored active wallet (same wallet, just ensuring it's saved), AND
-            // 3. A wallet switch is NOT in progress (to prevent overriding user's selection during switch)
+            // Set as active if:
+            // 1. It's a new wallet (not in stored wallets list) - always set as active for better UX, OR
+            // 2. It's a new connection (no stored active wallet), OR
+            // 3. The connected wallet matches the stored active wallet (same wallet, just ensuring it's saved), AND
+            // 4. A wallet switch is NOT in progress (to prevent overriding user's selection during switch)
             if (
-                (isNewConnection || isSameAsStoredActive) &&
+                (isNewWallet || isNewConnection || isSameAsStoredActive) &&
                 !isWalletSwitchInProgress
             ) {
                 setActiveWalletStorage(connectedWalletAddress);
@@ -316,6 +372,7 @@ export const useWallet = (): UseWalletReturnType => {
         saveWallet,
         setActiveWalletStorage,
         storedActiveWalletAddress,
+        getStoredWallets,
     ]);
 
     // Ensure the stored active wallet is saved when it changes

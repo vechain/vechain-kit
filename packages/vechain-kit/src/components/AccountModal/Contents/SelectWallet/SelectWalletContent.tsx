@@ -16,14 +16,23 @@ import {
     useWallet,
     useRefreshBalances,
     useDAppKitWallet,
+    useDAppKitWalletModal,
 } from '@/hooks';
 import { useWalletStorage } from '@/hooks/api/wallet/useWalletStorage';
-import { useModal } from '@/providers/ModalProvider';
 import { useAccountModalOptions } from '@/hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
 import { LuLogOut, LuPlus } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
+import { simpleHash } from '@/utils';
+
+const hashWallets = (wallets: StoredWallet[]): string => {
+    const addresses = wallets
+        .map((w) => w.address.toLowerCase())
+        .sort()
+        .join('|');
+    return simpleHash(addresses);
+};
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -41,22 +50,24 @@ export const SelectWalletContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
-    const { account, connection, disconnect } = useWallet();
+    const { account, disconnect } = useWallet();
     const { disconnect: dappKitDisconnect } = useDAppKitWallet();
+    const { open: openDappKitModal } = useDAppKitWalletModal();
     const { getStoredWallets, setActiveWallet, removeWallet } =
         useSwitchWallet();
     const { saveWallet } = useWalletStorage();
-    const { openConnectModal } = useModal();
     const { refresh } = useRefreshBalances();
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
     const [wallets, setWallets] = useState(getStoredWallets());
+    const walletsHashRef = useRef(hashWallets(getStoredWallets()));
 
     // Function to refresh wallets list
     const refreshWallets = useCallback(() => {
         const updatedWallets = getStoredWallets();
         setWallets(updatedWallets);
+        walletsHashRef.current = hashWallets(updatedWallets);
     }, [getStoredWallets]);
 
     // Refresh wallets list when account changes (new wallet connected) or when wallets are updated
@@ -83,6 +94,22 @@ export const SelectWalletContent = ({
             };
         }
     }, [refreshWallets]);
+
+    // Poll for wallet changes when modal is open to catch new wallets being added
+    // This ensures we catch wallets added via dappkit modal even if account doesn't change immediately
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const currentWallets = getStoredWallets();
+            const currentHash = hashWallets(currentWallets);
+
+            // If wallet hash changed, refresh
+            if (currentHash !== walletsHashRef.current) {
+                refreshWallets();
+            }
+        }, 200); // Check every 200ms
+
+        return () => clearInterval(interval);
+    }, [getStoredWallets, refreshWallets]);
 
     // Always use the stored active wallet from cache
     // This is the wallet the user has selected as active
@@ -239,28 +266,9 @@ export const SelectWalletContent = ({
         ],
     );
 
-    const handleAddNewWallet = useCallback(async () => {
-        // Disconnect from dappkit first if connected
-        if (connection.isConnectedWithDappKit && !connection.isInAppBrowser) {
-            try {
-                dappKitDisconnect();
-            } catch (error) {
-                console.error('Error disconnecting from dappkit:', error);
-            }
-        }
-
-        // Small delay to ensure disconnect is processed
-        setTimeout(() => {
-            // Open ConnectModal without preventAutoClose so it closes automatically
-            // when a new wallet is connected after disconnect
-            openConnectModal('main', false);
-        }, 100);
-    }, [
-        openConnectModal,
-        connection.isConnectedWithDappKit,
-        connection.isInAppBrowser,
-        dappKitDisconnect,
-    ]);
+    const handleAddNewWallet = useCallback(() => {
+        openDappKitModal();
+    }, [openDappKitModal]);
 
     const handleLogout = () => {
         disconnect();

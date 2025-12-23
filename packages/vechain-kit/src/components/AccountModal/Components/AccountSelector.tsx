@@ -74,6 +74,7 @@ export const AccountSelector = ({
                     setCurrentContent: setCurrentContent!,
                     onClose,
                     returnTo: 'main',
+                    onLogoutSuccess: onClose,
                 },
             });
         }
@@ -125,7 +126,8 @@ export const AccountSelector = ({
             </Button>
 
             {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
-            connection.isConnectedWithDappKit ? (
+            (!connection.isInAppBrowser &&
+                connection.isConnectedWithDappKit) ? (
                 <IconButton
                     aria-label="Switch wallet"
                     icon={<Icon as={LuArrowLeftRight} />}
