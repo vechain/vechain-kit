@@ -20,7 +20,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
 import { isBrowser } from '@/utils/ssrUtils';
@@ -274,6 +274,39 @@ export const useWallet = (): UseWalletReturnType => {
 
     const { setActiveWallet: setActiveWalletStorage } = useWalletStorage();
 
+    // Track recently removed wallets to prevent them from being set as active again
+    const recentlyRemovedWalletsRef = useRef<Set<string>>(new Set());
+
+    // Listen for wallet removal events
+    useEffect(() => {
+        if (!isBrowser() || !isConnectedWithDappKit || isInAppBrowser) return;
+
+        const handleWalletRemoved = (
+            event: CustomEvent<{ address: string }>,
+        ) => {
+            // Track removed wallet for 5 seconds to prevent it from being set as active
+            recentlyRemovedWalletsRef.current.add(
+                event.detail.address.toLowerCase(),
+            );
+            setTimeout(() => {
+                recentlyRemovedWalletsRef.current.delete(
+                    event.detail.address.toLowerCase(),
+                );
+            }, 5000);
+        };
+
+        window.addEventListener(
+            'wallet_removed',
+            handleWalletRemoved as EventListener,
+        );
+        return () => {
+            window.removeEventListener(
+                'wallet_removed',
+                handleWalletRemoved as EventListener,
+            );
+        };
+    }, [isConnectedWithDappKit, isInAppBrowser]);
+
     // Save/initialize wallet in storage when connected via dappkit and not in-app browser
     // Set the connected wallet as active when it's a new wallet or new connection
     useEffect(() => {
@@ -284,6 +317,15 @@ export const useWallet = (): UseWalletReturnType => {
             activeAccountMetadata &&
             !activeAccountMetadata.isLoading
         ) {
+            // Don't save or set as active if this wallet was recently removed
+            // This prevents re-adding wallets that the user just removed
+            const wasRecentlyRemoved = recentlyRemovedWalletsRef.current.has(
+                connectedWalletAddress.toLowerCase(),
+            );
+            if (wasRecentlyRemoved) {
+                return;
+            }
+
             // Check if this is a new wallet BEFORE saving (since saveWallet adds it to storage)
             const currentStoredWallets = getStoredWallets();
             const isNewWallet = !currentStoredWallets.some(

@@ -109,6 +109,14 @@ export const useWalletStorage = () => {
             ) {
                 removeLocalStorageItem(keys.activeWallet);
             }
+
+            // Dispatch event to notify that a wallet was removed
+            // This prevents useWallet from setting it as active again if it's still connected
+            if (isBrowser()) {
+                window.dispatchEvent(
+                    new CustomEvent('wallet_removed', { detail: { address } }),
+                );
+            }
         },
         [network.type, getStorageKeys, getStoredWallets, getActiveWallet],
     );

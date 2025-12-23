@@ -84,6 +84,35 @@ export const SelectWalletContent = ({
         }
     }, [refreshWallets]);
 
+    // Poll for wallet changes when modal is open to catch new wallets being added
+    // This ensures we catch wallets added via dappkit modal even if account doesn't change immediately
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const currentWallets = getStoredWallets();
+            const currentWalletsCount = currentWallets.length;
+            const currentWalletsAddresses = currentWallets
+                .map((w) => w.address.toLowerCase())
+                .sort()
+                .join(',');
+
+            const stateWalletsCount = wallets.length;
+            const stateWalletsAddresses = wallets
+                .map((w) => w.address.toLowerCase())
+                .sort()
+                .join(',');
+
+            // If wallets changed (count or addresses), refresh
+            if (
+                currentWalletsCount !== stateWalletsCount ||
+                currentWalletsAddresses !== stateWalletsAddresses
+            ) {
+                refreshWallets();
+            }
+        }, 200); // Check every 200ms
+
+        return () => clearInterval(interval);
+    }, [wallets, getStoredWallets, refreshWallets]);
+
     // Always use the stored active wallet from cache
     // This is the wallet the user has selected as active
     const activeWalletAddress = useMemo(() => {
