@@ -19,7 +19,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
-import { isBrowser } from '@/utils';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -150,7 +149,8 @@ export const ProfileContent = ({
                         >
                             {t('Switch')}
                         </Button>
-                    ) : isBrowser() && connection.isConnectedWithDappKit ? (
+                    ) : !connection.isInAppBrowser &&
+                      connection.isConnectedWithDappKit ? (
                         <Button
                             size="md"
                             width="full"

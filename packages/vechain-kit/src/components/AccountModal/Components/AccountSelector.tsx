@@ -9,7 +9,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
-import { copyToClipboard, isBrowser } from '@/utils/ssrUtils';
+import { copyToClipboard } from '@/utils/ssrUtils';
 import { Wallet } from '@/types';
 import {
     LuChevronRight,
@@ -125,7 +125,8 @@ export const AccountSelector = ({
             </Button>
 
             {(connection.isInAppBrowser && isSwitchWalletEnabled) ||
-            (isBrowser() && connection.isConnectedWithDappKit) ? (
+            (!connection.isInAppBrowser &&
+                connection.isConnectedWithDappKit) ? (
                 <IconButton
                     aria-label="Switch wallet"
                     icon={<Icon as={LuArrowLeftRight} />}
