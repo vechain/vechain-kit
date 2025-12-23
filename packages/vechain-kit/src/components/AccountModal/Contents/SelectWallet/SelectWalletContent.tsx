@@ -16,9 +16,9 @@ import {
     useWallet,
     useRefreshBalances,
     useDAppKitWallet,
+    useDAppKitWalletModal,
 } from '@/hooks';
 import { useWalletStorage } from '@/hooks/api/wallet/useWalletStorage';
-import { useModal } from '@/providers/ModalProvider';
 import { useAccountModalOptions } from '@/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
@@ -43,10 +43,10 @@ export const SelectWalletContent = ({
     const { isolatedView } = useAccountModalOptions();
     const { account, disconnect } = useWallet();
     const { disconnect: dappKitDisconnect } = useDAppKitWallet();
+    const { open: openDappKitModal } = useDAppKitWalletModal();
     const { getStoredWallets, setActiveWallet, removeWallet } =
         useSwitchWallet();
     const { saveWallet } = useWalletStorage();
-    const { openConnectModal } = useModal();
     const { refresh } = useRefreshBalances();
 
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
@@ -240,10 +240,8 @@ export const SelectWalletContent = ({
     );
 
     const handleAddNewWallet = useCallback(() => {
-        // Open ConnectModal without preventAutoClose so it closes automatically
-        // when a new wallet is connected
-        openConnectModal('main', false);
-    }, [openConnectModal]);
+        openDappKitModal();
+    }, [openDappKitModal]);
 
     const handleLogout = () => {
         disconnect();
