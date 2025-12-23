@@ -41,7 +41,7 @@ export const SelectWalletContent = ({
 }: Props) => {
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
-    const { account, connection, disconnect } = useWallet();
+    const { account, disconnect } = useWallet();
     const { disconnect: dappKitDisconnect } = useDAppKitWallet();
     const { getStoredWallets, setActiveWallet, removeWallet } =
         useSwitchWallet();
@@ -239,28 +239,11 @@ export const SelectWalletContent = ({
         ],
     );
 
-    const handleAddNewWallet = useCallback(async () => {
-        // Disconnect from dappkit first if connected
-        if (connection.isConnectedWithDappKit && !connection.isInAppBrowser) {
-            try {
-                // dappKitDisconnect();
-            } catch (error) {
-                console.error('Error disconnecting from dappkit:', error);
-            }
-        }
-
-        // Small delay to ensure disconnect is processed
-        setTimeout(() => {
-            // Open ConnectModal without preventAutoClose so it closes automatically
-            // when a new wallet is connected after disconnect
-            openConnectModal('main', true);
-        }, 100);
-    }, [
-        openConnectModal,
-        connection.isConnectedWithDappKit,
-        connection.isInAppBrowser,
-        dappKitDisconnect,
-    ]);
+    const handleAddNewWallet = useCallback(() => {
+        // Open ConnectModal without preventAutoClose so it closes automatically
+        // when a new wallet is connected
+        openConnectModal('main', false);
+    }, [openConnectModal]);
 
     const handleLogout = () => {
         disconnect();
