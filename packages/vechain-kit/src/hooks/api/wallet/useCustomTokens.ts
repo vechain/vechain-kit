@@ -2,9 +2,16 @@ import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { type CustomTokenInfo } from '@vechain/contract-getters';
+import { type CustomTokenInfo as ContractCustomTokenInfo } from '@vechain/contract-getters';
 
-import {  getTokenInfo } from './useGetCustomTokenInfo';
+import { getTokenInfo } from './useGetCustomTokenInfo';
+
+export type CustomTokenInfo = ContractCustomTokenInfo & {
+    /**
+     * Optional icon URL for UI display (not provided by contract-getters).
+     */
+    icon?: string;
+};
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(

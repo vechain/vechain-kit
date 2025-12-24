@@ -745,7 +745,7 @@ export const SwapTokenContent = ({
                                         }}
                                         leftIcon={
                                             fromTokenDisplay.logoComponent ? (
-                                                React.cloneElement(
+                                                cloneElement(
                                                     fromTokenDisplay.logoComponent,
                                                     {
                                                         boxSize: '20px',
@@ -891,7 +891,7 @@ export const SwapTokenContent = ({
                                         }}
                                         leftIcon={
                                             toTokenDisplay.logoComponent ? (
-                                                React.cloneElement(
+                                                cloneElement(
                                                     toTokenDisplay.logoComponent,
                                                     {
                                                         boxSize: '20px',
