@@ -1,5 +1,5 @@
 import { useWallet } from '@/hooks';
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useWalletModal = () => {
@@ -13,9 +13,9 @@ export const useWalletModal = () => {
         isAccountModalOpen,
     } = useModal();
 
-    const open = () => {
+    const open = (options?: AccountModalOptions) => {
         if (connection.isConnected) {
-            openAccountModal();
+            openAccountModal(undefined, options);
         } else {
             openConnectModal();
         }

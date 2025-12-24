@@ -10,7 +10,6 @@ import {
     GridItem,
     ModalFooter,
     Text,
-    Box,
     Spinner,
     Center,
     useToken,
@@ -202,7 +201,7 @@ export const ExploreEcosystemContent = ({
     };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Ecosystem')}</ModalHeader>
                 {!isolatedView && (
@@ -339,6 +338,6 @@ export const ExploreEcosystemContent = ({
             </ModalBody>
 
             <ModalFooter pt={0} />
-        </Box>
+        </>
     );
 };

@@ -1,7 +1,11 @@
 import { ThemeConfig, extendTheme, theme as baseTheme } from '@chakra-ui/react';
 import { getModalTheme } from './modal';
 import { getCardTheme } from './card';
-import { getButtonTheme } from './button';
+import {
+    getButtonTheme,
+    getIconButtonTheme,
+    getCloseButtonTheme,
+} from './button';
 import { getPopoverTheme } from './popover';
 import {
     VechainKitThemeConfig,
@@ -24,6 +28,8 @@ const getThemeConfig = (
         Modal: getModalTheme(tokens),
         Card: getCardTheme(tokens),
         Button: getButtonTheme(tokens),
+        IconButton: getIconButtonTheme(tokens),
+        CloseButton: getCloseButtonTheme(tokens),
         Popover: getPopoverTheme(tokens),
     },
     // No global styles - fonts will be applied via component-level styles
@@ -61,6 +67,9 @@ const getThemeConfig = (
             'vechain-kit-success': tokens.colors.success,
             'vechain-kit-error': tokens.colors.error,
             'vechain-kit-warning': tokens.colors.warning,
+            'vechain-kit-button-primary-bg': tokens.buttons.primaryButton.bg,
+            'vechain-kit-button-primary-color':
+                tokens.buttons.primaryButton.color,
         },
         effects: {
             'vechain-kit-backdrop-filter-modal':

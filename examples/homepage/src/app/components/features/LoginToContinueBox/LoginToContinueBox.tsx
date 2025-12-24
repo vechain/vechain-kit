@@ -30,7 +30,7 @@ export function LoginToContinueBox() {
                 Sign in to access transaction examples, signing capabilities,
                 profile customization and more.
             </Text>
-            <Button width="full" onClick={open}>
+            <Button width="full" onClick={() => open()}>
                 Click here to sign in!
             </Button>
         </VStack>

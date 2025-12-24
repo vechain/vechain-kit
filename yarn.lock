@@ -3994,6 +3994,289 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/primitive@npm:1.1.3":
+  version: 1.1.3
+  resolution: "@radix-ui/primitive@npm:1.1.3"
+  checksum: 10c0/88860165ee7066fa2c179f32ffcd3ee6d527d9dcdc0e8be85e9cb0e2c84834be8e3c1a976c74ba44b193f709544e12f54455d892b28e32f0708d89deda6b9f1d
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-compose-refs@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@radix-ui/react-compose-refs@npm:1.1.2"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/d36a9c589eb75d634b9b139c80f916aadaf8a68a7c1c4b8c6c6b88755af1a92f2e343457042089f04cc3f23073619d08bb65419ced1402e9d4e299576d970771
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-context@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@radix-ui/react-context@npm:1.1.2"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/cece731f8cc25d494c6589cc681e5c01a93867d895c75889973afa1a255f163c286e390baa7bc028858eaabe9f6b57270d0ca6377356f652c5557c1c7a41ccce
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-dialog@npm:^1.1.1":
+  version: 1.1.15
+  resolution: "@radix-ui/react-dialog@npm:1.1.15"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.3"
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-context": "npm:1.1.2"
+    "@radix-ui/react-dismissable-layer": "npm:1.1.11"
+    "@radix-ui/react-focus-guards": "npm:1.1.3"
+    "@radix-ui/react-focus-scope": "npm:1.1.7"
+    "@radix-ui/react-id": "npm:1.1.1"
+    "@radix-ui/react-portal": "npm:1.1.9"
+    "@radix-ui/react-presence": "npm:1.1.5"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-slot": "npm:1.2.3"
+    "@radix-ui/react-use-controllable-state": "npm:1.2.2"
+    aria-hidden: "npm:^1.2.4"
+    react-remove-scroll: "npm:^2.6.3"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/2f2c88e3c281acaea2fd9b96fa82132d59177d3aa5da2e7c045596fd4028e84e44ac52ac28f4f236910605dd7d9338c2858ba44a9ced2af2e3e523abbfd33014
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-dismissable-layer@npm:1.1.11":
+  version: 1.1.11
+  resolution: "@radix-ui/react-dismissable-layer@npm:1.1.11"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.3"
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-use-callback-ref": "npm:1.1.1"
+    "@radix-ui/react-use-escape-keydown": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/c825572a64073c4d3853702029979f6658770ffd6a98eabc4984e1dee1b226b4078a2a4dc7003f96475b438985e9b21a58e75f51db74dd06848dcae1f2d395dc
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-focus-guards@npm:1.1.3":
+  version: 1.1.3
+  resolution: "@radix-ui/react-focus-guards@npm:1.1.3"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/0bab65eb8d7e4f72f685d63de7fbba2450e3cb15ad6a20a16b42195e9d335c576356f5a47cb58d1ffc115393e46d7b14b12c5d4b10029b0ec090861255866985
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-focus-scope@npm:1.1.7":
+  version: 1.1.7
+  resolution: "@radix-ui/react-focus-scope@npm:1.1.7"
+  dependencies:
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-use-callback-ref": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/8a6071331bdeeb79b223463de75caf759b8ad19339cab838e537b8dbb2db236891a1f4df252445c854d375d43d9d315dfcce0a6b01553a2984ec372bb8f1300e
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-id@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-id@npm:1.1.1"
+  dependencies:
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/7d12e76818763d592c331277ef62b197e2e64945307e650bd058f0090e5ae48bbd07691b23b7e9e977901ef4eadcb3e2d5eaeb17a13859083384be83fc1292c7
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-portal@npm:1.1.9":
+  version: 1.1.9
+  resolution: "@radix-ui/react-portal@npm:1.1.9"
+  dependencies:
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/45b432497c722720c72c493a29ef6085bc84b50eafe79d48b45c553121b63e94f9cdb77a3a74b9c49126f8feb3feee009fe400d48b7759d3552396356b192cd7
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-presence@npm:1.1.5":
+  version: 1.1.5
+  resolution: "@radix-ui/react-presence@npm:1.1.5"
+  dependencies:
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/d0e61d314250eeaef5369983cb790701d667f51734bafd98cf759072755562018052c594e6cdc5389789f4543cb0a4d98f03ff4e8f37338d6b5bf51a1700c1d1
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-primitive@npm:2.1.3":
+  version: 2.1.3
+  resolution: "@radix-ui/react-primitive@npm:2.1.3"
+  dependencies:
+    "@radix-ui/react-slot": "npm:1.2.3"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/fdff9b84913bb4172ef6d3af7442fca5f9bba5f2709cba08950071f819d7057aec3a4a2d9ef44cf9cbfb8014d02573c6884a04cff175895823aaef809ebdb034
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-slot@npm:1.2.3":
+  version: 1.2.3
+  resolution: "@radix-ui/react-slot@npm:1.2.3"
+  dependencies:
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/5913aa0d760f505905779515e4b1f0f71a422350f077cc8d26d1aafe53c97f177fec0e6d7fbbb50d8b5e498aa9df9f707ca75ae3801540c283b26b0136138eef
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-use-callback-ref@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-use-callback-ref@npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/5f6aff8592dea6a7e46589808912aba3fb3b626cf6edd2b14f01638b61dbbe49eeb9f67cd5601f4c15b2fb547b9a7e825f7c4961acd4dd70176c969ae405f8d8
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-use-controllable-state@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@radix-ui/react-use-controllable-state@npm:1.2.2"
+  dependencies:
+    "@radix-ui/react-use-effect-event": "npm:0.0.2"
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/f55c4b06e895293aed4b44c9ef26fb24432539f5346fcd6519c7745800535b571058685314e83486a45bf61dc83887e24826490d3068acc317fb0a9010516e63
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-use-effect-event@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@radix-ui/react-use-effect-event@npm:0.0.2"
+  dependencies:
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/e84ff72a3e76c5ae9c94941028bb4b6472f17d4104481b9eab773deab3da640ecea035e54da9d6f4df8d84c18ef6913baf92b7511bee06930dc58bd0c0add417
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-use-escape-keydown@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-use-escape-keydown@npm:1.1.1"
+  dependencies:
+    "@radix-ui/react-use-callback-ref": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/bff53be99e940fef1d3c4df7d560e1d9133182e5a98336255d3063327d1d3dd4ec54a95dc5afe15cca4fb6c184f0a956c70de2815578c318cf995a7f9beabaa1
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-use-layout-effect@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-use-layout-effect@npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/9f98fdaba008dfc58050de60a77670b885792df473cf82c1cef8daee919a5dd5a77d270209f5f0b0abfaac78cb1627396e3ff56c81b735be550409426fe8b040
+  languageName: node
+  linkType: hard
+
 "@react-aria/focus@npm:^3.20.2":
   version: 3.21.2
   resolution: "@react-aria/focus@npm:3.21.2"
@@ -5953,35 +6236,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/contract-getters@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@vechain/contract-getters@npm:1.0.3"
+"@vechain/contract-getters@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@vechain/contract-getters@npm:1.0.4"
   peerDependencies:
-    "@vechain/sdk-network": ^2.0.5
-    "@vechain/vechain-contract-types": ^1.4.1
+    "@vechain/sdk-network": ^2.0.7
+    "@vechain/vechain-contract-types": ^1.5.0
     ethers: ^6.0.0
-  checksum: 10c0/ea63ab758db5c06fccb1ce28a73d40d3b41f1abda67bcba425a1ddbdc503a672a75bd6896109084076c32e999260996710d554fe76cd112c19b4e05b5d257c93
+  checksum: 10c0/114071733e795989e645ca9e498f76223c67d913b4c704e41d4a7728cedebd9f05565c1f4ac5f1780521bf197215931ae03190978aee9fbc9e0e73baaa1eca3d
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-react@npm:2.1.0-rc.2":
-  version: 2.1.0-rc.2
-  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.2"
+"@vechain/dapp-kit-react@npm:2.1.0-rc.5":
+  version: 2.1.0-rc.5
+  resolution: "@vechain/dapp-kit-react@npm:2.1.0-rc.5"
   dependencies:
     "@lit/react": "npm:^1.0.7"
-    "@vechain/dapp-kit": "npm:2.1.0-rc.2"
-    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.2"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.5"
+    "@vechain/dapp-kit-ui": "npm:2.1.0-rc.5"
     "@vechain/sdk-core": "npm:^2.0.0"
     valtio: "npm:1.13.2"
-  checksum: 10c0/60bec14c66310f0560a03c63e3aeaa0113dc3e43a28bd3501d8cf45eccc9d63f90e46d9b5f0f05fd74a3c50c88d62817a00bda2893983fd73461dc7ba3490726
+  checksum: 10c0/bb3b612c9d9f986ce8b186a1df596017821fd6da3f2a0fd4bd1a7cc5b2e4ee459be711f25e7337d8813c845952e410206baad11806f0c91ac53cef55e0dfcaa0
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit-ui@npm:2.1.0-rc.2":
-  version: 2.1.0-rc.2
-  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.2"
+"@vechain/dapp-kit-ui@npm:2.1.0-rc.5":
+  version: 2.1.0-rc.5
+  resolution: "@vechain/dapp-kit-ui@npm:2.1.0-rc.5"
   dependencies:
-    "@vechain/dapp-kit": "npm:2.1.0-rc.2"
+    "@vechain/dapp-kit": "npm:2.1.0-rc.5"
     "@vechain/picasso": "npm:2.1.1"
     "@vechain/sdk-core": "npm:^2.0.0"
     "@vechain/sdk-network": "npm:^2.0.0"
@@ -5991,13 +6274,13 @@ __metadata:
     lit: "npm:3.2.1"
     qrcode: "npm:1.5.4"
     valtio: "npm:1.13.2"
-  checksum: 10c0/45ef18b5ff480bd6e0fb673a8a84ae78885628bc0bb586c5ea2e1448f97bbbbac22637838b037baf934aca9ad90b7db6c9790191441fbd1da9bb37b7b6c34b89
+  checksum: 10c0/acdf827019ee53624c0a6f20df458deb6e39f84937c7e723f2cd4c19d4d46281199e55713f2ea9de7db84a28d2863aad50ad4058c81f2e6e126bb45e6bb57d58
   languageName: node
   linkType: hard
 
-"@vechain/dapp-kit@npm:2.1.0-rc.2":
-  version: 2.1.0-rc.2
-  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.2"
+"@vechain/dapp-kit@npm:2.1.0-rc.5":
+  version: 2.1.0-rc.5
+  resolution: "@vechain/dapp-kit@npm:2.1.0-rc.5"
   dependencies:
     "@vechain/connex-wallet-buddy": "npm:^0.1.11"
     "@vechain/sdk-core": "npm:^2.0.0"
@@ -6009,7 +6292,7 @@ __metadata:
     events: "npm:^3.3.0"
     valtio: "npm:1.13.2"
     viem: "npm:2.23.2"
-  checksum: 10c0/4067b9891424721acf12ccf635b80446179ca7ea757f4b37c11ee9bdb81130239434cfd9dbd5a2b448557d3de2a302102c9fc9e494b8b75c73a923f264055d34
+  checksum: 10c0/65a348a0eda7a1c41f29a78baea1197cea089a72abb2234fff68c2bee10cdc6468c639af69552963f1270a0d269aba7edf4ca3930749fe77a28ba0d730c0d5dc
   languageName: node
   linkType: hard
 
@@ -6019,27 +6302,6 @@ __metadata:
   dependencies:
     mersenne-twister: "npm:^1.1.0"
   checksum: 10c0/c5a3e8ba80af3747e3f86d65c9883bb1fa9eb775defb9b293da52ecb6f12e205b50a28caef32d0232b7600fbf5370bdad5ae2e44fb7a5b8a0aa9805c2c8001ff
-  languageName: node
-  linkType: hard
-
-"@vechain/sdk-core@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-core@npm:2.0.5"
-  dependencies:
-    "@ethereumjs/rlp": "npm:^5.0.2"
-    "@noble/ciphers": "npm:^1.1.1"
-    "@noble/curves": "npm:^1.6.0"
-    "@noble/hashes": "npm:^1.5.0"
-    "@scure/base": "npm:^1.2.4"
-    "@scure/bip32": "npm:^1.4.0"
-    "@scure/bip39": "npm:^1.5.1"
-    "@vechain/sdk-errors": "npm:2.0.5"
-    "@vechain/sdk-logging": "npm:2.0.5"
-    abitype: "npm:^1.0.6"
-    ethers: "npm:^6.14.0"
-    fast-json-stable-stringify: "npm:^2.1.0"
-    viem: "npm:^2.21.45"
-  checksum: 10c0/969a01a4ba11482ddf59b34e3bcd8dd00997958a1347d652692eced9c620eb50dab386f1cf4f00b9d6f058a8e9583cd601ad47718ba50d77ddbeee28e90a1895
   languageName: node
   linkType: hard
 
@@ -6064,10 +6326,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-errors@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-errors@npm:2.0.5"
-  checksum: 10c0/c991e6346b2b392816479cb8faa5b95b74827262f303960c2ac12b578977f6d6b92bdc9aa43035bd54c6a2ebe81cbb9bf9f76eb91f3419d1a022d91b3ba81c67
+"@vechain/sdk-core@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-core@npm:2.0.7"
+  dependencies:
+    "@ethereumjs/rlp": "npm:^5.0.2"
+    "@noble/ciphers": "npm:^1.1.1"
+    "@noble/curves": "npm:^1.6.0"
+    "@noble/hashes": "npm:^1.5.0"
+    "@scure/base": "npm:^1.2.4"
+    "@scure/bip32": "npm:^1.4.0"
+    "@scure/bip39": "npm:^1.5.1"
+    "@vechain/sdk-errors": "npm:2.0.7"
+    "@vechain/sdk-logging": "npm:2.0.7"
+    abitype: "npm:^1.0.6"
+    ethers: "npm:^6.14.0"
+    fast-json-stable-stringify: "npm:^2.1.0"
+    viem: "npm:^2.21.45"
+  checksum: 10c0/7286fb045b07938cfe28b3eb17295691fe1f4eb19df8afc8c406e548e8f23632a13a4703033be26ff2adf36e04c977a6c40ec763262b8d6c92209db3e9f532ba
   languageName: node
   linkType: hard
 
@@ -6078,12 +6354,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-logging@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-logging@npm:2.0.5"
-  dependencies:
-    "@vechain/sdk-errors": "npm:2.0.5"
-  checksum: 10c0/e88ede9f2e6fd11c5b0951972b8ba215c5a438d16fa1df8e17d9e79c3bb1c68d6dea6c50b2b1c8df2a0d04edf1703398ae0c8d1c5dca71f5f556f4da43bce4f1
+"@vechain/sdk-errors@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-errors@npm:2.0.7"
+  checksum: 10c0/9408bf926cd5662b6f5c96bd309e24f8b18b3dae0dc094621431aa8b607a90c325c3b5c14c609df665556432f43da1be81ba14fa0b6fa2d166c61b31eef53e2b
   languageName: node
   linkType: hard
 
@@ -6096,18 +6370,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/sdk-network@npm:2.0.5":
-  version: 2.0.5
-  resolution: "@vechain/sdk-network@npm:2.0.5"
+"@vechain/sdk-logging@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-logging@npm:2.0.7"
+  dependencies:
+    "@vechain/sdk-errors": "npm:2.0.7"
+  checksum: 10c0/0b1c589f8a833ea4e17f0d176273a9508d6314f0ed7cf97a531c83df827d3540d50f54511cdd2f7238a73b6e1cd6617b47ed823117bce76784cad842e0b89712
+  languageName: node
+  linkType: hard
+
+"@vechain/sdk-network@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@vechain/sdk-network@npm:2.0.7"
   dependencies:
     "@noble/curves": "npm:^1.6.0"
-    "@vechain/sdk-core": "npm:2.0.5"
-    "@vechain/sdk-errors": "npm:2.0.5"
-    "@vechain/sdk-logging": "npm:2.0.5"
+    "@vechain/sdk-core": "npm:2.0.7"
+    "@vechain/sdk-errors": "npm:2.0.7"
+    "@vechain/sdk-logging": "npm:2.0.7"
     abitype: "npm:1.0.8"
     ethers: "npm:^6.14.0"
     viem: "npm:^2.21.54"
-  checksum: 10c0/6cc89acf72ba60ea1b67fc7bd6aaeb9c4269d68cdc7d413842a4cf5a18a8b717660ae904b72fcbf3d081898835343a5d9b94b8f045c1da5cac3b81971cd2b459
+  checksum: 10c0/dbf67ec161bdb200a807f308945a811c6ee12d120bf18da9b685796e222ef3985dc5bebf2639d0c0f33bea3b8b50827e0ad9690ba348bd2fde1e9aeb9a3a616e
   languageName: node
   linkType: hard
 
@@ -6137,6 +6420,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vechain/vechain-contract-types@npm:1.5.0":
+  version: 1.5.0
+  resolution: "@vechain/vechain-contract-types@npm:1.5.0"
+  dependencies:
+    ethers: "npm:^6.13.5"
+  peerDependencies:
+    ethers: ^6.0.0
+  checksum: 10c0/b33ae8e047ab2468f3c4ba2598489e14e689b771446f913e252bd31f29c36c626335b4d989aeeb2d9d05063af7aa767414477c8bb6d68ed5ad6ef5f0311307a4
+  languageName: node
+  linkType: hard
+
 "@vechain/vechain-kit@workspace:*, @vechain/vechain-kit@workspace:packages/vechain-kit":
   version: 0.0.0-use.local
   resolution: "@vechain/vechain-kit@workspace:packages/vechain-kit"
@@ -6151,10 +6445,10 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.64.1"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
-    "@vechain/contract-getters": "npm:1.0.3"
-    "@vechain/dapp-kit-react": "npm:2.1.0-rc.2"
+    "@vechain/contract-getters": "npm:1.0.4"
+    "@vechain/dapp-kit-react": "npm:2.1.0-rc.5"
     "@vechain/picasso": "npm:^2.1.1"
-    "@vechain/vechain-contract-types": "npm:1.4.1"
+    "@vechain/vechain-contract-types": "npm:1.5.0"
     "@wagmi/core": "npm:^2.17.2"
     bignumber.js: "npm:^9.1.2"
     browser-image-compression: "npm:^2.0.2"
@@ -6178,6 +6472,7 @@ __metadata:
     translo-cli: "npm:^1.0.6"
     tsdown: "npm:^0.16.5"
     typescript: "npm:*"
+    vaul: "npm:^1.1.2"
     viem: "npm:^2.29.3"
     wagmi: "npm:^2.15.4"
   peerDependencies:
@@ -6185,7 +6480,7 @@ __metadata:
     "@emotion/react": ^11.0.0
     "@emotion/styled": ^11.0.0
     "@tanstack/react-query": ^5.64.2
-    "@vechain/dapp-kit-react": 2.1.0-rc.2
+    "@vechain/dapp-kit-react": 2.1.0-rc.5
     framer-motion: ^11.0.0
     react: ^18.0.0
     react-dom: ^18.0.0
@@ -7345,7 +7640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aria-hidden@npm:^1.2.3":
+"aria-hidden@npm:^1.2.3, aria-hidden@npm:^1.2.4":
   version: 1.2.6
   resolution: "aria-hidden@npm:1.2.6"
   dependencies:
@@ -8620,6 +8915,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv-cli@npm:latest":
+  version: 11.0.0
+  resolution: "dotenv-cli@npm:11.0.0"
+  dependencies:
+    cross-spawn: "npm:^7.0.6"
+    dotenv: "npm:^17.1.0"
+    dotenv-expand: "npm:^12.0.0"
+    minimist: "npm:^1.2.6"
+  bin:
+    dotenv: cli.js
+  checksum: 10c0/c3e6e58a484b3204eeb167a8f78c9cb04c4bae951069e7860eccbbbf96964e3bd808b3632dfe841e5d882b2c5d77c447f20abd06edd4db623ce719d94a7fb44e
+  languageName: node
+  linkType: hard
+
 "dotenv-expand@npm:^10.0.0":
   version: 10.0.0
   resolution: "dotenv-expand@npm:10.0.0"
@@ -8627,10 +8936,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.0.3, dotenv@npm:^16.3.0, dotenv@npm:^16.4.7":
+"dotenv-expand@npm:^12.0.0":
+  version: 12.0.3
+  resolution: "dotenv-expand@npm:12.0.3"
+  dependencies:
+    dotenv: "npm:^16.4.5"
+  checksum: 10c0/0824bdc74fc816a28b0744b7853a23e046602e9616c82121dfdae21ebc13c6e89afeb773e794e97c35d48be2be0a990fbca721ee3869a49c04210a58a3cf296f
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.3, dotenv@npm:^16.3.0, dotenv@npm:^16.4.5, dotenv@npm:^16.4.7":
   version: 16.6.1
   resolution: "dotenv@npm:16.6.1"
   checksum: 10c0/15ce56608326ea0d1d9414a5c8ee6dcf0fffc79d2c16422b4ac2268e7e2d76ff5a572d37ffe747c377de12005f14b3cc22361e79fc7f1061cce81f77d2c973dc
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^17.1.0":
+  version: 17.2.3
+  resolution: "dotenv@npm:17.2.3"
+  checksum: 10c0/c884403209f713214a1b64d4d1defa4934c2aa5b0002f5a670ae298a51e3c3ad3ba79dfee2f8df49f01ae74290fcd9acdb1ab1d09c7bfb42b539036108bb2ba0
   languageName: node
   linkType: hard
 
@@ -13172,6 +13497,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-remove-scroll@npm:^2.6.3":
+  version: 2.7.2
+  resolution: "react-remove-scroll@npm:2.7.2"
+  dependencies:
+    react-remove-scroll-bar: "npm:^2.3.7"
+    react-style-singleton: "npm:^2.2.3"
+    tslib: "npm:^2.1.0"
+    use-callback-ref: "npm:^1.3.3"
+    use-sidecar: "npm:^1.1.3"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/b5f3315bead75e72853f492c0b51ba8fb4fa09a4534d7fc42d6fcd59ca3e047cf213279ffc1e35b337e314ef5a04cb2b12544c85e0078802271731c27c09e5aa
+  languageName: node
+  linkType: hard
+
 "react-style-singleton@npm:^2.2.2, react-style-singleton@npm:^2.2.3":
   version: 2.2.3
   resolution: "react-style-singleton@npm:2.2.3"
@@ -15518,6 +15862,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vaul@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "vaul@npm:1.1.2"
+  dependencies:
+    "@radix-ui/react-dialog": "npm:^1.1.1"
+  peerDependencies:
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/a6da539eb5576c0004a6b17e3673ea1db2c34e80355860131183abf53279ce025bbd016d542c345d1cc8464ad12f9dc9860949c751055d8a84961e8472a53707
+  languageName: node
+  linkType: hard
+
 "vechain-kit-homepage@workspace:examples/homepage":
   version: 0.0.0-use.local
   resolution: "vechain-kit-homepage@workspace:examples/homepage"
@@ -15532,6 +15888,34 @@ __metadata:
     "@types/react-dom": "npm:^18"
     "@vechain/vechain-contract-types": "npm:1.4.1"
     "@vechain/vechain-kit": "workspace:*"
+    dotenv-cli: "npm:latest"
+    eslint: "npm:^9.12.0"
+    eslint-config-next: "npm:14.1.4"
+    i18next: "npm:^24.2.1"
+    i18next-browser-languagedetector: "npm:^8.0.2"
+    next: "npm:>=15.2.3"
+    react: "npm:^18"
+    react-dom: "npm:^18"
+    react-i18next: "npm:^15.4.0"
+    typescript: "npm:5.3.3"
+  languageName: unknown
+  linkType: soft
+
+"vechain-kit-playground@workspace:examples/playground":
+  version: 0.0.0-use.local
+  resolution: "vechain-kit-playground@workspace:examples/playground"
+  dependencies:
+    "@chakra-ui/react": "npm:2.8.2"
+    "@emotion/react": "npm:^11.13.5"
+    "@emotion/styled": "npm:^11.13.5"
+    "@next/eslint-plugin-next": "npm:^14.1.4"
+    "@tanstack/react-query": "npm:^5.64.2"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^18"
+    "@types/react-dom": "npm:^18"
+    "@vechain/vechain-contract-types": "npm:1.4.1"
+    "@vechain/vechain-kit": "workspace:*"
+    dotenv-cli: "npm:latest"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
     i18next: "npm:^24.2.1"
@@ -15550,8 +15934,8 @@ __metadata:
   dependencies:
     "@changesets/cli": "npm:^2.27.1"
     "@commitlint/config-conventional": "npm:^18.0.0"
-    "@vechain/sdk-core": "npm:2.0.5"
-    "@vechain/sdk-network": "npm:2.0.5"
+    "@vechain/sdk-core": "npm:2.0.7"
+    "@vechain/sdk-network": "npm:2.0.7"
     commitlint: "npm:^18.0.0"
     eslint: "npm:^9.12.0"
     husky: "npm:^8.0.0"

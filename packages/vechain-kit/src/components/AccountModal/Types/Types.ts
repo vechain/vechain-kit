@@ -7,6 +7,7 @@ import {
     UpgradeSmartAccountContentProps,
 } from '../Contents';
 import { DisconnectConfirmContentProps } from '../Contents/DisconnectConfirmation/DisconnectConfirmContent';
+import { RemoveWalletConfirmContentProps } from '../Contents/SelectWallet/RemoveWalletConfirmContent';
 import { AppOverviewContentProps } from '../Contents/Ecosystem/AppOverviewContent';
 import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterSection';
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
@@ -16,10 +17,26 @@ import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation
 import { FailedOperationContentProps } from '../Contents/FailedOperation/FailedOperationContent';
 import { TermsAndPrivacyContentProps } from '../Contents/TermsAndPrivacy/TermsAndPrivacyContent';
 
+export type SwitchFeedback = {
+    showFeedback: boolean;
+};
+
 export type AccountModalContentTypes =
     | 'main'
     | 'settings'
     | 'profile'
+    | {
+          type: 'main';
+          props?: {
+              switchFeedback?: SwitchFeedback;
+          };
+      }
+    | {
+          type: 'profile';
+          props?: {
+              switchFeedback?: SwitchFeedback;
+          };
+      }
     | 'manage-mfa'
     | 'receive-token'
     | 'swap-token'
@@ -29,10 +46,20 @@ export type AccountModalContentTypes =
     | 'privy-linked-accounts'
     | 'add-custom-token'
     | 'assets'
-    | 'bridge'
     | 'change-currency'
     | 'change-language'
     | 'gas-token-settings'
+    | {
+          type: 'select-wallet';
+          props: {
+              setCurrentContent: React.Dispatch<
+                  React.SetStateAction<AccountModalContentTypes>
+              >;
+              onClose: () => void;
+              returnTo?: 'main' | 'profile';
+              onLogoutSuccess?: () => void;
+          };
+      }
     | {
           type: 'swap-token';
           props: {
@@ -89,6 +116,10 @@ export type AccountModalContentTypes =
     | {
           type: 'disconnect-confirm';
           props: DisconnectConfirmContentProps;
+      }
+    | {
+          type: 'remove-wallet-confirm';
+          props: RemoveWalletConfirmContentProps;
       }
     | {
           type: 'upgrade-smart-account';

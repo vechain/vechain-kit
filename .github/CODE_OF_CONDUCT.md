@@ -1,10 +1,10 @@
-VeWorld DAppKit Code of Conduct
+Code of Conduct
 
 ## 1. Introduction
 
-The VeWorld DAppKit community is dedicated to providing a welcoming, inclusive, and harassment-free environment for everyone, regardless of age, gender, gender identity and expression, sexual orientation, disability, physical appearance, body size, race, ethnicity, nationality, religion, or technical experience. This Code of Conduct outlines our expectations for all members of the VeWorld DAppKit community, as well as the consequences for unacceptable behavior.
+The VeChain Kit community is dedicated to providing a welcoming, inclusive, and harassment-free environment for everyone, regardless of age, gender, gender identity and expression, sexual orientation, disability, physical appearance, body size, race, ethnicity, nationality, religion, or technical experience. This Code of Conduct outlines our expectations for all members of the VeChain Kit community, as well as the consequences for unacceptable behavior.
 
-We invite all those who participate in VeWorld DAppKit to help us create a safe and positive environment for everyone.
+We invite all those who participate in VeChain Kit to help us create a safe and positive environment for everyone.
 
 ## 2. Expected Behavior
 

@@ -3,6 +3,7 @@ import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
 import { TransactionStatus, TransactionStatusErrorType } from '@/types';
 import { TransactionReceipt } from '@vechain/sdk-network';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;
@@ -32,22 +33,31 @@ export const TransactionModal = ({
     txError,
     onTryAgain,
 }: TransactionModalProps) => {
+    const { darkMode, theme } = useVeChainKitConfig();
+
+    // avoid deep nesting and unnecessary rendering
+    if (!isOpen) return null;
+
     return (
-        <BaseModal
-            isOpen={isOpen}
-            onClose={onClose}
-            allowExternalFocus={true}
-            blockScrollOnMount={true}
-            closeOnOverlayClick={status !== 'pending' && uiConfig?.isClosable}
-        >
-            <TransactionModalContent
-                status={status}
-                onTryAgain={onTryAgain}
-                uiConfig={uiConfig}
-                txReceipt={txReceipt}
+        <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
+            <BaseModal
+                isOpen={isOpen}
                 onClose={onClose}
-                txError={txError}
-            />
-        </BaseModal>
+                allowExternalFocus={true}
+                blockScrollOnMount={true}
+                closeOnOverlayClick={
+                    status !== 'pending' && uiConfig?.isClosable
+                }
+            >
+                <TransactionModalContent
+                    status={status}
+                    onTryAgain={onTryAgain}
+                    uiConfig={uiConfig}
+                    txReceipt={txReceipt}
+                    onClose={onClose}
+                    txError={txError}
+                />
+            </BaseModal>
+        </VechainKitThemeProvider>
     );
 };

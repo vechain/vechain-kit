@@ -37,9 +37,11 @@ export const DappKitButton = ({ isDark, gridColumn = 2 }: Props) => {
                 }
                 return { ...(source && { source }) };
             }
+            // Wallet activation is now handled in useWallet.ts
+            // When a wallet connects, it will automatically be set as active
         };
         onConnectionStatusChange(handleConnectionChange);
-    }, [onConnectionStatusChange]);
+    }, [onConnectionStatusChange, source]);
     const handleDappKitClick = () => {
         openDappKitModal();
     };

@@ -20,8 +20,9 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
+import { useWalletStorage } from './useWalletStorage';
 import { isBrowser } from '@/utils/ssrUtils';
 
 export type UseWalletReturnType = {
@@ -75,8 +76,20 @@ export const useWallet = (): UseWalletReturnType => {
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
+    const {
+        initializeCurrentWallet,
+        getActiveWallet,
+        saveWallet,
+        getStoredWallets,
+    } = useWalletStorage();
 
     const nodeUrl = useGetNodeUrl();
+
+    // Check if in-app browser (calculate before using in useState)
+    const isInAppBrowser = useMemo(
+        () => (isBrowser() ? Boolean(window.vechain?.isInAppBrowser) : false),
+        [],
+    );
 
     // Connection states
     const isConnectedWithDappKit = !!dappKitAccount;
@@ -155,12 +168,94 @@ export const useWallet = (): UseWalletReturnType => {
         ? crossAppAddress
         : privyEmbeddedWalletAddress;
 
+    // For desktop dappkit wallets, check if there's a stored active wallet
+    // Use state to track active wallet so it updates immediately on switch
+    const [storedActiveWalletAddress, setStoredActiveWalletAddress] = useState<
+        string | null
+    >(() => {
+        if (isConnectedWithDappKit && !isInAppBrowser) {
+            return getActiveWallet();
+        }
+        return null;
+    });
+
+    // Update stored active wallet when it changes in storage
+    // Also reset when disconnecting
+    useEffect(() => {
+        if (isConnectedWithDappKit && !isInAppBrowser) {
+            const activeWallet = getActiveWallet();
+            setStoredActiveWalletAddress(activeWallet);
+        } else {
+            // Reset when disconnected or in-app browser
+            setStoredActiveWalletAddress(null);
+        }
+    }, [isConnectedWithDappKit, isInAppBrowser, getActiveWallet]);
+
+    // Track if a wallet switch is in progress to prevent overriding the user's selection
+    const [isWalletSwitchInProgress, setIsWalletSwitchInProgress] =
+        useState(false);
+
+    // Listen for wallet switch events
+    useEffect(() => {
+        if (!isBrowser() || !isConnectedWithDappKit || isInAppBrowser) return;
+
+        const handleWalletSwitch = (
+            event: CustomEvent<{ address: string }>,
+        ) => {
+            setIsWalletSwitchInProgress(true);
+            setStoredActiveWalletAddress(event.detail.address);
+            // Reset the flag after a short delay to allow the connection to update
+            setTimeout(() => {
+                setIsWalletSwitchInProgress(false);
+            }, 1000);
+        };
+
+        window.addEventListener(
+            'wallet_switched',
+            handleWalletSwitch as EventListener,
+        );
+        return () => {
+            window.removeEventListener(
+                'wallet_switched',
+                handleWalletSwitch as EventListener,
+            );
+        };
+    }, [isConnectedWithDappKit, isInAppBrowser]);
+
+    // Always prioritize the stored active wallet from cache when switching
+    // Use connected wallet when:
+    // 1. No stored active wallet exists (new connection)
+    // 2. Connected wallet is not in stored wallets list (new wallet after disconnect)
+    // 3. A switch is NOT in progress AND connected wallet differs from stored (reconnection with different wallet)
+    const storedWallets = getStoredWallets();
+    const isConnectedWalletInStoredList = storedWallets.some(
+        (w) =>
+            w.address.toLowerCase() === connectedWalletAddress?.toLowerCase(),
+    );
+
+    // Always read the stored active wallet directly from storage to ensure consistency
+    // This avoids race conditions with state updates
+    const currentStoredActiveWallet =
+        isConnectedWithDappKit && !isInAppBrowser ? getActiveWallet() : null;
+
+    const effectiveConnectedWalletAddress =
+        // If switch is in progress, always use stored active wallet
+        isWalletSwitchInProgress && currentStoredActiveWallet
+            ? currentStoredActiveWallet
+            : // If stored active wallet exists and connected wallet is in stored list, use stored (switch scenario)
+            currentStoredActiveWallet && isConnectedWalletInStoredList
+            ? currentStoredActiveWallet
+            : // Otherwise use connected wallet (new connection or reconnection with different wallet)
+              connectedWalletAddress;
+
     // Get smart account
-    const { data: smartAccount } = useSmartAccount(connectedWalletAddress);
+    const { data: smartAccount } = useSmartAccount(
+        effectiveConnectedWalletAddress ?? '',
+    );
 
     // TODO: here we will need to check if the owner of the wallet owns a smart account
     const activeAddress = isConnectedWithDappKit
-        ? dappKitAccount
+        ? effectiveConnectedWalletAddress
         : smartAccount?.address;
 
     const activeAccountMetadata = useWalletMetadata(
@@ -169,13 +264,137 @@ export const useWallet = (): UseWalletReturnType => {
     );
 
     const connectedMetadata = useWalletMetadata(
-        connectedWalletAddress ?? '',
+        effectiveConnectedWalletAddress ?? '',
         network.type,
     );
     const smartAccountMetadata = useWalletMetadata(
         smartAccount?.address ?? '',
         network.type,
     );
+
+    const { setActiveWallet: setActiveWalletStorage } = useWalletStorage();
+
+    // Track recently removed wallets to prevent them from being set as active again
+    const recentlyRemovedWalletsRef = useRef<Set<string>>(new Set());
+
+    // Listen for wallet removal events
+    useEffect(() => {
+        if (!isBrowser() || !isConnectedWithDappKit || isInAppBrowser) return;
+
+        const handleWalletRemoved = (
+            event: CustomEvent<{ address: string }>,
+        ) => {
+            // Track removed wallet for 5 seconds to prevent it from being set as active
+            recentlyRemovedWalletsRef.current.add(
+                event.detail.address.toLowerCase(),
+            );
+            setTimeout(() => {
+                recentlyRemovedWalletsRef.current.delete(
+                    event.detail.address.toLowerCase(),
+                );
+            }, 5000);
+        };
+
+        window.addEventListener(
+            'wallet_removed',
+            handleWalletRemoved as EventListener,
+        );
+        return () => {
+            window.removeEventListener(
+                'wallet_removed',
+                handleWalletRemoved as EventListener,
+            );
+        };
+    }, [isConnectedWithDappKit, isInAppBrowser]);
+
+    // Save/initialize wallet in storage when connected via dappkit and not in-app browser
+    // Set the connected wallet as active when it's a new wallet or new connection
+    useEffect(() => {
+        if (
+            isConnectedWithDappKit &&
+            !isInAppBrowser &&
+            connectedWalletAddress &&
+            activeAccountMetadata &&
+            !activeAccountMetadata.isLoading
+        ) {
+            // Don't save or set as active if this wallet was recently removed
+            // This prevents re-adding wallets that the user just removed
+            const wasRecentlyRemoved = recentlyRemovedWalletsRef.current.has(
+                connectedWalletAddress.toLowerCase(),
+            );
+            if (wasRecentlyRemoved) {
+                return;
+            }
+
+            // Check if this is a new wallet BEFORE saving (since saveWallet adds it to storage)
+            const currentStoredWallets = getStoredWallets();
+            const isNewWallet = !currentStoredWallets.some(
+                (w) =>
+                    w.address.toLowerCase() ===
+                    connectedWalletAddress.toLowerCase(),
+            );
+
+            // First try to initialize (only saves if no wallets exist and sets as active)
+            initializeCurrentWallet(connectedWalletAddress);
+            // Always save/update the wallet (in case it already exists or is a new connection)
+            saveWallet(connectedWalletAddress);
+
+            // Check if this is a new connection or a switch
+            // When switching, storedActiveWalletAddress is updated immediately via wallet_switched event
+            // and isWalletSwitchInProgress is set to true
+            // We should NOT override the stored active wallet when switching
+            const isNewConnection = !storedActiveWalletAddress;
+            const isSameAsStoredActive =
+                storedActiveWalletAddress &&
+                storedActiveWalletAddress.toLowerCase() ===
+                    connectedWalletAddress.toLowerCase();
+
+            // Set as active if:
+            // 1. It's a new wallet (not in stored wallets list) - always set as active for better UX, OR
+            // 2. It's a new connection (no stored active wallet), OR
+            // 3. The connected wallet matches the stored active wallet (same wallet, just ensuring it's saved), AND
+            // 4. A wallet switch is NOT in progress (to prevent overriding user's selection during switch)
+            if (
+                (isNewWallet || isNewConnection || isSameAsStoredActive) &&
+                !isWalletSwitchInProgress
+            ) {
+                setActiveWalletStorage(connectedWalletAddress);
+            }
+        }
+    }, [
+        isConnectedWithDappKit,
+        isInAppBrowser,
+        connectedWalletAddress,
+        activeAccountMetadata?.domain,
+        activeAccountMetadata?.image,
+        activeAccountMetadata?.isLoading,
+        initializeCurrentWallet,
+        saveWallet,
+        setActiveWalletStorage,
+        storedActiveWalletAddress,
+        getStoredWallets,
+    ]);
+
+    // Ensure the stored active wallet is saved when it changes
+    // Metadata will be fetched dynamically when needed
+    useEffect(() => {
+        if (
+            isConnectedWithDappKit &&
+            !isInAppBrowser &&
+            storedActiveWalletAddress &&
+            storedActiveWalletAddress.toLowerCase() ===
+                effectiveConnectedWalletAddress?.toLowerCase()
+        ) {
+            // Ensure the stored active wallet is saved
+            saveWallet(storedActiveWalletAddress);
+        }
+    }, [
+        isConnectedWithDappKit,
+        isInAppBrowser,
+        storedActiveWalletAddress,
+        effectiveConnectedWalletAddress,
+        saveWallet,
+    ]);
 
     const account = activeAddress
         ? {
@@ -263,8 +482,7 @@ export const useWallet = (): UseWalletReturnType => {
             isConnectedWithPrivy,
             isConnectedWithVeChain,
             source: connectionSource,
-            isInAppBrowser:
-                (isBrowser() && window.vechain && window.vechain.isInAppBrowser) ?? false,
+            isInAppBrowser,
             nodeUrl,
             delegatorUrl: feeDelegation?.delegatorUrl,
             chainId: chainId,

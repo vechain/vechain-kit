@@ -9,8 +9,16 @@ import { DappKitButton } from './DappKitButton';
 import { PrivyButton } from './PrivyButton';
 import { useLoginModalContent, usePrivy } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
+import { ConnectModalContentsTypes } from '../ConnectModal';
+import React from 'react';
 
-export const ConnectionOptionsStack = () => {
+type Props = {
+    setCurrentContent: React.Dispatch<
+        React.SetStateAction<ConnectModalContentsTypes>
+    >;
+};
+
+export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
     const { loginMethods, darkMode: isDark } = useVeChainKitConfig();
 
     // View more login
@@ -72,6 +80,7 @@ export const ConnectionOptionsStack = () => {
                                         key="vechain"
                                         isDark={isDark}
                                         gridColumn={gridColumn}
+                                        setCurrentContent={setCurrentContent}
                                     />
                                 ))
                             );
@@ -82,6 +91,7 @@ export const ConnectionOptionsStack = () => {
                                         key="passkey"
                                         isDark={isDark}
                                         gridColumn={gridColumn}
+                                        setCurrentContent={setCurrentContent}
                                     />
                                 )
                             );

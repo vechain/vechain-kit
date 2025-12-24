@@ -11,12 +11,12 @@ export const ModalBackButton = ({ onClick, ...props }: BackButtonProps) => {
             aria-label="Back"
             icon={<Icon as={LuChevronLeft} fontSize={'20px'} />}
             size="sm"
-            variant="ghost"
+            variant="vechainKitHeaderIconButtons"
             position="absolute"
-            borderRadius={'50%'}
             left="10px"
-            top="10px"
+            top="8px"
             onClick={onClick}
+            lineHeight={'0'}
             {...props}
         />
     );

@@ -7,7 +7,6 @@ import {
     ModalCloseButton,
     Text,
     useToken,
-    Divider,
 } from '@chakra-ui/react';
 import {
     useMfaEnrollment,
@@ -92,13 +91,13 @@ export const SettingsContent = ({
     };
 
     return (
-        <Box>
+        <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Settings')}</ModalHeader>
 
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
+                        onClick={() => setCurrentContent('profile')}
                     />
                 )}
                 <ModalCloseButton />
@@ -157,6 +156,20 @@ export const SettingsContent = ({
                         }}
                         leftIcon={LuShield}
                         rightIcon={LuChevronRight}
+                    />
+
+                    <ActionButton
+                        title={t('Logout')}
+                        onClick={() =>
+                            setCurrentContent({
+                                type: 'disconnect-confirm',
+                                props: {
+                                    onDisconnect: handleLogout,
+                                    onBack: () => setCurrentContent('settings'),
+                                },
+                            })
+                        }
+                        leftIcon={LuLogOut}
                     />
                 </VStack>
 
@@ -241,6 +254,20 @@ export const SettingsContent = ({
                     </Text>
 
                     <ActionButton
+                        title={t('Connection details')}
+                        onClick={handleConnectionDetails}
+                        leftIcon={LuUnlink}
+                        rightIcon={LuChevronRight}
+                    />
+
+                    <ActionButton
+                        title={t('Explore ecosystem')}
+                        onClick={() => setCurrentContent('ecosystem')}
+                        leftIcon={LuLayoutGrid}
+                        rightIcon={LuChevronRight}
+                    />
+
+                    <ActionButton
                         title={t('Frequently asked questions')}
                         onClick={() =>
                             setCurrentContent({
@@ -255,40 +282,9 @@ export const SettingsContent = ({
                         leftIcon={LuCircleHelp}
                         rightIcon={LuChevronRight}
                     />
-
-                    <ActionButton
-                        title={t('Connection details')}
-                        onClick={handleConnectionDetails}
-                        leftIcon={LuUnlink}
-                        rightIcon={LuChevronRight}
-                    />
-
-                    <ActionButton
-                        title={t('Explore ecosystem')}
-                        onClick={() => setCurrentContent('ecosystem')}
-                        leftIcon={LuLayoutGrid}
-                        rightIcon={LuChevronRight}
-                    />
                 </VStack>
             </ModalBody>
-            <ModalFooter w={'full'}>
-                <VStack w={'full'} spacing={4}>
-                    <Divider />
-                    <ActionButton
-                        title={t('Logout')}
-                        onClick={() =>
-                            setCurrentContent({
-                                type: 'disconnect-confirm',
-                                props: {
-                                    onDisconnect: handleLogout,
-                                    onBack: () => setCurrentContent('settings'),
-                                },
-                            })
-                        }
-                        leftIcon={LuLogOut}
-                    />
-                </VStack>
-            </ModalFooter>
-        </Box>
+            <ModalFooter p={0} />
+        </>
     );
 };

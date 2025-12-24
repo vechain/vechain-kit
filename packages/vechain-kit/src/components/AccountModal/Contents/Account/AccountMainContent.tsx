@@ -6,17 +6,22 @@ import {
     Tag,
     ModalFooter,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ScrollToTopWrapper } from '@/components/common';
+import {
+    StickyHeaderContainer,
+    ScrollToTopWrapper,
+    WalletSwitchFeedback,
+} from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     BalanceSection,
+    ModalBackButton,
     QuickActionsSection,
 } from '@/components';
 import { Wallet } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
+import { useAccountModalOptions } from '@/hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -24,25 +29,29 @@ type Props = {
     >;
     onClose: () => void;
     wallet: Wallet;
+    switchFeedback?: { showFeedback: boolean };
 };
 
 export const AccountMainContent = ({
     setCurrentContent,
     wallet,
     onClose,
+    switchFeedback,
 }: Props) => {
     const { t } = useTranslation();
     const { network } = useVeChainKitConfig();
+    const { isolatedView } = useAccountModalOptions();
 
     return (
         <ScrollToTopWrapper>
             <StickyHeaderContainer>
-                <ModalSettingsButton
-                    onClick={() => {
-                        setCurrentContent('settings');
-                    }}
-                    data-testid="settings-button"
-                />
+                {!isolatedView && (
+                    <ModalBackButton
+                        onClick={() => {
+                            setCurrentContent('profile');
+                        }}
+                    />
+                )}
                 <ModalHeader>
                     {t('Wallet')}
 
@@ -68,8 +77,11 @@ export const AccountMainContent = ({
                     w={'full'}
                     overflow={'hidden'}
                     justifyContent={'flex-start'}
-                    spacing={6}
+                    spacing={8}
                 >
+                    <WalletSwitchFeedback
+                        showFeedback={switchFeedback?.showFeedback}
+                    />
                     <AccountSelector
                         style={{ justifyContent: 'flex-start' }}
                         onClick={() => {

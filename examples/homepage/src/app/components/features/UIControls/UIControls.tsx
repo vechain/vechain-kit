@@ -176,7 +176,7 @@ export function UIControls() {
                                     </VStack>
 
                                     <VStack alignItems="flex-start" spacing={2}>
-                                        <Button onClick={open}>
+                                        <Button onClick={() => open()}>
                                             <Text>This is a custom button</Text>
                                         </Button>
                                         <Text

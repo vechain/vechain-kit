@@ -1,0 +1,34 @@
+{
+    "translationPath": "./src/app/languages",
+    "languages": [
+        { "name": "English", "code": "en" },
+        { "name": "German", "code": "de" },
+        { "name": "Italian", "code": "it" },
+        { "name": "French", "code": "fr" },
+        { "name": "Spanish", "code": "es" },
+        { "name": "Chinese", "code": "zh" },
+        { "name": "Japanese", "code": "ja" }
+    ],
+    "mainLanguage": "en",
+    "sortMainLanguageFileAlphabetically": true,
+    "sortTargetLanguageFilesAlphabetically": true,
+    "fixedWords": {
+        "all": {
+            "staking": "staking",
+            "stake": "stake",
+            "validator": "validator",
+            "validators": "validators",
+            "APY": "APY",
+            "NFT": "NFT",
+            "VET": "VET",
+            "VTHO": "VTHO",
+            "B3TR": "B3TR",
+            "VeChain": "VeChain",
+            "vechain": "vechain"
+        },
+        "it": {
+            "maturity": "maturazione",
+            "build": "sviluppare"
+        }
+    }
+}
