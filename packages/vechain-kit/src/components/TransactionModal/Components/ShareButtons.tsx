@@ -4,12 +4,11 @@ import { FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import React from 'react';
 import { useVeChainKitConfig } from '@/providers';
-
-const TWITTER_INJECT = 'https://twitter.com/intent/tweet?text=';
-
-const WHATSAPP_INJECT = 'https://wa.me/?text=';
-
-const TELEGRAM_INJECT = 'https://telegram.me/share/url?url=';
+import {
+    TELEGRAM_SHARE_URL_BASE_URL,
+    TWITTER_INTENT_TWEET_TEXT_BASE_URL,
+    WHATSAPP_SHARE_TEXT_BASE_URL,
+} from '@/utils/urls';
 
 // bouncing circle button animation provider
 const BouncingAnimation = ({ children }: { children: React.ReactNode }) => (
@@ -44,7 +43,7 @@ export const ShareButtons = ({ descriptionEncoded }: Props) => {
         <HStack gap={2}>
             <BouncingAnimation>
                 <Link
-                    href={`${TWITTER_INJECT}${descriptionEncoded}`}
+                    href={`${TWITTER_INTENT_TWEET_TEXT_BASE_URL}${descriptionEncoded}`}
                     isExternal
                 >
                     <Box
@@ -58,7 +57,7 @@ export const ShareButtons = ({ descriptionEncoded }: Props) => {
             </BouncingAnimation>
             <BouncingAnimation>
                 <Link
-                    href={`${TELEGRAM_INJECT}${descriptionEncoded}`}
+                    href={`${TELEGRAM_SHARE_URL_BASE_URL}${descriptionEncoded}`}
                     isExternal
                 >
                     <Box bg={'#30abec'} p={2} borderRadius={'full'}>
@@ -68,7 +67,7 @@ export const ShareButtons = ({ descriptionEncoded }: Props) => {
             </BouncingAnimation>
             <BouncingAnimation>
                 <Link
-                    href={`${WHATSAPP_INJECT}${descriptionEncoded}`}
+                    href={`${WHATSAPP_SHARE_TEXT_BASE_URL}${descriptionEncoded}`}
                     isExternal
                 >
                     <Box bg={'#01cb37'} p={2} borderRadius={'full'}>

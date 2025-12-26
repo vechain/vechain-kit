@@ -5,11 +5,21 @@ import {
     GasTokenInfo,
 } from '@/types/gasToken';
 import { getConfig } from '@/config';
+import {
+    CLEANIFY_APP_URL,
+    EVEARN_APP_URL,
+    GREENCART_APP_URL,
+    IMAGE_NOT_FOUND_URL,
+    MAINNET_GENERIC_DELEGATOR_URL,
+    MUGSHOT_APP_URL,
+    TESTNET_GENERIC_DELEGATOR_URL,
+    VECHAIN_KIT_COOKIES_URL,
+    VECHAIN_KIT_TERMS_URL,
+} from '@/utils/urls';
 
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
 
-export const notFoundImage =
-    'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';
+export const notFoundImage = IMAGE_NOT_FOUND_URL;
 
 export enum TogglePassportCheck {
     WhitelistCheck = 1,
@@ -55,8 +65,8 @@ export const ENV = {
 export const getGenericDelegatorUrl = () => {
     const env = getENV();
     return env.isProduction
-        ? 'https://mainnet.delegator.vechain.org/api/v1/'
-        : 'https://testnet.delegator.vechain.org/api/v1/'; // or url to your delegator
+        ? MAINNET_GENERIC_DELEGATOR_URL
+        : TESTNET_GENERIC_DELEGATOR_URL; // or url to your delegator
 };
 
 export type PrivyEcosystemApp = {
@@ -69,28 +79,28 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
     {
         id: 'clz41gcg00e4ay75dmq3uzzgr',
         name: 'Cleanify',
-        website: 'https://app.cleanify.vet',
+        website: CLEANIFY_APP_URL,
     },
     {
         id: 'cm153hrup0817axti38avlfyg',
         name: 'GreenCart',
-        website: 'https://greencart.ai',
+        website: GREENCART_APP_URL,
     },
     {
         id: 'clv9sfos20j6x1431ga80d95f',
         name: 'Mughsot',
-        website: 'https://mugshot.vet/',
+        website: MUGSHOT_APP_URL,
     },
     {
         id: 'cm4l8tiai070i108zo17oieyc',
         name: 'EVearn',
-        website: 'https://evearn.io',
+        website: EVEARN_APP_URL,
     },
 ];
 
 //Hardcoded for displaying in the "Terms and Privacy" agreements modal
 export const VECHAIN_KIT_TERMS_CONFIG = {
-    url: 'https://vechainkit.vechain.org/terms',
+    url: VECHAIN_KIT_TERMS_URL,
     version: 1,
     required: true,
     displayName: 'Vechain Kit Terms',
@@ -99,7 +109,7 @@ export const VECHAIN_KIT_TERMS_CONFIG = {
 //Hardcoded for showing up if allowAnalytics is true
 //So we ask users if they agree with data tracking
 export const VECHAIN_KIT_COOKIES_CONFIG = {
-    url: 'https://vechainkit.vechain.org/cookies',
+    url: VECHAIN_KIT_COOKIES_URL,
     version: 1,
     required: false,
     displayName: 'Vechain Kit Cookies',

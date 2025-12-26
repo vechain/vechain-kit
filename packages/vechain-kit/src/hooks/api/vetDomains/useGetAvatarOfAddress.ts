@@ -4,6 +4,7 @@ import { getAddressDomain, getAvatar } from '@vechain/contract-getters';
 import { useVeChainKitConfig } from '@/providers';
 import { getLocalStorageItem } from '@/utils/ssrUtils';
 import { CrossAppConnectionCache } from '@/types';
+import { VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL } from '@/utils/urls';
 
 /**
  * Avatar resolution priority:
@@ -18,12 +19,12 @@ import { CrossAppConnectionCache } from '@/types';
 
 const CROSSAPP_AVATAR_MAP: Record<string, string> = {
     Mugshot:
-        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/mugshot.png',
+        `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/mugshot.png`,
     Greencart:
-        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/greencart.png',
+        `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/greencart.png`,
     Cleanify:
-        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/cleanify.png',
-    EVearn: 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/evearn.png',
+        `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/cleanify.png`,
+    EVearn: `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/evearn.png`,
 };
 
 const CACHE_KEY = 'vechain_kit_cross_app_connection';

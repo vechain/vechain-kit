@@ -15,6 +15,12 @@ import { VECHAIN_PRIVY_APP_ID } from '../utils';
 import { defineChain } from 'viem';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { isBrowser } from '@/utils/ssrUtils';
+import {
+    MAINNET_EXPLORER_URL,
+    PRIVY_VECHAIN_CONNECTOR_ICON_URL,
+    THOR_MAINNET_URLS,
+    VECHAINSTATS_URL,
+} from '@/utils/urls';
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
@@ -22,17 +28,17 @@ export const vechain = defineChain({
     nativeCurrency: { name: 'VeChain', symbol: 'VET', decimals: 18 },
     rpcUrls: {
         default: {
-            http: ['https://mainnet.vechain.org'],
+            http: [THOR_MAINNET_URLS[0]],
         },
     },
     blockExplorers: {
         default: {
             name: 'Vechain Explorer',
-            url: 'https://explore.vechain.org',
+            url: MAINNET_EXPLORER_URL,
         },
         vechainStats: {
             name: 'Vechain Stats',
-            url: 'https://vechainstats.com',
+            url: VECHAINSTATS_URL,
         },
     },
 });
@@ -42,7 +48,7 @@ export const vechainConnector = () => {
         id: VECHAIN_PRIVY_APP_ID,
         name: 'VeChain',
         iconUrl:
-            'https://imagedelivery.net/oHBRUd2clqykxgDWmeAyLg/661dd77c-2f9d-40e7-baa1-f4e24fd7bf00/icon',
+            PRIVY_VECHAIN_CONNECTOR_ICON_URL,
         smartWalletMode: false,
     });
 };

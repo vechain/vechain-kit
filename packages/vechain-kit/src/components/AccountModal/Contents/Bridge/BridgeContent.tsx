@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { VechainEnergy } from '@/assets';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { VECHAIN_ENERGY_SWAP_URL } from '@/utils/urls';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -29,7 +30,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { isolatedView } = useAccountModalOptions();
 
     const handleLaunchVeChainEnergy = () => {
-        window.open('https://swap.vechain.energy/', '_blank');
+        window.open(VECHAIN_ENERGY_SWAP_URL, '_blank');
     };
 
     return (

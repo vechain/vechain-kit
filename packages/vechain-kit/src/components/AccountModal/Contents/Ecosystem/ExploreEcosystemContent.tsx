@@ -36,6 +36,12 @@ import {
 } from './Components/CategoryFilterSection';
 import { AllowedCategories } from './Components/CategoryLabel';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import {
+    VEBETTERDAO_GOVERNANCE_URL,
+    VEBETTERDAO_LOGO_URL,
+    VET_DOMAINS_URL,
+    VET_DOMAINS_WALLETCONNECT_IMAGE_URL,
+} from '@/utils/urls';
 
 export type EcosystemWithCategoryProps = {
     selectedCategory: CategoryFilter;
@@ -56,15 +62,15 @@ const DEFAULT_APPS: XAppMetadata[] = [
     {
         name: 'VeBetterDAO',
         description: 'Engage, earn and prosper by doing sustainable actions.',
-        external_url: 'https://governance.vebetterdao.org/',
-        logo: 'https://i.ibb.co/cgJBj83/vbd.png',
-        banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+        external_url: VEBETTERDAO_GOVERNANCE_URL,
+        logo: VEBETTERDAO_LOGO_URL,
+        banner: VEBETTERDAO_LOGO_URL,
         screenshots: [],
         social_urls: [],
         app_urls: [],
         tweets: [],
         ve_world: {
-            banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+            banner: VEBETTERDAO_LOGO_URL,
         },
         categories: [],
     },
@@ -72,15 +78,15 @@ const DEFAULT_APPS: XAppMetadata[] = [
         name: 'vet.domains',
         description:
             '.vet.domains provides a unique and unchangeable identity for Vechain users by linking information to their wallet addresses. It becomes easier for people to use the blockchain by replacing complicated wallet addresses with easy-to-remember names.',
-        external_url: 'https://vet.domains',
-        logo: 'https://vet.domains/assets/walletconnect.png',
-        banner: 'https://vet.domains/assets/walletconnect.png',
+        external_url: VET_DOMAINS_URL,
+        logo: VET_DOMAINS_WALLETCONNECT_IMAGE_URL,
+        banner: VET_DOMAINS_WALLETCONNECT_IMAGE_URL,
         screenshots: [],
         social_urls: [],
         app_urls: [],
         tweets: [],
         ve_world: {
-            banner: 'https://vet.domains/assets/walletconnect.png',
+            banner: VET_DOMAINS_WALLETCONNECT_IMAGE_URL,
         },
         categories: [],
     },

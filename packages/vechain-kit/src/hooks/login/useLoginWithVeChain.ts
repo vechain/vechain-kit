@@ -3,6 +3,7 @@ import { useCrossAppConnectionCache } from '@/hooks/cache/useCrossAppConnectionC
 import { useFetchAppInfo } from '@/hooks';
 import { VECHAIN_PRIVY_APP_ID } from '@/utils';
 import { handlePopupError } from '@/utils/handlePopupError';
+import { VEBETTERDAO_GOVERNANCE_NO_TRAILING_SLASH_URL } from '@/utils/urls';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();
@@ -17,7 +18,7 @@ export const useLoginWithVeChain = () => {
                 name: 'VeChain',
                 logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
                 appId: VECHAIN_PRIVY_APP_ID,
-                website: 'https://governance.vebetterdao.org',
+                website: VEBETTERDAO_GOVERNANCE_NO_TRAILING_SLASH_URL,
             });
 
         } catch (error) {
