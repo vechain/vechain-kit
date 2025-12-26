@@ -1,6 +1,3 @@
-import { VeBetterIcon, VTHOLogo } from '@/assets';
-import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
-import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
 import {
     GasTokenPreferences,
@@ -8,8 +5,6 @@ import {
     GasTokenInfo,
 } from '@/types/gasToken';
 import { getConfig } from '@/config';
-
-
 
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
 
@@ -63,7 +58,6 @@ export const getGenericDelegatorUrl = () => {
         ? 'https://mainnet.delegator.vechain.org/api/v1/'
         : 'https://testnet.delegator.vechain.org/api/v1/'; // or url to your delegator
 };
-
 
 export type PrivyEcosystemApp = {
     id: string;
