@@ -1,11 +1,12 @@
 import { PrivyAppInfo } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/constants';
+import { PRIVY_AUTH_APP_INFO_BASE_URL } from '@/utils/urls';
 
 export const fetchPrivyAppInfo = async (
     appId: string,
 ): Promise<PrivyAppInfo> => {
-    const response = await fetch(`https://auth.privy.io/api/v1/apps/${appId}`, {
+    const response = await fetch(`${PRIVY_AUTH_APP_INFO_BASE_URL}${appId}`, {
         headers: {
             'privy-app-id': appId,
         },

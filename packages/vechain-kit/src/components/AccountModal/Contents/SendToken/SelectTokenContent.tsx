@@ -57,10 +57,10 @@ export const SelectTokenContent = ({
         if (showAllTokens) {
             // Show all tokens, sorted with owned tokens first (by value), then unowned
             const ownedTokens = sortedTokens.filter(
-                (token) => Number(token.balance) > 0,
+                (token) => Number(token.balance.scaled) > 0,
             );
             const unownedTokens = sortedTokens.filter(
-                (token) => Number(token.balance) === 0,
+                (token) => Number(token.balance.scaled) === 0,
             );
 
             // Owned tokens are already sorted by value (highest first)
@@ -139,7 +139,7 @@ export const SelectTokenContent = ({
                                     <AssetButton
                                         key={token.address}
                                         symbol={token.symbol}
-                                        amount={Number(token.balance)}
+                                        amount={Number(token.balance.scaled)}
                                         currencyValue={token.valueInCurrency}
                                         currentCurrency={
                                             currentCurrency as SupportedCurrency

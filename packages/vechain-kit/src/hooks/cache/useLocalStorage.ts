@@ -3,6 +3,7 @@ import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 export enum LocalStorageKey {
     CUSTOM_TOKENS = 'vechain_kit_custom_tokens',
+    ENABLED_REGISTRY_TOKENS = 'vechain_kit_enabled_registry_tokens',
     ECOSYSTEM_SHORTCUTS = 'vechain-kit-ecosystem-shortcuts',
     CURRENCY = 'vechain_kit_currency',
     NODE_URL = 'vechain_kit_node_url',

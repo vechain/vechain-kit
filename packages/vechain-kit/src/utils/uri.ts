@@ -1,6 +1,7 @@
 import { NETWORK_TYPE } from '@/config/network';
 import { validateIpfsUri } from './ipfs';
 import { getConfig } from '@/config';
+import { ARWEAVE_BASE_URL } from '@/utils/urls';
 
 /**
  * Convert a URI to a URL
@@ -31,7 +32,7 @@ export const convertUriToUrl = (uri: string, networkType: NETWORK_TYPE) => {
             }/${uriWithoutProtocol}`;
 
         case 'ar':
-            return `https://arweave.net/${uriWithoutProtocol}`;
+            return `${ARWEAVE_BASE_URL}${uriWithoutProtocol}`;
 
         default:
             return uri;

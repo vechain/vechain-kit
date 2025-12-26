@@ -2,9 +2,25 @@ import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import { type CustomTokenInfo } from '@vechain/contract-getters';
+import {
+    TOKEN_REGISTRY_BASE_URL,
+    TOKEN_REGISTRY_PLACEHOLDER_ICON_FILE,
+} from '@/utils/urls';
+import { type CustomTokenInfo as ContractCustomTokenInfo } from '@vechain/contract-getters';
 
-import {  getTokenInfo } from './useGetCustomTokenInfo';
+import { getTokenInfo } from './useGetCustomTokenInfo';
+
+export type CustomTokenInfo = ContractCustomTokenInfo & {
+    /**
+     * Optional icon URL for UI display (not provided by contract-getters).
+     */
+    icon?: string;
+};
+
+const TOKEN_REGISTRY_PLACEHOLDER_ICON_URL = new URL(
+    `assets/${TOKEN_REGISTRY_PLACEHOLDER_ICON_FILE}`,
+    TOKEN_REGISTRY_BASE_URL,
+).href;
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(
@@ -15,12 +31,14 @@ export const useCustomTokens = () => {
 
     const addToken = async (address: CustomTokenInfo['address']) => {
         if (!isTokenIncluded(address) && !isDefaultToken(address)) {
-            if (!network.nodeUrl) throw new Error('Network node URL is required');
-            const tokenInfo = await getTokenInfo( address, network.nodeUrl);
+            if (!network.nodeUrl)
+                throw new Error('Network node URL is required');
+            const tokenInfo = await getTokenInfo(address, network.nodeUrl);
 
             const token: CustomTokenInfo = {
                 ...tokenInfo,
                 address,
+                icon: TOKEN_REGISTRY_PLACEHOLDER_ICON_URL, // TODO: This is a placeholder; should be replaced with a proper token icon resolution strategy
             };
 
             setCustomTokens([...customTokens, token]);

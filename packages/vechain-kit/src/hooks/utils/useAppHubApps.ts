@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AllowedCategories } from '@/components/AccountModal/Contents/Ecosystem/Components/CategoryLabel';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
+import { APP_HUB_RAW_BASE_URL, GITHUB_API_BASE_URL } from '@/utils/urls';
 export type AppHubApp = {
     id: string;
     name: string;
@@ -19,11 +20,6 @@ export type AppHubApp = {
 const CACHE_KEY = 'vechain-kit-app-hub-apps';
 const CACHE_EXPIRY_KEY = 'vechain-kit-app-hub-apps-expiry';
 const CACHE_EXPIRY_TIME = 24 * 60 * 60 * 1000; // 24 hours
-
-// GitHub API endpoints
-const GITHUB_API_BASE = 'https://api.github.com';
-const GITHUB_RAW_CONTENT_BASE =
-    'https://raw.githubusercontent.com/vechain/app-hub/master';
 
 /**
  * Query key for AppHub apps
@@ -56,7 +52,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
 
     // Fetch fresh data from GitHub
     const dirResponse = await fetch(
-        `${GITHUB_API_BASE}/repos/vechain/app-hub/contents/apps`,
+        `${GITHUB_API_BASE_URL}/repos/vechain/app-hub/contents/apps`,
     );
     if (!dirResponse.ok) {
         throw new Error('Failed to fetch app directories');
@@ -68,7 +64,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
     const appPromises = directories.map(async (dir: any) => {
         if (dir.type !== 'dir') return null;
 
-        const manifestUrl = `${GITHUB_RAW_CONTENT_BASE}/apps/${dir.name}/manifest.json`;
+        const manifestUrl = `${APP_HUB_RAW_BASE_URL}/apps/${dir.name}/manifest.json`;
         const manifestResponse = await fetch(manifestUrl);
 
         if (!manifestResponse.ok) {
@@ -83,7 +79,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
                 name: manifest.name,
                 description: manifest.desc,
                 url: manifest.href,
-                logo: `${GITHUB_RAW_CONTENT_BASE}/apps/${dir.name}/logo.png`,
+                logo: `${APP_HUB_RAW_BASE_URL}/apps/${dir.name}/logo.png`,
                 category: manifest.category,
                 tags: manifest.tags || [],
                 isVeWorldSupported: manifest.isVeWorldSupported || false,

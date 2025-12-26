@@ -8,6 +8,7 @@ import { TransactionClause, ABIContract, Clause, Address as VeChainAddress, VET,
 import { ERC20__factory } from '@hooks/contracts';
 import { ThorClient } from '@vechain/sdk-network';
 import { simulateSwapWithClauses } from './simulateSwap';
+import { VETRADE_QUOTE_VCK_URL } from '@/utils/urls';
 
 /**
  * VeTrade supported addresses for different networks
@@ -40,19 +41,19 @@ const isVET = (address: string): boolean => {
  */
 const getVeTradeApiUrl = (networkType: NETWORK_TYPE): string => {
     const apiUrls: Record<NETWORK_TYPE, string> = {
-        main: 'https://vetrade.vet/api/quote/vck',
-        test: 'https://vetrade.vet/api/quote/vck',
-        solo: 'https://vetrade.vet/api/quote/vck',
+        main: VETRADE_QUOTE_VCK_URL,
+        test: VETRADE_QUOTE_VCK_URL,
+        solo: VETRADE_QUOTE_VCK_URL,
     };
     return apiUrls[networkType] || apiUrls.main;
 };
 
 /**
  * Create VeTrade aggregator instance for a specific network
- * 
+ *
  * VeTrade uses an API-based aggregator that returns clauses with function calls
  * that are encoded locally. Only clauses targeting supported addresses are used.
- * 
+ *
  * @param networkType - The network type (main, test, or solo)
  * @returns SwapAggregator instance configured for the specified network
  */

@@ -39,7 +39,6 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
     const { sortedTokens } = useTokensWithValues({ address: account?.address });
     const { allowCustomTokens, darkMode } = useVeChainKitConfig();
     const { currentCurrency } = useCurrency();
-    
     const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
@@ -95,17 +94,18 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
 
                     <VStack spacing={2} align="stretch" mt={2}>
                         {filteredTokens.map((token) => {
-                            const hasBalance = Number(token.balance) > 0;
+                            const hasBalance = Number(token.balance.scaled) > 0;
 
                             return (
                                 <AssetButton
                                     key={token.address}
                                     symbol={token.symbol}
-                                    amount={Number(token.balance)}
+                                    amount={Number(token.balance.scaled)}
                                     currencyValue={token.valueInCurrency}
                                     currentCurrency={
                                         currentCurrency as SupportedCurrency
                                     }
+                                    icon={token.icon}
                                     onClick={() => handleTokenSelect(token)}
                                     isDisabled={!hasBalance}
                                 />

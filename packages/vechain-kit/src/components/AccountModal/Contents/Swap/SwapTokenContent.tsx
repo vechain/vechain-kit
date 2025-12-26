@@ -1,4 +1,12 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import {
+    useState,
+    useMemo,
+    useCallback,
+    cloneElement,
+    Dispatch,
+    SetStateAction,
+    useEffect,
+} from 'react';
 import {
     ModalBody,
     ModalCloseButton,
@@ -39,7 +47,6 @@ import {
 import { SelectQuoteContent } from './SelectQuoteContent';
 import { SwapQuote } from '@/types/swap';
 import { useVeChainKitConfig } from '@/providers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { formatUnits, parseUnits } from 'viem';
 import { getConfig } from '@/config';
 import { compareAddresses } from '@/utils';
@@ -56,9 +63,7 @@ import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 type Props = {
-    setCurrentContent: React.Dispatch<
-        React.SetStateAction<AccountModalContentTypes>
-    >;
+    setCurrentContent: Dispatch<SetStateAction<AccountModalContentTypes>>;
     fromTokenAddress?: string;
     toTokenAddress?: string;
 };
@@ -104,12 +109,10 @@ export const SwapTokenContent = ({
     const [customSlippageValue, setCustomSlippageValue] = useState('1');
     const [selectedQuote, setSelectedQuote] = useState<SwapQuote | null>(null);
     const [selectedGasToken, setSelectedGasToken] =
-        React.useState<GasTokenType | null>(null);
+        useState<GasTokenType | null>(null);
     const [userSelectedGasToken, setUserSelectedGasToken] =
-        React.useState<GasTokenType | null>(null);
-    const [swapClauses, setSwapClauses] = React.useState<TransactionClause[]>(
-        [],
-    );
+        useState<GasTokenType | null>(null);
+    const [swapClauses, setSwapClauses] = useState<TransactionClause[]>([]);
 
     // Prices and FX to compute fiat values for entered and output amounts
     const { prices, exchangeRates } = useTokenPrices();
@@ -118,7 +121,7 @@ export const SwapTokenContent = ({
     const isAutoMode = slippageTolerance === 1;
 
     // Sync customSlippageValue with slippageTolerance
-    React.useEffect(() => {
+    useEffect(() => {
         if (slippageTolerance === 1) {
             setCustomSlippageValue('1');
         } else if (slippageTolerance === 0.5) {
@@ -131,7 +134,7 @@ export const SwapTokenContent = ({
     }, [slippageTolerance]);
 
     // Set initial tokens from provided addresses if present, otherwise default VET -> B3TR
-    React.useEffect(() => {
+    useEffect(() => {
         if (sortedTokens.length === 0) return;
 
         // Prefer provided addresses
@@ -195,7 +198,7 @@ export const SwapTokenContent = ({
     // Clear selected quote when quote parameters change
     // This ensures that when amount/token changes, we use the new best quote
     // instead of a stale manually selected quote
-    React.useEffect(() => {
+    useEffect(() => {
         setSelectedQuote(null);
     }, [fromToken?.address, toToken?.address, amount]);
 
@@ -287,7 +290,7 @@ export const SwapTokenContent = ({
     const gasCostVTHO = quote?.gasCostVTHO ?? 0;
 
     // Build swap clauses for gas estimation (async operation)
-    React.useEffect(() => {
+    useEffect(() => {
         const buildClauses = async () => {
             if (!quote || !swapParams || !quote.aggregator) {
                 setSwapClauses([]);
@@ -343,7 +346,7 @@ export const SwapTokenContent = ({
         connection.isConnectedWithPrivy &&
         !feeDelegation?.delegatorUrl;
 
-    const handleGasTokenChange = React.useCallback(
+    const handleGasTokenChange = useCallback(
         (token: GasTokenType) => {
             setSelectedGasToken(token);
             setUserSelectedGasToken(token);
@@ -357,7 +360,7 @@ export const SwapTokenContent = ({
 
     // Auto-fallback: if the selected token cannot cover fees (estimation error),
     // clear selection to re-estimate across all available tokens
-    React.useEffect(() => {
+    useEffect(() => {
         if (gasEstimationError && selectedGasToken) {
             setSelectedGasToken(null);
         }
@@ -489,11 +492,11 @@ export const SwapTokenContent = ({
     );
 
     // Track if we've already shown success/error to prevent duplicate dialogs
-    const [hasShownResult, setHasShownResult] = React.useState(false);
+    const [hasShownResult, setHasShownResult] = useState(false);
 
     // Handle transaction status changes to show success dialogs
     // Errors are shown inline via TransactionButtonAndStatus component
-    React.useEffect(() => {
+    useEffect(() => {
         // Reset the flag when transaction status changes to ready (new transaction)
         if (status === 'ready') {
             setHasShownResult(false);
@@ -583,20 +586,20 @@ export const SwapTokenContent = ({
 
     const handleSetMaxAmount = useCallback(() => {
         if (fromToken) {
-            setAmount(fromToken.balance);
+            setAmount(fromToken.balance.scaled);
         }
     }, [fromToken]);
 
     // Get token display info
     const getTokenDisplay = (token: TokenWithValue | null) => {
         if (!token) return null;
-        const logoComponent = TOKEN_LOGO_COMPONENTS[token.symbol];
-        const logoUrl = TOKEN_LOGOS[token.symbol];
+        const logoComponent = null; //TODO: CHECK IF COMPONENT IS NEEDED
+        const logoUrl = ''; //TODO: ADD LOGO URL;
         return {
             symbol: token.symbol,
             logoComponent,
             logoUrl,
-            balance: token.balance,
+            balance: token.balance.scaled,
             value: token.valueInCurrency,
         };
     };
@@ -742,7 +745,7 @@ export const SwapTokenContent = ({
                                         }}
                                         leftIcon={
                                             fromTokenDisplay.logoComponent ? (
-                                                React.cloneElement(
+                                                cloneElement(
                                                     fromTokenDisplay.logoComponent,
                                                     {
                                                         boxSize: '20px',
@@ -888,7 +891,7 @@ export const SwapTokenContent = ({
                                         }}
                                         leftIcon={
                                             toTokenDisplay.logoComponent ? (
-                                                React.cloneElement(
+                                                cloneElement(
                                                     toTokenDisplay.logoComponent,
                                                     {
                                                         boxSize: '20px',

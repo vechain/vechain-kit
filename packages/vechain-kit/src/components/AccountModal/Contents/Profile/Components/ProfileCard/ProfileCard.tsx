@@ -14,6 +14,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { X_PROFILE_BASE_URL } from '@/utils/urls';
 
 export type ProfileCardProps = {
     address: string;
@@ -180,7 +181,7 @@ export const ProfileCard = ({
                         )}
                         {metadata?.records?.['com.x'] && (
                             <Link
-                                href={`https://x.com/${encodeURIComponent(
+                                href={`${X_PROFILE_BASE_URL}${encodeURIComponent(
                                     String(metadata.records['com.x']),
                                 )}`}
                                 target="_blank"
