@@ -23,40 +23,14 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Setup Node
-              uses: actions/setup-node@v4
+            - name: Bootstrap + build vechain-kit (cached)
+              uses: ./.github/actions/vechain-kit-bootstrap
               with:
-                  node-version-file: .nvmrc
-                  cache: 'yarn'
-
-            - name: Restore node_modules cache
-              id: cache-node-modules
-              uses: actions/cache@v4
-              with:
-                  path: |
-                      node_modules
-                      .yarn/install-state.gz
-                  key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
-
-            - name: Install
-              run: yarn install --immutable
-              env:
-                  NODE_OPTIONS: '--max-old-space-size=4096'
+                  commit-sha: ${{ github.event.pull_request.head.sha || github.sha }}
+                  install-cache-key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+                  build-command: yarn workspace @vechain/vechain-kit build
 
             - name: Lint
               run: yarn run lint
-              env:
-                  NODE_OPTIONS: '--max-old-space-size=4096'
-
-            - name: Restore vechain-kit dist cache
-              id: cache-vechain-kit-dist
-              uses: actions/cache@v4
-              with:
-                  path: packages/vechain-kit/dist
-                  key: ${{ runner.os }}-vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
-
-            - name: Build vechain-kit (only if cache miss)
-              if: steps.cache-vechain-kit-dist.outputs.cache-hit != 'true'
-              run: yarn workspace @vechain/vechain-kit build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'

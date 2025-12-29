@@ -65,36 +65,12 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Bootstrap + build vechain-kit (cached)
+        uses: ./.github/actions/vechain-kit-bootstrap
         with:
-          node-version-file: .nvmrc
-          cache: yarn
-
-      - name: Restore node_modules cache
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            .yarn/install-state.gz
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
-
-      - name: Install dependencies
-        run: yarn install --immutable
-
-      - name: Restore vechain-kit dist cache
-        id: cache-vechain-kit-dist
-        uses: actions/cache@v4
-        with:
-          path: packages/vechain-kit/dist
-          key: ${{ runner.os }}-vechain-kit-dist-${{ github.event.pull_request.head.sha }}
-
-      - name: Build vechain-kit (only if cache miss)
-        if: steps.cache-vechain-kit-dist.outputs.cache-hit != 'true'
-        env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
-        run: yarn workspace @vechain/vechain-kit build
+          commit-sha: ${{ github.event.pull_request.head.sha }}
+          install-cache-key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+          build-command: yarn workspace @vechain/vechain-kit build
 
       - name: Compare package sizes
         uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
