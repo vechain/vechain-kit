@@ -4,7 +4,7 @@ const config: AppConfig = {
     indexerUrl: 'https://indexer.mainnet.vechain.org/api/v1',
     ipfsPinningService:
         'https://api.gateway-proxy.vechain.org/api/v1/pinning/pinFileToIPFS',
-    b3trIndexerUrl: 'https://b3tr.mainnet.vechain.org/api/v1',
+    b3trIndexerUrl: 'https://indexer.mainnet.vechain.org/api/v1',
     graphQlIndexerUrl: 'https://graph.vet/subgraphs/name/vns',
     nodeUrl: 'https://mainnet.vechain.org',
     network: {
