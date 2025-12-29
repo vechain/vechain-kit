@@ -54,10 +54,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
     }
 
     // Fetch fresh data from GitHub
-    const appsDirUrl = new URL(
-        '/repos/vechain/app-hub/contents/apps',
-        APP_HUB_GITHUB_API_BASE_URL,
-    );
+    const appsDirUrl = new URL('/contents/apps', APP_HUB_GITHUB_API_BASE_URL);
     const dirResponse = await fetch(appsDirUrl);
     if (!dirResponse.ok) {
         throw new Error('Failed to fetch app directories');
