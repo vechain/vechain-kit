@@ -1,5 +1,5 @@
 import { getConfig } from '@/config';
-import { VeworldSubdomainClaimer__factory } from '@hooks/contracts';
+import { VeworldSubdomainClaimer__factory } from '@vechain/vechain-contract-types';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';

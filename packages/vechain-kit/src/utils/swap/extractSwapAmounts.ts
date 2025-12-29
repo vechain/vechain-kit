@@ -1,5 +1,5 @@
 import { decodeEventLog, zeroAddress } from 'viem';
-import { ERC20__factory } from '@hooks/contracts';
+import { IERC20__factory } from '@vechain/vechain-contract-types';
 import type { TransactionReceipt, Event, Transfer } from '@vechain/sdk-network';
 
 /**
@@ -54,10 +54,9 @@ export const extractSwapAmounts = (
     }
 
     // Get ERC20 ABI for decoding (only needed if we have ERC20 tokens)
-    const ERC20Interface = ERC20__factory.createInterface();
+    const ERC20Interface = IERC20__factory.createInterface();
     const transferEventAbi = ERC20Interface.getEvent('Transfer');
-    const transferEventTopicHash = transferEventAbi.topicHash.toLowerCase();
-
+    const transferEventTopicHash = transferEventAbi?.topicHash.toLowerCase();
 
     // Filter for Transfer events (only needed for ERC20 tokens)
     const transferEvents = allEvents.filter((event) => {
@@ -117,17 +116,47 @@ export const extractSwapAmounts = (
                 const decoded = decodeEventLog({
                     abi: [transferEventAbi],
                     data: event.data.toString() as `0x${string}`,
-                    topics: event.topics.map((t: any) => t.toString()) as [`0x${string}`, ...`0x${string}`[]],
+                    topics: event.topics.map((t: any) => t.toString()) as [
+                        `0x${string}`,
+                        ...`0x${string}`[],
+                    ],
                 });
 
                 // Type guard for Transfer event args
-                if (!decoded.args || !('from' in decoded.args) || !('to' in decoded.args) || !('value' in decoded.args)) {
+                if (
+                    !decoded.args ||
+                    !('from' in decoded.args) ||
+                    !('to' in decoded.args) ||
+                    !('value' in decoded.args)
+                ) {
                     continue;
                 }
 
-                const from = (decoded.args as { from: `0x${string}`; to: `0x${string}`; value: bigint }).from?.toString().toLowerCase();
-                const to = (decoded.args as { from: `0x${string}`; to: `0x${string}`; value: bigint }).to?.toString().toLowerCase();
-                const value = (decoded.args as { from: `0x${string}`; to: `0x${string}`; value: bigint }).value as bigint;
+                const from = (
+                    decoded.args as {
+                        from: `0x${string}`;
+                        to: `0x${string}`;
+                        value: bigint;
+                    }
+                ).from
+                    ?.toString()
+                    .toLowerCase();
+                const to = (
+                    decoded.args as {
+                        from: `0x${string}`;
+                        to: `0x${string}`;
+                        value: bigint;
+                    }
+                ).to
+                    ?.toString()
+                    .toLowerCase();
+                const value = (
+                    decoded.args as {
+                        from: `0x${string}`;
+                        to: `0x${string}`;
+                        value: bigint;
+                    }
+                ).value as bigint;
 
                 // Get contract address from event
                 // Event type from TransactionReceipt has address as string
@@ -169,4 +198,3 @@ export const extractSwapAmounts = (
         toAmount: toAmount ?? 0n,
     };
 };
-

@@ -3,7 +3,7 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
-import { ERC20__factory } from '@hooks/contracts';
+import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { useMemo } from 'react';
 import { humanAddress, isValidAddress } from '@/utils';
 import { parseEther } from 'viem';
@@ -25,7 +25,7 @@ type useTransferERC20ReturnValue = {
     clauses: EnhancedClause[];
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
-const ERC20Interface = ERC20__factory.createInterface();
+const ERC20Interface = IERC20__factory.createInterface();
 
 export const buildERC20Clauses = (receiverAddress: string, amount: string, tokenAddress: string, tokenName: string): EnhancedClause[] => {
     if (!receiverAddress || !amount || !isValidAddress(receiverAddress))
