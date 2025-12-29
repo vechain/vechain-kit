@@ -61,7 +61,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
     {
         name: 'VeBetterDAO',
         description: 'Engage, earn and prosper by doing sustainable actions.',
-        external_url: new URL('/', VEBETTERDAO_GOVERNANCE_BASE_URL).toString(),
+        external_url: VEBETTERDAO_GOVERNANCE_BASE_URL,
         logo: new URL(
             '/static/img/coins/64x64/33509.png',
             COINMARKETCAP_STATIC_BASE_URL,
@@ -86,7 +86,7 @@ const DEFAULT_APPS: XAppMetadata[] = [
         name: 'vet.domains',
         description:
             '.vet.domains provides a unique and unchangeable identity for Vechain users by linking information to their wallet addresses. It becomes easier for people to use the blockchain by replacing complicated wallet addresses with easy-to-remember names.',
-        external_url: new URL('/', VET_DOMAINS_BASE_URL).toString(),
+        external_url: VET_DOMAINS_BASE_URL,
         logo: new URL(
             '/assets/walletconnect.png',
             VET_DOMAINS_BASE_URL,

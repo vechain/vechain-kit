@@ -30,7 +30,7 @@ export const BridgeContent = ({ setCurrentContent }: Props) => {
     const { isolatedView } = useAccountModalOptions();
 
     const handleLaunchVeChainEnergy = () => {
-        window.open(new URL('/', VECHAIN_ENERGY_SWAP_BASE_URL).toString(), '_blank');
+        window.open(VECHAIN_ENERGY_SWAP_BASE_URL, '_blank');
     };
 
     return (

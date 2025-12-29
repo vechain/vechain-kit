@@ -113,10 +113,7 @@ export const CrossAppConnectionSecurityCard = () => {
                     onClick={() => {
                         window.open(
                             connectionCache?.ecosystemApp.website ??
-                                new URL(
-                                    '/',
-                                    VEBETTERDAO_GOVERNANCE_BASE_URL,
-                                ).toString(),
+                                VEBETTERDAO_GOVERNANCE_BASE_URL,
                             '_blank',
                         );
                     }}

@@ -80,7 +80,7 @@ export const FAQContent = ({
 
                     <Button
                         as={Link}
-                        href={new URL('/', VECHAIN_KIT_DOCS_BASE_URL).toString()}
+                        href={VECHAIN_KIT_DOCS_BASE_URL}
                         isExternal
                         variant="vechainKitSecondary"
                         rightIcon={<Icon as={LuExternalLink} />}

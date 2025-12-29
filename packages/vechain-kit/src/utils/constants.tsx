@@ -118,22 +118,22 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
     {
         id: 'clz41gcg00e4ay75dmq3uzzgr',
         name: 'Cleanify',
-        website: new URL('/', CLEANIFY_APP_BASE_URL).toString(),
+        website: CLEANIFY_APP_BASE_URL,
     },
     {
         id: 'cm153hrup0817axti38avlfyg',
         name: 'GreenCart',
-        website: new URL('/', GREENCART_BASE_URL).toString(),
+        website: GREENCART_BASE_URL,
     },
     {
         id: 'clv9sfos20j6x1431ga80d95f',
         name: 'Mughsot',
-        website: new URL('/', MUGSHOT_BASE_URL).toString(),
+        website: MUGSHOT_BASE_URL,
     },
     {
         id: 'cm4l8tiai070i108zo17oieyc',
         name: 'EVearn',
-        website: new URL('/', EVEARN_BASE_URL).toString(),
+        website: EVEARN_BASE_URL,
     },
 ];
 

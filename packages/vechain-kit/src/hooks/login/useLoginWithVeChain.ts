@@ -18,7 +18,7 @@ export const useLoginWithVeChain = () => {
                 name: 'VeChain',
                 logoUrl: appsInfo?.[VECHAIN_PRIVY_APP_ID]?.logo_url,
                 appId: VECHAIN_PRIVY_APP_ID,
-                website: new URL('/', VEBETTERDAO_GOVERNANCE_BASE_URL).toString(),
+                website: VEBETTERDAO_GOVERNANCE_BASE_URL,
             });
 
         } catch (error) {
