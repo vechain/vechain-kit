@@ -28,7 +28,8 @@ export const getTextRecords = async (
 
     try {
         // First get the resolver address
-        const resolverResponse = await fetch(`${nodeUrl}/accounts/*`, {
+        const accountsUrl = new URL('/accounts/*', nodeUrl);
+        const resolverResponse = await fetch(accountsUrl, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -58,7 +59,7 @@ export const getTextRecords = async (
         );
 
         // Then get all text records from the resolver
-        const response = await fetch(`${nodeUrl}/accounts/*`, {
+        const response = await fetch(accountsUrl, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',

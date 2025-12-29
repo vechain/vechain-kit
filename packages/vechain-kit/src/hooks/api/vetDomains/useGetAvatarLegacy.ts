@@ -55,7 +55,8 @@ export const getAvatarLegacy = async (
 
     try {
         // Get resolver address
-        const resolverResponse = await fetch(`${nodeUrl}/accounts/*`, {
+        const accountsUrl = new URL('/accounts/*', nodeUrl);
+        const resolverResponse = await fetch(accountsUrl, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -85,7 +86,7 @@ export const getAvatarLegacy = async (
         );
 
         // Get avatar
-        const avatarResponse = await fetch(`${nodeUrl}/accounts/*`, {
+        const avatarResponse = await fetch(accountsUrl, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -173,7 +174,8 @@ async function parseAvatarRecord(
                 },
             ];
 
-            const [{ data, reverted }] = await fetch(`${nodeUrl}/accounts/*`, {
+            const accountsUrl = new URL('/accounts/*', nodeUrl);
+            const [{ data, reverted }] = await fetch(accountsUrl, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',

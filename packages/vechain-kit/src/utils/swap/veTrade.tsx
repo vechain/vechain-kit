@@ -8,6 +8,7 @@ import { TransactionClause, ABIContract, Clause, Address as VeChainAddress, VET,
 import { ERC20__factory } from '@hooks/contracts';
 import { ThorClient } from '@vechain/sdk-network';
 import { simulateSwapWithClauses } from './simulateSwap';
+import { VETRADE_BASE_URL } from '@/constants';
 
 /**
  * VeTrade supported addresses for different networks
@@ -39,12 +40,9 @@ const isVET = (address: string): boolean => {
  * Get VeTrade API base URL for a specific network
  */
 const getVeTradeApiUrl = (networkType: NETWORK_TYPE): string => {
-    const apiUrls: Record<NETWORK_TYPE, string> = {
-        main: 'https://vetrade.vet/api/quote/vck',
-        test: 'https://vetrade.vet/api/quote/vck',
-        solo: 'https://vetrade.vet/api/quote/vck',
-    };
-    return apiUrls[networkType] || apiUrls.main;
+    // Currently same endpoint across environments; keep signature for future overrides.
+    void networkType;
+    return new URL('/api/quote/vck', VETRADE_BASE_URL).toString();
 };
 
 /**
