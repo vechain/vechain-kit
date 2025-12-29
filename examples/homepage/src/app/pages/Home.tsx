@@ -28,6 +28,7 @@ export default function Home(): ReactElement {
     const heroSectionRef = useRef<HTMLDivElement>(null);
     const scrollableSectionsRef = useRef<HTMLDivElement>(null);
 
+
     return (
         <VStack spacing={0} align="stretch" minH="100vh">
             <Box h={[300, 250]} w="full" bg="#e4ebe1" borderBottomRadius={24}>
