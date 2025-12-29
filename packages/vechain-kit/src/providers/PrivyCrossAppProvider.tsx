@@ -16,7 +16,6 @@ import { defineChain } from 'viem';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { isBrowser } from '@/utils/ssrUtils';
 import {
-    IMAGEDELIVERY_NET_BASE_URL,
     VECHAIN_EXPLORER_BASE_URL,
     VECHAIN_MAINNET_NODE_BASE_URL,
     VECHAINSTATS_BASE_URL,
