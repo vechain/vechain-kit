@@ -37,9 +37,9 @@ import {
 import { AllowedCategories } from './Components/CategoryLabel';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 import {
-    IBB_CO_BASE_URL,
     VEBETTERDAO_GOVERNANCE_BASE_URL,
     VET_DOMAINS_BASE_URL,
+    COINMARKETCAP_STATIC_BASE_URL,
 } from '@/constants';
 
 export type EcosystemWithCategoryProps = {
@@ -62,14 +62,23 @@ const DEFAULT_APPS: XAppMetadata[] = [
         name: 'VeBetterDAO',
         description: 'Engage, earn and prosper by doing sustainable actions.',
         external_url: new URL('/', VEBETTERDAO_GOVERNANCE_BASE_URL).toString(),
-        logo: new URL('/cgJBj83/vbd.png', IBB_CO_BASE_URL).toString(),
-        banner: new URL('/cgJBj83/vbd.png', IBB_CO_BASE_URL).toString(),
+        logo: new URL(
+            '/static/img/coins/64x64/33509.png',
+            COINMARKETCAP_STATIC_BASE_URL,
+        ).toString(),
+        banner: new URL(
+            '/static/img/icons/vbd.png',
+            COINMARKETCAP_STATIC_BASE_URL,
+        ).toString(),
         screenshots: [],
         social_urls: [],
         app_urls: [],
         tweets: [],
         ve_world: {
-            banner: new URL('/cgJBj83/vbd.png', IBB_CO_BASE_URL).toString(),
+            banner: new URL(
+                '/static/img/icons/vbd.png',
+                COINMARKETCAP_STATIC_BASE_URL,
+            ).toString(),
         },
         categories: [],
     },
