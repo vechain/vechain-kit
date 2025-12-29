@@ -12,9 +12,7 @@ import {
     GENERIC_DELEGATOR_MAINNET_URL,
     GENERIC_DELEGATOR_TESTNET_URL,
     VECHAIN_KIT_WEBSITE_BASE_URL,
-    APP_HUB_GITHUB_RAW_REPO_BASE_URL,
     COINMARKETCAP_STATIC_BASE_URL,
-    CRYPTOLOGOS_BASE_URL,
     VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
     IMAGE_NOT_FOUND_URL,
     CLEANIFY_APP_BASE_URL,
@@ -25,28 +23,28 @@ import {
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: new URL(
-        '/logos/vechain-vet-logo.png',
-        CRYPTOLOGOS_BASE_URL,
+        '/static/img/coins/64x64/3077.png',
+        COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
     VTHO: new URL(
         '/static/img/coins/64x64/3012.png',
         COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
     B3TR: new URL(
-        '/3d55edb42b09a634f7f2f26756a02571de901a5b.png',
-        VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
+        '/static/img/coins/64x64/33509.png',
+        COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
     VOT3: new URL(
         '/17ff70aa1d898bc97ad690dbfad1a3b5643f7e0b.png',
-        VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
+        COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
     veDelegate: new URL(
         '/1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
         VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
     ).toString(),
     USDGLO: new URL(
-        '/439fba60c80ba2521d435981102d88c4aec050d6/apps/org.glodollar.app/logo.png',
-        APP_HUB_GITHUB_RAW_REPO_BASE_URL,
+        '/static/img/coins/64x64/23888.png',
+        COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
 };
 
