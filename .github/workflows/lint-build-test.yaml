@@ -1,4 +1,4 @@
-name: Lint & Build
+name: Lint & Build & Compare package sizes
 
 on:
   # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
@@ -42,10 +42,10 @@ jobs:
 
             Thank you for your patience! 🙏
 
-  # Job 1: Post instruction comment for external PRs
+  # Job 2: Build, Lint and Compare package sizes
   build-and-test-job:
     runs-on: ubuntu-latest
-    name: Lint & Build
+    name: Lint & Build & Compare package sizes
     if: |
       (github.event.label.name == 'safe-to-build') ||
       (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
