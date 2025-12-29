@@ -36,6 +36,13 @@ import {
 } from './Components/CategoryFilterSection';
 import { AllowedCategories } from './Components/CategoryLabel';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import {
+    IBB_CO_BASE_URL,
+    VEBETTERDAO_GOVERNANCE_BASE_URL,
+    VET_DOMAINS_BASE_URL,
+    VECHAIN_KIT_WEBSITE_BASE_URL,
+    VECHAIN_ORG_BASE_URL,
+} from '@/constants';
 
 export type EcosystemWithCategoryProps = {
     selectedCategory: CategoryFilter;
@@ -56,15 +63,15 @@ const DEFAULT_APPS: XAppMetadata[] = [
     {
         name: 'VeBetterDAO',
         description: 'Engage, earn and prosper by doing sustainable actions.',
-        external_url: 'https://governance.vebetterdao.org/',
-        logo: 'https://i.ibb.co/cgJBj83/vbd.png',
-        banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+        external_url: new URL('/', VEBETTERDAO_GOVERNANCE_BASE_URL).toString(),
+        logo: new URL('/cgJBj83/vbd.png', IBB_CO_BASE_URL).toString(),
+        banner: new URL('/cgJBj83/vbd.png', IBB_CO_BASE_URL).toString(),
         screenshots: [],
         social_urls: [],
         app_urls: [],
         tweets: [],
         ve_world: {
-            banner: 'https://i.ibb.co/cgJBj83/vbd.png',
+            banner: new URL('/cgJBj83/vbd.png', IBB_CO_BASE_URL).toString(),
         },
         categories: [],
     },
@@ -72,23 +79,26 @@ const DEFAULT_APPS: XAppMetadata[] = [
         name: 'vet.domains',
         description:
             '.vet.domains provides a unique and unchangeable identity for Vechain users by linking information to their wallet addresses. It becomes easier for people to use the blockchain by replacing complicated wallet addresses with easy-to-remember names.',
-        external_url: 'https://vet.domains',
-        logo: 'https://vet.domains/assets/walletconnect.png',
-        banner: 'https://vet.domains/assets/walletconnect.png',
+        external_url: new URL('/', VET_DOMAINS_BASE_URL).toString(),
+        logo: new URL('/assets/walletconnect.png', VET_DOMAINS_BASE_URL).toString(),
+        banner: new URL('/assets/walletconnect.png', VET_DOMAINS_BASE_URL).toString(),
         screenshots: [],
         social_urls: [],
         app_urls: [],
         tweets: [],
         ve_world: {
-            banner: 'https://vet.domains/assets/walletconnect.png',
+            banner: new URL('/assets/walletconnect.png', VET_DOMAINS_BASE_URL).toString(),
         },
         categories: [],
     },
     // {
     //     name: 'VeChain Kit',
     //     description: 'A all-in-one library for building VeChain applications.',
-    //     external_url: 'https://vechainkit.vechain.org/',
-    //     logo: 'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png',
+    //     external_url: new URL('/', VECHAIN_KIT_WEBSITE_BASE_URL).toString(),
+    //     logo: new URL(
+    //         '/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png',
+    //         VECHAIN_ORG_BASE_URL,
+    //     ).toString(),
     //     banner: '',
     //     screenshots: [],
     //     social_urls: [],

@@ -4,12 +4,7 @@ import { FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import React from 'react';
 import { useVeChainKitConfig } from '@/providers';
-
-const TWITTER_INJECT = 'https://twitter.com/intent/tweet?text=';
-
-const WHATSAPP_INJECT = 'https://wa.me/?text=';
-
-const TELEGRAM_INJECT = 'https://telegram.me/share/url?url=';
+import { TELEGRAM_BASE_URL, TWITTER_BASE_URL, WHATSAPP_BASE_URL } from '@/constants';
 
 // bouncing circle button animation provider
 const BouncingAnimation = ({ children }: { children: React.ReactNode }) => (
@@ -40,13 +35,21 @@ type Props = {
 export const ShareButtons = ({ descriptionEncoded }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
 
+    // descriptionEncoded is already URI-encoded upstream; avoid double-encoding by
+    // setting the query string directly (not via URLSearchParams).
+    const twitterUrl = new URL('/intent/tweet', TWITTER_BASE_URL);
+    twitterUrl.search = `text=${descriptionEncoded}`;
+
+    const telegramUrl = new URL('/share/url', TELEGRAM_BASE_URL);
+    telegramUrl.search = `url=${descriptionEncoded}`;
+
+    const whatsappUrl = new URL('/', WHATSAPP_BASE_URL);
+    whatsappUrl.search = `text=${descriptionEncoded}`;
+
     return (
         <HStack gap={2}>
             <BouncingAnimation>
-                <Link
-                    href={`${TWITTER_INJECT}${descriptionEncoded}`}
-                    isExternal
-                >
+                <Link href={twitterUrl.toString()} isExternal>
                     <Box
                         bg={isDark ? 'blackAlpha.700' : 'lightgrey'}
                         p={2}
@@ -57,20 +60,14 @@ export const ShareButtons = ({ descriptionEncoded }: Props) => {
                 </Link>
             </BouncingAnimation>
             <BouncingAnimation>
-                <Link
-                    href={`${TELEGRAM_INJECT}${descriptionEncoded}`}
-                    isExternal
-                >
+                <Link href={telegramUrl.toString()} isExternal>
                     <Box bg={'#30abec'} p={2} borderRadius={'full'}>
                         <FaTelegramPlane color="white" size={22} />
                     </Box>
                 </Link>
             </BouncingAnimation>
             <BouncingAnimation>
-                <Link
-                    href={`${WHATSAPP_INJECT}${descriptionEncoded}`}
-                    isExternal
-                >
+                <Link href={whatsappUrl.toString()} isExternal>
                     <Box bg={'#01cb37'} p={2} borderRadius={'full'}>
                         <FaWhatsapp size={22} color="white" />
                     </Box>
