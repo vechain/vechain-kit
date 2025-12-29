@@ -14,23 +14,28 @@ jobs:
     build-and-test:
         runs-on: ubuntu-latest
         name: Lint & Build
-        # Prevent multiple workflows from building the same vechain-kit commit concurrently.
-        concurrency:
-            group: vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
-            cancel-in-progress: false
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v3
 
-            - name: Bootstrap + build vechain-kit (cached)
-              uses: ./.github/actions/vechain-kit-bootstrap
+            - name: Setup Node
+              uses: actions/setup-node@v3
               with:
-                  commit-sha: ${{ github.event.pull_request.head.sha || github.sha }}
-                  install-cache-key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
-                  build-command: yarn workspace @vechain/vechain-kit build
+                  node-version-file: .nvmrc
+                  cache: 'yarn'
+
+            - name: Install
+              run: yarn && yarn install:all
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
 
             - name: Lint
               run: yarn run lint
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
+
+            - name: Build
+              run: yarn run build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'

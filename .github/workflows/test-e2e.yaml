@@ -10,20 +10,15 @@ jobs:
   e2e-test:
     if: ${{ !contains(join(github.event.pull_request.labels.*.name, ','), 'skip-e2e') }}
     runs-on: ubuntu-latest
-    # Prevent multiple workflows from building the same vechain-kit commit concurrently.
-    concurrency:
-      group: vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
-      cancel-in-progress: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Bootstrap + build vechain-kit (cached)
-        uses: ./.github/actions/vechain-kit-bootstrap
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          commit-sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          install-cache-key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
-          build-command: yarn workspace @vechain/vechain-kit build
+          node-version: 20
+          cache: 'yarn'
 
       - name: Start thor-solo
         working-directory: ./thor-solo
@@ -31,6 +26,12 @@ jobs:
           nohup make solo-up > solo.log 2>&1 &
       - name: Wait for thor-solo to be ready
         run: sleep 30
+
+      - name: Build vechain-kit
+        working-directory: ./packages/vechain-kit
+        run: |
+          yarn install
+          yarn build
 
       - name: Set next-template app env vars
         run: |
@@ -43,7 +44,10 @@ jobs:
           EOF
 
       - name: Build next-template app
-        run: yarn workspace next-template build
+        working-directory: ./examples/next-template
+        run: |
+          yarn install
+          yarn build
 
       - name: Start next-template app
         working-directory: ./examples/next-template

@@ -44,12 +44,6 @@ jobs:
   # Job 2: Build size check (only runs for internal PRs)
   build-size-check:
     runs-on: ubuntu-latest
-    # Prevent multiple workflows from building the same vechain-kit commit concurrently.
-    # If another workflow/job already built and cached `packages/vechain-kit/dist` for this SHA,
-    # this job will queue and then hit the cache.
-    concurrency:
-      group: vechain-kit-dist-${{ github.event.pull_request.head.sha }}
-      cancel-in-progress: false
     permissions:
       pull-requests: write
       contents: read
@@ -68,9 +62,16 @@ jobs:
       - name: Bootstrap + build vechain-kit (cached)
         uses: ./.github/actions/vechain-kit-bootstrap
         with:
-          commit-sha: ${{ github.event.pull_request.head.sha }}
-          install-cache-key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
-          build-command: yarn workspace @vechain/vechain-kit build
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+        run: yarn build
 
       - name: Compare package sizes
         uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
