@@ -1,0 +1,65 @@
+name: VeChain Kit bootstrap (Node + install + dist cache)
+description: Setup Node, restore node_modules cache, install deps, restore vechain-kit dist cache, and build it if missing.
+
+inputs:
+  node-version-file:
+    description: Path to Node version file (e.g. .nvmrc)
+    required: false
+    default: .nvmrc
+  commit-sha:
+    description: Commit SHA used to key the vechain-kit dist cache (e.g. PR head sha)
+    required: true
+  install-cache-key:
+    description: Cache key for node_modules (typically hash of yarn.lock)
+    required: true
+  build-dist:
+    description: Whether to build @vechain/vechain-kit when dist cache misses
+    required: false
+    default: "true"
+  install-command:
+    description: Command used to install dependencies
+    required: false
+    default: yarn install --immutable
+  build-command:
+    description: Command used to build @vechain/vechain-kit
+    required: false
+    default: yarn workspace @vechain/vechain-kit build
+
+outputs:
+  dist-cache-hit:
+    description: Whether the vechain-kit dist cache was restored
+    value: ${{ steps.cache-vechain-kit-dist.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: ${{ inputs.node-version-file }}
+        cache: yarn
+
+    - name: Restore node_modules cache
+      id: cache-node-modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          .yarn/install-state.gz
+        key: ${{ inputs.install-cache-key }}
+
+    - name: Install dependencies
+      shell: bash
+      run: ${{ inputs.install-command }}
+
+    - name: Restore vechain-kit dist cache
+      id: cache-vechain-kit-dist
+      uses: actions/cache@v4
+      with:
+        path: packages/vechain-kit/dist
+        key: ${{ runner.os }}-vechain-kit-dist-${{ inputs.commit-sha }}
+
+    - name: Build vechain-kit (only if cache miss)
+      if: inputs.build-dist == 'true' && steps.cache-vechain-kit-dist.outputs.cache-hit != 'true'
+      shell: bash
+      run: ${{ inputs.build-command }}
