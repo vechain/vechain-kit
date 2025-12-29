@@ -14,19 +14,32 @@ jobs:
     build-and-test:
         runs-on: ubuntu-latest
         name: Lint & Build
+        # Prevent multiple workflows from building the same vechain-kit commit concurrently.
+        concurrency:
+            group: vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
+            cancel-in-progress: false
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup Node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version-file: .nvmrc
                   cache: 'yarn'
 
+            - name: Restore node_modules cache
+              id: cache-node-modules
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      node_modules
+                      .yarn/install-state.gz
+                  key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+
             - name: Install
-              run: yarn && yarn install:all
+              run: yarn install --immutable
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
 
@@ -35,7 +48,15 @@ jobs:
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
 
-            - name: Build
-              run: yarn run build
+            - name: Restore vechain-kit dist cache
+              id: cache-vechain-kit-dist
+              uses: actions/cache@v4
+              with:
+                  path: packages/vechain-kit/dist
+                  key: ${{ runner.os }}-vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
+
+            - name: Build vechain-kit (only if cache miss)
+              if: steps.cache-vechain-kit-dist.outputs.cache-hit != 'true'
+              run: yarn workspace @vechain/vechain-kit build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'

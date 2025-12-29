@@ -10,15 +10,31 @@ jobs:
   e2e-test:
     if: ${{ !contains(join(github.event.pull_request.labels.*.name, ','), 'skip-e2e') }}
     runs-on: ubuntu-latest
+    # Prevent multiple workflows from building the same vechain-kit commit concurrently.
+    concurrency:
+      group: vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
+      cancel-in-progress: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: 'yarn'
+
+      - name: Restore node_modules cache
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            .yarn/install-state.gz
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
 
       - name: Start thor-solo
         working-directory: ./thor-solo
@@ -27,11 +43,16 @@ jobs:
       - name: Wait for thor-solo to be ready
         run: sleep 30
 
-      - name: Build vechain-kit
-        working-directory: ./packages/vechain-kit
-        run: |
-          yarn install
-          yarn build
+      - name: Restore vechain-kit dist cache
+        id: cache-vechain-kit-dist
+        uses: actions/cache@v4
+        with:
+          path: packages/vechain-kit/dist
+          key: ${{ runner.os }}-vechain-kit-dist-${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Build vechain-kit (only if cache miss)
+        if: steps.cache-vechain-kit-dist.outputs.cache-hit != 'true'
+        run: yarn workspace @vechain/vechain-kit build
 
       - name: Set next-template app env vars
         run: |
@@ -44,10 +65,7 @@ jobs:
           EOF
 
       - name: Build next-template app
-        working-directory: ./examples/next-template
-        run: |
-          yarn install
-          yarn build
+        run: yarn workspace next-template build
 
       - name: Start next-template app
         working-directory: ./examples/next-template

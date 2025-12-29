@@ -43,20 +43,24 @@ jobs:
                   issue-number: ${{ github.event.pull_request.number }}
                   body: |
                       ## 👋 Thanks for your contribution!
-                      
+
                       Since this PR comes from a forked repository, preview deployment requires approval from a maintainer for security reasons.
                       Please ensure that your PR branch name starts with your GitHub username in the format of <username>/<branch-name>. Eg. myusername/my-feature **not main**
-                      
+
                       **Next steps:**
                       1. A maintainer will review your code
                       2. If approved, they'll add the `safe-to-deploy` label to trigger deployment
                       3. **After each new commit**, the maintainer will need to remove and re-add the label for security
-                      
+
                       This ensures every version of the code is explicitly reviewed before deployment. Thank you for your patience! 🙏
 
     # Job 2: Deploy (runs for internal PRs OR when external PR gets labeled)
     deploy:
         runs-on: ubuntu-latest
+        # Prevent multiple workflows from building the same vechain-kit commit concurrently.
+        concurrency:
+            group: vechain-kit-dist-${{ github.event.pull_request.head.sha }}
+            cancel-in-progress: false
         permissions:
             id-token: write
             pull-requests: write
@@ -91,6 +95,12 @@ jobs:
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: 'yarn'
+
             - name: Process Branch Name
               id: process-branch-name
               run: |
@@ -98,14 +108,36 @@ jobs:
                   echo "processedBranchName=$sanitized_branch_name" >> $GITHUB_OUTPUT
                   echo "basePath=/$sanitized_branch_name" >> $GITHUB_OUTPUT
 
-            - name: Build App
+            - name: Restore node_modules cache
+              id: cache-node-modules
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      node_modules
+                      .yarn/install-state.gz
+                  key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock', 'package.json') }}
+
+            - name: Install dependencies
+              run: yarn install --immutable
+
+            - name: Restore vechain-kit dist cache
+              id: cache-vechain-kit-dist
+              uses: actions/cache@v4
+              with:
+                  path: packages/vechain-kit/dist
+                  key: ${{ runner.os }}-vechain-kit-dist-${{ github.event.pull_request.head.sha }}
+
+            - name: Build vechain-kit (only if cache miss)
+              if: steps.cache-vechain-kit-dist.outputs.cache-hit != 'true'
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=8192'
+              run: yarn workspace @vechain/vechain-kit build
+
+            - name: Build homepage
               env:
                   NODE_OPTIONS: '--max-old-space-size=8192'
                   NEXT_PUBLIC_BASE_PATH: ${{ steps.process-branch-name.outputs.basePath }}
-              run: |
-                  yarn install
-                  yarn install:all
-                  yarn build
+              run: yarn workspace vechain-kit-homepage build
 
             - name: Fix permissions
               run: |
