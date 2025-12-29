@@ -1,7 +1,10 @@
 // Base URLs only (scheme + host). No paths here by request.
 
 // GitHub
-export const APP_HUB_GITHUB_API_BASE_URL = 'https://api.github.com';
+export const APP_HUB_GITHUB_API_BASE_URL =
+    'https://api.github.com/repos/vechain/app-hub';
+export const APP_HUB_GITHUB_RAW_REPO_BASE_URL =
+    'https://raw.githubusercontent.com/vechain/app-hub';
 // Include the repo prefix so callers only append branch/sha + path (not owner/repo every time)
 // Privy
 export const PRIVY_STATUS_BASE_URL = 'https://status.privy.io';
@@ -52,7 +55,6 @@ export const EVEARN_BASE_URL = 'https://evearn.io';
 // VeChain docs
 export const VECHAIN_DOCS_BASE_URL = 'https://docs.vechain.org';
 
-
 // Token registry / assets
 export const VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL =
     'https://vechain.github.io/token-registry/assets';
@@ -61,12 +63,10 @@ export const IMAGE_NOT_FOUND_URL =
     'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';
 
 // Image / asset CDNs used in UI
-export const IBB_CO_BASE_URL = 'https://i.ibb.co';
 export const VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL =
     'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com';
 export const PRIVY_MINTLIFY_ASSETS_S3_BASE_URL =
     'https://mintlify.s3.us-west-1.amazonaws.com';
-export const IMAGEDELIVERY_NET_BASE_URL = 'https://imagedelivery.net';
 
 // Social / sharing
 export const X_BASE_URL = 'https://x.com';
