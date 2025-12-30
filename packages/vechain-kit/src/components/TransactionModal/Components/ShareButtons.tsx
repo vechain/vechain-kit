@@ -27,24 +27,23 @@ const BouncingAnimation = ({ children }: { children: React.ReactNode }) => (
 );
 
 type Props = {
-    descriptionEncoded: string;
+    description: string;
     url?: string;
     facebookHashtag?: string;
 };
 
-export const ShareButtons = ({ descriptionEncoded }: Props) => {
+export const ShareButtons = ({ description }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
 
-    // descriptionEncoded is already URI-encoded upstream; avoid double-encoding by
-    // setting the query string directly (not via URLSearchParams).
+    // `description` is treated as raw text; use URLSearchParams so values are encoded.
     const twitterUrl = new URL('/intent/tweet', TWITTER_BASE_URL);
-    twitterUrl.search = `text=${descriptionEncoded}`;
+    twitterUrl.searchParams.set('text', description);
 
     const telegramUrl = new URL('/share/url', TELEGRAM_BASE_URL);
-    telegramUrl.search = `url=${descriptionEncoded}`;
+    telegramUrl.searchParams.set('url', description);
 
     const whatsappUrl = new URL('/', WHATSAPP_BASE_URL);
-    whatsappUrl.search = `text=${descriptionEncoded}`;
+    whatsappUrl.searchParams.set('text', description);
 
     return (
         <HStack gap={2}>
