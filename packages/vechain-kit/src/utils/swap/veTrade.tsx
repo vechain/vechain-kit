@@ -39,18 +39,17 @@ const isVET = (address: string): boolean => {
 /**
  * Get VeTrade API base URL for a specific network
  */
-const getVeTradeApiUrl = (networkType: NETWORK_TYPE): string => {
+const getVeTradeApiUrl = (_networkType: NETWORK_TYPE): string => {
     // Currently same endpoint across environments; keep signature for future overrides.
-    void networkType;
     return new URL('/api/quote/vck', VETRADE_BASE_URL).toString();
 };
 
 /**
  * Create VeTrade aggregator instance for a specific network
- * 
+ *
  * VeTrade uses an API-based aggregator that returns clauses with function calls
  * that are encoded locally. Only clauses targeting supported addresses are used.
- * 
+ *
  * @param networkType - The network type (main, test, or solo)
  * @returns SwapAggregator instance configured for the specified network
  */
