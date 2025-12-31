@@ -213,7 +213,9 @@ export const createApiAggregator = (config: ApiAggregatorConfig): SwapAggregator
                 });
 
                 // Fetch quote from API
-                const response = await fetch(`${config.apiBaseUrl}?${queryParams.toString()}`);
+                const quoteUrl = new URL(config.apiBaseUrl);
+                quoteUrl.search = queryParams.toString();
+                const response = await fetch(quoteUrl);
 
                 if (!response.ok) {
                     throw new Error(`API request failed: ${response.status} ${response.statusText}`);
@@ -312,4 +314,3 @@ export const createApiAggregator = (config: ApiAggregatorConfig): SwapAggregator
 
     return aggregator;
 };
-

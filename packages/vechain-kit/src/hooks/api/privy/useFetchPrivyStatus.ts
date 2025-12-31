@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { PRIVY_STATUS_SUMMARY_URL } from '@/utils/urls';
+import { PRIVY_STATUS_BASE_URL } from '@/constants';
 
 export const fetchPrivyStatus = async (): Promise<string> => {
     try {
-        const response = await fetch(PRIVY_STATUS_SUMMARY_URL);
+        const statusUrl = new URL('/summary.json', PRIVY_STATUS_BASE_URL);
+        const response = await fetch(statusUrl);
 
         if (!response.ok) {
             throw new Error('Failed to fetch Privy status');

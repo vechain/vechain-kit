@@ -4,7 +4,7 @@ import { getAddressDomain, getAvatar } from '@vechain/contract-getters';
 import { useVeChainKitConfig } from '@/providers';
 import { getLocalStorageItem } from '@/utils/ssrUtils';
 import { CrossAppConnectionCache } from '@/types';
-import { VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL } from '@/utils/urls';
+import { VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL } from '@/constants';
 
 /**
  * Avatar resolution priority:
@@ -19,12 +19,12 @@ import { VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL } from '@/utils/urls';
 
 const CROSSAPP_AVATAR_MAP: Record<string, string> = {
     Mugshot:
-        `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/mugshot.png`,
+        new URL('/mugshot.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
     Greencart:
-        `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/greencart.png`,
+        new URL('/greencart.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
     Cleanify:
-        `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/cleanify.png`,
-    EVearn: `${VECHAIN_KIT_DOCS_IMAGES_BUCKET_BASE_URL}/evearn.png`,
+        new URL('/cleanify.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
+    EVearn: new URL('/evearn.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
 };
 
 const CACHE_KEY = 'vechain_kit_cross_app_connection';

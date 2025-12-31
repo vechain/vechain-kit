@@ -14,7 +14,7 @@ import {
 import { LuExternalLink, LuUserCog, LuShieldCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useCrossAppConnectionCache } from '@/hooks';
-import { VEBETTERDAO_GOVERNANCE_URL } from '@/utils/urls';
+import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '@/constants';
 
 export const CrossAppConnectionSecurityCard = () => {
     const { t } = useTranslation();
@@ -113,7 +113,7 @@ export const CrossAppConnectionSecurityCard = () => {
                     onClick={() => {
                         window.open(
                             connectionCache?.ecosystemApp.website ??
-                                VEBETTERDAO_GOVERNANCE_URL,
+                                VEBETTERDAO_GOVERNANCE_BASE_URL,
                             '_blank',
                         );
                     }}

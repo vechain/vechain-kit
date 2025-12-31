@@ -156,9 +156,7 @@ export const TransactionModalContent = ({
                             >
                                 {t('Share on')}
                             </Text>
-                            <ShareButtons
-                                descriptionEncoded={socialDescription}
-                            />
+                            <ShareButtons description={socialDescription} />
                         </VStack>
                     )}
 
