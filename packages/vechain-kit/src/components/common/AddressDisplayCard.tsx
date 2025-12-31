@@ -54,7 +54,7 @@ export const AddressDisplayCard = ({
 
         // Otherwise, find the actual token balance, not its currency value
         if (tokenData) {
-            return Number(tokenData.balance);
+            return Number(tokenData.balance.scaled);
         }
         return 0;
     }, [balance, tokenData]);

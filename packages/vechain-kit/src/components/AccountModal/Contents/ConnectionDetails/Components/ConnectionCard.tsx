@@ -22,6 +22,7 @@ import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
 import packageJson from '../../../../../../package.json';
 import { humanAddress } from '@/utils';
 import { LuCheck, LuCopy } from 'react-icons/lu';
+import { VECHAIN_KIT_RELEASES_TAG_BASE_URL } from '@/constants';
 
 // Get DAppKit version from package.json (this is the version constraint, not the installed version)
 const dappKitVersion =
@@ -229,7 +230,10 @@ export const ConnectionCard = ({ connectionCache }: Props) => {
             <InfoRow
                 label={t('VeChain Kit')}
                 value={packageJson.version}
-                href={`https://github.com/vechain/vechain-kit/releases/tag/${packageJson.version}`}
+                href={new URL(
+                    `/${packageJson.version}`,
+                    VECHAIN_KIT_RELEASES_TAG_BASE_URL,
+                ).toString()}
             />
 
             <InfoRow label={'DAppKit'} value={dappKitVersion} />

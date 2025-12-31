@@ -1,6 +1,3 @@
-import { VeBetterIcon, VTHOLogo } from '@/assets';
-import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
-import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
 import {
     GasTokenPreferences,
@@ -20,6 +17,9 @@ import {
     GREENCART_BASE_URL,
     MUGSHOT_BASE_URL,
 } from '@/constants';
+import { VTHOLogo } from '@/assets/icons/VechainLogo/VTHOLogo';
+import { VeBetterIcon } from '@/assets/icons/VechainLogo/VeBetterIcon';
+import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: new URL(
@@ -48,12 +48,6 @@ export const TOKEN_LOGOS: Record<string, string> = {
     ).toString(),
 };
 
-export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {
-    VET: <VETLogo />,
-    VTHO: <VTHOLogo />,
-    B3TR: <VeBetterIcon />,
-    VOT3: <VOT3Logo />,
-};
 
 export const VECHAIN_PRIVY_APP_ID = 'cm4wxxujb022fyujl7g0thb21';
 

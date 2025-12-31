@@ -13,10 +13,11 @@ import {
     FormControl,
     FormLabel,
     useToken,
+    Image,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { GasTokenType } from '@/types/gasToken';
-import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
+import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
 import { formatGasCost } from '@/types/gasEstimation';
 import { useTokenBalances } from '@/hooks';
 import { BaseModal } from './BaseModal';
@@ -71,18 +72,23 @@ export const GasFeeTokenSelector = ({
     const getTokenBalance = (tokenSymbol: string) => {
         const balance = balances.find((b) => b.symbol === tokenSymbol);
         return balance
-            ? Number(balance.balance).toLocaleString(undefined, {
+            ? Number(balance.balance.scaled).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
               })
             : '0.00';
     };
 
+    const getTokenIcon = (tokenSymbol: string) => {
+        const balance = balances.find((b) => b.symbol === tokenSymbol);
+        return balance?.icon;
+    };
+
     const hasInsufficientBalance = (tokenSymbol: GasTokenType) => {
         const balance = balances.find((b) => b.symbol === tokenSymbol);
         const estimation = tokenEstimations[tokenSymbol];
         if (!balance || !estimation) return false;
-        return Number(balance.balance) < estimation.cost;
+        return Number(balance.balance.scaled) < estimation.cost;
     };
 
     return (
@@ -141,13 +147,30 @@ export const GasFeeTokenSelector = ({
                             >
                                 <HStack spacing={3} justify="space-between">
                                     <HStack spacing={3} flex={1}>
-                                        {React.cloneElement(
-                                            TOKEN_LOGO_COMPONENTS[token],
-                                            {
-                                                boxSize: '36px',
-                                                borderRadius: 'full',
-                                            },
-                                        )}
+                                        <Image
+                                            src={getTokenIcon(token)}
+                                            alt={`${token} logo`}
+                                            boxSize="36px"
+                                            borderRadius="full"
+                                            fallback={
+                                                <Box
+                                                    boxSize="36px"
+                                                    borderRadius="full"
+                                                    bg="whiteAlpha.200"
+                                                    display="flex"
+                                                    alignItems="center"
+                                                    justifyContent="center"
+                                                >
+                                                    <Text
+                                                        fontSize="xs"
+                                                        fontWeight="bold"
+                                                        color={textPrimary}
+                                                    >
+                                                        {token.slice(0, 3)}
+                                                    </Text>
+                                                </Box>
+                                            }
+                                        />
                                         <VStack align="start" spacing={0}>
                                             <Text
                                                 fontWeight="medium"

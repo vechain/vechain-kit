@@ -3,15 +3,11 @@ import {
     VStack,
     HStack,
     Icon,
-    IconButton,
-    Box,
     Button,
     useToken,
 } from '@chakra-ui/react';
-import { useRefreshBalances, useWallet, useTotalBalance } from '@/hooks';
-import { useState } from 'react';
+import { useWallet, useTotalBalance } from '@/hooks';
 import { useTranslation } from 'react-i18next';
-import { LuRefreshCw } from 'react-icons/lu';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { LuChevronRight } from 'react-icons/lu';
 
@@ -26,30 +22,20 @@ export const BalanceSection = ({
 }) => {
     const { t } = useTranslation();
     const { account } = useWallet();
-    const { formattedBalance, isLoading } = useTotalBalance({
+    const { formattedBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
 
-    const { refresh } = useRefreshBalances();
-    const [isRefreshing, setIsRefreshing] = useState(false);
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
-
-    const handleRefresh = async () => {
-        setIsRefreshing(true);
-        await refresh();
-        setTimeout(() => {
-            setIsRefreshing(false);
-        }, 1500);
-    };
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={1} mt={mt} mb={mb}>
-            <HStack
+            <VStack
                 w={'full'}
                 justifyContent={'flex-start'}
-                alignItems={'center'}
+                alignItems={'flex-start'}
                 spacing={2}
-                role="group"
+                p={2}
             >
                 <Heading
                     size={'xs'}
@@ -57,82 +43,45 @@ export const BalanceSection = ({
                     color={textSecondary}
                     textTransform={'uppercase'}
                     letterSpacing={1.2}
-                    ml={'5px'}
                 >
-                    {t('Assets')}
+                    {t('Balance')}
                 </Heading>
-
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    w="32px"
-                    h="32px"
-                >
-                    <IconButton
-                        aria-label="Refresh balances"
-                        variant="ghost"
-                        size="sm"
-                        opacity={0.5}
-                        _hover={{ opacity: 0.8 }}
-                        onClick={handleRefresh}
-                        icon={<Icon as={LuRefreshCw} boxSize={4} />}
-                        isLoading={isLoading || isRefreshing}
-                        sx={{
-                            '& > span.chakra-button__spinner': {
-                                width: '16px',
-                                height: '16px',
-                                position: 'absolute',
-                            },
-                        }}
-                    />
-                </Box>
-            </HStack>
+                <Heading size={'2xl'} fontWeight={'700'}>
+                    {formattedBalance}
+                </Heading>
+            </VStack>
 
             <Button
                 onClick={onAssetsClick}
                 h="fit-content"
                 variant="vechainKitSecondary"
+                p={2}
             >
-                <VStack
-                    spacing={2}
-                    w="full"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    mt={4}
-                    mb={4}
+                <HStack
+                    w={'full'}
+                    justifyContent={'flex-start'}
+                    data-testid="all-assets-button"
                 >
-                    <Heading size={'2xl'} fontWeight={'700'}>
-                        {formattedBalance}
-                    </Heading>
-
-                    <HStack
-                        w={'full'}
-                        justifyContent={'flex-start'}
-                        data-testid="all-assets-button"
-                        mt={2}
-                    >
-                        <AssetIcons
-                            style={{
-                                width: '100%',
-                                justifyContent: 'space-between',
-                            }}
-                            maxIcons={10}
-                            iconSize={26}
-                            iconsGap={3}
-                            address={account?.address ?? ''}
-                            showNoAssetsWarning={true}
-                            rightIcon={
-                                <Icon
-                                    as={LuChevronRight}
-                                    boxSize={5}
-                                    opacity={0.5}
-                                    marginLeft={2}
-                                />
-                            }
-                        />
-                    </HStack>
-                </VStack>
+                    <AssetIcons
+                        style={{
+                            width: '100%',
+                            justifyContent: 'space-between',
+                        }}
+                        maxIcons={10}
+                        iconSize={26}
+                        iconsGap={3}
+                        address={account?.address ?? ''}
+                        showNoAssetsWarning={true}
+                        rightIcon={
+                            <Icon
+                                as={LuChevronRight}
+                                boxSize={5}
+                                opacity={0.5}
+                                marginLeft={2}
+                            />
+                        }
+                    />
+                </HStack>
             </Button>
         </VStack>
     );

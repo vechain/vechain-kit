@@ -21,7 +21,6 @@ import { AccountModalContentTypes } from '../../Types';
 import { LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
@@ -149,7 +148,7 @@ export const SendTokenContent = ({
 
     const handleSetMaxAmount = () => {
         if (selectedToken) {
-            setValue('amount', selectedToken.balance);
+            setValue('amount', selectedToken.balance.scaled);
         }
     };
 
@@ -208,7 +207,7 @@ export const SendTokenContent = ({
                 }
             }
 
-            if (numericAmount > parseEther(selectedToken.balance)) {
+            if (numericAmount > parseEther(selectedToken.balance.scaled)) {
                 setError('amount', {
                     type: 'manual',
                     message: t(`Insufficient {{symbol}} balance`, {
@@ -281,7 +280,7 @@ export const SendTokenContent = ({
                             color={textSecondary}
                         >
                             {t('Balance')}:{' '}
-                            {Number(selectedToken?.balance ?? 0).toLocaleString(
+                            {Number(selectedToken?.balance.scaled ?? 0).toLocaleString(
                                 undefined,
                                 {
                                     minimumFractionDigits: 2,
@@ -373,55 +372,35 @@ export const SendTokenContent = ({
                                                 setIsSelectingToken(true)
                                             }
                                             leftIcon={
-                                                TOKEN_LOGO_COMPONENTS[
-                                                    selectedToken.symbol
-                                                ] ? (
-                                                    React.cloneElement(
-                                                        TOKEN_LOGO_COMPONENTS[
-                                                            selectedToken.symbol
-                                                        ],
-                                                        {
-                                                            boxSize: '20px',
-                                                            borderRadius:
-                                                                'full',
-                                                        },
-                                                    )
-                                                ) : (
-                                                    <Image
-                                                        src={
-                                                            TOKEN_LOGOS[
-                                                                selectedToken
-                                                                    .symbol
-                                                            ]
-                                                        }
-                                                        alt={`${selectedToken.symbol} logo`}
-                                                        boxSize="20px"
-                                                        borderRadius="full"
-                                                        fallback={
-                                                            <Box
-                                                                boxSize="20px"
-                                                                borderRadius="full"
-                                                                bg="whiteAlpha.200"
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                justifyContent="center"
+                                                <Image
+                                                    src={selectedToken.icon}
+                                                    alt={`${selectedToken.symbol} logo`}
+                                                    boxSize="20px"
+                                                    borderRadius="full"
+                                                    fallback={
+                                                        <Box
+                                                            boxSize="20px"
+                                                            borderRadius="full"
+                                                            bg="whiteAlpha.200"
+                                                            display="flex"
+                                                            alignItems="center"
+                                                            justifyContent="center"
+                                                        >
+                                                            <Text
+                                                                fontSize="8px"
+                                                                fontWeight="bold"
+                                                                color={
+                                                                    textPrimary
+                                                                }
                                                             >
-                                                                <Text
-                                                                    fontSize="8px"
-                                                                    fontWeight="bold"
-                                                                    color={
-                                                                        textPrimary
-                                                                    }
-                                                                >
-                                                                    {selectedToken.symbol.slice(
-                                                                        0,
-                                                                        3,
-                                                                    )}
-                                                                </Text>
-                                                            </Box>
-                                                        }
-                                                    />
-                                                )
+                                                                {selectedToken.symbol.slice(
+                                                                    0,
+                                                                    3,
+                                                                )}
+                                                            </Text>
+                                                        </Box>
+                                                    }
+                                                />
                                             }
                                         >
                                             {selectedToken.symbol}

@@ -16,8 +16,5 @@ export * from './VeBetterIcon';
 export * from './VeBetterIconLight';
 export * from './VeBetterIconDark';
 
-export * from './VETLogo';
-export * from './VTHOLogo';
-
 export * from './VeWorldLogoLight';
 export * from './VeWorldLogoDark';

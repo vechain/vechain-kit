@@ -1,120 +1,63 @@
-import { useMemo } from 'react';
+import { useQueries } from '@tanstack/react-query';
 import {
     useAccountBalance,
-    useGetB3trBalance,
-    useGetVot3Balance,
-    useGetErc20Balance,
-    useGetCustomTokenBalances,
+    useTokenRegistry,
+    getErc20BalanceQueryKey,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getErc20Balance } from '@vechain/contract-getters';
+import { formatTokenBalance } from '@/utils';
+import { TokenRegistryInfo } from './useTokenRegistry';
+import { TokenBalance } from '@/types';
+import { useMemo } from 'react';
 
-export type WalletTokenBalance = {
-    address: string;
-    symbol: string;
-    balance: string;
+export type WalletTokenBalance = TokenRegistryInfo & {
+    balance: TokenBalance;
 };
 
 export const useTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();
-    const config = getConfig(network.type);
 
-    // Base token balances
-    const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);
-    const { data: b3trBalance, isLoading: b3trLoading } =
-        useGetB3trBalance(address);
-    const { data: vot3Balance, isLoading: vot3Loading } =
-        useGetVot3Balance(address);
-    const { data: veDelegateBalance, isLoading: veDelegateLoading } =
-        useGetErc20Balance(config.veDelegateTokenContractAddress, address);
-    const { data: gloDollarBalance, isLoading: gloDollarLoading } =
-        useGetErc20Balance(config.gloDollarContractAddress, address);
+    // Get VET balance (includes VTHO as energy)
+    const { isLoading: vetLoading } = useAccountBalance(address);
 
-    // Custom token balances
-    const customTokenBalancesQueries = useGetCustomTokenBalances(address);
-    const customTokenBalances = customTokenBalancesQueries
-        .map((query) => query.data)
-        .filter(Boolean);
-    const customTokensLoading = customTokenBalancesQueries.some(
-        (query) => query.isLoading,
-    );
+    // Get all tokens from registry
+    const { data: registryTokens, isLoading: registryLoading } =
+        useTokenRegistry();
 
-    // Get all balances
+    // Fetch balances for all registry tokens
+    const tokenBalanceQueries = useQueries({
+        queries: (registryTokens || []).map((token) => ({
+            queryKey: getErc20BalanceQueryKey(token.address, address),
+            queryFn: async (): Promise<WalletTokenBalance> => {
+                if (!address) throw new Error('Address is required');
+                const res = await getErc20Balance(token.address, address, {
+                    networkUrl: network.nodeUrl,
+                });
+
+                if (!res) throw new Error('Failed to get token balance');
+
+                const original = res[0];
+                return {
+                    ...token,
+                    balance: formatTokenBalance(original),
+                };
+            },
+            enabled: !!address && !!network.type,
+        })),
+    });
+
     const balances = useMemo(() => {
-        if (!address) return [];
-
-        // Get contract addresses from config
-        const contractAddresses = {
-            vet: '0x',
-            vtho: config.vthoContractAddress,
-            b3tr: config.b3trContractAddress,
-            vot3: config.vot3ContractAddress,
-            veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
-        };
-
-        // Base tokens
-        const baseTokens: WalletTokenBalance[] = [
-            {
-                address: contractAddresses.vet,
-                symbol: 'VET',
-                balance: vetData?.balance || '0',
-            },
-            {
-                address: contractAddresses.vtho,
-                symbol: 'VTHO',
-                balance: vetData?.energy || '0',
-            },
-            {
-                address: contractAddresses.b3tr,
-                symbol: 'B3TR',
-                balance: b3trBalance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.vot3,
-                symbol: 'VOT3',
-                balance: vot3Balance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.veDelegate,
-                symbol: 'veDelegate',
-                balance: veDelegateBalance?.scaled ?? '0',
-            },
-            {
-                address: contractAddresses.USDGLO,
-                symbol: 'USDGLO',
-                balance: gloDollarBalance?.scaled ?? '0',
-            },
-        ];
-
-        // Add custom tokens
-        const customTokens: WalletTokenBalance[] = customTokenBalances.map(
-            (token) => ({
-                address: token?.address || '',
-                symbol: token?.symbol || '',
-                balance: token?.scaled || '0',
-            }),
-        );
-
-        return [...baseTokens, ...customTokens];
-    }, [
-        address,
-        vetData,
-        b3trBalance,
-        vot3Balance,
-        veDelegateBalance,
-        gloDollarBalance,
-        customTokenBalances,
-        network.type,
-    ]);
+        // Return available balances while filtering out undefined/loading values
+        return tokenBalanceQueries
+            .map((query) => query.data)
+            .filter((data): data is WalletTokenBalance => Boolean(data));
+    }, [tokenBalanceQueries]);
 
     const isLoading =
         vetLoading ||
-        b3trLoading ||
-        vot3Loading ||
-        veDelegateLoading ||
-        gloDollarLoading ||
-        customTokensLoading;
+        registryLoading ||
+        tokenBalanceQueries.some((query) => query.isLoading);
 
     return {
         balances,

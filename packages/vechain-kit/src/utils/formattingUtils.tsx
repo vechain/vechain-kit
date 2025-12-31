@@ -1,6 +1,7 @@
 import { picasso } from '@vechain/picasso';
 import { BigNumber } from 'bignumber.js';
 import { formatEther } from 'ethers';
+import { TokenBalance } from '@/types';
 
 export const humanAddress = (
     address: string,
@@ -92,7 +93,7 @@ function roundDownSignificantDigits(numbers: number, decimals: number = 0) {
  * @param balance - balance in bigint
  * @returns the formatted balance in the form of {@link TokenBalance} (original, scaled down and formatted)
  */
-export const formatTokenBalance = (balance: bigint) => {
+export const formatTokenBalance = (balance: bigint): TokenBalance => {
     const scaled = formatEther(balance);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
     return {

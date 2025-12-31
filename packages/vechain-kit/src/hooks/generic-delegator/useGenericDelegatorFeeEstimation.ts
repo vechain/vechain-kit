@@ -29,7 +29,7 @@ export const useGenericDelegatorFeeEstimation = ({
     const { updatePreferences } = useGasTokenSelection();
     // Only include essential data in query key to prevent unnecessary refetches
     const queryKey = ['gas-estimation', JSON.stringify(clauses), JSON.stringify(tokens), sendingAmount, sendingTokenSymbol];
-    
+
     return useQuery<EstimationResponse & { usedToken: string }, Error>({
         queryKey,
         queryFn: async () => {
@@ -46,14 +46,14 @@ export const useGenericDelegatorFeeEstimation = ({
                     );
                     // Check if user has enough balance for this token
                     const gasCost = estimation.transactionCost;
-                    const tokenBalance = Number(balances.find(t => t.symbol === token)?.balance || 0);
+                    const tokenBalance = Number(balances.find(t => t.symbol === token)?.balance.scaled || 0);
                     // If sending the same token as gas token, need balance for both
                     // If no sendingAmount is provided, we're only checking for gas fees
-                    const additionalAmount = (sendingAmount && sendingTokenSymbol && token === sendingTokenSymbol) 
+                    const additionalAmount = (sendingAmount && sendingTokenSymbol && token === sendingTokenSymbol)
                         ? Number(sendingAmount)
                         : 0;
                     const requiredBalance = gasCost + additionalAmount;
-                    
+
                     if (tokenBalance >= requiredBalance) {
                         // Has enough balance, return this token
                         updatePreferences({ gasTokenToUse: token as GasTokenType });

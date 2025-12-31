@@ -31,7 +31,7 @@ export const useTokensWithValues = ({
     const tokensWithValues = useMemo(() => {
         return balances.map((token) => {
             const priceUsd = prices[token.address] || 0;
-            const valueUsd = Number(token.balance) * priceUsd;
+            const valueUsd = Number(token.balance.scaled) * priceUsd;
             const valueInCurrency = convertToSelectedCurrency(
                 valueUsd,
                 currentCurrency as SupportedCurrency,
@@ -56,7 +56,7 @@ export const useTokensWithValues = ({
 
     // Get tokens with positive balances
     const tokensWithBalance = useMemo(() => {
-        return sortedTokens.filter((token) => Number(token.balance) > 0);
+        return sortedTokens.filter((token) => Number(token.balance.scaled) > 0);
     }, [sortedTokens]);
 
     const isLoading = balancesLoading || pricesLoading;

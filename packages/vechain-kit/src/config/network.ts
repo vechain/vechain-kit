@@ -34,7 +34,6 @@ const THOR_MAIN_URLS = [
     'https://mainnet.veblocks.net',
     'https://mainnet.vecha.in',
 ];
-
 const THOR_TESTNET_URLS = [
     'https://testnet.vechain.org',
     'https://vethor-node-test.vechaindev.com',
@@ -43,7 +42,6 @@ const THOR_TESTNET_URLS = [
 ];
 
 const THOR_SOLO_URLS = ['http://localhost:8669'];
-
 const MAIN_EXPLORER_URL = 'https://explore.vechain.org';
 const TEST_EXPLORER_URL = 'https://explore-testnet.vechain.org';
 
@@ -196,7 +194,7 @@ export const getNetworkByName = (name: string): Network | undefined => {
     return defaultNetworks.find((net) => net.name === name);
 };
 
-//https://docs.vechain.org/miscellaneous
+// docs: vechain.org/miscellaneous
 export const chainTagToGenesisId: Record<number, string> = {
     74: genesisesId.main,
     39: genesisesId.test,
