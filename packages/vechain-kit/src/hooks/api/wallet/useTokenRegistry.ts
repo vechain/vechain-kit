@@ -2,7 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { normalize } from '@/utils/hexUtils';
-import { TOKEN_REGISTRY_BASE_URL } from '@/utils/urls';
+import {
+    VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
+    VECHAIN_TOKEN_REGISTRY_BASE_URL,
+} from '@/constants';
 export interface TokenRegistryInfo {
     name: string;
     symbol: string;
@@ -27,12 +30,12 @@ const CACHE_TIME = 1000 * 60 * 60 * 24; // 24 hours
 
 const getRegistryUrl = (networkType: NETWORK_TYPE): string => {
     const registryFile = networkType === 'main' ? 'main.json' : 'test.json';
-    return new URL(registryFile, TOKEN_REGISTRY_BASE_URL).href;
+    return new URL(registryFile, VECHAIN_TOKEN_REGISTRY_BASE_URL).href;
 };
 
 const getTokenIconUrl = (iconPath?: string): string | undefined => {
     if (!iconPath) return;
-    return new URL(`assets/${iconPath}`, TOKEN_REGISTRY_BASE_URL).href;
+    return new URL(iconPath, VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL).href;
 };
 
 // Fetch tokens from VeChain registry and resolve icon URLs

@@ -47,7 +47,7 @@ export const vechainConnector = () => {
         id: VECHAIN_PRIVY_APP_ID,
         name: 'VeChain',
         iconUrl:
-            PRIVY_VECHAIN_CONNECTOR_ICON_URL,
+            'https://imagedelivery.net/oHBRUd2clqykxgDWmeAyLg/661dd77c-2f9d-40e7-baa1-f4e24fd7bf00/icon',
         smartWalletMode: false,
     });
 };

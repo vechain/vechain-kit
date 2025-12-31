@@ -2,7 +2,7 @@ import { HStack, Link, StackProps } from '@chakra-ui/react';
 import { VechainLogo } from '../../assets';
 import packageJson from '../../../package.json';
 import { useVeChainKitConfig } from '@/providers';
-import { VECHAIN_KIT_RELEASES_TAG_BASE_URL } from '@/utils/urls';
+import { VECHAIN_KIT_RELEASES_TAG_BASE_URL } from '@/constants';
 
 type Props = {} & Omit<StackProps, 'dangerouslySetInnerHTML'>;
 
@@ -30,7 +30,10 @@ export const VersionFooter = ({ ...props }: Props) => {
                 fontWeight={'500'}
                 opacity={0.4}
                 textAlign={'left'}
-                href={`${VECHAIN_KIT_RELEASES_TAG_BASE_URL}${packageJson.version}`}
+                href={new URL(
+                    `/${packageJson.version}`,
+                    VECHAIN_KIT_RELEASES_TAG_BASE_URL,
+                ).toString()}
                 isExternal
                 pt={'1px'}
             >

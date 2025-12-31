@@ -2,13 +2,11 @@ import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '@/utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
-import {
-    TOKEN_REGISTRY_BASE_URL,
-    TOKEN_REGISTRY_PLACEHOLDER_ICON_FILE,
-} from '@/utils/urls';
+
 import { type CustomTokenInfo as ContractCustomTokenInfo } from '@vechain/contract-getters';
 
 import { getTokenInfo } from './useGetCustomTokenInfo';
+import { VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL } from '@/constants';
 
 export type CustomTokenInfo = ContractCustomTokenInfo & {
     /**
@@ -16,11 +14,6 @@ export type CustomTokenInfo = ContractCustomTokenInfo & {
      */
     icon?: string;
 };
-
-const TOKEN_REGISTRY_PLACEHOLDER_ICON_URL = new URL(
-    `assets/${TOKEN_REGISTRY_PLACEHOLDER_ICON_FILE}`,
-    TOKEN_REGISTRY_BASE_URL,
-).href;
 
 export const useCustomTokens = () => {
     const [customTokens, setCustomTokens] = useLocalStorage<CustomTokenInfo[]>(
@@ -38,7 +31,10 @@ export const useCustomTokens = () => {
             const token: CustomTokenInfo = {
                 ...tokenInfo,
                 address,
-                icon: TOKEN_REGISTRY_PLACEHOLDER_ICON_URL, // TODO: This is a placeholder; should be replaced with a proper token icon resolution strategy
+                icon: new URL(
+                    'f6815de4f571ad395cac066e10a4d3b21e8770a9.png',
+                    VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
+                ).toString(), // TODO: This is a placeholder; should be replaced with a proper token icon resolution strategy
             };
 
             setCustomTokens([...customTokens, token]);

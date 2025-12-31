@@ -56,6 +56,8 @@ export const EVEARN_BASE_URL = 'https://evearn.io';
 export const VECHAIN_DOCS_BASE_URL = 'https://docs.vechain.org';
 
 // Token registry / assets
+export const VECHAIN_TOKEN_REGISTRY_BASE_URL =
+    'https://vechain.github.io/token-registry';
 export const VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL =
     'https://vechain.github.io/token-registry/assets';
 export const COINMARKETCAP_STATIC_BASE_URL = 'https://s2.coinmarketcap.com';
@@ -76,3 +78,5 @@ export const WHATSAPP_BASE_URL = 'https://wa.me';
 
 // Storage / content addressing
 export const ARWEAVE_GATEWAY_BASE_URL = 'https://arweave.net';
+export const VECHAIN_KIT_RELEASES_TAG_BASE_URL =
+    'https://github.com/vechain/vechain-kit/releases/tag/';

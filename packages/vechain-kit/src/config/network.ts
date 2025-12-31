@@ -1,11 +1,4 @@
 import { CompressedBlockDetail } from '@vechain/sdk-network';
-import {
-    MAINNET_EXPLORER_URL,
-    TESTNET_EXPLORER_URL,
-    THOR_MAINNET_URLS as THOR_MAINNET_URLS_CONST,
-    THOR_SOLO_URLS as THOR_SOLO_URLS_CONST,
-    THOR_TESTNET_URLS as THOR_TESTNET_URLS_CONST,
-} from '@/utils/urls';
 
 /**
  * The type of network that we are connected to (indentified by the genesis block)
@@ -35,14 +28,22 @@ export type Network = {
     blockTime: number;
 };
 
-const THOR_MAIN_URLS = [...THOR_MAINNET_URLS_CONST];
+const THOR_MAIN_URLS = [
+    'https://mainnet.vechain.org',
+    'https://vethor-node.vechain.com',
+    'https://mainnet.veblocks.net',
+    'https://mainnet.vecha.in',
+];
+const THOR_TESTNET_URLS = [
+    'https://testnet.vechain.org',
+    'https://vethor-node-test.vechaindev.com',
+    'https://sync-testnet.veblocks.net',
+    'https://testnet.vecha.in',
+];
 
-const THOR_TESTNET_URLS = [...THOR_TESTNET_URLS_CONST];
-
-const THOR_SOLO_URLS = [...THOR_SOLO_URLS_CONST];
-
-const MAIN_EXPLORER_URL = MAINNET_EXPLORER_URL;
-const TEST_EXPLORER_URL = TESTNET_EXPLORER_URL;
+const THOR_SOLO_URLS = ['http://localhost:8669'];
+const MAIN_EXPLORER_URL = 'https://explore.vechain.org';
+const TEST_EXPLORER_URL = 'https://explore-testnet.vechain.org';
 
 export const genesisesId = {
     get main(): string {
