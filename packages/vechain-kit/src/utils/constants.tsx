@@ -39,7 +39,7 @@ export const TOKEN_LOGOS: Record<string, string> = {
         COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
     veDelegate: new URL(
-        '/1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
+        '1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
         VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
     ).toString(),
     USDGLO: new URL(
@@ -132,7 +132,7 @@ export const DEFAULT_PRIVY_ECOSYSTEM_APPS: PrivyEcosystemApp[] = [
 
 //Hardcoded for displaying in the "Terms and Privacy" agreements modal
 export const VECHAIN_KIT_TERMS_CONFIG = {
-    url: new URL('/terms', VECHAIN_KIT_WEBSITE_BASE_URL).toString(),
+    url: new URL('terms', VECHAIN_KIT_WEBSITE_BASE_URL).toString(),
     version: 1,
     required: true,
     displayName: 'Vechain Kit Terms',
@@ -141,7 +141,7 @@ export const VECHAIN_KIT_TERMS_CONFIG = {
 //Hardcoded for showing up if allowAnalytics is true
 //So we ask users if they agree with data tracking
 export const VECHAIN_KIT_COOKIES_CONFIG = {
-    url: new URL('/cookies', VECHAIN_KIT_WEBSITE_BASE_URL).toString(),
+    url: new URL('cookies', VECHAIN_KIT_WEBSITE_BASE_URL).toString(),
     version: 1,
     required: false,
     displayName: 'Vechain Kit Cookies',

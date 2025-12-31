@@ -36,13 +36,13 @@ export const ShareButtons = ({ description }: Props) => {
     const { darkMode: isDark } = useVeChainKitConfig();
 
     // `description` is treated as raw text; use URLSearchParams so values are encoded.
-    const twitterUrl = new URL('/intent/tweet', TWITTER_BASE_URL);
+    const twitterUrl = new URL('intent/tweet', TWITTER_BASE_URL);
     twitterUrl.searchParams.set('text', description);
 
-    const telegramUrl = new URL('/share/url', TELEGRAM_BASE_URL);
+    const telegramUrl = new URL('share/url', TELEGRAM_BASE_URL);
     telegramUrl.searchParams.set('url', description);
 
-    const whatsappUrl = new URL('/', WHATSAPP_BASE_URL);
+    const whatsappUrl = new URL('', WHATSAPP_BASE_URL);
     whatsappUrl.searchParams.set('text', description);
 
     return (

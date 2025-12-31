@@ -28,7 +28,7 @@ export const getTextRecords = async (
 
     try {
         // First get the resolver address
-        const accountsUrl = new URL('/accounts/*', nodeUrl);
+        const accountsUrl = new URL('accounts/*', nodeUrl);
         const resolverResponse = await fetch(accountsUrl, {
             method: 'POST',
             headers: {
