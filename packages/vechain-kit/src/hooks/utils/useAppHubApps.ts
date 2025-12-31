@@ -54,7 +54,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
     }
 
     // Fetch fresh data from GitHub
-    const appsDirUrl = new URL('/contents/apps', APP_HUB_GITHUB_API_BASE_URL);
+    const appsDirUrl = new URL('contents/apps', APP_HUB_GITHUB_API_BASE_URL);
     const dirResponse = await fetch(appsDirUrl);
     if (!dirResponse.ok) {
         throw new Error('Failed to fetch app directories');
@@ -67,7 +67,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
         if (dir.type !== 'dir') return null;
 
         const manifestUrl = new URL(
-            `/master/apps/${dir.name}/manifest.json`,
+            `master/apps/${dir.name}/manifest.json`,
             APP_HUB_GITHUB_RAW_REPO_BASE_URL,
         );
         const manifestResponse = await fetch(manifestUrl);
@@ -80,7 +80,7 @@ export const fetchAppHubApps = async (): Promise<AppHubApp[]> => {
         try {
             const manifest = await manifestResponse.json();
             const logoUrl = new URL(
-                `/master/apps/${dir.name}/logo.png`,
+                `master/apps/${dir.name}/logo.png`,
                 APP_HUB_GITHUB_RAW_REPO_BASE_URL,
             );
             return {

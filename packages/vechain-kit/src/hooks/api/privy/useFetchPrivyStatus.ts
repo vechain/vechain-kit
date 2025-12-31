@@ -3,7 +3,7 @@ import { PRIVY_STATUS_BASE_URL } from '@/constants';
 
 export const fetchPrivyStatus = async (): Promise<string> => {
     try {
-        const statusUrl = new URL('/summary.json', PRIVY_STATUS_BASE_URL);
+        const statusUrl = new URL('summary.json', PRIVY_STATUS_BASE_URL);
         const response = await fetch(statusUrl);
 
         if (!response.ok) {

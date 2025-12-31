@@ -41,7 +41,7 @@ const isVET = (address: string): boolean => {
  */
 const getVeTradeApiUrl = (_networkType: NETWORK_TYPE): string => {
     // Currently same endpoint across environments; keep signature for future overrides.
-    return new URL('/api/quote/vck', VETRADE_BASE_URL).toString();
+    return new URL('api/quote/vck', VETRADE_BASE_URL).toString();
 };
 
 /**

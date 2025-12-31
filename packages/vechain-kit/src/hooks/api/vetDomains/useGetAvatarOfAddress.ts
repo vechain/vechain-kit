@@ -19,12 +19,12 @@ import { VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL } from '@/constants';
 
 const CROSSAPP_AVATAR_MAP: Record<string, string> = {
     Mugshot:
-        new URL('/mugshot.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
+        new URL('mugshot.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
     Greencart:
-        new URL('/greencart.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
+        new URL('greencart.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
     Cleanify:
-        new URL('/cleanify.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
-    EVearn: new URL('/evearn.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
+        new URL('cleanify.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
+    EVearn: new URL('evearn.png', VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL).toString(),
 };
 
 const CACHE_KEY = 'vechain_kit_cross_app_connection';

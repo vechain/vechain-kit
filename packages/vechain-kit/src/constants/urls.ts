@@ -2,9 +2,9 @@
 
 // GitHub
 export const APP_HUB_GITHUB_API_BASE_URL =
-    'https://api.github.com/repos/vechain/app-hub';
+    'https://api.github.com/repos/vechain/app-hub/';
 export const APP_HUB_GITHUB_RAW_REPO_BASE_URL =
-    'https://raw.githubusercontent.com/vechain/app-hub';
+    'https://raw.githubusercontent.com/vechain/app-hub/';
 // Include the repo prefix so callers only append branch/sha + path (not owner/repo every time)
 // Privy
 export const PRIVY_STATUS_BASE_URL = 'https://status.privy.io';
@@ -57,7 +57,7 @@ export const VECHAIN_DOCS_BASE_URL = 'https://docs.vechain.org';
 
 // Token registry / assets
 export const VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL =
-    'https://vechain.github.io/token-registry/assets';
+    'https://vechain.github.io/token-registry/assets/';
 export const COINMARKETCAP_STATIC_BASE_URL = 'https://s2.coinmarketcap.com';
 export const IMAGE_NOT_FOUND_URL =
     'https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png';

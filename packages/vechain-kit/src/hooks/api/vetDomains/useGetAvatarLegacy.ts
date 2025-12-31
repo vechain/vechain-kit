@@ -55,7 +55,7 @@ export const getAvatarLegacy = async (
 
     try {
         // Get resolver address
-        const accountsUrl = new URL('/accounts/*', nodeUrl);
+        const accountsUrl = new URL('accounts/*', nodeUrl);
         const resolverResponse = await fetch(accountsUrl, {
             method: 'POST',
             headers: {
@@ -174,7 +174,7 @@ async function parseAvatarRecord(
                 },
             ];
 
-            const accountsUrl = new URL('/accounts/*', nodeUrl);
+            const accountsUrl = new URL('accounts/*', nodeUrl);
             const [{ data, reverted }] = await fetch(accountsUrl, {
                 method: 'POST',
                 headers: {
