@@ -7,14 +7,13 @@ import {
     Button,
     useToken,
 } from '@chakra-ui/react';
-import { useRefreshBalances, useWallet, useTotalBalance, LocalStorageKey } from '@/hooks';
-import { useState, useEffect } from 'react';
+import { useRefreshBalances, useWallet, useTotalBalance, LocalStorageKey, useLocalStorage } from '@/hooks';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LuRefreshCw } from 'react-icons/lu';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { LuChevronRight } from 'react-icons/lu';
 import { GoEye, GoEyeClosed } from 'react-icons/go';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 
 export const BalanceSection = ({
     mb,
@@ -42,18 +41,7 @@ export const BalanceSection = ({
             setIsRefreshing(false);
         }, 1500);
     };
-    const [showAssets, setShowAssets] = useState(() => {
-        try {
-            const stored = getLocalStorageItem(LocalStorageKey.SHOW_ASSETS);
-            return stored ? JSON.parse(stored) : true;
-        } catch (error) {
-            console.error(error);
-            return true;
-        }
-    });
-    useEffect(() => {
-        setLocalStorageItem(LocalStorageKey.SHOW_ASSETS, String(showAssets));
-    }, [showAssets]);
+    const [showAssets, setShowAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={1} mt={mt} mb={mb}>
