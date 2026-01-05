@@ -11,8 +11,7 @@ import {
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
 import React from 'react';
 import { CURRENCY } from '@/types';
-import { getLocalStorageItem } from '@/utils/ssrUtils';
-import { LocalStorageKey } from '@/hooks';
+import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import {
     formatCompactCurrency,
     SupportedCurrency,
@@ -38,7 +37,7 @@ export const AssetButton = ({
 }: AssetButtonProps) => {
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
-    const storedShowAssets = getLocalStorageItem(LocalStorageKey.SHOW_ASSETS);
+    const [showAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     return (
         <Button
@@ -92,7 +91,7 @@ export const AssetButton = ({
             </HStack>
             <VStack align="flex-end" spacing={0}>
                 <Text color={textPrimary}>
-                    {storedShowAssets === 'true' ? amount.toLocaleString(undefined, {
+                    {showAssets ? amount.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
                     }) : '*'.repeat(4)}{' '}
                 </Text>
@@ -101,7 +100,7 @@ export const AssetButton = ({
                     color={textSecondary}
                     data-testid={`${symbol}-balance`}
                 >
-                    {storedShowAssets === 'true' ? formatCompactCurrency(currencyValue, {
+                    {showAssets ? formatCompactCurrency(currencyValue, {
                         currency: currentCurrency as SupportedCurrency,
                     }) : '*'.repeat(4)}
                 </Text>
