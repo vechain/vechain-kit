@@ -15,6 +15,7 @@ import {
     useDAppKitWallet,
     useTotalBalance,
     LocalStorageKey,
+    useLocalStorage,
 } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
@@ -27,7 +28,6 @@ import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
 import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
-import { getLocalStorageItem } from '@/utils/ssrUtils';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -49,7 +49,7 @@ export const ProfileContent = ({
     const { hasAnyBalance, formattedBalance } = useTotalBalance({
         address: account?.address,
     });
-    const storedShowAssets = getLocalStorageItem(LocalStorageKey.SHOW_ASSETS);
+    const [showAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     const handleSwitchWallet = () => {
         if (isInAppBrowser) {
@@ -138,7 +138,7 @@ export const ProfileContent = ({
                                     maxIcons={2}
                                 />
                                 <Text fontWeight="600">
-                                    {storedShowAssets === 'true'
+                                    {showAssets
                                         ? formattedBalance
                                         : formattedBalance[0] +
                                           '*'.repeat(formattedBalance.slice(1).length)}
