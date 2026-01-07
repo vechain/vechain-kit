@@ -22,7 +22,7 @@ Resources:
         Properties:
             CodeUri: ./
             Handler: index.lambdaHandler
-            Runtime: nodejs20.x
+            Runtime: nodejs22.x
             Architectures:
                 - arm64
             Events:
@@ -38,7 +38,7 @@ Resources:
             BuildMethod: esbuild
             BuildProperties:
                 Minify: true
-                Target: es2020
+                Target: es2022
                 Sourcemap: true
                 EntryPoints:
                     - index.ts
