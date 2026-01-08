@@ -4,7 +4,10 @@ import {
     SwapQuote,
     SwapSimulation,
 } from '@/types/swap';
-import { ERC20__factory, UniswapV2Router__factory } from '@hooks/contracts';
+import {
+    IERC20__factory,
+    UniswapV2Router02__factory as UniswapV2Router__factory,
+} from '@vechain/vechain-contract-types';
 import {
     ABIContract,
     Clause,
@@ -22,7 +25,10 @@ import { simulateSwapWithClauses } from './simulateSwap';
  * Helper to check if token is VET (native token)
  */
 const isVET = (address: string): boolean => {
-    return address === '0x' || address === '0x0000000000000000000000000000000000000000';
+    return (
+        address === '0x' ||
+        address === '0x0000000000000000000000000000000000000000'
+    );
 };
 
 /**
@@ -60,16 +66,25 @@ export interface UniswapV2AggregatorConfig {
 /**
  * Create a SwapAggregator instance for a Uniswap V2 compatible router
  */
-export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): SwapAggregator => {
+export const createUniswapV2Aggregator = (
+    config: UniswapV2AggregatorConfig,
+): SwapAggregator => {
     const aggregator: SwapAggregator = {
         name: config.name,
         getIcon: config.getIcon,
 
-        async getQuote(params: SwapParams, thor: ThorClient): Promise<SwapQuote> {
+        async getQuote(
+            params: SwapParams,
+            thor: ThorClient,
+        ): Promise<SwapQuote> {
             // Use wrapped VET in paths instead of native VET address
             const path: Address[] = [
-                isVET(params.fromTokenAddress) ? config.wrappedVET : (params.fromTokenAddress as Address),
-                isVET(params.toTokenAddress) ? config.wrappedVET : (params.toTokenAddress as Address),
+                isVET(params.fromTokenAddress)
+                    ? config.wrappedVET
+                    : (params.fromTokenAddress as Address),
+                isVET(params.toTokenAddress)
+                    ? config.wrappedVET
+                    : (params.toTokenAddress as Address),
             ];
 
             const amountInBigInt = BigInt(params.amountIn);
@@ -139,7 +154,11 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
             }
         },
 
-        async simulateSwap(params: SwapParams, quote: SwapQuote, thor: ThorClient): Promise<SwapSimulation> {
+        async simulateSwap(
+            params: SwapParams,
+            quote: SwapQuote,
+            thor: ThorClient,
+        ): Promise<SwapSimulation> {
             // Build transaction clauses using existing logic
             const clauses = await this.buildSwapTransaction(params, quote);
 
@@ -147,16 +166,28 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
             return simulateSwapWithClauses(params, quote, clauses, thor);
         },
 
-        async buildSwapTransaction(params: SwapParams, quote: SwapQuote): Promise<TransactionClause[]> {
-            if (!quote.data || typeof quote.data !== 'object' || !('path' in quote.data)) {
+        async buildSwapTransaction(
+            params: SwapParams,
+            quote: SwapQuote,
+        ): Promise<TransactionClause[]> {
+            if (
+                !quote.data ||
+                typeof quote.data !== 'object' ||
+                !('path' in quote.data)
+            ) {
                 throw new Error('Invalid quote data');
             }
 
             const deadline = getDeadline();
 
             // Ensure minimumOutputAmount is set and not zero
-            if (!quote.minimumOutputAmount || quote.minimumOutputAmount === 0n) {
-                throw new Error('Invalid quote: minimumOutputAmount is missing or zero');
+            if (
+                !quote.minimumOutputAmount ||
+                quote.minimumOutputAmount === 0n
+            ) {
+                throw new Error(
+                    'Invalid quote: minimumOutputAmount is missing or zero',
+                );
             }
 
             const amountOutMin = quote.minimumOutputAmount;
@@ -194,7 +225,7 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
                 );
             } else {
                 // From token is an ERC20 token, need to approve the router first
-                const tokenABI = ABIContract.ofAbi(ERC20__factory.abi);
+                const tokenABI = ABIContract.ofAbi(IERC20__factory.abi);
                 const fromTokenAddress = VeChainAddress.of(
                     params.fromTokenAddress,
                 );
@@ -205,14 +236,11 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
                     Clause.callFunction(
                         fromTokenAddress,
                         tokenABI.getFunction('approve'),
-                        [
-                            routerAddress.toString(),
-                            amountIn.toString(),
-                        ],
+                        [routerAddress.toString(), amountIn.toString()],
                         VET.of(0n, Units.wei),
                         {
                             comment: `Swap on ${quote.aggregatorName}`,
-                        }
+                        },
                     ),
                 );
 
@@ -233,7 +261,7 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
                             VET.of(0n, Units.wei),
                             {
                                 comment: `Swap on ${quote.aggregatorName}`,
-                            }
+                            },
                         ),
                     );
                 } else {
@@ -252,7 +280,7 @@ export const createUniswapV2Aggregator = (config: UniswapV2AggregatorConfig): Sw
                             VET.of(0n, Units.wei),
                             {
                                 comment: `Swap on ${quote.aggregatorName}`,
-                            }
+                            },
                         ),
                     );
                 }

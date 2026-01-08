@@ -6,8 +6,8 @@ import {
 import { useCallback } from 'react';
 import {
     VeworldSubdomainClaimer__factory,
-    IReverseRegistrar__factory,
-} from '@hooks/contracts';
+    VetDomainsReverseRegistrar__factory,
+} from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
@@ -33,7 +33,7 @@ type useClaimVeWorldSubdomainReturnValue = {
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 const SubdomainClaimerInterface = VeworldSubdomainClaimer__factory.createInterface();
-const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
+const ReverseRegistrarInterface = VetDomainsReverseRegistrar__factory.createInterface();
 
 const buildVeWorldSubdomainClauses = (subdomain: string, domain: string, alreadyOwned: boolean, account: Wallet, network: VeChainKitConfig['network']): TransactionClause[] => {
     const clausesArray: any[] = [];

@@ -1,8 +1,7 @@
-import { TransactionClause } from '@vechain/sdk-core';
+import { ERC20_ABI, TransactionClause } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { decodeEventLog, zeroAddress, type Hex } from 'viem';
 import { SwapParams, SwapQuote, SwapSimulation } from '@/types/swap';
-import { ERC20__factory } from '@hooks/contracts';
 
 /**
  * Helper to detect VeChain native token (VET) placeholder addresses.
@@ -40,7 +39,7 @@ const calculateTokenFlowsFromEvents = (
     for (const event of events) {
         try {
             const decoded = decodeEventLog({
-                abi: ERC20__factory.abi,
+                abi: ERC20_ABI,
                 eventName: 'Transfer',
                 topics: event.topics as unknown as [Hex, ...Hex[]],
                 data: event.data as Hex,
@@ -226,7 +225,9 @@ export const simulateSwapWithClauses = async (
             }
 
             // Verify no other tokens have outflow, in case an approval was granted in a different transaction
-            for (const [tokenAddress, flows] of Object.entries(aggregatedFlows)) {
+            for (const [tokenAddress, flows] of Object.entries(
+                aggregatedFlows,
+            )) {
                 if (tokenAddress !== zeroAddress && flows.outflow > 0n) {
                     return {
                         gasCostVTHO,
@@ -251,9 +252,12 @@ export const simulateSwapWithClauses = async (
             }
 
             // Verify no other tokens (including VET) have outflow
-            for (const [tokenAddress, flows] of Object.entries(aggregatedFlows)) {
+            for (const [tokenAddress, flows] of Object.entries(
+                aggregatedFlows,
+            )) {
                 if (tokenAddress !== fromTokenAddress && flows.outflow > 0n) {
-                    const tokenName = tokenAddress === zeroAddress ? 'VET' : tokenAddress;
+                    const tokenName =
+                        tokenAddress === zeroAddress ? 'VET' : tokenAddress;
                     return {
                         gasCostVTHO,
                         success: false,
@@ -307,5 +311,3 @@ export const simulateSwapWithClauses = async (
         };
     }
 };
-
-

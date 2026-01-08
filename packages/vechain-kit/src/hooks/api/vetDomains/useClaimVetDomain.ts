@@ -5,7 +5,7 @@ import {
 } from '@/hooks';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { useCallback } from 'react';
-import { IReverseRegistrar__factory } from '@hooks/contracts';
+import { VetDomainsReverseRegistrar__factory } from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '@/config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
@@ -28,7 +28,7 @@ type useClaimVetDomainReturnValue = {
     clauses: () => TransactionClause[];
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
-const ReverseRegistrarInterface = IReverseRegistrar__factory.createInterface();
+const ReverseRegistrarInterface = VetDomainsReverseRegistrar__factory.createInterface();
 
 export const buildVetDomainClauses = (
     domain: string,

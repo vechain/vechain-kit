@@ -1,4 +1,4 @@
-import { SocialLoginSmartAccountFactory__factory } from '@hooks/contracts';
+import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';

@@ -5,7 +5,7 @@ import { createApiAggregator } from './apiAggregator';
 import { VeTradeLogo } from '@/assets/icons';
 import React from 'react';
 import { TransactionClause, ABIContract, Clause, Address as VeChainAddress, VET, Units } from '@vechain/sdk-core';
-import { ERC20__factory } from '@hooks/contracts';
+import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { ThorClient } from '@vechain/sdk-network';
 import { simulateSwapWithClauses } from './simulateSwap';
 
@@ -108,7 +108,7 @@ export const createVeTradeAggregator = (networkType: NETWORK_TYPE): SwapAggregat
                 if (addresses.supportedAddresses.length === 0) {
                     throw new Error('No supported addresses configured for VeTrade on this network');
                 }
-                const tokenABI = ABIContract.ofAbi(ERC20__factory.abi);
+                const tokenABI = ABIContract.ofAbi(IERC20__factory.abi);
                 const fromTokenAddress = VeChainAddress.of(params.fromTokenAddress);
                 const amountIn = BigInt(params.amountIn);
 
