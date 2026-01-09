@@ -14,6 +14,8 @@ import {
     useWallet,
     useDAppKitWallet,
     useTotalBalance,
+    LocalStorageKey,
+    useLocalStorage,
 } from '@/hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
@@ -47,6 +49,7 @@ export const ProfileContent = ({
     const { hasAnyBalance, formattedBalance } = useTotalBalance({
         address: account?.address,
     });
+    const [showAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     const handleSwitchWallet = () => {
         if (isInAppBrowser) {
@@ -134,7 +137,12 @@ export const ProfileContent = ({
                                     address={account?.address ?? ''}
                                     maxIcons={2}
                                 />
-                                <Text fontWeight="600">{formattedBalance}</Text>
+                                <Text fontWeight="600">
+                                    {showAssets
+                                        ? formattedBalance
+                                        : formattedBalance[0] +
+                                          '*'.repeat(formattedBalance.slice(1).length)}
+                                </Text>
                             </HStack>
                         ) : (
                             t('Wallet')
