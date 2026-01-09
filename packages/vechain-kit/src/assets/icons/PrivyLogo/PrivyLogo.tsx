@@ -1,5 +1,6 @@
 import { Image, ImageProps } from '@chakra-ui/react';
 import React from 'react';
+import { PRIVY_MINTLIFY_ASSETS_S3_BASE_URL } from '@/constants';
 
 type Props = {
     isDark?: boolean;
@@ -10,8 +11,14 @@ export const PrivyLogo: React.FC<Props> = ({ isDark = false, ...props }) => {
         <Image
             src={
                 isDark
-                    ? 'https://mintlify.s3.us-west-1.amazonaws.com/privy-c2af3412/logo/privy-logo-dark.png'
-                    : 'https://mintlify.s3.us-west-1.amazonaws.com/privy-c2af3412/logo/privy-logo-light.png'
+                    ? new URL(
+                          '/privy-c2af3412/logo/privy-logo-dark.png',
+                          PRIVY_MINTLIFY_ASSETS_S3_BASE_URL,
+                      ).toString()
+                    : new URL(
+                          '/privy-c2af3412/logo/privy-logo-light.png',
+                          PRIVY_MINTLIFY_ASSETS_S3_BASE_URL,
+                      ).toString()
             }
             alt="Privy Logo"
             {...props}

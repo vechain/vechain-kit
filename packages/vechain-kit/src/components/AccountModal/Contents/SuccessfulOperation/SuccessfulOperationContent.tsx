@@ -81,9 +81,7 @@ export const SuccessfulOperationContent = ({
                             >
                                 {t('Share on')}
                             </Text>
-                            <ShareButtons
-                                descriptionEncoded={socialDescription}
-                            />
+                            <ShareButtons description={socialDescription} />
                         </VStack>
                     )}
                 </VStack>

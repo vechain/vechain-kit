@@ -23,4 +23,3 @@ export const BetterSwapLogo = ({ boxSize = '24px', ...props }: { boxSize?: strin
         </svg>
     );
 };
-
