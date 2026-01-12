@@ -8,9 +8,10 @@ import {
     ButtonProps,
     useToken,
 } from '@chakra-ui/react';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
 import React from 'react';
 import { CURRENCY } from '@/types';
+import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import {
     formatCompactCurrency,
     SupportedCurrency,
@@ -36,6 +37,7 @@ export const AssetButton = ({
 }: AssetButtonProps) => {
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
+    const [showAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     return (
         <Button
@@ -89,18 +91,18 @@ export const AssetButton = ({
             </HStack>
             <VStack align="flex-end" spacing={0}>
                 <Text color={textPrimary}>
-                    {amount.toLocaleString(undefined, {
+                    {showAssets ? amount.toLocaleString(undefined, {
                         maximumFractionDigits: 2,
-                    })}{' '}
+                    }) : '*'.repeat(4)}{' '}
                 </Text>
                 <Text
                     fontSize="sm"
                     color={textSecondary}
                     data-testid={`${symbol}-balance`}
                 >
-                    {formatCompactCurrency(currencyValue, {
+                    {showAssets ? formatCompactCurrency(currencyValue, {
                         currency: currentCurrency as SupportedCurrency,
-                    })}
+                    }) : '*'.repeat(4)}
                 </Text>
             </VStack>
         </Button>

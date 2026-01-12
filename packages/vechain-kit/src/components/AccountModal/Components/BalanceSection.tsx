@@ -4,16 +4,16 @@ import {
     HStack,
     Icon,
     IconButton,
-    Box,
     Button,
     useToken,
 } from '@chakra-ui/react';
-import { useRefreshBalances, useWallet, useTotalBalance } from '@/hooks';
+import { useRefreshBalances, useWallet, useTotalBalance, LocalStorageKey, useLocalStorage } from '@/hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LuRefreshCw } from 'react-icons/lu';
 import { AssetIcons } from '@/components/WalletButton/AssetIcons';
 import { LuChevronRight } from 'react-icons/lu';
+import { GoEye, GoEyeClosed } from 'react-icons/go';
 
 export const BalanceSection = ({
     mb,
@@ -41,14 +41,15 @@ export const BalanceSection = ({
             setIsRefreshing(false);
         }, 1500);
     };
+    const [showAssets, setShowAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     return (
         <VStack w="full" justifyContent={'start'} spacing={1} mt={mt} mb={mb}>
             <HStack
                 w={'full'}
-                justifyContent={'flex-start'}
+                justifyContent={'space-between'}
                 alignItems={'center'}
-                spacing={2}
+                spacing={0}
                 role="group"
             >
                 <Heading
@@ -62,12 +63,9 @@ export const BalanceSection = ({
                     {t('Assets')}
                 </Heading>
 
-                <Box
-                    display="flex"
+                <HStack
+                    spacing={0}
                     alignItems="center"
-                    justifyContent="center"
-                    w="32px"
-                    h="32px"
                 >
                     <IconButton
                         aria-label="Refresh balances"
@@ -86,7 +84,16 @@ export const BalanceSection = ({
                             },
                         }}
                     />
-                </Box>
+                    <IconButton
+                        aria-label="Show/hide assets"
+                        variant="ghost"
+                        size="sm"
+                        opacity={0.5}
+                        _hover={{ opacity: 0.8 }}
+                        onClick={() => setShowAssets(!showAssets)}
+                        icon={<Icon as={showAssets ? GoEye : GoEyeClosed} boxSize={4} />}
+                    />
+                </HStack>
             </HStack>
 
             <Button
@@ -103,7 +110,7 @@ export const BalanceSection = ({
                     mb={4}
                 >
                     <Heading size={'2xl'} fontWeight={'700'}>
-                        {formattedBalance}
+                        { showAssets ? formattedBalance : formattedBalance[0] + '*'.repeat(formattedBalance.slice(1).length) }
                     </Heading>
 
                     <HStack
