@@ -138,7 +138,8 @@ export const PrivyWalletProvider = ({
         const rawDelegateSigned = await signer.signTransaction(txInput);
 
         // publish the hexlified signed transaction directly on the node api
-        const { id } = (await fetch(`${nodeUrl}/transactions`, {
+        const transactionsUrl = new URL('transactions', nodeUrl);
+        const { id } = (await fetch(transactionsUrl, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -226,7 +227,7 @@ export const PrivyWalletProvider = ({
                 return simulatedTx1[i].vmError;
             }
         }
-        
+
          const txBody = await estimateAndBuildTxBody(
             clauses,
             thor,

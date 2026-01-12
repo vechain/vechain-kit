@@ -15,6 +15,11 @@ import { VECHAIN_PRIVY_APP_ID } from '../utils';
 import { defineChain } from 'viem';
 import { handlePopupError } from '@/utils/handlePopupError';
 import { isBrowser } from '@/utils/ssrUtils';
+import {
+    VECHAIN_EXPLORER_BASE_URL,
+    VECHAIN_MAINNET_NODE_BASE_URL,
+    VECHAINSTATS_BASE_URL,
+} from '@/constants';
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
@@ -22,17 +27,17 @@ export const vechain = defineChain({
     nativeCurrency: { name: 'VeChain', symbol: 'VET', decimals: 18 },
     rpcUrls: {
         default: {
-            http: ['https://mainnet.vechain.org'],
+            http: [VECHAIN_MAINNET_NODE_BASE_URL],
         },
     },
     blockExplorers: {
         default: {
             name: 'Vechain Explorer',
-            url: 'https://explore.vechain.org',
+            url: VECHAIN_EXPLORER_BASE_URL,
         },
         vechainStats: {
             name: 'Vechain Stats',
-            url: 'https://vechainstats.com',
+            url: VECHAINSTATS_BASE_URL,
         },
     },
 });

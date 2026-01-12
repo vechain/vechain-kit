@@ -45,7 +45,7 @@ const config: AppConfig = {
     gloDollarContractAddress: '0x0000000000000000000000000000000000000000',
     vetDomainAvatarUrl: 'https://testnet.vet.domains/api/avatar',
     indexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
-    b3trIndexerUrl: 'https://b3tr.testnet.vechain.org/api/v1',
+    b3trIndexerUrl: 'https://indexer.testnet.vechain.org/api/v1',
     graphQlIndexerUrl: 'https://graph.vet/subgraphs/name/vns',
     nodeUrl: 'https://testnet.vechain.org',
     network: {

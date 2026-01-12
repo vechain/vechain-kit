@@ -14,8 +14,21 @@ import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallback } from 'react';
 
-export const estimateGas = async (signerAddress: string, genericDelegatorUrl: string, clauses: any[], token: GasTokenType, speed: TransactionSpeed) => {
-    const response = await fetch(genericDelegatorUrl + 'estimate/clauses/' + token.toLowerCase() + '?type=smartaccount&speed=' + speed, {
+export const estimateGas = async (
+    signerAddress: string,
+    genericDelegatorUrl: string,
+    clauses: any[],
+    token: GasTokenType,
+    speed: TransactionSpeed,
+) => {
+    const estimateUrl = new URL(
+        `estimate/clauses/${token.toLowerCase()}`,
+        genericDelegatorUrl,
+    );
+    estimateUrl.searchParams.set('type', 'smartaccount');
+    estimateUrl.searchParams.set('speed', speed);
+
+    const response = await fetch(estimateUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -27,10 +40,13 @@ export const estimateGas = async (signerAddress: string, genericDelegatorUrl: st
     });
     const data = await response.json();
     return data;
-}
+};
 
-export const getDepositAccount = async (genericDelegatorUrl: string): Promise<DepositAccount> => {
-    const response = await fetch(genericDelegatorUrl + 'deposit/account', {
+export const getDepositAccount = async (
+    genericDelegatorUrl: string,
+): Promise<DepositAccount> => {
+    const depositAccountUrl = new URL('deposit/account', genericDelegatorUrl);
+    const response = await fetch(depositAccountUrl, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -38,10 +54,14 @@ export const getDepositAccount = async (genericDelegatorUrl: string): Promise<De
     });
     const data = await response.json();
     return data;
-}
+};
 
 export const delegateAuthorized = async (encodedSignedTx: string, origin: string, token: GasTokenType, genericDelegatorUrl: string) => {
-    const response = await fetch(genericDelegatorUrl + 'sign/transaction/authorized/' + token.toLowerCase(), {
+    const delegateAuthorizedUrl = new URL(
+        `sign/transaction/authorized/${token.toLowerCase()}`,
+        genericDelegatorUrl,
+    );
+    const response = await fetch(delegateAuthorizedUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -49,7 +69,7 @@ export const delegateAuthorized = async (encodedSignedTx: string, origin: string
         body: JSON.stringify({
             raw: encodedSignedTx,
             origin: origin,
-            token: token.toLowerCase()
+            token: token.toLowerCase(),
         }),
     });
     const data = await response.json();
