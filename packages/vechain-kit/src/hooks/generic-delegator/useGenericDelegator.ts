@@ -6,7 +6,7 @@ import {
 import * as nc_utils from '@noble/curves/abstract/utils';
 import { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, Wallet } from '@/types';
 import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '@/hooks';
-import { ERC20__factory } from '@hooks/contracts';
+import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { parseEther } from 'viem';
 import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '@/utils';
 import { ThorClient } from '@vechain/sdk-network';
@@ -120,7 +120,7 @@ export const useGenericDelegator = () => {
         connectedWallet?.address ?? '',
     );
     const { preferences } = useGasTokenSelection();
-    const ERC20Interface = ERC20__factory.createInterface();
+    const ERC20Interface = IERC20__factory.createInterface();
     const { network } = useVeChainKitConfig();
     const { buildClausesWithAuth } = useBuildClauses();
     const thor = ThorClient.at(getConfig(network.type).nodeUrl);
