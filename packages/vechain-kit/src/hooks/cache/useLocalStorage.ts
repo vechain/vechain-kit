@@ -8,6 +8,7 @@ export enum LocalStorageKey {
     NODE_URL = 'vechain_kit_node_url',
     NETWORK = 'vechain_kit_network',
     GAS_TOKEN_PREFERENCES = 'vechain_kit_gas_token_preferences',
+    SHOW_ASSETS = 'vechain_kit_show_assets',
 }
 
 export const useLocalStorage = <T>(key: LocalStorageKey, initialValue: T) => {
