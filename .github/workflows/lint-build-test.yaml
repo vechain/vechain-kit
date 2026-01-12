@@ -1,41 +1,78 @@
-name: Lint & Build
+name: Lint & Build & Compare package sizes
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+  # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
+  pull_request_target:
+    types: [labeled, opened, synchronize, reopened]
+    branches:
+        - main
 
 concurrency:
-    group: ${{ github.head_ref || github.ref_name }}-build-test-scan
-    cancel-in-progress: true
+  group: ${{ github.head_ref || github.ref_name }}-lint-build-test
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-    build-and-test:
-        runs-on: ubuntu-latest
-        name: Lint & Build
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+  # Job 1: Post instruction comment for external PRs
+  comment-external-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    if: |
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      github.event.action == 'opened'
+    steps:
+      - name: Comment on external PR
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## 👋 Thanks for your contribution!
 
-            - name: Setup Node
-              uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-              with:
-                  node-version-file: .nvmrc
-                  cache: 'yarn'
+            Since this PR comes from a forked repository, the lint and build will only run for internal PRs for security reasons.
+            Please ensure that your PR is coming from a meaningful branch name. Eg. feature/my-feature **not main**
 
-            - name: Install
-              run: yarn && yarn install:all
-              env:
-                  NODE_OPTIONS: '--max-old-space-size=4096'
+                      **Next steps:**
+                      1. A maintainer will review your code
+                      2. If approved, they'll add the `safe-to-build` label to trigger build and test
+                      3. **After each new commit**, the maintainer will need to remove and re-add the label for security
 
-            - name: Lint
-              run: yarn run lint
-              env:
-                  NODE_OPTIONS: '--max-old-space-size=4096'
+            Thank you for your patience! 🙏
 
-            - name: Build
-              run: yarn run build
-              env:
-                  NODE_OPTIONS: '--max-old-space-size=4096'
+  # Job 2: Build, Lint and Compare package sizes
+  build-and-test-job:
+    runs-on: ubuntu-latest
+    name: Lint & Build & Compare package sizes
+    if: |
+      (github.event.label.name == 'safe-to-build') ||
+      (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install
+        run: yarn && yarn install:all
+
+      - name: Build
+        run: yarn build
+      - name: Compare package sizes
+        uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: "packages/vechain-kit/dist/**/*"
+          exclude: "{**/node_modules/**}"
+          compression: none
+          minimum-change-threshold: 1000
+      - name: Lint
+        run: yarn lint
