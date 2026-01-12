@@ -6,7 +6,8 @@
     "workspaces": [
         "examples/*",
         "!examples/test-tailwind-vck",
-        "packages/*"
+        "packages/*",
+        "lambda"
     ],
     "keywords": [
         "vechain",
@@ -95,6 +96,7 @@
         "wrap-ansi": "7.0.0",
         "elliptic": "6.6.1",
         "es-toolkit": "1.39.4",
-        "next": "15.5.7"
+        "next": "15.5.9",
+        "preact": "10.27.3"
     }
 }
