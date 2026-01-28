@@ -18,7 +18,7 @@ import {
     GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { getPicassoImage } from '@/utils';
+import { getPicassoImage } from '../../../../utils';
 import {
     useTransferERC20,
     useTransferVET,

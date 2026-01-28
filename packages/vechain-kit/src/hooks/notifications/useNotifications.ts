@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useWallet } from '@/hooks';
 import { Notification } from './types';
 import { DEFAULT_NOTIFICATIONS } from './useNotificationAlerts';
-import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '@/utils/ssrUtils';
+import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '../../utils/ssrUtils';
 
 export const useNotifications = () => {
     const { account } = useWallet();

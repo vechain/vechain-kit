@@ -1,4 +1,4 @@
-import { TIME } from '@/utils';
+import { TIME } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 

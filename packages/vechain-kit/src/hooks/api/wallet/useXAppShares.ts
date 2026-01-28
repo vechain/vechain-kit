@@ -3,7 +3,7 @@ import { XAllocationPool__factory } from '@vechain/vechain-contract-types';
 import { getConfig } from '@/config';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
-import { executeMultipleClausesCall } from '@/utils';
+import { executeMultipleClausesCall } from '../../../utils';
 
 const abi = XAllocationPool__factory.abi;
 const method = 'getAppShares' as const;

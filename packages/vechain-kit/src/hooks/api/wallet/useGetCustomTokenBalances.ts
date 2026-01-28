@@ -3,7 +3,7 @@ import { useCustomTokens } from '@/hooks';
 import { type CustomTokenInfo, getErc20Balance } from '@vechain/contract-getters';
 import type { TokenBalance } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';
-import { formatTokenBalance } from '@/utils';
+import { formatTokenBalance } from '../../../utils';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;
 

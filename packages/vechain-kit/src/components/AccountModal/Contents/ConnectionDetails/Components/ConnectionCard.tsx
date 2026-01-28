@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import type { CrossAppConnectionCache } from '../../../../../types';
 import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
 import packageJson from '../../../../../../package.json';
-import { humanAddress } from '@/utils';
+import { humanAddress } from '../../../../../utils';
 import { LuCheck, LuCopy } from 'react-icons/lu';
 
 // Get DAppKit version from package.json (this is the version constraint, not the installed version)

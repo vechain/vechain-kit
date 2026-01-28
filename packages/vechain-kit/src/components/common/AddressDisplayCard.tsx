@@ -6,7 +6,7 @@ import {
     Skeleton,
     useToken,
 } from '@chakra-ui/react';
-import { humanAddress } from '@/utils';
+import { humanAddress } from '../../utils';
 import { useTotalBalance, useTokensWithValues } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';

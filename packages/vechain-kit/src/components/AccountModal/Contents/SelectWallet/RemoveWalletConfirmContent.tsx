@@ -12,7 +12,7 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { LuTrash2 } from 'react-icons/lu';
-import { humanAddress, humanDomain } from '@/utils';
+import { humanAddress, humanDomain } from '../../../../utils';
 import { useWalletMetadata } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 

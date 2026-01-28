@@ -4,7 +4,7 @@ import {
     useGetTextRecords,
     useGetAvatarOfAddress,
 } from '@/hooks';
-import { convertUriToUrl } from '@/utils';
+import { convertUriToUrl } from '../../../utils';
 import type { ENSRecords } from '../../../types';
 
 export const useWalletMetadata = (

@@ -9,7 +9,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
-import { copyToClipboard } from '@/utils/ssrUtils';
+import { copyToClipboard } from '../../../utils/ssrUtils';
 import type { Wallet } from '../../../types';
 import {
     LuChevronRight,

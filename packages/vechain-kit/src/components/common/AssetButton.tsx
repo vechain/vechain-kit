@@ -8,14 +8,14 @@ import {
     ButtonProps,
     useToken,
 } from '@chakra-ui/react';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../utils/constants';
 import React from 'react';
 import type { CURRENCY } from '../../types';
 import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import {
     formatCompactCurrency,
     SupportedCurrency,
-} from '@/utils/currencyUtils';
+} from '../../utils/currencyUtils';
 
 type AssetButtonProps = ButtonProps & {
     symbol: string;

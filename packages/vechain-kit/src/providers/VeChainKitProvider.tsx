@@ -1,9 +1,9 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import type { CURRENCY, PrivyLoginMethod } from '../types';
-import { isValidUrl } from '@/utils';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
-import { initializeI18n } from '@/utils/i18n';
+import { isValidUrl } from '../utils';
+import { getLocalStorageItem, setLocalStorageItem } from '../utils/ssrUtils';
+import { initializeI18n } from '../utils/i18n';
 import {
     LoginMethodOrderOption,
     NonEmptyArray,
@@ -39,7 +39,7 @@ import {
     applyPrivyCSSVariables,
     applyDAppKitButtonStyles,
     improvePrivyReadability,
-} from '@/utils/cssVariables';
+} from '../utils/cssVariables';
 
 import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
@@ -49,7 +49,7 @@ import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
     getGenericDelegatorUrl,
-} from '@/utils/constants';
+} from '../utils/constants';
 import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';

@@ -2,7 +2,7 @@
 
 import { useThor } from '@vechain/dapp-kit-react';
 import { useQuery } from '@tanstack/react-query';
-import { TIME } from '@/utils';
+import { TIME } from '../../../utils';
 
 const BLOCK_GENERATION_INTERVAL = 10 * TIME.SECOND;
 

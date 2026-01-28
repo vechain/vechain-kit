@@ -32,7 +32,7 @@ import { useUpdateTextRecord } from '@/hooks';
 import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 import { useQueryClient } from '@tanstack/react-query';
-import { convertUriToUrl } from '@/utils';
+import { convertUriToUrl } from '../../../../../utils';
 import type { GasTokenType } from '../../../../../types/gasToken';
 import { LuFileText } from 'react-icons/lu';
 

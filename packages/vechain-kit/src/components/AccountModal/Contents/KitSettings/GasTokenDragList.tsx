@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { LuGripVertical } from 'react-icons/lu';
 import type { GasTokenType } from '../../../../types/gasToken';
-import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
+import { SUPPORTED_GAS_TOKENS } from '../../../../utils/constants';
 import { useVeChainKitConfig } from '@/providers';
 
 interface DragListProps {

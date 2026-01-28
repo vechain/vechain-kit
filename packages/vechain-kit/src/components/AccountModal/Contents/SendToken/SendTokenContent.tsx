@@ -21,7 +21,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useForm } from 'react-hook-form';
@@ -36,7 +36,7 @@ import {
     formatCompactCurrency,
     SupportedCurrency,
     convertToSelectedCurrency,
-} from '@/utils/currencyUtils';
+} from '../../../../utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 

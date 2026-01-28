@@ -24,7 +24,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
 import { LuLogOut, LuPlus } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { simpleHash } from '@/utils';
+import { simpleHash } from '../../../../utils';
 
 const hashWallets = (wallets: StoredWallet[]): string => {
     const addresses = wallets

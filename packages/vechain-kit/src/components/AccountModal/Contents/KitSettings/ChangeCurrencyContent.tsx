@@ -22,7 +22,7 @@ import { useCurrency } from '@/hooks';
 import { LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
-import { setLocalStorageItem } from '@/utils/ssrUtils';
+import { setLocalStorageItem } from '../../../../utils/ssrUtils';
 
 export type ChangeCurrencyContentProps = {
     setCurrentContent: React.Dispatch<

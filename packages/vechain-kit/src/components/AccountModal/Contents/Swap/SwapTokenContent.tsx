@@ -39,20 +39,20 @@ import {
 import { SelectQuoteContent } from './SelectQuoteContent';
 import type { SwapQuote } from '../../../../types/swap';
 import { useVeChainKitConfig } from '@/providers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { formatUnits, parseUnits } from 'viem';
 import { getConfig } from '@/config';
-import { compareAddresses } from '@/utils';
+import { compareAddresses } from '../../../../utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
-import { formatCompactCurrency } from '@/utils/currencyUtils';
+import { formatCompactCurrency } from '../../../../utils/currencyUtils';
 import {
     convertToSelectedCurrency,
     SupportedCurrency,
-} from '@/utils/currencyUtils';
+} from '../../../../utils/currencyUtils';
 import { useTokenPrices } from '@/hooks';
 import type { GasTokenType } from '../../../../types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
-import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
+import { extractSwapAmounts } from '../../../../utils/swap/extractSwapAmounts';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 type Props = {

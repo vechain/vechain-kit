@@ -1,5 +1,5 @@
 import { useWallet } from '@/hooks';
-import { humanAddress, humanDomain } from '@/utils';
+import { humanAddress, humanDomain } from '../../utils';
 import { HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 
 import { AssetIcons } from './AssetIcons';

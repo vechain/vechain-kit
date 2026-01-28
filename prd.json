@@ -1,0 +1,136 @@
+{
+    "project": "VeChain Kit",
+    "branchName": "ralph/direct-imports",
+    "description": "Convert @/ path alias imports to direct relative imports for better tree-shaking and reduced bundle size",
+    "userStories": [
+        {
+            "id": "US-001",
+            "title": "Convert @/types imports to relative imports",
+            "description": "As a developer, I need type imports converted to direct paths for better tree-shaking.",
+            "acceptanceCriteria": [
+                "Find all imports matching 'from '@/types' in packages/vechain-kit/src/",
+                "Convert each to relative path (e.g., from '@/types' to '../../types' based on file location)",
+                "Use 'import type' syntax where only types are imported",
+                "Approximately 69 imports to convert",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 1,
+            "passes": true,
+            "notes": "Converted 69 @/types imports across 50+ files to relative paths. Used 'import type' syntax for type-only imports where appropriate. Typecheck passes successfully."
+        },
+        {
+            "id": "US-002",
+            "title": "Convert @/utils imports to relative imports",
+            "description": "As a developer, I need utility imports converted to direct paths.",
+            "acceptanceCriteria": [
+                "Find all imports matching 'from '@/utils' in packages/vechain-kit/src/",
+                "Convert each to relative path based on file location",
+                "Approximately 98 imports to convert",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 2,
+            "passes": true,
+            "notes": "Converted 98 @/utils imports across 60+ files to relative paths. Imports include @/utils, @/utils/constants, @/utils/ssrUtils, @/utils/currencyUtils, @/utils/dateUtils, @/utils/stringUtils, @/utils/ipfs, @/utils/thorUtils, @/utils/uri, @/utils/swap/*. Relative paths calculated based on file location depth (e.g., ../../utils for files 2 levels deep). Typecheck passes successfully."
+        },
+        {
+            "id": "US-003",
+            "title": "Convert @/config imports to relative imports",
+            "description": "As a developer, I need config imports converted to direct paths.",
+            "acceptanceCriteria": [
+                "Find all imports matching 'from '@/config' in packages/vechain-kit/src/",
+                "Convert each to relative path based on file location",
+                "Approximately 74 imports to convert",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 3,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-004",
+            "title": "Convert @/hooks imports to relative imports",
+            "description": "As a developer, I need hook imports converted to direct paths.",
+            "acceptanceCriteria": [
+                "Find all imports matching 'from '@/hooks' in packages/vechain-kit/src/",
+                "Convert each to relative path based on file location",
+                "Approximately 133 imports to convert",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 4,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-005",
+            "title": "Convert @/providers imports to relative imports",
+            "description": "As a developer, I need provider imports converted to direct paths.",
+            "acceptanceCriteria": [
+                "Find all imports matching 'from '@/providers' in packages/vechain-kit/src/",
+                "Convert each to relative path based on file location",
+                "Approximately 126 imports to convert",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 5,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-006",
+            "title": "Convert @/components imports to relative imports",
+            "description": "As a developer, I need component imports converted to direct paths.",
+            "acceptanceCriteria": [
+                "Find all imports matching 'from '@/components' in packages/vechain-kit/src/",
+                "Convert each to relative path based on file location",
+                "Approximately 79 imports to convert",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 6,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-007",
+            "title": "Convert remaining @/ imports (constants, assets, theme)",
+            "description": "As a developer, I need remaining alias imports converted.",
+            "acceptanceCriteria": [
+                "Convert all 'from '@/constants' imports (~14)",
+                "Convert all 'from '@/assets' imports (~10)",
+                "Convert all 'from '@/theme' imports (~6)",
+                "All imports resolve correctly",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 7,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-008",
+            "title": "Verify no @/ imports remain and test build",
+            "description": "As a developer, I need to verify all conversions are complete.",
+            "acceptanceCriteria": [
+                "Run: grep -r \"from '@/\" src/ - must return zero results",
+                "Build completes without errors (yarn kit:build)",
+                "Typecheck passes (yarn kit:typecheck)",
+                "Make a final git commit summarizing the conversion"
+            ],
+            "priority": 8,
+            "passes": false,
+            "notes": ""
+        },
+        {
+            "id": "US-009",
+            "title": "Measure bundle size improvement",
+            "description": "As a developer, I need to verify bundle size improved.",
+            "acceptanceCriteria": [
+                "Run bundle analysis (yarn analyze)",
+                "Previous baseline: 577.96 KB minified, 169.93 KB gzipped",
+                "Document new bundle size in tasks/bundle-analysis.md",
+                "Note percentage change (target: at least 10% reduction)",
+                "Typecheck passes (yarn kit:typecheck)"
+            ],
+            "priority": 9,
+            "passes": false,
+            "notes": ""
+        }
+    ]
+}

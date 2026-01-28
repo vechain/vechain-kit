@@ -20,7 +20,7 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useCurrency } from '@/hooks';
-import { SupportedCurrency } from '@/utils/currencyUtils';
+import { SupportedCurrency } from '../../../../utils/currencyUtils';
 
 type Props = {
     setCurrentContent: React.Dispatch<

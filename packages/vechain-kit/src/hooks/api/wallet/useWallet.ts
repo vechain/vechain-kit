@@ -14,7 +14,7 @@ import {
     useSmartAccount,
     useCrossAppConnectionCache,
 } from '@/hooks';
-import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
+import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
@@ -23,7 +23,7 @@ import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
-import { isBrowser } from '@/utils/ssrUtils';
+import { isBrowser } from '../../../utils/ssrUtils';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit

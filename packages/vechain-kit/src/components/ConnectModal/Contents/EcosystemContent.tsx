@@ -16,7 +16,7 @@ import { useCrossAppConnectionCache } from '@/hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useTranslation } from 'react-i18next';
 import type { PrivyAppInfo } from '../../../types';
-import { isRejectionError } from '@/utils/stringUtils';
+import { isRejectionError } from '../../../utils/stringUtils';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 type Props = {
     onClose: () => void;

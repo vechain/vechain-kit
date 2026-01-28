@@ -40,7 +40,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { useVeChainKitConfig } from '@/providers';
-import { humanAddress } from '@/utils';
+import { humanAddress } from '../../../../utils';
 
 type ConfirmUnlinkProps = {
     accountType: string;

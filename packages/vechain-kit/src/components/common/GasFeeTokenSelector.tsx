@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { GasTokenType } from '../../types/gasToken';
-import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
+import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '../../utils/constants';
 import { formatGasCost } from '../../types/gasEstimation';
 import { useTokenBalances } from '@/hooks';
 import { BaseModal } from './BaseModal';

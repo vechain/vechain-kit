@@ -13,8 +13,8 @@ import {
 import { SignTypedDataParameters } from '@wagmi/core';
 import { VECHAIN_PRIVY_APP_ID } from '../utils';
 import { defineChain } from 'viem';
-import { handlePopupError } from '@/utils/handlePopupError';
-import { isBrowser } from '@/utils/ssrUtils';
+import { handlePopupError } from '../utils/handlePopupError';
+import { isBrowser } from '../utils/ssrUtils';
 import {
     VECHAIN_EXPLORER_BASE_URL,
     VECHAIN_MAINNET_NODE_BASE_URL,

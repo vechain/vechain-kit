@@ -25,7 +25,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { LuSearch } from 'react-icons/lu';
 import { useState } from 'react';
 import { useCurrency } from '@/hooks';
-import { SupportedCurrency } from '@/utils/currencyUtils';
+import { SupportedCurrency } from '../../../../utils/currencyUtils';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type AssetsContentProps = {

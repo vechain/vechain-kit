@@ -22,7 +22,7 @@ import { LuChevronRight, LuCamera, LuSquareUser } from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '@/hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
-import { uploadBlobToIPFS } from '@/utils/ipfs';
+import { uploadBlobToIPFS } from '../../../../../utils/ipfs';
 import { AccountAvatar } from '@/components/common';
 import { DomainRequiredAlert } from '../../../Components/Alerts';
 import { AccountModalContentTypes } from '../../../Types';

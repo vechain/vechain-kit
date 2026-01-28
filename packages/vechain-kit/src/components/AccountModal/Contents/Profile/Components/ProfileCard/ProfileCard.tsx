@@ -11,7 +11,7 @@ import { AccountAvatar, AddressDisplay } from '@/components/common';
 import { useWalletMetadata } from '@/hooks';
 import { LuMail, LuGlobe, LuPencil } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
-import { getPicassoImage } from '@/utils';
+import { getPicassoImage } from '../../../../../../utils';
 import { useVeChainKitConfig } from '@/providers';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 

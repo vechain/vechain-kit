@@ -9,7 +9,7 @@ import {
     Tag,
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
-import { humanAddress, humanDomain } from '@/utils';
+import { humanAddress, humanDomain } from '../../../utils';
 import { useTranslation } from 'react-i18next';
 import type { Wallet } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';

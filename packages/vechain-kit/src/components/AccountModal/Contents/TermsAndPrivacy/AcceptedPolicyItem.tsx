@@ -1,6 +1,6 @@
 import type { LegalDocumentAgreement } from '../../../../types';
 import { LegalDocumentSource, LegalDocumentType } from '../../../../types';
-import { formatDate } from '@/utils/dateUtils';
+import { formatDate } from '../../../../utils/dateUtils';
 import { HStack, Tag, Text, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 

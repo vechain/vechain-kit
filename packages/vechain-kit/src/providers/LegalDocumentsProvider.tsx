@@ -9,14 +9,14 @@ import {
     LegalDocumentSource,
     LegalDocumentType,
 } from '../types';
-import { compareAddresses } from '@/utils';
+import { compareAddresses } from '../utils';
 import {
     createDocumentRecords,
     formatDocuments,
     getOptionalDocuments,
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
-} from '@/utils/legalDocumentsUtils';
+} from '../utils/legalDocumentsUtils';
 import {
     createContext,
     ReactNode,

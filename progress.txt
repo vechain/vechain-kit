@@ -1,0 +1,102 @@
+# Progress Log
+
+## Feature: Convert Path Aliases to Direct Relative Imports
+
+Branch: ralph/direct-imports
+
+**Goal:** Convert all `@/` path alias imports to relative imports for better tree-shaking.
+
+**Scope:** ~609 imports across the codebase
+
+| Category | Count |
+|----------|-------|
+| hooks | ~133 |
+| providers | ~126 |
+| utils | ~98 |
+| components | ~79 |
+| config | ~74 |
+| types | ~69 |
+| constants | ~14 |
+| assets | ~10 |
+| theme | ~6 |
+
+---
+
+## US-001: Convert @/types imports to relative imports ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 69 `@/types` imports across 50+ files to relative paths
+- Used `import type` syntax for type-only imports where appropriate
+- Relative paths calculated based on file location depth:
+  - `../types` for files 1 level deep
+  - `../../types` for files 2 levels deep
+  - `../../../types` for files 3 levels deep
+  - etc.
+
+**Files modified:**
+- config/swapAggregators.ts
+- utils/constants.tsx, legalDocumentsUtils.ts
+- utils/swap/apiAggregator.ts, betterSwap.tsx, simulateSwap.ts, uniswapV2Aggregator.ts, veTrade.tsx
+- providers/LegalDocumentsProvider.tsx, PrivyWalletProvider.tsx, VeChainKitProvider.tsx
+- hooks/generic-delegator/*.ts
+- hooks/thor/transactions/*.ts
+- hooks/api/privy/*.ts, ipfs/*.ts, swap/*.ts, vetDomains/*.ts, wallet/*.ts
+- hooks/cache/*.ts, utils/*.ts
+- components/AccountModal/*, TransactionModal/*, TransactionToast/*, ConnectModal/*, LegalDocumentsModal/*
+- components/common/*.tsx
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/types` imports remain in codebase ✅
+
+---
+
+## US-002: Convert @/utils imports to relative imports ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 98 `@/utils` imports across 60+ files to relative paths
+- Import patterns converted:
+  - `@/utils` → relative path to utils/index.ts
+  - `@/utils/constants` → relative path to utils/constants
+  - `@/utils/ssrUtils` → relative path to utils/ssrUtils
+  - `@/utils/currencyUtils` → relative path to utils/currencyUtils
+  - `@/utils/dateUtils` → relative path to utils/dateUtils
+  - `@/utils/stringUtils` → relative path to utils/stringUtils
+  - `@/utils/ipfs` → relative path to utils/ipfs
+  - `@/utils/thorUtils` → relative path to utils/thorUtils
+  - `@/utils/uri` → relative path to utils/uri
+  - `@/utils/swap/*` → relative path to utils/swap/*
+- Relative paths calculated based on file location depth
+
+**Files modified:**
+- hooks/generic-delegator/useGenericDelegator.ts, useGasTokenSelection.ts
+- hooks/utils/useFeatureAnnouncement.ts, useAppHubApps.ts, useCurrency.ts, useCallClause.ts, useIsPwa.ts
+- hooks/login/useLoginWithVeChain.ts
+- hooks/api/privy/useFetchAppInfo.ts
+- hooks/api/vetDomains/*.ts
+- hooks/api/wallet/*.ts
+- hooks/api/ipfs/*.ts
+- hooks/cache/*.ts
+- hooks/modals/useLoginModalContent.ts
+- hooks/notifications/useNotifications.ts
+- hooks/thor/blocks/useCurrentBlock.ts
+- hooks/thor/smartAccounts/*.ts
+- hooks/thor/transactions/*.ts
+- providers/VeChainKitProvider.tsx, PrivyCrossAppProvider.tsx, ModalProvider.tsx, LegalDocumentsProvider.tsx, VechainKitThemeProvider.tsx
+- config/swapAggregators.ts
+- components/WalletButton/*.tsx
+- components/ConnectModal/Contents/*.tsx
+- components/AccountModal/Components/*.tsx
+- components/AccountModal/Contents/**/*.tsx
+- components/common/*.tsx
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/utils` imports remain in codebase (except README.md documentation) ✅
+
+---
+

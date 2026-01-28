@@ -24,7 +24,7 @@ import {
 } from 'ethers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
-import { convertUriToUrl } from '@/utils/uri';
+import { convertUriToUrl } from '../../../utils/uri';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',

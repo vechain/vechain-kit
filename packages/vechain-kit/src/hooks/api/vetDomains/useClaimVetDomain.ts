@@ -11,7 +11,7 @@ import { getConfig } from '@/config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
-import { humanAddress } from '@/utils';
+import { humanAddress } from '../../../utils';
 import type { Wallet } from '../../../types';
 import { TransactionClause } from '@vechain/sdk-core';
 

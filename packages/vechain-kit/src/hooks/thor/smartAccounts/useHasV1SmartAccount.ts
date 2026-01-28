@@ -5,7 +5,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { getConfig } from '@/config';
 import { ThorClient } from '@vechain/sdk-network';
-import { executeCallClause } from '@/utils/thorUtils';
+import { executeCallClause } from '../../../utils/thorUtils';
 
 const abi = SocialLoginSmartAccountFactory__factory.abi;
 const method = 'hasLegacyAccount' as const;

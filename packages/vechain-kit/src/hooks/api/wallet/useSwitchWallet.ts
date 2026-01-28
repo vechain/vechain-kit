@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useDAppKitWallet, useWallet } from '@/hooks';
 import { useWalletStorage, StoredWallet } from './useWalletStorage';
-import { isBrowser } from '@/utils/ssrUtils';
+import { isBrowser } from '../../../utils/ssrUtils';
 
 export type UseSwitchWalletReturnType = {
     switchWallet: () => Promise<void>;

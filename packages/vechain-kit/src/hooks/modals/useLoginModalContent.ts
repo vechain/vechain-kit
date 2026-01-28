@@ -1,5 +1,5 @@
 import { useVeChainKitConfig } from '@/providers';
-import { VECHAIN_PRIVY_APP_ID } from '@/utils';
+import { VECHAIN_PRIVY_APP_ID } from '../../utils';
 import { useMemo } from 'react';
 
 type LoginModalContentConfig = {

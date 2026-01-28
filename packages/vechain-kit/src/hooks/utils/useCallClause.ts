@@ -3,7 +3,7 @@ import {
     executeMultipleClausesCall,
     MultipleClausesCallParameters,
     ViewFunctionResult,
-} from '@/utils';
+} from '../../utils';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { ThorClient } from '@vechain/sdk-network';
@@ -13,7 +13,7 @@ import {
 } from 'abitype';
 import { Abi, ContractFunctionParameters } from 'viem';
 
-export * from '@/utils/thorUtils';
+export * from '../../utils/thorUtils';
 
 type ExtractViewFunction<
     TAbi extends Abi,

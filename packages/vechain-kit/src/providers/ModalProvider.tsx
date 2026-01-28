@@ -14,7 +14,7 @@ import {
     UpgradeSmartAccountModalStyle,
 } from '../components';
 import { useDAppKitWallet } from '@/hooks';
-import { isBrowser } from '@/utils/ssrUtils';
+import { isBrowser } from '../utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 

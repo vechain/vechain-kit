@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { AllowedCategories } from '../../types';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
+import { getLocalStorageItem, setLocalStorageItem } from '../../utils/ssrUtils';
 import {
     APP_HUB_GITHUB_API_BASE_URL,
     APP_HUB_GITHUB_RAW_REPO_BASE_URL,

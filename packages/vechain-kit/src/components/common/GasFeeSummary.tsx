@@ -14,7 +14,7 @@ import { LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import type { GasTokenType } from '../../types/gasToken';
-import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
+import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '../../utils/constants';
 import { formatGasCost } from '../../types/gasEstimation';
 import {
     useWallet,

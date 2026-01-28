@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
+import { getLocalStorageItem, setLocalStorageItem } from '../../utils/ssrUtils';
 
 export const useFeatureAnnouncement = () => {
     const [isVisible, setIsVisible] = useState(true);

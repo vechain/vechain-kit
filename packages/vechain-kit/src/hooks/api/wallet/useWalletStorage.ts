@@ -6,7 +6,7 @@ import {
     setLocalStorageItem,
     removeLocalStorageItem,
     isBrowser,
-} from '@/utils/ssrUtils';
+} from '../../../utils/ssrUtils';
 
 export type StoredWallet = {
     address: string;

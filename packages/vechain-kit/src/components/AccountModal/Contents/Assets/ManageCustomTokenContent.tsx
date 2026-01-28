@@ -19,7 +19,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { useCustomTokens } from '@/hooks/api/wallet/useCustomTokens';
-import { humanAddress, TOKEN_LOGOS } from '@/utils';
+import { humanAddress, TOKEN_LOGOS } from '../../../../utils';
 import { LuTrash2 } from 'react-icons/lu';
 
 export type ManageCustomTokenContentProps = {

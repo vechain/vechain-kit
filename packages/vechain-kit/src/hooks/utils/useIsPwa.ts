@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { isBrowser } from '@/utils/ssrUtils';
+import { isBrowser } from '../../utils/ssrUtils';
 
 export const useIsPWA = () => {
     // set to true by default to avoid flickering

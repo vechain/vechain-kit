@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { LuChevronDown, LuChevronUp, LuCheck } from 'react-icons/lu';
 
 import type { EnrichedLegalDocument, LegalDocumentAgreement } from '../../../../types';
-import { formatDate } from '@/utils/dateUtils';
+import { formatDate } from '../../../../utils/dateUtils';
 import { AcceptedPolicyItem } from './AcceptedPolicyItem';
 
 type PolicyAccordionProps = {

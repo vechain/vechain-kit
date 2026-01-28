@@ -3,7 +3,7 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
-import { humanAddress, isValidAddress } from '@/utils';
+import { humanAddress, isValidAddress } from '../../../utils';
 import { useMemo } from 'react';
 import { parseEther } from 'viem';
 import type { EnhancedClause } from '../../../types';

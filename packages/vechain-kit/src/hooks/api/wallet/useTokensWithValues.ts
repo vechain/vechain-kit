@@ -4,7 +4,7 @@ import { useTokenPrices } from './useTokenPrices';
 import {
     SupportedCurrency,
     convertToSelectedCurrency,
-} from '@/utils/currencyUtils';
+} from '../../../utils/currencyUtils';
 import { useCurrency } from '../../utils/useCurrency';
 
 export type TokenWithValue = WalletTokenBalance & {

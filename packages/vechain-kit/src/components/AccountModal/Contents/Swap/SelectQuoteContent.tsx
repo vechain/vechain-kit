@@ -20,11 +20,11 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
-import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } from '@/utils/currencyUtils';
+import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } from '../../../../utils/currencyUtils';
 import { useCurrency, useTokensWithValues, useWallet } from '@/hooks';
 import { useTokenPrices } from '@/hooks';
 import { useState, useMemo } from 'react';
-import { TOKEN_LOGO_COMPONENTS, TOKEN_LOGOS, compareAddresses } from '@/utils';
+import { TOKEN_LOGO_COMPONENTS, TOKEN_LOGOS, compareAddresses } from '../../../../utils';
 import React from 'react';
 
 type Props = {
