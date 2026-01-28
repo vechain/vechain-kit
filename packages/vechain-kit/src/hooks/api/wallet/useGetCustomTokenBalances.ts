@@ -1,5 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
-import { useCustomTokens } from '../../';
+// Direct import to avoid circular dependency through barrel exports
+import { useCustomTokens } from './useCustomTokens';
 import { type CustomTokenInfo, getErc20Balance } from '@vechain/contract-getters';
 import type { TokenBalance } from '../../../types';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';

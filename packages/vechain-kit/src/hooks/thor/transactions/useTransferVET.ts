@@ -1,8 +1,6 @@
-import {
-    UseSendTransactionReturnValue,
-    useRefreshBalances,
-    useSendTransaction,
-} from '../../';
+// Direct imports to avoid circular dependencies
+import { useSendTransaction, UseSendTransactionReturnValue } from './useSendTransaction';
+import { useRefreshBalances } from '../../api/wallet/useRefreshBalances';
 import { humanAddress, isValidAddress } from '../../../utils';
 import { useMemo } from 'react';
 import { parseEther } from 'viem';

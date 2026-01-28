@@ -5,7 +5,8 @@ import {
     useFetchPrivyStatus,
     useGetAccountVersion,
 } from '../../../../../hooks';
-import { useVeChainKitConfig } from '../../../../../providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitProvider';
 import {
     VStack,
     Text,

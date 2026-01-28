@@ -1,9 +1,8 @@
 import { NETWORK_TYPE } from '../../../config/network';
-import {
-    useVechainDomain,
-    useGetTextRecords,
-    useGetAvatarOfAddress,
-} from '../../';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { useVechainDomain } from '../vetDomains/useVechainDomain';
+import { useGetTextRecords } from '../vetDomains/useGetTextRecords';
+import { useGetAvatarOfAddress } from '../vetDomains/useGetAvatarOfAddress';
 import { convertUriToUrl } from '../../../utils';
 import type { ENSRecords } from '../../../types';
 

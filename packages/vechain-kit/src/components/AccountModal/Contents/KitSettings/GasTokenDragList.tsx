@@ -11,7 +11,8 @@ import {
 import { LuGripVertical } from 'react-icons/lu';
 import type { GasTokenType } from '../../../../types/gasToken';
 import { SUPPORTED_GAS_TOKENS } from '../../../../utils/constants';
-import { useVeChainKitConfig } from '../../../../providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitProvider';
 
 interface DragListProps {
     tokens: GasTokenType[];

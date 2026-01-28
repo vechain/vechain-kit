@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import {
-    useWallet,
-    useNotifications,
-    useUpgradeRequiredForAccount,
-} from '../';
+// Direct imports to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
+import { useNotifications } from './useNotifications';
+import { useUpgradeRequiredForAccount } from '../thor/smartAccounts/useUpgradeRequiredForAccount';
 import { useTranslation } from 'react-i18next';
 
 export const DEFAULT_NOTIFICATIONS = [

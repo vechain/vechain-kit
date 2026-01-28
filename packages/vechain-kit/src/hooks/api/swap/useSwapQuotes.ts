@@ -5,7 +5,8 @@ import type { SwapParams, SwapQuote } from '../../../types/swap';
 import { parseUnits, zeroAddress } from 'viem';
 import { useOptionalThor } from '../dappkit/useOptionalThor';
 import { useGetCustomTokenInfo } from '../wallet/useGetCustomTokenInfo';
-import { TokenWithValue } from '../../';
+// Direct import to avoid circular dependency through barrel exports
+import { TokenWithValue } from '../wallet/useTokensWithValues';
 import { useWallet } from '../wallet/useWallet';
 
 export type UnifiedSwapQuotesResult = {

@@ -1,6 +1,7 @@
 import { useOptionalPrivyCrossAppSdk } from '../api/privy/useOptionalPrivyCrossAppSdk';
 import { useCrossAppConnectionCache } from '../cache/useCrossAppConnectionCache';
-import { useFetchAppInfo } from '../';
+// Direct import to avoid circular dependency through hooks barrel
+import { useFetchAppInfo } from '../api/privy/useFetchAppInfo';
 import { VECHAIN_PRIVY_APP_ID } from '../../utils';
 import { handlePopupError } from '../../utils/handlePopupError';
 import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '../../constants';

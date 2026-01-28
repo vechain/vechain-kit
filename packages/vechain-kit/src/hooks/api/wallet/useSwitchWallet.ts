@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
-import { useDAppKitWallet, useWallet } from '../../';
+// Direct imports to avoid circular dependency through barrel exports
+import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
+import { useWallet } from './useWallet';
 import { useWalletStorage, StoredWallet } from './useWalletStorage';
 import { isBrowser } from '../../../utils/ssrUtils';
 

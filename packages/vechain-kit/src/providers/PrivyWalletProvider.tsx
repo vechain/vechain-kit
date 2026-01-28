@@ -14,16 +14,14 @@ import type {
     GasTokenType,
     TransactionSpeed,
 } from '../types';
-import {
-    useSmartAccount,
-    useWallet,
-    useGenericDelegator,
-    useHasV1SmartAccount,
-    SmartAccountReturnType,
-    estimateAndBuildTxBody,
-    useBuildClauses,
-    useGetAccountVersion,
-} from '../hooks';
+// Direct imports to avoid circular dependency with hooks barrel
+import { useSmartAccount } from '../hooks/thor/smartAccounts/useSmartAccount';
+import type { SmartAccountReturnType } from '../hooks/thor/smartAccounts/useSmartAccount';
+import { useWallet } from '../hooks/api/wallet/useWallet';
+import { useGenericDelegator, estimateAndBuildTxBody } from '../hooks/generic-delegator/useGenericDelegator';
+import { useHasV1SmartAccount } from '../hooks/thor/smartAccounts/useHasV1SmartAccount';
+import { useBuildClauses } from '../hooks/utils/useBuildClauses';
+import { useGetAccountVersion } from '../hooks/thor/smartAccounts/useGetAccountVersion';
 import { getConfig } from '../config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { useOptionalPrivyCrossAppSdk } from '../hooks/api/privy/useOptionalPrivyCrossAppSdk';

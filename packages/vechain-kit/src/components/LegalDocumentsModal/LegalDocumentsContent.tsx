@@ -1,5 +1,7 @@
 import { StickyHeaderContainer } from '../common';
-import { useLegalDocuments, useVeChainKitConfig } from '../../providers';
+// Import directly from specific provider files to avoid circular dependency with providers/index.ts
+import { useLegalDocuments } from '../../providers/LegalDocumentsProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 import type { EnrichedLegalDocument } from '../../types';
 import {
     Button,

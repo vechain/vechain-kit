@@ -6,7 +6,12 @@ import { TransactionMessage } from '@vechain/dapp-kit';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { useOptionalPrivyWalletProvider } from '../../../providers/PrivyWalletProvider';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
-import { useGetNodeUrl, useTxReceipt, useWallet, useOptionalThor, useOptionalDAppKitWallet } from '../../';
+// Direct imports to avoid circular dependencies
+import { useGetNodeUrl } from '../../utils/useGetNodeUrl';
+import { useTxReceipt } from './useTxReceipt';
+import { useWallet } from '../../api/wallet/useWallet';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
+import { useOptionalDAppKitWallet } from '../../api/dappkit/useOptionalDAppKitWallet';
 import { useGasEstimate } from './useGasEstimate';
 import { TransactionReceipt } from '@vechain/sdk-network';
 import { Revision, TransactionClause } from '@vechain/sdk-core';

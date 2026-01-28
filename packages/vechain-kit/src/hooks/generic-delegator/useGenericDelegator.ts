@@ -5,13 +5,20 @@ import {
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
 import type { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, Wallet } from '../../types';
-import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '../';
+// Direct imports to avoid circular dependency with hooks barrel
+import type { SmartAccountReturnType } from '../thor/smartAccounts/useSmartAccount';
+import { useGasTokenSelection } from './useGasTokenSelection';
+import { useWallet } from '../api/wallet/useWallet';
+import { useSmartAccount } from '../thor/smartAccounts/useSmartAccount';
+import { useBuildClauses } from '../utils/useBuildClauses';
+import { useGetAccountVersion } from '../thor/smartAccounts/useGetAccountVersion';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { parseEther } from 'viem';
 import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '../../utils';
 import { ThorClient } from '@vechain/sdk-network';
 import { getConfig } from '../../config';
-import { useVeChainKitConfig } from '../../providers';
+// Direct import to avoid circular dependency (providers barrel re-exports hooks)
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 import { useCallback } from 'react';
 
 export const estimateGas = async (

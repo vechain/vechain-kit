@@ -1,4 +1,5 @@
-import { useVeChainKitConfig } from '../../providers';
+// Direct import to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 import { Button, Link, Text, VStack, Box } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';

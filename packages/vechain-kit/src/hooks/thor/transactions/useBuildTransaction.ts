@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useWallet } from '../../';
+// Direct import to avoid circular dependency
+import { useWallet } from '../../api/wallet/useWallet';
 import { useSendTransaction } from './useSendTransaction';
 import { TransactionClause } from '@vechain/sdk-core';
 

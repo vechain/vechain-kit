@@ -1,11 +1,10 @@
 import { useMemo } from 'react';
-import {
-    useAccountBalance,
-    useGetB3trBalance,
-    useGetVot3Balance,
-    useGetErc20Balance,
-    useGetCustomTokenBalances,
-} from '../../';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { useAccountBalance } from '../../thor/accounts/useAccountBalance';
+import { useGetB3trBalance } from './useGetB3trBalance';
+import { useGetVot3Balance } from './useGetVot3Balance';
+import { useGetErc20Balance } from './useGetErc20Balance';
+import { useGetCustomTokenBalances } from './useGetCustomTokenBalances';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { getConfig } from '../../../config';
 

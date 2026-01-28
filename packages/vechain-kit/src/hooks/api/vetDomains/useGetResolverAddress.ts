@@ -1,6 +1,7 @@
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { getConfig } from '../../../config';
-import { useCallClause } from '../../';
+// Direct import to avoid circular dependency through barrel exports
+import { useCallClause } from '../../utils/useCallClause';
 import { namehash } from 'viem';
 import { VetDomainsRegistry__factory } from '@vechain/vechain-contract-types';
 

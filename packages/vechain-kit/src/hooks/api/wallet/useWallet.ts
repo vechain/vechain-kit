@@ -2,13 +2,12 @@
 
 import type { Wallet as PrivyWallet, User } from '@privy-io/react-auth';
 import { useOptionalPrivy } from '../privy/useOptionalPrivy';
-import {
-    useGetChainId,
-    useGetNodeUrl,
-    useGetAccountVersion,
-    useSmartAccount,
-    useCrossAppConnectionCache,
-} from '../../';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { useGetChainId } from '../../thor/blocks/useGetChainId';
+import { useGetNodeUrl } from '../../utils/useGetNodeUrl';
+import { useGetAccountVersion } from '../../thor/smartAccounts/useGetAccountVersion';
+import { useSmartAccount } from '../../thor/smartAccounts/useSmartAccount';
+import { useCrossAppConnectionCache } from '../../cache/useCrossAppConnectionCache';
 import { useOptionalDAppKitWallet } from '../dappkit/useOptionalDAppKitWallet';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';

@@ -1,4 +1,5 @@
-import { useWallet } from '../';
+// Direct import to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
 import { useModal, AccountModalOptions } from '../../providers/ModalProvider';
 import { ReactNode } from 'react';
 

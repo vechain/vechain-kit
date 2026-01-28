@@ -2,7 +2,8 @@ import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contra
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { NETWORK_TYPE } from '../../../config/network';
 import { getConfig } from '../../../config';
-import { getCallClauseQueryKeyWithArgs, useCallClause } from '../../';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { getCallClauseQueryKeyWithArgs, useCallClause } from '../../utils/useCallClause';
 
 const abi = SocialLoginSmartAccountFactory__factory.abi;
 

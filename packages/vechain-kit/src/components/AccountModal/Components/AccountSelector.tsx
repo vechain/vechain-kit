@@ -21,7 +21,10 @@ import { AccountAvatar } from '../../common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';
-import { useWallet, useSwitchWallet, useDAppKitWallet } from '../../../hooks';
+// Direct imports to avoid circular dependency with hooks barrel
+import { useWallet } from '../../../hooks/api/wallet/useWallet';
+import { useSwitchWallet } from '../../../hooks/api/wallet/useSwitchWallet';
+import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
 
 type Props = {
     wallet: Wallet;

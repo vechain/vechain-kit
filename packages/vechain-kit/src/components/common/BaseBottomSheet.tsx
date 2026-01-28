@@ -1,7 +1,8 @@
 import { Box, useToken } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
 import { useEffect, useState, useRef } from 'react';
-import { useVechainKitThemeConfig } from '../../providers';
+// Direct import to avoid circular dependency through barrel exports
+import { useVechainKitThemeConfig } from '../../providers/VechainKitThemeProvider';
 
 type Props = {
     isOpen: boolean;

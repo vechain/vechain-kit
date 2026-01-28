@@ -1,4 +1,5 @@
-import { LocalStorageKey, useLocalStorage } from '../../';
+// Direct import to avoid circular dependency through barrel exports
+import { LocalStorageKey, useLocalStorage } from '../../cache/useLocalStorage';
 import { compareAddresses } from '../../../utils';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { getConfig } from '../../../config';

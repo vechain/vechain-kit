@@ -13,7 +13,8 @@ import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { LuExternalLink } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '../../../../providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitProvider';
 import { VechainEnergy } from '../../../../assets';
 import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import { VECHAIN_ENERGY_SWAP_BASE_URL } from '../../../../constants';

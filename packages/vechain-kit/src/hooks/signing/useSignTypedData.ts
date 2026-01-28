@@ -4,7 +4,8 @@ import { useCallback, useState } from 'react';
 import type { SignTypedDataParams } from '@privy-io/react-auth';
 // Import from specific provider file to avoid circular dependencies
 import { useOptionalPrivyWalletProvider } from '../../providers/PrivyWalletProvider';
-import { useWallet } from '../';
+// Direct import to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
 import { useOptionalDAppKitWallet } from '../api/dappkit/useOptionalDAppKitWallet';
 import { SignTypedDataOptions, TypedDataDomain } from '@vechain/sdk-network';
 

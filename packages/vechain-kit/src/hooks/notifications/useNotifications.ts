@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
-import { useWallet } from '../';
+// Direct import to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
 import { Notification } from './types';
 import { DEFAULT_NOTIFICATIONS } from './useNotificationAlerts';
 import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '../../utils/ssrUtils';

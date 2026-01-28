@@ -469,3 +469,105 @@ Breaking this fully requires either:
 - Not using barrel exports (breaks backward compatibility)
 - Lazy-loading all cross-module dependencies
 - Restructuring to eliminate the circular references at the architecture level
+
+## US-008: Fix circular dependencies (ADDITIONAL PROGRESS - SESSION 2)
+Date: 2026-01-29
+
+### Status: Reduced from 229 to 218 circular dependencies (additional ~5% reduction, total ~30% from 309)
+
+The acceptance criteria requires "no circular dependencies" which hasn't been fully achieved.
+This story remains at passes: false but significant additional progress has been made.
+
+### Additional Changes Made (50+ files updated):
+
+1. **LegalDocumentItem.tsx**
+   - Changed import from `'../../../providers'` to `'../../../providers/VeChainKitProvider'`
+
+2. **AddressDisplay.tsx**
+   - Removed import of AccountModalContentTypes from `../AccountModal/Types`
+   - Used local `any` type to break the components→AccountModal→common cycle
+
+3. **AddressDisplayCard.tsx**
+   - Changed imports from `../../hooks` to direct imports:
+     - `useTotalBalance` from `'../../hooks/api/wallet/useTotalBalance'`
+     - `useTokensWithValues` from `'../../hooks/api/wallet/useTokensWithValues'`
+
+4. **LegalDocumentsContent.tsx**
+   - Changed imports from `'../../providers'` to direct imports:
+     - `useLegalDocuments` from `'../../providers/LegalDocumentsProvider'`
+     - `useVeChainKitConfig` from `'../../providers/VeChainKitProvider'`
+
+5. **useTokenBalances.ts**
+   - Changed imports from `'../../'` to direct imports:
+     - `useAccountBalance` from `'../../thor/accounts/useAccountBalance'`
+     - `useGetB3trBalance`, `useGetVot3Balance`, `useGetErc20Balance`, `useGetCustomTokenBalances` from sibling files
+
+6. **useWallet.ts**
+   - Changed imports from `'../../'` to direct imports:
+     - `useGetChainId` from `'../../thor/blocks/useGetChainId'`
+     - `useGetNodeUrl` from `'../../utils/useGetNodeUrl'`
+     - `useGetAccountVersion` from `'../../thor/smartAccounts/useGetAccountVersion'`
+     - `useSmartAccount` from `'../../thor/smartAccounts/useSmartAccount'`
+     - `useCrossAppConnectionCache` from `'../../cache/useCrossAppConnectionCache'`
+
+7. **useWalletMetadata.ts**
+   - Changed imports from `'../../'` to direct imports:
+     - `useVechainDomain` from `'../vetDomains/useVechainDomain'`
+     - `useGetTextRecords` from `'../vetDomains/useGetTextRecords'`
+     - `useGetAvatarOfAddress` from `'../vetDomains/useGetAvatarOfAddress'`
+
+8. **useGetAccountVersion.ts**
+   - Changed import from `'../../'` to `'../../utils/useCallClause'`
+
+9. **useCurrency.ts**
+   - Changed import from `'../../providers'` to `'../../providers/VeChainKitProvider'`
+
+10. **7 hooks in generic-delegator/**
+    - useLoginModalContent.ts, useGetNodeUrl.ts, useCurrentLanguage.ts, useCurrentCurrency.ts
+    - useGenericDelegatorFeeEstimation.ts, useEstimateAllTokens.ts, useGenericDelegator.ts
+    - All updated to use direct imports from specific provider/hook files
+
+11. **6 hooks in signing/notifications/login/modals**
+    - useSignTypedData.ts, useSignMessage.ts, useWalletModal.tsx
+    - useNotifications.ts, useNotificationAlerts.ts, useLoginWithVeChain.ts
+    - All updated to import useWallet from '../api/wallet/useWallet'
+
+12. **8 hooks in thor/ (smartAccounts, transactions)**
+    - useIsSmartAccountDeployed.ts, useRefreshFactoryQueries.ts, useRefreshSmartAccountQueries.ts, useUpgradeSmartAccount.ts
+    - useBuildTransaction.ts, useTransferERC20.ts, useTransferVET.ts, useSendTransaction.ts
+    - All updated to use direct imports from sibling/specific hook files
+
+13. **13 hooks in api/ (vetDomains, swap, wallet)**
+    - useClaimVeWorldSubdomain.ts, useClaimVetDomain.ts, useGetResolverAddress.ts, useUpdateTextRecord.ts, useUnsetDomain.ts
+    - useSwapTransaction.ts, useSwapQuotes.ts
+    - useGetCustomTokenBalances.ts, useRoundXApps.ts, useCustomTokens.ts, useSwitchWallet.ts, useCurrentAllocationsRoundId.ts, useRefreshMetadata.ts
+    - All updated to use direct imports from specific hook files
+
+14. **PrivyWalletProvider.tsx**
+    - Changed imports from `'../hooks'` to direct imports from specific hook files
+
+15. **ModalProvider.tsx**
+    - Changed import of `useDAppKitWallet` from `'../hooks'` to `'@vechain/dapp-kit-react'`
+
+16. **30+ component files**
+    - All updated to import from specific provider files instead of providers barrel
+    - Files in: EmailCodeVerificationModal, WalletButton, TransactionModal, ConnectModal, common, TransactionToast, AccountModal/Contents
+
+17. **AccountSelector.tsx**
+    - Changed imports from `'../../../hooks'` to direct imports from specific hook files
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- Circular dependencies reduced from 229 to 218 (total ~30% reduction from original 309)
+
+### Remaining Work:
+- 218 circular dependencies still exist
+- Main causes:
+  - Barrel exports (index.ts files) re-exporting everything creates transitive dependencies
+  - ModalProvider.tsx lazy-loads AccountModal but madge still detects the static import chain
+  - AccountModal/Types/Types.ts imports from Contents which imports from common
+- The lazy-loading pattern doesn't eliminate cycles from madge's perspective since it analyzes import statements statically
+- Further reduction would require architectural changes like:
+  - Removing barrel exports (breaking change)
+  - Extracting shared types to a separate types-only module
+  - Using truly dynamic imports for cross-module dependencies

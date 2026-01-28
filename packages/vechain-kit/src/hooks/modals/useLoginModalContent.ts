@@ -1,4 +1,5 @@
-import { useVeChainKitConfig } from '../../providers';
+// Direct import to avoid circular dependency (providers barrel re-exports hooks)
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 import { VECHAIN_PRIVY_APP_ID } from '../../utils';
 import { useMemo } from 'react';
 

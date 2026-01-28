@@ -1,8 +1,9 @@
+// Direct imports to avoid circular dependency through barrel exports
 import {
     UseSendTransactionReturnValue,
     useSendTransaction,
-    useWallet,
-} from '../../';
+} from '../../thor/transactions/useSendTransaction';
+import { useWallet } from '../wallet/useWallet';
 import { useCallback } from 'react';
 import {
     VeworldSubdomainClaimer__factory,

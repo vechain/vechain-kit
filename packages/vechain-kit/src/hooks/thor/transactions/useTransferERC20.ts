@@ -1,8 +1,6 @@
-import {
-    UseSendTransactionReturnValue,
-    useRefreshBalances,
-    useSendTransaction,
-} from '../../';
+// Direct imports to avoid circular dependencies
+import { useSendTransaction, UseSendTransactionReturnValue } from './useSendTransaction';
+import { useRefreshBalances } from '../../api/wallet/useRefreshBalances';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { useMemo } from 'react';
 import { humanAddress, isValidAddress } from '../../../utils';

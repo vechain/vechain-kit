@@ -1,4 +1,5 @@
-import { useVeChainKitConfig } from '../../providers';
+// Direct import to avoid circular dependency (providers barrel re-exports hooks)
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 
 /**
  * Hook to get and set the current currency in VeChainKit

@@ -7,7 +7,9 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { humanAddress } from '../../utils';
-import { useTotalBalance, useTokensWithValues } from '../../hooks';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { useTotalBalance } from '../../hooks/api/wallet/useTotalBalance';
+import { useTokensWithValues } from '../../hooks/api/wallet/useTokensWithValues';
 import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
 

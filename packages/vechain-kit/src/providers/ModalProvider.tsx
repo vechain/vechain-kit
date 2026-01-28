@@ -13,7 +13,8 @@ import type {
     ConnectModalContentsTypes,
     UpgradeSmartAccountModalStyle,
 } from '../types/modal';
-import { useDAppKitWallet } from '../hooks';
+// Direct import to avoid circular dependency with hooks barrel
+import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
 import { isBrowser } from '../utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 import { useVeChainKitConfig } from './VeChainKitProvider';

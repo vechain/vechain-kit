@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useSendTransaction } from '../../thor/transactions/useSendTransaction';
-import { useWallet } from '../../';
+// Direct import to avoid circular dependency through barrel exports
+import { useWallet } from '../wallet/useWallet';
 import type { SwapParams, SwapQuote } from '../../../types/swap';
 import { useTranslation } from 'react-i18next';
 

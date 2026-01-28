@@ -1,14 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useWallet } from '../../api/wallet/useWallet';
-import {
-    getAccountVersionQueryKey,
-    getUpgradeRequiredQueryKey,
-    getUpgradeRequiredForAccountQueryKey,
-    getCurrentAccountImplementationVersionQueryKey,
-    getAccountImplementationAddressQueryKey,
-    getHasV1SmartAccountQueryKey,
-    getAccountAddressQueryKey,
-} from '../../';
+// Direct imports to avoid circular dependencies
+import { getAccountVersionQueryKey } from './useGetAccountVersion';
+import { getUpgradeRequiredQueryKey } from './useUpgradeRequired';
+import { getUpgradeRequiredForAccountQueryKey } from './useUpgradeRequiredForAccount';
+import { getCurrentAccountImplementationVersionQueryKey } from './useCurrentAccountImplementationVersion';
+import { getAccountImplementationAddressQueryKey } from './useAccountImplementationAddress';
+import { getHasV1SmartAccountQueryKey } from './useHasV1SmartAccount';
+import { getAccountAddressQueryKey } from './useGetAccountAddress';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 
 /**

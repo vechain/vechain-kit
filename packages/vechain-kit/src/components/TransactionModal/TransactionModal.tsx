@@ -3,7 +3,9 @@ import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
 import { TransactionReceipt } from '@vechain/sdk-network';
-import { useVeChainKitConfig, VechainKitThemeProvider } from '../../providers';
+// Direct imports to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { VechainKitThemeProvider } from '../../providers/VechainKitThemeProvider';
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;

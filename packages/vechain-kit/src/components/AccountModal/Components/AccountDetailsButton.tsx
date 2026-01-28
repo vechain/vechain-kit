@@ -12,7 +12,8 @@ import { ElementType } from 'react';
 import { humanAddress, humanDomain } from '../../../utils';
 import { useTranslation } from 'react-i18next';
 import type { Wallet } from '../../../types';
-import { useVeChainKitConfig } from '../../../providers';
+// Direct import to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 
 interface AccountDetailsButtonProps {
     title: string;

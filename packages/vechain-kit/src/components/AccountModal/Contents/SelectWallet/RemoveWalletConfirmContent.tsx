@@ -14,7 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { LuTrash2 } from 'react-icons/lu';
 import { humanAddress, humanDomain } from '../../../../utils';
 import { useWalletMetadata } from '../../../../hooks';
-import { useVeChainKitConfig } from '../../../../providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitProvider';
 
 export type RemoveWalletConfirmContentProps = {
     walletAddress: string;

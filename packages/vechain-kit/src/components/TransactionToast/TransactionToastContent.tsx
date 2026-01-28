@@ -18,7 +18,8 @@ import {
     LuCircleCheck,
     LuRefreshCw,
 } from 'react-icons/lu';
-import { useVeChainKitConfig } from '../../providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 import { getConfig } from '../../config';
 import { useTranslation } from 'react-i18next';
 import { TransactionReceipt } from '@vechain/sdk-network';
