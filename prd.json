@@ -86,7 +86,8 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-150KB (-9%) for apps not using ecosystem login",
-      "status": "pending"
+      "status": "pending",
+      "passes": false
     },
     {
       "id": "US-005",
@@ -102,7 +103,9 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-500KB (-29%) - modals only load when opened",
-      "status": "pending"
+      "status": "completed",
+      "passes": true,
+      "notes": "Implemented lazy loading for all modal components using React.lazy() and Suspense. Changes made: (1) ModalProvider.tsx - converted ConnectModal, AccountModal, and UpgradeSmartAccountModal to lazy imports using dynamic import(), modals are now only rendered when their isOpen state is true, wrapped each in Suspense with null fallback to prevent flash of unstyled content. (2) LegalDocumentsProvider.tsx - converted LegalDocumentsModal to lazy import, only renders when showTermsModal is true. Type imports were converted to type-only imports to ensure they don't contribute to bundle size. Modals are now code-split into separate chunks and only loaded when the user actually opens them. Typecheck passes."
     },
     {
       "id": "US-006",
@@ -118,7 +121,8 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-300KB (-18%) for apps building custom UI",
-      "status": "pending"
+      "status": "pending",
+      "passes": false
     },
     {
       "id": "US-007",
@@ -134,7 +138,8 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-1.6MB (-95%) for advanced users building custom solutions",
-      "status": "pending"
+      "status": "pending",
+      "passes": false
     },
     {
       "id": "US-008",
@@ -149,7 +154,8 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "Enables proper tree-shaking (foundation for other optimizations)",
-      "status": "pending"
+      "status": "pending",
+      "passes": false
     },
     {
       "id": "US-009",
@@ -164,7 +170,8 @@
         "Add yarn size command to check locally"
       ],
       "impact": "Prevent future bundle size bloat",
-      "status": "pending"
+      "status": "pending",
+      "passes": false
     },
     {
       "id": "US-010",
@@ -180,7 +187,8 @@
         "All examples build successfully"
       ],
       "impact": "Demonstrates real-world bundle size wins, helps consumers optimize their apps",
-      "status": "pending"
+      "status": "pending",
+      "passes": false
     }
   ],
   "phases": [

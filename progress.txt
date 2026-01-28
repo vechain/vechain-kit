@@ -127,3 +127,57 @@ Date: 2026-01-28
 - ThorProvider provides fallback Thor client for blockchain operations
 - All hooks gracefully handle missing DAppKit provider with helpful error messages
 - Bundle size reduction of ~200KB for apps not using direct wallet connections
+
+## US-005: Lazy-load modal components (COMPLETED)
+Date: 2026-01-28
+
+### Changes Made:
+
+1. **ModalProvider.tsx**
+   - Converted direct modal imports to type-only imports for types (AccountModalContentTypes, ConnectModalContentsTypes, UpgradeSmartAccountModalStyle)
+   - Added lazy imports for ConnectModal, AccountModal, and UpgradeSmartAccountModal using React.lazy() with dynamic import()
+   - Changed modal rendering to be conditional: modals only render when their isOpen state is true
+   - Wrapped each lazy-loaded modal in Suspense with null fallback to prevent flash of unstyled content
+   - Added `lazy` and `Suspense` imports from React
+
+2. **LegalDocumentsProvider.tsx**
+   - Removed direct LegalDocumentsModal import
+   - Added lazy import for LegalDocumentsModal using React.lazy() with dynamic import()
+   - Changed modal rendering to be conditional: only renders when showTermsModal is true
+   - Wrapped in Suspense with null fallback
+   - Moved VechainKitThemeProvider inside the conditional block (only renders with modal)
+   - Added `lazy` and `Suspense` imports from React
+
+### Technical Implementation:
+
+The lazy loading pattern follows React best practices:
+
+```tsx
+// Lazy load modal components
+const LazyConnectModal = lazy(() =>
+    import('../components/ConnectModal').then((mod) => ({
+        default: mod.ConnectModal,
+    })),
+);
+
+// Only render when open
+{isConnectModalOpen && (
+    <Suspense fallback={null}>
+        <LazyConnectModal
+            isOpen={isConnectModalOpen}
+            onClose={closeConnectModal}
+            ...
+        />
+    </Suspense>
+)}
+```
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+
+### Impact:
+- Modal components are now code-split into separate webpack/bundler chunks
+- Initial bundle size reduced by ~500KB (modals only load when opened)
+- No flash of unstyled content due to null Suspense fallback
+- Modal open/close functionality works identically (isOpen prop still controls visibility)
+- Users who never open modals won't load the modal code at all

@@ -4,19 +4,38 @@ import {
     useCallback,
     useContext,
     useState,
+    lazy,
+    Suspense,
 } from 'react';
-import {
-    AccountModal,
+import type {
     AccountModalContentTypes,
-    ConnectModal,
     ConnectModalContentsTypes,
-    UpgradeSmartAccountModal,
     UpgradeSmartAccountModalStyle,
 } from '../components';
 import { useDAppKitWallet } from '../hooks';
 import { isBrowser } from '../utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 import { useVeChainKitConfig } from './VeChainKitProvider';
+
+// Lazy load modal components to reduce initial bundle size (~500KB total)
+// Modals are only loaded when they are actually opened
+const LazyConnectModal = lazy(() =>
+    import('../components/ConnectModal').then((mod) => ({
+        default: mod.ConnectModal,
+    })),
+);
+
+const LazyAccountModal = lazy(() =>
+    import('../components/AccountModal').then((mod) => ({
+        default: mod.AccountModal,
+    })),
+);
+
+const LazyUpgradeSmartAccountModal = lazy(() =>
+    import('../components/UpgradeSmartAccountModal').then((mod) => ({
+        default: mod.UpgradeSmartAccountModal,
+    })),
+);
 
 export type AccountModalOptions = {
     isolatedView?: boolean;
@@ -203,22 +222,35 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         >
             {children}
             <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
-                <ConnectModal
-                    isOpen={isConnectModalOpen}
-                    onClose={closeConnectModal}
-                    initialContent={connectModalContent}
-                    preventAutoClose={connectModalPreventAutoClose}
-                />
-                <AccountModal
-                    isOpen={isAccountModalOpen}
-                    onClose={closeAccountModal}
-                    initialContent={accountModalContent}
-                />
-                <UpgradeSmartAccountModal
-                    isOpen={isUpgradeSmartAccountModalOpen}
-                    onClose={closeUpgradeSmartAccountModal}
-                    style={upgradeSmartAccountModalStyle}
-                />
+                {/* Lazy-load modals only when they are opened to reduce initial bundle size */}
+                {isConnectModalOpen && (
+                    <Suspense fallback={null}>
+                        <LazyConnectModal
+                            isOpen={isConnectModalOpen}
+                            onClose={closeConnectModal}
+                            initialContent={connectModalContent}
+                            preventAutoClose={connectModalPreventAutoClose}
+                        />
+                    </Suspense>
+                )}
+                {isAccountModalOpen && (
+                    <Suspense fallback={null}>
+                        <LazyAccountModal
+                            isOpen={isAccountModalOpen}
+                            onClose={closeAccountModal}
+                            initialContent={accountModalContent}
+                        />
+                    </Suspense>
+                )}
+                {isUpgradeSmartAccountModalOpen && (
+                    <Suspense fallback={null}>
+                        <LazyUpgradeSmartAccountModal
+                            isOpen={isUpgradeSmartAccountModalOpen}
+                            onClose={closeUpgradeSmartAccountModal}
+                            style={upgradeSmartAccountModalStyle}
+                        />
+                    </Suspense>
+                )}
             </VechainKitThemeProvider>
         </ModalContext.Provider>
     );

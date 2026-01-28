@@ -1,4 +1,3 @@
-import { LegalDocumentsModal } from '../components/LegalDocumentsModal';
 import { useWallet, useSyncableLocalStorage } from '../hooks';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import type {
@@ -25,8 +24,17 @@ import {
     useEffect,
     useMemo,
     useState,
+    lazy,
+    Suspense,
 } from 'react';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
+
+// Lazy load LegalDocumentsModal to reduce initial bundle size
+const LazyLegalDocumentsModal = lazy(() =>
+    import('../components/LegalDocumentsModal').then((mod) => ({
+        default: mod.LegalDocumentsModal,
+    })),
+);
 
 type Props = {
     children: Readonly<ReactNode>;
@@ -305,16 +313,21 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             }}
         >
             {children}
-            <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
-                <LegalDocumentsModal
-                    isOpen={showTermsModal}
-                    onAgree={handleAgree}
-                    handleLogout={
-                        onlyOptionalDocuments ? () => {} : handleLogout
-                    }
-                    onlyOptionalDocuments={onlyOptionalDocuments}
-                />
-            </VechainKitThemeProvider>
+            {/* Lazy-load modal only when it needs to be shown */}
+            {showTermsModal && (
+                <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
+                    <Suspense fallback={null}>
+                        <LazyLegalDocumentsModal
+                            isOpen={showTermsModal}
+                            onAgree={handleAgree}
+                            handleLogout={
+                                onlyOptionalDocuments ? () => {} : handleLogout
+                            }
+                            onlyOptionalDocuments={onlyOptionalDocuments}
+                        />
+                    </Suspense>
+                </VechainKitThemeProvider>
+            )}
         </LegalDocumentsContext.Provider>
     );
 };
