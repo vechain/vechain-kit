@@ -30,8 +30,15 @@ echo -e "Compare branch: ${YELLOW}$COMPARE_BRANCH${NC}"
 echo -e "Results will be saved to: ${YELLOW}$RESULTS_FILE${NC}"
 echo ""
 
-# Store current branch
+# Store current branch and stash any uncommitted changes
 CURRENT_BRANCH=$(git branch --show-current)
+STASH_NEEDED=false
+
+if ! git diff-index --quiet HEAD --; then
+    echo -e "${YELLOW}Stashing uncommitted changes...${NC}"
+    git stash push -m "compare-bundle-sizes-temp" > /dev/null 2>&1
+    STASH_NEEDED=true
+fi
 
 # Function to get total size of dist folder
 get_dist_size() {
@@ -241,38 +248,61 @@ EOF
     done
 fi
 
-# Add entry point comparison if applicable
+# Add detailed file breakdown
 cat >> "$RESULTS_FILE" << EOF
 
-## 📦 Entry Points Analysis
+## 📦 Entry Points Breakdown
 
-### Base Branch (\`$BASE_BRANCH\`)
-\`\`\`
+### Main Chunks (ESM)
 EOF
 
-find packages/vechain-kit/dist -maxdepth 2 -name "index.*" -type f 2>/dev/null | while read file; do
-    git show "$BASE_BRANCH:${file#packages/vechain-kit/}" > /dev/null 2>&1 && \
-    du -h "$file" 2>/dev/null | awk '{print $2 ": " $1}' >> "$RESULTS_FILE" || true
-done
+# Get chunk files from compare branch
+git checkout "$COMPARE_BRANCH" -q
+cd packages/vechain-kit
 
-cat >> "$RESULTS_FILE" << EOF
-\`\`\`
+echo "| File | Size | Gzipped |" >> "../../$RESULTS_FILE"
+echo "|------|------|---------|" >> "../../$RESULTS_FILE"
 
-### Compare Branch (\`$COMPARE_BRANCH\`)
-\`\`\`
+ls -lh dist/*.mjs 2>/dev/null | grep -v ".map" | awk '{
+    file=$9; 
+    gsub(/.*\//, "", file); 
+    size=$5;
+    # Get corresponding .map file for gzip info
+    map_file=$9".map";
+    cmd="ls -lh "map_file" 2>/dev/null | awk '\''{print $5}'\''";
+    cmd | getline gzip_size;
+    close(cmd);
+    print "| `"file"` | "size" | "gzip_size" |"
+}' >> "../../$RESULTS_FILE"
+
+cat >> "../../$RESULTS_FILE" << EOF
+
+### Main Chunks (CJS)
+| File | Size | Gzipped |
+|------|------|---------|
 EOF
 
-find packages/vechain-kit/dist -maxdepth 2 -name "index.*" -type f 2>/dev/null | \
-du -h {} 2>/dev/null | awk '{print $2 ": " $1}' >> "$RESULTS_FILE"
+ls -lh dist/*.cjs 2>/dev/null | grep -v ".map" | awk '{
+    file=$9; 
+    gsub(/.*\//, "", file); 
+    size=$5;
+    print "| `"file"` | "size" | - |"
+}' >> "../../$RESULTS_FILE"
 
-cat >> "$RESULTS_FILE" << EOF
-\`\`\`
+cd ../..
 
----
+# Add footer
+echo "" >> "$RESULTS_FILE"
+echo "---" >> "$RESULTS_FILE"
+echo "" >> "$RESULTS_FILE"
+echo "*Generated on $(date)*" >> "$RESULTS_FILE"
+echo "*Base: \`$BASE_BRANCH\` | Compare: \`$COMPARE_BRANCH\`*" >> "$RESULTS_FILE"
 
-*Generated on $(date)*
-*Base: \`$BASE_BRANCH\` | Compare: \`$COMPARE_BRANCH\`*
-EOF
+# Restore stashed changes if needed
+if [ "$STASH_NEEDED" = true ]; then
+    echo -e "${YELLOW}Restoring stashed changes...${NC}"
+    git stash pop > /dev/null 2>&1
+fi
 
 # Cleanup
 rm -rf "$TEMP_DIR"

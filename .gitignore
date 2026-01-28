@@ -57,3 +57,9 @@ packages/vechain-kit/.env
 prd.json
 progress.txt
 tasks/
+
+# Bundle analysis reports
+bundle-size-comparison.md
+BUNDLE-SIZE-ANALYSIS.md
+GHA-BUILD-FAILURE-ANALYSIS.md
+BUNDLE-SIZE-IMPACT.md
