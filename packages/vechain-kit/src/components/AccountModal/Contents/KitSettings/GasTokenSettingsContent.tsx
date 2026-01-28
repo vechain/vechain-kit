@@ -17,7 +17,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { AccountModalContentTypes } from '../../Types';
 import { useGasTokenSelection } from '@/hooks';
-import { GasTokenType } from '@/types/gasToken';
+import type { GasTokenType } from '../../../../types/gasToken';
 import { GasTokenDragList } from './GasTokenDragList';
 import { useCallback } from 'react';
 

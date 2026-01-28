@@ -15,7 +15,7 @@ import {
     useCrossAppConnectionCache,
 } from '@/hooks';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
-import { ConnectionSource, SmartAccount, Wallet } from '@/types';
+import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { useAccount } from 'wagmi';

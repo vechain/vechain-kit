@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
 import { copyToClipboard } from '@/utils/ssrUtils';
-import { Wallet } from '@/types';
+import type { Wallet } from '../../../types';
 import {
     LuChevronRight,
     LuCheck,

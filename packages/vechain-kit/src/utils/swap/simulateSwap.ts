@@ -1,7 +1,7 @@
 import { ERC20_ABI, TransactionClause } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { decodeEventLog, zeroAddress, type Hex } from 'viem';
-import { SwapParams, SwapQuote, SwapSimulation } from '@/types/swap';
+import type { SwapParams, SwapQuote, SwapSimulation } from '../../types/swap';
 
 /**
  * Helper to detect VeChain native token (VET) placeholder addresses.

@@ -32,7 +32,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
-import { GasTokenType } from '@/types/gasToken';
+import type { GasTokenType } from '../../../../types/gasToken';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type SendTokenSummaryContentProps = {

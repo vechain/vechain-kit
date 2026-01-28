@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { LocalStorageKey, useSyncableLocalStorage } from '../cache';
-import { GasTokenPreferences, GasTokenType } from '@/types/gasToken';
+import type { GasTokenPreferences, GasTokenType } from '../../types/gasToken';
 import {
     DEFAULT_GAS_TOKEN_PREFERENCES,
     SUPPORTED_GAS_TOKENS,

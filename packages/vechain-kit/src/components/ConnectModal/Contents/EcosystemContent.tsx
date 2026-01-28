@@ -15,7 +15,7 @@ import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useCrossAppConnectionCache } from '@/hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useTranslation } from 'react-i18next';
-import { PrivyAppInfo } from '@/types';
+import type { PrivyAppInfo } from '../../../types';
 import { isRejectionError } from '@/utils/stringUtils';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 type Props = {

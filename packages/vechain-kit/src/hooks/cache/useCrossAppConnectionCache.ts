@@ -1,4 +1,4 @@
-import { CrossAppConnectionCache } from '@/types';
+import type { CrossAppConnectionCache } from '../../types';
 import { useCallback } from 'react';
 import { getLocalStorageItem, setLocalStorageItem, removeLocalStorageItem } from '@/utils/ssrUtils';
 

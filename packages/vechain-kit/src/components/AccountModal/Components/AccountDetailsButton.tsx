@@ -11,7 +11,7 @@ import {
 import { ElementType } from 'react';
 import { humanAddress, humanDomain } from '@/utils';
 import { useTranslation } from 'react-i18next';
-import { Wallet } from '@/types';
+import type { Wallet } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';
 
 interface AccountDetailsButtonProps {

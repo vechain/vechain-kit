@@ -6,7 +6,7 @@ import {
 import { humanAddress, isValidAddress } from '@/utils';
 import { useMemo } from 'react';
 import { parseEther } from 'viem';
-import { EnhancedClause } from '@/types';
+import type { EnhancedClause } from '../../../types';
 
 type useTransferVETProps = {
     fromAddress: string;

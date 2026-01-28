@@ -12,7 +12,7 @@ import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
 import { humanAddress } from '@/utils';
-import { Wallet } from '@/types';
+import type { Wallet } from '../../../types';
 import { TransactionClause } from '@vechain/sdk-core';
 
 type useClaimVetDomainProps = {

@@ -15,7 +15,7 @@ import {
     ModalFooter,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { SwapQuote } from '@/types/swap';
+import type { SwapQuote } from '../../../../types/swap';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { formatEther } from 'viem';

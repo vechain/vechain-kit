@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
 import React from 'react';
-import { CURRENCY } from '@/types';
+import type { CURRENCY } from '../../types';
 import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import {
     formatCompactCurrency,

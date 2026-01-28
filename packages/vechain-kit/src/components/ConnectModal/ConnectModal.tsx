@@ -5,7 +5,7 @@ import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
 import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
-import { PrivyAppInfo } from '@/types';
+import type { PrivyAppInfo } from '../../types';
 
 type Props = {
     isOpen: boolean;

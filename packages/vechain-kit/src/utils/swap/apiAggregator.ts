@@ -1,5 +1,5 @@
 import { TransactionClause } from '@vechain/sdk-core';
-import { SwapAggregator, SwapQuote, SwapSimulation, SwapParams } from '@/types/swap';
+import type { SwapAggregator, SwapQuote, SwapSimulation, SwapParams } from '../../types/swap';
 import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network';
 import React from 'react';

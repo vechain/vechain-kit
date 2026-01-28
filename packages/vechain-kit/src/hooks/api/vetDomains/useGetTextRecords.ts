@@ -3,7 +3,8 @@ import { Interface, namehash } from 'ethers';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { ENS_TEXT_RECORDS, TextRecords } from '@/types';
+import { ENS_TEXT_RECORDS } from '../../../types';
+import type { TextRecords } from '../../../types';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',

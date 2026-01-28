@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 import { useCustomTokens } from '@/hooks';
 import { type CustomTokenInfo, getErc20Balance } from '@vechain/contract-getters';
-import { TokenBalance } from '@/types';
+import type { TokenBalance } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';
 import { formatTokenBalance } from '@/utils';
 

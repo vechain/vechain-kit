@@ -1,4 +1,4 @@
-import { SwapAggregator } from '@/types/swap';
+import type { SwapAggregator } from '../types/swap';
 import { NETWORK_TYPE } from '@/config/network';
 import { createVeTradeAggregator } from '@/utils/swap/veTrade';
 import { createBetterSwapAggregator } from '@/utils/swap/betterSwap';

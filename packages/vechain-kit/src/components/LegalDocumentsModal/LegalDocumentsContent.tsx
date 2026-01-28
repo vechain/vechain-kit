@@ -1,6 +1,6 @@
 import { StickyHeaderContainer } from '@/components/common';
 import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import { EnrichedLegalDocument } from '@/types';
+import type { EnrichedLegalDocument } from '../../types';
 import {
     Button,
     ModalBody,

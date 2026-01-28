@@ -1,4 +1,4 @@
-import { SwapAggregator, SwapParams, SwapQuote, SwapSimulation } from '@/types/swap';
+import type { SwapAggregator, SwapParams, SwapQuote, SwapSimulation } from '../../types/swap';
 import { NETWORK_TYPE } from '@/config/network';
 import { type Address } from 'viem';
 import { createApiAggregator } from './apiAggregator';

@@ -15,7 +15,7 @@ import { humanAddress } from '@/utils';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
-import { Wallet } from '@/types';
+import type { Wallet } from '../../../types';
 import { TransactionClause } from '@vechain/sdk-core';
 
 type useClaimVeWorldSubdomainProps = {

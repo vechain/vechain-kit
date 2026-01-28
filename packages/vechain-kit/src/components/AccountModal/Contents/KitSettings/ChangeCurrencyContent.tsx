@@ -16,7 +16,8 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
+import type { CURRENCY } from '../../../../types';
+import { CURRENCY_SYMBOLS } from '../../../../types';
 import { useCurrency } from '@/hooks';
 import { LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';

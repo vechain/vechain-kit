@@ -33,7 +33,7 @@ import { useForm } from 'react-hook-form';
 import { useGetResolverAddress } from '@/hooks/api/vetDomains/useGetResolverAddress';
 import { useQueryClient } from '@tanstack/react-query';
 import { convertUriToUrl } from '@/utils';
-import { GasTokenType } from '@/types/gasToken';
+import type { GasTokenType } from '../../../../../types/gasToken';
 import { LuFileText } from 'react-icons/lu';
 
 export type CustomizationSummaryContentProps = {

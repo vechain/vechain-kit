@@ -13,16 +13,16 @@ import {
 import { LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { GasTokenType } from '@/types/gasToken';
+import type { GasTokenType } from '../../types/gasToken';
 import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
-import { formatGasCost } from '@/types/gasEstimation';
+import { formatGasCost } from '../../types/gasEstimation';
 import {
     useWallet,
     useGasTokenSelection,
     useEstimateAllTokens,
     useTokenBalances,
 } from '@/hooks';
-import { EstimationResponse } from '@/types/gasEstimation';
+import type { EstimationResponse } from '../../types/gasEstimation';
 import { GasFeeTokenSelector } from './GasFeeTokenSelector';
 import { TransactionClause } from '@vechain/sdk-core';
 

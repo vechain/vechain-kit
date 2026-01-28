@@ -1,6 +1,6 @@
 import { getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
-import { CURRENCY, PrivyLoginMethod } from '@/types';
+import type { CURRENCY, PrivyLoginMethod } from '../types';
 import { isValidUrl } from '@/utils';
 import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
 import { initializeI18n } from '@/utils/i18n';

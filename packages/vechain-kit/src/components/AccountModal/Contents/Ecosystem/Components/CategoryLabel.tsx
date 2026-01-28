@@ -1,6 +1,6 @@
 import { Tag, TagProps } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import type { AllowedCategories } from '@/types';
+import type { AllowedCategories } from '../../../../../types';
 
 // Re-export type for backwards compatibility
 export type { AllowedCategories };

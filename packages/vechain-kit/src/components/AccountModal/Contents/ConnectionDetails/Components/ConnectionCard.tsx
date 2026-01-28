@@ -17,7 +17,7 @@ import {
     Divider,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { CrossAppConnectionCache } from '@/types';
+import type { CrossAppConnectionCache } from '../../../../../types';
 import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
 import packageJson from '../../../../../../package.json';
 import { humanAddress } from '@/utils';

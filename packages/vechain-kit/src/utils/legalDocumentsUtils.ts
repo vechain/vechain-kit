@@ -1,4 +1,4 @@
-import { EnrichedLegalDocument, LegalDocumentAgreement } from '@/types';
+import type { EnrichedLegalDocument, LegalDocumentAgreement } from '../types';
 import { getLocalStorageItem } from './ssrUtils';
 
 export const LEGAL_DOCS_LOCAL_STORAGE_KEY = 'vechain-kit-legal-documents';

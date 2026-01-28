@@ -10,7 +10,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
+import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
 import {
     LuX,
     LuExternalLink,

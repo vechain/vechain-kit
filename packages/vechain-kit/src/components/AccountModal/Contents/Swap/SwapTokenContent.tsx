@@ -37,7 +37,7 @@ import {
     useGenericDelegatorFeeEstimation,
 } from '@/hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
-import { SwapQuote } from '@/types/swap';
+import type { SwapQuote } from '../../../../types/swap';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { formatUnits, parseUnits } from 'viem';
@@ -50,7 +50,7 @@ import {
     SupportedCurrency,
 } from '@/utils/currencyUtils';
 import { useTokenPrices } from '@/hooks';
-import { GasTokenType } from '@/types/gasToken';
+import type { GasTokenType } from '../../../../types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
 import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';

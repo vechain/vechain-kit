@@ -10,10 +10,10 @@ import {
     signerUtils,
 } from '@vechain/sdk-network';
 import { getGenericDelegatorUrl, randomTransactionUser } from '../utils';
-import {
+import type {
     GasTokenType,
     TransactionSpeed,
-} from '@/types';
+} from '../types';
 import {
     useSmartAccount,
     useWallet,

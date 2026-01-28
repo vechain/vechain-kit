@@ -1,4 +1,4 @@
-import { Wallet } from '@/types';
+import type { Wallet } from '../../types';
 import { Image, ImageProps, Skeleton } from '@chakra-ui/react';
 import { useRef, useEffect } from 'react';
 

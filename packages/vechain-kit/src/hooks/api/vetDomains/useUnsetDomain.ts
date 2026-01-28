@@ -10,7 +10,7 @@ import { getConfig } from '@/config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { humanAddress } from '@/utils';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';
-import { Wallet } from '@/types';
+import type { Wallet } from '../../../types';
 import { TransactionClause } from '@vechain/sdk-core';
 
 type useUnsetDomainProps = {

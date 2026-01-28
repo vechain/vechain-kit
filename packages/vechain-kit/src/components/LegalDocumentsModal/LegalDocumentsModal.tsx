@@ -1,6 +1,6 @@
 'use client';
 
-import { EnrichedLegalDocument } from '@/types';
+import type { EnrichedLegalDocument } from '../../types';
 import { Step, StepModal } from '../StepModal/StepModal';
 import { useSteps } from '@chakra-ui/react';
 import { DisconnectConfirmContent } from '../AccountModal/Contents/DisconnectConfirmation/DisconnectConfirmContent';

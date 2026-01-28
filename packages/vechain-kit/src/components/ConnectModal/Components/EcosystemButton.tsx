@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { ConnectModalContentsTypes } from '@/components';
 import { useTranslation } from 'react-i18next';
-import { PrivyAppInfo } from '@/types';
+import type { PrivyAppInfo } from '../../../types';
 
 type Props = {
     isDark: boolean;

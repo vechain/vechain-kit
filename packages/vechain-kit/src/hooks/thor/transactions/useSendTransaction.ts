@@ -7,7 +7,7 @@ import {
 } from '@vechain/dapp-kit-react';
 import { TransactionMessage } from '@vechain/dapp-kit';
 import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
+import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
 import { useGasEstimate } from './useGasEstimate';
 import { TransactionReceipt } from '@vechain/sdk-network';

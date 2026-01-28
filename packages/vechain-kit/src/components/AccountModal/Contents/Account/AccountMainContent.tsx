@@ -18,7 +18,7 @@ import {
     ModalBackButton,
     QuickActionsSection,
 } from '@/components';
-import { Wallet } from '@/types';
+import type { Wallet } from '../../../../types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useAccountModalOptions } from '@/hooks';

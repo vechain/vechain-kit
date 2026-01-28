@@ -1,12 +1,14 @@
 import { LegalDocumentsModal } from '@/components/LegalDocumentsModal';
 import { useWallet, useSyncableLocalStorage } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
-import {
+import type {
     EnrichedLegalDocument,
     LegalDocumentAgreement,
+} from '../types';
+import {
     LegalDocumentSource,
     LegalDocumentType,
-} from '@/types';
+} from '../types';
 import { compareAddresses } from '@/utils';
 import {
     createDocumentRecords,

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { GasTokenType } from '@/types';
+import type { GasTokenType } from '../../types';
 import { useSmartAccount, useWallet, estimateGas } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TransactionClause } from '@vechain/sdk-core';

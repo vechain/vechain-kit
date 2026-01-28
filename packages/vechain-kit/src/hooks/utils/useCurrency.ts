@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useVeChainKitConfig } from '@/providers';
-import { CURRENCY } from '@/types';
+import type { CURRENCY } from '../../types';
 import { setLocalStorageItem } from '@/utils/ssrUtils';
 
 const STORAGE_KEY = 'vechain_kit_currency';

@@ -5,7 +5,7 @@ import {
     useGetAvatarOfAddress,
 } from '@/hooks';
 import { convertUriToUrl } from '@/utils';
-import { ENSRecords } from '@/types';
+import type { ENSRecords } from '../../../types';
 
 export const useWalletMetadata = (
     address: string,

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
+import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
 import { TransactionReceipt } from '@vechain/sdk-network';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
 export type TransactionModalProps = {

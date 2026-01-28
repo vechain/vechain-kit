@@ -1,6 +1,6 @@
 import { convertUriToUrl, resolveMediaTypeFromMimeType } from '@/utils';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { NFTMediaType } from '@/types';
+import type { NFTMediaType } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 

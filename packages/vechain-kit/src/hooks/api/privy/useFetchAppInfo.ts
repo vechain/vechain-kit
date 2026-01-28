@@ -1,4 +1,4 @@
-import { PrivyAppInfo } from '@/types';
+import type { PrivyAppInfo } from '../../../types';
 import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_PRIVY_ECOSYSTEM_APPS } from '@/utils/constants';
 import { PRIVY_AUTH_BASE_URL } from '@/constants';

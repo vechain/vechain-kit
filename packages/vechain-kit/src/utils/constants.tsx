@@ -2,11 +2,11 @@ import { VeBetterIcon, VTHOLogo } from '@/assets';
 import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
 import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
-import {
+import type {
     GasTokenPreferences,
     GasTokenType,
     GasTokenInfo,
-} from '@/types/gasToken';
+} from '../types/gasToken';
 import { getConfig } from '@/config';
 import {
     GENERIC_DELEGATOR_MAINNET_URL,
