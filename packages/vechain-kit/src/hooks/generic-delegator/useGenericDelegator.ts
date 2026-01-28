@@ -11,7 +11,7 @@ import { parseEther } from 'viem';
 import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '../../utils';
 import { ThorClient } from '@vechain/sdk-network';
 import { getConfig } from '../../config';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { useCallback } from 'react';
 
 export const estimateGas = async (

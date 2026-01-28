@@ -1,5 +1,5 @@
 import type { UpgradeSmartAccountModalStyle } from '@/components';
-import { useModal } from '@/providers/ModalProvider';
+import { useModal } from '../../providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useUpgradeSmartAccountModal = (

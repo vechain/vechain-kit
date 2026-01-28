@@ -1,5 +1,5 @@
 import { getConfig } from '../../config';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 
 export const useGetNodeUrl = () => {
     const { network } = useVeChainKitConfig();

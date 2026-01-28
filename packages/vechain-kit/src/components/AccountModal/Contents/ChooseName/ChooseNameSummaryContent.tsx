@@ -27,7 +27,7 @@ import {
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
 } from '../../../../hooks';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import type { GasTokenType } from '../../../../types/gasToken';
 import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import { LuSquareUser } from 'react-icons/lu';

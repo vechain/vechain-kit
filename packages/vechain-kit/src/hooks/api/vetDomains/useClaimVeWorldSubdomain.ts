@@ -10,7 +10,7 @@ import {
 } from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '../../../config';
-import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig, VeChainKitConfig } from '../../../providers';
 import { humanAddress } from '../../../utils';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';

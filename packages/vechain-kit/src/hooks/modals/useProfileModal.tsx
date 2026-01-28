@@ -1,4 +1,4 @@
-import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '../../providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useProfileModal = () => {

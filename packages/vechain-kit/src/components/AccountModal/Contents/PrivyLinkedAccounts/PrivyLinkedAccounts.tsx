@@ -39,7 +39,7 @@ import {
 } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { humanAddress } from '../../../../utils';
 
 type ConfirmUnlinkProps = {

@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { TransactionToastContent } from './TransactionToastContent';
 import { TransactionReceipt } from '@vechain/sdk-network';
 

@@ -4,7 +4,7 @@ export * from './gasToken';
 export * from './gasEstimation';
 export * from './modal';
 
-import { LegalDocument } from '@/providers';
+import { LegalDocument } from '../providers';
 
 export enum LegalDocumentType {
     TERMS = 'terms',

@@ -1,5 +1,5 @@
 import { HStack, Circle, Icon, useMediaQuery } from '@chakra-ui/react';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { FcGoogle } from 'react-icons/fc';
 import { FaDiscord, FaXTwitter } from 'react-icons/fa6';
 import { LuPlus } from 'react-icons/lu';

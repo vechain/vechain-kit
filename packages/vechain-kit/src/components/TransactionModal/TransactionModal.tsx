@@ -3,7 +3,7 @@ import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
 import { TransactionReceipt } from '@vechain/sdk-network';
-import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '../../providers';
 export type TransactionModalProps = {
     isOpen: boolean;
     onClose: () => void;

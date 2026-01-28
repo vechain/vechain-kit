@@ -1,4 +1,4 @@
-import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '../../providers/ModalProvider';
 import type { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { ReactNode } from 'react';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { usePrivyWalletProvider } from '@/providers';
+import { usePrivyWalletProvider } from '../../providers';
 import { useWallet } from '../';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 

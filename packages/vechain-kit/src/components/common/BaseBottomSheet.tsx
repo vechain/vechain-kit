@@ -1,7 +1,7 @@
 import { Box, useToken } from '@chakra-ui/react';
 import { Drawer } from 'vaul';
 import { useEffect, useState, useRef } from 'react';
-import { useVechainKitThemeConfig } from '@/providers';
+import { useVechainKitThemeConfig } from '../../providers';
 
 type Props = {
     isOpen: boolean;

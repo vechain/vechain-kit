@@ -35,7 +35,7 @@ import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuUnlink } from 'react-icons/lu';
 import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<

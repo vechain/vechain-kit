@@ -33,9 +33,9 @@ import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/Succe
 import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
-import { useModal } from '@/providers/ModalProvider';
+import { useModal } from '../../providers/ModalProvider';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
-import { useVechainKitThemeConfig } from '@/providers';
+import { useVechainKitThemeConfig } from '../../providers';
 import { useEffect } from 'react';
 
 type Props = {

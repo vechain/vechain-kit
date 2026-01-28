@@ -30,7 +30,7 @@ import {
     useGenericDelegatorFeeEstimation,
 } from '../../../../hooks';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { useGetAvatarOfAddress } from '../../../../hooks/api/vetDomains';
 import type { GasTokenType } from '../../../../types/gasToken';
 import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';

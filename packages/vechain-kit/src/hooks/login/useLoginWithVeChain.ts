@@ -1,4 +1,4 @@
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
+import { usePrivyCrossAppSdk } from '../../providers/PrivyCrossAppProvider';
 import { useCrossAppConnectionCache } from '../cache/useCrossAppConnectionCache';
 import { useFetchAppInfo } from '../';
 import { VECHAIN_PRIVY_APP_ID } from '../../utils';

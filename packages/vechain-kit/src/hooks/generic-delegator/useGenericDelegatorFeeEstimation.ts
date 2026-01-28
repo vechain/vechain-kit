@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { EstimationResponse } from '../../types/gasEstimation';
 import type { EnhancedClause, GasTokenType } from '../../types';
 import { useSmartAccount, useWallet, estimateGas, useTokenBalances, useGasTokenSelection } from '../';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { TransactionClause } from '@vechain/sdk-core';
 
 export interface useGenericDelegatorFeeEstimationParams {

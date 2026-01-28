@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { getConfig } from '../../config';
 import {
     LuExternalLink,

@@ -16,10 +16,10 @@ import {
 } from '../../';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { NETWORK_TYPE } from '../../../config/network';
 import { useAccount } from 'wagmi';
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
+import { usePrivyCrossAppSdk } from '../../../providers/PrivyCrossAppProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';

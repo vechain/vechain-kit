@@ -8,7 +8,7 @@ import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '../../hooks'
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
-import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
+import { useVeChainKitConfig, VechainKitThemeProvider } from '../../providers';
 import { ConnectPopover } from '../ConnectModal';
 
 export type WalletButtonProps = {

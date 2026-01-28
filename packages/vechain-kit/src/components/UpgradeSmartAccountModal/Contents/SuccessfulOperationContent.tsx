@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { motion } from 'framer-motion';
 import { getConfig } from '../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';

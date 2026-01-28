@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import type { EnrichedLegalDocument } from '../../../types';
 import { Checkbox, HStack, Icon, Input, Link, Text } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';

@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 
 /**
  * Hook to get and set the current language in VeChainKit

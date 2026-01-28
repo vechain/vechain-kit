@@ -15,7 +15,7 @@ import { useTotalBalance, useWalletMetadata } from '../../../../../hooks';
 import { StoredWallet } from '../../../../../hooks/api/wallet/useWalletStorage';
 import { LuTrash2, LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../../providers';
 
 type Props = {
     wallet: StoredWallet;

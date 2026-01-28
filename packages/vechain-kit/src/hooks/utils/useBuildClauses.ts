@@ -6,9 +6,9 @@ import { Clause, Address, ABIContract, TransactionClause } from '@vechain/sdk-co
 import { getConfig } from '../../config';
 import { usePrivy } from '@privy-io/react-auth';
 import { NETWORK_TYPE } from '../../config/network';
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useWallet, SmartAccountReturnType, useGetChainId } from "@/hooks";
-import { useVeChainKitConfig } from "@/providers";
+import { usePrivyCrossAppSdk } from '../../providers/PrivyCrossAppProvider';
+import { useWallet, SmartAccountReturnType, useGetChainId } from "../";
+import { useVeChainKitConfig } from "../../providers";
 import { SocialLoginSmartAccount__factory, SocialLoginSmartAccountFactory__factory } from "@vechain/vechain-contract-types";
 
 export interface BuildClausesParams {

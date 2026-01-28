@@ -1,7 +1,7 @@
 import { HStack, Link, StackProps } from '@chakra-ui/react';
 import { VechainLogo } from '../../assets';
 import packageJson from '../../../package.json';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 
 type Props = {} & Omit<StackProps, 'dangerouslySetInnerHTML'>;
 

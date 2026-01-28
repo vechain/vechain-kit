@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { Button, Link, Text, VStack, Box } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';

@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { formatTokenBalance } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
 import { getB3trBalance } from '@vechain/contract-getters';

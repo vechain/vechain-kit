@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import type { CURRENCY } from '../../types';
 import { setLocalStorageItem } from '../../utils/ssrUtils';
 

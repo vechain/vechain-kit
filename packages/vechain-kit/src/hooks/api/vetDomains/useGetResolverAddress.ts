@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { getConfig } from '../../../config';
 import { useCallClause } from '../../';
 import { namehash } from 'viem';

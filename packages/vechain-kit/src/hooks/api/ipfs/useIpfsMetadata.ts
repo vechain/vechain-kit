@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { convertUriToUrl } from '../../../utils';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { NETWORK_TYPE } from '../../../config/network';
 
 /**

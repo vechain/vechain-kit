@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { useEffect, useState, useRef, createContext, useContext } from 'react';
-import { useVechainKitThemeConfig } from '@/providers';
+import { useVechainKitThemeConfig } from '../../providers';
 
 type Props = {
     children: React.ReactNode;

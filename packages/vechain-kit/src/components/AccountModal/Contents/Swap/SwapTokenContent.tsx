@@ -38,7 +38,7 @@ import {
 } from '../../../../hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
 import type { SwapQuote } from '../../../../types/swap';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { formatUnits, parseUnits } from 'viem';
 import { getConfig } from '../../../../config';

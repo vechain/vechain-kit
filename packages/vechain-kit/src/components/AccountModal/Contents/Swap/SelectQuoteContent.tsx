@@ -17,7 +17,7 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import type { SwapQuote } from '../../../../types/swap';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { formatEther } from 'viem';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } from '../../../../utils/currencyUtils';

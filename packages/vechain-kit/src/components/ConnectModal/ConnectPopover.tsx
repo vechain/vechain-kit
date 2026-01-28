@@ -13,7 +13,7 @@ import { ConnectionOptionsStack } from './Components/ConnectionOptionsStack';
 import { useTranslation } from 'react-i18next';
 import { LuChevronDown } from 'react-icons/lu';
 import { EcosystemButton } from './Components';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { useFetchAppInfo, useConnectModal } from '../../hooks';
 import { ConnectModalContentsTypes } from './ConnectModal';
 import { useCallback } from 'react';

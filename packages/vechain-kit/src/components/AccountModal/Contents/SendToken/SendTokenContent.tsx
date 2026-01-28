@@ -23,7 +23,7 @@ import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { useForm } from 'react-hook-form';
 import {
     useVechainDomain,

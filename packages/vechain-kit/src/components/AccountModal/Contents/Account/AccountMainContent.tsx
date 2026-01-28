@@ -20,7 +20,7 @@ import {
 } from '@/components';
 import type { Wallet } from '../../../../types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { useAccountModalOptions } from '../../../../hooks';
 
 type Props = {

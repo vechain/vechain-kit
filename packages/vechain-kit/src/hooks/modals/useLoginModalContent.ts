@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 import { VECHAIN_PRIVY_APP_ID } from '../../utils';
 import { useMemo } from 'react';
 

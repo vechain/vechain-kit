@@ -18,7 +18,7 @@ import { AccountModalContentTypes, AssetButton } from '@/components';
 import { useWallet, useTokensWithValues, TokenWithValue } from '../../../../hooks';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import { useCurrency } from '../../../../hooks';
 import { SupportedCurrency } from '../../../../utils/currencyUtils';
 

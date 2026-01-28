@@ -3,7 +3,7 @@ import { useThor } from '@vechain/dapp-kit-react';
 import { OracleVechainEnergy__factory } from '@vechain/vechain-contract-types';
 import { BigNumber } from 'bignumber.js';
 import { getConfig } from '../../../config';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { NETWORK_TYPE } from '../../../config/network';
 import { ThorClient } from '@vechain/sdk-network';
 

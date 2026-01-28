@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 
 export const EmailLoginButton = () => {
     const { t } = useTranslation();

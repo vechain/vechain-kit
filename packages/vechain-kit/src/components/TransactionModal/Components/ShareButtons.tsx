@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import React from 'react';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers';
 import { TELEGRAM_BASE_URL, TWITTER_BASE_URL, WHATSAPP_BASE_URL } from '@/constants';
 
 // bouncing circle button animation provider
