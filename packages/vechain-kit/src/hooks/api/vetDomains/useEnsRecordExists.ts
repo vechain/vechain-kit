@@ -1,5 +1,5 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../../../config';
+import { NETWORK_TYPE } from '../../../config/network';
 import { VetDomainsRegistry__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery } from '@tanstack/react-query';

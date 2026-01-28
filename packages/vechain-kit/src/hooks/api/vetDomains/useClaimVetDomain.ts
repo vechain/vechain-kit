@@ -7,7 +7,7 @@ import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { useCallback } from 'react';
 import { VetDomainsReverseRegistrar__factory } from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { useVeChainKitConfig, VeChainKitConfig } from '@/providers';
 import { ethers } from 'ethers';
 import { invalidateAndRefetchDomainQueries } from './utils/domainQueryUtils';

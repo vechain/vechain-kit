@@ -1,9 +1,9 @@
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { X2EarnApps__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { useThor } from '@vechain/dapp-kit-react';
 import { convertUriToUrl } from '../../../utils';
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../../../config/network';
 import { useQuery } from '@tanstack/react-query';
 
 /**

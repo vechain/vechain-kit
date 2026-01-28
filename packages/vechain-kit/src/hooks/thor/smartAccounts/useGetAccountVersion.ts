@@ -1,7 +1,7 @@
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '../../../config/network';
+import { getConfig } from '../../../config';
 import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';
 
 const abi = SocialLoginSmartAccountFactory__factory.abi;

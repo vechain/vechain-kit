@@ -1,4 +1,4 @@
-import { getConfig } from '@/config';
+import { getConfig } from '../../../../../config';
 import {
     useFetchAppInfo,
     useWallet,

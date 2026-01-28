@@ -15,7 +15,7 @@ import { StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';
 import { ShareButtons } from '@/components/TransactionModal';
 

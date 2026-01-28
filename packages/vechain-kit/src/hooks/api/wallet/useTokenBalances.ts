@@ -7,7 +7,7 @@ import {
     useGetCustomTokenBalances,
 } from '@/hooks';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 
 export type WalletTokenBalance = {
     address: string;

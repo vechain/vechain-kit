@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../../../config/network';
 import { getAvatar  } from '@vechain/contract-getters';
 
 export const getAvatarQueryKey = (name: string, networkType: NETWORK_TYPE) => [

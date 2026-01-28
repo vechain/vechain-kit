@@ -1,5 +1,5 @@
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { useCallClause } from '@/hooks';
 import { namehash } from 'viem';
 import { VetDomainsRegistry__factory } from '@vechain/vechain-contract-types';

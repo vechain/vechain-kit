@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { useGetTokenUsdPrice } from './useGetTokenUsdPrice';
 
 export type ExchangeRates = {

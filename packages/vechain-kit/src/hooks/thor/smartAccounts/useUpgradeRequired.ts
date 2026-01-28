@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useThor } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '../../../config/network';
+import { getConfig } from '../../../config';
 import { ThorClient } from '@vechain/sdk-network';
 
 export const getUpgradeRequired = async (

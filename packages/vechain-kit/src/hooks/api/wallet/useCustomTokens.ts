@@ -1,7 +1,7 @@
 import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '../../../utils';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { type CustomTokenInfo } from '@vechain/contract-getters';
 
 import {  getTokenInfo } from './useGetCustomTokenInfo';

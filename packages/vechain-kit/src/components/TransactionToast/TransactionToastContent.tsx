@@ -19,7 +19,7 @@ import {
     LuRefreshCw,
 } from 'react-icons/lu';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../config';
 import { useTranslation } from 'react-i18next';
 import { TransactionReceipt } from '@vechain/sdk-network';
 

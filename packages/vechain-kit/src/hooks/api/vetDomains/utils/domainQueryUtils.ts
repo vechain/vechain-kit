@@ -7,7 +7,7 @@ import {
     getAvatarQueryKey,
 } from '@/hooks';
 import { QueryClient } from '@tanstack/react-query';
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../../../../config/network';
 
 /**
  * Invalidates and refetches all domain-related queries

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { getSwapAggregators } from '@/config/swapAggregators';
+import { getSwapAggregators } from '../../../config/swapAggregators';
 import type { SwapParams, SwapQuote } from '../../../types/swap';
 import { parseUnits, zeroAddress } from 'viem';
 import { useThor } from '@vechain/dapp-kit-react';

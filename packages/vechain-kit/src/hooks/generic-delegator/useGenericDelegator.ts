@@ -10,7 +10,7 @@ import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { parseEther } from 'viem';
 import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '../../utils';
 import { ThorClient } from '@vechain/sdk-network';
-import { getConfig } from '@/config';
+import { getConfig } from '../../config';
 import { useVeChainKitConfig } from '@/providers';
 import { useCallback } from 'react';
 

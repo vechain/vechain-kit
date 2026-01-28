@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../../../config/network';
 import {
     getLocalStorageItem,
     setLocalStorageItem,

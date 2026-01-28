@@ -1,5 +1,5 @@
 import type { SwapAggregator } from '../../types/swap';
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../../config/network';
 import { zeroAddress, type Address } from 'viem';
 import { createUniswapV2Aggregator } from './uniswapV2Aggregator';
 import { BetterSwapLogo } from '@/assets/icons';

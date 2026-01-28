@@ -7,7 +7,7 @@ import type {
     GasTokenType,
     GasTokenInfo,
 } from '../types/gasToken';
-import { getConfig } from '@/config';
+import { getConfig } from '../config';
 import {
     GENERIC_DELEGATOR_MAINNET_URL,
     GENERIC_DELEGATOR_TESTNET_URL,

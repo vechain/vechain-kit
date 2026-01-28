@@ -1,5 +1,5 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../config';
+import { NETWORK_TYPE } from '../config/network';
 import type { CURRENCY, PrivyLoginMethod } from '../types';
 import { isValidUrl } from '../utils';
 import { getLocalStorageItem, setLocalStorageItem } from '../utils/ssrUtils';

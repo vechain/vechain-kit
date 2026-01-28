@@ -100,3 +100,48 @@ Branch: ralph/direct-imports
 
 ---
 
+## US-003: Convert @/config imports to relative imports ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 75 `@/config` imports across 55 files to relative paths
+- Import patterns converted:
+  - `@/config` → relative path to config/index.ts
+  - `@/config/network` → relative path to config/network.ts
+  - `@/config/swapAggregators` → relative path to config/swapAggregators.ts
+- Relative paths calculated based on file location depth:
+  - `../config` for files 1 level deep (utils/, providers/)
+  - `../../config` for files 2 levels deep (hooks/utils/, hooks/generic-delegator/, components/TransactionModal/, etc.)
+  - `../../../config` for files 3 levels deep (hooks/api/wallet/, hooks/api/ipfs/, hooks/api/vetDomains/, hooks/api/swap/, hooks/thor/smartAccounts/, components/UpgradeSmartAccountModal/Contents/)
+  - `../../../../config` for files 4 levels deep (components/AccountModal/Contents/*/*)
+  - `../../../../../config` for files 5 levels deep (components/AccountModal/Contents/ConnectionDetails/Components/)
+  - `./network` for config/swapAggregators.ts (same directory)
+
+**Files modified:**
+- providers/VeChainKitProvider.tsx, PrivyWalletProvider.tsx
+- hooks/generic-delegator/useGenericDelegator.ts
+- hooks/utils/useBuildClauses.ts, useGetNodeUrl.ts
+- hooks/api/swap/useSwapQuotes.ts
+- hooks/api/wallet/useTokenBalances.ts, useWalletMetadata.ts, useRoundXApps.ts, useWalletStorage.ts, useIsPerson.ts, useCustomTokens.ts, useGetTokenUsdPrice.ts, useTokenPrices.ts, useXAppShares.ts, useXAppMetadata.tsx, useWallet.ts, useCurrentAllocationsRoundId.ts
+- hooks/api/ipfs/useIpfsImage.ts, useIpfsMetadata.ts
+- hooks/api/vetDomains/useGetAvatar.ts, useIsDomainProtected.ts, useGetAvatarLegacy.ts, useClaimVeWorldSubdomain.ts, utils/domainQueryUtils.ts, useGetDomainsOfAddress.ts, useClaimVetDomain.ts, useGetTextRecords.ts, useGetResolverAddress.ts, useEnsRecordExists.ts, useUnsetDomain.ts
+- hooks/thor/smartAccounts/useAccountImplementationAddress.ts, useUpgradeRequired.ts, useHasV1SmartAccount.ts, useUpgradeRequiredForAccount.ts, useGetAccountAddress.ts, useGetAccountVersion.ts, useSmartAccount.ts, useCurrentAccountImplementationVersion.ts
+- components/TransactionModal/TransactionModalContent.tsx
+- components/common/TransactionButtonAndStatus.tsx
+- components/TransactionToast/TransactionToastContent.tsx
+- components/UpgradeSmartAccountModal/Contents/SuccessfulOperationContent.tsx
+- components/AccountModal/Contents/SuccessfulOperation/SuccessfulOperationContent.tsx
+- components/AccountModal/Contents/FailedOperation/FailedOperationContent.tsx
+- components/AccountModal/Contents/ConnectionDetails/Components/ConnectionCard.tsx
+- components/AccountModal/Contents/Swap/SwapTokenContent.tsx
+- utils/uri.ts, constants.tsx, ipfs.ts
+- utils/swap/veTrade.tsx, apiAggregator.ts, betterSwap.tsx
+- config/swapAggregators.ts
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/config` imports remain in codebase ✅
+
+---
+

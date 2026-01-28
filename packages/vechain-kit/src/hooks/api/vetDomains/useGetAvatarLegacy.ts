@@ -22,8 +22,8 @@ import {
     zeroPadValue,
     toBeHex,
 } from 'ethers';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '../../../config/network';
+import { getConfig } from '../../../config';
 import { convertUriToUrl } from '../../../utils/uri';
 
 const nameInterface = new Interface([

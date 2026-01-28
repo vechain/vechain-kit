@@ -1,4 +1,4 @@
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../../../config/network';
 import {
     useVechainDomain,
     useGetTextRecords,

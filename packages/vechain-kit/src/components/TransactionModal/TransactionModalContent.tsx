@@ -15,7 +15,7 @@ import {
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { getConfig } from '../../config';
 import {
     LuExternalLink,
     LuCircleCheck,

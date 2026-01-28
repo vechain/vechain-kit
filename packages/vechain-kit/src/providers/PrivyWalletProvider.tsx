@@ -24,7 +24,7 @@ import {
     useBuildClauses,
     useGetAccountVersion,
 } from '@/hooks';
-import { getConfig } from '@/config';
+import { getConfig } from '../config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
 import { SignTypedDataParameters } from '@wagmi/core';

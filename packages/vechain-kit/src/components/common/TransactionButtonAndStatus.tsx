@@ -3,7 +3,7 @@ import { Button, Link, Text, VStack, Box } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';
 import type { TransactionStatusErrorType } from '../../types';
-import { getConfig } from '@/config';
+import { getConfig } from '../../config';
 import { TransactionReceipt } from '@vechain/sdk-network';
 
 export type TransactionButtonAndStatusProps = {

@@ -41,7 +41,7 @@ import type { SwapQuote } from '../../../../types/swap';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { formatUnits, parseUnits } from 'viem';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../../config';
 import { compareAddresses } from '../../../../utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '../../../../utils/currencyUtils';

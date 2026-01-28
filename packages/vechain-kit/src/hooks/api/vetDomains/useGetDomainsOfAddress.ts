@@ -1,5 +1,5 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../../../config';
+import { NETWORK_TYPE } from '../../../config/network';
 import { useVeChainKitConfig } from '@/providers';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';

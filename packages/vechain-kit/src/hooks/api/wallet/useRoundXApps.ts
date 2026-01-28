@@ -1,5 +1,5 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../../../config';
+import { NETWORK_TYPE } from '../../../config/network';
 import { XAllocationVoting__factory } from '@vechain/vechain-contract-types';
 import { useVeChainKitConfig } from '@/providers';
 import { getCallClauseQueryKeyWithArgs, useCallClause } from '@/hooks';

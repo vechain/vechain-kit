@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Address } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
+import { NETWORK_TYPE } from '../../../config/network';
+import { getConfig } from '../../../config';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useThor } from '@vechain/dapp-kit-react';
 
