@@ -4,7 +4,7 @@ import { FaTelegramPlane, FaWhatsapp } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import React from 'react';
 import { useVeChainKitConfig } from '../../../providers';
-import { TELEGRAM_BASE_URL, TWITTER_BASE_URL, WHATSAPP_BASE_URL } from '@/constants';
+import { TELEGRAM_BASE_URL, TWITTER_BASE_URL, WHATSAPP_BASE_URL } from '../../../constants';
 
 // bouncing circle button animation provider
 const BouncingAnimation = ({ children }: { children: React.ReactNode }) => (

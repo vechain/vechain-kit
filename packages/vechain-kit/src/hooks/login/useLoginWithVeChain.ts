@@ -3,7 +3,7 @@ import { useCrossAppConnectionCache } from '../cache/useCrossAppConnectionCache'
 import { useFetchAppInfo } from '../';
 import { VECHAIN_PRIVY_APP_ID } from '../../utils';
 import { handlePopupError } from '../../utils/handlePopupError';
-import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '@/constants';
+import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '../../constants';
 
 export const useLoginWithVeChain = () => {
     const { login: loginWithVeChain } = usePrivyCrossAppSdk();

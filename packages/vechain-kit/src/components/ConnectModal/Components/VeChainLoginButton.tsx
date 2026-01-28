@@ -1,5 +1,5 @@
 import { GridItem } from '@chakra-ui/react';
-import { VechainLogoDark, VechainLogoLight } from '@/assets';
+import { VechainLogoDark, VechainLogoLight } from '../../../assets';
 import { ConnectionButton, SocialIcons } from '../../';
 import { useLoginWithVeChain } from '../../../hooks';
 import { useTranslation } from 'react-i18next';

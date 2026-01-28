@@ -40,7 +40,7 @@ import {
     VEBETTERDAO_GOVERNANCE_BASE_URL,
     VET_DOMAINS_BASE_URL,
     COINMARKETCAP_STATIC_BASE_URL,
-} from '@/constants';
+} from '../../../../constants';
 
 export type EcosystemWithCategoryProps = {
     selectedCategory: CategoryFilter;

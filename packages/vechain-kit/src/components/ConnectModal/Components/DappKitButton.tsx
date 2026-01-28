@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { LuArrowRight, LuWallet } from 'react-icons/lu';
 import { useEffect } from 'react';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
-import { VeWorldLogoDark, VeWorldLogoLight } from '@/assets';
+import { VeWorldLogoDark, VeWorldLogoLight } from '../../../assets';
 import { IconType } from 'react-icons';
 import { useVeChainKitConfig } from '../../../providers';
 

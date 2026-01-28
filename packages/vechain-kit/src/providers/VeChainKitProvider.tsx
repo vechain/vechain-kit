@@ -27,12 +27,12 @@ import {
     useState,
     useRef,
 } from 'react';
-import { VechainKitThemeConfig } from '@/theme/tokens';
+import { VechainKitThemeConfig } from '../theme/tokens';
 import {
     getDefaultTokens,
     convertThemeConfigToTokens,
     mergeTokens,
-} from '@/theme/tokens';
+} from '../theme/tokens';
 import {
     generateDAppKitCSSVariables,
     generatePrivyCSSVariables,

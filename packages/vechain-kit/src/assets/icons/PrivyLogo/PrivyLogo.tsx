@@ -1,6 +1,6 @@
 import { Image, ImageProps } from '@chakra-ui/react';
 import React from 'react';
-import { PRIVY_MINTLIFY_ASSETS_S3_BASE_URL } from '@/constants';
+import { PRIVY_MINTLIFY_ASSETS_S3_BASE_URL } from '../../../constants';
 
 type Props = {
     isDark?: boolean;

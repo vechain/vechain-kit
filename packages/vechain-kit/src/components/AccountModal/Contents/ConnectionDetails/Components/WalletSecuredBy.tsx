@@ -1,4 +1,4 @@
-import { PrivyLogo, VechainLogo } from '@/assets';
+import { PrivyLogo, VechainLogo } from '../../../../../assets';
 import { useCrossAppConnectionCache, useWallet } from '../../../../../hooks';
 import { useVeChainKitConfig } from '../../../../../providers';
 import { HStack, Icon, Image, Text, VStack, useToken } from '@chakra-ui/react';

@@ -1,6 +1,6 @@
-import { VeBetterIcon, VTHOLogo } from '@/assets';
-import { VETLogo } from '@/assets/icons/VechainLogo/VETLogo';
-import { VOT3Logo } from '@/assets/icons/VechainLogo/VOT3Logo';
+import { VeBetterIcon, VTHOLogo } from '../assets';
+import { VETLogo } from '../assets/icons/VechainLogo/VETLogo';
+import { VOT3Logo } from '../assets/icons/VechainLogo/VOT3Logo';
 import { getLocalStorageItem } from './ssrUtils';
 import type {
     GasTokenPreferences,
@@ -19,7 +19,7 @@ import {
     EVEARN_BASE_URL,
     GREENCART_BASE_URL,
     MUGSHOT_BASE_URL,
-} from '@/constants';
+} from '../constants';
 
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: new URL(

@@ -19,7 +19,7 @@ import {
     VECHAIN_EXPLORER_BASE_URL,
     VECHAIN_MAINNET_NODE_BASE_URL,
     VECHAINSTATS_BASE_URL,
-} from '@/constants';
+} from '../constants';
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,

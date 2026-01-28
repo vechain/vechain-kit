@@ -20,7 +20,7 @@ import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
 import { supportedLanguages, languageNames } from '../../../../../i18n';
 import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
-import { VECHAIN_KIT_DOCS_BASE_URL } from '@/constants';
+import { VECHAIN_KIT_DOCS_BASE_URL } from '../../../../constants';
 
 export type FAQContentProps = {
     onGoBack: () => void;

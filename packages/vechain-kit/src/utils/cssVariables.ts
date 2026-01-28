@@ -3,7 +3,7 @@
  * Converts ThemeTokens to CSS variable objects
  */
 
-import { ThemeTokens } from '@/theme/tokens';
+import { ThemeTokens } from '../theme/tokens';
 import { CustomizedStyle } from '@vechain/dapp-kit-ui';
 
 /**

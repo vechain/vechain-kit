@@ -280,3 +280,50 @@ Branch: ralph/direct-imports
 
 ---
 
+## US-007: Convert remaining @/ imports (constants, assets, theme) ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 14 `@/constants` imports to relative paths
+- Converted 10 `@/assets` imports to relative paths
+- Converted 6 `@/theme` imports to relative paths
+- Relative paths calculated based on file location depth
+
+**@/constants files modified:**
+- assets/icons/PrivyLogo/PrivyLogo.tsx → `../../../constants`
+- providers/PrivyCrossAppProvider.tsx → `../constants`
+- utils/constants.tsx → `../constants`
+- utils/swap/veTrade.tsx → `../../constants`
+- hooks/login/useLoginWithVeChain.ts → `../../constants`
+- hooks/api/privy/useFetchPrivyStatus.ts → `../../../constants`
+- hooks/api/privy/useFetchAppInfo.ts → `../../../constants`
+- components/TransactionModal/Components/ShareButtons.tsx → `../../../constants`
+- components/AccountModal/Components/CrossAppConnectionSecurityCard.tsx → `../../../constants`
+- hooks/api/vetDomains/useGetAvatarOfAddress.ts → `../../../constants`
+- components/AccountModal/Contents/Ecosystem/ExploreEcosystemContent.tsx → `../../../../constants`
+- components/AccountModal/Contents/Bridge/BridgeContent.tsx → `../../../../constants`
+- components/AccountModal/Contents/FAQ/FAQContent.tsx → `../../../../constants`
+- hooks/utils/useAppHubApps.ts → `../../constants`
+
+**@/assets files modified:**
+- utils/constants.tsx → `../assets`, `../assets/icons/VechainLogo/VETLogo`, `../assets/icons/VechainLogo/VOT3Logo`
+- utils/swap/betterSwap.tsx → `../../assets/icons`
+- utils/swap/veTrade.tsx → `../../assets/icons`
+- components/ConnectModal/Components/VeChainLoginButton.tsx → `../../../assets`
+- components/ConnectModal/Components/DappKitButton.tsx → `../../../assets`
+- components/AccountModal/Contents/Bridge/BridgeContent.tsx → `../../../../assets`
+- components/AccountModal/Contents/ConnectionDetails/Components/WalletSecuredBy.tsx → `../../../../../assets`
+- components/ConnectModal/Components/VeChainWithPrivyLoginButton.tsx → `../../../assets`
+
+**@/theme files modified:**
+- utils/cssVariables.ts → `../theme/tokens`
+- providers/VeChainKitProvider.tsx → `../theme/tokens`
+- providers/VechainKitThemeProvider.tsx → `../theme`, `../theme/tokens`
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/constants`, `@/assets`, or `@/theme` imports remain in codebase ✅
+
+---
+

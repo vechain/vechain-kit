@@ -15,16 +15,16 @@ import {
     useMemo,
     useRef,
 } from 'react';
-import { getVechainKitTheme } from '@/theme';
+import { getVechainKitTheme } from '../theme';
 import { safeQuerySelector } from '../utils/ssrUtils';
 import type { VechainKitThemeConfig } from '../theme/tokens';
 import { VeChainKitContext } from './VeChainKitProvider';
-import { ThemeTokens } from '@/theme/tokens';
+import { ThemeTokens } from '../theme/tokens';
 import {
     getDefaultTokens,
     convertThemeConfigToTokens,
     mergeTokens,
-} from '@/theme/tokens';
+} from '../theme/tokens';
 
 type Props = {
     children: ReactNode;
