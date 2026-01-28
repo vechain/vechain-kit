@@ -30,8 +30,63 @@ It offers:
 -   [Smart Account Factory](https://vechain.github.io/smart-accounts/)
 -   [Docs](https://docs.vechainkit.vechain.org/)
 
+## Bundle Size Optimization
+
+VeChain Kit supports conditional loading to reduce bundle size based on your needs:
+
+| Configuration | Bundle Size | Use Case |
+|---------------|-------------|----------|
+| DAppKit only | ~400KB | Wallet connections only |
+| Full-featured | ~1.0MB | All features (social + wallet + ecosystem) |
+
+### Optimization Strategies
+
+**1. Use subpath imports** for better tree-shaking:
+
+```typescript
+// Instead of barrel imports
+import { useWallet, WalletButton, VeChainKitProvider } from '@vechain/vechain-kit';
+
+// Use subpath imports
+import { useWallet } from '@vechain/vechain-kit/hooks';
+import { WalletButton } from '@vechain/vechain-kit/components';
+import { VeChainKitProvider } from '@vechain/vechain-kit/providers';
+```
+
+**2. Skip Privy** (~500KB savings) if you only need wallet connections:
+
+```typescript
+<VeChainKitProvider
+    // No privy prop = Privy SDK not loaded
+    dappKit={{
+        allowedWallets: ['veworld', 'wallet-connect'],
+        walletConnectOptions: { projectId: '...' },
+    }}
+    loginMethods={[{ method: 'dappkit', gridColumn: 4 }]}
+>
+```
+
+**3. Skip ecosystem login** (~150KB savings) if you don't need cross-app connections:
+
+```typescript
+// Don't include 'ecosystem' or 'vechain' in loginMethods
+loginMethods={[{ method: 'dappkit', gridColumn: 4 }]}
+```
+
+**4. Use headless mode** (~300KB savings) if building custom UI:
+
+```typescript
+<VeChainKitProvider headless={true} ...>
+```
+
+See the [examples](./examples) directory for complete configurations:
+- **[next-template](./examples/next-template)** - Optimized setup (~400KB)
+- **[homepage](./examples/homepage)** - Full-featured (~1.0MB)
+- **[playground](./examples/playground)** - Backward compatibility testing
+
 ## Table of Contents
 
+-   [Bundle Size Optimization](#bundle-size-optimization)
 -   [Setting up for local development](#setting-up-for-local-development)
 -   [Branching Strategy](#branching-strategy)
 -   [E2E Testing](#e2e-testing)

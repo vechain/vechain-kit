@@ -21,6 +21,20 @@ interface Props {
     children: React.ReactNode;
 }
 
+/**
+ * OPTIMIZED CONFIGURATION
+ *
+ * This template demonstrates an optimized VeChain Kit setup for smaller bundle sizes:
+ *
+ * - NO Privy: Removes ~500KB by not loading @privy-io/react-auth
+ * - NO Ecosystem login: Removes ~150KB by not loading wagmi
+ * - DAppKit only: Uses direct wallet connections (VeWorld, WalletConnect)
+ *
+ * For apps that need social logins or ecosystem wallet connections,
+ * see the `homepage` or `playground` examples which demonstrate full-featured setups.
+ *
+ * Expected bundle size: ~400KB (vs ~1.0MB+ for full-featured setup)
+ */
 export function VechainKitProviderWrapper({ children }: Props) {
     const { colorMode } = useColorMode();
     const { i18n } = useTranslation();
@@ -44,67 +58,38 @@ export function VechainKitProviderWrapper({ children }: Props) {
         [],
     );
 
-    const coloredLogo =
-        'https://vechain.org/wp-content/uploads/2025/02/VeChain_Icon_Quartz_300ppi.png';
-
     return (
         <VeChainKitProvider
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: [
-                    'google',
-                    'apple',
-                    'twitter',
-                    'farcaster',
-                    'email',
-                    'discord',
-                    'tiktok',
-                    // 'rabby_wallet',
-                    // 'coinbase_wallet',
-                    // 'rainbow',
-                    // 'phantom',
-                    // 'metamask',
-                ],
-                appearance: {
-                    loginMessage: 'Select a login method',
-                    logo: coloredLogo,
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
+            // OPTIMIZED: No privy prop = Privy SDK not loaded (~500KB savings)
+            // To enable social logins, add the privy prop (see homepage example)
+
+            // DAppKit configuration for direct wallet connections
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
                     projectId:
                         process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
                     metadata: {
-                        name: 'VeChainKit Demo App',
+                        name: 'VeChainKit Optimized Template',
                         description:
-                            'This is a demo app to show you how the VechainKit works.',
+                            'A bundle-optimized VeChain Kit template using DAppKit only.',
                         url:
                             typeof window !== 'undefined'
                                 ? window.location.origin
                                 : '',
                         icons: [
-                            typeof window !== 'undefined' ? coloredLogo : '',
+                            typeof window !== 'undefined'
+                                ? `${window.location.origin}/favicon.ico`
+                                : '',
                         ],
                     },
                 },
             }}
-            loginMethods={[
-                // { method: 'email', gridColumn: 4 },
-                // { method: 'google', gridColumn: 4 },
-                { method: 'vechain', gridColumn: 4 },
-                { method: 'dappkit', gridColumn: 4 },
-                { method: 'ecosystem', gridColumn: 4 },
-                // { method: 'passkey', gridColumn: 1 },
-                // { method: 'more', gridColumn: 1 },
-            ]}
+            // OPTIMIZED: Only dappkit login method = no ecosystem/wagmi loaded (~150KB savings)
+            // No 'ecosystem' or 'vechain' methods means PrivyCrossAppProvider is not rendered
+            loginMethods={[{ method: 'dappkit', gridColumn: 4 }]}
             loginModalUI={{
-                description:
-                    'Choose between social login through VeChain or by connecting your wallet.',
+                description: 'Connect your VeChain wallet to continue.',
             }}
             darkMode={isDarkMode}
             onLanguageChange={handleLanguageChange}

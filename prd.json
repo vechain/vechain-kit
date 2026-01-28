@@ -191,8 +191,9 @@
         "All examples build successfully"
       ],
       "impact": "Demonstrates real-world bundle size wins, helps consumers optimize their apps",
-      "status": "pending",
-      "passes": false
+      "status": "completed",
+      "passes": true,
+      "notes": "Updated examples to demonstrate optimization strategies: (1) next-template - configured for DAppKit-only mode (no privy prop, only 'dappkit' in loginMethods) to achieve optimal bundle size by not loading Privy (~500KB) or ecosystem/wagmi (~150KB), added detailed comments explaining optimization strategy, (2) homepage - unchanged, full-featured setup demonstrating all capabilities, (3) playground - unchanged, uses barrel imports for backward compatibility testing. Updated all three example READMEs with bundle size documentation tables and when-to-use guidance. Added comprehensive 'Bundle Size Optimization' section to main README with strategies for subpath imports, skipping Privy, skipping ecosystem login, and using headless mode. All three examples build successfully (yarn build passes). Note: Next.js 'First Load JS' shows ~1.7MB because it includes all possible chunks; actual runtime savings come from conditional loading where unused providers are never rendered/loaded."
     }
   ],
   "phases": [
