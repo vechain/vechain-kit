@@ -69,7 +69,7 @@ export const useLegalDocuments = () => {
 
 export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
-    const { darkMode, legalDocuments, theme } = useVeChainKitConfig();
+    const { darkMode, legalDocuments, theme, headless } = useVeChainKitConfig();
 
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         LegalDocumentAgreement[]
@@ -314,7 +314,8 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
         >
             {children}
             {/* Lazy-load modal only when it needs to be shown */}
-            {showTermsModal && (
+            {/* In headless mode, skip the modal entirely - no UI components are rendered */}
+            {!headless && showTermsModal && (
                 <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
                     <Suspense fallback={null}>
                         <LazyLegalDocumentsModal

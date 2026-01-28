@@ -30,6 +30,11 @@ type Props = {
     children: ReactNode;
     darkMode?: boolean;
     theme?: VechainKitThemeConfig;
+    /**
+     * When true, skips Chakra UI and Emotion setup entirely.
+     * Used by VeChainKitProvider in headless mode.
+     */
+    headless?: boolean;
 };
 
 // Create a standalone toast system
@@ -215,6 +220,7 @@ export const VechainKitThemeProvider = ({
     children,
     darkMode = false,
     theme: customTheme,
+    headless = false,
 }: Props) => {
     const portalRootRef = useRef<HTMLDivElement | null>(null);
 
@@ -243,6 +249,18 @@ export const VechainKitThemeProvider = ({
         }),
         [darkMode, effectiveTheme],
     );
+
+    // In headless mode, skip Chakra UI entirely to reduce bundle size (~300KB)
+    // This is used when the consumer provides their own UI
+    if (headless) {
+        return (
+            <VechainKitThemeContext.Provider
+                value={{ portalRootRef: undefined, tokens, themeConfig: effectiveTheme }}
+            >
+                {children}
+            </VechainKitThemeContext.Provider>
+        );
+    }
 
     return (
         <VechainKitThemeContext.Provider

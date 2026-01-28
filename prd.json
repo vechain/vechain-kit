@@ -122,8 +122,9 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-300KB (-18%) for apps building custom UI",
-      "status": "pending",
-      "passes": false
+      "status": "completed",
+      "passes": true,
+      "notes": "Implemented headless mode for VeChainKitProvider using the headless prop. When headless=true: (1) VeChainKitProvider skips ModalProvider entirely, (2) VechainKitThemeProvider returns a minimal context provider without Chakra UI, ChakraProvider, ColorModeScript, or Emotion setup, (3) ModalProvider's useModal hook returns a no-op context with safe defaults and helpful console warnings when modal methods are called in headless mode, (4) LegalDocumentsProvider skips rendering the legal documents modal, (5) All hooks continue to work - they receive no-op functions that log warnings. Added headless property to VeChainKitConfig type for consumers to check mode. Typecheck passes."
     },
     {
       "id": "US-007",

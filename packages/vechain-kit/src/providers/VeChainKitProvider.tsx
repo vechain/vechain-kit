@@ -123,6 +123,18 @@ export type LegalDocument = {
 
 export type VechainKitProviderProps = {
     children: ReactNode;
+    /**
+     * Enable headless mode: Skip Chakra UI and modal components entirely.
+     * Use this if you want to provide your own UI or use VeChainKit in headless environments.
+     * When enabled:
+     * - ModalProvider is not included (modals don't render)
+     * - VechainKitThemeProvider skips Chakra/Emotion setup
+     * - All modal-related context provides no-op functions
+     * - Bundle size reduced by ~300KB (Chakra + dependencies)
+     *
+     * Default: false
+     */
+    headless?: boolean;
     privy?: {
         appId: string;
         clientId: string;
@@ -196,6 +208,8 @@ export type VeChainKitConfig = {
     loginModalUI?: VechainKitProviderProps['loginModalUI'];
     loginMethods?: VechainKitProviderProps['loginMethods'];
     darkMode: boolean;
+    /** Whether headless mode is enabled (no UI components/Chakra). */
+    headless: boolean;
     i18n?: VechainKitProviderProps['i18n'];
     network: {
         type: NETWORK_TYPE;
@@ -381,6 +395,7 @@ export const VeChainKitProvider = (
     const validatedProps = validateConfig(props);
     const {
         children,
+        headless = false,
         privy,
         feeDelegation,
         dappKit: _dappKit,
@@ -667,6 +682,7 @@ export const VeChainKitProvider = (
     }, [isDAppKitConfigured]);
 
     // Core content that contains modals and legal documents
+    // In headless mode, skip ModalProvider to avoid loading Chakra UI (~300KB)
     const coreContent = isPrivyConfigured ? (
         <PrivyWalletProvider
             nodeUrl={network.nodeUrl}
@@ -684,10 +700,16 @@ export const VeChainKitProvider = (
                     : false
             }
         >
-            <ModalProvider>
+            {headless ? (
                 <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
-            </ModalProvider>
+            ) : (
+                <ModalProvider>
+                    <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+                </ModalProvider>
+            )}
         </PrivyWalletProvider>
+    ) : headless ? (
+        <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
     ) : (
         <ModalProvider>
             <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
@@ -785,6 +807,7 @@ export const VeChainKitProvider = (
         loginModalUI,
         loginMethods: validatedLoginMethods,
         darkMode,
+        headless,
         i18n: i18nConfig,
         currentLanguage,
         network,

@@ -89,10 +89,59 @@ type ModalContextType = {
 
 const ModalContext = createContext<ModalContextType | null>(null);
 
+// Default no-op modal context for headless mode
+// Provides safe defaults so hooks work without ModalProvider
+const headlessModalContext: ModalContextType = {
+    openConnectModal: () => {
+        console.warn(
+            'VeChainKit: openConnectModal called in headless mode. Modals are disabled when headless=true.',
+        );
+    },
+    closeConnectModal: () => {},
+    isConnectModalOpen: false,
+    connectModalContent: 'main',
+    setConnectModalContent: () => {},
+    connectModalPreventAutoClose: false,
+    setConnectModalPreventAutoClose: () => {},
+    openAccountModal: () => {
+        console.warn(
+            'VeChainKit: openAccountModal called in headless mode. Modals are disabled when headless=true.',
+        );
+    },
+    closeAccountModal: () => {},
+    isAccountModalOpen: false,
+    accountModalContent: 'main',
+    setAccountModalContent: () => {},
+    isolatedView: false,
+    openTransactionModal: () => {
+        console.warn(
+            'VeChainKit: openTransactionModal called in headless mode. Modals are disabled when headless=true.',
+        );
+    },
+    closeTransactionModal: () => {},
+    isTransactionModalOpen: false,
+    openTransactionToast: () => {
+        console.warn(
+            'VeChainKit: openTransactionToast called in headless mode. Toasts are disabled when headless=true.',
+        );
+    },
+    closeTransactionToast: () => {},
+    isTransactionToastOpen: false,
+    openUpgradeSmartAccountModal: () => {
+        console.warn(
+            'VeChainKit: openUpgradeSmartAccountModal called in headless mode. Modals are disabled when headless=true.',
+        );
+    },
+    closeUpgradeSmartAccountModal: () => {},
+    isUpgradeSmartAccountModalOpen: false,
+};
+
 export const useModal = () => {
     const context = useContext(ModalContext);
+    // In headless mode, ModalProvider is not rendered, so context will be null
+    // Return no-op context to allow hooks to work without errors
     if (!context) {
-        throw new Error('useModal must be used within ModalProvider');
+        return headlessModalContext;
     }
     return context;
 };

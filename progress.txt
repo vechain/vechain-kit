@@ -242,3 +242,71 @@ Date: 2026-01-28
 - PrivyCrossAppProvider is only instantiated when ecosystem login is enabled
 - All hooks gracefully handle missing cross-app provider with helpful error messages
 - Bundle size reduction of ~150KB for apps not using ecosystem login features
+
+## US-006: Make Chakra UI optional with headless mode (COMPLETED)
+Date: 2026-01-28
+
+### Changes Made:
+
+1. **VeChainKitProvider.tsx**
+   - Added `headless?: boolean` prop to `VechainKitProviderProps` type with JSDoc documentation
+   - Added `headless: boolean` to `VeChainKitConfig` type for consumers to check mode
+   - Extracted `headless` prop in the provider (defaults to false)
+   - Made `coreContent` conditional: when `headless=true`, skips `ModalProvider` entirely
+   - Added `headless` to context value so it's available throughout the app
+
+2. **VechainKitThemeProvider.tsx**
+   - Added `headless?: boolean` prop to `Props` type
+   - Added early return when `headless=true`: returns minimal context provider without:
+     - ChakraProvider
+     - CacheProvider (Emotion)
+     - ColorModeScript
+     - ColorModeSync
+     - Box#vechain-kit-root
+     - ToastContainer
+   - Still provides `tokens` and `themeConfig` in headless mode for any code that needs them
+
+3. **ModalProvider.tsx**
+   - Added `headlessModalContext` constant with no-op implementations for all modal methods
+   - Each no-op method logs a helpful warning when called in headless mode
+   - Updated `useModal` hook to return `headlessModalContext` when context is null (headless mode)
+   - This allows all modal-dependent code to work without throwing errors
+
+4. **LegalDocumentsProvider.tsx**
+   - Now reads `headless` from `useVeChainKitConfig()`
+   - Made modal rendering conditional: `{!headless && showTermsModal && (...)}`
+   - In headless mode, the legal documents modal is never rendered
+
+### Technical Implementation:
+
+When `headless=true` is passed to VeChainKitProvider:
+
+```tsx
+<VeChainKitProvider headless={true} ...>
+  {/* Your app */}
+</VeChainKitProvider>
+```
+
+The following occurs:
+1. ModalProvider is not rendered - modals are completely excluded from the tree
+2. useModal() returns no-op functions that log warnings if called
+3. LegalDocumentsModal is not rendered even if conditions would normally show it
+4. Chakra UI is not loaded - no ChakraProvider, no Emotion cache, no CSS layers
+
+### Hooks behavior in headless mode:
+
+All hooks continue to work. For example:
+- `useWallet()` - Works normally for wallet connections
+- `useConnectModal()` - Returns no-op `openConnectModal()` that logs a warning
+- `useAccountModal()` - Returns no-op `openAccountModal()` that logs a warning
+- `useSendTransaction()` - Works normally for transactions
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+
+### Impact:
+- Apps building custom UI can use `headless=true` to avoid bundling Chakra UI
+- Bundle size reduction of ~300KB for apps not using VeChain Kit's UI components
+- All core functionality (wallet connections, transactions, hooks) continues to work
+- Modal hooks provide helpful warnings instead of errors in headless mode
+- Backward compatible: default `headless=false` maintains existing behavior
