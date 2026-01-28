@@ -26,7 +26,7 @@ import {
 } from '../hooks';
 import { getConfig } from '../config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
-import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
+import { useOptionalPrivyCrossAppSdk } from '../hooks/api/privy/useOptionalPrivyCrossAppSdk';
 import { SignTypedDataParameters } from '@wagmi/core';
 
 export interface PrivyWalletProviderContextType {
@@ -79,10 +79,11 @@ export const PrivyWalletProvider = ({
         exportWallet,
         signMessage: signMessagePrivy,
     } = usePrivy();
+    // Use optional cross-app SDK hook that handles missing provider gracefully
     const {
         signTypedData: signTypedDataWithCrossApp,
         signMessage: signMessageWithCrossApp,
-    } = usePrivyCrossAppSdk();
+    } = useOptionalPrivyCrossAppSdk();
     const { connection, connectedWallet } = useWallet();
     const { network } = useVeChainKitConfig();
     const { data: smartAccount } = useSmartAccount(

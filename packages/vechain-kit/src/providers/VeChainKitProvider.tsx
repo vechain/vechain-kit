@@ -50,9 +50,21 @@ import {
     getGenericDelegatorUrl,
 } from '../utils/constants';
 import { Certificate, CertificateData } from '@vechain/sdk-core';
-import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
+import type { PrivyCrossAppProvider as PrivyCrossAppProviderType } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { ThorProvider } from './ThorProvider';
+
+// Lazy load PrivyCrossAppProvider only when ecosystem login is enabled to reduce bundle size (~150KB wagmi)
+const LazyPrivyCrossAppProvider = lazy(() =>
+    import('./PrivyCrossAppProvider').then((mod) => ({
+        default: mod.PrivyCrossAppProvider,
+    })),
+);
+
+// Passthrough component when ecosystem login is not enabled
+const CrossAppPassthrough = ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+);
 
 // Lazy load ReactQueryDevtools only in development to reduce production bundle size (~100KB)
 const ReactQueryDevtools =
@@ -445,6 +457,14 @@ export const VeChainKitProvider = (
     // Check if Privy is configured
     const isPrivyConfigured = !!privy;
 
+    // Check if ecosystem login is enabled in loginMethods
+    // This determines whether we need to load PrivyCrossAppProvider/wagmi
+    const isEcosystemLoginEnabled = useMemo(() => {
+        return validatedLoginMethods?.some(
+            (method) => method.method === 'ecosystem' || method.method === 'vechain',
+        ) ?? false;
+    }, [validatedLoginMethods]);
+
     // Initialize i18n with stored language or prop, and merge translations
     useEffect(() => {
         // Initialize translations from VeChainKit
@@ -756,6 +776,45 @@ export const VeChainKitProvider = (
         innerContent
     );
 
+    // Context value for the provider
+    const contextValue = {
+        privy,
+        privyEcosystemAppIDS: allowedEcosystemApps,
+        feeDelegation,
+        dappKit,
+        loginModalUI,
+        loginMethods: validatedLoginMethods,
+        darkMode,
+        i18n: i18nConfig,
+        currentLanguage,
+        network,
+        allowCustomTokens,
+        legalDocuments,
+        currentCurrency,
+        theme: customTheme,
+        setLanguage,
+        setCurrency,
+    };
+
+    // Core content without ecosystem provider
+    const coreProviderContent = (
+        <VeChainKitContext.Provider value={contextValue}>
+            {privyWrappedContent}
+        </VeChainKitContext.Provider>
+    );
+
+    // Conditionally wrap with PrivyCrossAppProvider only when ecosystem login is enabled
+    // This avoids bundling wagmi (~150KB) for apps that don't use ecosystem login
+    const ecosystemWrappedContent = isEcosystemLoginEnabled ? (
+        <Suspense fallback={coreProviderContent}>
+            <LazyPrivyCrossAppProvider privyEcosystemAppIDS={allowedEcosystemApps}>
+                {coreProviderContent}
+            </LazyPrivyCrossAppProvider>
+        </Suspense>
+    ) : (
+        coreProviderContent
+    );
+
     return (
         <EnsureQueryClient>
             {process.env.NODE_ENV === 'development' && (
@@ -763,30 +822,7 @@ export const VeChainKitProvider = (
                     <ReactQueryDevtools initialIsOpen={false} />
                 </Suspense>
             )}
-            <PrivyCrossAppProvider privyEcosystemAppIDS={allowedEcosystemApps}>
-                <VeChainKitContext.Provider
-                    value={{
-                        privy,
-                        privyEcosystemAppIDS: allowedEcosystemApps,
-                        feeDelegation,
-                        dappKit,
-                        loginModalUI,
-                        loginMethods: validatedLoginMethods,
-                        darkMode,
-                        i18n: i18nConfig,
-                        currentLanguage,
-                        network,
-                        allowCustomTokens,
-                        legalDocuments,
-                        currentCurrency,
-                        theme: customTheme,
-                        setLanguage,
-                        setCurrency,
-                    }}
-                >
-                    {privyWrappedContent}
-                </VeChainKitContext.Provider>
-            </PrivyCrossAppProvider>
+            {ecosystemWrappedContent}
         </EnsureQueryClient>
     );
 };

@@ -86,8 +86,9 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-150KB (-9%) for apps not using ecosystem login",
-      "status": "pending",
-      "passes": false
+      "status": "completed",
+      "passes": true,
+      "notes": "Implemented conditional PrivyCrossAppProvider loading using React.lazy() for dynamic imports. When ecosystem login is not enabled (no 'ecosystem' or 'vechain' methods in loginMethods): (1) PrivyCrossAppProvider is not rendered - uses LazyPrivyCrossAppProvider with Suspense only when isEcosystemLoginEnabled is true, (2) Created useOptionalPrivyCrossAppSdk hook that returns safe defaults (no-op functions with helpful error messages) when provider is missing, (3) Created useOptionalWagmiAccount hook that returns disconnected state when WagmiProvider is not available, (4) Updated useWallet.ts to use optional hooks instead of direct wagmi/cross-app imports, (5) Updated PrivyWalletProvider.tsx, EcosystemContent.tsx, useLoginWithVeChain.ts, and useBuildClauses.ts to use optional cross-app SDK hook, (6) Added CrossAppPassthrough component for non-ecosystem scenarios. Apps that don't use ecosystem or vechain login methods will no longer bundle wagmi (~150KB). Typecheck passes."
     },
     {
       "id": "US-005",

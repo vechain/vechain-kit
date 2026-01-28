@@ -14,8 +14,8 @@ import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
 import { useVeChainKitConfig } from '../../../providers';
 import { NETWORK_TYPE } from '../../../config/network';
-import { useAccount } from 'wagmi';
-import { usePrivyCrossAppSdk } from '../../../providers/PrivyCrossAppProvider';
+import { useOptionalWagmiAccount } from '../privy/useOptionalWagmiAccount';
+import { useOptionalPrivyCrossAppSdk } from '../privy/useOptionalPrivyCrossAppSdk';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
@@ -56,13 +56,15 @@ export type UseWalletReturnType = {
 };
 
 export const useWallet = (): UseWalletReturnType => {
+    // Use optional wagmi account hook that handles missing WagmiProvider gracefully
     const {
         address: crossAppAddress,
         isConnected: isConnectedWithCrossApp,
         isConnecting: isConnectingWithCrossApp,
         isReconnecting: isReconnectingWithCrossApp,
-    } = useAccount();
-    const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
+    } = useOptionalWagmiAccount();
+    // Use optional cross-app SDK hook that handles missing provider gracefully
+    const { logout: disconnectCrossApp } = useOptionalPrivyCrossAppSdk();
     const { feeDelegation, network, privy } = useVeChainKitConfig();
     // Use optional Privy hook that handles missing provider gracefully
     const { user, authenticated, logout, ready } = useOptionalPrivy();

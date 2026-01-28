@@ -32,3 +32,8 @@ export {
     useOptionalDAppKitWallet,
     useOptionalDAppKitWalletModal,
 } from './api/dappkit';
+
+export {
+    useOptionalPrivyCrossAppSdk,
+    useOptionalWagmiAccount,
+} from './api/privy';

@@ -12,8 +12,7 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '../../common';
-import { useCrossAppConnectionCache } from '../../../hooks';
-import { usePrivyCrossAppSdk } from '../../../providers/PrivyCrossAppProvider';
+import { useCrossAppConnectionCache, useOptionalPrivyCrossAppSdk } from '../../../hooks';
 import { useTranslation } from 'react-i18next';
 import type { PrivyAppInfo } from '../../../types';
 import { isRejectionError } from '../../../utils/stringUtils';
@@ -42,8 +41,8 @@ export const EcosystemContent = ({
 
     const { setConnectionCache } = useCrossAppConnectionCache();
 
-    // Login with Vechain - Cross app account login
-    const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
+    // Login with Vechain - Cross app account login (uses optional hook for conditional provider)
+    const { login: loginWithCrossApp } = useOptionalPrivyCrossAppSdk();
 
     const connectWithVebetterDaoApps = async (
         appId: string,

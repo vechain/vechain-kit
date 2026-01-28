@@ -1,4 +1,4 @@
-import { usePrivyCrossAppSdk } from '../../providers/PrivyCrossAppProvider';
+import { useOptionalPrivyCrossAppSdk } from '../api/privy/useOptionalPrivyCrossAppSdk';
 import { useCrossAppConnectionCache } from '../cache/useCrossAppConnectionCache';
 import { useFetchAppInfo } from '../';
 import { VECHAIN_PRIVY_APP_ID } from '../../utils';
@@ -6,7 +6,8 @@ import { handlePopupError } from '../../utils/handlePopupError';
 import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '../../constants';
 
 export const useLoginWithVeChain = () => {
-    const { login: loginWithVeChain } = usePrivyCrossAppSdk();
+    // Use optional hook that handles missing provider gracefully
+    const { login: loginWithVeChain } = useOptionalPrivyCrossAppSdk();
     const { setConnectionCache } = useCrossAppConnectionCache();
     const { data: appsInfo } = useFetchAppInfo([VECHAIN_PRIVY_APP_ID]);
 

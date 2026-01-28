@@ -6,7 +6,7 @@ import { Clause, Address, ABIContract, TransactionClause } from '@vechain/sdk-co
 import { getConfig } from '../../config';
 import { usePrivy } from '@privy-io/react-auth';
 import { NETWORK_TYPE } from '../../config/network';
-import { usePrivyCrossAppSdk } from '../../providers/PrivyCrossAppProvider';
+import { useOptionalPrivyCrossAppSdk } from '../api/privy/useOptionalPrivyCrossAppSdk';
 import { useWallet, SmartAccountReturnType, useGetChainId } from "../";
 import { useVeChainKitConfig } from "../../providers";
 import { SocialLoginSmartAccount__factory, SocialLoginSmartAccountFactory__factory } from "@vechain/vechain-contract-types";
@@ -139,7 +139,8 @@ export function buildSingleAuthorizationTypedData({
 
 function setUpBuildClausesParams() {
     const { connection, connectedWallet } = useWallet();
-    const { signTypedData: signTypedDataWithCrossApp } = usePrivyCrossAppSdk();
+    // Use optional hook that handles missing provider gracefully
+    const { signTypedData: signTypedDataWithCrossApp } = useOptionalPrivyCrossAppSdk();
     const { signTypedData: signTypedDataPrivy } = usePrivy();
     const { network } = useVeChainKitConfig();
     const { data: chainId } = useGetChainId();
