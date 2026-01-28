@@ -53,7 +53,7 @@
         "purge": "yarn clean && rm -rf node_modules",
         "translate": "dotenv -e .env -- translo-cli",
         "typecheck": "tsc --noEmit",
-        "analyze": "yarn build && source-map-explorer dist/index.mjs --no-border-checks"
+        "analyze": "./analyze.sh"
     },
     "dependencies": {
         "@adraffy/ens-normalize": "^1.11.0",
