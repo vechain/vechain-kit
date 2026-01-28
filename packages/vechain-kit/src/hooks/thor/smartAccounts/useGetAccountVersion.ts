@@ -1,5 +1,5 @@
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { NETWORK_TYPE } from '../../../config/network';
 import { getConfig } from '../../../config';
 import { getCallClauseQueryKeyWithArgs, useCallClause } from '../../';

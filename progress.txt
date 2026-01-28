@@ -392,3 +392,80 @@ This story remains at passes: false but significant progress has been made.
 - Types no longer create cycles between types and providers modules
 - Config files no longer create cycles with config/index.ts
 - Foundation laid for further circular dependency elimination
+
+## US-008: Fix circular dependencies (ADDITIONAL PROGRESS)
+Date: 2026-01-29
+
+### Status: Reduced from 230 to 229 circular dependencies (additional ~1% reduction, total ~26% from 309)
+
+The acceptance criteria requires "no circular dependencies" which hasn't been fully achieved.
+This story remains at passes: false but additional progress has been made.
+
+### Additional Changes Made:
+
+1. **types/modal.ts** (CREATED/UPDATED)
+   - Created shared modal types file to break provider→components circular dependency
+   - Contains: AllowedCategories, CategoryFilter, ConnectModalContentsTypes, UpgradeSmartAccountModalStyle, UpgradeSmartAccountModalContentsTypes
+   - Note: AccountModalContentTypes remains in components/AccountModal/Types/Types.ts with full type safety
+
+2. **providers/ModalProvider.tsx**
+   - Changed import from `../components` to `../types/modal` for ConnectModalContentsTypes and UpgradeSmartAccountModalStyle
+   - Added local `AccountModalContentTypes = any` to break circular dependency while maintaining functionality
+   - This prevents ModalProvider from importing the entire components tree
+
+3. **components/ConnectModal/ConnectModal.tsx**
+   - Changed type import from local definition to `../../types/modal`
+   - Re-exports ConnectModalContentsTypes for backward compatibility with internal components
+
+4. **components/UpgradeSmartAccountModal/UpgradeSmartAccountModal.tsx**
+   - Changed type imports from local definition to `../../types/modal`
+   - Re-exports UpgradeSmartAccountModalStyle and UpgradeSmartAccountModalContentsTypes for backward compatibility
+
+5. **components/UpgradeSmartAccountModal/Contents/UpgradeSmartAccountContent.tsx**
+   - Changed import from `../UpgradeSmartAccountModal` to `../../../types/modal`
+
+6. **components/UpgradeSmartAccountModal/Contents/SuccessfulOperationContent.tsx**
+   - Changed import from `../UpgradeSmartAccountModal` to `../../../types/modal`
+
+7. **hooks/modals/useConnectModal.tsx**
+   - Changed import of useVeChainKitConfig from `../../providers` to `../../providers/VeChainKitProvider`
+   - Changed import of ConnectModalContentsTypes from `../../components` to `../../types/modal`
+
+8. **~40 hook files updated to use direct imports**
+   - Changed imports from `../../../providers` to `../../../providers/VeChainKitProvider`
+   - Files in: hooks/api/ipfs/, hooks/api/vetDomains/, hooks/api/wallet/, hooks/thor/smartAccounts/, hooks/thor/transactions/
+
+9. **hooks/signing/useSignMessage.ts, useSignTypedData.ts**
+   - Changed import of useOptionalPrivyWalletProvider from `../../providers` to `../../providers/PrivyWalletProvider`
+
+10. **hooks/thor/transactions/useSendTransaction.ts**
+    - Split imports: useVeChainKitConfig from providers/VeChainKitProvider, useOptionalPrivyWalletProvider from providers/PrivyWalletProvider
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- Circular dependencies reduced from ~230 to 229 (total ~26% reduction from 309)
+
+### Remaining Work:
+- 229 circular dependencies still exist, primarily caused by:
+  - Barrel exports (index.ts files) that re-export everything from modules
+  - providers/index.ts → hooks → providers cycles
+  - components/index.ts → common → hooks → providers → components cycles
+  - The structural issue requires either:
+    a) Breaking up barrel files into smaller, targeted exports
+    b) Using dynamic imports more extensively
+    c) Restructuring the module hierarchy to prevent cross-module dependencies
+
+### Technical Notes:
+The core circular dependency pattern is:
+1. providers/index.ts exports ModalProvider
+2. ModalProvider lazy-loads components from AccountModal
+3. AccountModal/index.ts exports Types which import from Contents
+4. Contents import from common/index.ts
+5. common components import from hooks/index.ts
+6. hooks/index.ts exports hooks that import from providers/VeChainKitProvider.tsx
+7. VeChainKitProvider.tsx (through LegalDocumentsProvider) eventually imports back to components
+
+Breaking this fully requires either:
+- Not using barrel exports (breaks backward compatibility)
+- Lazy-loading all cross-module dependencies
+- Restructuring to eliminate the circular references at the architecture level

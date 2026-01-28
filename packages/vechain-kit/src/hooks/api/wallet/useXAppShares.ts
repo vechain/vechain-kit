@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { XAllocationPool__factory } from '@vechain/vechain-contract-types';
 import { getConfig } from '../../../config';
 import { useOptionalThor } from '../dappkit/useOptionalThor';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { executeMultipleClausesCall } from '../../../utils';
 
 const abi = XAllocationPool__factory.abi;

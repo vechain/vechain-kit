@@ -4,7 +4,7 @@ import {
     getAvatarQueryKey,
     getTextRecordsQueryKey,
 } from '../../';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 
 export const useRefreshMetadata = (domain: string, address: string) => {
     const queryClient = useQueryClient();

@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { useOptionalPrivyWalletProvider } from '../../providers';
+// Import from specific provider file to avoid circular dependencies
+import { useOptionalPrivyWalletProvider } from '../../providers/PrivyWalletProvider';
 import { useWallet } from '../';
 import { useOptionalDAppKitWallet } from '../api/dappkit/useOptionalDAppKitWallet';
 

@@ -18,7 +18,8 @@ import { motion } from 'framer-motion';
 import { getConfig } from '../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';
 import { ShareButtons } from '../../TransactionModal';
-import { UpgradeSmartAccountModalContentsTypes } from '../UpgradeSmartAccountModal';
+// Import types from centralized location to avoid circular dependencies
+import type { UpgradeSmartAccountModalContentsTypes } from '../../../types/modal';
 
 export type SuccessfulOperationContentProps = {
     setCurrentContent: React.Dispatch<

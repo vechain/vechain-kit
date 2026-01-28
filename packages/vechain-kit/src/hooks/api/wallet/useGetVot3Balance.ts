@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { formatTokenBalance } from '../../../utils';
 import { getVot3Balance } from '@vechain/contract-getters';
 

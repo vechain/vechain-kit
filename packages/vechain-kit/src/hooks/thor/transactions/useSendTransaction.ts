@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TransactionMessage } from '@vechain/dapp-kit';
-import { useOptionalPrivyWalletProvider, useVeChainKitConfig } from '../../../providers';
+// Import from specific provider files to avoid circular dependencies
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useOptionalPrivyWalletProvider } from '../../../providers/PrivyWalletProvider';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
 import { useGetNodeUrl, useTxReceipt, useWallet, useOptionalThor, useOptionalDAppKitWallet } from '../../';
 import { useGasEstimate } from './useGasEstimate';

@@ -1,6 +1,6 @@
 import { getConfig } from '../../../config';
 import { NETWORK_TYPE } from '../../../config/network';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 

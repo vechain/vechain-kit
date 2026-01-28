@@ -7,15 +7,21 @@ import {
     lazy,
     Suspense,
 } from 'react';
+// Import modal types from types/modal.ts to avoid circular dependency with components
+// Note: AccountModalContentTypes is defined in components, we use 'any' here to break the cycle
 import type {
-    AccountModalContentTypes,
     ConnectModalContentsTypes,
     UpgradeSmartAccountModalStyle,
-} from '../components';
+} from '../types/modal';
 import { useDAppKitWallet } from '../hooks';
 import { isBrowser } from '../utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 import { useVeChainKitConfig } from './VeChainKitProvider';
+
+// Use 'any' for AccountModalContentTypes to avoid circular dependency with components
+// The full type is defined in components/AccountModal/Types/Types.ts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AccountModalContentTypes = any;
 
 // Lazy load modal components to reduce initial bundle size (~500KB total)
 // Modals are only loaded when they are actually opened

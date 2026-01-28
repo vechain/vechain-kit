@@ -6,7 +6,7 @@ import {
     useGetErc20Balance,
     useGetCustomTokenBalances,
 } from '../../';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { getConfig } from '../../../config';
 
 export type WalletTokenBalance = {

@@ -5,7 +5,11 @@ import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '../common';
 import { FAQContent } from '../AccountModal';
 import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
-import type { PrivyAppInfo } from '../../types';
+// Import type from centralized location to avoid circular dependencies
+import type { ConnectModalContentsTypes } from '../../types/modal';
+
+// Re-export for backward compatibility - needed by internal components
+export type { ConnectModalContentsTypes } from '../../types/modal';
 
 type Props = {
     isOpen: boolean;
@@ -13,34 +17,6 @@ type Props = {
     initialContent?: ConnectModalContentsTypes;
     preventAutoClose?: boolean;
 };
-
-export type ConnectModalContentsTypes =
-    | 'main'
-    | 'faq'
-    | {
-          type: 'ecosystem';
-          props: {
-              appsInfo: PrivyAppInfo[];
-              isLoading: boolean;
-              showBackButton?: boolean;
-          };
-      }
-    | {
-          type: 'loading';
-          props: {
-              title?: string;
-              loadingText?: string;
-              onTryAgain?: () => void;
-              showBackButton?: boolean;
-          };
-      }
-    | {
-          type: 'error';
-          props: {
-              error: string;
-              onTryAgain: () => void;
-          };
-      };
 
 export const ConnectModal = ({
     isOpen,

@@ -1,8 +1,9 @@
-import { useVeChainKitConfig } from '../../providers';
+// Import from specific files to avoid circular dependencies
+import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
 import { useModal } from '../../providers/ModalProvider';
 import { ReactNode } from 'react';
 import { useOptionalDAppKitWalletModal } from '../api/dappkit/useOptionalDAppKitWalletModal';
-import type { ConnectModalContentsTypes } from '../../components';
+import type { ConnectModalContentsTypes } from '../../types/modal';
 
 export const useConnectModal = () => {
     const { loginMethods } = useVeChainKitConfig();

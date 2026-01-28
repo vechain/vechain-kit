@@ -9,7 +9,7 @@ import {
     getHasV1SmartAccountQueryKey,
     getAccountAddressQueryKey,
 } from '../../';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 
 /**
  * Hook to refresh smart account factory-related queries

@@ -1,6 +1,6 @@
 import { getConfig } from '../../../config';
 import { X2EarnApps__factory } from '@vechain/vechain-contract-types';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { useOptionalThor } from '../dappkit/useOptionalThor';
 import { convertUriToUrl } from '../../../utils';
 import { NETWORK_TYPE } from '../../../config/network';

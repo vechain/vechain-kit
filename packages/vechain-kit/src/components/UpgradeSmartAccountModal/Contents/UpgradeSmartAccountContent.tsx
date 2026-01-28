@@ -22,10 +22,11 @@ import {
     TransactionButtonAndStatus,
 } from '../../common';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '../../../hooks';
-import {
+// Import types from centralized location to avoid circular dependencies
+import type {
     UpgradeSmartAccountModalContentsTypes,
     UpgradeSmartAccountModalStyle,
-} from '../UpgradeSmartAccountModal';
+} from '../../../types/modal';
 import { LuArrowRight } from 'react-icons/lu';
 
 type Props = {

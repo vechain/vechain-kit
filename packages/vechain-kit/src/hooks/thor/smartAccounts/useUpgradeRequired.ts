@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
-import { useVeChainKitConfig } from '../../../providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { NETWORK_TYPE } from '../../../config/network';
 import { getConfig } from '../../../config';
 import { ThorClient } from '@vechain/sdk-network';
