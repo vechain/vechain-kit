@@ -156,8 +156,9 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "Enables proper tree-shaking (foundation for other optimizations)",
-      "status": "pending",
-      "passes": false
+      "status": "in_progress",
+      "passes": false,
+      "notes": "Partial progress: Reduced circular dependencies from 309 to ~230 (~25% reduction). Changes made: (1) Moved LegalDocument and LegalDocumentOptions types from VeChainKitProvider.tsx to types/types.ts to break types→providers cycle, (2) Created config/appConfig.ts with AppConfig type to break config→mainnet/testnet/solo cycles, (3) Fixed VechainLogo.tsx to import directly from sibling files instead of barrel, (4) Updated LegalDocumentsProvider.tsx to import useWallet and useSyncableLocalStorage directly from specific files instead of hooks barrel, (5) Updated useWallet.ts, useWalletStorage.ts, useIpfsImage.ts to import useVeChainKitConfig directly from VeChainKitProvider instead of providers barrel. Remaining work: ~40+ hook files still import from providers barrel, component→barrel→component cycles in modals, hooks→index.ts→hooks cycles. These require more extensive refactoring. Typecheck passes."
     },
     {
       "id": "US-009",

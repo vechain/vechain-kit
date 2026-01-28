@@ -310,3 +310,85 @@ All hooks continue to work. For example:
 - All core functionality (wallet connections, transactions, hooks) continues to work
 - Modal hooks provide helpful warnings instead of errors in headless mode
 - Backward compatible: default `headless=false` maintains existing behavior
+
+## US-008: Fix circular dependencies (PARTIAL PROGRESS - IN PROGRESS)
+Date: 2026-01-28
+
+### Status: Reduced from 309 to ~230 circular dependencies (~25% reduction)
+
+The acceptance criteria requires "no circular dependencies" which hasn't been fully achieved.
+This story remains at passes: false but significant progress has been made.
+
+### Changes Made:
+
+1. **types/types.ts**
+   - Added `LegalDocument` type definition (moved from VeChainKitProvider.tsx)
+   - Added `LegalDocumentOptions` type definition (moved from VeChainKitProvider.tsx)
+   - These types are now exported from types to avoid circular dependency with providers
+
+2. **types/index.ts**
+   - Changed import of `LegalDocument` from `../providers` to `./types`
+   - Added comment explaining the change to avoid circular dependency
+
+3. **providers/VeChainKitProvider.tsx**
+   - Changed import to include `LegalDocument`, `LegalDocumentOptions` from `../types`
+   - Removed local type definitions for LegalDocument and LegalDocumentOptions
+   - Added re-export: `export type { LegalDocument, LegalDocumentOptions } from '../types'` for backward compatibility
+
+4. **config/appConfig.ts** (NEW FILE)
+   - Created new file containing `AppConfig` type definition
+   - Moved type from config/index.ts to break circular dependency
+   - Imports `Network` from `./network`
+
+5. **config/index.ts**
+   - Removed local `AppConfig` type definition
+   - Added re-export: `export type { AppConfig } from './appConfig'`
+   - Added type import: `import type { AppConfig } from './appConfig'`
+
+6. **config/mainnet.ts, config/testnet.ts, config/solo.ts**
+   - Changed import from `import { AppConfig } from '.'` to `import { AppConfig } from './appConfig'`
+   - This breaks the cycle: config/index.ts → config/mainnet.ts → config/index.ts
+
+7. **assets/icons/VechainLogo/VechainLogo.tsx**
+   - Changed imports from `import { ... } from './'` to direct imports:
+     - `import { VechainLogoHorizontalDark } from './VechainLogoHorizontalDark'`
+     - `import { VechainLogoHorizontalLight } from './VechainLogoHorizontalLight'`
+   - This breaks the cycle: VechainLogo.tsx → index.ts → VechainLogo.tsx
+
+8. **providers/LegalDocumentsProvider.tsx**
+   - Changed import from `import { useWallet, useSyncableLocalStorage } from '../hooks'` to:
+     - `import { useWallet } from '../hooks/api/wallet/useWallet'`
+     - `import { useSyncableLocalStorage } from '../hooks/cache/useSyncableLocalStorage'`
+   - This breaks cycles through hooks/index.ts
+
+9. **hooks/api/wallet/useWallet.ts**
+   - Changed import from `import { useVeChainKitConfig } from '../../../providers'` to:
+     - `import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider'`
+   - Added comment explaining the change
+
+10. **hooks/api/wallet/useWalletStorage.ts**
+    - Changed import from `import { useVeChainKitConfig } from '../../../providers'` to:
+      - `import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider'`
+    - Added comment explaining the change
+
+11. **hooks/api/ipfs/useIpfsImage.ts**
+    - Changed import from `import { useVeChainKitConfig } from '../../../providers'` to:
+      - `import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider'`
+    - Added comment explaining the change
+
+### Remaining Work:
+- ~40+ hook files still import `useVeChainKitConfig` from `../../../providers` barrel instead of directly
+- Component→barrel→component cycles exist within modal components
+- hooks→index.ts→hooks cycles exist in various places
+- Component barrel files (index.ts) in AccountModal, ConnectModal, etc. create many cycles
+- Extensive refactoring needed to fully eliminate all circular dependencies
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- Circular dependencies reduced from 309 to ~230 (~25% reduction)
+
+### Impact:
+- Improved tree-shaking potential by breaking key dependency chains
+- Types no longer create cycles between types and providers modules
+- Config files no longer create cycles with config/index.ts
+- Foundation laid for further circular dependency elimination

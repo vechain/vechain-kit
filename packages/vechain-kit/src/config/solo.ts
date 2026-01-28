@@ -1,4 +1,4 @@
-import { AppConfig } from '.';
+import { AppConfig } from './appConfig';
 const config: AppConfig = {
     ipfsFetchingService: 'https://api.dev.gateway-proxy.vechain.org/ipfs',
     ipfsPinningService:

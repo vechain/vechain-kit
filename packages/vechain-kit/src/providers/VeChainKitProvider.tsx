@@ -1,6 +1,6 @@
 import { getConfig } from '../config';
 import { NETWORK_TYPE } from '../config/network';
-import type { CURRENCY, PrivyLoginMethod } from '../types';
+import type { CURRENCY, PrivyLoginMethod, LegalDocument, LegalDocumentOptions } from '../types';
 import { isValidUrl } from '../utils';
 import { getLocalStorageItem, setLocalStorageItem } from '../utils/ssrUtils';
 import { initializeI18n } from '../utils/i18n';
@@ -108,18 +108,9 @@ type LoginMethodOrder = {
     allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
 };
 
-export type LegalDocumentOptions = {
-    privacyPolicy?: LegalDocument[];
-    termsAndConditions?: LegalDocument[];
-    cookiePolicy?: LegalDocument[];
-};
-
-export type LegalDocument = {
-    url: string;
-    version: number;
-    required: boolean;
-    displayName?: string;
-};
+// Re-export types from ../types for backward compatibility
+// These types are now defined in types/types.ts to avoid circular dependencies
+export type { LegalDocument, LegalDocumentOptions } from '../types';
 
 export type VechainKitProviderProps = {
     children: ReactNode;

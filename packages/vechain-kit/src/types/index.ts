@@ -4,7 +4,8 @@ export * from './gasToken';
 export * from './gasEstimation';
 export * from './modal';
 
-import { LegalDocument } from '../providers';
+// Import LegalDocument from types.ts to avoid circular dependency with providers
+import type { LegalDocument } from './types';
 
 export enum LegalDocumentType {
     TERMS = 'terms',

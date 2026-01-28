@@ -1,7 +1,8 @@
 import { convertUriToUrl, resolveMediaTypeFromMimeType } from '../../../utils';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import type { NFTMediaType } from '../../../types';
-import { useVeChainKitConfig } from '../../../providers';
+// Import directly from VeChainKitProvider to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
 import { NETWORK_TYPE } from '../../../config/network';
 
 export interface IpfsImage {
