@@ -3,7 +3,8 @@
 import { useCallback, useState } from 'react';
 import type { SignTypedDataParams } from '@privy-io/react-auth';
 import { useOptionalPrivyWalletProvider } from '../../providers';
-import { useWallet, useDAppKitWallet } from '../';
+import { useWallet } from '../';
+import { useOptionalDAppKitWallet } from '../api/dappkit/useOptionalDAppKitWallet';
 import { SignTypedDataOptions, TypedDataDomain } from '@vechain/sdk-network';
 
 type UseSignTypedDataReturnValue = {
@@ -28,7 +29,8 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
     const [signature, setSignature] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
-    const { signer } = useDAppKitWallet();
+    // Use optional DAppKit wallet hook that handles missing provider gracefully
+    const { signer } = useOptionalDAppKitWallet();
     const { connection } = useWallet();
     // Use optional provider - returns null when Privy is not configured
     const privyWalletProvider = useOptionalPrivyWalletProvider();

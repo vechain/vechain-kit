@@ -3,7 +3,7 @@ import { NETWORK_TYPE } from '../../../config/network';
 import { useVeChainKitConfig } from '../../../providers';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
 import { ThorClient } from '@vechain/sdk-network';
 
 export const getAccountImplementationAddress = async (
@@ -63,7 +63,8 @@ export const getAccountImplementationAddressQueryKey = (
  * @returns The address of the smart account implementation
  */
 export const useAccountImplementationAddress = (version?: number) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -72,7 +73,7 @@ export const useAccountImplementationAddress = (version?: number) => {
             network.type,
         ),
         queryFn: async () =>
-            getAccountImplementationAddress(thor, version, network.type),
+            getAccountImplementationAddress(thor!, version, network.type),
         enabled: !!thor && !!version && !!network,
     });
 };

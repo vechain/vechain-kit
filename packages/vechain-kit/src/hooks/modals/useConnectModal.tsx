@@ -1,7 +1,7 @@
 import { useVeChainKitConfig } from '../../providers';
 import { useModal } from '../../providers/ModalProvider';
 import { ReactNode } from 'react';
-import { useWalletModal as useDAppKitWalletModal } from '@vechain/dapp-kit-react';
+import { useOptionalDAppKitWalletModal } from '../api/dappkit/useOptionalDAppKitWalletModal';
 import type { ConnectModalContentsTypes } from '../../components';
 
 export const useConnectModal = () => {
@@ -12,7 +12,8 @@ export const useConnectModal = () => {
     const { openConnectModal, closeConnectModal, isConnectModalOpen } =
         useModal();
 
-    const { open: openDappKit, close: closeDappKit } = useDAppKitWalletModal();
+    // Use optional DAppKit wallet modal hook that handles missing provider gracefully
+    const { open: openDappKit, close: closeDappKit } = useOptionalDAppKitWalletModal();
 
     return {
         open: hasOnlyDappKit

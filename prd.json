@@ -70,7 +70,9 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-200KB (-12%) for apps not using direct wallet connections",
-      "status": "pending"
+      "status": "completed",
+      "passes": true,
+      "notes": "Implemented conditional DAppKitProvider loading using React.lazy() for dynamic imports. When dappKit prop is not provided: (1) DAppKitProvider is not rendered - uses LazyDAppKitProvider with Suspense only when isDAppKitConfigured is true, (2) ThorProvider is used as fallback to provide Thor client access for blockchain operations, (3) Created useOptionalThor hook that returns Thor client from DAppKit if available or falls back to ThorProvider, (4) Created useOptionalDAppKitWallet hook with graceful handling for missing provider and mock signer, (5) Created useOptionalDAppKitWalletModal hook for wallet modal operations, (6) Updated 20+ hooks to use optional variants: useWallet, useSignMessage, useSignTypedData, useSendTransaction, useCallClause, useEvents, useCurrentBlock, useGetChainId, useAccountBalance, useTxReceipt, useSmartAccount, and all other Thor-dependent hooks, (7) Made VeChainKitConfig.dappKit optional, (8) Removed automatic default dappKit config to allow opt-out. Typecheck passes."
     },
     {
       "id": "US-004",

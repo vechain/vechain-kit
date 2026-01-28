@@ -16,6 +16,8 @@ export {
     useMfaEnrollment,
     useSetWalletRecovery,
 } from '@privy-io/react-auth';
+// Re-export DAppKit hooks for backward compatibility
+// These require DAppKitProvider to be configured
 export {
     useThor,
     useWallet as useDAppKitWallet,
@@ -23,3 +25,10 @@ export {
 } from '@vechain/dapp-kit-react';
 export { ThorClient } from '@vechain/sdk-network';
 export { useLegalDocuments } from '../providers/LegalDocumentsProvider';
+
+// Re-export optional hooks that handle missing providers gracefully
+export {
+    useOptionalThor,
+    useOptionalDAppKitWallet,
+    useOptionalDAppKitWalletModal,
+} from './api/dappkit';

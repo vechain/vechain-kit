@@ -7,7 +7,7 @@ import {
     decodeEventLog as viemDecodeEventLog,
     Hex as ViemHex,
 } from 'viem';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../api/dappkit/useOptionalThor';
 import { getAllEventLogs } from '../thor';
 
 type Topics = [] | [signature: ViemHex, ...args: ViemHex[]];
@@ -73,7 +73,8 @@ export const useEvents = <T extends Abi, K extends ContractEventName<T>, R>({
     mapResponse,
     nodeUrl,
 }: UseEventsParams<T, K, R>) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
 
     const queryFn = useCallback(async () => {
         if (!thor) return [];

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
 import { useVeChainKitConfig } from '../../../providers';
 import { NETWORK_TYPE } from '../../../config/network';
 import { getConfig } from '../../../config';
@@ -46,13 +46,14 @@ export const getHasV1SmartAccountQueryKey = (
  * @returns True if the smart account has a v1 smart account, false otherwise
  */
 export const useHasV1SmartAccount = (ownerAddress?: string) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getHasV1SmartAccountQueryKey(ownerAddress, network.type),
         queryFn: async () =>
-            getHasV1SmartAccount(thor, ownerAddress, network.type),
+            getHasV1SmartAccount(thor!, ownerAddress, network.type),
         enabled: !!thor && !!ownerAddress && !!network,
     });
 };

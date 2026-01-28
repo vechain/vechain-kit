@@ -1,6 +1,6 @@
 import { getConfig } from '../../../config';
 import { VeworldSubdomainClaimer__factory } from '@vechain/vechain-contract-types';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../dappkit/useOptionalThor';
 import { useVeChainKitConfig } from '../../../providers';
 import { NETWORK_TYPE } from '../../../config/network';
 import { ThorClient } from '@vechain/sdk-network';
@@ -39,13 +39,14 @@ const getIsDomainProtected = async (
  * @returns The result of the useQuery hook, with the protection status.
  */
 export const useIsDomainProtected = (domain?: string, enabled = true) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getIsDomainProtectedQueryKey(domain),
-        queryFn: () => getIsDomainProtected(thor, network.type, domain),
-        enabled: !!domain && enabled && !!network.type,
+        queryFn: () => getIsDomainProtected(thor!, network.type, domain),
+        enabled: !!thor && !!domain && enabled && !!network.type,
         retry: (failureCount, error) => {
             // Don't retry on cancellation errors
             if (error instanceof Error) {

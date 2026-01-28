@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react';
 import { useOptionalPrivyWalletProvider } from '../../providers';
 import { useWallet } from '../';
-import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
+import { useOptionalDAppKitWallet } from '../api/dappkit/useOptionalDAppKitWallet';
 
 type UseSignMessageReturnValue = {
     signMessage: (message: string) => Promise<string>;
@@ -25,7 +25,8 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
     const [error, setError] = useState<Error | null>(null);
 
     const { connection, account } = useWallet();
-    const { requestCertificate } = useDappKitWallet();
+    // Use optional DAppKit wallet hook that handles missing provider gracefully
+    const { requestCertificate } = useOptionalDAppKitWallet();
     // Use optional provider - returns null when Privy is not configured
     const privyWalletProvider = useOptionalPrivyWalletProvider();
 

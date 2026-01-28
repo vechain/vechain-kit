@@ -9,12 +9,11 @@ import type {
     NonEmptyArray,
     WalletListEntry,
 } from '@privy-io/react-auth';
-import {
+import type {
     WalletSource as DAppKitWalletSource,
     LogLevel,
 } from '@vechain/dapp-kit';
-import { DAppKitProvider } from '@vechain/dapp-kit-react';
-import { WalletConnectOptions } from '@vechain/dapp-kit-react';
+import type { WalletConnectOptions } from '@vechain/dapp-kit-react';
 import { CustomizedStyle, I18n, SourceInfo } from '@vechain/dapp-kit-ui';
 import {
     createContext,
@@ -53,6 +52,7 @@ import {
 import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
+import { ThorProvider } from './ThorProvider';
 
 // Lazy load ReactQueryDevtools only in development to reduce production bundle size (~100KB)
 const ReactQueryDevtools =
@@ -68,6 +68,13 @@ const ReactQueryDevtools =
 const LazyPrivyProvider = lazy(() =>
     import('@privy-io/react-auth').then((mod) => ({
         default: mod.PrivyProvider,
+    })),
+);
+
+// Lazy load DAppKitProvider only when dappKit is configured to reduce bundle size (~200KB)
+const LazyDAppKitProvider = lazy(() =>
+    import('@vechain/dapp-kit-react').then((mod) => ({
+        default: mod.DAppKitProvider,
     })),
 );
 
@@ -173,7 +180,7 @@ export type VeChainKitConfig = {
     privy?: VechainKitProviderProps['privy'];
     privyEcosystemAppIDS: string[];
     feeDelegation?: VechainKitProviderProps['feeDelegation'];
-    dappKit: VechainKitProviderProps['dappKit'];
+    dappKit?: VechainKitProviderProps['dappKit'];
     loginModalUI?: VechainKitProviderProps['loginModalUI'];
     loginMethods?: VechainKitProviderProps['loginMethods'];
     darkMode: boolean;
@@ -238,12 +245,9 @@ const validateConfig = (
 
     const validatedProps = { ...props };
 
-    // Set default dappKit if not provided
-    if (!validatedProps.dappKit) {
-        validatedProps.dappKit = {
-            allowedWallets: ['veworld'],
-        };
-    }
+    // NOTE: dappKit is now optional - if not provided, DAppKitProvider will not be loaded
+    // This allows apps that only use Privy to avoid bundling @vechain/dapp-kit-react
+    // For backward compatibility, apps that explicitly pass dappKit: {} will get default wallet config
 
     // Check if fee delegation is required based on conditions
     const requiresFeeDelegation =
@@ -395,9 +399,10 @@ export const VeChainKitProvider = (
         nodeUrl,
     };
 
-    const dappKit = _dappKit ?? {
-        allowedWallets: ['veworld'] as DAppKitWalletSource[],
-    };
+    // DAppKit config - now optional; if not provided, DAppKitProvider won't be rendered
+    // Apps using only Privy can omit this to reduce bundle size
+    const dappKit = _dappKit;
+    const isDAppKitConfigured = !!_dappKit;
 
     // Initialize current language from i18n or prop
     const [currentLanguage, setCurrentLanguageState] = useState<string>(() => {
@@ -636,62 +641,72 @@ export const VeChainKitProvider = (
 
     // Apply DAppKit button styles (hover opacity matching loginIn variant)
     useEffect(() => {
-        applyDAppKitButtonStyles();
-    }, []);
+        if (isDAppKitConfigured) {
+            applyDAppKitButtonStyles();
+        }
+    }, [isDAppKitConfigured]);
 
-    // Inner content wrapped by DAppKitProvider
-    const innerContent = (
-        <DAppKitProvider
-            node={network.nodeUrl}
-            alwaysShowConnect={true}
-            v2Api={{
-                enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
-                external: dappKit.v2Api?.external ?? false, //defaults to false
-            }}
-            language={currentLanguage}
-            logLevel={dappKit.logLevel}
-            modalParent={dappKit.modalParent}
-            onSourceClick={dappKit.onSourceClick}
-            usePersistence={dappKit.usePersistence ?? true}
-            allowedWallets={dappKit.allowedWallets}
-            walletConnectOptions={dappKit.walletConnectOptions}
-            themeMode={darkMode ? 'DARK' : 'LIGHT'}
-            themeVariables={
-                dappKit.themeVariables
-                    ? {
-                          ...dappKitThemeVariables,
-                          ...dappKit.themeVariables,
-                      }
-                    : dappKitThemeVariables
+    // Core content that contains modals and legal documents
+    const coreContent = isPrivyConfigured ? (
+        <PrivyWalletProvider
+            nodeUrl={network.nodeUrl}
+            delegatorUrl={
+                feeDelegation?.delegatorUrl ??
+                feeDelegation?.genericDelegatorUrl
+            }
+            delegateAllTransactions={
+                feeDelegation?.delegateAllTransactions ?? false
+            }
+            genericDelegator={
+                !feeDelegation?.delegatorUrl &&
+                feeDelegation?.genericDelegatorUrl
+                    ? true
+                    : false
             }
         >
-            {isPrivyConfigured ? (
-                <PrivyWalletProvider
-                    nodeUrl={network.nodeUrl}
-                    delegatorUrl={
-                        feeDelegation?.delegatorUrl ??
-                        feeDelegation?.genericDelegatorUrl
-                    }
-                    delegateAllTransactions={
-                        feeDelegation?.delegateAllTransactions ?? false
-                    }
-                    genericDelegator={
-                        !feeDelegation?.delegatorUrl &&
-                        feeDelegation?.genericDelegatorUrl
-                            ? true
-                            : false
-                    }
-                >
-                    <ModalProvider>
-                        <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
-                    </ModalProvider>
-                </PrivyWalletProvider>
-            ) : (
-                <ModalProvider>
-                    <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
-                </ModalProvider>
-            )}
-        </DAppKitProvider>
+            <ModalProvider>
+                <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+            </ModalProvider>
+        </PrivyWalletProvider>
+    ) : (
+        <ModalProvider>
+            <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+        </ModalProvider>
+    );
+
+    // Inner content wrapped by DAppKitProvider or ThorProvider (fallback)
+    const innerContent = isDAppKitConfigured ? (
+        <Suspense fallback={<ThorProvider nodeUrl={network.nodeUrl}>{coreContent}</ThorProvider>}>
+            <LazyDAppKitProvider
+                node={network.nodeUrl}
+                alwaysShowConnect={true}
+                v2Api={{
+                    enabled: dappKit?.v2Api?.enabled ?? true, //defaults to true
+                    external: dappKit?.v2Api?.external ?? false, //defaults to false
+                }}
+                language={currentLanguage}
+                logLevel={dappKit?.logLevel}
+                modalParent={dappKit?.modalParent}
+                onSourceClick={dappKit?.onSourceClick}
+                usePersistence={dappKit?.usePersistence ?? true}
+                allowedWallets={dappKit?.allowedWallets}
+                walletConnectOptions={dappKit?.walletConnectOptions}
+                themeMode={darkMode ? 'DARK' : 'LIGHT'}
+                themeVariables={
+                    dappKit?.themeVariables
+                        ? {
+                              ...dappKitThemeVariables,
+                              ...dappKit.themeVariables,
+                          }
+                        : dappKitThemeVariables
+                }
+            >
+                {coreContent}
+            </LazyDAppKitProvider>
+        </Suspense>
+    ) : (
+        // When DAppKit is not configured, use ThorProvider for Thor client access
+        <ThorProvider nodeUrl={network.nodeUrl}>{coreContent}</ThorProvider>
     );
 
     // Conditionally wrap with PrivyProvider only when privy is configured

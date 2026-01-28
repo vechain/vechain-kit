@@ -6,10 +6,10 @@ import {
     useGetChainId,
     useGetNodeUrl,
     useGetAccountVersion,
-    useDAppKitWallet,
     useSmartAccount,
     useCrossAppConnectionCache,
 } from '../../';
+import { useOptionalDAppKitWallet } from '../dappkit/useOptionalDAppKitWallet';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
 import { useVeChainKitConfig } from '../../../providers';
@@ -67,8 +67,9 @@ export const useWallet = (): UseWalletReturnType => {
     // Use optional Privy hook that handles missing provider gracefully
     const { user, authenticated, logout, ready } = useOptionalPrivy();
     const { data: chainId } = useGetChainId();
+    // Use optional DAppKit wallet hook that handles missing provider gracefully
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
-        useDAppKitWallet();
+        useOptionalDAppKitWallet();
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();

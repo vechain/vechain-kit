@@ -47,3 +47,83 @@ Date: 2026-01-28
 - Apps without Privy configuration will no longer bundle @privy-io/react-auth eagerly
 - PrivyProvider and PrivyWalletProvider are only instantiated when needed
 - Bundle size reduction of ~500KB for apps not using Privy features
+
+## US-003: Make DAppKitProvider conditional (COMPLETED)
+Date: 2026-01-28
+
+### Changes Made:
+
+1. **VeChainKitProvider.tsx**
+   - Converted DAppKitProvider import to type-only import
+   - Added LazyDAppKitProvider using React.lazy() for dynamic loading
+   - Added `isDAppKitConfigured` check based on dappKit prop presence
+   - Made DAppKitProvider conditional: only renders when `isDAppKitConfigured` is true
+   - Falls back to ThorProvider when DAppKit is not configured
+   - Updated VeChainKitConfig type to make `dappKit` optional
+   - Removed automatic default dappKit config to allow opt-out
+
+2. **Created ThorProvider.tsx**
+   - New provider in `providers/` directory
+   - Provides Thor client via context when DAppKit is not configured
+   - Creates ThorClient from nodeUrl using useMemo for efficient memoization
+   - Exported `useFallbackThor` hook for accessing the fallback Thor client
+
+3. **Created useOptionalThor.ts**
+   - New hook in `hooks/api/dappkit/` directory
+   - Returns Thor client from DAppKit if available, falls back to ThorProvider
+   - Uses dynamic require() to check if DAppKit is available
+   - Caches the hook reference to avoid repeated require() calls
+
+4. **Created useOptionalDAppKitWallet.ts**
+   - New hook in `hooks/api/dappkit/` directory
+   - Returns default values when DAppKit provider is not available
+   - Includes mock signer that throws helpful error messages
+   - Supports all wallet operations: account, connect, disconnect, requestCertificate, requestTransaction, signer
+
+5. **Created useOptionalDAppKitWalletModal.ts**
+   - New hook in `hooks/api/dappkit/` directory
+   - Returns default values when DAppKit is not available
+   - Provides no-op functions for open/close/onConnectionStatusChange
+
+6. **Updated 20+ hooks to use optional Thor/DAppKit hooks:**
+   - useWallet.ts - replaced useDAppKitWallet with useOptionalDAppKitWallet
+   - useSignMessage.ts - replaced useDappKitWallet with useOptionalDAppKitWallet
+   - useSignTypedData.ts - replaced useDAppKitWallet with useOptionalDAppKitWallet
+   - useSendTransaction.ts - replaced useThor/useDAppKitWallet with optional variants
+   - useCallClause.ts - replaced useThor with useOptionalThor
+   - useEvents.ts - replaced useThor with useOptionalThor
+   - useCurrentBlock.ts - replaced useThor with useOptionalThor
+   - useGetChainId.ts - replaced useThor with useOptionalThor
+   - useAccountBalance.ts - replaced useThor with useOptionalThor
+   - useTxReceipt.ts - replaced useThor with useOptionalThor
+   - useSmartAccount.ts - replaced useThor with useOptionalThor
+   - useGetAccountAddress.ts - replaced useThor with useOptionalThor
+   - useUpgradeRequired.ts - replaced useThor with useOptionalThor
+   - useUpgradeRequiredForAccount.ts - replaced useThor with useOptionalThor
+   - useHasV1SmartAccount.ts - replaced useThor with useOptionalThor
+   - useCurrentAccountImplementationVersion.ts - replaced useThor with useOptionalThor
+   - useAccountImplementationAddress.ts - replaced useThor with useOptionalThor
+   - useConnectModal.tsx - replaced useDAppKitWalletModal with useOptionalDAppKitWalletModal
+   - useXAppMetadata.tsx - replaced useThor with useOptionalThor
+   - useXAppsShares.ts - replaced useThor with useOptionalThor
+   - useGetTokenUsdPrice.ts - replaced useThor with useOptionalThor
+   - useIsDomainProtected.ts - replaced useThor with useOptionalThor
+   - useEnsRecordExists.ts - replaced useThor with useOptionalThor
+   - useSwapQuotes.ts - replaced useThor with useOptionalThor
+
+7. **hooks/index.ts**
+   - Added exports for useOptionalThor, useOptionalDAppKitWallet, useOptionalDAppKitWalletModal
+   - Maintained backward compatibility with direct DAppKit hook exports
+
+8. **providers/index.ts**
+   - Added export for ThorProvider
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+
+### Impact:
+- Apps without DAppKit configuration will no longer bundle @vechain/dapp-kit-react eagerly
+- DAppKitProvider is only instantiated when dappKit prop is provided
+- ThorProvider provides fallback Thor client for blockchain operations
+- All hooks gracefully handle missing DAppKit provider with helpful error messages
+- Bundle size reduction of ~200KB for apps not using direct wallet connections

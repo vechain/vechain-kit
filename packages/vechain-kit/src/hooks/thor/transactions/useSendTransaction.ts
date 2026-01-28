@@ -1,14 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-    useThor,
-    useWallet as useDAppKitWallet,
-} from '@vechain/dapp-kit-react';
 import { TransactionMessage } from '@vechain/dapp-kit';
 import { useOptionalPrivyWalletProvider, useVeChainKitConfig } from '../../../providers';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
-import { useGetNodeUrl, useTxReceipt, useWallet } from '../../';
+import { useGetNodeUrl, useTxReceipt, useWallet, useOptionalThor, useOptionalDAppKitWallet } from '../../';
 import { useGasEstimate } from './useGasEstimate';
 import { TransactionReceipt } from '@vechain/sdk-network';
 import { Revision, TransactionClause } from '@vechain/sdk-core';
@@ -112,8 +108,9 @@ export const useSendTransaction = ({
     gasPadding,
     delegationUrl,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
-    const thor = useThor();
-    const { signer, requestTransaction } = useDAppKitWallet();
+    // Use optional hooks that handle missing providers gracefully
+    const thor = useOptionalThor();
+    const { signer, requestTransaction } = useOptionalDAppKitWallet();
     const { connection } = useWallet();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
@@ -159,15 +156,17 @@ export const useSendTransaction = ({
 
             let estimatedGas = 0;
             try {
-                estimatedGas = await useGasEstimate(
-                    thor,
-                    [..._clauses],
-                    signerAccountAddress,
-                    {
-                        revision: Revision.NEXT,
-                        ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
-                    },
-                );
+                if (thor) {
+                    estimatedGas = await useGasEstimate(
+                        thor,
+                        [..._clauses],
+                        signerAccountAddress,
+                        {
+                            revision: Revision.NEXT,
+                            ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
+                        },
+                    );
+                }
             } catch (e) {
                 console.error('Gas estimation failed', e);
             }
@@ -265,7 +264,7 @@ export const useSendTransaction = ({
      */
     const explainTxRevertReason = useCallback(
         async (txReceipt: TransactionReceipt) => {
-            if (!txReceipt.reverted || !txReceipt.meta.txID) return;
+            if (!txReceipt.reverted || !txReceipt.meta.txID || !thor) return;
 
             return await thor.transactions.getRevertReason(txReceipt.meta.txID);
         },
