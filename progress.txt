@@ -728,3 +728,67 @@ This story remains at passes: false but significant additional progress has been
 - Components no longer pull in VeChainKitProvider when they only need useVeChainKitConfig
 - Direct imports avoid loading entire hooks barrel when only specific hooks are needed
 - Total reduction from 309 to 92 cycles (70% reduction) enables better bundler optimization
+
+## US-009: Add bundle size regression testing (COMPLETED)
+Date: 2026-01-29
+
+### Changes Made:
+
+1. **packages/vechain-kit/package.json**
+   - Added `size-limit@^11.2.0` and `@size-limit/file@^11.2.0` as devDependencies
+   - Added `yarn size` script to run size-limit and display bundle sizes
+   - Added `yarn size:check` script to run size-limit with `--limit` flag (fails if thresholds exceeded)
+
+2. **packages/vechain-kit/.size-limit.json** (NEW FILE)
+   - Created configuration file with thresholds for all entry points:
+     - Main entry ESM/CJS: 15 KB limit
+     - Providers chunk ESM: 650 KB limit, CJS: 700 KB limit
+     - Assets chunk ESM: 60 KB limit, CJS: 65 KB limit
+     - Utils chunk ESM: 30 KB limit, CJS: 35 KB limit
+     - Hooks subpath: 10 KB limit
+     - Components subpath: 5 KB limit
+     - Providers subpath: 2 KB limit
+     - Utils subpath: 5 KB limit
+     - Assets subpath: 2 KB limit
+     - Total bundle (ESM): 750 KB limit
+   - All sizes measured uncompressed (`brotli: false`) for consistent CI results
+
+3. **package.json (root)**
+   - Added `yarn kit:size` command to run size check from root
+   - Added `yarn kit:size:check` command to run size check with limits from root
+
+4. **.github/workflows/lint-build-test.yaml**
+   - Added "Check bundle size limits" step that runs `yarn kit:size:check`
+   - This step fails the CI if any entry point exceeds its configured threshold
+   - Runs after the "Compare package sizes" step which provides PR diff comparison
+
+### Current Bundle Sizes (within limits):
+
+| Entry Point | Limit | Actual Size |
+|-------------|-------|-------------|
+| Main entry (ESM) | 15 KB | 11.74 KB |
+| Main entry (CJS) | 15 KB | 11.88 KB |
+| Providers chunk (ESM) | 650 KB | 571.76 KB |
+| Providers chunk (CJS) | 700 KB | 624.34 KB |
+| Assets chunk (ESM) | 60 KB | 51.28 KB |
+| Assets chunk (CJS) | 65 KB | 58.55 KB |
+| Utils chunk (ESM) | 30 KB | 20.88 KB |
+| Utils chunk (CJS) | 35 KB | 25.95 KB |
+| Hooks subpath (ESM) | 10 KB | 7.76 KB |
+| Components subpath (ESM) | 5 KB | 2.66 KB |
+| Providers subpath (ESM) | 2 KB | 484 B |
+| Utils subpath (ESM) | 5 KB | 1.96 KB |
+| Assets subpath (ESM) | 2 KB | 718 B |
+| Total bundle (ESM) | 750 KB | 655.67 KB |
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- `yarn size` displays all bundle sizes
+- `yarn size:check` passes (all within limits)
+
+### Acceptance Criteria Met:
+- ✓ Add size-limit or bundlesize package - Added size-limit@^11.2.0 and @size-limit/file@^11.2.0
+- ✓ Configure max bundle size thresholds for each entry point - .size-limit.json with 14 entry points
+- ✓ CI fails if bundle size increases beyond threshold - lint-build-test.yaml updated with size:check step
+- ✓ Document expected sizes in package.json - Documented via .size-limit.json (industry standard location)
+- ✓ Add yarn size command to check locally - Added yarn size and yarn size:check scripts

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Main entry (ESM)",
+    "path": "dist/index.mjs",
+    "limit": "15 KB",
+    "brotli": false
+  },
+  {
+    "name": "Main entry (CJS)",
+    "path": "dist/index.cjs",
+    "limit": "15 KB",
+    "brotli": false
+  },
+  {
+    "name": "Providers chunk (ESM)",
+    "path": "dist/providers-*.mjs",
+    "limit": "650 KB",
+    "brotli": false
+  },
+  {
+    "name": "Providers chunk (CJS)",
+    "path": "dist/providers-*.cjs",
+    "limit": "700 KB",
+    "brotli": false
+  },
+  {
+    "name": "Assets chunk (ESM)",
+    "path": "dist/assets-*.mjs",
+    "limit": "60 KB",
+    "brotli": false
+  },
+  {
+    "name": "Assets chunk (CJS)",
+    "path": "dist/assets-*.cjs",
+    "limit": "65 KB",
+    "brotli": false
+  },
+  {
+    "name": "Utils chunk (ESM)",
+    "path": "dist/utils-*.mjs",
+    "limit": "30 KB",
+    "brotli": false
+  },
+  {
+    "name": "Utils chunk (CJS)",
+    "path": "dist/utils-*.cjs",
+    "limit": "35 KB",
+    "brotli": false
+  },
+  {
+    "name": "Hooks subpath (ESM)",
+    "path": "dist/hooks/index.mjs",
+    "limit": "10 KB",
+    "brotli": false
+  },
+  {
+    "name": "Components subpath (ESM)",
+    "path": "dist/components/index.mjs",
+    "limit": "5 KB",
+    "brotli": false
+  },
+  {
+    "name": "Providers subpath (ESM)",
+    "path": "dist/providers/index.mjs",
+    "limit": "2 KB",
+    "brotli": false
+  },
+  {
+    "name": "Utils subpath (ESM)",
+    "path": "dist/utils/index.mjs",
+    "limit": "5 KB",
+    "brotli": false
+  },
+  {
+    "name": "Assets subpath (ESM)",
+    "path": "dist/assets/index.mjs",
+    "limit": "2 KB",
+    "brotli": false
+  },
+  {
+    "name": "Total bundle (ESM - all chunks)",
+    "path": "dist/*.mjs",
+    "limit": "750 KB",
+    "brotli": false
+  }
+]

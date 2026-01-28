@@ -173,8 +173,9 @@
         "Add yarn size command to check locally"
       ],
       "impact": "Prevent future bundle size bloat",
-      "status": "pending",
-      "passes": false
+      "status": "completed",
+      "passes": true,
+      "notes": "Implemented bundle size regression testing using size-limit package. Changes: (1) Added size-limit and @size-limit/file as devDependencies to packages/vechain-kit, (2) Created .size-limit.json with thresholds for all entry points: main ESM/CJS (15KB), providers chunk ESM/CJS (650KB/700KB), assets chunk (60KB/65KB), utils chunk (30KB/35KB), subpath entries (hooks 10KB, components 5KB, providers 2KB, utils 5KB, assets 2KB), total bundle (750KB), (3) Added yarn size and yarn size:check scripts to package.json, (4) Added yarn kit:size and yarn kit:size:check to root package.json, (5) Updated CI workflow to run size:check which fails if limits exceeded. Current sizes: main ~12KB, providers ~572KB ESM/624KB CJS, assets ~51KB, utils ~21KB, total ~656KB. All within limits."
     },
     {
       "id": "US-010",

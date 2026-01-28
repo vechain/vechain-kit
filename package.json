@@ -42,6 +42,8 @@
         "stop-preview": "kill -2 $(ps aux | grep '[t]urbo run preview' | awk '{print $2}')",
         "kit:build": "yarn workspace @vechain/vechain-kit build",
         "kit:typecheck": "yarn workspace @vechain/vechain-kit typecheck",
+        "kit:size": "yarn workspace @vechain/vechain-kit size",
+        "kit:size:check": "yarn workspace @vechain/vechain-kit size:check",
         "contracts:compile": "yarn workspace @vechain/contracts compile",
         "contracts:test": "yarn workspace @vechain/contracts test",
         "dev:homepage": "yarn workspace @vechain/vechain-kit watch & yarn workspace vechain-kit-homepage dev",
