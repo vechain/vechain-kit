@@ -9,7 +9,7 @@ import {
     Icon,
     ModalFooter,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { useTranslation } from 'react-i18next';
 import { LuTrash2 } from 'react-icons/lu';
 import { humanAddress, humanDomain } from '../../../../utils';

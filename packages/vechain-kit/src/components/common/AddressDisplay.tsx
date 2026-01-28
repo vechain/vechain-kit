@@ -22,7 +22,7 @@ import {
 import { humanAddress } from '../../utils';
 import { copyToClipboard as safeCopyToClipboard } from '../../utils/ssrUtils';
 import type { Wallet } from '../../types';
-import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { AccountModalContentTypes } from '../AccountModal/Types';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

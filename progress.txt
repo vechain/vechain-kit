@@ -221,3 +221,62 @@ Branch: ralph/direct-imports
 
 ---
 
+## US-006: Convert @/components imports to relative imports ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 79 `@/components` imports across 55+ files to relative paths
+- Import patterns converted:
+  - `@/components` → relative path to components/index.ts
+  - `@/components/common` → relative path to common/
+  - `@/components/common/*` → relative path to common/*
+  - `@/components/AccountModal/*` → relative path to AccountModal/*
+  - `@/components/TransactionModal` → relative path to TransactionModal/
+  - `@/components/WalletButton/*` → relative path to WalletButton/*
+- Relative paths calculated based on file location depth:
+  - `../` for files 1 level deep
+  - `../../` for files 2 levels deep
+  - `../../../` for files 3 levels deep
+  - `../../../../` for files 4 levels deep
+  - `../../../../../` for files 5 levels deep
+  - `../../../../../../` for files 6 levels deep
+
+**Files modified:**
+- hooks/modals/useConnectModal.tsx, useSwapTokenModal.tsx, useUpgradeSmartAccountModal.tsx
+- hooks/notifications/types.ts
+- providers/LegalDocumentsProvider.tsx
+- components/WalletButton/WalletButton.tsx
+- components/ConnectModal/ConnectModal.tsx, Contents/LoadingContent.tsx, Contents/MainContent.tsx, Contents/EcosystemContent.tsx, Contents/ErrorContent.tsx
+- components/ConnectModal/Components/VeChainLoginButton.tsx, DappKitButton.tsx, PrivyButton.tsx, PasskeyLoginButton.tsx, LoginWithGithubButton.tsx, LoginWithGoogleButton.tsx, EcosystemButton.tsx, VeChainWithPrivyLoginButton.tsx
+- components/AccountModal/AccountModal.tsx, Components/AccountSelector.tsx, Components/BalanceSection.tsx
+- components/AccountModal/Contents/Account/AccountMainContent.tsx
+- components/AccountModal/Contents/Assets/AssetsContent.tsx, ManageCustomTokenContent.tsx
+- components/AccountModal/Contents/Bridge/BridgeContent.tsx
+- components/AccountModal/Contents/ChooseName/ChooseNameContent.tsx, ChooseNameSearchContent.tsx, ChooseNameSummaryContent.tsx, Components/ExistingDomainsList.tsx
+- components/AccountModal/Contents/ConnectionDetails/ConnectionDetailsContent.tsx
+- components/AccountModal/Contents/DisconnectConfirmation/DisconnectConfirmContent.tsx
+- components/AccountModal/Contents/Ecosystem/ExploreEcosystemContent.tsx, AppOverviewContent.tsx, Components/AppComponent.tsx, Components/CustomAppComponent.tsx, Components/ShortcutsSection.tsx
+- components/AccountModal/Contents/FailedOperation/FailedOperationContent.tsx
+- components/AccountModal/Contents/FAQ/FAQContent.tsx
+- components/AccountModal/Contents/KitSettings/SettingsContent.tsx, LanguageSettingsContent.tsx, GasTokenSettingsContent.tsx, ChangeCurrencyContent.tsx
+- components/AccountModal/Contents/Notifications/NotificationContent.tsx, Components/EmptyNotifications.tsx
+- components/AccountModal/Contents/PrivyLinkedAccounts/PrivyLinkedAccounts.tsx
+- components/AccountModal/Contents/Profile/ProfileContent.tsx, Components/ProfileCard/ProfileCard.tsx, Customization/CustomizationContent.tsx, Customization/CustomizationSummaryContent.tsx
+- components/AccountModal/Contents/Receive/ReceiveTokenContent.tsx
+- components/AccountModal/Contents/SelectWallet/SelectWalletContent.tsx, RemoveWalletConfirmContent.tsx, Components/WalletCard.tsx
+- components/AccountModal/Contents/SendToken/SendTokenContent.tsx, SendTokenSummaryContent.tsx, SelectTokenContent.tsx
+- components/AccountModal/Contents/SuccessfulOperation/SuccessfulOperationContent.tsx
+- components/AccountModal/Contents/Swap/SwapTokenContent.tsx, SelectQuoteContent.tsx
+- components/AccountModal/Contents/TermsAndPrivacy/TermsAndPrivacyContent.tsx, TermsAndPrivacyAccordion.tsx
+- components/AccountModal/Contents/UpgradeSmartAccount/UpgradeSmartAccountContent.tsx
+- components/UpgradeSmartAccountModal/UpgradeSmartAccountModal.tsx, Contents/UpgradeSmartAccountContent.tsx, Contents/SuccessfulOperationContent.tsx
+- components/LegalDocumentsModal/LegalDocumentsContent.tsx
+- components/common/AddressDisplay.tsx
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/components` imports remain in codebase ✅
+
+---
+

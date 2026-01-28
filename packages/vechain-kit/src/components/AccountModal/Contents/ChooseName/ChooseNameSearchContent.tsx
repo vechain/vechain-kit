@@ -12,7 +12,7 @@ import {
     InputRightElement,
     useToken,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useState, useEffect } from 'react';
 import {

@@ -22,7 +22,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';

@@ -14,7 +14,7 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
     GasFeeSummary,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useClaimVeWorldSubdomain } from '../../../../hooks/api/vetDomains/useClaimVeWorldSubdomain';
 import { useClaimVetDomain } from '../../../../hooks/api/vetDomains/useClaimVetDomain';

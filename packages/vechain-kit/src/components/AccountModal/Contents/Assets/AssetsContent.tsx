@@ -17,7 +17,7 @@ import {
     AssetButton,
     ModalBackButton,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { useVeChainKitConfig } from '../../../../providers';
 import { useTranslation } from 'react-i18next';
 import { LuPencil } from 'react-icons/lu';

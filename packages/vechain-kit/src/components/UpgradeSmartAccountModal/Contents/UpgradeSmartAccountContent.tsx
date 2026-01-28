@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-} from '@/components/common';
+} from '../../common';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '../../../hooks';
 import {
     UpgradeSmartAccountModalContentsTypes,

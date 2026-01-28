@@ -9,7 +9,7 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { useVeChainKitConfig } from '../../../providers';
-import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
+import { ModalFAQButton, StickyHeaderContainer } from '../../common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';
 import { useFetchAppInfo, useWallet } from '../../../hooks';

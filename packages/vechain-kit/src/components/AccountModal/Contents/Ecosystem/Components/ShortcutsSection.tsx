@@ -8,7 +8,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useEcosystemShortcuts } from '../../../../../hooks';
-import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
 import { notFoundImage } from '../../../../../utils';
 

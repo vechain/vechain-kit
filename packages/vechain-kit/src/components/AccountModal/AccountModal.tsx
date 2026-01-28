@@ -1,7 +1,7 @@
 'use client';
 
 import { useWallet } from '../../hooks';
-import { BaseModal } from '@/components/common';
+import { BaseModal } from '../common';
 import {
     AccountMainContent,
     SettingsContent,

@@ -12,7 +12,7 @@ import {
 import {
     ModalBackButton,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { useTranslation } from 'react-i18next';
 import { LuLogOut } from 'react-icons/lu';
 

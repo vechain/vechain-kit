@@ -11,7 +11,7 @@ import {
     VStack,
     useToken,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../common';
 import { useCrossAppConnectionCache } from '../../../hooks';
 import { usePrivyCrossAppSdk } from '../../../providers/PrivyCrossAppProvider';
 import { useTranslation } from 'react-i18next';

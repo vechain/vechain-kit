@@ -1,4 +1,4 @@
-import { StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '../common';
 import { useLegalDocuments, useVeChainKitConfig } from '../../providers';
 import type { EnrichedLegalDocument } from '../../types';
 import {

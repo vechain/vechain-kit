@@ -14,7 +14,7 @@ import {
     Tooltip,
     ModalFooter,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import type { SwapQuote } from '../../../../types/swap';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '../../../../providers';

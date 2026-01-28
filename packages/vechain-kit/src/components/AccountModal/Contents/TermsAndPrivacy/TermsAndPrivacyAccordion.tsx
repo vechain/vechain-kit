@@ -1,4 +1,4 @@
-import { EmptyContent } from '@/components/common/EmptyContent';
+import { EmptyContent } from '../../../common/EmptyContent';
 import { useWallet } from '../../../../hooks';
 import { useLegalDocuments, useVeChainKitConfig } from '../../../../providers';
 import type { LegalDocumentAgreement } from '../../../../types';

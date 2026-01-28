@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { EmptyContent } from '@/components/common/EmptyContent';
+import { EmptyContent } from '../../../../common/EmptyContent';
 import { LuBell, LuArchive } from 'react-icons/lu';
 
 type Props = {

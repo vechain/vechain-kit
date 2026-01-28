@@ -14,7 +14,7 @@ import {
     FormLabel,
     useToken,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../../../common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '../../../../../providers';
 import { useWallet } from '../../../../../hooks';
@@ -23,7 +23,7 @@ import { ActionButton } from '../../../Components';
 import { useSingleImageUpload } from '../../../../../hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '../../../../../utils/ipfs';
-import { AccountAvatar } from '@/components/common';
+import { AccountAvatar } from '../../../../common';
 import { DomainRequiredAlert } from '../../../Components/Alerts';
 import { AccountModalContentTypes } from '../../../Types';
 import { useForm } from 'react-hook-form';

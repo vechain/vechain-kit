@@ -17,17 +17,17 @@ import {
     LocalStorageKey,
     useLocalStorage,
 } from '../../../../hooks';
-import { FeatureAnnouncementCard } from '@/components';
+import { FeatureAnnouncementCard } from '../../Components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import {
     StickyHeaderContainer,
     WalletSwitchFeedback,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
-import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
-import { AssetIcons } from '@/components/WalletButton/AssetIcons';
+import { ModalSettingsButton } from '../../../common/ModalSettingsButton';
+import { AssetIcons } from '../../../WalletButton/AssetIcons';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<

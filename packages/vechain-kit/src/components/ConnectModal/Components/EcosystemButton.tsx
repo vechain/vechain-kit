@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/react';
-import { ConnectModalContentsTypes } from '@/components';
+import { ConnectModalContentsTypes } from '../../';
 import { useTranslation } from 'react-i18next';
 import type { PrivyAppInfo } from '../../../types';
 

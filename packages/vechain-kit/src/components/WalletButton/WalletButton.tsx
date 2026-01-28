@@ -5,7 +5,7 @@ import {
     useMediaQuery,
 } from '@chakra-ui/react';
 import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '../../hooks';
-import { ConnectModal, AccountModal } from '@/components';
+import { ConnectModal, AccountModal } from '../';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
 import { useVeChainKitConfig, VechainKitThemeProvider } from '../../providers';

@@ -1,6 +1,6 @@
 import { GridItem, Icon } from '@chakra-ui/react';
 import { LuEllipsis, LuArrowRight } from 'react-icons/lu';
-import { ConnectionButton } from '@/components';
+import { ConnectionButton } from '../../';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

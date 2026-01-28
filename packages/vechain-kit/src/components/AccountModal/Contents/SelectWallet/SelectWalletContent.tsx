@@ -8,7 +8,7 @@ import {
     useToken,
     ModalFooter,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ModalBackButton } from '@/components/common';
+import { StickyHeaderContainer, ModalBackButton } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { WalletCard } from './Components/WalletCard';
 import {

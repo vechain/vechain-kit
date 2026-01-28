@@ -1,5 +1,5 @@
 import { useModal, AccountModalOptions } from '../../providers/ModalProvider';
-import type { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import type { AccountModalContentTypes } from '../../components/AccountModal/Types';
 import { ReactNode } from 'react';
 
 type SwapTokenModalOptions = {

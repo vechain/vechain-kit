@@ -7,13 +7,13 @@ import {
     useToken,
     VStack,
 } from '@chakra-ui/react';
-import { AccountAvatar, AddressDisplay } from '@/components/common';
+import { AccountAvatar, AddressDisplay } from '../../../../../common';
 import { useWalletMetadata } from '../../../../../../hooks';
 import { LuMail, LuGlobe, LuPencil } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '../../../../../../utils';
 import { useVeChainKitConfig } from '../../../../../../providers';
-import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { AccountModalContentTypes } from '../../../../Types';
 
 export type ProfileCardProps = {
     address: string;

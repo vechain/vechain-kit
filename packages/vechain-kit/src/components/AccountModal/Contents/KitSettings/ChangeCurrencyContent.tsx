@@ -14,7 +14,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import type { CURRENCY } from '../../../../types';
 import { CURRENCY_SYMBOLS } from '../../../../types';

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { MainContent } from './Contents/MainContent';
-import { BaseModal } from '@/components/common';
+import { BaseModal } from '../common';
 import { FAQContent } from '../AccountModal';
 import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
 import type { PrivyAppInfo } from '../../types';

@@ -14,7 +14,7 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
     GasFeeSummary,
-} from '@/components/common';
+} from '../../../../common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '../../../../../providers';

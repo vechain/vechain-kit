@@ -10,7 +10,7 @@ import {
     Link,
     HStack,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '../../../../providers';

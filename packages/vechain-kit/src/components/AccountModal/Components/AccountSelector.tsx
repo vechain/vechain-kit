@@ -17,7 +17,7 @@ import {
     LuCopy,
     LuArrowLeftRight,
 } from 'react-icons/lu';
-import { AccountAvatar } from '@/components/common';
+import { AccountAvatar } from '../../common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';

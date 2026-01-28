@@ -1,6 +1,6 @@
 import { GridItem } from '@chakra-ui/react';
 import { LuFingerprint } from 'react-icons/lu';
-import { ConnectionButton } from '@/components';
+import { ConnectionButton } from '../../';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithPasskey } from '../../../hooks';
 import { ConnectModalContentsTypes } from '../ConnectModal';

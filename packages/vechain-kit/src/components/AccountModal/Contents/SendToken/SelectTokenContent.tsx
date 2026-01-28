@@ -13,8 +13,9 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { LuSearch, LuSlash } from 'react-icons/lu';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { AccountModalContentTypes, AssetButton } from '@/components';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
+import { AccountModalContentTypes } from '../../Types';
+import { AssetButton } from '../../../common';
 import { useWallet, useTokensWithValues, TokenWithValue } from '../../../../hooks';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

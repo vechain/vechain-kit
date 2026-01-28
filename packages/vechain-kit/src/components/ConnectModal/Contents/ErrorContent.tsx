@@ -8,7 +8,7 @@ import {
     Icon,
     Button,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ModalBackButton } from '@/components/common';
+import { StickyHeaderContainer, ModalBackButton } from '../../common';
 import { LuCircleAlert, LuRefreshCw } from 'react-icons/lu';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';

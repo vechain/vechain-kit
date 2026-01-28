@@ -11,13 +11,13 @@ import {
     HStack,
     useToken,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '../../common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '../../../providers';
 import { motion } from 'framer-motion';
 import { getConfig } from '../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';
-import { ShareButtons } from '@/components/TransactionModal';
+import { ShareButtons } from '../../TransactionModal';
 import { UpgradeSmartAccountModalContentsTypes } from '../UpgradeSmartAccountModal';
 
 export type SuccessfulOperationContentProps = {

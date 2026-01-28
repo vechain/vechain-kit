@@ -16,7 +16,7 @@ import {
     AddressDisplayCard,
     TransactionButtonAndStatus,
     GasFeeSummary,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { getPicassoImage } from '../../../../utils';
 import {

@@ -2,7 +2,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import {
     ModalBody,
     ModalCloseButton,

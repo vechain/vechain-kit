@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BaseModal } from '@/components/common';
+import { BaseModal } from '../common';
 import {
     SuccessfulOperationContent,
     SuccessfulOperationContentProps,

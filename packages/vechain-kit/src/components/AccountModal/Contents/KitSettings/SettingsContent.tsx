@@ -29,8 +29,8 @@ import {
     LuSettings2,
     LuFingerprint,
 } from 'react-icons/lu';
-import { ActionButton } from '@/components';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ActionButton } from '../../Components';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuUnlink } from 'react-icons/lu';

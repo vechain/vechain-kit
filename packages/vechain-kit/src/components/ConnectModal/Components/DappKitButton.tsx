@@ -1,6 +1,6 @@
 import { GridItem, Icon } from '@chakra-ui/react';
 import { useDAppKitWalletModal } from '../../../hooks';
-import { ConnectionButton } from '@/components';
+import { ConnectionButton } from '../../';
 import { useTranslation } from 'react-i18next';
 import { LuArrowRight, LuWallet } from 'react-icons/lu';
 import { useEffect } from 'react';

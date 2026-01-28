@@ -13,7 +13,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplay,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useWallet } from '../../../../hooks';
 import { useTranslation } from 'react-i18next';

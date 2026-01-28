@@ -22,7 +22,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '../../../../hooks';
 import { LuArrowRight } from 'react-icons/lu';

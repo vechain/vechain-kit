@@ -10,14 +10,14 @@ import {
     StickyHeaderContainer,
     ScrollToTopWrapper,
     WalletSwitchFeedback,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     BalanceSection,
-    ModalBackButton,
     QuickActionsSection,
-} from '@/components';
+} from '../../Components';
+import { ModalBackButton } from '../../../common';
 import type { Wallet } from '../../../../types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '../../../../providers';
