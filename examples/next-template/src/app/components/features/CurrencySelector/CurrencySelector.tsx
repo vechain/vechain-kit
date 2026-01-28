@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Heading, VStack, Text, Select } from '@chakra-ui/react';
-import { useCurrentCurrency, CURRENCY, CURRENCY_SYMBOLS } from '@vechain/vechain-kit';
+import { useCurrentCurrency, CURRENCY, CURRENCY_SYMBOLS } from '@vechain/vechain-kit/hooks';
 import { useTranslation } from 'react-i18next';
 
 const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];

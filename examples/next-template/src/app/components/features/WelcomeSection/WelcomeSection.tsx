@@ -1,7 +1,7 @@
 'use client';
 
 import { Container, Text, VStack } from '@chakra-ui/react';
-import { WalletButton } from '@vechain/vechain-kit';
+import { WalletButton } from '@vechain/vechain-kit/components';
 
 export function WelcomeSection() {
     return (

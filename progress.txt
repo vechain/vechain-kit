@@ -381,12 +381,25 @@ When consumers use subpath imports instead of the main entry point:
 - The path alias conversion (`@/` → relative imports) doesn't directly reduce bundle size
 - The value is in **enabling tree-shaking** for consumers using subpath imports
 - Consumers can now import only what they need (e.g., `import { useWallet } from '@vechain/vechain-kit/hooks'`)
-- This can reduce their bundle by ~90% compared to importing from the main entry point
-- The initial 10% reduction target was based on incorrect assumptions about what this refactoring achieves
+- **IMPORTANT: Bundle reduction testing reveals the 90% claim was incorrect**
+  - Apps using VeChainKitProvider see NO bundle reduction (provider pulls in entire library)
+  - Tested: next-template converted to subpath imports: 1.71 MB → 1.71 MB (0% reduction)
+  - Tree-shaking only benefits consumers importing individual utilities/assets without the provider
+  - The initial 10% reduction target was based on incorrect assumptions about what this refactoring achieves
 
 **Verification:**
 - `yarn kit:typecheck` passes ✅
 - All import paths resolve correctly ✅
 - Subpath exports work as expected ✅
+- **Bundle size testing completed** - See BUNDLE-SIZE-ANALYSIS.md for full details
+- Examples updated to demonstrate subpath import best practices
+
+**Final Verdict:**
+The barrel imports refactoring achieved its true goals:
+- ✅ Improved code organization and maintainability
+- ✅ Better developer experience with explicit imports
+- ✅ Foundation for potential future optimizations
+- ❌ NO bundle size reduction for apps using VeChainKitProvider (0% change)
+- The provider's dependency chain prevents effective tree-shaking
 
 ---

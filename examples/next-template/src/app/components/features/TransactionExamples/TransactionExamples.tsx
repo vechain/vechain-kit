@@ -7,10 +7,12 @@ import {
     useBuildTransaction,
     useTransactionModal,
     useTransactionToast,
+    useSendTransaction,
+} from '@vechain/vechain-kit/hooks';
+import {
     TransactionModal,
     TransactionToast,
-    useSendTransaction,
-} from '@vechain/vechain-kit';
+} from '@vechain/vechain-kit/components';
 import { IB3TR__factory } from '@vechain/vechain-contract-types';
 import { humanAddress } from '@vechain/vechain-kit/utils';
 import { b3trMainnetAddress } from '../../../constants';

@@ -7,6 +7,10 @@ export * from './utils';
 export * from './cache';
 export * from './generic-delegator';
 export * from './thor';
+
+// Re-export commonly used types and constants for better tree-shaking
+export type { CURRENCY } from '../types/types';
+export { CURRENCY_SYMBOLS } from '../types/types';
 export {
     usePrivy,
     useMfaEnrollment,
