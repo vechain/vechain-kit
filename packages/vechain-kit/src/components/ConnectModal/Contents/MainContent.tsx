@@ -9,7 +9,7 @@ import {
     useToken,
 } from '@chakra-ui/react';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { ModalFAQButton, StickyHeaderContainer } from '../../common';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React, { useEffect } from 'react';

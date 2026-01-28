@@ -16,7 +16,7 @@ import { StoredWallet } from '../../../../../hooks/api/wallet/useWalletStorage';
 import { LuTrash2, LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 // Direct import to avoid circular dependency via providers barrel export
-import { useVeChainKitConfig } from '../../../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitContext';
 
 type Props = {
     wallet: StoredWallet;

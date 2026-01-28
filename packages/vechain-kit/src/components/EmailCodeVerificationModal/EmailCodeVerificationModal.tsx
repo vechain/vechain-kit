@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 import { useCreateWallet, useLoginWithEmail } from '@privy-io/react-auth';
 import { useTranslation } from 'react-i18next';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 
 type Props = {
     email: string;

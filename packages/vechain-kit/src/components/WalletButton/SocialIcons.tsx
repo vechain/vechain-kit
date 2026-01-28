@@ -1,6 +1,6 @@
 import { HStack, Circle, Icon, useMediaQuery } from '@chakra-ui/react';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { FcGoogle } from 'react-icons/fc';
 import { FaDiscord, FaXTwitter } from 'react-icons/fa6';
 import { LuPlus } from 'react-icons/lu';

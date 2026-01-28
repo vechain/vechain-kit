@@ -13,16 +13,15 @@ import {
 import { LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import type { GasTokenType } from '../../types/gasToken';
 import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '../../utils/constants';
 import { formatGasCost } from '../../types/gasEstimation';
-import {
-    useWallet,
-    useGasTokenSelection,
-    useEstimateAllTokens,
-    useTokenBalances,
-} from '../../hooks';
+// Direct imports to avoid circular dependency through hooks barrel
+import { useWallet } from '../../hooks/api/wallet/useWallet';
+import { useGasTokenSelection } from '../../hooks/generic-delegator/useGasTokenSelection';
+import { useEstimateAllTokens } from '../../hooks/generic-delegator/useEstimateAllTokens';
+import { useTokenBalances } from '../../hooks/api/wallet/useTokenBalances';
 import type { EstimationResponse } from '../../types/gasEstimation';
 import { GasFeeTokenSelector } from './GasFeeTokenSelector';
 import { TransactionClause } from '@vechain/sdk-core';

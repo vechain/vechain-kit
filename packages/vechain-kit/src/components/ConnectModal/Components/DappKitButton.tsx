@@ -8,7 +8,7 @@ import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 import { VeWorldLogoDark, VeWorldLogoLight } from '../../../assets';
 import { IconType } from 'react-icons';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 type Props = {
     isDark: boolean;

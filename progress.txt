@@ -643,3 +643,88 @@ VeChainKitProvider.tsx → LegalDocumentsProvider → useWallet → ... → useV
 
 ### Technical Notes:
 The `VeChainKitContext.tsx` pattern is a common React pattern for breaking circular dependencies in context-heavy applications. By extracting the context and hook into a separate "leaf" file that doesn't import anything from the rest of the codebase (except pure types), we ensure that any file importing `useVeChainKitConfig` doesn't inadvertently pull in the entire provider tree.
+
+## US-008: Fix circular dependencies (ADDITIONAL PROGRESS - SESSION 4)
+Date: 2026-01-29
+
+### Status: Reduced from 138 to 92 circular dependencies (33% reduction in this session, 70% total from 309)
+
+The acceptance criteria requires "no circular dependencies" which hasn't been fully achieved.
+This story remains at passes: false but significant additional progress has been made.
+
+### Changes Made:
+
+1. **Updated ~30 component files to import from VeChainKitContext**
+   - Changed all imports of `useVeChainKitConfig` from `providers/VeChainKitProvider` to `providers/VeChainKitContext`
+   - Files updated in: components/common/, components/WalletButton/, components/TransactionModal/, components/TransactionToast/, components/ConnectModal/, components/EmailCodeVerificationModal/, components/LegalDocumentsModal/, components/AccountModal/
+
+2. **components/common/AssetButton.tsx**
+   - Changed import from `../../hooks` (barrel) to `../../hooks/cache/useLocalStorage` (direct)
+
+3. **components/common/GasFeeSummary.tsx**
+   - Changed import from `../../hooks` (barrel) to direct imports:
+     - `useWallet` from `../../hooks/api/wallet/useWallet`
+     - `useGasTokenSelection` from `../../hooks/generic-delegator/useGasTokenSelection`
+     - `useEstimateAllTokens` from `../../hooks/generic-delegator/useEstimateAllTokens`
+     - `useTokenBalances` from `../../hooks/api/wallet/useTokenBalances`
+
+4. **components/common/GasFeeTokenSelector.tsx**
+   - Changed import from `../../hooks` (barrel) to `../../hooks/api/wallet/useTokenBalances` (direct)
+
+5. **components/LegalDocumentsModal/Components/LegalDocumentItem.tsx**
+   - Changed import from `../../../providers/VeChainKitProvider` to `../../../providers/VeChainKitContext`
+
+6. **components/LegalDocumentsModal/LegalDocumentsContent.tsx**
+   - Changed import from `../../providers/VeChainKitProvider` to `../../providers/VeChainKitContext`
+
+### Full list of component files updated:
+- components/common/VersionFooter.tsx
+- components/common/GasFeeSummary.tsx
+- components/common/TransactionButtonAndStatus.tsx
+- components/common/GasFeeTokenSelector.tsx
+- components/common/AssetButton.tsx
+- components/WalletButton/AssetIcons.tsx
+- components/WalletButton/WalletButton.tsx
+- components/WalletButton/SocialIcons.tsx
+- components/TransactionModal/TransactionModal.tsx
+- components/TransactionModal/TransactionModalContent.tsx
+- components/TransactionModal/Components/ShareButtons.tsx
+- components/TransactionToast/TransactionToast.tsx
+- components/TransactionToast/TransactionToastContent.tsx
+- components/ConnectModal/ConnectPopover.tsx
+- components/ConnectModal/Components/DappKitButton.tsx
+- components/ConnectModal/Components/ConnectionOptionsStack.tsx
+- components/ConnectModal/Components/EmailLoginButton.tsx
+- components/ConnectModal/Contents/MainContent.tsx
+- components/EmailCodeVerificationModal/EmailCodeVerificationModal.tsx
+- components/LegalDocumentsModal/Components/LegalDocumentItem.tsx
+- components/LegalDocumentsModal/LegalDocumentsContent.tsx
+- components/AccountModal/Components/AccountDetailsButton.tsx
+- components/AccountModal/Contents/SelectWallet/RemoveWalletConfirmContent.tsx
+- components/AccountModal/Contents/Ecosystem/ExploreEcosystemContent.tsx
+- components/AccountModal/Contents/SuccessfulOperation/SuccessfulOperationContent.tsx
+- components/AccountModal/Contents/FailedOperation/FailedOperationContent.tsx
+- components/AccountModal/Contents/KitSettings/SettingsContent.tsx
+- components/AccountModal/Contents/KitSettings/GasTokenDragList.tsx
+- components/AccountModal/Contents/Bridge/BridgeContent.tsx
+- components/AccountModal/Contents/ConnectionDetails/Components/ConnectionCard.tsx
+- components/AccountModal/Contents/SelectWallet/Components/WalletCard.tsx
+- components/AccountModal/Contents/ConnectionDetails/Components/WalletSecuredBy.tsx
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- Circular dependencies reduced from 138 to 92 (total 70% reduction from original 309)
+
+### Remaining Work:
+- 92 circular dependencies still exist
+- Main causes:
+  - hooks barrel exports (hooks/index.ts) that re-export everything creating transitive dependencies
+  - lazy imports in ModalProvider and LegalDocumentsProvider (madge detects import() statements statically)
+  - component barrel files (components/AccountModal/index.ts) that create component→hooks→providers cycles
+- The remaining cycles would require breaking up barrel exports which is a potential breaking change to the public API
+
+### Impact:
+- Significantly improved tree-shaking potential by breaking key dependency chains
+- Components no longer pull in VeChainKitProvider when they only need useVeChainKitConfig
+- Direct imports avoid loading entire hooks barrel when only specific hooks are needed
+- Total reduction from 309 to 92 cycles (70% reduction) enables better bundler optimization

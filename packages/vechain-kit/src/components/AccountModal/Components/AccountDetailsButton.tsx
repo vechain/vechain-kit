@@ -13,7 +13,7 @@ import { humanAddress, humanDomain } from '../../../utils';
 import { useTranslation } from 'react-i18next';
 import type { Wallet } from '../../../types';
 // Direct import to avoid circular dependency with providers barrel
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 interface AccountDetailsButtonProps {
     title: string;

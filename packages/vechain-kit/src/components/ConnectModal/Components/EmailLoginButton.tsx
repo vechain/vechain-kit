@@ -14,7 +14,7 @@ import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useTranslation } from 'react-i18next';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 export const EmailLoginButton = () => {
     const { t } = useTranslation();

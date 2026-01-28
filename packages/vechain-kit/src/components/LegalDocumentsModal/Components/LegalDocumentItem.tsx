@@ -1,5 +1,5 @@
-// Import directly from VeChainKitProvider to avoid circular dependency with providers/index.ts
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import type { EnrichedLegalDocument } from '../../../types';
 import { Checkbox, HStack, Icon, Input, Link, Text } from '@chakra-ui/react';
 import { UseFormRegister } from 'react-hook-form';

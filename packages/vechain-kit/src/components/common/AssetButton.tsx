@@ -11,7 +11,8 @@ import {
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../utils/constants';
 import React from 'react';
 import type { CURRENCY } from '../../types';
-import { LocalStorageKey, useLocalStorage } from '../../hooks';
+// Import directly from specific hook file to avoid circular dependency with hooks/index.ts
+import { LocalStorageKey, useLocalStorage } from '../../hooks/cache/useLocalStorage';
 import {
     formatCompactCurrency,
     SupportedCurrency,

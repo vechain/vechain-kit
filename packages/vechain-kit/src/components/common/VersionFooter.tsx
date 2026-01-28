@@ -2,7 +2,7 @@ import { HStack, Link, StackProps } from '@chakra-ui/react';
 import { VechainLogo } from '../../assets';
 import packageJson from '../../../package.json';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 
 type Props = {} & Omit<StackProps, 'dangerouslySetInnerHTML'>;
 

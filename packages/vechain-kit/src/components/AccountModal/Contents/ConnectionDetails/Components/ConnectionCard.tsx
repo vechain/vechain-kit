@@ -6,7 +6,7 @@ import {
     useGetAccountVersion,
 } from '../../../../../hooks';
 // Direct import to avoid circular dependency via providers barrel export
-import { useVeChainKitConfig } from '../../../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitContext';
 import {
     VStack,
     Text,

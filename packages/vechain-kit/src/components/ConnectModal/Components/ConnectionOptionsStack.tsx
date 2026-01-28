@@ -9,7 +9,7 @@ import { DappKitButton } from './DappKitButton';
 import { PrivyButton } from './PrivyButton';
 import { useLoginModalContent, usePrivy } from '../../../hooks';
 // Direct import to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { ConnectModalContentsTypes } from '../ConnectModal';
 import React from 'react';
 

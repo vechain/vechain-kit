@@ -15,7 +15,7 @@ import { StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 // Direct import to avoid circular dependency via providers barrel export
-import { useVeChainKitConfig } from '../../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { getConfig } from '../../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';
 import { ShareButtons } from '../../../TransactionModal';

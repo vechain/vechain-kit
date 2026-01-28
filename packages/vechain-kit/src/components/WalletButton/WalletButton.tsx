@@ -9,7 +9,7 @@ import { ConnectModal, AccountModal } from '../';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';
 // Direct imports to avoid circular dependency through barrel exports
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { VechainKitThemeProvider } from '../../providers/VechainKitThemeProvider';
 import { ConnectPopover } from '../ConnectModal';
 
