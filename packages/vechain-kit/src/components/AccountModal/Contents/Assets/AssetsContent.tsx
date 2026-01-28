@@ -12,7 +12,7 @@ import {
     VStack,
     useToken,
 } from '@chakra-ui/react';
-import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
+import { useWallet, useTokensWithValues, TokenWithValue } from '../../../../hooks';
 import {
     AssetButton,
     ModalBackButton,
@@ -24,9 +24,9 @@ import { LuPencil } from 'react-icons/lu';
 import { AccountModalContentTypes } from '../../Types';
 import { LuSearch } from 'react-icons/lu';
 import { useState } from 'react';
-import { useCurrency } from '@/hooks';
+import { useCurrency } from '../../../../hooks';
 import { SupportedCurrency } from '../../../../utils/currencyUtils';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<

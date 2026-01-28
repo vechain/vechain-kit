@@ -2,7 +2,7 @@ import { GridItem } from '@chakra-ui/react';
 import { LuGithub } from 'react-icons/lu';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
-import { useLoginWithOAuth } from '@/hooks';
+import { useLoginWithOAuth } from '../../../hooks';
 
 type Props = {
     isDark: boolean;

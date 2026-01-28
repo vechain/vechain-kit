@@ -8,7 +8,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { AccountAvatar, AddressDisplay } from '@/components/common';
-import { useWalletMetadata } from '@/hooks';
+import { useWalletMetadata } from '../../../../../../hooks';
 import { LuMail, LuGlobe, LuPencil } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '../../../../../../utils';

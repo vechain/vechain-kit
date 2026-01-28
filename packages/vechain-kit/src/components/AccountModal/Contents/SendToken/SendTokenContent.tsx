@@ -30,15 +30,15 @@ import {
     TokenWithValue,
     useTokensWithValues,
     useWallet,
-} from '@/hooks';
-import { useCurrency, useTokenPrices } from '@/hooks';
+} from '../../../../hooks';
+import { useCurrency, useTokenPrices } from '../../../../hooks';
 import {
     formatCompactCurrency,
     SupportedCurrency,
     convertToSelectedCurrency,
 } from '../../../../utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<

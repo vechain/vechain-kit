@@ -145,3 +145,52 @@ Branch: ralph/direct-imports
 
 ---
 
+## US-004: Convert @/hooks imports to relative imports ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 100+ `@/hooks` imports across 80+ files to relative paths
+- Import patterns converted:
+  - `@/hooks` → relative path to hooks/index.ts
+  - `@/hooks/api/wallet/*` → relative path to hooks/api/wallet/*
+  - `@/hooks/api/vetDomains/*` → relative path to hooks/api/vetDomains/*
+  - `@/hooks/notifications/*` → relative path to hooks/notifications/*
+  - `@/hooks/modals/*` → relative path to hooks/modals/*
+  - `@/hooks/utils/*` → relative path to hooks/utils/*
+  - `@/hooks/cache/*` → relative path to hooks/cache/*
+  - `@/hooks/thor/*` → relative path to hooks/thor/*
+- Relative paths calculated based on file location depth:
+  - `../hooks` for files 1 level deep (providers/, utils/)
+  - `../../hooks` for files 2 levels deep (hooks/api/, hooks/signing/, etc.)
+  - `../../../hooks` for files 3 levels deep (hooks/api/wallet/, components/common/, etc.)
+  - `../../../../hooks` for files 4 levels deep (components/AccountModal/Contents/*/)
+  - `../../../../../hooks` for files 5 levels deep (components/AccountModal/Contents/*/*/)
+  - `../../../../../../hooks` for files 6 levels deep (components/AccountModal/Contents/*/*/*/)
+- For files within hooks directory, relative imports like `./`, `../`, `../../` used as appropriate
+
+**Files modified:**
+- providers/PrivyWalletProvider.tsx, LegalDocumentsProvider.tsx, ModalProvider.tsx
+- utils/currencyUtils.ts
+- hooks/generic-delegator/useGenericDelegator.ts, useGenericDelegatorFeeEstimation.ts, useEstimateAllTokens.ts
+- hooks/notifications/useNotifications.ts, useNotificationAlerts.ts
+- hooks/signing/useSignTypedData.ts, useSignMessage.ts
+- hooks/login/useLoginWithVeChain.ts
+- hooks/modals/useWalletModal.tsx
+- hooks/thor/transactions/useSendTransaction.ts, useBuildTransaction.ts, useTransferVET.ts, useTransferERC20.ts
+- hooks/thor/smartAccounts/useUpgradeSmartAccount.ts, useRefreshSmartAccountQueries.ts, useGetAccountVersion.ts, useIsSmartAccountDeployed.ts, useRefreshFactoryQueries.ts
+- hooks/api/wallet/useWallet.ts, useWalletMetadata.ts, useTokenBalances.ts, useRefreshMetadata.ts, useSwitchWallet.ts, useCustomTokens.ts, useGetCustomTokenBalances.ts, useCurrentAllocationsRoundId.ts, useRoundXApps.ts
+- hooks/api/vetDomains/useUnsetDomain.ts, useUpdateTextRecord.ts, useGetResolverAddress.ts, useClaimVetDomain.ts, useClaimVeWorldSubdomain.ts, utils/domainQueryUtils.ts
+- hooks/api/swap/useSwapQuotes.ts, useSwapTransaction.ts
+- components/common/AddressDisplayCard.tsx, ScrollToTopWrapper.tsx, GasFeeSummary.tsx, GasFeeTokenSelector.tsx, ModalSettingsButton.tsx, AssetButton.tsx
+- components/WalletButton/AssetIcons.tsx, ConnectedWallet.tsx, WalletButton.tsx, WalletDisplay.tsx
+- components/ConnectModal/ConnectPopover.tsx, Contents/MainContent.tsx, Contents/EcosystemContent.tsx, Components/*.tsx
+- components/AccountModal/AccountModal.tsx, Components/*.tsx, Contents/**/*.tsx
+- components/UpgradeSmartAccountModal/Contents/UpgradeSmartAccountContent.tsx
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/hooks` imports remain in codebase ✅
+
+---
+

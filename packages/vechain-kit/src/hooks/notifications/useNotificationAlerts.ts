@@ -3,7 +3,7 @@ import {
     useWallet,
     useNotifications,
     useUpgradeRequiredForAccount,
-} from '@/hooks';
+} from '../';
 import { useTranslation } from 'react-i18next';
 
 export const DEFAULT_NOTIFICATIONS = [

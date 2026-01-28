@@ -1,4 +1,4 @@
-import { useAccountImplementationAddress, useRefreshFactoryQueries, useRefreshSmartAccountQueries, useSendTransaction, UseSendTransactionReturnValue } from '@/hooks';
+import { useAccountImplementationAddress, useRefreshFactoryQueries, useRefreshSmartAccountQueries, useSendTransaction, UseSendTransactionReturnValue } from '../../';
 import { humanAddress, isValidAddress } from '../../../utils';
 import { SocialLoginSmartAccount__factory } from '@vechain/vechain-contract-types';
 import { TransactionClause } from '@vechain/sdk-core';

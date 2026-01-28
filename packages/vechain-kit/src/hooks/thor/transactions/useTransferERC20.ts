@@ -2,7 +2,7 @@ import {
     UseSendTransactionReturnValue,
     useRefreshBalances,
     useSendTransaction,
-} from '@/hooks';
+} from '../../';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { useMemo } from 'react';
 import { humanAddress, isValidAddress } from '../../../utils';

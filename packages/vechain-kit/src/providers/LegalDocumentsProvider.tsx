@@ -1,5 +1,5 @@
 import { LegalDocumentsModal } from '@/components/LegalDocumentsModal';
-import { useWallet, useSyncableLocalStorage } from '@/hooks';
+import { useWallet, useSyncableLocalStorage } from '../hooks';
 import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
 import type {
     EnrichedLegalDocument,

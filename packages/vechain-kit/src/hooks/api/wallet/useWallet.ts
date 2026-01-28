@@ -13,7 +13,7 @@ import {
     useDAppKitWallet,
     useSmartAccount,
     useCrossAppConnectionCache,
-} from '@/hooks';
+} from '../../';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
 import { useVeChainKitConfig } from '@/providers';

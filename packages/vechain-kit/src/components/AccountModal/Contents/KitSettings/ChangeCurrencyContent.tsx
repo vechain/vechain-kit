@@ -18,7 +18,7 @@ import {
 import { AccountModalContentTypes } from '../../Types';
 import type { CURRENCY } from '../../../../types';
 import { CURRENCY_SYMBOLS } from '../../../../types';
-import { useCurrency } from '@/hooks';
+import { useCurrency } from '../../../../hooks';
 import { LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';

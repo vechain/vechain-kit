@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { useWallet } from '@/hooks';
+import { useWallet } from '../';
 import { Notification } from './types';
 import { DEFAULT_NOTIFICATIONS } from './useNotificationAlerts';
 import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '../../utils/ssrUtils';

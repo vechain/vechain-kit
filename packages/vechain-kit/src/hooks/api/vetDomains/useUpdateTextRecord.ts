@@ -1,6 +1,6 @@
 import { Interface, namehash } from 'ethers';
 import { useCallback } from 'react';
-import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
+import { UseSendTransactionReturnValue, useSendTransaction } from '../../';
 import { TransactionClause } from '@vechain/sdk-core';
 
 const nameInterface = new Interface([

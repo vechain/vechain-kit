@@ -5,7 +5,7 @@ import {
     useGetVot3Balance,
     useGetErc20Balance,
     useGetCustomTokenBalances,
-} from '@/hooks';
+} from '../../';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '../../../config';
 

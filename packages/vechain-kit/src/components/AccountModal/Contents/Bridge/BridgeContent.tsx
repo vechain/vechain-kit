@@ -15,7 +15,7 @@ import { LuExternalLink } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { VechainEnergy } from '@/assets';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import { VECHAIN_ENERGY_SWAP_BASE_URL } from '@/constants';
 
 type Props = {

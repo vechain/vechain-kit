@@ -21,7 +21,7 @@ import { AccountAvatar } from '@/components/common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';
-import { useWallet, useSwitchWallet, useDAppKitWallet } from '@/hooks';
+import { useWallet, useSwitchWallet, useDAppKitWallet } from '../../../hooks';
 
 type Props = {
     wallet: Wallet;

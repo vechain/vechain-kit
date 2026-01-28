@@ -21,7 +21,7 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
 } from '@/components/common';
-import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
+import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '../../../hooks';
 import {
     UpgradeSmartAccountModalContentsTypes,
     UpgradeSmartAccountModalStyle,

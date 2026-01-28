@@ -1,4 +1,4 @@
-import { useWallet } from '@/hooks';
+import { useWallet } from '../../hooks';
 import { Button, HStack, useMediaQuery } from '@chakra-ui/react';
 
 import { AccountAvatar } from '../common';

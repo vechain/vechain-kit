@@ -15,11 +15,11 @@ import {
 import { LuSearch, LuSlash } from 'react-icons/lu';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes, AssetButton } from '@/components';
-import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
+import { useWallet, useTokensWithValues, TokenWithValue } from '../../../../hooks';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useCurrency } from '@/hooks';
+import { useCurrency } from '../../../../hooks';
 import { SupportedCurrency } from '../../../../utils/currencyUtils';
 
 type Props = {

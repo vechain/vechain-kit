@@ -16,9 +16,9 @@ import {
     GasFeeSummary,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
-import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
-import { useClaimVetDomain } from '@/hooks/api/vetDomains/useClaimVetDomain';
-import { useUnsetDomain } from '@/hooks/api/vetDomains/useUnsetDomain';
+import { useClaimVeWorldSubdomain } from '../../../../hooks/api/vetDomains/useClaimVeWorldSubdomain';
+import { useClaimVetDomain } from '../../../../hooks/api/vetDomains/useClaimVetDomain';
+import { useUnsetDomain } from '../../../../hooks/api/vetDomains/useUnsetDomain';
 import { useTranslation } from 'react-i18next';
 import {
     useUpgradeRequired,
@@ -26,10 +26,10 @@ import {
     useWallet,
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
-} from '@/hooks';
+} from '../../../../hooks';
 import { useVeChainKitConfig } from '@/providers';
 import type { GasTokenType } from '../../../../types/gasToken';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import { LuSquareUser } from 'react-icons/lu';
 
 export type ChooseNameSummaryContentProps = {

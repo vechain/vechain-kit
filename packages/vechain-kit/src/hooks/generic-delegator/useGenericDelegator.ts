@@ -5,7 +5,7 @@ import {
 } from '@vechain/sdk-core';
 import * as nc_utils from '@noble/curves/abstract/utils';
 import type { GasTokenType, TransactionSpeed, DepositAccount, EstimationResponse, Wallet } from '../../types';
-import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '@/hooks';
+import { SmartAccountReturnType, useGasTokenSelection, useWallet, useSmartAccount, useBuildClauses, useGetAccountVersion } from '../';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { parseEther } from 'viem';
 import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '../../utils';

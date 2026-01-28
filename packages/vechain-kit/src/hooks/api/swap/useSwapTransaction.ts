@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useSendTransaction } from '@/hooks/thor/transactions/useSendTransaction';
-import { useWallet } from '@/hooks';
+import { useSendTransaction } from '../../thor/transactions/useSendTransaction';
+import { useWallet } from '../../';
 import type { SwapParams, SwapQuote } from '../../../types/swap';
 import { useTranslation } from 'react-i18next';
 

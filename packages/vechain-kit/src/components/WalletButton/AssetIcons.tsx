@@ -6,7 +6,7 @@ import {
     StackProps,
     useToken,
 } from '@chakra-ui/react';
-import { useTokensWithValues } from '@/hooks';
+import { useTokensWithValues } from '../../hooks';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../utils';
 import { useTranslation } from 'react-i18next';

@@ -8,7 +8,7 @@ import {
     Box,
 } from '@chakra-ui/react';
 import { AccountModalContentTypes } from '../Types';
-import { useUpgradeRequired, useWallet, useTotalBalance } from '@/hooks';
+import { useUpgradeRequired, useWallet, useTotalBalance } from '../../../hooks';
 import { useTranslation } from 'react-i18next';
 import {
     LuArrowDownToLine,

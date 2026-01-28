@@ -23,7 +23,7 @@ import {
     estimateAndBuildTxBody,
     useBuildClauses,
     useGetAccountVersion,
-} from '@/hooks';
+} from '../hooks';
 import { getConfig } from '../config';
 import { useVeChainKitConfig } from './VeChainKitProvider';
 import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';

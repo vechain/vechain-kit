@@ -8,7 +8,7 @@ import {
     getAccountImplementationAddressQueryKey,
     getHasV1SmartAccountQueryKey,
     getAccountAddressQueryKey,
-} from '@/hooks';
+} from '../../';
 import { useVeChainKitConfig } from '@/providers';
 
 /**

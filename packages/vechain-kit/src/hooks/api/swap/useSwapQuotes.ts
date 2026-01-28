@@ -4,9 +4,9 @@ import { getSwapAggregators } from '../../../config/swapAggregators';
 import type { SwapParams, SwapQuote } from '../../../types/swap';
 import { parseUnits, zeroAddress } from 'viem';
 import { useThor } from '@vechain/dapp-kit-react';
-import { useGetCustomTokenInfo } from '@/hooks/api/wallet/useGetCustomTokenInfo';
-import { TokenWithValue } from '@/hooks';
-import { useWallet } from '@/hooks/api/wallet/useWallet';
+import { useGetCustomTokenInfo } from '../wallet/useGetCustomTokenInfo';
+import { TokenWithValue } from '../../';
+import { useWallet } from '../wallet/useWallet';
 
 export type UnifiedSwapQuotesResult = {
     bestQuote: SwapQuote | null;

@@ -25,8 +25,8 @@ import {
     useEcosystemShortcuts,
     useMostVotedAppsInRound,
     XAppMetadata,
-} from '@/hooks';
-import { useAppHubApps, AppHubApp } from '@/hooks';
+} from '../../../../hooks';
+import { useAppHubApps, AppHubApp } from '../../../../hooks';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
@@ -35,7 +35,7 @@ import {
     CategoryFilter,
 } from './Components/CategoryFilterSection';
 import { AllowedCategories } from './Components/CategoryLabel';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import {
     VEBETTERDAO_GOVERNANCE_BASE_URL,
     VET_DOMAINS_BASE_URL,

@@ -2,7 +2,7 @@ import {
     UseSendTransactionReturnValue,
     useSendTransaction,
     useWallet,
-} from '@/hooks';
+} from '../../';
 import { useCallback } from 'react';
 import {
     VeworldSubdomainClaimer__factory,

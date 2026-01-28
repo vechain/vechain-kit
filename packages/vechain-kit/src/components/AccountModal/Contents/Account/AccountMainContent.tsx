@@ -21,7 +21,7 @@ import {
 import type { Wallet } from '../../../../types';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useAccountModalOptions } from '@/hooks';
+import { useAccountModalOptions } from '../../../../hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<

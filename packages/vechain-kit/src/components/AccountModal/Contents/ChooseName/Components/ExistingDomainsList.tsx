@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { LuChevronDown, LuChevronUp, LuTrash2 } from 'react-icons/lu';
-import { useWallet } from '@/hooks';
-import { useWalletMetadata } from '@/hooks/api/wallet/useWalletMetadata';
+import { useWallet } from '../../../../../hooks';
+import { useWalletMetadata } from '../../../../../hooks/api/wallet/useWalletMetadata';
 import { AccountAvatar } from '@/components/common';
 import { getPicassoImage, humanDomain } from '../../../../../utils';
 

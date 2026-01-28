@@ -4,7 +4,7 @@ import {
     useDisclosure,
     useMediaQuery,
 } from '@chakra-ui/react';
-import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '@/hooks';
+import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '../../hooks';
 import { ConnectModal, AccountModal } from '@/components';
 import { ConnectedWallet } from './ConnectedWallet';
 import { WalletDisplayVariant } from './types';

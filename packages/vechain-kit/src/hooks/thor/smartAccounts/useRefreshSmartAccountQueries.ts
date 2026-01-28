@@ -3,7 +3,7 @@ import { useWallet } from '../../api/wallet/useWallet';
 import {
     getSmartAccountQueryKey,
     getIsDeployedQueryKey,
-} from '@/hooks';
+} from '../../';
 
 /**
  * Hook to refresh smart account-related queries

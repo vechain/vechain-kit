@@ -1,6 +1,6 @@
 import { getConfig } from '../../../config';
 import { XAllocationVoting__factory } from '@vechain/vechain-contract-types';
-import { useCallClause, getCallClauseQueryKey } from '@/hooks';
+import { useCallClause, getCallClauseQueryKey } from '../../';
 import { useVeChainKitConfig } from '@/providers';
 
 const abi = XAllocationVoting__factory.abi;

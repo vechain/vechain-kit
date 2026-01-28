@@ -1,4 +1,4 @@
-import { useWallet } from '@/hooks';
+import { useWallet } from '../';
 import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 

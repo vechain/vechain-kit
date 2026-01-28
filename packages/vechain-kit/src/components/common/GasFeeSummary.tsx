@@ -21,7 +21,7 @@ import {
     useGasTokenSelection,
     useEstimateAllTokens,
     useTokenBalances,
-} from '@/hooks';
+} from '../../hooks';
 import type { EstimationResponse } from '../../types/gasEstimation';
 import { GasFeeTokenSelector } from './GasFeeTokenSelector';
 import { TransactionClause } from '@vechain/sdk-core';

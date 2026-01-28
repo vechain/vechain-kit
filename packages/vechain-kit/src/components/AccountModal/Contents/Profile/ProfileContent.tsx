@@ -16,7 +16,7 @@ import {
     useTotalBalance,
     LocalStorageKey,
     useLocalStorage,
-} from '@/hooks';
+} from '../../../../hooks';
 import { FeatureAnnouncementCard } from '@/components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import {

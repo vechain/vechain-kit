@@ -1,4 +1,4 @@
-import { useUpgradeRequired, useWallet } from '@/hooks';
+import { useUpgradeRequired, useWallet } from '../../hooks';
 import { IconButton, IconButtonProps, Box, Icon } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { LuSettings2 } from 'react-icons/lu';

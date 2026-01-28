@@ -5,7 +5,7 @@ import {
     getTextRecordsQueryKey,
     getVechainDomainQueryKey,
     getAvatarQueryKey,
-} from '@/hooks';
+} from '../../../';
 import { QueryClient } from '@tanstack/react-query';
 import { NETWORK_TYPE } from '../../../../config/network';
 

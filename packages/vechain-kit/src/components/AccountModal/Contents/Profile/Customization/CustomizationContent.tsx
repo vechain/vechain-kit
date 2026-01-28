@@ -17,10 +17,10 @@ import {
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
-import { useWallet } from '@/hooks';
+import { useWallet } from '../../../../../hooks';
 import { LuChevronRight, LuCamera, LuSquareUser } from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
-import { useSingleImageUpload } from '@/hooks/api/ipfs';
+import { useSingleImageUpload } from '../../../../../hooks/api/ipfs';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { uploadBlobToIPFS } from '../../../../../utils/ipfs';
 import { AccountAvatar } from '@/components/common';

@@ -2,7 +2,7 @@ import {
     UseSendTransactionReturnValue,
     useRefreshBalances,
     useSendTransaction,
-} from '@/hooks';
+} from '../../';
 import { humanAddress, isValidAddress } from '../../../utils';
 import { useMemo } from 'react';
 import { parseEther } from 'viem';

@@ -1,4 +1,4 @@
-import { useIpfsImage, useXAppMetadata, XApp } from '@/hooks';
+import { useIpfsImage, useXAppMetadata, XApp } from '../../../../../hooks';
 import { SharedAppCard } from './SharedAppCard';
 import { AccountModalContentTypes } from '@/components/AccountModal/Types';
 import { Skeleton } from '@chakra-ui/react';

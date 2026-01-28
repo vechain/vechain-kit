@@ -4,7 +4,7 @@ import {
     useWallet,
     useFetchPrivyStatus,
     useGetAccountVersion,
-} from '@/hooks';
+} from '../../../../../hooks';
 import { useVeChainKitConfig } from '@/providers';
 import {
     VStack,

@@ -2,7 +2,7 @@ import {
     UseSendTransactionReturnValue,
     useSendTransaction,
     useWallet,
-} from '@/hooks';
+} from '../../';
 import { useCallback } from 'react';
 import { VetDomainsReverseRegistrar__factory } from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';

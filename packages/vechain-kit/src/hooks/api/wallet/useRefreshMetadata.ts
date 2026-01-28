@@ -3,7 +3,7 @@ import {
     getAvatarOfAddressQueryKey,
     getAvatarQueryKey,
     getTextRecordsQueryKey,
-} from '@/hooks';
+} from '../../';
 import { useVeChainKitConfig } from '@/providers';
 
 export const useRefreshMetadata = (domain: string, address: string) => {

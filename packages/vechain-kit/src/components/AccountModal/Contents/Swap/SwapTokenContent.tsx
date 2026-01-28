@@ -35,7 +35,7 @@ import {
     useCurrency,
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
-} from '@/hooks';
+} from '../../../../hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
 import type { SwapQuote } from '../../../../types/swap';
 import { useVeChainKitConfig } from '@/providers';
@@ -49,11 +49,11 @@ import {
     convertToSelectedCurrency,
     SupportedCurrency,
 } from '../../../../utils/currencyUtils';
-import { useTokenPrices } from '@/hooks';
+import { useTokenPrices } from '../../../../hooks';
 import type { GasTokenType } from '../../../../types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
 import { extractSwapAmounts } from '../../../../utils/swap/extractSwapAmounts';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<

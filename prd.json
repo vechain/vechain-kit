@@ -57,8 +57,8 @@
                 "Typecheck passes (yarn kit:typecheck)"
             ],
             "priority": 4,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Converted 100+ @/hooks imports across 80+ files to relative paths. Import patterns converted: @/hooks -> relative path to hooks/index.ts, @/hooks/api/wallet/* -> relative path to hooks/api/wallet/*, @/hooks/api/vetDomains/* -> relative path to hooks/api/vetDomains/*, @/hooks/notifications/* -> relative path to hooks/notifications/*, @/hooks/modals/* -> relative path to hooks/modals/*, @/hooks/utils/* -> relative path to hooks/utils/*, @/hooks/cache/* -> relative path to hooks/cache/*, @/hooks/thor/* -> relative path to hooks/thor/*. Files modified in: components/ (50+ files including AccountModal, ConnectModal, WalletButton, common, UpgradeSmartAccountModal), hooks/ (30+ files including generic-delegator, notifications, signing, login, modals, thor/transactions, thor/smartAccounts, api/wallet, api/vetDomains, api/swap), providers/ (3 files), utils/ (1 file). Typecheck passes successfully."
         },
         {
             "id": "US-005",

@@ -12,7 +12,7 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { useCrossAppConnectionCache } from '@/hooks';
+import { useCrossAppConnectionCache } from '../../../hooks';
 import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
 import { useTranslation } from 'react-i18next';
 import type { PrivyAppInfo } from '../../../types';

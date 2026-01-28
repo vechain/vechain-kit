@@ -1,4 +1,4 @@
-import { LocalStorageKey, useLocalStorage } from '@/hooks';
+import { LocalStorageKey, useLocalStorage } from '../../';
 import { compareAddresses } from '../../../utils';
 import { useVeChainKitConfig } from '@/providers';
 import { getConfig } from '../../../config';

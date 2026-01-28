@@ -2,7 +2,7 @@ import {
     UseSendTransactionReturnValue,
     useSendTransaction,
     useWallet,
-} from '@/hooks';
+} from '../../';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';
 import { useCallback } from 'react';
 import { VetDomainsReverseRegistrar__factory } from '@vechain/vechain-contract-types';

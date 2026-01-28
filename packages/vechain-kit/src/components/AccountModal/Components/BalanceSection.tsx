@@ -7,7 +7,7 @@ import {
     Button,
     useToken,
 } from '@chakra-ui/react';
-import { useRefreshBalances, useWallet, useTotalBalance, LocalStorageKey, useLocalStorage } from '@/hooks';
+import { useRefreshBalances, useWallet, useTotalBalance, LocalStorageKey, useLocalStorage } from '../../../hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LuRefreshCw } from 'react-icons/lu';
