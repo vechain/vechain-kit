@@ -10,7 +10,6 @@ import {
     PrivyProvider,
     WalletListEntry,
 } from '@privy-io/react-auth';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
     WalletSource as DAppKitWalletSource,
     LogLevel,
@@ -26,6 +25,8 @@ import {
     useMemo,
     useState,
     useRef,
+    lazy,
+    Suspense,
 } from 'react';
 import { VechainKitThemeConfig } from '../theme/tokens';
 import {
@@ -53,6 +54,16 @@ import {
 import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
+
+// Lazy load ReactQueryDevtools only in development to reduce production bundle size (~100KB)
+const ReactQueryDevtools =
+    process.env.NODE_ENV === 'development'
+        ? lazy(() =>
+              import('@tanstack/react-query-devtools').then((mod) => ({
+                  default: mod.ReactQueryDevtools,
+              })),
+          )
+        : () => null;
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
@@ -626,7 +637,11 @@ export const VeChainKitProvider = (
 
     return (
         <EnsureQueryClient>
-            <ReactQueryDevtools initialIsOpen={false} />
+            {process.env.NODE_ENV === 'development' && (
+                <Suspense fallback={null}>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </Suspense>
+            )}
             <PrivyCrossAppProvider privyEcosystemAppIDS={allowedEcosystemApps}>
                 <VeChainKitContext.Provider
                     value={{

@@ -403,3 +403,40 @@ The barrel imports refactoring achieved its true goals:
 - The provider's dependency chain prevents effective tree-shaking
 
 ---
+
+## US-001: Remove ReactQueryDevtools from production builds ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Removed static import of `ReactQueryDevtools` from `@tanstack/react-query-devtools`
+- Added React `lazy` and `Suspense` to imports
+- Created a conditional lazy-loaded component that:
+  - In development: Uses `React.lazy()` to dynamically import `ReactQueryDevtools`
+  - In production: Returns `null` (empty component)
+- Wrapped the ReactQueryDevtools JSX usage in:
+  - `process.env.NODE_ENV === 'development'` conditional check
+  - `<Suspense fallback={null}>` boundary for the lazy component
+
+**File modified:**
+- `packages/vechain-kit/src/providers/VeChainKitProvider.tsx`
+
+**Implementation details:**
+```typescript
+// Lazy load ReactQueryDevtools only in development to reduce production bundle size (~100KB)
+const ReactQueryDevtools =
+    process.env.NODE_ENV === 'development'
+        ? lazy(() =>
+              import('@tanstack/react-query-devtools').then((mod) => ({
+                  default: mod.ReactQueryDevtools,
+              })),
+          )
+        : () => null;
+```
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- In production builds, the devtools chunk will not be included in the bundle
+- Expected bundle size reduction: ~100KB
+
+---
