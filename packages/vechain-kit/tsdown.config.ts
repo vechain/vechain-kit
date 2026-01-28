@@ -5,6 +5,9 @@ export default defineConfig({
     // Entry Points
     entry: {
         index: 'src/index.ts',
+        'hooks/index': 'src/hooks/index.ts',
+        'components/index': 'src/components/index.ts',
+        'providers/index': 'src/providers/index.ts',
         'utils/index': 'src/utils/index.ts',
         'assets/index': 'src/assets/index.ts',
     },
