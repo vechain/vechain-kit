@@ -1,4 +1,4 @@
-import { UpgradeSmartAccountModalStyle } from '@/components';
+import type { UpgradeSmartAccountModalStyle } from '@/components';
 import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 

@@ -1,8 +1,8 @@
 import { useVeChainKitConfig } from '@/providers';
 import { useModal } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
-import { useDAppKitWalletModal } from '..';
-import { ConnectModalContentsTypes } from '@/components';
+import { useWalletModal as useDAppKitWalletModal } from '@vechain/dapp-kit-react';
+import type { ConnectModalContentsTypes } from '@/components';
 
 export const useConnectModal = () => {
     const { loginMethods } = useVeChainKitConfig();

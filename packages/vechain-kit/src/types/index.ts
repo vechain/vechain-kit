@@ -2,6 +2,7 @@ export * from './types';
 export * from './ensTextRecords';
 export * from './gasToken';
 export * from './gasEstimation';
+export * from './modal';
 
 import { LegalDocument } from '@/providers';
 

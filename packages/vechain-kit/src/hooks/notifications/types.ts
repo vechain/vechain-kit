@@ -1,4 +1,4 @@
-import { AccountModalContentTypes } from '@/components';
+import type { AccountModalContentTypes } from '@/components';
 
 export type NotificationAction = {
     label: string;
