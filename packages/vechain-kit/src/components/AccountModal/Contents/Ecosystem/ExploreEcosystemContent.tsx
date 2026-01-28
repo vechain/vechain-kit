@@ -18,7 +18,7 @@ import { LuSearch } from 'react-icons/lu';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../providers';
 import React, { useState, useMemo, useEffect } from 'react';
 import {
     useCurrentAllocationsRoundId,

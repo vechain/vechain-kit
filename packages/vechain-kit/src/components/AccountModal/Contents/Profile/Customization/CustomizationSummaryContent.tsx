@@ -17,7 +17,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../../providers';
 import {
     useWallet,
     useUpgradeRequired,

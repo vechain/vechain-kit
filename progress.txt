@@ -194,3 +194,30 @@ Branch: ralph/direct-imports
 
 ---
 
+## US-005: Convert @/providers imports to relative imports ✅
+
+**Status:** COMPLETED
+
+**Changes made:**
+- Converted 7 remaining `@/providers` imports to relative paths (most were already converted in previous work)
+- Relative paths calculated based on file location depth:
+  - `../../providers` for files 2 levels deep
+  - `../../../../providers` for files 4 levels deep
+  - `../../../../../providers` for files 5 levels deep
+  - `../../../../../../providers` for files 6 levels deep
+
+**Files modified:**
+- components/EmailCodeVerificationModal/EmailCodeVerificationModal.tsx → `../../providers`
+- components/AccountModal/Contents/SuccessfulOperation/SuccessfulOperationContent.tsx → `../../../../providers`
+- components/AccountModal/Contents/FailedOperation/FailedOperationContent.tsx → `../../../../providers`
+- components/AccountModal/Contents/Ecosystem/ExploreEcosystemContent.tsx → `../../../../providers`
+- components/AccountModal/Contents/Profile/Components/ProfileCard/ProfileCard.tsx → `../../../../../../providers`
+- components/AccountModal/Contents/Profile/Customization/CustomizationSummaryContent.tsx → `../../../../../providers`
+- components/AccountModal/Contents/Profile/Customization/CustomizationContent.tsx → `../../../../../providers`
+
+**Verification:**
+- `yarn kit:typecheck` passes ✅
+- No `@/providers` imports remain in codebase ✅
+
+---
+

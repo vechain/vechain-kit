@@ -18,7 +18,7 @@ import { BaseModal, StickyHeaderContainer } from '../common';
 import { useEffect, useState } from 'react';
 import { useCreateWallet, useLoginWithEmail } from '@privy-io/react-auth';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../providers';
 
 type Props = {
     email: string;

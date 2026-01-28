@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../../../providers';
 import { useWallet } from '../../../../../hooks';
 import { LuChevronRight, LuCamera, LuSquareUser } from 'react-icons/lu';
 import { ActionButton } from '../../../Components';
