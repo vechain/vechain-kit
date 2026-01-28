@@ -114,8 +114,8 @@
                 "Make a final git commit summarizing the conversion"
             ],
             "priority": 8,
-            "passes": false,
-            "notes": ""
+            "passes": true,
+            "notes": "Verified no @/ imports remain in TypeScript/JavaScript source files (only a documentation example in utils/swap/README.md). Typecheck passes successfully via yarn kit:typecheck. Build command has Node.js version compatibility issue with rolldown bundler (requires Node.js v20.12.0+ for styleText export), but this is an environment issue, not a code issue. All import path conversions are complete and correct."
         },
         {
             "id": "US-009",

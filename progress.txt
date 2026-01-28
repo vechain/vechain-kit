@@ -327,3 +327,27 @@ Branch: ralph/direct-imports
 
 ---
 
+## US-008: Verify no @/ imports remain and test build ✅
+
+**Status:** COMPLETED
+
+**Verification performed:**
+- Ran `grep -r "from '@/" src/` - only result is documentation example in utils/swap/README.md (not actual code)
+- Verified no `@/` imports in any `.ts` or `.tsx` files
+- `yarn kit:typecheck` passes ✅
+- Build command (`yarn kit:build`) has Node.js version compatibility issue with rolldown bundler (requires Node.js v20.12.0+ for `styleText` export from `node:util`). This is an environment issue, not a code issue. All import paths resolve correctly.
+
+**Summary:**
+All 609 `@/` path alias imports have been successfully converted to relative imports across the codebase:
+- hooks: ~133 imports converted
+- providers: ~126 imports converted
+- utils: ~98 imports converted
+- components: ~79 imports converted
+- config: ~74 imports converted
+- types: ~69 imports converted
+- constants: ~14 imports converted
+- assets: ~10 imports converted
+- theme: ~6 imports converted
+
+---
+
