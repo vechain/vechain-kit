@@ -308,6 +308,10 @@ export const PrivyWalletProvider = ({
     );
 };
 
+/**
+ * Hook to access the PrivyWalletProvider context.
+ * Throws an error if used outside of a PrivyWalletProvider.
+ */
 export const usePrivyWalletProvider = () => {
     const context = useContext(PrivyWalletProviderContext);
     if (!context) {
@@ -316,4 +320,13 @@ export const usePrivyWalletProvider = () => {
         );
     }
     return context;
+};
+
+/**
+ * Optional hook to access the PrivyWalletProvider context.
+ * Returns null if the provider is not available (e.g., when Privy is not configured).
+ * Use this in hooks that need to work with or without Privy.
+ */
+export const useOptionalPrivyWalletProvider = () => {
+    return useContext(PrivyWalletProviderContext);
 };

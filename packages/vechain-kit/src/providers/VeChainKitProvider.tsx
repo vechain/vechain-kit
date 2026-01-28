@@ -4,10 +4,9 @@ import type { CURRENCY, PrivyLoginMethod } from '../types';
 import { isValidUrl } from '../utils';
 import { getLocalStorageItem, setLocalStorageItem } from '../utils/ssrUtils';
 import { initializeI18n } from '../utils/i18n';
-import {
+import type {
     LoginMethodOrderOption,
     NonEmptyArray,
-    PrivyProvider,
     WalletListEntry,
 } from '@privy-io/react-auth';
 import {
@@ -64,6 +63,18 @@ const ReactQueryDevtools =
               })),
           )
         : () => null;
+
+// Lazy load PrivyProvider only when privy is configured to reduce bundle size (~500KB)
+const LazyPrivyProvider = lazy(() =>
+    import('@privy-io/react-auth').then((mod) => ({
+        default: mod.PrivyProvider,
+    })),
+);
+
+// Passthrough component when Privy is not configured
+const PrivyPassthrough = ({ children }: { children: ReactNode }) => (
+    <>{children}</>
+);
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
@@ -426,15 +437,8 @@ export const VeChainKitProvider = (
         );
     }, [validatedLoginMethods]);
 
-    let privyAppId: string, privyClientId: string;
-    if (!privy) {
-        // We set dummy values for the appId and clientId so that the PrivyProvider doesn't throw an error
-        privyAppId = 'clzdb5k0b02b9qvzjm6jpknsc';
-        privyClientId = 'client-WY2oy87y6KNrHFnpXuwVsiFMkwPZKTYpExtjvUQuMbCMF';
-    } else {
-        privyAppId = privy.appId;
-        privyClientId = privy.clientId;
-    }
+    // Check if Privy is configured
+    const isPrivyConfigured = !!privy;
 
     // Initialize i18n with stored language or prop, and merge translations
     useEffect(() => {
@@ -635,6 +639,108 @@ export const VeChainKitProvider = (
         applyDAppKitButtonStyles();
     }, []);
 
+    // Inner content wrapped by DAppKitProvider
+    const innerContent = (
+        <DAppKitProvider
+            node={network.nodeUrl}
+            alwaysShowConnect={true}
+            v2Api={{
+                enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
+                external: dappKit.v2Api?.external ?? false, //defaults to false
+            }}
+            language={currentLanguage}
+            logLevel={dappKit.logLevel}
+            modalParent={dappKit.modalParent}
+            onSourceClick={dappKit.onSourceClick}
+            usePersistence={dappKit.usePersistence ?? true}
+            allowedWallets={dappKit.allowedWallets}
+            walletConnectOptions={dappKit.walletConnectOptions}
+            themeMode={darkMode ? 'DARK' : 'LIGHT'}
+            themeVariables={
+                dappKit.themeVariables
+                    ? {
+                          ...dappKitThemeVariables,
+                          ...dappKit.themeVariables,
+                      }
+                    : dappKitThemeVariables
+            }
+        >
+            {isPrivyConfigured ? (
+                <PrivyWalletProvider
+                    nodeUrl={network.nodeUrl}
+                    delegatorUrl={
+                        feeDelegation?.delegatorUrl ??
+                        feeDelegation?.genericDelegatorUrl
+                    }
+                    delegateAllTransactions={
+                        feeDelegation?.delegateAllTransactions ?? false
+                    }
+                    genericDelegator={
+                        !feeDelegation?.delegatorUrl &&
+                        feeDelegation?.genericDelegatorUrl
+                            ? true
+                            : false
+                    }
+                >
+                    <ModalProvider>
+                        <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+                    </ModalProvider>
+                </PrivyWalletProvider>
+            ) : (
+                <ModalProvider>
+                    <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+                </ModalProvider>
+            )}
+        </DAppKitProvider>
+    );
+
+    // Conditionally wrap with PrivyProvider only when privy is configured
+    const privyWrappedContent = isPrivyConfigured ? (
+        <Suspense fallback={innerContent}>
+            <LazyPrivyProvider
+                appId={privy.appId}
+                clientId={privy.clientId}
+                config={{
+                    loginMethodsAndOrder: {
+                        primary: (privy.loginMethods.slice(0, 4) ??
+                            []) as NonEmptyArray<LoginMethodOrderOption>,
+                        overflow: (privy.loginMethods.slice(4) ??
+                            []) as Array<LoginMethodOrderOption>,
+                    },
+                    externalWallets: {
+                        walletConnect: {
+                            enabled: false,
+                        },
+                    },
+                    appearance: {
+                        theme: darkMode ? 'dark' : 'light',
+                        accentColor:
+                            privy.appearance.accentColor ??
+                            (tokens.buttons.primaryButton.bg?.startsWith('#')
+                                ? (tokens.buttons.primaryButton
+                                      .bg as `#${string}`)
+                                : darkMode
+                                ? '#3182CE'
+                                : '#2B6CB0'),
+                        loginMessage: privy.appearance.loginMessage,
+                        logo: privy.appearance.logo,
+                    },
+                    embeddedWallets: {
+                        createOnLogin:
+                            privy.embeddedWallets?.createOnLogin ?? 'all-users',
+                    },
+                    passkeys: {
+                        shouldUnlinkOnUnenrollMfa: false,
+                    },
+                }}
+            >
+                {innerContent}
+            </LazyPrivyProvider>
+        </Suspense>
+    ) : (
+        innerContent
+    );
+
     return (
         <EnsureQueryClient>
             {process.env.NODE_ENV === 'development' && (
@@ -663,96 +769,7 @@ export const VeChainKitProvider = (
                         setCurrency,
                     }}
                 >
-                    <PrivyProvider
-                        appId={privyAppId}
-                        clientId={privyClientId}
-                        config={{
-                            // loginMethods: privy?.loginMethods,
-                            loginMethodsAndOrder: {
-                                primary: (privy?.loginMethods.slice(0, 4) ??
-                                    []) as NonEmptyArray<LoginMethodOrderOption>,
-                                overflow: (privy?.loginMethods.slice(4) ??
-                                    []) as Array<LoginMethodOrderOption>,
-                            },
-                            externalWallets: {
-                                walletConnect: {
-                                    enabled: false,
-                                },
-                            },
-                            appearance: {
-                                theme: darkMode ? 'dark' : 'light',
-                                accentColor:
-                                    privy?.appearance.accentColor ??
-                                    (tokens.buttons.primaryButton.bg?.startsWith(
-                                        '#',
-                                    )
-                                        ? (tokens.buttons.primaryButton
-                                              .bg as `#${string}`)
-                                        : darkMode
-                                        ? '#3182CE'
-                                        : '#2B6CB0'),
-                                loginMessage: privy?.appearance.loginMessage,
-                                logo: privy?.appearance.logo,
-                            },
-                            embeddedWallets: {
-                                createOnLogin:
-                                    privy?.embeddedWallets?.createOnLogin ??
-                                    'all-users',
-                            },
-                            passkeys: {
-                                shouldUnlinkOnUnenrollMfa: false,
-                            },
-                        }}
-                    >
-                        <DAppKitProvider
-                            node={network.nodeUrl}
-                            alwaysShowConnect={true}
-                            v2Api={{
-                                enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
-                                external: dappKit.v2Api?.external ?? false, //defaults to false
-                            }}
-                            language={currentLanguage}
-                            logLevel={dappKit.logLevel}
-                            modalParent={dappKit.modalParent}
-                            onSourceClick={dappKit.onSourceClick}
-                            usePersistence={dappKit.usePersistence ?? true}
-                            allowedWallets={dappKit.allowedWallets}
-                            walletConnectOptions={dappKit.walletConnectOptions}
-                            themeMode={darkMode ? 'DARK' : 'LIGHT'}
-                            themeVariables={
-                                dappKit.themeVariables
-                                    ? {
-                                          ...dappKitThemeVariables,
-                                          ...dappKit.themeVariables,
-                                      }
-                                    : dappKitThemeVariables
-                            }
-                        >
-                            <PrivyWalletProvider
-                                nodeUrl={network.nodeUrl}
-                                delegatorUrl={
-                                    feeDelegation?.delegatorUrl ??
-                                    feeDelegation?.genericDelegatorUrl
-                                }
-                                delegateAllTransactions={
-                                    feeDelegation?.delegateAllTransactions ??
-                                    false
-                                }
-                                genericDelegator={
-                                    !feeDelegation?.delegatorUrl &&
-                                    feeDelegation?.genericDelegatorUrl
-                                        ? true
-                                        : false
-                                }
-                            >
-                                <ModalProvider>
-                                    <LegalDocumentsProvider>
-                                        {children}
-                                    </LegalDocumentsProvider>
-                                </ModalProvider>
-                            </PrivyWalletProvider>
-                        </DAppKitProvider>
-                    </PrivyProvider>
+                    {privyWrappedContent}
                 </VeChainKitContext.Provider>
             </PrivyCrossAppProvider>
         </EnsureQueryClient>

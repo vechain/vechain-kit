@@ -1,11 +1,7 @@
 'use client';
 
-import {
-    Wallet as PrivyWallet,
-    useLoginWithOAuth,
-    usePrivy,
-    User,
-} from '@privy-io/react-auth';
+import type { Wallet as PrivyWallet, User } from '@privy-io/react-auth';
+import { useOptionalPrivy } from '../privy/useOptionalPrivy';
 import {
     useGetChainId,
     useGetNodeUrl,
@@ -67,9 +63,9 @@ export const useWallet = (): UseWalletReturnType => {
         isReconnecting: isReconnectingWithCrossApp,
     } = useAccount();
     const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
-    const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
     const { feeDelegation, network, privy } = useVeChainKitConfig();
-    const { user, authenticated, logout, ready } = usePrivy();
+    // Use optional Privy hook that handles missing provider gracefully
+    const { user, authenticated, logout, ready } = useOptionalPrivy();
     const { data: chainId } = useGetChainId();
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
         useDAppKitWallet();
@@ -105,7 +101,6 @@ export const useWallet = (): UseWalletReturnType => {
     const isLoading =
         isConnectingWithCrossApp ||
         isReconnectingWithCrossApp ||
-        isLoadingLoginOAuth ||
         !ready;
 
     // Add a single connection state that considers all factors

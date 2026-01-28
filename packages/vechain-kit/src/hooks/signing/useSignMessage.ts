@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { usePrivyWalletProvider } from '../../providers';
+import { useOptionalPrivyWalletProvider } from '../../providers';
 import { useWallet } from '../';
 import { useWallet as useDappKitWallet } from '@vechain/dapp-kit-react';
 
@@ -26,7 +26,8 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
 
     const { connection, account } = useWallet();
     const { requestCertificate } = useDappKitWallet();
-    const privyWalletProvider = usePrivyWalletProvider();
+    // Use optional provider - returns null when Privy is not configured
+    const privyWalletProvider = useOptionalPrivyWalletProvider();
 
     const signMessage = useCallback(
         async (message: string): Promise<string> => {
@@ -55,6 +56,11 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
 
                     sig = certResponse.signature;
                 } else {
+                    if (!privyWalletProvider) {
+                        throw new Error(
+                            'Privy is not configured. Please configure the privy prop in VeChainKitProvider to use this feature.',
+                        );
+                    }
                     sig = await privyWalletProvider.signMessage(message);
                 }
 

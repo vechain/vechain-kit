@@ -6,7 +6,7 @@ import {
     useWallet as useDAppKitWallet,
 } from '@vechain/dapp-kit-react';
 import { TransactionMessage } from '@vechain/dapp-kit';
-import { usePrivyWalletProvider, useVeChainKitConfig } from '../../../providers';
+import { useOptionalPrivyWalletProvider, useVeChainKitConfig } from '../../../providers';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
 import { useGetNodeUrl, useTxReceipt, useWallet } from '../../';
 import { useGasEstimate } from './useGasEstimate';
@@ -117,7 +117,8 @@ export const useSendTransaction = ({
     const { connection } = useWallet();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
-    const privyWalletProvider = usePrivyWalletProvider();
+    // Use optional provider - returns null when Privy is not configured
+    const privyWalletProvider = useOptionalPrivyWalletProvider();
 
     /**
      * Send a transaction with the given clauses (in case you need to pass data to build the clauses to mutate directly)
@@ -140,6 +141,11 @@ export const useSendTransaction = ({
             const _clauses =
                 typeof clauses === 'function' ? await clauses() : clauses ?? [];
             if (connection.isConnectedWithPrivy) {
+                if (!privyWalletProvider) {
+                    throw new Error(
+                        'Privy is not configured. Please configure the privy prop in VeChainKitProvider to use this feature.',
+                    );
+                }
                 return await privyWalletProvider.sendTransaction({
                     txClauses: _clauses,
                     ...privyUIOptions,
