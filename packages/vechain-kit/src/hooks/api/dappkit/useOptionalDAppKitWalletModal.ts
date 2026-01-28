@@ -14,7 +14,7 @@ export type UseOptionalDAppKitWalletModalReturnType = {
 const DEFAULT_DAPPKIT_WALLET_MODAL_STATE: UseOptionalDAppKitWalletModalReturnType = {
     open: () => {
         console.warn(
-            'DAppKit is not configured. Add dappKit prop to VeChainKitProvider to enable wallet modal.',
+            'DAppKit is not configured. Add dappKit prop to VeChainKitContext to enable wallet modal.',
         );
     },
     close: () => {},

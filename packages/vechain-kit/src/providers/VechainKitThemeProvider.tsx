@@ -18,7 +18,8 @@ import {
 import { getVechainKitTheme } from '../theme';
 import { safeQuerySelector } from '../utils/ssrUtils';
 import type { VechainKitThemeConfig } from '../theme/tokens';
-import { VeChainKitContext } from './VeChainKitProvider';
+// Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
+import { VeChainKitContext } from './VeChainKitContext';
 import { ThemeTokens } from '../theme/tokens';
 import {
     getDefaultTokens,

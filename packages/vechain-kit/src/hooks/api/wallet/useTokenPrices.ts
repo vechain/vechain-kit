@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getConfig } from '../../../config';
 import { useGetTokenUsdPrice } from './useGetTokenUsdPrice';
 

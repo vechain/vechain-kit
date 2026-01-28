@@ -8,7 +8,7 @@ import { useTokenBalances } from '../api/wallet/useTokenBalances';
 import { estimateGas } from './useGenericDelegator';
 import { useGasTokenSelection } from './useGasTokenSelection';
 // Direct import to avoid circular dependency (providers barrel re-exports hooks)
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { TransactionClause } from '@vechain/sdk-core';
 
 export interface useGenericDelegatorFeeEstimationParams {

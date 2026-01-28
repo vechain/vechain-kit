@@ -1,6 +1,6 @@
 import { getConfig } from '../../../config';
 import { NETWORK_TYPE } from '../../../config/network';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useQuery } from '@tanstack/react-query';
 import { useOptionalThor } from '../../api/dappkit/useOptionalThor';

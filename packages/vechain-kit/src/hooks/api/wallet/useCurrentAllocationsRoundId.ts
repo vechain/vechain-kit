@@ -2,7 +2,7 @@ import { getConfig } from '../../../config';
 import { XAllocationVoting__factory } from '@vechain/vechain-contract-types';
 // Direct import to avoid circular dependency through barrel exports
 import { useCallClause, getCallClauseQueryKey } from '../../utils/useCallClause';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 const abi = XAllocationVoting__factory.abi;
 const method = 'currentRoundId' as const;

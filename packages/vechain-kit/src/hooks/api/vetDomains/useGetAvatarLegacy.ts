@@ -14,7 +14,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import {
     Interface,
     namehash,

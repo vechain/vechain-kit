@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getAvatarOfAddressQueryKey } from '../vetDomains/useGetAvatarOfAddress';
 import { getAvatarQueryKey } from '../vetDomains/useGetAvatar';
 import { getTextRecordsQueryKey } from '../vetDomains/useGetTextRecords';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 export const useRefreshMetadata = (domain: string, address: string) => {
     const queryClient = useQueryClient();

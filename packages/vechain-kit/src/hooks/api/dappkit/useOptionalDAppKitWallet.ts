@@ -7,7 +7,7 @@ import type { CertificateData } from '@vechain/sdk-core';
 const createMockSigner = (): VeChainSignerDAppKit => {
     const notConfiguredError = () => {
         throw new Error(
-            'DAppKit is not configured. Add dappKit prop to VeChainKitProvider to use signing features.',
+            'DAppKit is not configured. Add dappKit prop to VeChainKitContext to use signing features.',
         );
     };
 
@@ -52,7 +52,7 @@ const DEFAULT_DAPPKIT_WALLET_STATE: UseOptionalDAppKitWalletReturnType = {
     connectionCertificate: null,
     connect: () => {
         console.warn(
-            'DAppKit is not configured. Add dappKit prop to VeChainKitProvider to enable wallet connections.',
+            'DAppKit is not configured. Add dappKit prop to VeChainKitContext to enable wallet connections.',
         );
     },
     disconnect: () => {},
@@ -60,12 +60,12 @@ const DEFAULT_DAPPKIT_WALLET_STATE: UseOptionalDAppKitWalletReturnType = {
     availableSources: [],
     requestCertificate: async () => {
         throw new Error(
-            'DAppKit is not configured. Add dappKit prop to VeChainKitProvider to use certificate signing.',
+            'DAppKit is not configured. Add dappKit prop to VeChainKitContext to use certificate signing.',
         );
     },
     requestTransaction: async () => {
         throw new Error(
-            'DAppKit is not configured. Add dappKit prop to VeChainKitProvider to use transaction signing.',
+            'DAppKit is not configured. Add dappKit prop to VeChainKitContext to use transaction signing.',
         );
     },
     signer: createMockSigner(),

@@ -19,7 +19,7 @@ export type UseOptionalPrivyCrossAppSdkReturnType = {
 const DEFAULT_CROSS_APP_STATE: UseOptionalPrivyCrossAppSdkReturnType = {
     login: async () => {
         throw new Error(
-            'Ecosystem login is not configured. Add ecosystem to loginMethods in VeChainKitProvider to enable this feature.',
+            'Ecosystem login is not configured. Add ecosystem to loginMethods in VeChainKitContext to enable this feature.',
         );
     },
     logout: async () => {},

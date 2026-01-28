@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Interface, namehash } from 'ethers';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getConfig } from '../../../config';
 import { NETWORK_TYPE } from '../../../config/network';
 import { ENS_TEXT_RECORDS } from '../../../types';

@@ -23,7 +23,8 @@ import { useHasV1SmartAccount } from '../hooks/thor/smartAccounts/useHasV1SmartA
 import { useBuildClauses } from '../hooks/utils/useBuildClauses';
 import { useGetAccountVersion } from '../hooks/thor/smartAccounts/useGetAccountVersion';
 import { getConfig } from '../config';
-import { useVeChainKitConfig } from './VeChainKitProvider';
+// Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
+import { useVeChainKitConfig } from './VeChainKitContext';
 import { useOptionalPrivyCrossAppSdk } from '../hooks/api/privy/useOptionalPrivyCrossAppSdk';
 import { SignTypedDataParameters } from '@wagmi/core';
 

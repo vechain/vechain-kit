@@ -1,7 +1,7 @@
 import { getConfig } from '../../../config';
 import { NETWORK_TYPE } from '../../../config/network';
 import { XAllocationVoting__factory } from '@vechain/vechain-contract-types';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 // Direct import to avoid circular dependency through barrel exports
 import { getCallClauseQueryKeyWithArgs, useCallClause } from '../../utils/useCallClause';
 

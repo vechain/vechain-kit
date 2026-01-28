@@ -11,7 +11,7 @@ import {
 } from '@vechain/vechain-contract-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { getConfig } from '../../../config';
-import { useVeChainKitConfig, VeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig, VeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { humanAddress } from '../../../utils';
 import { ethers } from 'ethers';
 import { useRefreshMetadata } from '../wallet/useRefreshMetadata';

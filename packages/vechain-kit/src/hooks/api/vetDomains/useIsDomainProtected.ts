@@ -1,7 +1,7 @@
 import { getConfig } from '../../../config';
 import { VeworldSubdomainClaimer__factory } from '@vechain/vechain-contract-types';
 import { useOptionalThor } from '../dappkit/useOptionalThor';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { NETWORK_TYPE } from '../../../config/network';
 import { ThorClient } from '@vechain/sdk-network';
 import { useQuery } from '@tanstack/react-query';

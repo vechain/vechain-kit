@@ -1,5 +1,5 @@
 // Direct import to avoid circular dependency (providers barrel re-exports hooks)
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 
 /**
  * Hook to get and set the current language in VeChainKit

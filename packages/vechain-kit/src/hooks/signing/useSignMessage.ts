@@ -61,7 +61,7 @@ export const useSignMessage = (): UseSignMessageReturnValue => {
                 } else {
                     if (!privyWalletProvider) {
                         throw new Error(
-                            'Privy is not configured. Please configure the privy prop in VeChainKitProvider to use this feature.',
+                            'Privy is not configured. Please configure the privy prop in VeChainKitContext to use this feature.',
                         );
                     }
                     sig = await privyWalletProvider.signMessage(message);

@@ -571,3 +571,75 @@ This story remains at passes: false but significant additional progress has been
   - Removing barrel exports (breaking change)
   - Extracting shared types to a separate types-only module
   - Using truly dynamic imports for cross-module dependencies
+
+## US-008: Fix circular dependencies (ADDITIONAL PROGRESS - SESSION 3)
+Date: 2026-01-29
+
+### Status: Reduced from 218 to 138 circular dependencies (37% reduction in this session, 55% total from 309)
+
+The acceptance criteria requires "no circular dependencies" which hasn't been fully achieved.
+This story remains at passes: false but significant additional progress has been made.
+
+### Key Architectural Change:
+
+Created `VeChainKitContext.tsx` to extract context and hook from `VeChainKitProvider.tsx`.
+
+The main circular dependency pattern was:
+```
+VeChainKitProvider.tsx → LegalDocumentsProvider → useWallet → ... → useVeChainKitConfig → VeChainKitProvider.tsx
+```
+
+By extracting `VeChainKitContext` and `useVeChainKitConfig` to a separate file that doesn't import anything that could cycle back, we break this chain:
+```
+VeChainKitProvider.tsx → LegalDocumentsProvider → useWallet → ... → useVeChainKitConfig → VeChainKitContext.tsx (no cycle!)
+```
+
+### Changes Made:
+
+1. **Created providers/VeChainKitContext.tsx**
+   - Contains `VeChainKitContext` (React context)
+   - Contains `useVeChainKitConfig` hook
+   - Contains type definitions: `VeChainKitConfig`, `VechainKitProviderProps`, `LoginMethodOrder`
+   - No imports from other providers or hooks that could create cycles
+   - Only imports types from external packages and config/types modules
+
+2. **Updated providers/VeChainKitProvider.tsx**
+   - Imports context, hook, and types from VeChainKitContext
+   - Removed duplicate type definitions (now in VeChainKitContext)
+   - Re-exports from VeChainKitContext for backward compatibility
+
+3. **Updated providers/index.ts**
+   - Added export for VeChainKitContext
+   - Added comment explaining the circular dependency prevention
+
+4. **Updated 52 hook files to import from VeChainKitContext**
+   - All hooks in `hooks/api/`, `hooks/thor/`, `hooks/modals/`, `hooks/utils/`, `hooks/generic-delegator/`
+   - Changed: `from '../../../providers/VeChainKitProvider'` → `from '../../../providers/VeChainKitContext'`
+
+5. **Updated provider files to import from VeChainKitContext**
+   - PrivyWalletProvider.tsx
+   - LegalDocumentsProvider.tsx
+   - ModalProvider.tsx
+   - VechainKitThemeProvider.tsx
+
+6. **Updated hooks/utils/useBuildClauses.ts**
+   - Changed imports to use direct imports from specific hook files
+   - Avoids hooks barrel and providers barrel imports
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- Circular dependencies reduced from 218 to 138 (total 55% reduction from original 309)
+
+### Remaining Work:
+- 138 circular dependencies still exist
+- Main causes:
+  - Lazy imports in ModalProvider and LegalDocumentsProvider (madge detects import() statements statically)
+  - hooks barrel exports (hooks/index.ts → hooks/modals/index.ts → useAccountCustomizationModal → ModalProvider → components)
+  - components barrel files that create component→hooks→providers→components cycles
+- The remaining cycles are structural and would require:
+  - Breaking up hooks/index.ts barrel exports (potential breaking change for consumers)
+  - Moving lazy-loaded modal components to a separate entry point
+  - Restructuring component hierarchies to prevent cross-module dependencies
+
+### Technical Notes:
+The `VeChainKitContext.tsx` pattern is a common React pattern for breaking circular dependencies in context-heavy applications. By extracting the context and hook into a separate "leaf" file that doesn't import anything from the rest of the codebase (except pure types), we ensure that any file importing `useVeChainKitConfig` doesn't inadvertently pull in the entire provider tree.

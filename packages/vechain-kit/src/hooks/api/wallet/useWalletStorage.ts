@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-// Import directly from VeChainKitProvider to avoid circular dependency with providers/index.ts
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { NETWORK_TYPE } from '../../../config/network';
 import {
     getLocalStorageItem,

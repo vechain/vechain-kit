@@ -1,5 +1,5 @@
 // Import from specific files to avoid circular dependencies
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { useModal } from '../../providers/ModalProvider';
 import { ReactNode } from 'react';
 import { useOptionalDAppKitWalletModal } from '../api/dappkit/useOptionalDAppKitWalletModal';

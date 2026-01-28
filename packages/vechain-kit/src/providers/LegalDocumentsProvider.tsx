@@ -1,7 +1,8 @@
 // Import directly from specific hook files to avoid circular dependency with hooks/index.ts
 import { useWallet } from '../hooks/api/wallet/useWallet';
 import { useSyncableLocalStorage } from '../hooks/cache/useSyncableLocalStorage';
-import { useVeChainKitConfig } from './VeChainKitProvider';
+// Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
+import { useVeChainKitConfig } from './VeChainKitContext';
 import type {
     EnrichedLegalDocument,
     LegalDocumentAgreement,

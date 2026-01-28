@@ -8,7 +8,7 @@ import { getCurrentAccountImplementationVersionQueryKey } from './useCurrentAcco
 import { getAccountImplementationAddressQueryKey } from './useAccountImplementationAddress';
 import { getHasV1SmartAccountQueryKey } from './useHasV1SmartAccount';
 import { getAccountAddressQueryKey } from './useGetAccountAddress';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 /**
  * Hook to refresh smart account factory-related queries

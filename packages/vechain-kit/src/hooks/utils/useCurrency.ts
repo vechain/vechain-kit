@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-// Import directly from VeChainKitProvider to avoid circular dependency with providers/index.ts
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import type { CURRENCY } from '../../types';
 import { setLocalStorageItem } from '../../utils/ssrUtils';
 

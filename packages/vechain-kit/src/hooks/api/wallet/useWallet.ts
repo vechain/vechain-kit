@@ -11,8 +11,8 @@ import { useCrossAppConnectionCache } from '../../cache/useCrossAppConnectionCac
 import { useOptionalDAppKitWallet } from '../dappkit/useOptionalDAppKitWallet';
 import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
 import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
-// Import directly from VeChainKitProvider to avoid circular dependency with providers/index.ts
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { NETWORK_TYPE } from '../../../config/network';
 import { useOptionalWagmiAccount } from '../privy/useOptionalWagmiAccount';
 import { useOptionalPrivyCrossAppSdk } from '../privy/useOptionalPrivyCrossAppSdk';

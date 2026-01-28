@@ -5,7 +5,7 @@ import { useGetB3trBalance } from './useGetB3trBalance';
 import { useGetVot3Balance } from './useGetVot3Balance';
 import { useGetErc20Balance } from './useGetErc20Balance';
 import { useGetCustomTokenBalances } from './useGetCustomTokenBalances';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getConfig } from '../../../config';
 
 export type WalletTokenBalance = {

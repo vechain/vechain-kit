@@ -18,7 +18,7 @@ import { randomTransactionUser, SUPPORTED_GAS_TOKENS } from '../../utils';
 import { ThorClient } from '@vechain/sdk-network';
 import { getConfig } from '../../config';
 // Direct import to avoid circular dependency (providers barrel re-exports hooks)
-import { useVeChainKitConfig } from '../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { useCallback } from 'react';
 
 export const estimateGas = async (

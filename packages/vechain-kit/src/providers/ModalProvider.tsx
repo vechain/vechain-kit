@@ -17,7 +17,8 @@ import type {
 import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
 import { isBrowser } from '../utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
-import { useVeChainKitConfig } from './VeChainKitProvider';
+// Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
+import { useVeChainKitConfig } from './VeChainKitContext';
 
 // Use 'any' for AccountModalContentTypes to avoid circular dependency with components
 // The full type is defined in components/AccountModal/Types/Types.ts

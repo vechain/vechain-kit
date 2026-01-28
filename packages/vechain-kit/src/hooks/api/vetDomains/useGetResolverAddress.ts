@@ -1,4 +1,4 @@
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getConfig } from '../../../config';
 // Direct import to avoid circular dependency through barrel exports
 import { useCallClause } from '../../utils/useCallClause';

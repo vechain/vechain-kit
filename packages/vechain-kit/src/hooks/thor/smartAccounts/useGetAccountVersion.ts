@@ -1,5 +1,5 @@
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { NETWORK_TYPE } from '../../../config/network';
 import { getConfig } from '../../../config';
 // Import directly from specific hook files to avoid circular dependency with hooks/index.ts

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { TransactionMessage } from '@vechain/dapp-kit';
 // Import from specific provider files to avoid circular dependencies
-import { useVeChainKitConfig } from '../../../providers/VeChainKitProvider';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { useOptionalPrivyWalletProvider } from '../../../providers/PrivyWalletProvider';
 import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
 // Direct imports to avoid circular dependencies
@@ -147,7 +147,7 @@ export const useSendTransaction = ({
             if (connection.isConnectedWithPrivy) {
                 if (!privyWalletProvider) {
                     throw new Error(
-                        'Privy is not configured. Please configure the privy prop in VeChainKitProvider to use this feature.',
+                        'Privy is not configured. Please configure the privy prop in VeChainKitContext to use this feature.',
                     );
                 }
                 return await privyWalletProvider.sendTransaction({
