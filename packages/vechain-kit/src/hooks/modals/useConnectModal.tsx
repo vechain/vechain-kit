@@ -1,6 +1,7 @@
 // Import from specific files to avoid circular dependencies
 import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
-import { useModal } from '../../providers/ModalProvider';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal } from '../../providers/ModalContext';
 import { ReactNode } from 'react';
 import { useOptionalDAppKitWalletModal } from '../api/dappkit/useOptionalDAppKitWalletModal';
 import type { ConnectModalContentsTypes } from '../../types/modal';

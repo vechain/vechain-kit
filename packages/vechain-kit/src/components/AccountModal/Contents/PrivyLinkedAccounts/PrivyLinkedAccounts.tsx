@@ -39,7 +39,8 @@ import {
 } from '../../../common';
 import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
-import { useVeChainKitConfig } from '../../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { humanAddress } from '../../../../utils';
 
 type ConfirmUnlinkProps = {

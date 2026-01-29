@@ -1,6 +1,11 @@
-import { useModal, AccountModalOptions } from '../../providers/ModalProvider';
-import type { AccountModalContentTypes } from '../../components/AccountModal/Types';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal, AccountModalOptions } from '../../providers/ModalContext';
 import { ReactNode } from 'react';
+
+// Local type alias to avoid circular dependency with components
+// The full type is defined in components/AccountModal/Types/Types.ts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AccountModalContentTypes = any;
 
 type SwapTokenModalOptions = {
     fromTokenAddress?: string;

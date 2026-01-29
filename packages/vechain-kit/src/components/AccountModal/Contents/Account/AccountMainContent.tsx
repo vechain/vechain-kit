@@ -20,7 +20,8 @@ import {
 import { ModalBackButton } from '../../../common';
 import type { Wallet } from '../../../../types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '../../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { useAccountModalOptions } from '../../../../hooks';
 
 type Props = {

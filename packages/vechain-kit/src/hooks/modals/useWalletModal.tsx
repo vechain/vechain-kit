@@ -1,6 +1,7 @@
 // Direct import to avoid circular dependency through hooks barrel
 import { useWallet } from '../api/wallet/useWallet';
-import { useModal, AccountModalOptions } from '../../providers/ModalProvider';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal, AccountModalOptions } from '../../providers/ModalContext';
 import { ReactNode } from 'react';
 
 export const useWalletModal = () => {

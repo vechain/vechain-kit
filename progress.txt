@@ -863,3 +863,110 @@ The bundle savings are realized at runtime:
 - ✓ Document bundle sizes in each example's README - All three READMEs updated
 - ✓ Add optimization guide to main README - Comprehensive section added
 - ✓ All examples build successfully - Verified with yarn build
+
+## US-008: Fix circular dependencies (ADDITIONAL PROGRESS - SESSION 5)
+Date: 2026-01-29
+
+### Status: Reduced from 92 to 45 circular dependencies (51% reduction in this session, 85% total from 309)
+
+The acceptance criteria requires "no circular dependencies" which hasn't been fully achieved.
+This story remains at passes: false but significant additional progress has been made.
+
+### Key Architectural Change:
+
+Created `ModalContext.tsx` to extract the modal context and `useModal` hook from `ModalProvider.tsx`.
+
+The main circular dependency pattern was:
+```
+hooks/modals/useXModal.tsx → providers/ModalProvider.tsx → components (via lazy imports) → back to hooks
+```
+
+By extracting `ModalContext` and `useModal` to a separate file that doesn't import components:
+```
+hooks/modals/useXModal.tsx → providers/ModalContext.tsx (no components imported, no cycle!)
+```
+
+### Changes Made:
+
+1. **Created providers/ModalContext.tsx**
+   - Contains `ModalContext` (React context)
+   - Contains `useModal` hook
+   - Contains `headlessModalContext` for headless mode support
+   - Contains type definitions: `ModalContextType`, `AccountModalOptions`
+   - Uses internal type alias `AccountModalContentTypesInternal = any` to avoid importing from components
+   - No imports from components or hooks that could create cycles
+
+2. **Updated providers/ModalProvider.tsx**
+   - Imports context from ModalContext
+   - Removed duplicate type definitions
+   - Uses local type alias for AccountModalContentTypes
+
+3. **Updated providers/index.ts**
+   - Added export for ModalContext
+
+4. **Updated 17 modal hooks to import from ModalContext**
+   - useAccountCustomizationModal.tsx
+   - useAccountModal.tsx
+   - useAccountModalOptions.tsx
+   - useChooseNameModal.tsx
+   - useConnectModal.tsx
+   - useExploreEcosystemModal.tsx
+   - useFAQModal.tsx
+   - useNotificationsModal.tsx
+   - useProfileModal.tsx
+   - useReceiveModal.tsx
+   - useSendTokenModal.tsx
+   - useSettingsModal.tsx
+   - useSwapTokenModal.tsx
+   - useTransactionModal.tsx
+   - useTransactionToast.tsx
+   - useUpgradeSmartAccountModal.tsx
+   - useWalletModal.tsx
+
+5. **Updated hooks/notifications/types.ts**
+   - Changed import of AccountModalContentTypes from components to local type alias
+   - This broke a major cycle: hooks → notifications/types.ts → components → back to hooks
+
+6. **Updated 12+ component files to use direct imports**
+   - components/AccountModal/Contents/SendToken/SelectTokenContent.tsx
+   - components/AccountModal/Contents/SendToken/SendTokenContent.tsx
+   - components/AccountModal/Contents/PrivyLinkedAccounts/PrivyLinkedAccounts.tsx
+   - components/AccountModal/Contents/Swap/SwapTokenContent.tsx
+   - components/AccountModal/Contents/Swap/SelectQuoteContent.tsx
+   - components/AccountModal/Contents/ChooseName/ChooseNameSummaryContent.tsx
+   - components/AccountModal/Contents/ChooseName/ChooseNameSearchContent.tsx
+   - components/AccountModal/Contents/SendToken/SendTokenSummaryContent.tsx
+   - components/AccountModal/Contents/Account/AccountMainContent.tsx
+   - components/AccountModal/Contents/Assets/AssetsContent.tsx
+   - components/AccountModal/Contents/TermsAndPrivacy/TermsAndPrivacyAccordion.tsx
+   - components/AccountModal/Contents/Profile/Customization/CustomizationContent.tsx
+   - All now import useVeChainKitConfig from VeChainKitContext instead of providers barrel
+
+7. **Updated providers/FeedbackProvider.tsx**
+   - Changed import of useModal from ModalProvider to ModalContext
+
+8. **Updated components/AccountModal/AccountModal.tsx**
+   - Changed import of useModal from ModalProvider to ModalContext
+
+### Verification:
+- `yarn kit:typecheck` passes ✓
+- Circular dependencies reduced from 92 to 45 (total 85% reduction from original 309)
+
+### Remaining Work:
+- 45 circular dependencies still exist
+- Main causes:
+  - AccountModal Types/Types.ts imports from Contents which import back to Types (internal component cycles)
+  - ConnectModal internal component cycles (PasskeyLoginButton → ConnectModal → Contents → Components)
+  - Component barrel files creating transitive cycles
+- These remaining cycles are structural within components and would require:
+  - Moving shared types to a separate types-only module
+  - Breaking up component barrel exports
+  - Restructuring component hierarchies
+
+### Impact:
+- Major reduction from 92 to 45 cycles (51% reduction this session)
+- Total reduction from 309 to 45 cycles (85% reduction overall)
+- The ModalContext pattern breaks the key hooks→ModalProvider→components cycle
+- All modal hooks now import from a "leaf" file with no component dependencies
+- Direct imports prevent providers barrel from pulling in ModalProvider
+- Significantly improved tree-shaking potential

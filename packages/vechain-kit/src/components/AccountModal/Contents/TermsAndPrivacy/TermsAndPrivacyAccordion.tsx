@@ -1,6 +1,8 @@
 import { EmptyContent } from '../../../common/EmptyContent';
 import { useWallet } from '../../../../hooks';
-import { useLegalDocuments, useVeChainKitConfig } from '../../../../providers';
+// Import from specific provider files to avoid circular dependency with providers barrel
+import { useLegalDocuments } from '../../../../providers/LegalDocumentsProvider';
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import type { LegalDocumentAgreement } from '../../../../types';
 import { LegalDocumentSource, LegalDocumentType } from '../../../../types';
 import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '../../../../utils';

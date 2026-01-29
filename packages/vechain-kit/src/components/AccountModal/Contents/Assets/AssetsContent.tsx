@@ -18,7 +18,8 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
 } from '../../../common';
-import { useVeChainKitConfig } from '../../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { useTranslation } from 'react-i18next';
 import { LuPencil } from 'react-icons/lu';
 import { AccountModalContentTypes } from '../../Types';

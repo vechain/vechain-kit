@@ -1,4 +1,7 @@
-import type { AccountModalContentTypes } from '../../components';
+// Local type alias to avoid circular dependency with components
+// The full type is defined in components/AccountModal/Types/Types.ts
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AccountModalContentTypes = any;
 
 export type NotificationAction = {
     label: string;

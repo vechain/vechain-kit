@@ -23,7 +23,8 @@ import {
     useGetDomainsOfAddress,
 } from '../../../../hooks';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '../../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { ExistingDomainsList } from './Components/ExistingDomainsList';
 import { ens_normalize } from '@adraffy/ens-normalize';
 import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
