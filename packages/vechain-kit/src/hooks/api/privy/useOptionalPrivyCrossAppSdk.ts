@@ -1,22 +1,24 @@
 'use client';
 
-import type { SignTypedDataParameters } from '@wagmi/core';
+// Use static import to ensure we use the same module instance
+// This avoids ESM/CJS interop issues that can occur with require() in Next.js
+import { usePrivyCrossAppSdk } from '../../../providers/PrivyCrossAppProvider';
 
 /**
  * Type for the optional PrivyCrossAppSdk hook return value.
- * Returns no-op functions when ecosystem login is not configured.
+ * Uses ReturnType to ensure type compatibility with the actual hook.
  */
-export type UseOptionalPrivyCrossAppSdkReturnType = {
-    login: (appID: string) => Promise<{ accounts: readonly `0x${string}`[] } | undefined>;
+export type UseOptionalPrivyCrossAppSdkReturnType = ReturnType<typeof usePrivyCrossAppSdk> | {
+    login: () => Promise<never>;
     logout: () => Promise<void>;
-    signMessage: (message: string) => Promise<string>;
-    signTypedData: (data: SignTypedDataParameters) => Promise<string>;
-    isConnecting: boolean;
-    connectionError: Error | null;
+    signMessage: () => Promise<never>;
+    signTypedData: () => Promise<never>;
+    isConnecting: false;
+    connectionError: null;
 };
 
 // Default return value when PrivyCrossAppProvider is not available
-const DEFAULT_CROSS_APP_STATE: UseOptionalPrivyCrossAppSdkReturnType = {
+const DEFAULT_CROSS_APP_STATE = {
     login: async () => {
         throw new Error(
             'Ecosystem login is not configured. Add ecosystem to loginMethods in VeChainKitContext to enable this feature.',
@@ -33,53 +35,27 @@ const DEFAULT_CROSS_APP_STATE: UseOptionalPrivyCrossAppSdkReturnType = {
             'Ecosystem login is not configured. Cannot sign typed data without PrivyCrossAppProvider.',
         );
     },
-    isConnecting: false,
-    connectionError: null,
+    isConnecting: false as const,
+    connectionError: null as null,
 };
-
-// Cached reference to the usePrivyCrossAppSdk hook
-let cachedCrossAppHook: (() => UseOptionalPrivyCrossAppSdkReturnType) | undefined;
-let hookLoadAttempted = false;
 
 /**
  * Optional hook to access PrivyCrossAppSdk context.
  * Returns default values when ecosystem login is not configured, avoiding the need
  * to wrap every usage in a try-catch or conditional check.
  *
+ * Uses static import to ensure the same module instance as PrivyCrossAppProvider,
+ * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ *
  * @returns Cross-app SDK functions, or no-op functions if provider is not available
  */
 export const useOptionalPrivyCrossAppSdk = (): UseOptionalPrivyCrossAppSdkReturnType => {
-    // Lazy load the hook to avoid importing when not needed
-    if (!hookLoadAttempted) {
-        hookLoadAttempted = true;
-        try {
-            // Dynamic require to check if the provider module is available
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const crossAppModule = require('../../../providers/PrivyCrossAppProvider');
-            cachedCrossAppHook = crossAppModule.usePrivyCrossAppSdk;
-        } catch {
-            // Module not available
-            cachedCrossAppHook = undefined;
-        }
-    }
-
-    // If hook failed to load, return defaults
-    if (!cachedCrossAppHook) {
-        return DEFAULT_CROSS_APP_STATE;
-    }
-
     try {
-        const result = cachedCrossAppHook();
-        return {
-            login: result.login ?? DEFAULT_CROSS_APP_STATE.login,
-            logout: result.logout ?? DEFAULT_CROSS_APP_STATE.logout,
-            signMessage: result.signMessage ?? DEFAULT_CROSS_APP_STATE.signMessage,
-            signTypedData: result.signTypedData ?? DEFAULT_CROSS_APP_STATE.signTypedData,
-            isConnecting: result.isConnecting ?? false,
-            connectionError: result.connectionError ?? null,
-        };
+        // Call the hook directly - it will throw if not inside PrivyCrossAppProvider
+        // Return the result directly to preserve all properties and types
+        return usePrivyCrossAppSdk();
     } catch {
-        // Hook threw (probably no provider), return defaults
-        return DEFAULT_CROSS_APP_STATE;
+        // Hook threw (no PrivyCrossAppProvider in tree), return defaults
+        return DEFAULT_CROSS_APP_STATE as unknown as UseOptionalPrivyCrossAppSdkReturnType;
     }
 };

@@ -1,10 +1,13 @@
 'use client';
 
 import type { User } from '@privy-io/react-auth';
+// Use static import to ensure we use the same module instance as PrivyProvider
+// This avoids ESM/CJS interop issues that can occur with require() in Next.js
+import { usePrivy } from '@privy-io/react-auth';
 
 /**
  * Type for the optional Privy hook return value.
- * Returns null values when Privy is not configured.
+ * Uses a subset of the actual hook return type for safer defaults.
  */
 export type UseOptionalPrivyReturnType = {
     user: User | null;
@@ -21,39 +24,20 @@ const DEFAULT_PRIVY_STATE: UseOptionalPrivyReturnType = {
     logout: async () => {},
 };
 
-// Cached reference to the usePrivy hook - null means not yet loaded, undefined means failed to load
-let cachedPrivyHook: (() => UseOptionalPrivyReturnType) | undefined;
-let hookLoadAttempted = false;
-
 /**
  * Optional hook to access Privy context.
- * Returns default values when Privy is not configured, avoiding the need
+ * Returns default values when Privy provider is not available, avoiding the need
  * to wrap every usage in a try-catch or conditional check.
  *
- * @returns Privy user info and auth state, or null values if Privy is not available
+ * Uses static import to ensure the same module instance as PrivyProvider,
+ * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ *
+ * @returns Privy user info and auth state, or null values if provider is not available
  */
 export const useOptionalPrivy = (): UseOptionalPrivyReturnType => {
-    // Lazy load the hook to avoid importing Privy when not needed
-    if (!hookLoadAttempted) {
-        hookLoadAttempted = true;
-        try {
-            // Dynamic require to check if Privy is available
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const privyModule = require('@privy-io/react-auth');
-            cachedPrivyHook = privyModule.usePrivy;
-        } catch {
-            // Privy not available
-            cachedPrivyHook = undefined;
-        }
-    }
-
-    // If hook failed to load, return defaults
-    if (!cachedPrivyHook) {
-        return DEFAULT_PRIVY_STATE;
-    }
-
     try {
-        const result = cachedPrivyHook();
+        // Call the hook directly - it will throw if not inside PrivyProvider
+        const result = usePrivy();
         return {
             user: result.user ?? null,
             authenticated: result.authenticated ?? false,
@@ -61,7 +45,7 @@ export const useOptionalPrivy = (): UseOptionalPrivyReturnType => {
             logout: result.logout ?? (async () => {}),
         };
     } catch {
-        // Hook threw (probably no provider), return defaults
+        // Hook threw (no PrivyProvider in tree), return defaults
         return DEFAULT_PRIVY_STATE;
     }
 };

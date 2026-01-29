@@ -1,5 +1,7 @@
 import { Button, useDisclosure, useMediaQuery } from '@chakra-ui/react';
-import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '../../hooks';
+import { useWallet, useDAppKitWalletModal } from '../../hooks';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../hooks/api/dappkit/useOptionalDAppKitWallet';
 // Import directly to avoid circular dependency with components barrel
 import { ConnectModal } from '../ConnectModal/ConnectModal';
 import { AccountModal } from '../AccountModal/AccountModal';
@@ -27,7 +29,7 @@ export const WalletButton = ({
         loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
 
     const { connection, account } = useWallet();
-    const { setSource, connectV2 } = useDAppKitWallet();
+    const { setSource, connectV2 } = useOptionalDAppKitWallet();
 
     const [isMobile] = useMediaQuery('(max-width: 768px)');
 

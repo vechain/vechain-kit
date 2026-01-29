@@ -1,71 +1,49 @@
 'use client';
 
+// Use static import to ensure we use the same module instance as WagmiProvider
+// This avoids ESM/CJS interop issues that can occur with require() in Next.js
+import { useAccount } from 'wagmi';
+
 /**
  * Type for the optional wagmi useAccount hook return value.
- * Returns default values when WagmiProvider/PrivyCrossAppProvider is not available.
+ * Uses ReturnType to ensure type compatibility with the actual hook.
  */
-export type UseOptionalWagmiAccountReturnType = {
-    address: `0x${string}` | undefined;
-    isConnected: boolean;
-    isConnecting: boolean;
-    isReconnecting: boolean;
-    isDisconnected: boolean;
-    status: 'connected' | 'disconnected' | 'connecting' | 'reconnecting';
+export type UseOptionalWagmiAccountReturnType = ReturnType<typeof useAccount> | {
+    address: undefined;
+    isConnected: false;
+    isConnecting: false;
+    isReconnecting: false;
+    isDisconnected: true;
+    status: 'disconnected';
 };
 
 // Default return value when WagmiProvider is not available
-const DEFAULT_ACCOUNT_STATE: UseOptionalWagmiAccountReturnType = {
-    address: undefined,
-    isConnected: false,
-    isConnecting: false,
-    isReconnecting: false,
-    isDisconnected: true,
-    status: 'disconnected',
+const DEFAULT_ACCOUNT_STATE = {
+    address: undefined as undefined,
+    isConnected: false as const,
+    isConnecting: false as const,
+    isReconnecting: false as const,
+    isDisconnected: true as const,
+    status: 'disconnected' as const,
 };
-
-// Cached reference to the useAccount hook
-let cachedAccountHook: (() => UseOptionalWagmiAccountReturnType) | undefined;
-let hookLoadAttempted = false;
 
 /**
  * Optional hook to access wagmi's useAccount.
  * Returns default values when WagmiProvider is not available (i.e., when ecosystem login is disabled).
  * This prevents errors when PrivyCrossAppProvider is not rendered.
  *
+ * Uses static import to ensure the same module instance as WagmiProvider,
+ * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ *
  * @returns Account info from wagmi, or disconnected state if provider is not available
  */
 export const useOptionalWagmiAccount = (): UseOptionalWagmiAccountReturnType => {
-    // Lazy load the hook to avoid importing wagmi when not needed
-    if (!hookLoadAttempted) {
-        hookLoadAttempted = true;
-        try {
-            // Dynamic require to check if wagmi is available
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const wagmiModule = require('wagmi');
-            cachedAccountHook = wagmiModule.useAccount;
-        } catch {
-            // Wagmi not available
-            cachedAccountHook = undefined;
-        }
-    }
-
-    // If hook failed to load, return defaults
-    if (!cachedAccountHook) {
-        return DEFAULT_ACCOUNT_STATE;
-    }
-
     try {
-        const result = cachedAccountHook();
-        return {
-            address: result.address,
-            isConnected: result.isConnected ?? false,
-            isConnecting: result.isConnecting ?? false,
-            isReconnecting: result.isReconnecting ?? false,
-            isDisconnected: result.isDisconnected ?? true,
-            status: result.status ?? 'disconnected',
-        };
+        // Call the hook directly - it will throw if not inside WagmiProvider
+        // Return the result directly to preserve all properties and types
+        return useAccount();
     } catch {
-        // Hook threw (probably no provider), return defaults
-        return DEFAULT_ACCOUNT_STATE;
+        // Hook threw (no WagmiProvider in tree), return defaults
+        return DEFAULT_ACCOUNT_STATE as unknown as UseOptionalWagmiAccountReturnType;
     }
 };

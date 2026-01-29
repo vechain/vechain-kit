@@ -10,8 +10,8 @@ import type {
     ConnectModalContentsTypes,
     UpgradeSmartAccountModalStyle,
 } from '../types/modal';
-// Direct import to avoid circular dependency with hooks barrel
-import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
+// Use optional hook to handle missing DAppKitProvider during Suspense loading
+import { useOptionalDAppKitWallet } from '../hooks/api/dappkit/useOptionalDAppKitWallet';
 import { isBrowser } from '../utils/ssrUtils';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
 // Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
@@ -44,7 +44,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         useState<ConnectModalContentsTypes>('main');
     const [connectModalPreventAutoClose, setConnectModalPreventAutoClose] =
         useState(false);
-    const { setSource, connectV2 } = useDAppKitWallet();
+    const { setSource, connectV2 } = useOptionalDAppKitWallet();
     const openConnectModal = useCallback(
         (
             initialContent?: ConnectModalContentsTypes,

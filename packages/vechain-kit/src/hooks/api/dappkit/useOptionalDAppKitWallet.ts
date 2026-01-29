@@ -2,6 +2,9 @@
 
 import type { CertificateResponse, CertificateMessage, CertificateOptions, VeChainSignerDAppKit, TransactionMessage, TransactionOptions, TransactionResponse } from '@vechain/dapp-kit';
 import type { CertificateData } from '@vechain/sdk-core';
+// Use static import to ensure we use the same module instance as DAppKitProvider
+// This avoids ESM/CJS interop issues that can occur with require() in Next.js
+import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
 
 // Mock signer that throws helpful errors when DAppKit is not configured
 const createMockSigner = (): VeChainSignerDAppKit => {
@@ -31,33 +34,40 @@ const createMockSigner = (): VeChainSignerDAppKit => {
 /**
  * Type for the optional DAppKitWallet hook return value.
  * Returns default values when DAppKit is not configured.
+ * Uses ReturnType to ensure type compatibility with the actual hook.
  */
-export type UseOptionalDAppKitWalletReturnType = {
-    account: string | null;
-    source: string | null;
-    connectionCertificate: CertificateData | null;
+export type UseOptionalDAppKitWalletReturnType = ReturnType<typeof useDAppKitWallet> | {
+    account: null;
+    source: null;
+    connectionCertificate: null;
     connect: () => void;
+    connectV2: () => void;
     disconnect: () => void;
-    setSource: (source: string) => void;
-    availableSources: string[];
-    requestCertificate: (message: CertificateMessage, options?: CertificateOptions) => Promise<CertificateResponse>;
-    requestTransaction: (clauses: TransactionMessage[], options?: TransactionOptions) => Promise<TransactionResponse>;
+    setSource: () => void;
+    availableWallets: string[];
+    requestCertificate: () => Promise<never>;
+    requestTransaction: () => Promise<never>;
     signer: VeChainSignerDAppKit;
 };
 
 // Default return value when DAppKit is not available
-const DEFAULT_DAPPKIT_WALLET_STATE: UseOptionalDAppKitWalletReturnType = {
-    account: null,
-    source: null,
-    connectionCertificate: null,
+const DEFAULT_DAPPKIT_WALLET_STATE = {
+    account: null as string | null,
+    source: null as string | null,
+    connectionCertificate: null as CertificateData | null,
     connect: () => {
+        console.warn(
+            'DAppKit is not configured. Add dappKit prop to VeChainKitContext to enable wallet connections.',
+        );
+    },
+    connectV2: () => {
         console.warn(
             'DAppKit is not configured. Add dappKit prop to VeChainKitContext to enable wallet connections.',
         );
     },
     disconnect: () => {},
     setSource: () => {},
-    availableSources: [],
+    availableWallets: [] as string[],
     requestCertificate: async () => {
         throw new Error(
             'DAppKit is not configured. Add dappKit prop to VeChainKitContext to use certificate signing.',
@@ -69,55 +79,25 @@ const DEFAULT_DAPPKIT_WALLET_STATE: UseOptionalDAppKitWalletReturnType = {
         );
     },
     signer: createMockSigner(),
-};
-
-// Cached reference to the useWallet hook - null means not yet loaded, undefined means failed to load
-let cachedWalletHook: (() => UseOptionalDAppKitWalletReturnType) | undefined;
-let hookLoadAttempted = false;
+} as const;
 
 /**
  * Optional hook to access DAppKit wallet context.
- * Returns default values when DAppKit is not configured, avoiding the need
+ * Returns default values when DAppKit provider is not available, avoiding the need
  * to wrap every usage in a try-catch or conditional check.
  *
- * @returns DAppKit wallet info and functions, or default values if DAppKit is not available
+ * Uses static import to ensure the same module instance as DAppKitProvider,
+ * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ *
+ * @returns DAppKit wallet info and functions, or default values if provider is not available
  */
 export const useOptionalDAppKitWallet = (): UseOptionalDAppKitWalletReturnType => {
-    // Lazy load the hook to avoid importing DAppKit when not needed
-    if (!hookLoadAttempted) {
-        hookLoadAttempted = true;
-        try {
-            // Dynamic require to check if DAppKit is available
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const dappKitModule = require('@vechain/dapp-kit-react');
-            cachedWalletHook = dappKitModule.useWallet;
-        } catch {
-            // DAppKit not available
-            cachedWalletHook = undefined;
-        }
-    }
-
-    // If hook failed to load, return defaults
-    if (!cachedWalletHook) {
-        return DEFAULT_DAPPKIT_WALLET_STATE;
-    }
-
     try {
-        const result = cachedWalletHook();
-        return {
-            account: result.account ?? null,
-            source: result.source ?? null,
-            connectionCertificate: result.connectionCertificate ?? null,
-            connect: result.connect ?? (() => {}),
-            disconnect: result.disconnect ?? (() => {}),
-            setSource: result.setSource ?? (() => {}),
-            availableSources: result.availableSources ?? [],
-            requestCertificate: result.requestCertificate ?? DEFAULT_DAPPKIT_WALLET_STATE.requestCertificate,
-            requestTransaction: result.requestTransaction ?? DEFAULT_DAPPKIT_WALLET_STATE.requestTransaction,
-            signer: result.signer ?? DEFAULT_DAPPKIT_WALLET_STATE.signer,
-        };
+        // Call the hook directly - it will throw if not inside DAppKitProvider
+        // Return the result directly to preserve all properties and types
+        return useDAppKitWallet();
     } catch {
-        // Hook threw (probably no provider), return defaults
-        return DEFAULT_DAPPKIT_WALLET_STATE;
+        // Hook threw (no DAppKitProvider in tree), return defaults
+        return DEFAULT_DAPPKIT_WALLET_STATE as unknown as UseOptionalDAppKitWalletReturnType;
     }
 };
