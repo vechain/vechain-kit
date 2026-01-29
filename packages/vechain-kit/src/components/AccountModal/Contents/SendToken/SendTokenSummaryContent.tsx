@@ -16,9 +16,9 @@ import {
     AddressDisplayCard,
     TransactionButtonAndStatus,
     GasFeeSummary,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
-import { getPicassoImage } from '@/utils';
+import { getPicassoImage } from '../../../../utils';
 import {
     useTransferERC20,
     useTransferVET,
@@ -28,12 +28,13 @@ import {
     TokenWithValue,
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
-} from '@/hooks';
+} from '../../../../hooks';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
-import { useGetAvatarOfAddress } from '@/hooks/api/vetDomains';
-import { GasTokenType } from '@/types/gasToken';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import { useGetAvatarOfAddress } from '../../../../hooks/api/vetDomains';
+import type { GasTokenType } from '../../../../types/gasToken';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 export type SendTokenSummaryContentProps = {
     setCurrentContent: React.Dispatch<

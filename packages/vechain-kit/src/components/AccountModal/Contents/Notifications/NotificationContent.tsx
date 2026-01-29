@@ -14,14 +14,14 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useNotifications } from '@/hooks/notifications';
+import { useNotifications } from '../../../../hooks/notifications';
 import { useState } from 'react';
 import { EmptyNotifications } from './Components/EmptyNotifications';
 import { NotificationItem } from './Components/NotificationItem';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<

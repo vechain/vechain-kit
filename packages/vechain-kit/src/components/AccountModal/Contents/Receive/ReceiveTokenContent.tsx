@@ -13,11 +13,11 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     AddressDisplay,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
-import { useWallet } from '@/hooks';
+import { useWallet } from '../../../../hooks';
 import { useTranslation } from 'react-i18next';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<

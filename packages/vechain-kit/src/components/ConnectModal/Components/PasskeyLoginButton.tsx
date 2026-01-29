@@ -1,9 +1,11 @@
 import { GridItem } from '@chakra-ui/react';
 import { LuFingerprint } from 'react-icons/lu';
-import { ConnectionButton } from '@/components';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectionButton } from './ConnectionButton';
 import { useTranslation } from 'react-i18next';
-import { useLoginWithPasskey } from '@/hooks';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+import { useLoginWithPasskey } from '../../../hooks';
+// Import from types/modal to avoid circular dependency
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 import React from 'react';
 
 type Props = {

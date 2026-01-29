@@ -1,12 +1,10 @@
-import {
-    UseSendTransactionReturnValue,
-    useRefreshBalances,
-    useSendTransaction,
-} from '@/hooks';
-import { humanAddress, isValidAddress } from '@/utils';
+// Direct imports to avoid circular dependencies
+import { useSendTransaction, UseSendTransactionReturnValue } from './useSendTransaction';
+import { useRefreshBalances } from '../../api/wallet/useRefreshBalances';
+import { humanAddress, isValidAddress } from '../../../utils';
 import { useMemo } from 'react';
 import { parseEther } from 'viem';
-import { EnhancedClause } from '@/types';
+import type { EnhancedClause } from '../../../types';
 
 type useTransferVETProps = {
     fromAddress: string;

@@ -9,9 +9,10 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { LuGripVertical } from 'react-icons/lu';
-import { GasTokenType } from '@/types/gasToken';
-import { SUPPORTED_GAS_TOKENS } from '@/utils/constants';
-import { useVeChainKitConfig } from '@/providers';
+import type { GasTokenType } from '../../../../types/gasToken';
+import { SUPPORTED_GAS_TOKENS } from '../../../../utils/constants';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 
 interface DragListProps {
     tokens: GasTokenType[];

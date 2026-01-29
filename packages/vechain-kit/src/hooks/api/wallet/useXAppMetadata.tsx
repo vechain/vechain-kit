@@ -1,9 +1,9 @@
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { X2EarnApps__factory } from '@vechain/vechain-contract-types';
-import { useVeChainKitConfig } from '@/providers';
-import { useThor } from '@vechain/dapp-kit-react';
-import { convertUriToUrl } from '@/utils';
-import { NETWORK_TYPE } from '@/config/network';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { useOptionalThor } from '../dappkit/useOptionalThor';
+import { convertUriToUrl } from '../../../utils';
+import { NETWORK_TYPE } from '../../../config/network';
 import { useQuery } from '@tanstack/react-query';
 
 /**
@@ -66,12 +66,14 @@ export const getXAppMetadata = async (
 const abi = X2EarnApps__factory.abi;
 
 export const useXAppMetadata = (xAppId: string) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: ['xAppMetaData', xAppId],
         queryFn: async () => {
+            if (!thor) throw new Error('Thor client not available');
             const address = getConfig(network.type).x2EarnAppsContractAddress;
             const contract = thor.contracts.load(address, abi);
 
@@ -90,6 +92,6 @@ export const useXAppMetadata = (xAppId: string) => {
 
             return metadata;
         },
-        enabled: !!xAppId,
+        enabled: !!thor && !!xAppId,
     });
 };

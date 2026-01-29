@@ -1,4 +1,4 @@
-import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { AccountModalContentTypes } from '../../../Types';
 import { SharedAppCard } from './SharedAppCard';
 import { CategoryFilter } from './CategoryFilterSection';
 import { AllowedCategories } from './CategoryLabel';

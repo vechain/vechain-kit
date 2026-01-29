@@ -1,9 +1,9 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
-import { useVeChainKitConfig } from '@/providers';
+import { getConfig } from '../../../config';
+import { NETWORK_TYPE } from '../../../config/network';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
 import { ThorClient } from '@vechain/sdk-network';
 
 export const getCurrentAccountImplementationVersion = async (
@@ -40,13 +40,14 @@ export const getCurrentAccountImplementationVersionQueryKey = (
  * @returns The current account implementation version
  */
 export const useCurrentAccountImplementationVersion = () => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getCurrentAccountImplementationVersionQueryKey(network.type),
         queryFn: async () =>
-            getCurrentAccountImplementationVersion(thor, network.type),
+            getCurrentAccountImplementationVersion(thor!, network.type),
         enabled: !!thor && !!network,
     });
 };

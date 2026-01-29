@@ -1,6 +1,6 @@
-import { NETWORK_TYPE } from '@/config/network';
+import { NETWORK_TYPE } from '../config/network';
 import { validateIpfsUri } from './ipfs';
-import { getConfig } from '@/config';
+import { getConfig } from '../config';
 
 /**
  * Convert a URI to a URL

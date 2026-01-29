@@ -6,9 +6,10 @@ import {
     StackProps,
     useToken,
 } from '@chakra-ui/react';
-import { useTokensWithValues } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import { useTokensWithValues } from '../../hooks';
+// Direct import to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../utils';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 

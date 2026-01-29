@@ -2,7 +2,8 @@
 
 import { type ReactElement } from 'react';
 import { Container, Spinner, VStack } from '@chakra-ui/react';
-import { useWallet, WalletButton } from '@vechain/vechain-kit';
+import { useWallet } from '@vechain/vechain-kit/hooks';
+import { WalletButton } from '@vechain/vechain-kit/components';
 import { AccountInfo } from '@/app/components/features/AccountInfo';
 import { ConnectionInfo } from '@/app/components/features/ConnectionInfo';
 import { DaoInfo } from '@/app/components/features/DaoInfo';

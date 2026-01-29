@@ -1,13 +1,9 @@
 import { Tag, TagProps } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import type { AllowedCategories } from '../../../../../types';
 
-export type AllowedCategories =
-    | 'defi'
-    | 'games'
-    | 'collectibles'
-    | 'marketplaces'
-    | 'utilities'
-    | 'vebetter';
+// Re-export type for backwards compatibility
+export type { AllowedCategories };
 
 type CategoryProps = {
     category: AllowedCategories;

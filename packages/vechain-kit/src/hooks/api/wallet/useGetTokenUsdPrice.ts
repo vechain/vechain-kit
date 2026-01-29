@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../dappkit/useOptionalThor';
 import { OracleVechainEnergy__factory } from '@vechain/vechain-contract-types';
 import { BigNumber } from 'bignumber.js';
-import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../../../config';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { NETWORK_TYPE } from '../../../config/network';
 import { ThorClient } from '@vechain/sdk-network';
 
 // Create an enum or object for supported price feed IDs
@@ -42,12 +42,13 @@ export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
 ];
 
 export const useGetTokenUsdPrice = (token: SupportedToken) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getTokenUsdPriceQueryKey(token),
-        queryFn: async () => getTokenUsdPrice(thor, token, network.type),
+        queryFn: async () => getTokenUsdPrice(thor!, token, network.type),
         enabled: !!thor && !!network.type,
         retry: (failureCount, error) => {
             // Don't retry on cancellation errors

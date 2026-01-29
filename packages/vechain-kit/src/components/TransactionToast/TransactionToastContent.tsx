@@ -10,7 +10,7 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 import React, { useMemo } from 'react';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
+import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
 import {
     LuX,
     LuExternalLink,
@@ -18,8 +18,9 @@ import {
     LuCircleCheck,
     LuRefreshCw,
 } from 'react-icons/lu';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import { getConfig } from '../../config';
 import { useTranslation } from 'react-i18next';
 import { TransactionReceipt } from '@vechain/sdk-network';
 

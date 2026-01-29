@@ -1,7 +1,7 @@
 import { Button, Icon } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { LuBookmark, LuBookmarkCheck } from 'react-icons/lu';
-import { useEcosystemShortcuts } from '@/hooks';
+import { useEcosystemShortcuts } from '../../../../../hooks';
 
 type Props = {
     name: string;

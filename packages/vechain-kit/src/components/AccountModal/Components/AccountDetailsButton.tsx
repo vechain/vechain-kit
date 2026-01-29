@@ -9,10 +9,11 @@ import {
     Tag,
 } from '@chakra-ui/react';
 import { ElementType } from 'react';
-import { humanAddress, humanDomain } from '@/utils';
+import { humanAddress, humanDomain } from '../../../utils';
 import { useTranslation } from 'react-i18next';
-import { Wallet } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
+import type { Wallet } from '../../../types';
+// Direct import to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 interface AccountDetailsButtonProps {
     title: string;

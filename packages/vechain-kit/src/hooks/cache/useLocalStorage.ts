@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
+import { getLocalStorageItem, setLocalStorageItem } from '../../utils/ssrUtils';
 
 export enum LocalStorageKey {
     CUSTOM_TOKENS = 'vechain_kit_custom_tokens',

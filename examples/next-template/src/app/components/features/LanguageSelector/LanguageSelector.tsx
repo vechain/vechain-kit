@@ -3,7 +3,7 @@
 import { Box, Heading, VStack, Text, Select } from '@chakra-ui/react';
 import { useTranslation } from '../../../../../node_modules/react-i18next';
 import { languageNames, supportedLanguages } from '../../../../../i18n';
-import { useCurrentLanguage } from '@vechain/vechain-kit';
+import { useCurrentLanguage } from '@vechain/vechain-kit/hooks';
 
 export function LanguageSelector() {
     const { t, i18n } = useTranslation();

@@ -1,4 +1,4 @@
-import { AppConfig } from '.';
+import { AppConfig } from './appConfig';
 const config: AppConfig = {
     ipfsFetchingService: 'https://api.gateway-proxy.vechain.org/ipfs',
     indexerUrl: 'https://indexer.mainnet.vechain.org/api/v1',

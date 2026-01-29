@@ -1,4 +1,5 @@
-import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal, AccountModalOptions } from '../../providers/ModalContext';
 import { ReactNode } from 'react';
 
 export const useProfileModal = () => {

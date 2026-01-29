@@ -1,6 +1,7 @@
 import { GridItem, Icon } from '@chakra-ui/react';
 import { LuEllipsis, LuArrowRight } from 'react-icons/lu';
-import { ConnectionButton } from '@/components';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectionButton } from './ConnectionButton';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

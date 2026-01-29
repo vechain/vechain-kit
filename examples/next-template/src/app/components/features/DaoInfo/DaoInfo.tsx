@@ -5,7 +5,7 @@ import {
     useWallet,
     useCurrentAllocationsRoundId,
     useIsPerson,
-} from '@vechain/vechain-kit';
+} from '@vechain/vechain-kit/hooks';
 
 export function DaoInfo() {
     const { account } = useWallet();

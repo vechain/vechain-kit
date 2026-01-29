@@ -1,6 +1,6 @@
-import { CrossAppConnectionCache } from '@/types';
+import type { CrossAppConnectionCache } from '../../types';
 import { useCallback } from 'react';
-import { getLocalStorageItem, setLocalStorageItem, removeLocalStorageItem } from '@/utils/ssrUtils';
+import { getLocalStorageItem, setLocalStorageItem, removeLocalStorageItem } from '../../utils/ssrUtils';
 
 export const useCrossAppConnectionCache = () => {
     const CACHE_KEY = 'vechain_kit_cross_app_connection';

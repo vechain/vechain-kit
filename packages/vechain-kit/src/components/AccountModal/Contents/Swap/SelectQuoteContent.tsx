@@ -14,17 +14,18 @@ import {
     Tooltip,
     ModalFooter,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { SwapQuote } from '@/types/swap';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
+import type { SwapQuote } from '../../../../types/swap';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { formatEther } from 'viem';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
-import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } from '@/utils/currencyUtils';
-import { useCurrency, useTokensWithValues, useWallet } from '@/hooks';
-import { useTokenPrices } from '@/hooks';
+import { formatCompactCurrency, SupportedCurrency, convertToSelectedCurrency } from '../../../../utils/currencyUtils';
+import { useCurrency, useTokensWithValues, useWallet } from '../../../../hooks';
+import { useTokenPrices } from '../../../../hooks';
 import { useState, useMemo } from 'react';
-import { TOKEN_LOGO_COMPONENTS, TOKEN_LOGOS, compareAddresses } from '@/utils';
+import { TOKEN_LOGO_COMPONENTS, TOKEN_LOGOS, compareAddresses } from '../../../../utils';
 import React from 'react';
 
 type Props = {

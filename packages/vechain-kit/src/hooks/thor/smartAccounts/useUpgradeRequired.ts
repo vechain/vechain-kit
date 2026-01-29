@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { SocialLoginSmartAccountFactory__factory } from '@vechain/vechain-contract-types';
-import { useThor } from '@vechain/dapp-kit-react';
-import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { NETWORK_TYPE } from '../../../config/network';
+import { getConfig } from '../../../config';
 import { ThorClient } from '@vechain/sdk-network';
 
 export const getUpgradeRequired = async (
@@ -62,7 +62,8 @@ export const useUpgradeRequired = (
     ownerAddress: string,
     targetVersion: number,
 ) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
@@ -74,7 +75,7 @@ export const useUpgradeRequired = (
         ),
         queryFn: async () =>
             getUpgradeRequired(
-                thor,
+                thor!,
                 accountAddress,
                 ownerAddress,
                 targetVersion,

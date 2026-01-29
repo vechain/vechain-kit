@@ -1,10 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
-import {
-    getAvatarOfAddressQueryKey,
-    getAvatarQueryKey,
-    getTextRecordsQueryKey,
-} from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
+// Direct imports to avoid circular dependency through barrel exports
+import { getAvatarOfAddressQueryKey } from '../vetDomains/useGetAvatarOfAddress';
+import { getAvatarQueryKey } from '../vetDomains/useGetAvatar';
+import { getTextRecordsQueryKey } from '../vetDomains/useGetTextRecords';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 export const useRefreshMetadata = (domain: string, address: string) => {
     const queryClient = useQueryClient();

@@ -13,8 +13,8 @@ import {
     useWallet,
     useSignMessage,
     useSignTypedData,
-    WalletButton,
-} from '@vechain/vechain-kit';
+} from '@vechain/vechain-kit/hooks';
+import { WalletButton } from '@vechain/vechain-kit/components';
 
 // Example EIP-712 typed data
 const exampleTypedData = {

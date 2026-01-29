@@ -8,12 +8,10 @@ import {
     Text,
     useToken,
 } from '@chakra-ui/react';
-import {
-    useMfaEnrollment,
-    usePrivy,
-    useUpgradeRequired,
-    useWallet,
-} from '@/hooks';
+import { useUpgradeRequired, useWallet } from '../../../../hooks';
+// Use optional hooks to handle missing PrivyProvider gracefully
+import { useOptionalPrivy } from '../../../../hooks/api/privy/useOptionalPrivy';
+import { useOptionalMfaEnrollment } from '../../../../hooks/api/privy/useOptionalMfaEnrollment';
 import {
     LuChevronRight,
     LuCircleHelp,
@@ -29,13 +27,14 @@ import {
     LuSettings2,
     LuFingerprint,
 } from 'react-icons/lu';
-import { ActionButton } from '@/components';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ActionButton } from '../../Components';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuUnlink } from 'react-icons/lu';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import { useVeChainKitConfig } from '@/providers';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 
 export type SettingsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -51,8 +50,8 @@ export const SettingsContent = ({
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
-    const { exportWallet, linkPasskey } = usePrivy();
-    const { showMfaEnrollmentModal } = useMfaEnrollment();
+    const { exportWallet, linkPasskey } = useOptionalPrivy();
+    const { showMfaEnrollmentModal } = useOptionalMfaEnrollment();
 
     const { feeDelegation } = useVeChainKitConfig();
 

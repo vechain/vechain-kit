@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getPicassoImage } from '@/utils';
+import { getPicassoImage } from '../../../utils';
 import { getAddressDomain, getAvatar } from '@vechain/contract-getters';
-import { useVeChainKitConfig } from '@/providers';
-import { getLocalStorageItem } from '@/utils/ssrUtils';
-import { CrossAppConnectionCache } from '@/types';
-import { VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL } from '@/constants';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { getLocalStorageItem } from '../../../utils/ssrUtils';
+import type { CrossAppConnectionCache } from '../../../types';
+import { VECHAIN_KIT_DOCS_IMAGES_S3_BASE_URL } from '../../../constants';
 
 /**
  * Avatar resolution priority:

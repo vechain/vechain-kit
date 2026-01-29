@@ -7,10 +7,10 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react';
-import { useEcosystemShortcuts } from '@/hooks';
-import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { useEcosystemShortcuts } from '../../../../../hooks';
+import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
-import { notFoundImage } from '@/utils';
+import { notFoundImage } from '../../../../../utils';
 
 type Props = {
     setCurrentContent: React.Dispatch<

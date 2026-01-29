@@ -1,48 +1,12 @@
 import localConfig from './solo';
 import testnetConfig from './testnet';
 import mainnetConfig from './mainnet';
-import { Network, NETWORK_TYPE } from './network';
+import { NETWORK_TYPE } from './network';
 
-export type AppConfig = {
-    ipfsFetchingService: string;
-    ipfsPinningService: string;
-    vthoContractAddress: string;
-    b3trContractAddress: string;
-    vot3ContractAddress: string;
-    b3trGovernorAddress: string;
-    timelockContractAddress: string;
-    xAllocationPoolContractAddress: string;
-    xAllocationVotingContractAddress: string;
-    emissionsContractAddress: string;
-    voterRewardsContractAddress: string;
-    galaxyMemberContractAddress: string;
-    treasuryContractAddress: string;
-    x2EarnAppsContractAddress: string;
-    x2EarnCreatorContractAddress: string;
-    x2EarnRewardsPoolContractAddress: string;
-    nodeManagementContractAddress: string;
-    veBetterPassportContractAddress: string;
-    veDelegate: string;
-    veDelegateVotes: string;
-    veDelegateTokenContractAddress: string;
-    oracleContractAddress: string;
-    accountFactoryAddress: string;
-    cleanifyCampaignsContractAddress: string;
-    cleanifyChallengesContractAddress: string;
-    veWorldSubdomainClaimerContractAddress: string;
-    vetDomainsContractAddress: string;
-    vetDomainsPublicResolverAddress: string;
-    vetDomainsReverseRegistrarAddress: string;
-    vnsResolverAddress: string;
-    gloDollarContractAddress: string;
-    vetDomainAvatarUrl: string;
-    nodeUrl: string;
-    indexerUrl: string;
-    b3trIndexerUrl: string;
-    graphQlIndexerUrl: string;
-    network: Network;
-    explorerUrl: string;
-};
+// Re-export AppConfig from appConfig.ts to maintain backward compatibility
+// while avoiding circular dependency with network config files
+export type { AppConfig } from './appConfig';
+import type { AppConfig } from './appConfig';
 
 export const getConfig = (env: NETWORK_TYPE): AppConfig => {
     if (env === 'solo') return localConfig;

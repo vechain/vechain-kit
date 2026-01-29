@@ -52,7 +52,10 @@
         "lint": "eslint",
         "purge": "yarn clean && rm -rf node_modules",
         "translate": "dotenv -e .env -- translo-cli",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "analyze": "./analyze.sh",
+        "size": "size-limit",
+        "size:check": "size-limit --limit"
     },
     "dependencies": {
         "@adraffy/ens-normalize": "^1.11.0",
@@ -88,12 +91,15 @@
         "wagmi": "^2.15.4"
     },
     "devDependencies": {
+        "@size-limit/file": "^11.2.0",
         "@types/react": "^18.2.28",
         "@types/react-dom": "^18.2.13",
         "cross-env": "^7.0.3",
         "dotenv-cli": "^8.0.0",
         "eslint": "^9.12.0",
         "eslint-plugin-i18next": "^6.1.1",
+        "size-limit": "^11.2.0",
+        "source-map-explorer": "^2.5.3",
         "translo-cli": "^1.0.6",
         "tsdown": "^0.16.5",
         "typescript": "*"
@@ -131,18 +137,48 @@
     "exports": {
         ".": {
             "import": {
-                "types": "./dist/index.d.mts",
-                "default": "./dist/index.mjs"
+                "types": "./dist/index.d.ts",
+                "default": "./dist/index.js"
             },
             "require": {
                 "types": "./dist/index.d.cts",
                 "default": "./dist/index.cjs"
             }
         },
+        "./hooks": {
+            "import": {
+                "types": "./dist/hooks/index.d.ts",
+                "default": "./dist/hooks/index.js"
+            },
+            "require": {
+                "types": "./dist/hooks/index.d.cts",
+                "default": "./dist/hooks/index.cjs"
+            }
+        },
+        "./components": {
+            "import": {
+                "types": "./dist/components/index.d.ts",
+                "default": "./dist/components/index.js"
+            },
+            "require": {
+                "types": "./dist/components/index.d.cts",
+                "default": "./dist/components/index.cjs"
+            }
+        },
+        "./providers": {
+            "import": {
+                "types": "./dist/providers/index.d.ts",
+                "default": "./dist/providers/index.js"
+            },
+            "require": {
+                "types": "./dist/providers/index.d.cts",
+                "default": "./dist/providers/index.cjs"
+            }
+        },
         "./utils": {
             "import": {
-                "types": "./dist/utils/index.d.mts",
-                "default": "./dist/utils/index.mjs"
+                "types": "./dist/utils/index.d.ts",
+                "default": "./dist/utils/index.js"
             },
             "require": {
                 "types": "./dist/utils/index.d.cts",
@@ -151,8 +187,8 @@
         },
         "./assets": {
             "import": {
-                "types": "./dist/assets/index.d.mts",
-                "default": "./dist/assets/index.mjs"
+                "types": "./dist/assets/index.d.ts",
+                "default": "./dist/assets/index.js"
             },
             "require": {
                 "types": "./dist/assets/index.d.cts",

@@ -14,11 +14,11 @@ import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
     GasFeeSummary,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
-import { useClaimVeWorldSubdomain } from '@/hooks/api/vetDomains/useClaimVeWorldSubdomain';
-import { useClaimVetDomain } from '@/hooks/api/vetDomains/useClaimVetDomain';
-import { useUnsetDomain } from '@/hooks/api/vetDomains/useUnsetDomain';
+import { useClaimVeWorldSubdomain } from '../../../../hooks/api/vetDomains/useClaimVeWorldSubdomain';
+import { useClaimVetDomain } from '../../../../hooks/api/vetDomains/useClaimVetDomain';
+import { useUnsetDomain } from '../../../../hooks/api/vetDomains/useUnsetDomain';
 import { useTranslation } from 'react-i18next';
 import {
     useUpgradeRequired,
@@ -26,10 +26,11 @@ import {
     useWallet,
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
-} from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
-import { GasTokenType } from '@/types/gasToken';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+} from '../../../../hooks';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import type { GasTokenType } from '../../../../types/gasToken';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import { LuSquareUser } from 'react-icons/lu';
 
 export type ChooseNameSummaryContentProps = {

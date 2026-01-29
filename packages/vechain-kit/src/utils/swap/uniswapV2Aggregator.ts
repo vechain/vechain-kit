@@ -1,9 +1,9 @@
-import {
+import type {
     SwapAggregator,
     SwapParams,
     SwapQuote,
     SwapSimulation,
-} from '@/types/swap';
+} from '../../types/swap';
 import {
     IERC20__factory,
     UniswapV2Router02__factory as UniswapV2Router__factory,

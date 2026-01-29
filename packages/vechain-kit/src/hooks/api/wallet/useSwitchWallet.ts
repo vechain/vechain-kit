@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
-import { useDAppKitWallet, useWallet } from '@/hooks';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../dappkit/useOptionalDAppKitWallet';
+import { useWallet } from './useWallet';
 import { useWalletStorage, StoredWallet } from './useWalletStorage';
-import { isBrowser } from '@/utils/ssrUtils';
+import { isBrowser } from '../../../utils/ssrUtils';
 
 export type UseSwitchWalletReturnType = {
     switchWallet: () => Promise<void>;
@@ -18,7 +20,7 @@ export type UseSwitchWalletReturnType = {
  * - On desktop: Provides wallet storage functions for UI-based switching
  */
 export const useSwitchWallet = (): UseSwitchWalletReturnType => {
-    const { switchWallet: dappKitSwitchWallet } = useDAppKitWallet();
+    const { switchWallet: dappKitSwitchWallet } = useOptionalDAppKitWallet();
     const { connection } = useWallet();
     const [isSwitching, setIsSwitching] = useState(false);
     const {

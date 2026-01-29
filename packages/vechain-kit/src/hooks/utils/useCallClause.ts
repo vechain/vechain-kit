@@ -3,9 +3,9 @@ import {
     executeMultipleClausesCall,
     MultipleClausesCallParameters,
     ViewFunctionResult,
-} from '@/utils';
+} from '../../utils';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../api/dappkit/useOptionalThor';
 import { ThorClient } from '@vechain/sdk-network';
 import {
     ExtractAbiFunctionNames,
@@ -13,7 +13,7 @@ import {
 } from 'abitype';
 import { Abi, ContractFunctionParameters } from 'viem';
 
-export * from '@/utils/thorUtils';
+export * from '../../utils/thorUtils';
 
 type ExtractViewFunction<
     TAbi extends Abi,
@@ -113,7 +113,8 @@ export const useCallClause = <
         'queryKey' | 'queryFn'
     >;
 }) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
 
     return useQuery({
         queryKey: getCallClauseQueryKeyWithArgs({
@@ -122,14 +123,17 @@ export const useCallClause = <
             method,
             args,
         }),
-        queryFn: async () =>
-            executeCallClause({
+        queryFn: async () => {
+            if (!thor) throw new Error('Thor client not available');
+            return executeCallClause({
                 thor,
                 contractAddress: address,
                 abi,
                 method,
                 args,
-            }),
+            });
+        },
+        enabled: !!thor && (queryOptions?.enabled !== false),
         ...queryOptions,
     });
 };

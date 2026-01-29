@@ -1,5 +1,5 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../config';
+import { NETWORK_TYPE } from '../config/network';
 
 /**
  * Validate IPFS URI strings. An example of a valid IPFS URI is:

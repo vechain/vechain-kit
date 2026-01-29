@@ -1,8 +1,8 @@
 'use client';
 
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
 import { useQuery } from '@tanstack/react-query';
-import { TIME } from '@/utils';
+import { TIME } from '../../../utils';
 
 const BLOCK_GENERATION_INTERVAL = 10 * TIME.SECOND;
 
@@ -20,11 +20,13 @@ export const txReceiptQueryKey = (txId: string) => [
  * @returns Query result containing the transaction receipt
  */
 export const useTxReceipt = (txId: string, blockTimeout = 5) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
 
     return useQuery({
         queryKey: txReceiptQueryKey(txId),
         queryFn: async () => {
+            if (!thor) throw new Error('Thor client not available');
             const response = await thor.transactions.waitForTransaction(txId, {
                 timeoutMs: blockTimeout * BLOCK_GENERATION_INTERVAL,
                 intervalMs: 3000
@@ -34,6 +36,6 @@ export const useTxReceipt = (txId: string, blockTimeout = 5) => {
 
             return response;
         },
-        enabled: !!txId,
+        enabled: !!thor && !!txId,
     });
 };

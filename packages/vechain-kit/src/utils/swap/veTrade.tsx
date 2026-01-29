@@ -1,14 +1,14 @@
-import { SwapAggregator, SwapParams, SwapQuote, SwapSimulation } from '@/types/swap';
-import { NETWORK_TYPE } from '@/config/network';
+import type { SwapAggregator, SwapParams, SwapQuote, SwapSimulation } from '../../types/swap';
+import { NETWORK_TYPE } from '../../config/network';
 import { type Address } from 'viem';
 import { createApiAggregator } from './apiAggregator';
-import { VeTradeLogo } from '@/assets/icons';
+import { VeTradeLogo } from '../../assets/icons';
 import React from 'react';
 import { TransactionClause, ABIContract, Clause, Address as VeChainAddress, VET, Units } from '@vechain/sdk-core';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { ThorClient } from '@vechain/sdk-network';
 import { simulateSwapWithClauses } from './simulateSwap';
-import { VETRADE_BASE_URL } from '@/constants';
+import { VETRADE_BASE_URL } from '../../constants';
 
 /**
  * VeTrade supported addresses for different networks

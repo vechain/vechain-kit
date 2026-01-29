@@ -10,11 +10,12 @@ import {
     Link,
     HStack,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import { getConfig } from '../../../../config';
 import { LuExternalLink, LuCircleAlert } from 'react-icons/lu';
 
 export type FailedOperationContentProps = {

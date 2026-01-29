@@ -1,12 +1,13 @@
 import { useCallback } from 'react';
-import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { NETWORK_TYPE } from '../../../config/network';
 import {
     getLocalStorageItem,
     setLocalStorageItem,
     removeLocalStorageItem,
     isBrowser,
-} from '@/utils/ssrUtils';
+} from '../../../utils/ssrUtils';
 
 export type StoredWallet = {
     address: string;

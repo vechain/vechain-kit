@@ -1,9 +1,12 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { SignTypedDataParams } from '@privy-io/react-auth';
-import { usePrivyWalletProvider } from '@/providers';
-import { useWallet, useDAppKitWallet } from '@/hooks';
+import type { SignTypedDataParams } from '@privy-io/react-auth';
+// Import from specific provider file to avoid circular dependencies
+import { useOptionalPrivyWalletProvider } from '../../providers/PrivyWalletProvider';
+// Direct import to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
+import { useOptionalDAppKitWallet } from '../api/dappkit/useOptionalDAppKitWallet';
 import { SignTypedDataOptions, TypedDataDomain } from '@vechain/sdk-network';
 
 type UseSignTypedDataReturnValue = {
@@ -28,9 +31,11 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
     const [signature, setSignature] = useState<string | null>(null);
     const [error, setError] = useState<Error | null>(null);
 
-    const { signer } = useDAppKitWallet();
+    // Use optional DAppKit wallet hook that handles missing provider gracefully
+    const { signer } = useOptionalDAppKitWallet();
     const { connection } = useWallet();
-    const privyWalletProvider = usePrivyWalletProvider();
+    // Use optional provider - returns null when Privy is not configured
+    const privyWalletProvider = useOptionalPrivyWalletProvider();
 
     const signTypedData = useCallback(
         async (
@@ -59,6 +64,11 @@ export const useSignTypedData = (): UseSignTypedDataReturnValue => {
                         options,
                     );
                 } else {
+                    if (!privyWalletProvider) {
+                        throw new Error(
+                            'Privy is not configured. Please configure the privy prop in VeChainKitContext to use this feature.',
+                        );
+                    }
                     sig = await privyWalletProvider.signTypedData(data);
                 }
 

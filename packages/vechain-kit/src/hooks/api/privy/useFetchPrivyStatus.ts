@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { PRIVY_STATUS_BASE_URL } from '@/constants';
+import { PRIVY_STATUS_BASE_URL } from '../../../constants';
 
 export const fetchPrivyStatus = async (): Promise<string> => {
     try {

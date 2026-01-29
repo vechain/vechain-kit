@@ -1,22 +1,12 @@
 import { useEffect } from 'react';
-import {
-    useWallet,
-    useNotifications,
-    useUpgradeRequiredForAccount,
-} from '@/hooks';
+// Direct imports to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
+import { useNotifications } from './useNotifications';
+import { useUpgradeRequiredForAccount } from '../thor/smartAccounts/useUpgradeRequiredForAccount';
 import { useTranslation } from 'react-i18next';
 
-export const DEFAULT_NOTIFICATIONS = [
-    {
-        id: 'welcome',
-        title: 'Welcome to the VeChain',
-        description:
-            'Welcome! Here you can manage your wallet, send tokens, and interact with the VeChain blockchain and its applications.',
-        timestamp: Date.now(),
-        status: 'success' as const,
-        isRead: false,
-    },
-];
+// Re-export for backward compatibility (moved to types.ts to avoid circular dependency)
+export { DEFAULT_NOTIFICATIONS } from './types';
 
 export const useNotificationAlerts = () => {
     const { t } = useTranslation();

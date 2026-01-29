@@ -1,6 +1,10 @@
 import { Interface, namehash } from 'ethers';
 import { useCallback } from 'react';
-import { UseSendTransactionReturnValue, useSendTransaction } from '@/hooks';
+// Direct import to avoid circular dependency through barrel exports
+import {
+    UseSendTransactionReturnValue,
+    useSendTransaction,
+} from '../../thor/transactions/useSendTransaction';
 import { TransactionClause } from '@vechain/sdk-core';
 
 const nameInterface = new Interface([

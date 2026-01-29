@@ -13,7 +13,7 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { languageNames, supportedLanguages } from '../../../../../i18n';

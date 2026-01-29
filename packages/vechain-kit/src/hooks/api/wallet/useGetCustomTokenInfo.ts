@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getTokenInfo as getTokenInfoFromContract, type CustomTokenInfo } from '@vechain/contract-getters';
 
 export const getTokenInfo = async (tokenAddress: string, networkUrl: string): Promise<CustomTokenInfo> => {

@@ -1,9 +1,9 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
+import { getConfig } from '../../../config';
+import { NETWORK_TYPE } from '../../../config/network';
 import { VetDomainsRegistry__factory } from '@vechain/vechain-contract-types';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../dappkit/useOptionalThor';
 import { ThorClient } from '@vechain/sdk-network';
 import { concat, keccak256, toBytes } from 'viem';
 
@@ -41,13 +41,14 @@ export const getEnsRecordExistsQueryKey = (name: string) => [
 ];
 
 export const useEnsRecordExists = (name: string) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     return useQuery({
         queryKey: getEnsRecordExistsQueryKey(name),
-        queryFn: () => getEnsRecordExists(thor, network.type, name),
-        enabled: !!name,
+        queryFn: () => getEnsRecordExists(thor!, network.type, name),
+        enabled: !!thor && !!name,
         retry: (failureCount, error) => {
             // Don't retry on cancellation errors
             if (error instanceof Error) {

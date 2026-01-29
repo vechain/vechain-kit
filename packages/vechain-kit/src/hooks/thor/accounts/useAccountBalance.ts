@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useThor } from '@vechain/dapp-kit-react';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
 import { Address } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { formatEther } from 'viem';
@@ -24,11 +24,12 @@ export const getAccountBalanceQueryKey = (address?: string) => [
  * @returns  The account balance
  */
 export const useAccountBalance = (address?: string) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     return useQuery({
         queryKey: getAccountBalanceQueryKey(address),
-        queryFn: () => getAccountBalance(thor, address),
-        enabled: !!address && Address.isValid(address),
+        queryFn: () => getAccountBalance(thor!, address),
+        enabled: !!thor && !!address && Address.isValid(address),
         refetchInterval: 10000,
     });
 };

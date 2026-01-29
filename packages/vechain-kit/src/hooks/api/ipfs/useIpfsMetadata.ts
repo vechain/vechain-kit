@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { convertUriToUrl } from '@/utils';
-import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
+import { convertUriToUrl } from '../../../utils';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { NETWORK_TYPE } from '../../../config/network';
 
 /**
  * Fetches metadata from IPFS for a given URI

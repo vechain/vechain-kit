@@ -11,14 +11,16 @@ import {
     HStack,
     useToken,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer } from '@/components/common';
+import { StickyHeaderContainer } from '../../common';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { motion } from 'framer-motion';
-import { getConfig } from '@/config';
+import { getConfig } from '../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';
-import { ShareButtons } from '@/components/TransactionModal';
-import { UpgradeSmartAccountModalContentsTypes } from '../UpgradeSmartAccountModal';
+import { ShareButtons } from '../../TransactionModal';
+// Import types from centralized location to avoid circular dependencies
+import type { UpgradeSmartAccountModalContentsTypes } from '../../../types/modal';
 
 export type SuccessfulOperationContentProps = {
     setCurrentContent: React.Dispatch<

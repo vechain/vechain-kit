@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '@/providers';
-import { formatTokenBalance } from '@/utils';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { formatTokenBalance } from '../../../utils';
 import { getVot3Balance } from '@vechain/contract-getters';
 
 export const getVot3BalanceQueryKey = (address?: string) => [

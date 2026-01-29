@@ -15,10 +15,11 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { GasTokenType } from '@/types/gasToken';
-import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '@/utils/constants';
-import { formatGasCost } from '@/types/gasEstimation';
-import { useTokenBalances } from '@/hooks';
+import type { GasTokenType } from '../../types/gasToken';
+import { SUPPORTED_GAS_TOKENS, TOKEN_LOGO_COMPONENTS } from '../../utils/constants';
+import { formatGasCost } from '../../types/gasEstimation';
+// Direct import to avoid circular dependency through hooks barrel
+import { useTokenBalances } from '../../hooks/api/wallet/useTokenBalances';
 import { BaseModal } from './BaseModal';
 
 interface GasFeeTokenSelectorProps {

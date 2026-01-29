@@ -178,3 +178,23 @@ export const CURRENCY_SYMBOLS: Record<CURRENCY, string> = {
     gbp: '£',
     eur: '€',
 };
+
+/**
+ * Legal document configuration for terms, privacy policy, and cookies
+ * Used by VeChainKitProvider and LegalDocumentsProvider
+ */
+export type LegalDocument = {
+    url: string;
+    version: number;
+    required: boolean;
+    displayName?: string;
+};
+
+/**
+ * Options for configuring legal documents in VeChainKitProvider
+ */
+export type LegalDocumentOptions = {
+    privacyPolicy?: LegalDocument[];
+    termsAndConditions?: LegalDocument[];
+    cookiePolicy?: LegalDocument[];
+};

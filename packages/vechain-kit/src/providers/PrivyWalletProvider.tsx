@@ -10,23 +10,22 @@ import {
     signerUtils,
 } from '@vechain/sdk-network';
 import { getGenericDelegatorUrl, randomTransactionUser } from '../utils';
-import {
+import type {
     GasTokenType,
     TransactionSpeed,
-} from '@/types';
-import {
-    useSmartAccount,
-    useWallet,
-    useGenericDelegator,
-    useHasV1SmartAccount,
-    SmartAccountReturnType,
-    estimateAndBuildTxBody,
-    useBuildClauses,
-    useGetAccountVersion,
-} from '@/hooks';
-import { getConfig } from '@/config';
-import { useVeChainKitConfig } from './VeChainKitProvider';
-import { usePrivyCrossAppSdk } from './PrivyCrossAppProvider';
+} from '../types';
+// Direct imports to avoid circular dependency with hooks barrel
+import { useSmartAccount } from '../hooks/thor/smartAccounts/useSmartAccount';
+import type { SmartAccountReturnType } from '../hooks/thor/smartAccounts/useSmartAccount';
+import { useWallet } from '../hooks/api/wallet/useWallet';
+import { useGenericDelegator, estimateAndBuildTxBody } from '../hooks/generic-delegator/useGenericDelegator';
+import { useHasV1SmartAccount } from '../hooks/thor/smartAccounts/useHasV1SmartAccount';
+import { useBuildClauses } from '../hooks/utils/useBuildClauses';
+import { useGetAccountVersion } from '../hooks/thor/smartAccounts/useGetAccountVersion';
+import { getConfig } from '../config';
+// Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
+import { useVeChainKitConfig } from './VeChainKitContext';
+import { useOptionalPrivyCrossAppSdk } from '../hooks/api/privy/useOptionalPrivyCrossAppSdk';
 import { SignTypedDataParameters } from '@wagmi/core';
 
 export interface PrivyWalletProviderContextType {
@@ -79,10 +78,11 @@ export const PrivyWalletProvider = ({
         exportWallet,
         signMessage: signMessagePrivy,
     } = usePrivy();
+    // Use optional cross-app SDK hook that handles missing provider gracefully
     const {
         signTypedData: signTypedDataWithCrossApp,
         signMessage: signMessageWithCrossApp,
-    } = usePrivyCrossAppSdk();
+    } = useOptionalPrivyCrossAppSdk();
     const { connection, connectedWallet } = useWallet();
     const { network } = useVeChainKitConfig();
     const { data: smartAccount } = useSmartAccount(
@@ -308,6 +308,10 @@ export const PrivyWalletProvider = ({
     );
 };
 
+/**
+ * Hook to access the PrivyWalletProvider context.
+ * Throws an error if used outside of a PrivyWalletProvider.
+ */
 export const usePrivyWalletProvider = () => {
     const context = useContext(PrivyWalletProviderContext);
     if (!context) {
@@ -316,4 +320,13 @@ export const usePrivyWalletProvider = () => {
         );
     }
     return context;
+};
+
+/**
+ * Optional hook to access the PrivyWalletProvider context.
+ * Returns null if the provider is not available (e.g., when Privy is not configured).
+ * Use this in hooks that need to work with or without Privy.
+ */
+export const useOptionalPrivyWalletProvider = () => {
+    return useContext(PrivyWalletProviderContext);
 };

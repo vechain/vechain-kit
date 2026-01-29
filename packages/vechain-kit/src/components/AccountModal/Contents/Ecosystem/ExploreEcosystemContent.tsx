@@ -15,18 +15,19 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { LuSearch } from 'react-icons/lu';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import React, { useState, useMemo, useEffect } from 'react';
 import {
     useCurrentAllocationsRoundId,
     useEcosystemShortcuts,
     useMostVotedAppsInRound,
     XAppMetadata,
-} from '@/hooks';
-import { useAppHubApps, AppHubApp } from '@/hooks';
+} from '../../../../hooks';
+import { useAppHubApps, AppHubApp } from '../../../../hooks';
 import { AppComponent } from './Components/AppComponent';
 import { CustomAppComponent } from './Components/CustomAppComponent';
 import { ShortcutsSection } from './Components/ShortcutsSection';
@@ -35,12 +36,12 @@ import {
     CategoryFilter,
 } from './Components/CategoryFilterSection';
 import { AllowedCategories } from './Components/CategoryLabel';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 import {
     VEBETTERDAO_GOVERNANCE_BASE_URL,
     VET_DOMAINS_BASE_URL,
     COINMARKETCAP_STATIC_BASE_URL,
-} from '@/constants';
+} from '../../../../constants';
 
 export type EcosystemWithCategoryProps = {
     selectedCategory: CategoryFilter;

@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { getSwapAggregators } from '@/config/swapAggregators';
-import { SwapParams, SwapQuote } from '@/types/swap';
+import { getSwapAggregators } from '../../../config/swapAggregators';
+import type { SwapParams, SwapQuote } from '../../../types/swap';
 import { parseUnits, zeroAddress } from 'viem';
-import { useThor } from '@vechain/dapp-kit-react';
-import { useGetCustomTokenInfo } from '@/hooks/api/wallet/useGetCustomTokenInfo';
-import { TokenWithValue } from '@/hooks';
-import { useWallet } from '@/hooks/api/wallet/useWallet';
+import { useOptionalThor } from '../dappkit/useOptionalThor';
+import { useGetCustomTokenInfo } from '../wallet/useGetCustomTokenInfo';
+// Direct import to avoid circular dependency through barrel exports
+import { TokenWithValue } from '../wallet/useTokensWithValues';
+import { useWallet } from '../wallet/useWallet';
 
 export type UnifiedSwapQuotesResult = {
     bestQuote: SwapQuote | null;
@@ -36,7 +37,8 @@ export const useSwapQuotes = (
     slippageTolerance: number = 1,
     enabled: boolean = true,
 ): UnifiedSwapQuotesResult => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { connection } = useWallet();
 
     // Use on-chain token decimals for correct parsing of amountIn, pass empty string to not let it fetch details for VET

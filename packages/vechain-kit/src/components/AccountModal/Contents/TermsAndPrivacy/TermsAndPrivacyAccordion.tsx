@@ -1,12 +1,11 @@
-import { EmptyContent } from '@/components/common/EmptyContent';
-import { useWallet } from '@/hooks';
-import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import {
-    LegalDocumentAgreement,
-    LegalDocumentSource,
-    LegalDocumentType,
-} from '@/types';
-import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '@/utils';
+import { EmptyContent } from '../../../common/EmptyContent';
+import { useWallet } from '../../../../hooks';
+// Import from specific provider files to avoid circular dependency with providers barrel
+import { useLegalDocuments } from '../../../../providers/LegalDocumentsProvider';
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import type { LegalDocumentAgreement } from '../../../../types';
+import { LegalDocumentSource, LegalDocumentType } from '../../../../types';
+import { compareAddresses, VECHAIN_KIT_TERMS_CONFIG } from '../../../../utils';
 import { Accordion, VStack } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

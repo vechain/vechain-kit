@@ -1,45 +1,46 @@
-import { getConfig } from '@/config';
-import { NETWORK_TYPE } from '@/config/network';
-import { CURRENCY, PrivyLoginMethod } from '@/types';
-import { isValidUrl } from '@/utils';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
-import { initializeI18n } from '@/utils/i18n';
-import {
+import { getConfig } from '../config';
+import { NETWORK_TYPE } from '../config/network';
+import type { CURRENCY } from '../types';
+import { isValidUrl } from '../utils';
+import { getLocalStorageItem, setLocalStorageItem } from '../utils/ssrUtils';
+import { initializeI18n } from '../utils/i18n';
+import type {
     LoginMethodOrderOption,
     NonEmptyArray,
-    PrivyProvider,
-    WalletListEntry,
 } from '@privy-io/react-auth';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
-    WalletSource as DAppKitWalletSource,
-    LogLevel,
-} from '@vechain/dapp-kit';
-import { DAppKitProvider } from '@vechain/dapp-kit-react';
-import { WalletConnectOptions } from '@vechain/dapp-kit-react';
-import { CustomizedStyle, I18n, SourceInfo } from '@vechain/dapp-kit-ui';
-import {
-    createContext,
-    ReactNode,
-    useContext,
     useEffect,
     useMemo,
     useState,
     useRef,
+    lazy,
+    Suspense,
 } from 'react';
-import { VechainKitThemeConfig } from '@/theme/tokens';
+// Import context and types from dedicated context file to break circular dependencies
+// Hooks should import useVeChainKitConfig from VeChainKitContext.tsx, not from this file
+import { VeChainKitContext, type VechainKitProviderProps } from './VeChainKitContext';
 import {
     getDefaultTokens,
     convertThemeConfigToTokens,
     mergeTokens,
-} from '@/theme/tokens';
+} from '../theme/tokens';
+
+// Re-export context, hook and types from VeChainKitContext for backward compatibility
+// NOTE: Hooks should prefer importing from './VeChainKitContext' to avoid circular dependencies
+export {
+    VeChainKitContext,
+    useVeChainKitConfig,
+    type VeChainKitConfig,
+    type VechainKitProviderProps,
+    type LoginMethodOrder,
+} from './VeChainKitContext';
 import {
     generateDAppKitCSSVariables,
     generatePrivyCSSVariables,
     applyPrivyCSSVariables,
     applyDAppKitButtonStyles,
     improvePrivyReadability,
-} from '@/utils/cssVariables';
+} from '../utils/cssVariables';
 
 import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
@@ -49,165 +50,44 @@ import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
     getGenericDelegatorUrl,
-} from '@/utils/constants';
-import { Certificate, CertificateData } from '@vechain/sdk-core';
-import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
+} from '../utils/constants';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
+import { ThorProvider } from './ThorProvider';
 
-type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
-type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
+// Lazy load PrivyCrossAppProvider only when ecosystem login is enabled to reduce bundle size (~150KB wagmi)
+const LazyPrivyCrossAppProvider = lazy(() =>
+    import('./PrivyCrossAppProvider').then((mod) => ({
+        default: mod.PrivyCrossAppProvider,
+    })),
+);
 
-type LoginMethodOrder = {
-    method:
-        | AlwaysAvailableMethods
-        | (VechainKitProviderProps['privy'] extends undefined
-              ? never
-              : PrivyDependentMethods);
-    gridColumn?: number;
-    allowedApps?: string[]; // Only used by ecosystem method, if it's not provided, it will use default apps
-};
+// Lazy load ReactQueryDevtools only in development to reduce production bundle size (~100KB)
+const ReactQueryDevtools =
+    process.env.NODE_ENV === 'development'
+        ? lazy(() =>
+              import('@tanstack/react-query-devtools').then((mod) => ({
+                  default: mod.ReactQueryDevtools,
+              })),
+          )
+        : () => null;
 
-export type LegalDocumentOptions = {
-    privacyPolicy?: LegalDocument[];
-    termsAndConditions?: LegalDocument[];
-    cookiePolicy?: LegalDocument[];
-};
+// Lazy load PrivyProvider only when privy is configured to reduce bundle size (~500KB)
+const LazyPrivyProvider = lazy(() =>
+    import('@privy-io/react-auth').then((mod) => ({
+        default: mod.PrivyProvider,
+    })),
+);
 
-export type LegalDocument = {
-    url: string;
-    version: number;
-    required: boolean;
-    displayName?: string;
-};
+// Lazy load DAppKitProvider only when dappKit is configured to reduce bundle size (~200KB)
+const LazyDAppKitProvider = lazy(() =>
+    import('@vechain/dapp-kit-react').then((mod) => ({
+        default: mod.DAppKitProvider,
+    })),
+);
 
-export type VechainKitProviderProps = {
-    children: ReactNode;
-    privy?: {
-        appId: string;
-        clientId: string;
-        appearance: {
-            walletList?: WalletListEntry[];
-            accentColor?: `#${string}`;
-            loginMessage: string;
-            logo: string;
-        };
-        embeddedWallets?: {
-            createOnLogin: 'users-without-wallets' | 'all-users' | 'off';
-        };
-        loginMethods: PrivyLoginMethod[];
-    };
-    feeDelegation?: {
-        delegatorUrl?: string;
-        delegateAllTransactions?: boolean;
-        genericDelegatorUrl?: string;
-        b3trTransfers?: {
-            minAmountInEther: number;
-        };
-    };
-    dappKit?: {
-        allowedWallets?: DAppKitWalletSource[];
-        walletConnectOptions?: WalletConnectOptions;
-        usePersistence?: boolean;
-        useFirstDetectedSource?: boolean;
-        logLevel?: LogLevel;
-        themeVariables?: CustomizedStyle;
-        modalParent?: HTMLElement;
-        onSourceClick?: (source?: SourceInfo) => void;
-        v2Api?: {
-            enabled?: boolean;
-            external?: boolean; // whether to disconnect the user on every visit
-        };
-    };
-    loginModalUI?: {
-        logo?: string;
-        description?: string;
-    };
-    loginMethods?: LoginMethodOrder[];
-    darkMode?: boolean;
-    i18n?: I18n;
-    language?: string;
-    network?: {
-        type?: string; // Accepts any string, validated internally to 'main' | 'test' | 'solo'
-        nodeUrl?: string;
-        requireCertificate?: boolean;
-        // TODO: migration check these types
-        connectionCertificate?: {
-            message?: Certificate;
-            options?: CertificateData;
-        };
-    };
-    allowCustomTokens?: boolean;
-    legalDocuments?: LegalDocumentOptions;
-    defaultCurrency?: CURRENCY;
-    theme?: VechainKitThemeConfig;
-    onLanguageChange?: (language: string) => void;
-    onCurrencyChange?: (currency: CURRENCY) => void;
-};
-
-/**
- * Configuration object returned by useVeChainKitConfig hook
- */
-export type VeChainKitConfig = {
-    privy?: VechainKitProviderProps['privy'];
-    privyEcosystemAppIDS: string[];
-    feeDelegation?: VechainKitProviderProps['feeDelegation'];
-    dappKit: VechainKitProviderProps['dappKit'];
-    loginModalUI?: VechainKitProviderProps['loginModalUI'];
-    loginMethods?: VechainKitProviderProps['loginMethods'];
-    darkMode: boolean;
-    i18n?: VechainKitProviderProps['i18n'];
-    network: {
-        type: NETWORK_TYPE;
-        nodeUrl: string;
-        requireCertificate?: boolean;
-        connectionCertificate?: {
-            message?: Certificate;
-            options?: CertificateData;
-        };
-    };
-    /** Current runtime language value. Reflects the active language in VeChainKit. */
-    currentLanguage: string;
-    allowCustomTokens?: boolean;
-    legalDocuments?: VechainKitProviderProps['legalDocuments'];
-    /** Current runtime currency value. Reflects the active currency in VeChainKit. */
-    currentCurrency: CURRENCY;
-    theme?: VechainKitThemeConfig;
-    /** Function to change the language from the host app. Changes will sync to VeChainKit. */
-    setLanguage: (language: string) => void;
-    /** Function to change the currency from the host app. Changes will sync to VeChainKit. */
-    setCurrency: (currency: CURRENCY) => void;
-};
-
-/**
- * Context to store the Privy and DAppKit configs so that they can be used by the hooks/components
- */
-export const VeChainKitContext = createContext<VeChainKitConfig | null>(null);
-
-/**
- * Hook to get the VeChainKit configuration
- *
- * @returns VeChainKitConfig object containing:
- * - `currentLanguage`: Current runtime language value
- * - `currentCurrency`: Current runtime currency value
- * - `setLanguage`: Function to change language from host app
- * - `setCurrency`: Function to change currency from host app
- * - Other configuration values (network, darkMode, etc.)
- *
- * @example
- * ```tsx
- * const config = useVeChainKitConfig();
- * console.log(config.currentLanguage); // 'fr' (current value)
- * console.log(config.currentCurrency); // 'eur' (current value)
- * config.setLanguage('de'); // Change language
- * ```
- */
-export const useVeChainKitConfig = () => {
-    const context = useContext(VeChainKitContext);
-    if (!context) {
-        throw new Error('useVeChainKitConfig must be used within VeChainKit');
-    }
-    return context;
-};
+// Re-export types from ../types for backward compatibility
+// These types are now defined in types/types.ts to avoid circular dependencies
+export type { LegalDocument, LegalDocumentOptions } from '../types';
 
 const validateConfig = (
     props: Omit<VechainKitProviderProps, 'queryClient'>,
@@ -216,12 +96,9 @@ const validateConfig = (
 
     const validatedProps = { ...props };
 
-    // Set default dappKit if not provided
-    if (!validatedProps.dappKit) {
-        validatedProps.dappKit = {
-            allowedWallets: ['veworld'],
-        };
-    }
+    // NOTE: dappKit is now optional - if not provided, DAppKitProvider will not be loaded
+    // This allows apps that only use Privy to avoid bundling @vechain/dapp-kit-react
+    // For backward compatibility, apps that explicitly pass dappKit: {} will get default wallet config
 
     // Check if fee delegation is required based on conditions
     const requiresFeeDelegation =
@@ -343,6 +220,7 @@ export const VeChainKitProvider = (
     const validatedProps = validateConfig(props);
     const {
         children,
+        headless = false,
         privy,
         feeDelegation,
         dappKit: _dappKit,
@@ -373,9 +251,10 @@ export const VeChainKitProvider = (
         nodeUrl,
     };
 
-    const dappKit = _dappKit ?? {
-        allowedWallets: ['veworld'] as DAppKitWalletSource[],
-    };
+    // DAppKit config - now optional; if not provided, DAppKitProvider won't be rendered
+    // Apps using only Privy can omit this to reduce bundle size
+    const dappKit = _dappKit;
+    const isDAppKitConfigured = !!_dappKit;
 
     // Initialize current language from i18n or prop
     const [currentLanguage, setCurrentLanguageState] = useState<string>(() => {
@@ -415,15 +294,16 @@ export const VeChainKitProvider = (
         );
     }, [validatedLoginMethods]);
 
-    let privyAppId: string, privyClientId: string;
-    if (!privy) {
-        // We set dummy values for the appId and clientId so that the PrivyProvider doesn't throw an error
-        privyAppId = 'clzdb5k0b02b9qvzjm6jpknsc';
-        privyClientId = 'client-WY2oy87y6KNrHFnpXuwVsiFMkwPZKTYpExtjvUQuMbCMF';
-    } else {
-        privyAppId = privy.appId;
-        privyClientId = privy.clientId;
-    }
+    // Check if Privy is configured
+    const isPrivyConfigured = !!privy;
+
+    // Check if ecosystem login is enabled in loginMethods
+    // This determines whether we need to load PrivyCrossAppProvider/wagmi
+    const isEcosystemLoginEnabled = useMemo(() => {
+        return validatedLoginMethods?.some(
+            (method) => method.method === 'ecosystem' || method.method === 'vechain',
+        ) ?? false;
+    }, [validatedLoginMethods]);
 
     // Initialize i18n with stored language or prop, and merge translations
     useEffect(() => {
@@ -621,125 +501,176 @@ export const VeChainKitProvider = (
 
     // Apply DAppKit button styles (hover opacity matching loginIn variant)
     useEffect(() => {
-        applyDAppKitButtonStyles();
-    }, []);
+        if (isDAppKitConfigured) {
+            applyDAppKitButtonStyles();
+        }
+    }, [isDAppKitConfigured]);
+
+    // Core content that contains modals and legal documents
+    // In headless mode, skip ModalProvider to avoid loading Chakra UI (~300KB)
+    const coreContent = isPrivyConfigured ? (
+        <PrivyWalletProvider
+            nodeUrl={network.nodeUrl}
+            delegatorUrl={
+                feeDelegation?.delegatorUrl ??
+                feeDelegation?.genericDelegatorUrl
+            }
+            delegateAllTransactions={
+                feeDelegation?.delegateAllTransactions ?? false
+            }
+            genericDelegator={
+                !feeDelegation?.delegatorUrl &&
+                feeDelegation?.genericDelegatorUrl
+                    ? true
+                    : false
+            }
+        >
+            {headless ? (
+                <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+            ) : (
+                <ModalProvider>
+                    <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+                </ModalProvider>
+            )}
+        </PrivyWalletProvider>
+    ) : headless ? (
+        <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+    ) : (
+        <ModalProvider>
+            <LegalDocumentsProvider>{children}</LegalDocumentsProvider>
+        </ModalProvider>
+    );
+
+    // Inner content wrapped by DAppKitProvider or ThorProvider (fallback)
+    const innerContent = isDAppKitConfigured ? (
+        <Suspense fallback={<ThorProvider nodeUrl={network.nodeUrl}>{coreContent}</ThorProvider>}>
+            <LazyDAppKitProvider
+                node={network.nodeUrl}
+                alwaysShowConnect={true}
+                v2Api={{
+                    enabled: dappKit?.v2Api?.enabled ?? true, //defaults to true
+                    external: dappKit?.v2Api?.external ?? false, //defaults to false
+                }}
+                language={currentLanguage}
+                logLevel={dappKit?.logLevel}
+                modalParent={dappKit?.modalParent}
+                onSourceClick={dappKit?.onSourceClick}
+                usePersistence={dappKit?.usePersistence ?? true}
+                allowedWallets={dappKit?.allowedWallets}
+                walletConnectOptions={dappKit?.walletConnectOptions}
+                themeMode={darkMode ? 'DARK' : 'LIGHT'}
+                themeVariables={
+                    dappKit?.themeVariables
+                        ? {
+                              ...dappKitThemeVariables,
+                              ...dappKit.themeVariables,
+                          }
+                        : dappKitThemeVariables
+                }
+            >
+                {coreContent}
+            </LazyDAppKitProvider>
+        </Suspense>
+    ) : (
+        // When DAppKit is not configured, use ThorProvider for Thor client access
+        <ThorProvider nodeUrl={network.nodeUrl}>{coreContent}</ThorProvider>
+    );
+
+    // Conditionally wrap with PrivyProvider only when privy is configured
+    const privyWrappedContent = isPrivyConfigured ? (
+        <Suspense fallback={innerContent}>
+            <LazyPrivyProvider
+                appId={privy.appId}
+                clientId={privy.clientId}
+                config={{
+                    loginMethodsAndOrder: {
+                        primary: (privy.loginMethods.slice(0, 4) ??
+                            []) as NonEmptyArray<LoginMethodOrderOption>,
+                        overflow: (privy.loginMethods.slice(4) ??
+                            []) as Array<LoginMethodOrderOption>,
+                    },
+                    externalWallets: {
+                        walletConnect: {
+                            enabled: false,
+                        },
+                    },
+                    appearance: {
+                        theme: darkMode ? 'dark' : 'light',
+                        accentColor:
+                            privy.appearance.accentColor ??
+                            (tokens.buttons.primaryButton.bg?.startsWith('#')
+                                ? (tokens.buttons.primaryButton
+                                      .bg as `#${string}`)
+                                : darkMode
+                                ? '#3182CE'
+                                : '#2B6CB0'),
+                        loginMessage: privy.appearance.loginMessage,
+                        logo: privy.appearance.logo,
+                    },
+                    embeddedWallets: {
+                        createOnLogin:
+                            privy.embeddedWallets?.createOnLogin ?? 'all-users',
+                    },
+                    passkeys: {
+                        shouldUnlinkOnUnenrollMfa: false,
+                    },
+                }}
+            >
+                {innerContent}
+            </LazyPrivyProvider>
+        </Suspense>
+    ) : (
+        innerContent
+    );
+
+    // Context value for the provider
+    const contextValue = {
+        privy,
+        privyEcosystemAppIDS: allowedEcosystemApps,
+        feeDelegation,
+        dappKit,
+        loginModalUI,
+        loginMethods: validatedLoginMethods,
+        darkMode,
+        headless,
+        i18n: i18nConfig,
+        currentLanguage,
+        network,
+        allowCustomTokens,
+        legalDocuments,
+        currentCurrency,
+        theme: customTheme,
+        setLanguage,
+        setCurrency,
+    };
+
+    // Core content without ecosystem provider
+    const coreProviderContent = (
+        <VeChainKitContext.Provider value={contextValue}>
+            {privyWrappedContent}
+        </VeChainKitContext.Provider>
+    );
+
+    // Conditionally wrap with PrivyCrossAppProvider only when ecosystem login is enabled
+    // This avoids bundling wagmi (~150KB) for apps that don't use ecosystem login
+    const ecosystemWrappedContent = isEcosystemLoginEnabled ? (
+        <Suspense fallback={coreProviderContent}>
+            <LazyPrivyCrossAppProvider privyEcosystemAppIDS={allowedEcosystemApps}>
+                {coreProviderContent}
+            </LazyPrivyCrossAppProvider>
+        </Suspense>
+    ) : (
+        coreProviderContent
+    );
 
     return (
         <EnsureQueryClient>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <PrivyCrossAppProvider privyEcosystemAppIDS={allowedEcosystemApps}>
-                <VeChainKitContext.Provider
-                    value={{
-                        privy,
-                        privyEcosystemAppIDS: allowedEcosystemApps,
-                        feeDelegation,
-                        dappKit,
-                        loginModalUI,
-                        loginMethods: validatedLoginMethods,
-                        darkMode,
-                        i18n: i18nConfig,
-                        currentLanguage,
-                        network,
-                        allowCustomTokens,
-                        legalDocuments,
-                        currentCurrency,
-                        theme: customTheme,
-                        setLanguage,
-                        setCurrency,
-                    }}
-                >
-                    <PrivyProvider
-                        appId={privyAppId}
-                        clientId={privyClientId}
-                        config={{
-                            // loginMethods: privy?.loginMethods,
-                            loginMethodsAndOrder: {
-                                primary: (privy?.loginMethods.slice(0, 4) ??
-                                    []) as NonEmptyArray<LoginMethodOrderOption>,
-                                overflow: (privy?.loginMethods.slice(4) ??
-                                    []) as Array<LoginMethodOrderOption>,
-                            },
-                            externalWallets: {
-                                walletConnect: {
-                                    enabled: false,
-                                },
-                            },
-                            appearance: {
-                                theme: darkMode ? 'dark' : 'light',
-                                accentColor:
-                                    privy?.appearance.accentColor ??
-                                    (tokens.buttons.primaryButton.bg?.startsWith(
-                                        '#',
-                                    )
-                                        ? (tokens.buttons.primaryButton
-                                              .bg as `#${string}`)
-                                        : darkMode
-                                        ? '#3182CE'
-                                        : '#2B6CB0'),
-                                loginMessage: privy?.appearance.loginMessage,
-                                logo: privy?.appearance.logo,
-                            },
-                            embeddedWallets: {
-                                createOnLogin:
-                                    privy?.embeddedWallets?.createOnLogin ??
-                                    'all-users',
-                            },
-                            passkeys: {
-                                shouldUnlinkOnUnenrollMfa: false,
-                            },
-                        }}
-                    >
-                        <DAppKitProvider
-                            node={network.nodeUrl}
-                            alwaysShowConnect={true}
-                            v2Api={{
-                                enabled: dappKit.v2Api?.enabled ?? true, //defaults to true
-                                external: dappKit.v2Api?.external ?? false, //defaults to false
-                            }}
-                            language={currentLanguage}
-                            logLevel={dappKit.logLevel}
-                            modalParent={dappKit.modalParent}
-                            onSourceClick={dappKit.onSourceClick}
-                            usePersistence={dappKit.usePersistence ?? true}
-                            allowedWallets={dappKit.allowedWallets}
-                            walletConnectOptions={dappKit.walletConnectOptions}
-                            themeMode={darkMode ? 'DARK' : 'LIGHT'}
-                            themeVariables={
-                                dappKit.themeVariables
-                                    ? {
-                                          ...dappKitThemeVariables,
-                                          ...dappKit.themeVariables,
-                                      }
-                                    : dappKitThemeVariables
-                            }
-                        >
-                            <PrivyWalletProvider
-                                nodeUrl={network.nodeUrl}
-                                delegatorUrl={
-                                    feeDelegation?.delegatorUrl ??
-                                    feeDelegation?.genericDelegatorUrl
-                                }
-                                delegateAllTransactions={
-                                    feeDelegation?.delegateAllTransactions ??
-                                    false
-                                }
-                                genericDelegator={
-                                    !feeDelegation?.delegatorUrl &&
-                                    feeDelegation?.genericDelegatorUrl
-                                        ? true
-                                        : false
-                                }
-                            >
-                                <ModalProvider>
-                                    <LegalDocumentsProvider>
-                                        {children}
-                                    </LegalDocumentsProvider>
-                                </ModalProvider>
-                            </PrivyWalletProvider>
-                        </DAppKitProvider>
-                    </PrivyProvider>
-                </VeChainKitContext.Provider>
-            </PrivyCrossAppProvider>
+            {process.env.NODE_ENV === 'development' && (
+                <Suspense fallback={null}>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </Suspense>
+            )}
+            {ecosystemWrappedContent}
         </EnsureQueryClient>
     );
 };

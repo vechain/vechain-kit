@@ -1,9 +1,10 @@
-import { useVeChainKitConfig } from '@/providers';
+// Direct import to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { Button, Link, Text, VStack, Box } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useMemo } from 'react';
-import { TransactionStatusErrorType } from '@/types';
-import { getConfig } from '@/config';
+import type { TransactionStatusErrorType } from '../../types';
+import { getConfig } from '../../config';
 import { TransactionReceipt } from '@vechain/sdk-network';
 
 export type TransactionButtonAndStatusProps = {

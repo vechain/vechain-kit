@@ -14,7 +14,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import {
     Interface,
     namehash,
@@ -22,9 +22,9 @@ import {
     zeroPadValue,
     toBeHex,
 } from 'ethers';
-import { NETWORK_TYPE } from '@/config/network';
-import { getConfig } from '@/config';
-import { convertUriToUrl } from '@/utils/uri';
+import { NETWORK_TYPE } from '../../../config/network';
+import { getConfig } from '../../../config';
+import { convertUriToUrl } from '../../../utils/uri';
 
 const nameInterface = new Interface([
     'function resolver(bytes32 node) returns (address resolverAddress)',

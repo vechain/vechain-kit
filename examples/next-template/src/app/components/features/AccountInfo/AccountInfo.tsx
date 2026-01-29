@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Heading, Text, Spinner } from '@chakra-ui/react';
-import { useWallet, useGetB3trBalance } from '@vechain/vechain-kit';
+import { useWallet, useGetB3trBalance } from '@vechain/vechain-kit/hooks';
 
 export function AccountInfo() {
     const { smartAccount, connectedWallet } = useWallet();

@@ -1,7 +1,7 @@
 'use client';
 
-import { useWallet } from '@/hooks';
-import { BaseModal } from '@/components/common';
+import { useWallet } from '../../hooks';
+import { BaseModal } from '../common';
 import {
     AccountMainContent,
     SettingsContent,
@@ -33,9 +33,11 @@ import { SuccessfulOperationContent } from './Contents/SuccessfulOperation/Succe
 import { FailedOperationContent } from './Contents/FailedOperation/FailedOperationContent';
 import { ManageCustomTokenContent } from './Contents/Assets/ManageCustomTokenContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
-import { useModal } from '@/providers/ModalProvider';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal } from '../../providers/ModalContext';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
-import { useVechainKitThemeConfig } from '@/providers';
+// Import directly to avoid circular dependency with providers barrel
+import { useVechainKitThemeConfig } from '../../providers/VechainKitThemeProvider';
 import { useEffect } from 'react';
 
 type Props = {

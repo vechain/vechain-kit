@@ -1,5 +1,6 @@
-import { getConfig } from '@/config';
-import { useVeChainKitConfig } from '@/providers';
+import { getConfig } from '../../config';
+// Direct import to avoid circular dependency (providers barrel re-exports hooks)
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 
 export const useGetNodeUrl = () => {
     const { network } = useVeChainKitConfig();

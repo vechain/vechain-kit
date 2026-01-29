@@ -12,21 +12,22 @@ import {
     VStack,
     useToken,
 } from '@chakra-ui/react';
-import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
+import { useWallet, useTokensWithValues, TokenWithValue } from '../../../../hooks';
 import {
     AssetButton,
     ModalBackButton,
     StickyHeaderContainer,
-} from '@/components/common';
-import { useVeChainKitConfig } from '@/providers';
+} from '../../../common';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { useTranslation } from 'react-i18next';
 import { LuPencil } from 'react-icons/lu';
 import { AccountModalContentTypes } from '../../Types';
 import { LuSearch } from 'react-icons/lu';
 import { useState } from 'react';
-import { useCurrency } from '@/hooks';
-import { SupportedCurrency } from '@/utils/currencyUtils';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useCurrency } from '../../../../hooks';
+import { SupportedCurrency } from '../../../../utils/currencyUtils';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<

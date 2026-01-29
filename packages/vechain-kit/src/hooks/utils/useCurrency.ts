@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import { useVeChainKitConfig } from '@/providers';
-import { CURRENCY } from '@/types';
-import { setLocalStorageItem } from '@/utils/ssrUtils';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import type { CURRENCY } from '../../types';
+import { setLocalStorageItem } from '../../utils/ssrUtils';
 
 const STORAGE_KEY = 'vechain_kit_currency';
 const allCurrencies: CURRENCY[] = ['usd', 'eur', 'gbp'];

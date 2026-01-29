@@ -14,14 +14,15 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
-import { CURRENCY, CURRENCY_SYMBOLS } from '@/types';
-import { useCurrency } from '@/hooks';
+import type { CURRENCY } from '../../../../types';
+import { CURRENCY_SYMBOLS } from '../../../../types';
+import { useCurrency } from '../../../../hooks';
 import { LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
-import { setLocalStorageItem } from '@/utils/ssrUtils';
+import { setLocalStorageItem } from '../../../../utils/ssrUtils';
 
 export type ChangeCurrencyContentProps = {
     setCurrentContent: React.Dispatch<

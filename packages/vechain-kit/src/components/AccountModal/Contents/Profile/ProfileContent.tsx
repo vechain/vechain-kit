@@ -12,22 +12,23 @@ import {
 import {
     useSwitchWallet,
     useWallet,
-    useDAppKitWallet,
     useTotalBalance,
     LocalStorageKey,
     useLocalStorage,
-} from '@/hooks';
-import { FeatureAnnouncementCard } from '@/components';
+} from '../../../../hooks';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../../hooks/api/dappkit/useOptionalDAppKitWallet';
+import { FeatureAnnouncementCard } from '../../Components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import {
     StickyHeaderContainer,
     WalletSwitchFeedback,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
 import { LuArrowLeftRight, LuLogOut, LuWalletCards } from 'react-icons/lu';
-import { ModalSettingsButton } from '@/components/common/ModalSettingsButton';
-import { AssetIcons } from '@/components/WalletButton/AssetIcons';
+import { ModalSettingsButton } from '../../../common/ModalSettingsButton';
+import { AssetIcons } from '../../../WalletButton/AssetIcons';
 
 export type ProfileContentProps = {
     setCurrentContent: React.Dispatch<
@@ -45,7 +46,7 @@ export const ProfileContent = ({
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { isSwitchWalletEnabled } = useDAppKitWallet();
+    const { isSwitchWalletEnabled } = useOptionalDAppKitWallet();
     const { hasAnyBalance, formattedBalance } = useTotalBalance({
         address: account?.address,
     });

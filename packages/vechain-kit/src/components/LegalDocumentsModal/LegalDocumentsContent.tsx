@@ -1,6 +1,9 @@
-import { StickyHeaderContainer } from '@/components/common';
-import { useLegalDocuments, useVeChainKitConfig } from '@/providers';
-import { EnrichedLegalDocument } from '@/types';
+import { StickyHeaderContainer } from '../common';
+// Import from LegalDocumentsContext to avoid circular dependency with LegalDocumentsProvider
+import { useLegalDocuments } from '../../providers/LegalDocumentsContext';
+// Import from VeChainKitContext to avoid circular dependency chain
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import type { EnrichedLegalDocument } from '../../types';
 import {
     Button,
     ModalBody,

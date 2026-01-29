@@ -13,8 +13,8 @@ import {
 } from '@chakra-ui/react';
 import { LuExternalLink, LuUserCog, LuShieldCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache } from '@/hooks';
-import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '@/constants';
+import { useCrossAppConnectionCache } from '../../../hooks';
+import { VEBETTERDAO_GOVERNANCE_BASE_URL } from '../../../constants';
 
 export const CrossAppConnectionSecurityCard = () => {
     const { t } = useTranslation();

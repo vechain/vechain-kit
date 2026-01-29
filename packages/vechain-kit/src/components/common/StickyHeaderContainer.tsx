@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { useEffect, useState, useRef, createContext, useContext } from 'react';
-import { useVechainKitThemeConfig } from '@/providers';
+// Direct import to avoid circular dependency through barrel exports
+import { useVechainKitThemeConfig } from '../../providers/VechainKitThemeProvider';
 
 type Props = {
     children: React.ReactNode;

@@ -7,7 +7,8 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { useVechainKitThemeConfig } from '@/providers';
+// Direct import to avoid circular dependency through barrel exports
+import { useVechainKitThemeConfig } from '../../providers/VechainKitThemeProvider';
 import { BaseBottomSheet } from './BaseBottomSheet';
 
 type BaseModalProps = {

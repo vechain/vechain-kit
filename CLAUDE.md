@@ -84,6 +84,47 @@ This explains the many if/else conditions when signing messages or transactions.
 
 `@/*` → `src/*`, `@hooks` → `src/hooks`, `@components` → `src/components`, `@utils` → `src/utils`
 
+### Subpath Exports (Tree-Shaking)
+
+VeChain Kit supports subpath imports for better tree-shaking and smaller bundle sizes. Instead of importing everything from the main entry point, import only what you need:
+
+**Available subpaths:**
+- `@vechain/vechain-kit` - Full library (backwards compatible)
+- `@vechain/vechain-kit/hooks` - React hooks only
+- `@vechain/vechain-kit/components` - UI components only
+- `@vechain/vechain-kit/providers` - Context providers only
+- `@vechain/vechain-kit/utils` - Utility functions only
+- `@vechain/vechain-kit/assets` - Icons and images only
+
+**Migration examples:**
+
+```typescript
+// Before (imports entire library)
+import { useWallet, useBalance, WalletButton } from '@vechain/vechain-kit';
+
+// After (tree-shakeable imports)
+import { useWallet, useBalance } from '@vechain/vechain-kit/hooks';
+import { WalletButton } from '@vechain/vechain-kit/components';
+```
+
+```typescript
+// Before
+import { VeChainKitProvider } from '@vechain/vechain-kit';
+
+// After
+import { VeChainKitProvider } from '@vechain/vechain-kit/providers';
+```
+
+```typescript
+// Before
+import { formatBalance } from '@vechain/vechain-kit';
+
+// After
+import { formatBalance } from '@vechain/vechain-kit/utils';
+```
+
+**Note:** This is a non-breaking change. The main entry point (`@vechain/vechain-kit`) continues to export everything for backwards compatibility. However, using subpath imports is recommended for new code to enable better tree-shaking when your application is bundled.
+
 ## Best Practices
 
 ### Type Safety & Contract Calls

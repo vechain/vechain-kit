@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { GasTokenType } from '@/types';
-import { useSmartAccount, useWallet, estimateGas } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
+import type { GasTokenType } from '../../types';
+// Direct imports to avoid circular dependency with hooks barrel
+import { useSmartAccount } from '../thor/smartAccounts/useSmartAccount';
+import { useWallet } from '../api/wallet/useWallet';
+import { estimateGas } from './useGenericDelegator';
+// Direct import to avoid circular dependency (providers barrel re-exports hooks)
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { TransactionClause } from '@vechain/sdk-core';
 
 export interface UseEstimateAllTokensParams {

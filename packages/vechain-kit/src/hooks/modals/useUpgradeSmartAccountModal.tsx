@@ -1,5 +1,7 @@
-import { UpgradeSmartAccountModalStyle } from '@/components';
-import { useModal } from '@/providers/ModalProvider';
+// Import from types/modal to avoid circular dependency with components
+import type { UpgradeSmartAccountModalStyle } from '../../types/modal';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal } from '../../providers/ModalContext';
 import { ReactNode } from 'react';
 
 export const useUpgradeSmartAccountModal = (

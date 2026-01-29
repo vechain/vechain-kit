@@ -8,11 +8,13 @@ import {
     Text,
     useToken,
 } from '@chakra-ui/react';
-import { useVeChainKitConfig } from '@/providers';
-import { ModalFAQButton, StickyHeaderContainer } from '@/components/common';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+// Direct import to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { ModalFAQButton, StickyHeaderContainer } from '../../common';
+// Import from types/modal to avoid circular dependency with ConnectModal
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 import React, { useEffect } from 'react';
-import { useFetchAppInfo, useWallet } from '@/hooks';
+import { useFetchAppInfo, useWallet } from '../../../hooks';
 import { useTranslation } from 'react-i18next';
 import { ConnectionOptionsStack } from '../Components/ConnectionOptionsStack';
 import { EcosystemButton } from '../Components/EcosystemButton';

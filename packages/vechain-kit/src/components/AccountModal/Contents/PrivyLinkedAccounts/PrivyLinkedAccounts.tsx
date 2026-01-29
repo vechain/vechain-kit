@@ -31,16 +31,18 @@ import {
     LuFingerprint,
 } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
-import { ActionButton } from '@/components';
+// Import directly to avoid circular dependency with components barrel
+import { ActionButton } from '../../Components/ActionButton';
 import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
-import { useVeChainKitConfig } from '@/providers';
-import { humanAddress } from '@/utils';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import { humanAddress } from '../../../../utils';
 
 type ConfirmUnlinkProps = {
     accountType: string;

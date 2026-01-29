@@ -1,5 +1,5 @@
 import { Card, CardBody, Image, Text, VStack, Box } from '@chakra-ui/react';
-import { notFoundImage } from '@/utils';
+import { notFoundImage } from '../../../../../utils';
 import { CategoryLabel, AllowedCategories } from './CategoryLabel';
 
 export type SharedAppCardProps = {

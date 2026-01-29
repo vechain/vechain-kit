@@ -7,9 +7,13 @@ import { VeChainLoginButton } from './VeChainLoginButton';
 import { PasskeyLoginButton } from './PasskeyLoginButton';
 import { DappKitButton } from './DappKitButton';
 import { PrivyButton } from './PrivyButton';
-import { useLoginModalContent, usePrivy } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+import { useLoginModalContent } from '../../../hooks';
+// Use optional hook to handle missing PrivyProvider gracefully
+import { useOptionalPrivy } from '../../../hooks/api/privy/useOptionalPrivy';
+// Direct import to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+// Import from types/modal to avoid circular dependency with ConnectModal
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 import React from 'react';
 
 type Props = {
@@ -21,8 +25,8 @@ type Props = {
 export const ConnectionOptionsStack = ({ setCurrentContent }: Props) => {
     const { loginMethods, darkMode: isDark } = useVeChainKitConfig();
 
-    // View more login
-    const { login: viewMoreLogin } = usePrivy();
+    // View more login - use optional hook for when Privy is not configured
+    const { login: viewMoreLogin } = useOptionalPrivy();
 
     const {
         showGoogleLogin,

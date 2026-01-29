@@ -3,12 +3,15 @@ import { encodeFunctionData } from "viem";
 import { ethers } from "ethers";
 import { EnhancedClause, ExecuteWithAuthorizationSignData, ExecuteBatchWithAuthorizationSignData } from "@/types";
 import { Clause, Address, ABIContract, TransactionClause } from '@vechain/sdk-core';
-import { getConfig } from '@/config';
+import { getConfig } from '../../config';
 import { usePrivy } from '@privy-io/react-auth';
-import { NETWORK_TYPE } from '@/config/network';
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
-import { useWallet, SmartAccountReturnType, useGetChainId } from "@/hooks";
-import { useVeChainKitConfig } from "@/providers";
+import { NETWORK_TYPE } from '../../config/network';
+import { useOptionalPrivyCrossAppSdk } from '../api/privy/useOptionalPrivyCrossAppSdk';
+// Direct imports to avoid circular dependency with hooks/index.ts and providers/index.ts
+import { useWallet } from '../api/wallet/useWallet';
+import type { SmartAccountReturnType } from '../thor/smartAccounts/useSmartAccount';
+import { useGetChainId } from '../thor/blocks/useGetChainId';
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { SocialLoginSmartAccount__factory, SocialLoginSmartAccountFactory__factory } from "@vechain/vechain-contract-types";
 
 export interface BuildClausesParams {
@@ -139,7 +142,8 @@ export function buildSingleAuthorizationTypedData({
 
 function setUpBuildClausesParams() {
     const { connection, connectedWallet } = useWallet();
-    const { signTypedData: signTypedDataWithCrossApp } = usePrivyCrossAppSdk();
+    // Use optional hook that handles missing provider gracefully
+    const { signTypedData: signTypedDataWithCrossApp } = useOptionalPrivyCrossAppSdk();
     const { signTypedData: signTypedDataPrivy } = usePrivy();
     const { network } = useVeChainKitConfig();
     const { data: chainId } = useGetChainId();

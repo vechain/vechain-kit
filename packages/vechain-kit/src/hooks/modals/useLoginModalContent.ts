@@ -1,5 +1,6 @@
-import { useVeChainKitConfig } from '@/providers';
-import { VECHAIN_PRIVY_APP_ID } from '@/utils';
+// Direct import to avoid circular dependency (providers barrel re-exports hooks)
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import { VECHAIN_PRIVY_APP_ID } from '../../utils';
 import { useMemo } from 'react';
 
 type LoginModalContentConfig = {

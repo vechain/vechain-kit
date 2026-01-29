@@ -13,11 +13,11 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { useTranslation } from 'react-i18next';
 import { AccountModalContentTypes } from '../../Types';
-import { useGasTokenSelection } from '@/hooks';
-import { GasTokenType } from '@/types/gasToken';
+import { useGasTokenSelection } from '../../../../hooks';
+import type { GasTokenType } from '../../../../types/gasToken';
 import { GasTokenDragList } from './GasTokenDragList';
 import { useCallback } from 'react';
 

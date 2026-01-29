@@ -9,13 +9,14 @@ import {
     useToken,
     Box,
 } from '@chakra-ui/react';
-import { AccountAvatar } from '@/components/common';
-import { humanAddress, humanDomain } from '@/utils';
-import { useTotalBalance, useWalletMetadata } from '@/hooks';
-import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
+import { AccountAvatar } from '../../../../common';
+import { humanAddress, humanDomain } from '../../../../../utils';
+import { useTotalBalance, useWalletMetadata } from '../../../../../hooks';
+import { StoredWallet } from '../../../../../hooks/api/wallet/useWalletStorage';
 import { LuTrash2, LuCheck } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitContext';
 
 type Props = {
     wallet: StoredWallet;

@@ -9,19 +9,23 @@ import {
     IconButton,
 } from '@chakra-ui/react';
 import { humanAddress, humanDomain } from '../../../utils';
-import { copyToClipboard } from '@/utils/ssrUtils';
-import { Wallet } from '@/types';
+import { copyToClipboard } from '../../../utils/ssrUtils';
+import type { Wallet } from '../../../types';
 import {
     LuChevronRight,
     LuCheck,
     LuCopy,
     LuArrowLeftRight,
 } from 'react-icons/lu';
-import { AccountAvatar } from '@/components/common';
+import { AccountAvatar } from '../../common';
 import { useState } from 'react';
 import { AccountModalContentTypes } from '../Types/Types';
 import { useTranslation } from 'react-i18next';
-import { useWallet, useSwitchWallet, useDAppKitWallet } from '@/hooks';
+// Direct imports to avoid circular dependency with hooks barrel
+import { useWallet } from '../../../hooks/api/wallet/useWallet';
+import { useSwitchWallet } from '../../../hooks/api/wallet/useSwitchWallet';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../hooks/api/dappkit/useOptionalDAppKitWallet';
 
 type Props = {
     wallet: Wallet;
@@ -47,7 +51,7 @@ export const AccountSelector = ({
     const { t } = useTranslation();
     const { connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { isSwitchWalletEnabled } = useDAppKitWallet();
+    const { isSwitchWalletEnabled } = useOptionalDAppKitWallet();
 
     const [copied, setCopied] = useState(false);
 

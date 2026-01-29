@@ -1,9 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useWallet } from '../../api/wallet/useWallet';
-import {
-    getSmartAccountQueryKey,
-    getIsDeployedQueryKey,
-} from '@/hooks';
+// Direct imports to avoid circular dependencies
+import { getSmartAccountQueryKey } from './useSmartAccount';
+import { getIsDeployedQueryKey } from './useIsSmartAccountDeployed';
 
 /**
  * Hook to refresh smart account-related queries

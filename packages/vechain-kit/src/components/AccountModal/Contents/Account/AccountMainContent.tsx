@@ -10,18 +10,19 @@ import {
     StickyHeaderContainer,
     ScrollToTopWrapper,
     WalletSwitchFeedback,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import {
     AccountSelector,
     BalanceSection,
-    ModalBackButton,
     QuickActionsSection,
-} from '@/components';
-import { Wallet } from '@/types';
+} from '../../Components';
+import { ModalBackButton } from '../../../common';
+import type { Wallet } from '../../../../types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
-import { useAccountModalOptions } from '@/hooks';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import { useAccountModalOptions } from '../../../../hooks';
 
 type Props = {
     setCurrentContent: React.Dispatch<

@@ -19,10 +19,13 @@ import {
     LuPencil,
     LuLogOut,
 } from 'react-icons/lu';
-import { humanAddress } from '@/utils';
-import { copyToClipboard as safeCopyToClipboard } from '@/utils/ssrUtils';
-import { Wallet } from '@/types';
-import { AccountModalContentTypes } from '@/components/AccountModal/Types';
+import { humanAddress } from '../../utils';
+import { copyToClipboard as safeCopyToClipboard } from '../../utils/ssrUtils';
+import type { Wallet } from '../../types';
+// Use a generic type to avoid circular dependency with AccountModal/Types
+// The full AccountModalContentTypes is complex and imports from Contents which imports from common
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AccountModalContentTypes = any;
 import { useTranslation } from 'react-i18next';
 
 type Props = {

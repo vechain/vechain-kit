@@ -9,11 +9,11 @@ import {
     ModalFooter,
     useToken,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { LuSquareUser } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 export type ChooseNameContentProps = {
     setCurrentContent: React.Dispatch<

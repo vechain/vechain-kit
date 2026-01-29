@@ -8,9 +8,9 @@ import {
     ModalBackButton,
     ScrollToTopWrapper,
     StickyHeaderContainer,
-} from '@/components/common';
+} from '../../../common';
 import { useTranslation } from 'react-i18next';
-import { useCrossAppConnectionCache } from '@/hooks';
+import { useCrossAppConnectionCache } from '../../../../hooks';
 import { ConnectionCard, WalletSecuredBy } from './Components';
 
 type Props = {

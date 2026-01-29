@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { LuCircleX } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { Notification } from '@/hooks/notifications/types';
+import { Notification } from '../../../../../hooks/notifications/types';
 
 type Props = {
     notification: Notification;

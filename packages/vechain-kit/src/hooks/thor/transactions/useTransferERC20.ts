@@ -1,13 +1,11 @@
-import {
-    UseSendTransactionReturnValue,
-    useRefreshBalances,
-    useSendTransaction,
-} from '@/hooks';
+// Direct imports to avoid circular dependencies
+import { useSendTransaction, UseSendTransactionReturnValue } from './useSendTransaction';
+import { useRefreshBalances } from '../../api/wallet/useRefreshBalances';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { useMemo } from 'react';
-import { humanAddress, isValidAddress } from '@/utils';
+import { humanAddress, isValidAddress } from '../../../utils';
 import { parseEther } from 'viem';
-import { EnhancedClause } from '@/types';
+import type { EnhancedClause } from '../../../types';
 
 type useTransferERC20Props = {
     fromAddress: string;

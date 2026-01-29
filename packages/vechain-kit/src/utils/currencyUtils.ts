@@ -1,4 +1,4 @@
-import { ExchangeRates } from '@/hooks/api/wallet/useTokenPrices';
+import { ExchangeRates } from '../hooks/api/wallet/useTokenPrices';
 import i18n, { bcp47LanguageCodes } from '@i18n';
 
 export type SupportedCurrency = 'usd' | 'eur' | 'gbp';

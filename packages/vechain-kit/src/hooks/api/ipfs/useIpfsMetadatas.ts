@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 import { getIpfsMetadata, getIpfsMetadataQueryKey } from './useIpfsMetadata';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 /**
  * Fetches metadatas from IPFS for given URIs

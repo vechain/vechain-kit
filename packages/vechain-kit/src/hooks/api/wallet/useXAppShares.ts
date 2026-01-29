@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { XAllocationPool__factory } from '@vechain/vechain-contract-types';
-import { getConfig } from '@/config';
-import { useThor } from '@vechain/dapp-kit-react';
-import { useVeChainKitConfig } from '@/providers';
-import { executeMultipleClausesCall } from '@/utils';
+import { getConfig } from '../../../config';
+import { useOptionalThor } from '../dappkit/useOptionalThor';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { executeMultipleClausesCall } from '../../../utils';
 
 const abi = XAllocationPool__factory.abi;
 const method = 'getAppShares' as const;
@@ -27,7 +27,8 @@ export const getXAppsSharesQueryKey = (roundId?: number | string) => [
  *
  */
 export const useXAppsShares = (apps: string[], roundId?: string) => {
-    const thor = useThor();
+    // Use optional Thor hook that handles missing provider gracefully
+    const thor = useOptionalThor();
     const { network } = useVeChainKitConfig();
 
     const address = getConfig(network.type)
@@ -36,6 +37,7 @@ export const useXAppsShares = (apps: string[], roundId?: string) => {
     return useQuery({
         queryKey: getXAppsSharesQueryKey(roundId),
         queryFn: async () => {
+            if (!thor) throw new Error('Thor client not available');
             const shares = await executeMultipleClausesCall({
                 thor,
                 calls: apps.map(
@@ -57,6 +59,6 @@ export const useXAppsShares = (apps: string[], roundId?: string) => {
                 };
             });
         },
-        enabled: !!roundId && !!apps.length,
+        enabled: !!thor && !!roundId && !!apps.length,
     });
 };

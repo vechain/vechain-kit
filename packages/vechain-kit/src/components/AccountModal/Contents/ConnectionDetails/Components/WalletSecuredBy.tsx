@@ -1,6 +1,7 @@
-import { PrivyLogo, VechainLogo } from '@/assets';
-import { useCrossAppConnectionCache, useWallet } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
+import { PrivyLogo, VechainLogo } from '../../../../../assets';
+import { useCrossAppConnectionCache, useWallet } from '../../../../../hooks';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitContext';
 import { HStack, Icon, Image, Text, VStack, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { LuMinus } from 'react-icons/lu';

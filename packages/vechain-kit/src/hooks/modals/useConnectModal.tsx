@@ -1,8 +1,10 @@
-import { useVeChainKitConfig } from '@/providers';
-import { useModal } from '@/providers/ModalProvider';
+// Import from specific files to avoid circular dependencies
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal } from '../../providers/ModalContext';
 import { ReactNode } from 'react';
-import { useDAppKitWalletModal } from '..';
-import { ConnectModalContentsTypes } from '@/components';
+import { useOptionalDAppKitWalletModal } from '../api/dappkit/useOptionalDAppKitWalletModal';
+import type { ConnectModalContentsTypes } from '../../types/modal';
 
 export const useConnectModal = () => {
     const { loginMethods } = useVeChainKitConfig();
@@ -12,7 +14,8 @@ export const useConnectModal = () => {
     const { openConnectModal, closeConnectModal, isConnectModalOpen } =
         useModal();
 
-    const { open: openDappKit, close: closeDappKit } = useDAppKitWalletModal();
+    // Use optional DAppKit wallet modal hook that handles missing provider gracefully
+    const { open: openDappKit, close: closeDappKit } = useOptionalDAppKitWalletModal();
 
     return {
         open: hasOnlyDappKit

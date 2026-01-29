@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useGetNodeUrl } from '@/hooks';
+// Direct import to avoid circular dependency
+import { useGetNodeUrl } from '../../utils/useGetNodeUrl';
 import { ThorClient } from '@vechain/sdk-network';
 import { Address } from '@vechain/sdk-core';
 

@@ -16,29 +16,30 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components';
+import { ModalBackButton, StickyHeaderContainer } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { LuChevronDown } from 'react-icons/lu';
 import { SelectTokenContent } from './SelectTokenContent';
 import { parseEther } from 'ethers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
 import { useForm } from 'react-hook-form';
 import {
     useVechainDomain,
     TokenWithValue,
     useTokensWithValues,
     useWallet,
-} from '@/hooks';
-import { useCurrency, useTokenPrices } from '@/hooks';
+} from '../../../../hooks';
+import { useCurrency, useTokenPrices } from '../../../../hooks';
 import {
     formatCompactCurrency,
     SupportedCurrency,
     convertToSelectedCurrency,
-} from '@/utils/currencyUtils';
+} from '../../../../utils/currencyUtils';
 import { ens_normalize } from '@adraffy/ens-normalize';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 export type SendTokenContentProps = {
     setCurrentContent: React.Dispatch<

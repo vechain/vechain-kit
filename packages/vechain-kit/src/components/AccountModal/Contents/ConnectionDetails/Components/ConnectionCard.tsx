@@ -1,11 +1,12 @@
-import { getConfig } from '@/config';
+import { getConfig } from '../../../../../config';
 import {
     useFetchAppInfo,
     useWallet,
     useFetchPrivyStatus,
     useGetAccountVersion,
-} from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
+} from '../../../../../hooks';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitContext';
 import {
     VStack,
     Text,
@@ -17,10 +18,11 @@ import {
     Divider,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import { CrossAppConnectionCache } from '@/types';
-import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
+import type { CrossAppConnectionCache } from '../../../../../types';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../../../hooks/api/dappkit/useOptionalDAppKitWallet';
 import packageJson from '../../../../../../package.json';
-import { humanAddress } from '@/utils';
+import { humanAddress } from '../../../../../utils';
 import { LuCheck, LuCopy } from 'react-icons/lu';
 
 // Get DAppKit version from package.json (this is the version constraint, not the installed version)
@@ -40,7 +42,7 @@ type Props = {
 export const ConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
     const { connection, smartAccount, connectedWallet } = useWallet();
-    const { source: sourceDappKit } = useWalletDappKit();
+    const { source: sourceDappKit } = useOptionalDAppKitWallet();
     const { privy, network } = useVeChainKitConfig();
 
     const privyAppId = privy?.appId;

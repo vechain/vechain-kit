@@ -1,8 +1,9 @@
-import { useWallet } from '@/hooks';
+import { useWallet } from '../../hooks';
 import { Button, HStack, useMediaQuery } from '@chakra-ui/react';
 
 import { AccountAvatar } from '../common';
-import { WalletButtonProps } from './WalletButton';
+// Import from types.ts to avoid circular dependency with WalletButton
+import type { WalletButtonProps } from './types';
 import { WalletDisplay } from './WalletDisplay';
 
 type ConnectedWalletProps = WalletButtonProps & {

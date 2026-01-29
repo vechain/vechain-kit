@@ -2,7 +2,7 @@
 
 import { Box, Button, Heading, HStack } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/react';
-import { useAccountModal } from '@vechain/vechain-kit';
+import { useAccountModal } from '@vechain/vechain-kit/hooks';
 
 export function UIControls() {
     const { toggleColorMode, colorMode } = useColorMode();

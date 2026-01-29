@@ -14,8 +14,9 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+// Direct import to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import { getConfig } from '../../config';
 import {
     LuExternalLink,
     LuCircleCheck,
@@ -24,7 +25,8 @@ import {
 } from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
 import { StickyHeaderContainer } from '../common';
-import { TransactionModalProps } from './TransactionModal';
+// Import from types.ts to avoid circular dependency with TransactionModal
+import type { TransactionModalProps } from './types';
 
 type StatusConfig = {
     title: ReactNode;

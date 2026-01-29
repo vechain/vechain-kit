@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORK_TYPE } from '@/config/network';
-import { useVeChainKitConfig } from '@/providers';
+import { NETWORK_TYPE } from '../../../config/network';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getIsPerson } from '@vechain/contract-getters';
 
 /**

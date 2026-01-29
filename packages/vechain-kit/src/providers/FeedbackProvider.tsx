@@ -6,7 +6,8 @@ import {
     useEffect,
     useState,
 } from 'react';
-import { useModal } from './ModalProvider';
+// Import from ModalContext to avoid circular dependency with ModalProvider
+import { useModal } from './ModalContext';
 
 type FeedbackContextType = {
     showFeedback: (message?: string) => void;

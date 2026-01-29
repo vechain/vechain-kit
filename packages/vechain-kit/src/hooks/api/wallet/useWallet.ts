@@ -1,29 +1,25 @@
 'use client';
 
-import {
-    Wallet as PrivyWallet,
-    useLoginWithOAuth,
-    usePrivy,
-    User,
-} from '@privy-io/react-auth';
-import {
-    useGetChainId,
-    useGetNodeUrl,
-    useGetAccountVersion,
-    useDAppKitWallet,
-    useSmartAccount,
-    useCrossAppConnectionCache,
-} from '@/hooks';
-import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '@/utils';
-import { ConnectionSource, SmartAccount, Wallet } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
-import { NETWORK_TYPE } from '@/config/network';
-import { useAccount } from 'wagmi';
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
+import type { Wallet as PrivyWallet, User } from '@privy-io/react-auth';
+import { useOptionalPrivy } from '../privy/useOptionalPrivy';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { useGetChainId } from '../../thor/blocks/useGetChainId';
+import { useGetNodeUrl } from '../../utils/useGetNodeUrl';
+import { useGetAccountVersion } from '../../thor/smartAccounts/useGetAccountVersion';
+import { useSmartAccount } from '../../thor/smartAccounts/useSmartAccount';
+import { useCrossAppConnectionCache } from '../../cache/useCrossAppConnectionCache';
+import { useOptionalDAppKitWallet } from '../dappkit/useOptionalDAppKitWallet';
+import { compareAddresses, VECHAIN_PRIVY_APP_ID } from '../../../utils';
+import type { ConnectionSource, SmartAccount, Wallet } from '../../../types';
+// Import directly from VeChainKitContext to avoid circular dependency with providers/index.ts
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { NETWORK_TYPE } from '../../../config/network';
+import { useOptionalWagmiAccount } from '../privy/useOptionalWagmiAccount';
+import { useOptionalPrivyCrossAppSdk } from '../privy/useOptionalPrivyCrossAppSdk';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWalletMetadata } from './useWalletMetadata';
 import { useWalletStorage } from './useWalletStorage';
-import { isBrowser } from '@/utils/ssrUtils';
+import { isBrowser } from '../../../utils/ssrUtils';
 
 export type UseWalletReturnType = {
     // This will be the smart account if connected with privy, otherwise it will be wallet connected with dappkit
@@ -60,19 +56,22 @@ export type UseWalletReturnType = {
 };
 
 export const useWallet = (): UseWalletReturnType => {
+    // Use optional wagmi account hook that handles missing WagmiProvider gracefully
     const {
         address: crossAppAddress,
         isConnected: isConnectedWithCrossApp,
         isConnecting: isConnectingWithCrossApp,
         isReconnecting: isReconnectingWithCrossApp,
-    } = useAccount();
-    const { logout: disconnectCrossApp } = usePrivyCrossAppSdk();
-    const { loading: isLoadingLoginOAuth } = useLoginWithOAuth({});
+    } = useOptionalWagmiAccount();
+    // Use optional cross-app SDK hook that handles missing provider gracefully
+    const { logout: disconnectCrossApp } = useOptionalPrivyCrossAppSdk();
     const { feeDelegation, network, privy } = useVeChainKitConfig();
-    const { user, authenticated, logout, ready } = usePrivy();
+    // Use optional Privy hook that handles missing provider gracefully
+    const { user, authenticated, logout, ready } = useOptionalPrivy();
     const { data: chainId } = useGetChainId();
+    // Use optional DAppKit wallet hook that handles missing provider gracefully
     const { account: dappKitAccount, disconnect: dappKitDisconnect } =
-        useDAppKitWallet();
+        useOptionalDAppKitWallet();
     const { getConnectionCache, clearConnectionCache } =
         useCrossAppConnectionCache();
     const connectionCache = getConnectionCache();
@@ -105,7 +104,6 @@ export const useWallet = (): UseWalletReturnType => {
     const isLoading =
         isConnectingWithCrossApp ||
         isReconnectingWithCrossApp ||
-        isLoadingLoginOAuth ||
         !ready;
 
     // Add a single connection state that considers all factors

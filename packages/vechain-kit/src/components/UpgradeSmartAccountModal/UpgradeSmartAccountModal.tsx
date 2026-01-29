@@ -1,31 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BaseModal } from '@/components/common';
-import {
-    SuccessfulOperationContent,
-    SuccessfulOperationContentProps,
-} from './Contents/SuccessfulOperationContent';
+import { BaseModal } from '../common';
+import { SuccessfulOperationContent } from './Contents/SuccessfulOperationContent';
 import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccountContent';
-import { ThemeTypings } from '@chakra-ui/react';
+// Import types from centralized location to avoid circular dependencies
+import type {
+    UpgradeSmartAccountModalStyle,
+    UpgradeSmartAccountModalContentsTypes,
+} from '../../types/modal';
 
-export type UpgradeSmartAccountModalStyle = {
-    accentColor?: string;
-    modalSize?: ThemeTypings['components']['Modal']['sizes'];
-};
+// Re-export for backward compatibility - needed by internal components and hooks
+export type {
+    UpgradeSmartAccountModalStyle,
+    UpgradeSmartAccountModalContentsTypes,
+} from '../../types/modal';
 
 type Props = {
     isOpen: boolean;
     onClose: () => void;
     style?: UpgradeSmartAccountModalStyle;
 };
-
-export type UpgradeSmartAccountModalContentsTypes =
-    | 'upgrade-smart-account'
-    | {
-          type: 'successful-operation';
-          props: SuccessfulOperationContentProps;
-      };
 
 export const UpgradeSmartAccountModal = ({ isOpen, onClose, style }: Props) => {
     const [currentContent, setCurrentContent] =

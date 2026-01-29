@@ -1,14 +1,17 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-    useThor,
-    useWallet as useDAppKitWallet,
-} from '@vechain/dapp-kit-react';
 import { TransactionMessage } from '@vechain/dapp-kit';
-import { usePrivyWalletProvider, useVeChainKitConfig } from '@/providers';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { useGetNodeUrl, useTxReceipt, useWallet } from '@/hooks';
+// Import from specific provider files to avoid circular dependencies
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { useOptionalPrivyWalletProvider } from '../../../providers/PrivyWalletProvider';
+import type { TransactionStatus, TransactionStatusErrorType } from '../../../types';
+// Direct imports to avoid circular dependencies
+import { useGetNodeUrl } from '../../utils/useGetNodeUrl';
+import { useTxReceipt } from './useTxReceipt';
+import { useWallet } from '../../api/wallet/useWallet';
+import { useOptionalThor } from '../../api/dappkit/useOptionalThor';
+import { useOptionalDAppKitWallet } from '../../api/dappkit/useOptionalDAppKitWallet';
 import { useGasEstimate } from './useGasEstimate';
 import { TransactionReceipt } from '@vechain/sdk-network';
 import { Revision, TransactionClause } from '@vechain/sdk-core';
@@ -112,12 +115,14 @@ export const useSendTransaction = ({
     gasPadding,
     delegationUrl,
 }: UseSendTransactionProps): UseSendTransactionReturnValue => {
-    const thor = useThor();
-    const { signer, requestTransaction } = useDAppKitWallet();
+    // Use optional hooks that handle missing providers gracefully
+    const thor = useOptionalThor();
+    const { signer, requestTransaction } = useOptionalDAppKitWallet();
     const { connection } = useWallet();
     const { feeDelegation } = useVeChainKitConfig();
     const nodeUrl = useGetNodeUrl();
-    const privyWalletProvider = usePrivyWalletProvider();
+    // Use optional provider - returns null when Privy is not configured
+    const privyWalletProvider = useOptionalPrivyWalletProvider();
 
     /**
      * Send a transaction with the given clauses (in case you need to pass data to build the clauses to mutate directly)
@@ -140,6 +145,11 @@ export const useSendTransaction = ({
             const _clauses =
                 typeof clauses === 'function' ? await clauses() : clauses ?? [];
             if (connection.isConnectedWithPrivy) {
+                if (!privyWalletProvider) {
+                    throw new Error(
+                        'Privy is not configured. Please configure the privy prop in VeChainKitContext to use this feature.',
+                    );
+                }
                 return await privyWalletProvider.sendTransaction({
                     txClauses: _clauses,
                     ...privyUIOptions,
@@ -153,15 +163,17 @@ export const useSendTransaction = ({
 
             let estimatedGas = 0;
             try {
-                estimatedGas = await useGasEstimate(
-                    thor,
-                    [..._clauses],
-                    signerAccountAddress,
-                    {
-                        revision: Revision.NEXT,
-                        ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
-                    },
-                );
+                if (thor) {
+                    estimatedGas = await useGasEstimate(
+                        thor,
+                        [..._clauses],
+                        signerAccountAddress,
+                        {
+                            revision: Revision.NEXT,
+                            ...(gasPadding ? { gasPadding } : {}), //If gasPadding is provided, use it, otherwise it will apply only revision
+                        },
+                    );
+                }
             } catch (e) {
                 console.error('Gas estimation failed', e);
             }
@@ -259,7 +271,7 @@ export const useSendTransaction = ({
      */
     const explainTxRevertReason = useCallback(
         async (txReceipt: TransactionReceipt) => {
-            if (!txReceipt.reverted || !txReceipt.meta.txID) return;
+            if (!txReceipt.reverted || !txReceipt.meta.txID || !thor) return;
 
             return await thor.transactions.getRevertReason(txReceipt.meta.txID);
         },

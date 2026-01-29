@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useVeChainKitConfig } from '@/providers';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { getAddressDomain, getDomainAddress, isValidDomain, isPrimaryDomain } from '@vechain/contract-getters';
-import { isValidAddress } from '@/utils/addressUtils';
+import { isValidAddress } from '../../../utils/addressUtils';
 
 interface VeChainDomainResult {
     address?: string;

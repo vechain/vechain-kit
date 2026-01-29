@@ -1,6 +1,8 @@
 import { IconProps } from '@chakra-ui/react';
 import React from 'react';
-import { VechainLogoHorizontalDark, VechainLogoHorizontalLight } from './';
+// Import directly from sibling files to avoid circular dependency with barrel file
+import { VechainLogoHorizontalDark } from './VechainLogoHorizontalDark';
+import { VechainLogoHorizontalLight } from './VechainLogoHorizontalLight';
 
 type Props = {
     isDark?: boolean;

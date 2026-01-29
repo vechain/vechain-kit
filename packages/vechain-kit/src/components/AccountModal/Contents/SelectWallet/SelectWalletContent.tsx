@@ -8,23 +8,20 @@ import {
     useToken,
     ModalFooter,
 } from '@chakra-ui/react';
-import { StickyHeaderContainer, ModalBackButton } from '@/components/common';
+import { StickyHeaderContainer, ModalBackButton } from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { WalletCard } from './Components/WalletCard';
-import {
-    useSwitchWallet,
-    useWallet,
-    useRefreshBalances,
-    useDAppKitWallet,
-    useDAppKitWalletModal,
-} from '@/hooks';
-import { useWalletStorage } from '@/hooks/api/wallet/useWalletStorage';
-import { useAccountModalOptions } from '@/hooks';
+import { useSwitchWallet, useWallet, useRefreshBalances } from '../../../../hooks';
+// Use optional hooks to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../../hooks/api/dappkit/useOptionalDAppKitWallet';
+import { useOptionalDAppKitWalletModal } from '../../../../hooks/api/dappkit/useOptionalDAppKitWalletModal';
+import { useWalletStorage } from '../../../../hooks/api/wallet/useWalletStorage';
+import { useAccountModalOptions } from '../../../../hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StoredWallet } from '@/hooks/api/wallet/useWalletStorage';
+import { StoredWallet } from '../../../../hooks/api/wallet/useWalletStorage';
 import { LuLogOut, LuPlus } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
-import { simpleHash } from '@/utils';
+import { simpleHash } from '../../../../utils';
 
 const hashWallets = (wallets: StoredWallet[]): string => {
     const addresses = wallets
@@ -51,8 +48,8 @@ export const SelectWalletContent = ({
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
     const { account, disconnect } = useWallet();
-    const { disconnect: dappKitDisconnect } = useDAppKitWallet();
-    const { open: openDappKitModal } = useDAppKitWalletModal();
+    const { disconnect: dappKitDisconnect } = useOptionalDAppKitWallet();
+    const { open: openDappKitModal } = useOptionalDAppKitWalletModal();
     const { getStoredWallets, setActiveWallet, removeWallet } =
         useSwitchWallet();
     const { saveWallet } = useWalletStorage();

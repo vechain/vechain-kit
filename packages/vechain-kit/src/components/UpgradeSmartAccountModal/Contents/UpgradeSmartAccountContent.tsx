@@ -20,12 +20,13 @@ import { useTranslation } from 'react-i18next';
 import {
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-} from '@/components/common';
-import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '@/hooks';
-import {
+} from '../../common';
+import { useUpgradeRequired, useUpgradeSmartAccount, useWallet } from '../../../hooks';
+// Import types from centralized location to avoid circular dependencies
+import type {
     UpgradeSmartAccountModalContentsTypes,
     UpgradeSmartAccountModalStyle,
-} from '../UpgradeSmartAccountModal';
+} from '../../../types/modal';
 import { LuArrowRight } from 'react-icons/lu';
 
 type Props = {

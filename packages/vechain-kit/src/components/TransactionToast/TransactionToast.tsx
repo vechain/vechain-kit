@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
-import { TransactionStatus, TransactionStatusErrorType } from '@/types';
-import { useVeChainKitConfig } from '@/providers';
+import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
+// Direct import to avoid circular dependency via providers barrel export
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { TransactionToastContent } from './TransactionToastContent';
 import { TransactionReceipt } from '@vechain/sdk-network';
 

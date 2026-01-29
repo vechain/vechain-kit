@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { AllowedCategories } from '@/components/AccountModal/Contents/Ecosystem/Components/CategoryLabel';
-import { getLocalStorageItem, setLocalStorageItem } from '@/utils/ssrUtils';
+import type { AllowedCategories } from '../../types';
+import { getLocalStorageItem, setLocalStorageItem } from '../../utils/ssrUtils';
 import {
     APP_HUB_GITHUB_API_BASE_URL,
     APP_HUB_GITHUB_RAW_REPO_BASE_URL,
-} from '@/constants';
+} from '../../constants';
 export type AppHubApp = {
     id: string;
     name: string;

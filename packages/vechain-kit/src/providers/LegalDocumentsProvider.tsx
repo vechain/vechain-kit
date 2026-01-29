@@ -1,65 +1,48 @@
-import { LegalDocumentsModal } from '@/components/LegalDocumentsModal';
-import { useWallet, useSyncableLocalStorage } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers/VeChainKitProvider';
-import {
-    EnrichedLegalDocument,
-    LegalDocumentAgreement,
-    LegalDocumentSource,
-    LegalDocumentType,
-} from '@/types';
-import { compareAddresses } from '@/utils';
+// Import directly from specific hook files to avoid circular dependency with hooks/index.ts
+import { useWallet } from '../hooks/api/wallet/useWallet';
+import { useSyncableLocalStorage } from '../hooks/cache/useSyncableLocalStorage';
+// Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
+import { useVeChainKitConfig } from './VeChainKitContext';
+// Import context from LegalDocumentsContext to avoid circular dependency
+import { LegalDocumentsContext } from './LegalDocumentsContext';
+import type { EnrichedLegalDocument, LegalDocumentAgreement } from '../types';
+import { LegalDocumentSource, LegalDocumentType } from '../types';
+import { compareAddresses } from '../utils';
 import {
     createDocumentRecords,
     formatDocuments,
     getOptionalDocuments,
     LEGAL_DOCS_LOCAL_STORAGE_KEY,
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
-} from '@/utils/legalDocumentsUtils';
+} from '../utils/legalDocumentsUtils';
 import {
-    createContext,
     ReactNode,
     useCallback,
-    useContext,
     useEffect,
     useMemo,
     useState,
+    lazy,
+    Suspense,
 } from 'react';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
+
+// Re-export useLegalDocuments for backward compatibility
+export { useLegalDocuments } from './LegalDocumentsContext';
+
+// Lazy load LegalDocumentsModal to reduce initial bundle size
+const LazyLegalDocumentsModal = lazy(() =>
+    import('../components/LegalDocumentsModal').then((mod) => ({
+        default: mod.LegalDocumentsModal,
+    })),
+);
 
 type Props = {
     children: Readonly<ReactNode>;
 };
 
-type LegalDocumentsContextType = {
-    hasAgreedToRequiredDocuments: boolean;
-    agreements: LegalDocumentAgreement[];
-    walletAddress?: string;
-    documents: EnrichedLegalDocument[];
-    documentsNotAgreed: EnrichedLegalDocument[];
-};
-
-const LegalDocumentsContext = createContext<
-    LegalDocumentsContextType | undefined
->(undefined);
-
-export const useLegalDocuments = () => {
-    const context = useContext(LegalDocumentsContext);
-    if (!context) {
-        // This fallback is used to avoid errors when the context is not available
-        return {
-            hasAgreedToRequiredDocuments: true,
-            agreements: [],
-            walletAddress: undefined,
-            documents: [],
-            documentsNotAgreed: [],
-        };
-    }
-    return context;
-};
-
 export const LegalDocumentsProvider = ({ children }: Props) => {
     const { connection, account, disconnect } = useWallet();
-    const { darkMode, legalDocuments, theme } = useVeChainKitConfig();
+    const { darkMode, legalDocuments, theme, headless } = useVeChainKitConfig();
 
     const [storedAgreements, setStoredAgreements] = useSyncableLocalStorage<
         LegalDocumentAgreement[]
@@ -303,16 +286,22 @@ export const LegalDocumentsProvider = ({ children }: Props) => {
             }}
         >
             {children}
-            <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
-                <LegalDocumentsModal
-                    isOpen={showTermsModal}
-                    onAgree={handleAgree}
-                    handleLogout={
-                        onlyOptionalDocuments ? () => {} : handleLogout
-                    }
-                    onlyOptionalDocuments={onlyOptionalDocuments}
-                />
-            </VechainKitThemeProvider>
+            {/* Lazy-load modal only when it needs to be shown */}
+            {/* In headless mode, skip the modal entirely - no UI components are rendered */}
+            {!headless && showTermsModal && (
+                <VechainKitThemeProvider darkMode={darkMode} theme={theme}>
+                    <Suspense fallback={null}>
+                        <LazyLegalDocumentsModal
+                            isOpen={showTermsModal}
+                            onAgree={handleAgree}
+                            handleLogout={
+                                onlyOptionalDocuments ? () => {} : handleLogout
+                            }
+                            onlyOptionalDocuments={onlyOptionalDocuments}
+                        />
+                    </Suspense>
+                </VechainKitThemeProvider>
+            )}
         </LegalDocumentsContext.Provider>
     );
 };

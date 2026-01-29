@@ -22,7 +22,7 @@ import {
     ModalBackButton,
     StickyHeaderContainer,
     TransactionButtonAndStatus,
-} from '@/components/common';
+} from '../../../common';
 import { AccountModalContentTypes } from '../../Types';
 import { LuArrowDown, LuArrowUp, LuChevronDown } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
@@ -35,25 +35,26 @@ import {
     useCurrency,
     useGasTokenSelection,
     useGenericDelegatorFeeEstimation,
-} from '@/hooks';
+} from '../../../../hooks';
 import { SelectQuoteContent } from './SelectQuoteContent';
-import { SwapQuote } from '@/types/swap';
-import { useVeChainKitConfig } from '@/providers';
-import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
+import type { SwapQuote } from '../../../../types/swap';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../providers/VeChainKitContext';
+import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '../../../../utils';
 import { formatUnits, parseUnits } from 'viem';
-import { getConfig } from '@/config';
-import { compareAddresses } from '@/utils';
+import { getConfig } from '../../../../config';
+import { compareAddresses } from '../../../../utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
-import { formatCompactCurrency } from '@/utils/currencyUtils';
+import { formatCompactCurrency } from '../../../../utils/currencyUtils';
 import {
     convertToSelectedCurrency,
     SupportedCurrency,
-} from '@/utils/currencyUtils';
-import { useTokenPrices } from '@/hooks';
-import { GasTokenType } from '@/types/gasToken';
+} from '../../../../utils/currencyUtils';
+import { useTokenPrices } from '../../../../hooks';
+import type { GasTokenType } from '../../../../types/gasToken';
 import { TransactionClause } from '@vechain/sdk-core';
-import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
-import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { extractSwapAmounts } from '../../../../utils/swap/extractSwapAmounts';
+import { useAccountModalOptions } from '../../../../hooks/modals/useAccountModalOptions';
 
 type Props = {
     setCurrentContent: React.Dispatch<

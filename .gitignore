@@ -52,3 +52,14 @@ packages/vechain-kit/.env
 .env.json
 
 .yarn/install-state.gz
+
+# Ralph autonomous agent
+prd.json
+progress.txt
+tasks/
+
+# Bundle analysis reports
+bundle-size-comparison.md
+BUNDLE-SIZE-ANALYSIS.md
+GHA-BUILD-FAILURE-ANALYSIS.md
+BUNDLE-SIZE-IMPACT.md

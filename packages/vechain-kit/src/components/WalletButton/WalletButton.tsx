@@ -1,23 +1,21 @@
-import {
-    Button,
-    ButtonProps,
-    useDisclosure,
-    useMediaQuery,
-} from '@chakra-ui/react';
-import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '@/hooks';
-import { ConnectModal, AccountModal } from '@/components';
+import { Button, useDisclosure, useMediaQuery } from '@chakra-ui/react';
+import { useWallet } from '../../hooks';
+// Use optional hooks to handle missing providers gracefully
+import { useOptionalDAppKitWallet } from '../../hooks/api/dappkit/useOptionalDAppKitWallet';
+import { useOptionalDAppKitWalletModal } from '../../hooks/api/dappkit/useOptionalDAppKitWalletModal';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectModal } from '../ConnectModal/ConnectModal';
+import { AccountModal } from '../AccountModal/AccountModal';
 import { ConnectedWallet } from './ConnectedWallet';
-import { WalletDisplayVariant } from './types';
-import { useVeChainKitConfig, VechainKitThemeProvider } from '@/providers';
+// Import type from types.ts to avoid circular dependency with ConnectedWallet
+import type { WalletButtonProps } from './types';
+// Direct imports to avoid circular dependency through barrel exports
+import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
+import { VechainKitThemeProvider } from '../../providers/VechainKitThemeProvider';
 import { ConnectPopover } from '../ConnectModal';
 
-export type WalletButtonProps = {
-    mobileVariant?: WalletDisplayVariant;
-    desktopVariant?: WalletDisplayVariant;
-    buttonStyle?: ButtonProps;
-    connectionVariant?: 'modal' | 'popover';
-    label?: string;
-};
+// Re-export for backward compatibility
+export type { WalletButtonProps } from './types';
 
 export const WalletButton = ({
     mobileVariant = 'iconAndDomain',
@@ -32,13 +30,13 @@ export const WalletButton = ({
         loginMethods?.length === 1 && loginMethods[0].method === 'dappkit';
 
     const { connection, account } = useWallet();
-    const { setSource, connectV2 } = useDAppKitWallet();
+    const { setSource, connectV2 } = useOptionalDAppKitWallet();
 
     const [isMobile] = useMediaQuery('(max-width: 768px)');
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
-    const { open: openDappKit } = useDAppKitWalletModal();
+    const { open: openDappKit } = useOptionalDAppKitWalletModal();
 
     const handleConnect = () => {
         if (connection.isInAppBrowser) {

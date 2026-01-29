@@ -11,13 +11,13 @@ import {
     VStack,
     useToken,
 } from '@chakra-ui/react';
-import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
-import { useCrossAppConnectionCache } from '@/hooks';
-import { usePrivyCrossAppSdk } from '@/providers/PrivyCrossAppProvider';
+import { ModalBackButton, StickyHeaderContainer } from '../../common';
+import { useCrossAppConnectionCache, useOptionalPrivyCrossAppSdk } from '../../../hooks';
 import { useTranslation } from 'react-i18next';
-import { PrivyAppInfo } from '@/types';
-import { isRejectionError } from '@/utils/stringUtils';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+import type { PrivyAppInfo } from '../../../types';
+import { isRejectionError } from '../../../utils/stringUtils';
+// Import from types/modal to avoid circular dependency with ConnectModal
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 type Props = {
     onClose: () => void;
     appsInfo: PrivyAppInfo[];
@@ -42,8 +42,8 @@ export const EcosystemContent = ({
 
     const { setConnectionCache } = useCrossAppConnectionCache();
 
-    // Login with Vechain - Cross app account login
-    const { login: loginWithCrossApp } = usePrivyCrossAppSdk();
+    // Login with Vechain - Cross app account login (uses optional hook for conditional provider)
+    const { login: loginWithCrossApp } = useOptionalPrivyCrossAppSdk();
 
     const connectWithVebetterDaoApps = async (
         appId: string,

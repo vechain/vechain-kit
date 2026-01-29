@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Heading, Text } from '@chakra-ui/react';
-import { useWallet } from '@vechain/vechain-kit';
+import { useWallet } from '@vechain/vechain-kit/hooks';
 
 export function ConnectionInfo() {
     const { connection } = useWallet();

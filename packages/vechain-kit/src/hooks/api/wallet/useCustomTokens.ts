@@ -1,7 +1,8 @@
-import { LocalStorageKey, useLocalStorage } from '@/hooks';
-import { compareAddresses } from '@/utils';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+// Direct import to avoid circular dependency through barrel exports
+import { LocalStorageKey, useLocalStorage } from '../../cache/useLocalStorage';
+import { compareAddresses } from '../../../utils';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
+import { getConfig } from '../../../config';
 import { type CustomTokenInfo } from '@vechain/contract-getters';
 
 import {  getTokenInfo } from './useGetCustomTokenInfo';

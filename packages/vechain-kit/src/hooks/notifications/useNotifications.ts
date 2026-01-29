@@ -1,8 +1,9 @@
 import { useCallback, useEffect } from 'react';
-import { useWallet } from '@/hooks';
-import { Notification } from './types';
-import { DEFAULT_NOTIFICATIONS } from './useNotificationAlerts';
-import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '@/utils/ssrUtils';
+// Direct import to avoid circular dependency through hooks barrel
+import { useWallet } from '../api/wallet/useWallet';
+// Import from types.ts to avoid circular dependency with useNotificationAlerts
+import { Notification, DEFAULT_NOTIFICATIONS } from './types';
+import { getLocalStorageItem, setLocalStorageItem, isBrowser } from '../../utils/ssrUtils';
 
 export const useNotifications = () => {
     const { account } = useWallet();
