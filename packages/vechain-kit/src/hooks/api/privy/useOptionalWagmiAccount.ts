@@ -3,19 +3,22 @@
 // Use static import to ensure we use the same module instance as WagmiProvider
 // This avoids ESM/CJS interop issues that can occur with require() in Next.js
 import { useAccount } from 'wagmi';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 /**
  * Type for the optional wagmi useAccount hook return value.
  * Uses ReturnType to ensure type compatibility with the actual hook.
  */
-export type UseOptionalWagmiAccountReturnType = ReturnType<typeof useAccount> | {
-    address: undefined;
-    isConnected: false;
-    isConnecting: false;
-    isReconnecting: false;
-    isDisconnected: true;
-    status: 'disconnected';
-};
+export type UseOptionalWagmiAccountReturnType =
+    | ReturnType<typeof useAccount>
+    | {
+          address: undefined;
+          isConnected: false;
+          isConnecting: false;
+          isReconnecting: false;
+          isDisconnected: true;
+          status: 'disconnected';
+      };
 
 // Default return value when WagmiProvider is not available
 const DEFAULT_ACCOUNT_STATE = {
@@ -29,21 +32,42 @@ const DEFAULT_ACCOUNT_STATE = {
 
 /**
  * Optional hook to access wagmi's useAccount.
- * Returns default values when WagmiProvider is not available (i.e., when ecosystem login is disabled).
+ * Returns default values when ecosystem login is not configured (i.e., when WagmiProvider is not rendered).
  * This prevents errors when PrivyCrossAppProvider is not rendered.
  *
- * Uses static import to ensure the same module instance as WagmiProvider,
- * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ * Checks VeChainKitConfig to determine if ecosystem login is enabled before
+ * using wagmi's useAccount result, avoiding false loading states.
  *
- * @returns Account info from wagmi, or disconnected state if provider is not available
+ * @returns Account info from wagmi, or disconnected state if ecosystem login is not configured
  */
-export const useOptionalWagmiAccount = (): UseOptionalWagmiAccountReturnType => {
-    try {
-        // Call the hook directly - it will throw if not inside WagmiProvider
-        // Return the result directly to preserve all properties and types
-        return useAccount();
-    } catch {
-        // Hook threw (no WagmiProvider in tree), return defaults
-        return DEFAULT_ACCOUNT_STATE as unknown as UseOptionalWagmiAccountReturnType;
-    }
-};
+export const useOptionalWagmiAccount =
+    (): UseOptionalWagmiAccountReturnType => {
+        const config = useVeChainKitConfig();
+
+        // Check if ecosystem login is enabled (which means WagmiProvider is rendered)
+        const isEcosystemLoginEnabled = config.loginMethods?.some(
+            (method) =>
+                method.method === 'ecosystem' || method.method === 'vechain',
+        );
+
+        // Always call hooks unconditionally to satisfy React's rules of hooks
+        let wagmiResult: ReturnType<typeof useAccount> | null = null;
+        try {
+            wagmiResult = useAccount();
+        } catch {
+            // Hook threw (no WagmiProvider in tree), will use defaults
+        }
+
+        // If ecosystem login is not enabled, return defaults immediately
+        // This handles the case where useAccount() returns connecting states instead of throwing
+        if (!isEcosystemLoginEnabled) {
+            return DEFAULT_ACCOUNT_STATE as unknown as UseOptionalWagmiAccountReturnType;
+        }
+
+        // Ecosystem login is enabled, return actual values (or defaults if hook threw)
+        if (!wagmiResult) {
+            return DEFAULT_ACCOUNT_STATE as unknown as UseOptionalWagmiAccountReturnType;
+        }
+
+        return wagmiResult;
+    };

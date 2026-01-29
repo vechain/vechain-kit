@@ -4,6 +4,7 @@ import type { User } from '@privy-io/react-auth';
 // Use static import to ensure we use the same module instance as PrivyProvider
 // This avoids ESM/CJS interop issues that can occur with require() in Next.js
 import { usePrivy } from '@privy-io/react-auth';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 /**
  * Type for the optional Privy hook return value.
@@ -26,26 +27,42 @@ const DEFAULT_PRIVY_STATE: UseOptionalPrivyReturnType = {
 
 /**
  * Optional hook to access Privy context.
- * Returns default values when Privy provider is not available, avoiding the need
- * to wrap every usage in a try-catch or conditional check.
+ * Returns default values when Privy is not configured in VeChainKitProvider,
+ * avoiding the need to wrap every usage in a try-catch or conditional check.
  *
- * Uses static import to ensure the same module instance as PrivyProvider,
- * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ * When Privy is not configured, the PrivyProvider is not rendered, so usePrivy()
+ * may return { ready: false } instead of throwing. This hook checks the
+ * VeChainKitConfig first to determine if Privy is configured.
  *
- * @returns Privy user info and auth state, or null values if provider is not available
+ * @returns Privy user info and auth state, or default values if Privy is not configured
  */
 export const useOptionalPrivy = (): UseOptionalPrivyReturnType => {
+    const config = useVeChainKitConfig();
+    const isPrivyConfigured = !!config.privy;
+
+    // Always call hooks unconditionally to satisfy React's rules of hooks
+    let privyResult: ReturnType<typeof usePrivy> | null = null;
     try {
-        // Call the hook directly - it will throw if not inside PrivyProvider
-        const result = usePrivy();
-        return {
-            user: result.user ?? null,
-            authenticated: result.authenticated ?? false,
-            ready: result.ready ?? true,
-            logout: result.logout ?? (async () => {}),
-        };
+        privyResult = usePrivy();
     } catch {
-        // Hook threw (no PrivyProvider in tree), return defaults
+        // Hook threw (no PrivyProvider in tree), will use defaults
+    }
+
+    // If Privy is not configured, return defaults immediately
+    // This handles the case where usePrivy() returns { ready: false } instead of throwing
+    if (!isPrivyConfigured) {
         return DEFAULT_PRIVY_STATE;
     }
+
+    // Privy is configured, return actual values (or defaults if hook threw)
+    if (!privyResult) {
+        return DEFAULT_PRIVY_STATE;
+    }
+
+    return {
+        user: privyResult.user ?? null,
+        authenticated: privyResult.authenticated ?? false,
+        ready: privyResult.ready ?? true,
+        logout: privyResult.logout ?? (async () => {}),
+    };
 };

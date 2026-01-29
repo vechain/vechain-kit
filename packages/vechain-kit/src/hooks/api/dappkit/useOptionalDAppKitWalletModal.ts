@@ -3,16 +3,19 @@
 // Use static import to ensure we use the same module instance as DAppKitProvider
 // This avoids ESM/CJS interop issues that can occur with require() in Next.js
 import { useWalletModal } from '@vechain/dapp-kit-react';
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
 /**
  * Type for the optional DAppKitWalletModal hook return value.
  * Uses ReturnType to ensure type compatibility with the actual hook.
  */
-export type UseOptionalDAppKitWalletModalReturnType = ReturnType<typeof useWalletModal> | {
-    open: () => void;
-    close: () => void;
-    onConnectionStatusChange: () => void;
-};
+export type UseOptionalDAppKitWalletModalReturnType =
+    | ReturnType<typeof useWalletModal>
+    | {
+          open: () => void;
+          close: () => void;
+          onConnectionStatusChange: () => void;
+      };
 
 // Default return value when DAppKit is not available
 const DEFAULT_DAPPKIT_WALLET_MODAL_STATE = {
@@ -27,21 +30,36 @@ const DEFAULT_DAPPKIT_WALLET_MODAL_STATE = {
 
 /**
  * Optional hook to access DAppKit wallet modal context.
- * Returns default values when DAppKit provider is not available, avoiding the need
+ * Returns default values when DAppKit is not configured, avoiding the need
  * to wrap every usage in a try-catch or conditional check.
  *
- * Uses static import to ensure the same module instance as DAppKitProvider,
- * avoiding ESM/CJS interop issues that can occur with require() in Next.js.
+ * Checks VeChainKitConfig to determine if DAppKit is configured before
+ * using the DAppKit wallet modal result.
  *
- * @returns DAppKit wallet modal functions, or default values if provider is not available
+ * @returns DAppKit wallet modal functions, or default values if DAppKit is not configured
  */
-export const useOptionalDAppKitWalletModal = (): UseOptionalDAppKitWalletModalReturnType => {
-    try {
-        // Call the hook directly - it will throw if not inside DAppKitProvider
-        // Return the result directly to preserve all properties and types
-        return useWalletModal();
-    } catch {
-        // Hook threw (no DAppKitProvider in tree), return defaults
-        return DEFAULT_DAPPKIT_WALLET_MODAL_STATE as unknown as UseOptionalDAppKitWalletModalReturnType;
-    }
-};
+export const useOptionalDAppKitWalletModal =
+    (): UseOptionalDAppKitWalletModalReturnType => {
+        const config = useVeChainKitConfig();
+        const isDAppKitConfigured = !!config.dappKit;
+
+        // Always call hooks unconditionally to satisfy React's rules of hooks
+        let dappKitModalResult: ReturnType<typeof useWalletModal> | null = null;
+        try {
+            dappKitModalResult = useWalletModal();
+        } catch {
+            // Hook threw (no DAppKitProvider in tree), will use defaults
+        }
+
+        // If DAppKit is not configured, return defaults immediately
+        if (!isDAppKitConfigured) {
+            return DEFAULT_DAPPKIT_WALLET_MODAL_STATE as unknown as UseOptionalDAppKitWalletModalReturnType;
+        }
+
+        // DAppKit is configured, return actual values (or defaults if hook threw)
+        if (!dappKitModalResult) {
+            return DEFAULT_DAPPKIT_WALLET_MODAL_STATE as unknown as UseOptionalDAppKitWalletModalReturnType;
+        }
+
+        return dappKitModalResult;
+    };
