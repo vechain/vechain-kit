@@ -9,7 +9,6 @@ import type {
     NonEmptyArray,
 } from '@privy-io/react-auth';
 import {
-    ReactNode,
     useEffect,
     useMemo,
     useState,
@@ -17,16 +16,9 @@ import {
     lazy,
     Suspense,
 } from 'react';
-// Import context, hook, and types from dedicated context file to break circular dependencies
+// Import context and types from dedicated context file to break circular dependencies
 // Hooks should import useVeChainKitConfig from VeChainKitContext.tsx, not from this file
-import {
-    VeChainKitContext,
-    useVeChainKitConfig,
-    type VeChainKitConfig,
-    type VechainKitProviderProps,
-    type LoginMethodOrder,
-} from './VeChainKitContext';
-import type { VechainKitThemeConfig } from '../theme/tokens';
+import { VeChainKitContext, type VechainKitProviderProps } from './VeChainKitContext';
 import {
     getDefaultTokens,
     convertThemeConfigToTokens,
@@ -59,8 +51,6 @@ import {
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
     getGenericDelegatorUrl,
 } from '../utils/constants';
-import { Certificate, CertificateData } from '@vechain/sdk-core';
-import type { PrivyCrossAppProvider as PrivyCrossAppProviderType } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 import { ThorProvider } from './ThorProvider';
 
@@ -69,11 +59,6 @@ const LazyPrivyCrossAppProvider = lazy(() =>
     import('./PrivyCrossAppProvider').then((mod) => ({
         default: mod.PrivyCrossAppProvider,
     })),
-);
-
-// Passthrough component when ecosystem login is not enabled
-const CrossAppPassthrough = ({ children }: { children: ReactNode }) => (
-    <>{children}</>
 );
 
 // Lazy load ReactQueryDevtools only in development to reduce production bundle size (~100KB)
@@ -98,11 +83,6 @@ const LazyDAppKitProvider = lazy(() =>
     import('@vechain/dapp-kit-react').then((mod) => ({
         default: mod.DAppKitProvider,
     })),
-);
-
-// Passthrough component when Privy is not configured
-const PrivyPassthrough = ({ children }: { children: ReactNode }) => (
-    <>{children}</>
 );
 
 // Re-export types from ../types for backward compatibility
