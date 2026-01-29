@@ -13,7 +13,8 @@ import {
 } from '@chakra-ui/react';
 import { StickyHeaderContainer } from '../../common';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { motion } from 'framer-motion';
 import { getConfig } from '../../../config';
 import { LuExternalLink, LuCircleCheck } from 'react-icons/lu';

@@ -10,7 +10,8 @@ import { PrivyButton } from './PrivyButton';
 import { useLoginModalContent, usePrivy } from '../../../hooks';
 // Direct import to avoid circular dependency through barrel exports
 import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+// Import from types/modal to avoid circular dependency with ConnectModal
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 import React from 'react';
 
 type Props = {

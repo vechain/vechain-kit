@@ -17,7 +17,8 @@ import {
 } from '../../../../common';
 import { AccountModalContentTypes } from '../../../Types';
 import { useTranslation } from 'react-i18next';
-import { useVeChainKitConfig } from '../../../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../../providers/VeChainKitContext';
 import {
     useWallet,
     useUpgradeRequired,

@@ -3,14 +3,10 @@ import { useWallet } from '../hooks/api/wallet/useWallet';
 import { useSyncableLocalStorage } from '../hooks/cache/useSyncableLocalStorage';
 // Import from VeChainKitContext to avoid circular dependency with VeChainKitProvider
 import { useVeChainKitConfig } from './VeChainKitContext';
-import type {
-    EnrichedLegalDocument,
-    LegalDocumentAgreement,
-} from '../types';
-import {
-    LegalDocumentSource,
-    LegalDocumentType,
-} from '../types';
+// Import context from LegalDocumentsContext to avoid circular dependency
+import { LegalDocumentsContext } from './LegalDocumentsContext';
+import type { EnrichedLegalDocument, LegalDocumentAgreement } from '../types';
+import { LegalDocumentSource, LegalDocumentType } from '../types';
 import { compareAddresses } from '../utils';
 import {
     createDocumentRecords,
@@ -20,10 +16,8 @@ import {
     LEGAL_DOCS_OPTIONAL_REJECT_LOCAL_STORAGE_KEY,
 } from '../utils/legalDocumentsUtils';
 import {
-    createContext,
     ReactNode,
     useCallback,
-    useContext,
     useEffect,
     useMemo,
     useState,
@@ -31,6 +25,9 @@ import {
     Suspense,
 } from 'react';
 import { VechainKitThemeProvider } from './VechainKitThemeProvider';
+
+// Re-export useLegalDocuments for backward compatibility
+export { useLegalDocuments } from './LegalDocumentsContext';
 
 // Lazy load LegalDocumentsModal to reduce initial bundle size
 const LazyLegalDocumentsModal = lazy(() =>
@@ -41,33 +38,6 @@ const LazyLegalDocumentsModal = lazy(() =>
 
 type Props = {
     children: Readonly<ReactNode>;
-};
-
-type LegalDocumentsContextType = {
-    hasAgreedToRequiredDocuments: boolean;
-    agreements: LegalDocumentAgreement[];
-    walletAddress?: string;
-    documents: EnrichedLegalDocument[];
-    documentsNotAgreed: EnrichedLegalDocument[];
-};
-
-const LegalDocumentsContext = createContext<
-    LegalDocumentsContextType | undefined
->(undefined);
-
-export const useLegalDocuments = () => {
-    const context = useContext(LegalDocumentsContext);
-    if (!context) {
-        // This fallback is used to avoid errors when the context is not available
-        return {
-            hasAgreedToRequiredDocuments: true,
-            agreements: [],
-            walletAddress: undefined,
-            documents: [],
-            documentsNotAgreed: [],
-        };
-    }
-    return context;
 };
 
 export const LegalDocumentsProvider = ({ children }: Props) => {

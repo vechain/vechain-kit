@@ -1,11 +1,10 @@
-import {
-    getAvatarOfAddressQueryKey,
-    getDomainsOfAddressQueryKey,
-    getEnsRecordExistsQueryKey,
-    getTextRecordsQueryKey,
-    getVechainDomainQueryKey,
-    getAvatarQueryKey,
-} from '../../../';
+// Import directly to avoid circular dependency with hooks barrel
+import { getAvatarOfAddressQueryKey } from '../useGetAvatarOfAddress';
+import { getDomainsOfAddressQueryKey } from '../useGetDomainsOfAddress';
+import { getEnsRecordExistsQueryKey } from '../useEnsRecordExists';
+import { getTextRecordsQueryKey } from '../useGetTextRecords';
+import { getVechainDomainQueryKey } from '../useVechainDomain';
+import { getAvatarQueryKey } from '../useGetAvatar';
 import { QueryClient } from '@tanstack/react-query';
 import { NETWORK_TYPE } from '../../../../config/network';
 

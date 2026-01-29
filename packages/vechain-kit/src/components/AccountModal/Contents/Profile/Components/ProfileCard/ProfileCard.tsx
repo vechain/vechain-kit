@@ -12,7 +12,8 @@ import { useWalletMetadata } from '../../../../../../hooks';
 import { LuMail, LuGlobe, LuPencil } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
 import { getPicassoImage } from '../../../../../../utils';
-import { useVeChainKitConfig } from '../../../../../../providers';
+// Import from VeChainKitContext to avoid circular dependency with providers barrel
+import { useVeChainKitConfig } from '../../../../../../providers/VeChainKitContext';
 import { AccountModalContentTypes } from '../../../../Types';
 
 export type ProfileCardProps = {

@@ -1,6 +1,7 @@
 import { GridItem, Icon } from '@chakra-ui/react';
 import { useDAppKitWalletModal } from '../../../hooks';
-import { ConnectionButton } from '../../';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectionButton } from './ConnectionButton';
 import { useTranslation } from 'react-i18next';
 import { LuArrowRight, LuWallet } from 'react-icons/lu';
 import { useEffect } from 'react';

@@ -11,7 +11,8 @@ import {
 // Direct import to avoid circular dependency through barrel exports
 import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 import { ModalFAQButton, StickyHeaderContainer } from '../../common';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+// Import from types/modal to avoid circular dependency with ConnectModal
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 import React, { useEffect } from 'react';
 import { useFetchAppInfo, useWallet } from '../../../hooks';
 import { useTranslation } from 'react-i18next';

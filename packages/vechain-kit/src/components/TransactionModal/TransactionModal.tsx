@@ -1,30 +1,13 @@
-import { ReactNode } from 'react';
 import { BaseModal } from '../common/BaseModal';
 import { TransactionModalContent } from './TransactionModalContent';
-import type { TransactionStatus, TransactionStatusErrorType } from '../../types';
-import { TransactionReceipt } from '@vechain/sdk-network';
 // Direct imports to avoid circular dependency through barrel exports
 import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { VechainKitThemeProvider } from '../../providers/VechainKitThemeProvider';
-export type TransactionModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onTryAgain: () => void;
-    status: TransactionStatus;
-    txReceipt: TransactionReceipt | null;
-    txError?: Error | TransactionStatusErrorType;
-    uiConfig?: {
-        isClosable?: boolean;
-        showShareOnSocials?: boolean;
-        showExplorerButton?: boolean;
-        loadingIcon?: ReactNode;
-        successIcon?: ReactNode;
-        errorIcon?: ReactNode;
-        title?: ReactNode;
-        description?: string;
-        showSocialButtons?: boolean;
-    };
-};
+// Import from types.ts to avoid circular dependency with TransactionModalContent
+import type { TransactionModalProps } from './types';
+
+// Re-export for backward compatibility
+export type { TransactionModalProps } from './types';
 
 export const TransactionModal = ({
     isOpen,

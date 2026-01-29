@@ -1,6 +1,7 @@
 import { GridItem } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
-import { ConnectionButton } from '../../';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectionButton } from './ConnectionButton';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '../../../hooks';
 

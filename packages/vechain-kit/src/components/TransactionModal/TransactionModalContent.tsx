@@ -25,7 +25,8 @@ import {
 } from 'react-icons/lu';
 import { ShareButtons } from './Components/ShareButtons';
 import { StickyHeaderContainer } from '../common';
-import { TransactionModalProps } from './TransactionModal';
+// Import from types.ts to avoid circular dependency with TransactionModal
+import type { TransactionModalProps } from './types';
 
 type StatusConfig = {
     title: ReactNode;

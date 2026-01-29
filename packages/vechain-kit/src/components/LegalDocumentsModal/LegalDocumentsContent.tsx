@@ -1,6 +1,6 @@
 import { StickyHeaderContainer } from '../common';
-// Import directly from specific provider files to avoid circular dependency with providers/index.ts
-import { useLegalDocuments } from '../../providers/LegalDocumentsProvider';
+// Import from LegalDocumentsContext to avoid circular dependency with LegalDocumentsProvider
+import { useLegalDocuments } from '../../providers/LegalDocumentsContext';
 // Import from VeChainKitContext to avoid circular dependency chain
 import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import type { EnrichedLegalDocument } from '../../types';

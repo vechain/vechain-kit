@@ -16,7 +16,8 @@ import { useCrossAppConnectionCache, useOptionalPrivyCrossAppSdk } from '../../.
 import { useTranslation } from 'react-i18next';
 import type { PrivyAppInfo } from '../../../types';
 import { isRejectionError } from '../../../utils/stringUtils';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+// Import from types/modal to avoid circular dependency with ConnectModal
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 type Props = {
     onClose: () => void;
     appsInfo: PrivyAppInfo[];

@@ -31,7 +31,8 @@ import {
     LuFingerprint,
 } from 'react-icons/lu';
 import { FaXTwitter } from 'react-icons/fa6';
-import { ActionButton } from '../../../';
+// Import directly to avoid circular dependency with components barrel
+import { ActionButton } from '../../Components/ActionButton';
 import {
     ModalBackButton,
     ScrollToTopWrapper,

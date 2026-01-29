@@ -1,25 +1,18 @@
-import {
-    Button,
-    ButtonProps,
-    useDisclosure,
-    useMediaQuery,
-} from '@chakra-ui/react';
+import { Button, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import { useWallet, useDAppKitWallet, useDAppKitWalletModal } from '../../hooks';
-import { ConnectModal, AccountModal } from '../';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectModal } from '../ConnectModal/ConnectModal';
+import { AccountModal } from '../AccountModal/AccountModal';
 import { ConnectedWallet } from './ConnectedWallet';
-import { WalletDisplayVariant } from './types';
+// Import type from types.ts to avoid circular dependency with ConnectedWallet
+import type { WalletButtonProps } from './types';
 // Direct imports to avoid circular dependency through barrel exports
 import { useVeChainKitConfig } from '../../providers/VeChainKitContext';
 import { VechainKitThemeProvider } from '../../providers/VechainKitThemeProvider';
 import { ConnectPopover } from '../ConnectModal';
 
-export type WalletButtonProps = {
-    mobileVariant?: WalletDisplayVariant;
-    desktopVariant?: WalletDisplayVariant;
-    buttonStyle?: ButtonProps;
-    connectionVariant?: 'modal' | 'popover';
-    label?: string;
-};
+// Re-export for backward compatibility
+export type { WalletButtonProps } from './types';
 
 export const WalletButton = ({
     mobileVariant = 'iconAndDomain',

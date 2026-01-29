@@ -1,10 +1,13 @@
 import { GridItem } from '@chakra-ui/react';
 import { VechainLogoDark, VechainLogoLight } from '../../../assets';
-import { ConnectionButton, SocialIcons } from '../../';
+// Import directly to avoid circular dependency with components barrel
+import { ConnectionButton } from './ConnectionButton';
+import { SocialIcons } from '../../WalletButton/SocialIcons';
 import { useLoginWithVeChain } from '../../../hooks';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
-import { ConnectModalContentsTypes } from '../ConnectModal';
+// Import from types/modal to avoid circular dependency
+import type { ConnectModalContentsTypes } from '../../../types/modal';
 import React from 'react';
 
 type Props = {

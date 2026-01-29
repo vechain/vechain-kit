@@ -36,7 +36,8 @@ import { UpgradeSmartAccountContent } from './Contents/UpgradeSmartAccount';
 // Import from ModalContext to avoid circular dependency with ModalProvider
 import { useModal } from '../../providers/ModalContext';
 import { ChangeCurrencyContent } from './Contents/KitSettings';
-import { useVechainKitThemeConfig } from '../../providers';
+// Import directly to avoid circular dependency with providers barrel
+import { useVechainKitThemeConfig } from '../../providers/VechainKitThemeProvider';
 import { useEffect } from 'react';
 
 type Props = {
