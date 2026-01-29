@@ -15,7 +15,8 @@ export default defineConfig({
     // Output Configuration
     outDir: 'dist',
     format: ['cjs', 'esm'],
-    target: 'node18',
+    target: 'es2020',
+    platform: 'browser',
     clean: true,
 
     // Code Optimization
