@@ -8,21 +8,32 @@ Compare the bundle sizes of the `@vechain/vechain-kit` package between two git b
 
 #### Usage
 
+**Important:** Run from the repository root (the script will auto-navigate there)
+
 ```bash
+# From repository root
 ./scripts/compare-bundle-sizes.sh <base-branch> <compare-branch>
+
+# Or from any directory (script finds git root)
+cd scripts/
+./compare-bundle-sizes.sh <base-branch> <compare-branch>
 ```
 
 #### Examples
 
 ```bash
-# Compare current branch with main
+# From repository root
 ./scripts/compare-bundle-sizes.sh main $(git branch --show-current)
 
-# Compare main with a specific branch
-./scripts/compare-bundle-sizes.sh main ralph/barrel-imports
+# From any subdirectory (script auto-navigates to root)
+cd packages/vechain-kit
+../../scripts/compare-bundle-sizes.sh main ralph/barrel-imports
 
 # Compare two feature branches
 ./scripts/compare-bundle-sizes.sh feature/old feature/new
+
+# Default: Compare main with current branch
+./scripts/compare-bundle-sizes.sh
 ```
 
 #### Output

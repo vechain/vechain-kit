@@ -9,6 +9,15 @@
 
 set -e
 
+# Find git root and cd to it
+GIT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -z "$GIT_ROOT" ]; then
+    echo "Error: Not in a git repository"
+    exit 1
+fi
+
+cd "$GIT_ROOT"
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -99,7 +108,13 @@ git checkout "$CURRENT_BRANCH" -q
 
 # Calculate difference
 DIFF_BYTES=$((COMPARE_BYTES - BASE_BYTES))
-DIFF_PERCENT=$(awk "BEGIN {printf \"%.2f\", ($DIFF_BYTES / $BASE_BYTES) * 100}")
+
+# Calculate percentage (handle division by zero)
+if [ "$BASE_BYTES" -eq 0 ]; then
+    DIFF_PERCENT="N/A"
+else
+    DIFF_PERCENT=$(echo "scale=2; ($DIFF_BYTES / $BASE_BYTES) * 100" | bc)
+fi
 
 # Determine color for difference
 if [ $DIFF_BYTES -gt 0 ]; then

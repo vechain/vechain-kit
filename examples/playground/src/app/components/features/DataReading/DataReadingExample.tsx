@@ -8,7 +8,7 @@ import {
     useGetVot3Balance,
     useGetTokenUsdPrice,
     useCurrentAllocationsRoundId,
-} from '@vechain/vechain-kit';
+} from '@vechain/vechain-kit/hooks';
 import { useTranslation } from 'react-i18next';
 
 export function DataReadingExample(): ReactElement {
