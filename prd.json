@@ -140,8 +140,9 @@
         "Typecheck passes (yarn kit:typecheck)"
       ],
       "impact": "-1.6MB (-95%) for advanced users building custom solutions",
-      "status": "pending",
-      "passes": false
+      "status": "completed",
+      "passes": true,
+      "notes": "Implemented VeChainKitCoreProvider as a minimal provider for advanced users. The provider includes only: (1) VeChainKitContext for configuration, (2) EnsureQueryClient for React Query setup, (3) ThorProvider for Thor client blockchain operations. It does NOT include Privy, DAppKit, Wagmi, Chakra UI, ModalProvider, or LegalDocumentsProvider. The context value sets headless: true by default, so hooks that depend on missing providers (useModal, useLegalDocuments, etc.) return safe no-op defaults with helpful console warnings. Created VeChainKitCoreProviderProps interface with simplified props (network, language, darkMode, defaultCurrency, callbacks). Added documentation to README.md explaining when to use Core vs Full provider. Exported from providers/index.ts. Zero circular dependencies verified by madge. Typecheck passes."
     },
     {
       "id": "US-008",

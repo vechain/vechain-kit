@@ -2,6 +2,8 @@
 // Hooks should import useVeChainKitConfig from VeChainKitContext, not VeChainKitProvider
 export * from './VeChainKitContext';
 export * from './VeChainKitProvider';
+// Export the minimal core provider for advanced users who don't need Privy/DAppKit/Chakra
+export * from './VeChainKitCoreProvider';
 export * from './PrivyWalletProvider';
 export * from './VechainKitThemeProvider';
 // Export from LegalDocumentsContext first to avoid circular dependencies

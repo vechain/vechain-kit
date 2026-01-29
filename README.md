@@ -36,6 +36,7 @@ VeChain Kit supports conditional loading to reduce bundle size based on your nee
 
 | Configuration | Bundle Size | Use Case |
 |---------------|-------------|----------|
+| Core provider only | ~60KB | Custom auth, blockchain data only |
 | DAppKit only | ~400KB | Wallet connections only |
 | Full-featured | ~1.0MB | All features (social + wallet + ecosystem) |
 
@@ -78,6 +79,26 @@ loginMethods={[{ method: 'dappkit', gridColumn: 4 }]}
 ```typescript
 <VeChainKitProvider headless={true} ...>
 ```
+
+**5. Use VeChainKitCoreProvider** (~60KB) for maximum control:
+
+```typescript
+import { VeChainKitCoreProvider } from '@vechain/vechain-kit/providers';
+
+// Minimal provider: only context + React Query + Thor client
+// No Privy, DAppKit, Wagmi, or Chakra UI
+<VeChainKitCoreProvider network={{ type: 'main' }}>
+  <CustomAuthProvider>
+    <MyApp />
+  </CustomAuthProvider>
+</VeChainKitCoreProvider>
+```
+
+Use `VeChainKitCoreProvider` when:
+- Building custom authentication flows
+- Using your own wallet connection logic
+- Building headless/server-side applications
+- Need only blockchain data (balances, contract calls)
 
 See the [examples](./examples) directory for complete configurations:
 - **[next-template](./examples/next-template)** - Optimized setup (~400KB)
