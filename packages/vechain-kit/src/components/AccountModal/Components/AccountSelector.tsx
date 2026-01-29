@@ -24,7 +24,8 @@ import { useTranslation } from 'react-i18next';
 // Direct imports to avoid circular dependency with hooks barrel
 import { useWallet } from '../../../hooks/api/wallet/useWallet';
 import { useSwitchWallet } from '../../../hooks/api/wallet/useSwitchWallet';
-import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../hooks/api/dappkit/useOptionalDAppKitWallet';
 
 type Props = {
     wallet: Wallet;
@@ -50,7 +51,7 @@ export const AccountSelector = ({
     const { t } = useTranslation();
     const { connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { isSwitchWalletEnabled } = useDAppKitWallet();
+    const { isSwitchWalletEnabled } = useOptionalDAppKitWallet();
 
     const [copied, setCopied] = useState(false);
 

@@ -12,11 +12,12 @@ import {
 import {
     useSwitchWallet,
     useWallet,
-    useDAppKitWallet,
     useTotalBalance,
     LocalStorageKey,
     useLocalStorage,
 } from '../../../../hooks';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../../hooks/api/dappkit/useOptionalDAppKitWallet';
 import { FeatureAnnouncementCard } from '../../Components';
 import { ProfileCard } from './Components/ProfileCard/ProfileCard';
 import {
@@ -45,7 +46,7 @@ export const ProfileContent = ({
     const { t } = useTranslation();
     const { account, disconnect, connection } = useWallet();
     const { switchWallet, isSwitching, isInAppBrowser } = useSwitchWallet();
-    const { isSwitchWalletEnabled } = useDAppKitWallet();
+    const { isSwitchWalletEnabled } = useOptionalDAppKitWallet();
     const { hasAnyBalance, formattedBalance } = useTotalBalance({
         address: account?.address,
     });

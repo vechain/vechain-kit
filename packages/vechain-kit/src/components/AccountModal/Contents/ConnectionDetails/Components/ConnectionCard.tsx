@@ -19,7 +19,8 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import type { CrossAppConnectionCache } from '../../../../../types';
-import { useWallet as useWalletDappKit } from '@vechain/dapp-kit-react';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../../../../../hooks/api/dappkit/useOptionalDAppKitWallet';
 import packageJson from '../../../../../../package.json';
 import { humanAddress } from '../../../../../utils';
 import { LuCheck, LuCopy } from 'react-icons/lu';
@@ -41,7 +42,7 @@ type Props = {
 export const ConnectionCard = ({ connectionCache }: Props) => {
     const { t } = useTranslation();
     const { connection, smartAccount, connectedWallet } = useWallet();
-    const { source: sourceDappKit } = useWalletDappKit();
+    const { source: sourceDappKit } = useOptionalDAppKitWallet();
     const { privy, network } = useVeChainKitConfig();
 
     const privyAppId = privy?.appId;

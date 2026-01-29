@@ -8,12 +8,10 @@ import {
     Text,
     useToken,
 } from '@chakra-ui/react';
-import {
-    useMfaEnrollment,
-    usePrivy,
-    useUpgradeRequired,
-    useWallet,
-} from '../../../../hooks';
+import { useUpgradeRequired, useWallet } from '../../../../hooks';
+// Use optional hooks to handle missing PrivyProvider gracefully
+import { useOptionalPrivy } from '../../../../hooks/api/privy/useOptionalPrivy';
+import { useOptionalMfaEnrollment } from '../../../../hooks/api/privy/useOptionalMfaEnrollment';
 import {
     LuChevronRight,
     LuCircleHelp,
@@ -52,8 +50,8 @@ export const SettingsContent = ({
     const { t } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
 
-    const { exportWallet, linkPasskey } = usePrivy();
-    const { showMfaEnrollmentModal } = useMfaEnrollment();
+    const { exportWallet, linkPasskey } = useOptionalPrivy();
+    const { showMfaEnrollmentModal } = useOptionalMfaEnrollment();
 
     const { feeDelegation } = useVeChainKitConfig();
 

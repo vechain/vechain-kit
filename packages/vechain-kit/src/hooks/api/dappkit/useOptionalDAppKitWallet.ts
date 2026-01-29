@@ -2,8 +2,8 @@
 
 import type { VeChainSignerDAppKit } from '@vechain/dapp-kit';
 import type { CertificateData } from '@vechain/sdk-core';
-// Use static import to ensure we use the same module instance as DAppKitProvider
-// This avoids ESM/CJS interop issues that can occur with require() in Next.js
+// Use static import to ensure we use the same module instance as LazyDAppKitProvider
+// This avoids ESM/CJS interop issues that can occur with require() in bundled contexts
 import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
@@ -49,29 +49,30 @@ const createMockSigner = (): VeChainSignerDAppKit => {
 /**
  * Type for the optional DAppKitWallet hook return value.
  * Returns default values when DAppKit is not configured.
- * Uses ReturnType to ensure type compatibility with the actual hook.
  */
-export type UseOptionalDAppKitWalletReturnType =
-    | ReturnType<typeof useDAppKitWallet>
-    | {
-          account: null;
-          source: null;
-          connectionCertificate: null;
-          connect: () => void;
-          connectV2: () => void;
-          disconnect: () => void;
-          setSource: () => void;
-          availableWallets: string[];
-          requestCertificate: () => Promise<never>;
-          requestTransaction: () => Promise<never>;
-          signer: VeChainSignerDAppKit;
-      };
+export type UseOptionalDAppKitWalletReturnType = {
+    account: string | null;
+    source: string | null;
+    connectionCertificate: CertificateData | null;
+    connect: () => void;
+    connectV2: (...args: unknown[]) => void;
+    disconnect: () => void;
+    setSource: (source: string) => void;
+    availableWallets: string[];
+    switchWallet?: () => Promise<void>;
+    isSwitchWalletEnabled?: boolean;
+    signer: VeChainSignerDAppKit;
+    requestCertificate: (
+        ...args: unknown[]
+    ) => Promise<{ annex: { domain: string; signer: string; timestamp: number }; signature: string }>;
+    requestTransaction: (...args: unknown[]) => Promise<{ txid: string }>;
+};
 
 // Default return value when DAppKit is not available
-const DEFAULT_DAPPKIT_WALLET_STATE = {
-    account: null as string | null,
-    source: null as string | null,
-    connectionCertificate: null as CertificateData | null,
+const DEFAULT_DAPPKIT_WALLET_STATE: UseOptionalDAppKitWalletReturnType = {
+    account: null,
+    source: null,
+    connectionCertificate: null,
     connect: () => {
         console.warn(
             'DAppKit is not configured. Add dappKit prop to VeChainKitContext to enable wallet connections.',
@@ -84,7 +85,10 @@ const DEFAULT_DAPPKIT_WALLET_STATE = {
     },
     disconnect: () => {},
     setSource: () => {},
-    availableWallets: [] as string[],
+    availableWallets: [],
+    switchWallet: async () => {},
+    isSwitchWalletEnabled: false,
+    signer: createMockSigner(),
     requestCertificate: async () => {
         throw new Error(
             'DAppKit is not configured. Add dappKit prop to VeChainKitContext to use certificate signing.',
@@ -95,16 +99,15 @@ const DEFAULT_DAPPKIT_WALLET_STATE = {
             'DAppKit is not configured. Add dappKit prop to VeChainKitContext to use transaction signing.',
         );
     },
-    signer: createMockSigner(),
-} as const;
+};
 
 /**
  * Optional hook to access DAppKit wallet context.
  * Returns default values when DAppKit is not configured, avoiding the need
  * to wrap every usage in a try-catch or conditional check.
  *
- * Checks VeChainKitConfig to determine if DAppKit is configured before
- * using the DAppKit wallet result.
+ * Uses static import to ensure the same module instance as LazyDAppKitProvider,
+ * avoiding ESM/CJS interop issues that can occur with require().
  *
  * @returns DAppKit wallet info and functions, or default values if DAppKit is not configured
  */
@@ -123,13 +126,13 @@ export const useOptionalDAppKitWallet =
 
         // If DAppKit is not configured, return defaults immediately
         if (!isDAppKitConfigured) {
-            return DEFAULT_DAPPKIT_WALLET_STATE as unknown as UseOptionalDAppKitWalletReturnType;
+            return DEFAULT_DAPPKIT_WALLET_STATE;
         }
 
         // DAppKit is configured, return actual values (or defaults if hook threw)
         if (!dappKitResult) {
-            return DEFAULT_DAPPKIT_WALLET_STATE as unknown as UseOptionalDAppKitWalletReturnType;
+            return DEFAULT_DAPPKIT_WALLET_STATE;
         }
 
-        return dappKitResult;
+        return dappKitResult as unknown as UseOptionalDAppKitWalletReturnType;
     };

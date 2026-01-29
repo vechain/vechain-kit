@@ -3,7 +3,8 @@ import { VechainLogoDark, VechainLogoLight } from '../../../assets';
 // Import directly to avoid circular dependency with components barrel
 import { ConnectionButton } from './ConnectionButton';
 import { SocialIcons } from '../../WalletButton/SocialIcons';
-import { usePrivy } from '../../../hooks';
+// Use optional hook to handle missing PrivyProvider gracefully
+import { useOptionalPrivy } from '../../../hooks/api/privy/useOptionalPrivy';
 import { useTranslation } from 'react-i18next';
 import { IconType } from 'react-icons';
 
@@ -17,7 +18,7 @@ type Props = {
 /// It is a very specific scenario.
 export const VeChainWithPrivyLoginButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
-    const { login: viewMoreLogin } = usePrivy();
+    const { login: viewMoreLogin } = useOptionalPrivy();
 
     return (
         <GridItem colSpan={gridColumn ? gridColumn : 4} w={'full'}>

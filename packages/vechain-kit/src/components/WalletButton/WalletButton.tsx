@@ -1,7 +1,8 @@
 import { Button, useDisclosure, useMediaQuery } from '@chakra-ui/react';
-import { useWallet, useDAppKitWalletModal } from '../../hooks';
-// Use optional hook to handle missing DAppKitProvider gracefully
+import { useWallet } from '../../hooks';
+// Use optional hooks to handle missing providers gracefully
 import { useOptionalDAppKitWallet } from '../../hooks/api/dappkit/useOptionalDAppKitWallet';
+import { useOptionalDAppKitWalletModal } from '../../hooks/api/dappkit/useOptionalDAppKitWalletModal';
 // Import directly to avoid circular dependency with components barrel
 import { ConnectModal } from '../ConnectModal/ConnectModal';
 import { AccountModal } from '../AccountModal/AccountModal';
@@ -35,7 +36,7 @@ export const WalletButton = ({
 
     const connectModal = useDisclosure();
     const accountModal = useDisclosure();
-    const { open: openDappKit } = useDAppKitWalletModal();
+    const { open: openDappKit } = useOptionalDAppKitWalletModal();
 
     const handleConnect = () => {
         if (connection.isInAppBrowser) {

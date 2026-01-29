@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-// Direct imports to avoid circular dependency through barrel exports
-import { useWallet as useDAppKitWallet } from '@vechain/dapp-kit-react';
+// Use optional hook to handle missing DAppKitProvider gracefully
+import { useOptionalDAppKitWallet } from '../dappkit/useOptionalDAppKitWallet';
 import { useWallet } from './useWallet';
 import { useWalletStorage, StoredWallet } from './useWalletStorage';
 import { isBrowser } from '../../../utils/ssrUtils';
@@ -20,7 +20,7 @@ export type UseSwitchWalletReturnType = {
  * - On desktop: Provides wallet storage functions for UI-based switching
  */
 export const useSwitchWallet = (): UseSwitchWalletReturnType => {
-    const { switchWallet: dappKitSwitchWallet } = useDAppKitWallet();
+    const { switchWallet: dappKitSwitchWallet } = useOptionalDAppKitWallet();
     const { connection } = useWallet();
     const [isSwitching, setIsSwitching] = useState(false);
     const {

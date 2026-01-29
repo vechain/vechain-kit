@@ -1,8 +1,8 @@
 'use client';
 
 import type { User } from '@privy-io/react-auth';
-// Use static import to ensure we use the same module instance as PrivyProvider
-// This avoids ESM/CJS interop issues that can occur with require() in Next.js
+// Use static import to ensure we use the same module instance as LazyPrivyProvider
+// This avoids ESM/CJS interop issues that can occur with require() in bundled contexts
 import { usePrivy } from '@privy-io/react-auth';
 import { useVeChainKitConfig } from '../../../providers/VeChainKitContext';
 
@@ -15,6 +15,9 @@ export type UseOptionalPrivyReturnType = {
     authenticated: boolean;
     ready: boolean;
     logout: () => Promise<void>;
+    login: () => void;
+    exportWallet: () => Promise<void>;
+    linkPasskey: () => void;
 };
 
 // Default return value when Privy is not available
@@ -23,6 +26,21 @@ const DEFAULT_PRIVY_STATE: UseOptionalPrivyReturnType = {
     authenticated: false,
     ready: true,
     logout: async () => {},
+    login: () => {
+        console.warn(
+            'Privy is not configured. Add privy prop to VeChainKitProvider to enable social logins.',
+        );
+    },
+    exportWallet: async () => {
+        console.warn(
+            'Privy is not configured. Add privy prop to VeChainKitProvider to enable wallet export.',
+        );
+    },
+    linkPasskey: () => {
+        console.warn(
+            'Privy is not configured. Add privy prop to VeChainKitProvider to enable passkey linking.',
+        );
+    },
 };
 
 /**
@@ -30,9 +48,8 @@ const DEFAULT_PRIVY_STATE: UseOptionalPrivyReturnType = {
  * Returns default values when Privy is not configured in VeChainKitProvider,
  * avoiding the need to wrap every usage in a try-catch or conditional check.
  *
- * When Privy is not configured, the PrivyProvider is not rendered, so usePrivy()
- * may return { ready: false } instead of throwing. This hook checks the
- * VeChainKitConfig first to determine if Privy is configured.
+ * Uses static import to ensure the same module instance as LazyPrivyProvider,
+ * avoiding ESM/CJS interop issues that can occur with require().
  *
  * @returns Privy user info and auth state, or default values if Privy is not configured
  */
@@ -49,7 +66,6 @@ export const useOptionalPrivy = (): UseOptionalPrivyReturnType => {
     }
 
     // If Privy is not configured, return defaults immediately
-    // This handles the case where usePrivy() returns { ready: false } instead of throwing
     if (!isPrivyConfigured) {
         return DEFAULT_PRIVY_STATE;
     }
@@ -64,5 +80,8 @@ export const useOptionalPrivy = (): UseOptionalPrivyReturnType => {
         authenticated: privyResult.authenticated ?? false,
         ready: privyResult.ready ?? true,
         logout: privyResult.logout ?? (async () => {}),
+        login: privyResult.login ?? (() => {}),
+        exportWallet: privyResult.exportWallet ?? (async () => {}),
+        linkPasskey: privyResult.linkPasskey ?? (async () => {}),
     };
 };

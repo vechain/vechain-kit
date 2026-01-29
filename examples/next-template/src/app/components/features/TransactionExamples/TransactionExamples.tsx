@@ -33,30 +33,32 @@ export function TransactionExamples() {
 
     const callUseBuildTransaction = (delegationUrl?: string) => {
         return useBuildTransaction({
-        clauseBuilder: () => {
-            if (!account?.address) return [];
+            clauseBuilder: () => {
+                if (!account?.address) return [];
 
-            return clauses;
-        },
-        refetchQueryKeys: [],
-        onSuccess: () => {},
-        onFailure: () => {},
-        suggestedMaxGas: undefined,
-        delegationUrl: delegationUrl,
-    });}
+                return clauses;
+            },
+            refetchQueryKeys: [],
+            onSuccess: () => {},
+            onFailure: () => {},
+            suggestedMaxGas: undefined,
+            delegationUrl: delegationUrl,
+        });
+    };
 
     const callUseSendTransaction = (delegationUrl?: string) => {
         return useSendTransaction({
             signerAccountAddress: account?.address,
             delegationUrl: delegationUrl,
         });
-    }
+    };
 
     const buildTransactionNoDelegation = callUseBuildTransaction();
 
-    const delegationUrl = ""; // YOUR DELEGATION URL HERE
-    
-    const buildTransactionWithDelegation = callUseBuildTransaction(delegationUrl);
+    const delegationUrl = ''; // YOUR DELEGATION URL HERE
+
+    const buildTransactionWithDelegation =
+        callUseBuildTransaction(delegationUrl);
 
     const sendTransactionNoDelegation = callUseSendTransaction();
 
@@ -75,7 +77,13 @@ export function TransactionExamples() {
     } = useTransactionModal();
 
     // State to track which modal type is currently open
-    const [currentModalType, setCurrentModalType] = useState<'useBuildTxWithDelegation' | 'useSendTxWithDelegation' | 'useBuildTxWithToast' | 'useSendTxWithToast' | null>(null);
+    const [currentModalType, setCurrentModalType] = useState<
+        | 'useBuildTxWithDelegation'
+        | 'useSendTxWithDelegation'
+        | 'useBuildTxWithToast'
+        | 'useSendTxWithToast'
+        | null
+    >(null);
 
     const handleTransactionWithToast = useCallback(async () => {
         setCurrentModalType('useBuildTxWithToast');
@@ -86,7 +94,7 @@ export function TransactionExamples() {
     const handleBuildTransactionDelegatedWithModal = useCallback(async () => {
         setCurrentModalType('useBuildTxWithDelegation');
         openTransactionModal();
-        await (buildTransactionWithDelegation.sendTransaction({}));
+        await buildTransactionWithDelegation.sendTransaction({});
     }, [buildTransactionWithDelegation.sendTransaction, openTransactionModal]);
 
     const handleUseSendTransactionWithToast = useCallback(async () => {
@@ -98,28 +106,46 @@ export function TransactionExamples() {
     const handleSendTransactionDelegatedWithModal = useCallback(async () => {
         setCurrentModalType('useSendTxWithDelegation');
         openTransactionModal();
-        await sendTransactionWithDelegation.sendTransaction(clauses, delegationUrl);
+        await sendTransactionWithDelegation.sendTransaction(
+            clauses,
+            delegationUrl,
+        );
     }, [sendTransactionWithDelegation.sendTransaction, openTransactionModal]);
 
     const retryBuildTransactionDelegated = useCallback(async () => {
         buildTransactionWithDelegation.resetStatus();
         await buildTransactionWithDelegation.sendTransaction({});
-    }, [buildTransactionWithDelegation.resetStatus, buildTransactionWithDelegation.sendTransaction]);
+    }, [
+        buildTransactionWithDelegation.resetStatus,
+        buildTransactionWithDelegation.sendTransaction,
+    ]);
 
     const retryBuildTransactionNoDelegation = useCallback(async () => {
         buildTransactionNoDelegation.resetStatus();
         await buildTransactionNoDelegation.sendTransaction({});
-    }, [buildTransactionNoDelegation.resetStatus, buildTransactionNoDelegation.sendTransaction]);
+    }, [
+        buildTransactionNoDelegation.resetStatus,
+        buildTransactionNoDelegation.sendTransaction,
+    ]);
 
     const retrySendTransactionDelegated = useCallback(async () => {
         sendTransactionWithDelegation.resetStatus();
-        await sendTransactionWithDelegation.sendTransaction(clauses, delegationUrl);
-    }, [sendTransactionWithDelegation.resetStatus, sendTransactionWithDelegation.sendTransaction]);
+        await sendTransactionWithDelegation.sendTransaction(
+            clauses,
+            delegationUrl,
+        );
+    }, [
+        sendTransactionWithDelegation.resetStatus,
+        sendTransactionWithDelegation.sendTransaction,
+    ]);
 
     const retrySendTransactionNoDelegation = useCallback(async () => {
         sendTransactionNoDelegation.resetStatus();
         await sendTransactionNoDelegation.sendTransaction(clauses);
-    }, [sendTransactionNoDelegation.resetStatus, sendTransactionNoDelegation.sendTransaction]);
+    }, [
+        sendTransactionNoDelegation.resetStatus,
+        sendTransactionNoDelegation.sendTransaction,
+    ]);
 
     const closeModalAndReset = useCallback(() => {
         closeTransactionModal();
@@ -135,16 +161,24 @@ export function TransactionExamples() {
                 <HStack mt={4} spacing={4}>
                     <Button
                         onClick={handleTransactionWithToast}
-                        isLoading={buildTransactionNoDelegation.isTransactionPending}
-                        isDisabled={buildTransactionNoDelegation.isTransactionPending}
+                        isLoading={
+                            buildTransactionNoDelegation.isTransactionPending
+                        }
+                        isDisabled={
+                            buildTransactionNoDelegation.isTransactionPending
+                        }
                         data-testid="tx-with-toast-button"
                     >
                         useBuildTransaction with toast (no delegation)
                     </Button>
                     <Button
                         onClick={handleBuildTransactionDelegatedWithModal}
-                        isLoading={buildTransactionWithDelegation.isTransactionPending}
-                        isDisabled={buildTransactionWithDelegation.isTransactionPending}
+                        isLoading={
+                            buildTransactionWithDelegation.isTransactionPending
+                        }
+                        isDisabled={
+                            buildTransactionWithDelegation.isTransactionPending
+                        }
                         data-testid="tx-with-modal-button"
                     >
                         useBuildTransaction with modal (delegated)
@@ -153,16 +187,24 @@ export function TransactionExamples() {
                 <HStack mt={5} spacing={4}>
                     <Button
                         onClick={handleUseSendTransactionWithToast}
-                        isLoading={sendTransactionNoDelegation.isTransactionPending}
-                        isDisabled={sendTransactionNoDelegation.isTransactionPending}
+                        isLoading={
+                            sendTransactionNoDelegation.isTransactionPending
+                        }
+                        isDisabled={
+                            sendTransactionNoDelegation.isTransactionPending
+                        }
                         data-testid="tx-with-toast-button"
                     >
                         useSendTransaction with toast (no delegation)
                     </Button>
                     <Button
                         onClick={handleSendTransactionDelegatedWithModal}
-                        isLoading={sendTransactionWithDelegation.isTransactionPending}
-                        isDisabled={sendTransactionWithDelegation.isTransactionPending}
+                        isLoading={
+                            sendTransactionWithDelegation.isTransactionPending
+                        }
+                        isDisabled={
+                            sendTransactionWithDelegation.isTransactionPending
+                        }
                         data-testid="tx-with-modal-button"
                     >
                         useSendTransaction with modal (delegated)
@@ -204,18 +246,24 @@ export function TransactionExamples() {
                 onClose={closeModalAndReset}
                 status={
                     currentModalType === 'useBuildTxWithDelegation'
-                        ? buildTransactionWithDelegation.status ?? buildTransactionNoDelegation.status
-                        : sendTransactionWithDelegation.status ?? sendTransactionNoDelegation.status
+                        ? buildTransactionWithDelegation.status ??
+                          buildTransactionNoDelegation.status
+                        : sendTransactionWithDelegation.status ??
+                          sendTransactionNoDelegation.status
                 }
                 txReceipt={
                     currentModalType === 'useBuildTxWithDelegation'
-                        ? buildTransactionWithDelegation.txReceipt ?? buildTransactionNoDelegation.txReceipt
-                        : sendTransactionWithDelegation.txReceipt ?? sendTransactionNoDelegation.txReceipt
+                        ? buildTransactionWithDelegation.txReceipt ??
+                          buildTransactionNoDelegation.txReceipt
+                        : sendTransactionWithDelegation.txReceipt ??
+                          sendTransactionNoDelegation.txReceipt
                 }
                 txError={
                     currentModalType === 'useBuildTxWithDelegation'
-                        ? buildTransactionWithDelegation.error ?? buildTransactionNoDelegation.error
-                        : sendTransactionWithDelegation.error ?? sendTransactionNoDelegation.error
+                        ? buildTransactionWithDelegation.error ??
+                          buildTransactionNoDelegation.error
+                        : sendTransactionWithDelegation.error ??
+                          sendTransactionNoDelegation.error
                 }
                 onTryAgain={
                     currentModalType === 'useBuildTxWithDelegation'

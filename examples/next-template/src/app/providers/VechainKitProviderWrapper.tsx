@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 // 2. Code splitting - this component will only be loaded when needed, reducing initial bundle size
 // 3. The 'ssr: false' option ensures this component is only rendered on the client side
 const VeChainKitProvider = dynamic(
-    async () => (await import('@vechain/vechain-kit/providers')).VeChainKitProvider,
+    async () =>
+        (await import('@vechain/vechain-kit/providers')).VeChainKitProvider,
     {
         ssr: false,
     },
