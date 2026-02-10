@@ -97,6 +97,7 @@ export const ProfileContent = ({
                     )}
 
                     <ProfileCard
+                        reserveNameDescriptionSpace={!!account?.domain}
                         onEditClick={() => {
                             setCurrentContent({
                                 type: 'account-customization',
