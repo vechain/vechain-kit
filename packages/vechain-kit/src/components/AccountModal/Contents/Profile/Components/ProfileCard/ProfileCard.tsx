@@ -24,6 +24,8 @@ export type ProfileCardProps = {
     showDescription?: boolean;
     showDisplayName?: boolean;
     showEdit?: boolean;
+    /** When true, reserves space for name/description when empty. Use when user has .vet domain (no announcement card). */
+    reserveNameDescriptionSpace?: boolean;
     setCurrentContent?: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
@@ -35,6 +37,7 @@ export const ProfileCard = ({
     showLinks = true,
     showDescription = true,
     showDisplayName = true,
+    reserveNameDescriptionSpace = false,
     setCurrentContent,
     onLogout,
 }: ProfileCardProps) => {
@@ -128,30 +131,42 @@ export const ProfileCard = ({
             </Box>
 
             <VStack w={'full'} spacing={2}>
-                {showDisplayName && metadata?.records?.display && (
-                    <Text
-                        fontSize="xl"
-                        color={textPrimary}
-                        fontWeight="bold"
-                        w="full"
-                        textAlign="center"
-                        mt={2}
-                        data-testid="display-name-val"
-                    >
-                        {metadata?.records?.display}
-                    </Text>
+                {showDisplayName && (
+                    metadata?.records?.display ? (
+                        <Text
+                            fontSize="xl"
+                            color={textPrimary}
+                            fontWeight="bold"
+                            w="full"
+                            textAlign="center"
+                            mt={2}
+                            data-testid="display-name-val"
+                        >
+                            {metadata?.records?.display}
+                        </Text>
+                    ) : (
+                        reserveNameDescriptionSpace && (
+                            <Box mt={2} minH="28px" aria-hidden />
+                        )
+                    )
                 )}
 
-                {showDescription && metadata?.records?.description && (
-                    <Text
-                        fontSize="sm"
-                        color={textSecondary}
-                        w="full"
-                        textAlign="center"
-                        data-testid="description-val"
-                    >
-                        {metadata?.records?.description}
-                    </Text>
+                {showDescription && (
+                    metadata?.records?.description ? (
+                        <Text
+                            fontSize="sm"
+                            color={textSecondary}
+                            w="full"
+                            textAlign="center"
+                            data-testid="description-val"
+                        >
+                            {metadata?.records?.description}
+                        </Text>
+                    ) : (
+                        reserveNameDescriptionSpace && (
+                            <Box minH="20px" aria-hidden />
+                        )
+                    )
                 )}
 
                 {showLinks && hasLinks && (

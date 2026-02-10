@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
 import { useCurrency } from '@/hooks';
 import { SupportedCurrency } from '@/utils/currencyUtils';
+import { NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
 
 type Props = {
     setCurrentContent: React.Dispatch<
@@ -32,12 +33,17 @@ type Props = {
      * If true, shows all tokens (not just tokens with balance) and sorts owned tokens first
      */
     showAllTokens?: boolean;
+    /**
+     * Token symbols to exclude from the list (e.g. non-transferable governance tokens)
+     */
+    excludedTokenSymbols?: readonly string[];
 };
 
 export const SelectTokenContent = ({
     onSelectToken,
     onBack,
     showAllTokens = false,
+    excludedTokenSymbols = NON_TRANSFERABLE_TOKEN_SYMBOLS,
 }: Props) => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
@@ -54,13 +60,19 @@ export const SelectTokenContent = ({
 
     // Get the appropriate token list based on showAllTokens prop
     const availableTokens = useMemo(() => {
+        const exclude = (symbol: string) =>
+            excludedTokenSymbols.includes(symbol);
+
+        let tokens: TokenWithValue[];
         if (showAllTokens) {
             // Show all tokens, sorted with owned tokens first (by value), then unowned
             const ownedTokens = sortedTokens.filter(
-                (token) => Number(token.balance) > 0,
+                (token) =>
+                    Number(token.balance) > 0 && !exclude(token.symbol),
             );
             const unownedTokens = sortedTokens.filter(
-                (token) => Number(token.balance) === 0,
+                (token) =>
+                    Number(token.balance) === 0 && !exclude(token.symbol),
             );
 
             // Owned tokens are already sorted by value (highest first)
@@ -69,10 +81,19 @@ export const SelectTokenContent = ({
                 a.symbol.localeCompare(b.symbol),
             );
 
-            return [...ownedTokens, ...sortedUnowned];
+            tokens = [...ownedTokens, ...sortedUnowned];
+        } else {
+            tokens = tokensWithBalance.filter(
+                (token) => !exclude(token.symbol),
+            );
         }
-        return tokensWithBalance;
-    }, [showAllTokens, sortedTokens, tokensWithBalance]);
+        return tokens;
+    }, [
+        showAllTokens,
+        sortedTokens,
+        tokensWithBalance,
+        excludedTokenSymbols,
+    ]);
 
     // Filter tokens
     const filteredTokens = availableTokens.filter(({ symbol }) =>

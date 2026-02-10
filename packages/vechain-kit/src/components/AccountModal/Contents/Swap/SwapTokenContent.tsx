@@ -42,7 +42,7 @@ import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { formatUnits, parseUnits } from 'viem';
 import { getConfig } from '@/config';
-import { compareAddresses } from '@/utils';
+import { compareAddresses, NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
 import {
@@ -134,19 +134,29 @@ export const SwapTokenContent = ({
     React.useEffect(() => {
         if (sortedTokens.length === 0) return;
 
-        // Prefer provided addresses
+        // Prefer provided addresses (exclude non-transferable tokens)
         if ((fromTokenAddress || toTokenAddress) && (!fromToken || !toToken)) {
             if (fromTokenAddress && !fromToken) {
                 const match = sortedTokens.find((t) =>
                     compareAddresses(t.address, fromTokenAddress),
                 );
-                if (match) setFromToken(match);
+                if (
+                    match &&
+                    !NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(match.symbol)
+                ) {
+                    setFromToken(match);
+                }
             }
             if (toTokenAddress && !toToken) {
                 const match = sortedTokens.find((t) =>
                     compareAddresses(t.address, toTokenAddress),
                 );
-                if (match) setToToken(match);
+                if (
+                    match &&
+                    !NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(match.symbol)
+                ) {
+                    setToToken(match);
+                }
             }
             return;
         }
