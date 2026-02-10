@@ -110,7 +110,7 @@ export const BalanceSection = ({
                     mb={4}
                 >
                     <Heading size={'2xl'} fontWeight={'700'}>
-                        { showAssets ? formattedBalance : formattedBalance[0] + '*'.repeat(formattedBalance.slice(1).length) }
+                        {showAssets ? formattedBalance : '$****'}
                     </Heading>
 
                     <HStack

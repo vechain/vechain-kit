@@ -138,10 +138,7 @@ export const ProfileContent = ({
                                     maxIcons={2}
                                 />
                                 <Text fontWeight="600">
-                                    {showAssets
-                                        ? formattedBalance
-                                        : formattedBalance[0] +
-                                          '*'.repeat(formattedBalance.slice(1).length)}
+                                    {showAssets ? formattedBalance : '$****'}
                                 </Text>
                             </HStack>
                         ) : (
