@@ -1,6 +1,6 @@
 {
     "name": "@vechain/vechain-kit",
-    "version": "2.4.3",
+    "version": "2.4.4",
     "author": "VeChain Foundation",
     "homepage": "https://github.com/vechain/vechain-kit",
     "repository": {
@@ -63,7 +63,7 @@
         "@solana/web3.js": "^1.98.0",
         "@tanstack/react-query": "^5.64.2",
         "@tanstack/react-query-devtools": "^5.64.1",
-        "@vechain/contract-getters": "1.0.4",
+        "@vechain/contract-getters": "1.1.0",
         "@vechain/dapp-kit-react": "2.1.0-rc.5",
         "@vechain/picasso": "^2.1.1",
         "@vechain/vechain-contract-types": "1.6.0-rc",
