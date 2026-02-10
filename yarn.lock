@@ -7436,14 +7436,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vechain/contract-getters@npm:1.0.4":
-  version: 1.0.4
-  resolution: "@vechain/contract-getters@npm:1.0.4"
+"@vechain/contract-getters@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@vechain/contract-getters@npm:1.1.0"
   peerDependencies:
     "@vechain/sdk-network": ^2.0.7
     "@vechain/vechain-contract-types": ^1.5.0
     ethers: ^6.0.0
-  checksum: 10c0/114071733e795989e645ca9e498f76223c67d913b4c704e41d4a7728cedebd9f05565c1f4ac5f1780521bf197215931ae03190978aee9fbc9e0e73baaa1eca3d
+  checksum: 10c0/3c4802e13da707be876a5793920c11edbc7237957668116641a93df4d4b7820fef4f926220b80267993ae2c518a9004e52e92b002166fe5029145f979aa3d075
   languageName: node
   linkType: hard
 
@@ -7645,7 +7645,7 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.64.1"
     "@types/react": "npm:^18.2.28"
     "@types/react-dom": "npm:^18.2.13"
-    "@vechain/contract-getters": "npm:1.0.4"
+    "@vechain/contract-getters": "npm:1.1.0"
     "@vechain/dapp-kit-react": "npm:2.1.0-rc.5"
     "@vechain/picasso": "npm:^2.1.1"
     "@vechain/vechain-contract-types": "npm:1.6.0-rc"
