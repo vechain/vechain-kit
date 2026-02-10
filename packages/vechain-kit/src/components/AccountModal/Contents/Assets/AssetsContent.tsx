@@ -26,6 +26,7 @@ import { LuSearch } from 'react-icons/lu';
 import { useState } from 'react';
 import { useCurrency } from '@/hooks';
 import { SupportedCurrency } from '@/utils/currencyUtils';
+import { NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
 export type AssetsContentProps = {
@@ -96,6 +97,10 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                     <VStack spacing={2} align="stretch" mt={2}>
                         {filteredTokens.map((token) => {
                             const hasBalance = Number(token.balance) > 0;
+                            const isNonTransferable =
+                                NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(
+                                    token.symbol,
+                                );
 
                             return (
                                 <AssetButton
@@ -107,7 +112,7 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                                         currentCurrency as SupportedCurrency
                                     }
                                     onClick={() => handleTokenSelect(token)}
-                                    isDisabled={!hasBalance}
+                                    isDisabled={!hasBalance || isNonTransferable}
                                 />
                             );
                         })}

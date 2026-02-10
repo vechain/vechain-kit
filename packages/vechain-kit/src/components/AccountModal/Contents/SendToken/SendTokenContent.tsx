@@ -37,6 +37,7 @@ import {
     SupportedCurrency,
     convertToSelectedCurrency,
 } from '@/utils/currencyUtils';
+import { NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
 import { ens_normalize } from '@adraffy/ens-normalize';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
@@ -80,21 +81,30 @@ export const SendTokenContent = ({
         address: account?.address ?? '',
     });
 
+    const transferableTokens = useMemo(
+        () =>
+            tokensWithBalance.filter(
+                (t) => !NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(t.symbol),
+            ),
+        [tokensWithBalance],
+    );
+
     const [selectedToken, setSelectedToken] = useState<TokenWithValue | null>(
-        preselectedToken ?? tokensWithBalance[0] ?? null,
+        () => {
+            const validPreselected =
+                preselectedToken &&
+                !NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(preselectedToken.symbol);
+            return validPreselected ? preselectedToken : transferableTokens[0] ?? null;
+        },
     );
     const [isSelectingToken, setIsSelectingToken] = useState(false);
 
-    // Set first token with balance as default when tokens load
+    // Set first transferable token as default when tokens load and we have no selection yet
     useEffect(() => {
-        if (
-            !preselectedToken &&
-            !selectedToken &&
-            tokensWithBalance.length > 0
-        ) {
-            setSelectedToken(tokensWithBalance[0]);
+        if (!selectedToken && transferableTokens.length > 0) {
+            setSelectedToken(transferableTokens[0]);
         }
-    }, [tokensWithBalance, preselectedToken, selectedToken]);
+    }, [transferableTokens, selectedToken]);
 
     // Form setup with validation rules
     const {

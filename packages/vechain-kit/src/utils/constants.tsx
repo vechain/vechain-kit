@@ -21,6 +21,9 @@ import {
     MUGSHOT_BASE_URL,
 } from '@/constants';
 
+/** Tokens that cannot be swapped or transferred (e.g. governance voting tokens) */
+export const NON_TRANSFERABLE_TOKEN_SYMBOLS: readonly string[] = ['VOT3'];
+
 export const TOKEN_LOGOS: Record<string, string> = {
     VET: new URL(
         '/static/img/coins/64x64/3077.png',
