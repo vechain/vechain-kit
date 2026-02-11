@@ -4657,15 +4657,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/api-base@npm:1.6.1":
-  version: 1.6.1
-  resolution: "@privy-io/api-base@npm:1.6.1"
-  dependencies:
-    zod: "npm:^3.24.3"
-  checksum: 10c0/3c2a4b26de13af8c30e26b78db1ed792f1411d415a2ab3077145129c3e5315d6f0748c2419d51871a128ac6e20da31fa4d21137e9be3f4bcadbad9f9cb61f822
-  languageName: node
-  linkType: hard
-
 "@privy-io/api-base@npm:1.7.0":
   version: 1.7.0
   resolution: "@privy-io/api-base@npm:1.7.0"
@@ -4721,9 +4712,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/js-sdk-core@npm:0.54.2":
-  version: 0.54.2
-  resolution: "@privy-io/js-sdk-core@npm:0.54.2"
+"@privy-io/js-sdk-core@npm:0.55.0":
+  version: 0.55.0
+  resolution: "@privy-io/js-sdk-core@npm:0.55.0"
   dependencies:
     "@ethersproject/abstract-signer": "npm:^5.7.0"
     "@ethersproject/bignumber": "npm:^5.7.0"
@@ -4731,9 +4722,9 @@ __metadata:
     "@ethersproject/providers": "npm:^5.7.2"
     "@ethersproject/transactions": "npm:^5.7.0"
     "@ethersproject/units": "npm:^5.7.0"
-    "@privy-io/api-base": "npm:1.6.1"
+    "@privy-io/api-base": "npm:1.7.0"
     "@privy-io/chains": "npm:0.0.2"
-    "@privy-io/public-api": "npm:2.44.2"
+    "@privy-io/public-api": "npm:2.45.0"
     canonicalize: "npm:^2.0.0"
     eventemitter3: "npm:^5.0.1"
     fetch-retry: "npm:^6.0.0"
@@ -4750,20 +4741,20 @@ __metadata:
       optional: true
     viem:
       optional: true
-  checksum: 10c0/ab6d8ae1c28cc149394b8e847ba32be71dab5046b326e65106ade28783799f895d6e308d024debbbc8c6f79600f4a4eb8552af8d74c36705b0e8fae832a85fee
+  checksum: 10c0/3efc4c7de7a1bf510266ad911788b690419c055793ca101068f3a86016345e35f6037b3906ff56b7beeaada8f157ba1b3ddc62f4dff5d3875a00b6c11b084a4c
   languageName: node
   linkType: hard
 
-"@privy-io/public-api@npm:2.44.2":
-  version: 2.44.2
-  resolution: "@privy-io/public-api@npm:2.44.2"
+"@privy-io/public-api@npm:2.45.0":
+  version: 2.45.0
+  resolution: "@privy-io/public-api@npm:2.45.0"
   dependencies:
-    "@privy-io/api-base": "npm:1.6.1"
+    "@privy-io/api-base": "npm:1.7.0"
     bs58: "npm:^5.0.0"
     libphonenumber-js: "npm:^1.10.31"
     viem: "npm:^2"
     zod: "npm:^3.24.3"
-  checksum: 10c0/05595aa3055ecb3256e91b04968fc85d6e118594f0c7ca7281e03fb54d3994a3e392069cbfcdc24c0cd98b782b3e1d4868893734c4dd28647f6aef6924042731
+  checksum: 10c0/2c5c94c50c47780f0c86bd42716b2207643cd932fcdf9dd13cdcb13607b061d31a8ff957b163b26a8218a86d75e72cc632838cca100b6db00bf374d0fbe1937c
   languageName: node
   linkType: hard
 
@@ -4793,9 +4784,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@privy-io/react-auth@npm:2.24.0":
-  version: 2.24.0
-  resolution: "@privy-io/react-auth@npm:2.24.0"
+"@privy-io/react-auth@npm:2.25.0":
+  version: 2.25.0
+  resolution: "@privy-io/react-auth@npm:2.25.0"
   dependencies:
     "@base-org/account": "npm:^1.1.0"
     "@coinbase/wallet-sdk": "npm:4.3.2"
@@ -4804,11 +4795,11 @@ __metadata:
     "@heroicons/react": "npm:^2.1.1"
     "@marsidev/react-turnstile": "npm:^0.4.1"
     "@metamask/eth-sig-util": "npm:^6.0.0"
-    "@privy-io/api-base": "npm:1.6.1"
+    "@privy-io/api-base": "npm:1.7.0"
     "@privy-io/chains": "npm:0.0.2"
     "@privy-io/ethereum": "npm:0.0.2"
-    "@privy-io/js-sdk-core": "npm:0.54.2"
-    "@privy-io/public-api": "npm:2.44.2"
+    "@privy-io/js-sdk-core": "npm:0.55.0"
+    "@privy-io/public-api": "npm:2.45.0"
     "@reown/appkit": "npm:^1.7.11"
     "@scure/base": "npm:^1.2.5"
     "@simplewebauthn/browser": "npm:^9.0.1"
@@ -4842,6 +4833,8 @@ __metadata:
     zustand: "npm:^5.0.0"
   peerDependencies:
     "@abstract-foundation/agw-client": ^1.0.0
+    "@solana-program/system": ^0.7.0
+    "@solana-program/token": ^0.5.1
     "@solana/kit": ^2.3.0
     "@solana/spl-token": ^0.4.9
     "@solana/web3.js": ^1.95.8
@@ -4851,6 +4844,10 @@ __metadata:
   peerDependenciesMeta:
     "@abstract-foundation/agw-client":
       optional: true
+    "@solana-program/system":
+      optional: true
+    "@solana-program/token":
+      optional: true
     "@solana/kit":
       optional: true
     "@solana/spl-token":
@@ -4859,7 +4856,7 @@ __metadata:
       optional: true
     permissionless:
       optional: true
-  checksum: 10c0/48552e86caeef6f6f1f94cc339000efa9069f98d89eb4a7c11837e8bd83bce18a50ffbf18ea4e2d9581076f5a9e2589f27a9bfb39960ee073bc89775a64d6f1c
+  checksum: 10c0/2f174d6f650ef5d99b81616708a90942bdd76bb59eb7fa4c5c9a166d0bcf0f17d8f39c84505c2c4f12fa86b85f20b575874da216b883d2fd2616c7803c2f56a5
   languageName: node
   linkType: hard
 
@@ -7639,7 +7636,7 @@ __metadata:
     "@chakra-ui/react": "npm:^2.8.2"
     "@emotion/styled": "npm:^11.14.1"
     "@privy-io/cross-app-connect": "npm:0.2.2"
-    "@privy-io/react-auth": "npm:2.24.0"
+    "@privy-io/react-auth": "npm:2.25.0"
     "@solana/web3.js": "npm:^1.98.0"
     "@tanstack/react-query": "npm:^5.64.2"
     "@tanstack/react-query-devtools": "npm:^5.64.1"
