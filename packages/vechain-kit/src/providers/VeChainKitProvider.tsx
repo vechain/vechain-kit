@@ -95,6 +95,12 @@ export type VechainKitProviderProps = {
             createOnLogin: 'users-without-wallets' | 'all-users' | 'off';
         };
         loginMethods: PrivyLoginMethod[];
+        /**
+         * Custom redirect URL for OAuth flows, useful for mobile applications. If not provided, defaults to window.location.href.
+         * For Capacitor/mobile apps, use a custom URL scheme like: 'com.yourapp.oauth://callback' or 'yourapp://oauth'
+         * Make sure to register this URL scheme in your app configuration and add it to your app's allowed URL schemes in the Privy dashboard.
+         */
+        customOAuthRedirectUrl?: string;
     };
     feeDelegation?: {
         delegatorUrl?: string;
@@ -687,6 +693,8 @@ export const VeChainKitProvider = (
                             passkeys: {
                                 shouldUnlinkOnUnenrollMfa: false,
                             },
+                            customOAuthRedirectUrl:
+                                privy?.customOAuthRedirectUrl,
                         }}
                     >
                         <DAppKitProvider
