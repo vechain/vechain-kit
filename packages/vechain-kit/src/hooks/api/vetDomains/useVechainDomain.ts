@@ -23,6 +23,17 @@ export const useVechainDomain = (addressOrDomain?: string | null) => {
         queryKey: getVechainDomainQueryKey(addressOrDomain),
         queryFn: async () => {
             if (!addressOrDomain) throw new Error('Address or domain is required');
+
+            // VNS contracts only exist on mainnet and testnet
+            if (network.type !== 'main' && network.type !== 'test') {
+                const isAddress = isValidAddress(addressOrDomain);
+                return {
+                    address: isAddress ? addressOrDomain : undefined,
+                    domain: undefined,
+                    isValidAddressOrDomain: isAddress,
+                    isPrimaryDomain: false,
+                };
+            }
             
             // Determine input type
             const isDomain = await isValidDomain(addressOrDomain, {
