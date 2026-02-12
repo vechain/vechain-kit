@@ -42,6 +42,7 @@ export const useGetAccountVersion = (
                     isDeployed: data[1],
                 };
             },
+            enabled: !!accountAddress && !!ownerAddress,
         },
     });
 };
