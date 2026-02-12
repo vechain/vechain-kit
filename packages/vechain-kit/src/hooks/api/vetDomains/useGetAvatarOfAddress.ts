@@ -66,6 +66,12 @@ export const useGetAvatarOfAddress = (address?: string) => {
                 return crossAppAvatar ?? getPicassoImage(address ?? '');
             }
 
+            // VNS contracts only exist on mainnet and testnet
+            if (network.type !== 'main' && network.type !== 'test') {
+                const crossAppAvatar = getCrossAppAvatar();
+                return crossAppAvatar ?? getPicassoImage(address);
+            }
+
             const addressDomain = await getAddressDomain(address, {
                 networkUrl: network.nodeUrl,
             });
