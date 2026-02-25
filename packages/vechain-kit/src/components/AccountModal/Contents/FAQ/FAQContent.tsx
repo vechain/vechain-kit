@@ -39,9 +39,14 @@ export const FAQContent = ({
     const selectBorder = useToken('colors', 'vechain-kit-border');
     const selectBorderHover = useToken('colors', 'vechain-kit-border-hover');
 
-    const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleLanguageChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const lang = e.target.value;
-        loadLanguage(lang).then(() => i18n.changeLanguage(lang));
+        try {
+            await loadLanguage(lang);
+            i18n.changeLanguage(lang);
+        } catch (error) {
+            console.error(`[VeChainKit] Failed to switch language to "${lang}":`, error);
+        }
     };
 
     return (

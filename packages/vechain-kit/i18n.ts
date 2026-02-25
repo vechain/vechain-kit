@@ -77,8 +77,12 @@ export const loadLanguage = async (lng: string): Promise<void> => {
     const importFn = languageImportMap[lng];
     if (!importFn) return;
 
-    const module = await importFn();
-    i18n.addResourceBundle(lng, 'translation', module.default, true, true);
+    try {
+        const module = await importFn();
+        i18n.addResourceBundle(lng, 'translation', module.default, true, true);
+    } catch (error) {
+        console.error(`[VeChainKit] Failed to load language "${lng}":`, error);
+    }
 };
 
 const customLanguageDetector = {

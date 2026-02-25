@@ -15,6 +15,7 @@ import {
     StickyHeaderContainer,
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { languageNames, supportedLanguages, loadLanguage } from '../../../../../i18n';
 import { LuCheck } from 'react-icons/lu';
@@ -27,13 +28,21 @@ type Props = {
 
 export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
     const { t, i18n } = useTranslation();
+    const languageRequestIdRef = useRef(0);
     const selectedBg = useColorModeValue(
         'rgba(0, 0, 0, 0.1)',
         'rgba(255, 255, 255, 0.05)',
     );
 
-    const handleLanguageChange = (lang: string) => {
-        loadLanguage(lang).then(() => i18n.changeLanguage(lang));
+    const handleLanguageChange = async (lang: string) => {
+        const requestId = ++languageRequestIdRef.current;
+        try {
+            await loadLanguage(lang);
+            if (requestId !== languageRequestIdRef.current) return;
+            i18n.changeLanguage(lang);
+        } catch (error) {
+            console.error(`[VeChainKit] Failed to switch language to "${lang}":`, error);
+        }
     };
 
     const renderLanguageButton = (lang: string) => {
