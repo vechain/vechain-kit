@@ -27,8 +27,6 @@ export const useTokenBalances = (address?: string) => {
         useGetVot3Balance(address);
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
         useGetErc20Balance(config.veDelegateTokenContractAddress, address);
-    const { data: gloDollarBalance, isLoading: gloDollarLoading } =
-        useGetErc20Balance(config.gloDollarContractAddress, address);
     const { data: sassBalance, isLoading: sassLoading } = useGetErc20Balance(
         config.sassContractAddress,
         address,
@@ -55,7 +53,6 @@ export const useTokenBalances = (address?: string) => {
             b3tr: config.b3trContractAddress,
             vot3: config.vot3ContractAddress,
             veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
         };
 
         // Base tokens
@@ -85,11 +82,6 @@ export const useTokenBalances = (address?: string) => {
                 symbol: 'veDelegate',
                 balance: veDelegateBalance?.scaled ?? '0',
             },
-            {
-                address: contractAddresses.USDGLO,
-                symbol: 'USDGLO',
-                balance: gloDollarBalance?.scaled ?? '0',
-            },
         ];
 
         // Add custom tokens
@@ -118,7 +110,6 @@ export const useTokenBalances = (address?: string) => {
         b3trBalance,
         vot3Balance,
         veDelegateBalance,
-        gloDollarBalance,
         customTokenBalances,
         allowCommunityTokens,
         sassBalance,
@@ -131,7 +122,6 @@ export const useTokenBalances = (address?: string) => {
         b3trLoading ||
         vot3Loading ||
         veDelegateLoading ||
-        gloDollarLoading ||
         (allowCommunityTokens && sassLoading) ||
         customTokensLoading;
 

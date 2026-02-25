@@ -32,7 +32,6 @@ export const useTokenPrices = () => {
             b3tr: config.b3trContractAddress,
             vot3: config.vot3ContractAddress,
             veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
             SASS: config.sassContractAddress,
         };
 
@@ -43,7 +42,6 @@ export const useTokenPrices = () => {
             // VOT3 and veDelegate share the same price feed as B3TR
             [contractAddresses.vot3]: b3trUsdPrice || 0,
             [contractAddresses.veDelegate]: b3trUsdPrice || 0,
-            [contractAddresses.USDGLO]: 1, // GloDollar is pegged to USD
             [contractAddresses.SASS]: 0, // No price feed available
         };
     }, [
@@ -54,7 +52,6 @@ export const useTokenPrices = () => {
         config.b3trContractAddress,
         config.vot3ContractAddress,
         config.veDelegate,
-        config.gloDollarContractAddress,
         config.sassContractAddress,
     ]);
 

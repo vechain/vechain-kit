@@ -45,10 +45,6 @@ export const TOKEN_LOGOS: Record<string, string> = {
         '1c641b86096d56bf13d49f38388accd6db8b8b2e.png',
         VECHAIN_TOKEN_REGISTRY_ASSETS_BASE_URL,
     ).toString(),
-    USDGLO: new URL(
-        '/static/img/coins/64x64/23888.png',
-        COINMARKETCAP_STATIC_BASE_URL,
-    ).toString(),
     SASS: new URL(
         'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/sass-token-image.png',
     ).toString(),
