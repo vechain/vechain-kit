@@ -9,7 +9,15 @@
         { "name": "Chinese", "code": "zh" },
         { "name": "Japanese", "code": "ja" },
         { "name": "Russian", "code": "ru" },
-        { "name": "Romanian", "code": "ro" }
+        { "name": "Romanian", "code": "ro" },
+        { "name": "Vietnamese", "code": "vi" },
+        { "name": "Dutch", "code": "nl" },
+        { "name": "Korean", "code": "ko" },
+        { "name": "Swedish", "code": "sv" },
+        { "name": "Taiwanese", "code": "tw" },
+        { "name": "Turkish", "code": "tr" },
+        { "name": "Hindi", "code": "hi" },
+        { "name": "Portuguese (Brazil)", "code": "pt" }
     ],
     "fixedWords": {
         "it": {

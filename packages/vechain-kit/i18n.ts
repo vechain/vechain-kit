@@ -11,9 +11,20 @@ import zh from './src/languages/zh.json';
 import ja from './src/languages/ja.json';
 import ru from './src/languages/ru.json';
 import ro from './src/languages/ro.json';
+import tw from './src/languages/tw.json';
+import vi from './src/languages/vi.json';
+import nl from './src/languages/nl.json';
+import ko from './src/languages/ko.json';
+import sv from './src/languages/sv.json';
+import tr from './src/languages/tr.json';
+import hi from './src/languages/hi.json';
+import pt from './src/languages/pt.json';
 
 // Define supported languages
-export const supportedLanguages = ['en', 'de', 'it', 'fr', 'es', 'zh', 'ja', 'ru', 'ro'];
+export const supportedLanguages = [
+    'en', 'de', 'it', 'fr', 'es', 'zh', 'ja', 'ru', 'ro',
+    'vi', 'nl', 'ko', 'sv', 'tw', 'tr', 'hi', 'pt',
+];
 
 export const resources = {
     en: { translation: en },
@@ -25,6 +36,14 @@ export const resources = {
     ja: { translation: ja },
     ru: { translation: ru },
     ro: { translation: ro },
+    tw: { translation: tw },
+    vi: { translation: vi },
+    nl: { translation: nl },
+    ko: { translation: ko },
+    sv: { translation: sv },
+    tr: { translation: tr },
+    hi: { translation: hi },
+    pt: { translation: pt },
 };
 
 // Language names mapping
@@ -38,6 +57,14 @@ export const languageNames = {
     ja: '日本語',
     ru: 'Русский',
     ro: 'Română',
+    vi: 'Tiếng Việt',
+    nl: 'Nederlands',
+    ko: '한국어',
+    sv: 'Svenska',
+    tw: '繁體中文',
+    tr: 'Türkçe',
+    hi: 'हिन्दी',
+    pt: 'Português',
 };
 
 export const bcp47LanguageCodes: Record<string, string> = {
@@ -50,6 +77,14 @@ export const bcp47LanguageCodes: Record<string, string> = {
     ja: 'ja-JP',
     ru: 'ru-RU',
     ro: 'ro-RO',
+    vi: 'vi-VN',
+    nl: 'nl-NL',
+    ko: 'ko-KR',
+    sv: 'sv-SE',
+    tw: 'zh-TW',
+    tr: 'tr-TR',
+    hi: 'hi-IN',
+    pt: 'pt-BR',
 };
 
 // Custom language detector that checks localStorage first, then prop, then browser
