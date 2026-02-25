@@ -16,7 +16,7 @@ export type WalletTokenBalance = {
 };
 
 export const useTokenBalances = (address?: string) => {
-    const { network } = useVeChainKitConfig();
+    const { network, allowCommunityTokens } = useVeChainKitConfig();
     const config = getConfig(network.type);
 
     // Base token balances
@@ -29,6 +29,11 @@ export const useTokenBalances = (address?: string) => {
         useGetErc20Balance(config.veDelegateTokenContractAddress, address);
     const { data: gloDollarBalance, isLoading: gloDollarLoading } =
         useGetErc20Balance(config.gloDollarContractAddress, address);
+    const { data: sassBalance, isLoading: sassLoading } = useGetErc20Balance(
+        config.sassContractAddress,
+        address,
+        { enabled: allowCommunityTokens },
+    );
 
     // Custom token balances
     const customTokenBalancesQueries = useGetCustomTokenBalances(address);
@@ -96,7 +101,17 @@ export const useTokenBalances = (address?: string) => {
             }),
         );
 
-        return [...baseTokens, ...customTokens];
+        const communityTokens: WalletTokenBalance[] = allowCommunityTokens
+            ? [
+                  {
+                      address: config.sassContractAddress,
+                      symbol: 'SASS',
+                      balance: sassBalance?.scaled ?? '0',
+                  },
+              ]
+            : [];
+
+        return [...baseTokens, ...customTokens, ...communityTokens];
     }, [
         address,
         vetData,
@@ -105,6 +120,9 @@ export const useTokenBalances = (address?: string) => {
         veDelegateBalance,
         gloDollarBalance,
         customTokenBalances,
+        allowCommunityTokens,
+        sassBalance,
+        config.sassContractAddress,
         network.type,
     ]);
 
@@ -114,6 +132,7 @@ export const useTokenBalances = (address?: string) => {
         vot3Loading ||
         veDelegateLoading ||
         gloDollarLoading ||
+        (allowCommunityTokens && sassLoading) ||
         customTokensLoading;
 
     return {

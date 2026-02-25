@@ -9,8 +9,17 @@ export const getErc20BalanceQueryKey = (
     address?: string,
 ) => ['VECHAIN_KIT', 'BALANCE', 'ERC20', tokenAddress, address];
 
-export const useGetErc20Balance = (tokenAddress: string, address?: string) => {
+export type UseGetErc20BalanceOptions = {
+    enabled?: boolean;
+};
+
+export const useGetErc20Balance = (
+    tokenAddress: string,
+    address?: string,
+    options?: UseGetErc20BalanceOptions,
+) => {
     const { network } = useVeChainKitConfig();
+    const baseEnabled = !!address && !!network.type;
 
     return useQuery({
         queryKey: getErc20BalanceQueryKey(tokenAddress, address),
@@ -23,8 +32,8 @@ export const useGetErc20Balance = (tokenAddress: string, address?: string) => {
             if (!res) throw new Error('Failed to get vot3 balance');
 
             const original = res[0];
-            return formatTokenBalance(original);   
+            return formatTokenBalance(original);
         },
-        enabled: !!address && !!network.type,
+        enabled: baseEnabled && (options?.enabled ?? true),
     });
 };

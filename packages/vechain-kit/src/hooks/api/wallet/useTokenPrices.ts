@@ -33,6 +33,7 @@ export const useTokenPrices = () => {
             vot3: config.vot3ContractAddress,
             veDelegate: config.veDelegate,
             USDGLO: config.gloDollarContractAddress,
+            SASS: config.sassContractAddress,
         };
 
         return {
@@ -43,6 +44,7 @@ export const useTokenPrices = () => {
             [contractAddresses.vot3]: b3trUsdPrice || 0,
             [contractAddresses.veDelegate]: b3trUsdPrice || 0,
             [contractAddresses.USDGLO]: 1, // GloDollar is pegged to USD
+            [contractAddresses.SASS]: 0, // No price feed available
         };
     }, [
         vetUsdPrice,
@@ -53,6 +55,7 @@ export const useTokenPrices = () => {
         config.vot3ContractAddress,
         config.veDelegate,
         config.gloDollarContractAddress,
+        config.sassContractAddress,
     ]);
 
     const exchangeRates: ExchangeRates = useMemo(

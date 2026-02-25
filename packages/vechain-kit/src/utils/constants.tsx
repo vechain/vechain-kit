@@ -49,6 +49,9 @@ export const TOKEN_LOGOS: Record<string, string> = {
         '/static/img/coins/64x64/23888.png',
         COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
+    SASS: new URL(
+        'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/sass-token-image.png',
+    ).toString(),
 };
 
 export const TOKEN_LOGO_COMPONENTS: Record<string, JSX.Element> = {
