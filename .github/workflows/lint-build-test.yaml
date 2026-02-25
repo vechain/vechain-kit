@@ -42,19 +42,16 @@ jobs:
 
             Thank you for your patience! 🙏
 
-  # Job 2: Build, Lint and Compare package sizes
+  # Job 2: Build and Lint
   build-and-test-job:
     runs-on: ubuntu-latest
-    name: Lint & Build & Compare package sizes
-    permissions:
-      contents: read
-      pull-requests: write
+    name: Lint & Build
     if: |
       (github.event.label.name == 'safe-to-build') ||
       (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -69,6 +66,33 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name: Lint
+        run: yarn lint
+
+  # Job 3: Compare package sizes (separate job with write permissions)
+  compare-package-sizes:
+    runs-on: ubuntu-latest
+    name: Compare package sizes
+    needs: build-and-test-job
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install
+        run: yarn && yarn install:all
+
       - name: Compare package sizes
         uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
         with:
@@ -77,5 +101,3 @@ jobs:
           exclude: "{**/node_modules/**}"
           compression: none
           minimum-change-threshold: 1000
-      - name: Lint
-        run: yarn lint
