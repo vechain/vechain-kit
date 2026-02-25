@@ -2,7 +2,6 @@
     " and ": " 그리고 ",
     "'{{policyName}}' on connect": "연결 시 '{{policyName}}'",
     "'{{policyName}}' on {{date}}": "{{date}}에 '{{policyName}}'",
-    "<bold>Your privacy matters.</bold> You're in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>개인정보는 중요합니다.</bold> 당신이 통제합니다. 쿠키와 같은 선택적 기능을 활성화하려면 수락하세요.",
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "프로필을 사용자 정의하려면 .vet 도메인이 필요합니다. 시작하려면 계정 이름을 선택하세요.",
     "A Smart Account is a smart contract wallet that provides enhanced security and functionality. It allows for features like social recovery, transaction batching, and more.": "Smart Account는 향상된 보안과 기능을 제공하는 스마트 계약 지갑입니다. 소셜 복구, 거래 일괄 처리 등의 기능을 지원합니다.",
     "A domain name is a sort of nickname for your wallet address. It allows you to easily identify your wallet and interact with dApps using a human-readable name. For example, if your wallet address is 0x1234567890, your nickname could be \"alice.vechain\".": "도메인 이름은 지갑 주소의 별명입니다. 읽기 쉬운 이름으로 지갑을 쉽게 식별하고 dApps와 상호작용할 수 있습니다. 예를 들어, 지갑 주소가 0x1234567890이면 별명은 \"alice.vechain\"이 될 수 있습니다.",
@@ -423,5 +422,6 @@
     "unavailable": "사용 불가",
     "utilities": "유틸리티",
     "vebetter": "VeBetter",
-    "your@email.com": "your@email.com"
+    "your@email.com": "your@email.com",
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>개인정보는 중요합니다.</bold> 당신이 통제합니다. 쿠키와 같은 선택적 기능을 활성화하려면 수락하세요."
 }

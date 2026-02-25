@@ -2,7 +2,6 @@
     " and ": " và ",
     "'{{policyName}}' on connect": "'{{policyName}}' khi kết nối",
     "'{{policyName}}' on {{date}}": "'{{policyName}}' vào {{date}}",
-    "<bold>Your privacy matters.</bold> You're in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Quyền riêng tư của bạn rất quan trọng.</bold> Bạn nắm quyền kiểm soát, chấp nhận để bật các tính năng tùy chọn như cookie giúp chúng tôi nâng cao trải nghiệm của bạn.",
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "Cần có tên miền .vet để tùy chỉnh hồ sơ. Chọn tên tài khoản để bắt đầu.",
     "A Smart Account is a smart contract wallet that provides enhanced security and functionality. It allows for features like social recovery, transaction batching, and more.": "Smart Account là ví hợp đồng thông minh cung cấp bảo mật và chức năng nâng cao. Nó hỗ trợ các tính năng như khôi phục xã hội, gộp giao dịch và nhiều hơn nữa.",
     "A domain name is a sort of nickname for your wallet address. It allows you to easily identify your wallet and interact with dApps using a human-readable name. For example, if your wallet address is 0x1234567890, your nickname could be \"alice.vechain\".": "Tên miền là một dạng biệt danh cho địa chỉ ví của bạn. Nó cho phép bạn dễ dàng nhận dạng ví và tương tác với dApps bằng tên dễ đọc. Ví dụ, nếu địa chỉ ví của bạn là 0x1234567890, biệt danh có thể là \"alice.vechain\".",
@@ -423,5 +422,6 @@
     "unavailable": "không khả dụng",
     "utilities": "Tiện ích",
     "vebetter": "VeBetter",
-    "your@email.com": "your@email.com"
+    "your@email.com": "your@email.com",
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Quyền riêng tư của bạn rất quan trọng.</bold> Bạn nắm quyền kiểm soát, chấp nhận để bật các tính năng tùy chọn như cookie giúp chúng tôi nâng cao trải nghiệm của bạn."
 }

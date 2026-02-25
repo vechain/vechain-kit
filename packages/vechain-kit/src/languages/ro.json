@@ -2,7 +2,6 @@
     " and ": " și ",
     "'{{policyName}}' on connect": "'{{policyName}}' la conectare",
     "'{{policyName}}' on {{date}}": "'{{policyName}}' pe {{date}}",
-    "<bold>Your privacy matters.</bold> You're in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Confidențialitatea ta contează.</bold> Tu ai controlul, acceptă pentru a activa funcții opționale precum cookie-urile care ne ajută să îți îmbunătățim experiența.",
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "Este necesar un domeniu .vet pentru a-ți personaliza profilul. Alege un nume de cont pentru a începe.",
     "A Smart Account is a smart contract wallet that provides enhanced security and functionality. It allows for features like social recovery, transaction batching, and more.": "Un Smart Account este un portofel bazat pe contract inteligent care oferă securitate și funcționalitate îmbunătățite. Permite funcții precum recuperarea socială, gruparea tranzacțiilor și multe altele.",
     "A domain name is a sort of nickname for your wallet address. It allows you to easily identify your wallet and interact with dApps using a human-readable name. For example, if your wallet address is 0x1234567890, your nickname could be \"alice.vechain\".": "Un nume de domeniu este un fel de pseudonim pentru adresa portofelului tău. Îți permite să îți identifici ușor portofelul și să interacționezi cu dApps folosind un nume ușor de citit. De exemplu, dacă adresa portofelului tău este 0x1234567890, pseudonimul tău ar putea fi \"alice.vechain\".",
@@ -423,5 +422,6 @@
     "unavailable": "indisponibil",
     "utilities": "Utilități",
     "vebetter": "VeBetter",
-    "your@email.com": "your@email.com"
+    "your@email.com": "your@email.com",
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Confidențialitatea ta contează.</bold> Tu ai controlul, acceptă pentru a activa funcții opționale precum cookie-urile care ne ajută să îți îmbunătățim experiența."
 }

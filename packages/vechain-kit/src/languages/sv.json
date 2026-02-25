@@ -2,7 +2,6 @@
     " and ": " och ",
     "'{{policyName}}' on connect": "'{{policyName}}' vid anslutning",
     "'{{policyName}}' on {{date}}": "'{{policyName}}' den {{date}}",
-    "<bold>Your privacy matters.</bold> You're in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Din integritet är viktig.</bold> Du har kontrollen, acceptera för att aktivera valfria funktioner som cookies som hjälper oss förbättra din upplevelse.",
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "En .vet-domän krävs för att anpassa din profil. Välj ett kontonamn för att komma igång.",
     "A Smart Account is a smart contract wallet that provides enhanced security and functionality. It allows for features like social recovery, transaction batching, and more.": "Ett Smart Account är en smart contract-plånbok som ger förbättrad säkerhet och funktionalitet. Det möjliggör funktioner som social återställning, transaktionsbuntning och mer.",
     "A domain name is a sort of nickname for your wallet address. It allows you to easily identify your wallet and interact with dApps using a human-readable name. For example, if your wallet address is 0x1234567890, your nickname could be \"alice.vechain\".": "Ett domännamn är en sorts smeknamn för din plånboksadress. Det gör att du enkelt kan identifiera din plånbok och interagera med dApps med ett läsbart namn. Till exempel, om din plånboksadress är 0x1234567890, kan ditt smeknamn vara \"alice.vechain\".",
@@ -423,5 +422,6 @@
     "unavailable": "ej tillgänglig",
     "utilities": "Verktyg",
     "vebetter": "VeBetter",
-    "your@email.com": "your@email.com"
+    "your@email.com": "your@email.com",
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Din integritet är viktig.</bold> Du har kontrollen, acceptera för att aktivera valfria funktioner som cookies som hjälper oss förbättra din upplevelse."
 }
