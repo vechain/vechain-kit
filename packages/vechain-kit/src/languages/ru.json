@@ -2,7 +2,6 @@
     " and ": " и ",
     "'{{policyName}}' on connect": "'{{policyName}}' при подключении",
     "'{{policyName}}' on {{date}}": "'{{policyName}}' от {{date}}",
-    "<bold>Your privacy matters.</bold> You're in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Ваша конфиденциальность важна.</bold> Вы контролируете ситуацию, примите, чтобы включить дополнительные функции, такие как файлы cookie, которые помогают улучшить ваш опыт.",
     "A .vet domain is required to customize your profile. Choose an account name to get started.": "Для настройки профиля требуется домен .vet. Выберите имя аккаунта, чтобы начать.",
     "A Smart Account is a smart contract wallet that provides enhanced security and functionality. It allows for features like social recovery, transaction batching, and more.": "Smart Account — это кошелёк на основе смарт-контракта с улучшенной безопасностью и функциональностью. Он поддерживает социальное восстановление, группировку транзакций и многое другое.",
     "A domain name is a sort of nickname for your wallet address. It allows you to easily identify your wallet and interact with dApps using a human-readable name. For example, if your wallet address is 0x1234567890, your nickname could be \"alice.vechain\".": "Доменное имя — это своего рода псевдоним для адреса вашего кошелька. Оно позволяет легко идентифицировать ваш кошелёк и взаимодействовать с dApps, используя понятное имя. Например, если адрес вашего кошелька 0x1234567890, ваш псевдоним может быть \"alice.vechain\".",
@@ -423,5 +422,6 @@
     "unavailable": "недоступно",
     "utilities": "Утилиты",
     "vebetter": "VeBetter",
-    "your@email.com": "your@email.com"
+    "your@email.com": "your@email.com",
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Ваша конфиденциальность важна.</bold> Вы контролируете ситуацию, примите, чтобы включить дополнительные функции, такие как файлы cookie, которые помогают улучшить ваш опыт."
 }

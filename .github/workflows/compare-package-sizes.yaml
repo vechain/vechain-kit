@@ -1,0 +1,42 @@
+name: Compare package sizes
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.head_ref || github.ref_name }}-compare-package-sizes
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  compare-package-sizes:
+    runs-on: ubuntu-latest
+    name: Compare package sizes
+    permissions:
+      contents: read
+      pull-requests: write
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Compare package sizes
+        uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2.8.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pattern: "packages/vechain-kit/dist/**/*"
+          exclude: "{**/node_modules/**}"
+          compression: none
+          minimum-change-threshold: 1000
+          install-script: "yarn"
+          build-script: "build"

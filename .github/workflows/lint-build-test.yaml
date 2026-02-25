@@ -1,4 +1,4 @@
-name: Lint & Build & Compare package sizes
+name: Lint & Build
 
 on:
   # zizmor: ignore[dangerous-triggers] - Mitigated by checking repository origin
@@ -42,10 +42,10 @@ jobs:
 
             Thank you for your patience! 🙏
 
-  # Job 2: Build, Lint and Compare package sizes
+  # Job 2: Build and Lint
   build-and-test-job:
     runs-on: ubuntu-latest
-    name: Lint & Build & Compare package sizes
+    name: Lint & Build
     if: |
       (github.event.label.name == 'safe-to-build') ||
       (github.event.pull_request.head.repo.full_name == github.repository) && github.event.pull_request.head.ref != 'main'
@@ -66,13 +66,7 @@ jobs:
 
       - name: Build
         run: yarn build
-      - name: Compare package sizes
-        uses: preactjs/compressed-size-action@946a292cd35bd1088e0d7eb92b69d1a8d5b5d76a # v2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          pattern: "packages/vechain-kit/dist/**/*"
-          exclude: "{**/node_modules/**}"
-          compression: none
-          minimum-change-threshold: 1000
+
       - name: Lint
         run: yarn lint
+
