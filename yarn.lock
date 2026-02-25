@@ -7658,6 +7658,7 @@ __metadata:
     framer-motion: "npm:^11.15.0"
     i18next: "npm:^24.2.1"
     i18next-browser-languagedetector: "npm:^8.0.2"
+    i18next-resources-to-backend: "npm:^1.2.1"
     net: "npm:^1.0.2"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
@@ -12391,6 +12392,15 @@ __metadata:
   dependencies:
     "@babel/runtime": "npm:^7.23.2"
   checksum: 10c0/4fcb6ec316e0fd4a10eee67a8d1e3d7e1407f14d5bed98978c50ed6f1853f5d559dc18ea7fd4b2de445ac0a4ed44df5b38f0b31b89b9ac883f99050d59ffec82
+  languageName: node
+  linkType: hard
+
+"i18next-resources-to-backend@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "i18next-resources-to-backend@npm:1.2.1"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.2"
+  checksum: 10c0/ba83152726aae34ab34bb152518b666d4393bf816c91ab6e1064090cbbb9b235d3dfbcf9d5640c825819644fddcaf7799f581cdbe6abb3e7b11d58c50dc4644a
   languageName: node
   linkType: hard
 

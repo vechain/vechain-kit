@@ -16,7 +16,7 @@ import {
 } from '@/components/common';
 import { AccountModalContentTypes } from '../../Types';
 import { useTranslation } from 'react-i18next';
-import { languageNames, supportedLanguages } from '../../../../../i18n';
+import { languageNames, supportedLanguages, loadLanguage } from '../../../../../i18n';
 import { LuCheck } from 'react-icons/lu';
 
 type Props = {
@@ -33,7 +33,7 @@ export const LanguageSettingsContent = ({ setCurrentContent }: Props) => {
     );
 
     const handleLanguageChange = (lang: string) => {
-        i18n.changeLanguage(lang);
+        loadLanguage(lang).then(() => i18n.changeLanguage(lang));
     };
 
     const renderLanguageButton = (lang: string) => {

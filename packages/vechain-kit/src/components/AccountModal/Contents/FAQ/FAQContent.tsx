@@ -18,7 +18,7 @@ import {
 } from '@/components/common';
 import { FAQAccordion } from './FAQAccordion';
 import { useTranslation } from 'react-i18next';
-import { supportedLanguages, languageNames } from '../../../../../i18n';
+import { supportedLanguages, languageNames, loadLanguage } from '../../../../../i18n';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 import { VECHAIN_KIT_DOCS_BASE_URL } from '@/constants';
 
@@ -40,7 +40,8 @@ export const FAQContent = ({
     const selectBorderHover = useToken('colors', 'vechain-kit-border-hover');
 
     const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        i18n.changeLanguage(e.target.value);
+        const lang = e.target.value;
+        loadLanguage(lang).then(() => i18n.changeLanguage(lang));
     };
 
     return (
