@@ -10,9 +10,10 @@ import es from './src/languages/es.json';
 import zh from './src/languages/zh.json';
 import ja from './src/languages/ja.json';
 import ru from './src/languages/ru.json';
+import ro from './src/languages/ro.json';
 
 // Define supported languages
-export const supportedLanguages = ['en', 'de', 'it', 'fr', 'es', 'zh', 'ja', 'ru'];
+export const supportedLanguages = ['en', 'de', 'it', 'fr', 'es', 'zh', 'ja', 'ru', 'ro'];
 
 export const resources = {
     en: { translation: en },
@@ -23,6 +24,7 @@ export const resources = {
     zh: { translation: zh },
     ja: { translation: ja },
     ru: { translation: ru },
+    ro: { translation: ro },
 };
 
 // Language names mapping
@@ -35,6 +37,7 @@ export const languageNames = {
     zh: '中文',
     ja: '日本語',
     ru: 'Русский',
+    ro: 'Română',
 };
 
 export const bcp47LanguageCodes: Record<string, string> = {
@@ -46,6 +49,7 @@ export const bcp47LanguageCodes: Record<string, string> = {
     zh: 'zh-CN',
     ja: 'ja-JP',
     ru: 'ru-RU',
+    ro: 'ro-RO',
 };
 
 // Custom language detector that checks localStorage first, then prop, then browser

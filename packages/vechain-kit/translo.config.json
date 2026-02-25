@@ -8,7 +8,8 @@
         { "name": "Spanish", "code": "es" },
         { "name": "Chinese", "code": "zh" },
         { "name": "Japanese", "code": "ja" },
-        { "name": "Russian", "code": "ru" }
+        { "name": "Russian", "code": "ru" },
+        { "name": "Romanian", "code": "ro" }
     ],
     "fixedWords": {
         "it": {
