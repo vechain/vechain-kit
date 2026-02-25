@@ -109,10 +109,11 @@ export function VechainKitProviderWrapper({ children }: Props) {
             darkMode={isDarkMode}
             onLanguageChange={handleLanguageChange}
             onCurrencyChange={handleCurrencyChange}
-            network={{
-                type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
-            }}
+            // network={{
+            //     type: process.env.NEXT_PUBLIC_NETWORK_TYPE,
+            // }}
             allowCustomTokens={true}
+            allowCommunityTokens={true}
             legalDocuments={{
                 termsAndConditions: [
                     {

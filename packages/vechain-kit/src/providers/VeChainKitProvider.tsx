@@ -143,6 +143,8 @@ export type VechainKitProviderProps = {
         };
     };
     allowCustomTokens?: boolean;
+    /** When true, community tokens (e.g. SASS) are included in token lists and balances. */
+    allowCommunityTokens?: boolean;
     legalDocuments?: LegalDocumentOptions;
     defaultCurrency?: CURRENCY;
     theme?: VechainKitThemeConfig;
@@ -174,6 +176,7 @@ export type VeChainKitConfig = {
     /** Current runtime language value. Reflects the active language in VeChainKit. */
     currentLanguage: string;
     allowCustomTokens?: boolean;
+    allowCommunityTokens: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
@@ -359,6 +362,7 @@ export const VeChainKitProvider = (
         language = 'en',
         network: _network,
         allowCustomTokens,
+        allowCommunityTokens = false,
         legalDocuments,
         defaultCurrency = 'usd',
         theme: customTheme,
@@ -647,6 +651,7 @@ export const VeChainKitProvider = (
                         currentLanguage,
                         network,
                         allowCustomTokens,
+                        allowCommunityTokens,
                         legalDocuments,
                         currentCurrency,
                         theme: customTheme,

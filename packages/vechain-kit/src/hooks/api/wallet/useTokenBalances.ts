@@ -16,7 +16,7 @@ export type WalletTokenBalance = {
 };
 
 export const useTokenBalances = (address?: string) => {
-    const { network } = useVeChainKitConfig();
+    const { network, allowCommunityTokens } = useVeChainKitConfig();
     const config = getConfig(network.type);
 
     // Base token balances
@@ -27,8 +27,11 @@ export const useTokenBalances = (address?: string) => {
         useGetVot3Balance(address);
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
         useGetErc20Balance(config.veDelegateTokenContractAddress, address);
-    const { data: gloDollarBalance, isLoading: gloDollarLoading } =
-        useGetErc20Balance(config.gloDollarContractAddress, address);
+    const { data: sassBalance, isLoading: sassLoading } = useGetErc20Balance(
+        config.sassContractAddress,
+        address,
+        { enabled: allowCommunityTokens },
+    );
 
     // Custom token balances
     const customTokenBalancesQueries = useGetCustomTokenBalances(address);
@@ -50,7 +53,6 @@ export const useTokenBalances = (address?: string) => {
             b3tr: config.b3trContractAddress,
             vot3: config.vot3ContractAddress,
             veDelegate: config.veDelegate,
-            USDGLO: config.gloDollarContractAddress,
         };
 
         // Base tokens
@@ -80,11 +82,6 @@ export const useTokenBalances = (address?: string) => {
                 symbol: 'veDelegate',
                 balance: veDelegateBalance?.scaled ?? '0',
             },
-            {
-                address: contractAddresses.USDGLO,
-                symbol: 'USDGLO',
-                balance: gloDollarBalance?.scaled ?? '0',
-            },
         ];
 
         // Add custom tokens
@@ -96,15 +93,27 @@ export const useTokenBalances = (address?: string) => {
             }),
         );
 
-        return [...baseTokens, ...customTokens];
+        const communityTokens: WalletTokenBalance[] = allowCommunityTokens
+            ? [
+                  {
+                      address: config.sassContractAddress,
+                      symbol: 'SASS',
+                      balance: sassBalance?.scaled ?? '0',
+                  },
+              ]
+            : [];
+
+        return [...baseTokens, ...customTokens, ...communityTokens];
     }, [
         address,
         vetData,
         b3trBalance,
         vot3Balance,
         veDelegateBalance,
-        gloDollarBalance,
         customTokenBalances,
+        allowCommunityTokens,
+        sassBalance,
+        config.sassContractAddress,
         network.type,
     ]);
 
@@ -113,7 +122,7 @@ export const useTokenBalances = (address?: string) => {
         b3trLoading ||
         vot3Loading ||
         veDelegateLoading ||
-        gloDollarLoading ||
+        (allowCommunityTokens && sassLoading) ||
         customTokensLoading;
 
     return {
