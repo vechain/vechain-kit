@@ -39,4 +39,4 @@ jobs:
           compression: none
           minimum-change-threshold: 1000
           install-script: "yarn"
-          build-script: "yarn build"
+          build-script: "build"
