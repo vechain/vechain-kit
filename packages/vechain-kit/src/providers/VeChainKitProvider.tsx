@@ -41,7 +41,7 @@ import {
     improvePrivyReadability,
 } from '@/utils/cssVariables';
 
-import i18n, { loadLanguage, supportedLanguages } from '../../i18n';
+import i18n from '../../i18n';
 import { EnsureQueryClient } from './EnsureQueryClient';
 import { LegalDocumentsProvider } from './LegalDocumentsProvider';
 import { ModalProvider } from './ModalProvider';
@@ -437,52 +437,34 @@ export const VeChainKitProvider = (
 
     // Initialize i18n with stored language or prop, and merge translations
     useEffect(() => {
-        const init = async () => {
-            try {
-                const storedLanguage =
-                    typeof window !== 'undefined'
-                        ? getLocalStorageItem('i18nextLng')
-                        : null;
-                const initialLanguage = storedLanguage || currentLanguage;
+        initializeI18n(i18n);
 
-                await initializeI18n(i18n);
+        if (i18nConfig) {
+            Object.keys(i18nConfig).forEach((lang) => {
+                i18n.addResourceBundle(
+                    lang,
+                    'translation',
+                    i18nConfig[lang],
+                    true,
+                    true,
+                );
+            });
+        }
 
-                if (i18nConfig) {
-                    Object.keys(i18nConfig).forEach((lang) => {
-                        i18n.addResourceBundle(
-                            lang,
-                            'translation',
-                            i18nConfig[lang],
-                            true,
-                            true,
-                        );
-                    });
-                }
+        const storedLanguage =
+            typeof window !== 'undefined'
+                ? getLocalStorageItem('i18nextLng')
+                : null;
+        const initialLanguage = storedLanguage || currentLanguage;
 
-                const resolvedLanguage = supportedLanguages.includes(initialLanguage)
-                    ? initialLanguage
-                    : supportedLanguages.includes(initialLanguage.split('-')[0])
-                        ? initialLanguage.split('-')[0]
-                        : null;
-
-                if (resolvedLanguage && i18n.language !== resolvedLanguage) {
-                    isUpdatingFromPropRef.current = true;
-                    try {
-                        await loadLanguage(resolvedLanguage);
-                        i18n.changeLanguage(resolvedLanguage);
-                        if (resolvedLanguage !== currentLanguage) {
-                            setCurrentLanguageState(resolvedLanguage);
-                        }
-                    } finally {
-                        isUpdatingFromPropRef.current = false;
-                    }
-                }
-            } catch (error) {
-                console.error('[VeChainKit] Failed to initialize i18n:', error);
+        if (initialLanguage && i18n.language !== initialLanguage) {
+            isUpdatingFromPropRef.current = true;
+            i18n.changeLanguage(initialLanguage);
+            if (initialLanguage !== currentLanguage) {
+                setCurrentLanguageState(initialLanguage);
             }
-        };
-
-        init();
+            isUpdatingFromPropRef.current = false;
+        }
     }, []); // Only run once on mount
 
     // Sync language prop changes to i18n and state (but only if no stored value exists)
@@ -494,17 +476,9 @@ export const VeChainKitProvider = (
 
         if (language && !storedLanguage && language !== currentLanguage) {
             isUpdatingFromPropRef.current = true;
-            loadLanguage(language)
-                .then(() => {
-                    i18n.changeLanguage(language);
-                    setCurrentLanguageState(language);
-                })
-                .catch((error) => {
-                    console.error(`[VeChainKit] Failed to sync language prop "${language}":`, error);
-                })
-                .finally(() => {
-                    isUpdatingFromPropRef.current = false;
-                });
+            i18n.changeLanguage(language);
+            setCurrentLanguageState(language);
+            isUpdatingFromPropRef.current = false;
         }
     }, [language, currentLanguage]);
 
@@ -579,17 +553,9 @@ export const VeChainKitProvider = (
 
     const setLanguage = (lang: string) => {
         isUpdatingFromPropRef.current = true;
-        loadLanguage(lang)
-            .then(() => {
-                i18n.changeLanguage(lang);
-                setCurrentLanguageState(lang);
-            })
-            .catch((error) => {
-                console.error(`[VeChainKit] Failed to set language "${lang}":`, error);
-            })
-            .finally(() => {
-                isUpdatingFromPropRef.current = false;
-            });
+        i18n.changeLanguage(lang);
+        setCurrentLanguageState(lang);
+        isUpdatingFromPropRef.current = false;
     };
 
     const setCurrency = (currency: CURRENCY) => {
