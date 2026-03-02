@@ -18,7 +18,6 @@ export default defineConfig({
     // Code Optimization
     minify: true,
     treeshake: true,
-    splitting: true,
 
     // Source Maps & Debug
     sourcemap: true,

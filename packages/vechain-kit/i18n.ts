@@ -1,12 +1,48 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import resourcesToBackend from 'i18next-resources-to-backend';
+
 import en from './src/languages/en.json';
+import de from './src/languages/de.json';
+import it from './src/languages/it.json';
+import fr from './src/languages/fr.json';
+import es from './src/languages/es.json';
+import zh from './src/languages/zh.json';
+import ja from './src/languages/ja.json';
+import ru from './src/languages/ru.json';
+import ro from './src/languages/ro.json';
+import tw from './src/languages/tw.json';
+import vi from './src/languages/vi.json';
+import nl from './src/languages/nl.json';
+import ko from './src/languages/ko.json';
+import sv from './src/languages/sv.json';
+import tr from './src/languages/tr.json';
+import hi from './src/languages/hi.json';
+import pt from './src/languages/pt.json';
 
 export const supportedLanguages = [
     'en', 'de', 'it', 'fr', 'es', 'zh', 'ja', 'ru', 'ro',
     'vi', 'nl', 'ko', 'sv', 'tw', 'tr', 'hi', 'pt',
 ];
+
+export const resources = {
+    en: { translation: en },
+    de: { translation: de },
+    it: { translation: it },
+    fr: { translation: fr },
+    es: { translation: es },
+    zh: { translation: zh },
+    ja: { translation: ja },
+    ru: { translation: ru },
+    ro: { translation: ro },
+    tw: { translation: tw },
+    vi: { translation: vi },
+    nl: { translation: nl },
+    ko: { translation: ko },
+    sv: { translation: sv },
+    tr: { translation: tr },
+    hi: { translation: hi },
+    pt: { translation: pt },
+};
 
 export const languageNames: Record<string, string> = {
     en: 'English',
@@ -46,43 +82,6 @@ export const bcp47LanguageCodes: Record<string, string> = {
     tr: 'tr-TR',
     hi: 'hi-IN',
     pt: 'pt-BR',
-};
-
-const languageImportMap: Record<string, () => Promise<{ default: Record<string, string> }>> = {
-    de: () => import('./src/languages/de.json'),
-    it: () => import('./src/languages/it.json'),
-    fr: () => import('./src/languages/fr.json'),
-    es: () => import('./src/languages/es.json'),
-    zh: () => import('./src/languages/zh.json'),
-    ja: () => import('./src/languages/ja.json'),
-    ru: () => import('./src/languages/ru.json'),
-    ro: () => import('./src/languages/ro.json'),
-    tw: () => import('./src/languages/tw.json'),
-    vi: () => import('./src/languages/vi.json'),
-    nl: () => import('./src/languages/nl.json'),
-    ko: () => import('./src/languages/ko.json'),
-    sv: () => import('./src/languages/sv.json'),
-    tr: () => import('./src/languages/tr.json'),
-    hi: () => import('./src/languages/hi.json'),
-    pt: () => import('./src/languages/pt.json'),
-};
-
-/**
- * Loads a non-English language bundle into i18n.
- * Returns immediately if already loaded or language is English.
- */
-export const loadLanguage = async (lng: string): Promise<void> => {
-    if (lng === 'en' || i18n.hasResourceBundle(lng, 'translation')) return;
-
-    const importFn = languageImportMap[lng];
-    if (!importFn) return;
-
-    try {
-        const module = await importFn();
-        i18n.addResourceBundle(lng, 'translation', module.default, true, true);
-    } catch (error) {
-        console.error(`[VeChainKit] Failed to load language "${lng}":`, error);
-    }
 };
 
 const customLanguageDetector = {
@@ -133,18 +132,9 @@ i18n.use({
     detect: customLanguageDetector.lookup,
     cacheUserLanguage: customLanguageDetector.cacheUserLanguage,
 })
-    .use(
-        resourcesToBackend((language: string) => {
-            if (language === 'en') return;
-            const importFn = languageImportMap[language];
-            if (importFn) return importFn();
-        }),
-    )
     .use(initReactI18next)
     .init({
-        resources: {
-            en: { translation: en },
-        },
+        resources,
         fallbackLng: 'en',
         interpolation: {
             escapeValue: false,
