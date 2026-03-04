@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "vechain-dev@vechain-ai": true,
+    "karpathy-guidelines@vechain-ai": true,
+    "prd@vechain-ai": true,
+    "ralph@vechain-ai": true
+  }
+}
