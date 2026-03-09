@@ -86,6 +86,7 @@ export const estimateAndBuildTxBody = async (
     const gasResult = await thor.gas.estimateGas(
         clauses,
         randomTransactionUser?.address ?? '',
+        { gasPadding: 1 },
     );
     const parsedGasLimit = Math.max(
         gasResult.totalGas,
