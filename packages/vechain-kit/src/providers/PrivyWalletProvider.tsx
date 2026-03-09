@@ -199,7 +199,7 @@ export const PrivyWalletProvider = ({
         const clauses = await buildClausesWithAuth({
             clauses: txClauses,
             smartAccount: smartAccount as SmartAccountReturnType,
-            version: !hasV1SmartAccount ? (smartAccountVersion?.version ?? 3) : 1,
+            version: smartAccountVersion?.version ?? (hasV1SmartAccount ? 1 : 3),
             title,
             description,
             buttonText,
