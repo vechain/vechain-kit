@@ -56,6 +56,7 @@ import { PrivyWalletProvider } from './PrivyWalletProvider';
 
 type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
 type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
+export type AccountQuickAction = 'send' | 'swap' | 'receive';
 
 type LoginMethodOrder = {
     method:
@@ -146,6 +147,7 @@ export type VechainKitProviderProps = {
     /** When true, community tokens (e.g. SASS) are included in token lists and balances. */
     allowCommunityTokens?: boolean;
     legalDocuments?: LegalDocumentOptions;
+    hiddenQuickActions?: AccountQuickAction[];
     defaultCurrency?: CURRENCY;
     theme?: VechainKitThemeConfig;
     onLanguageChange?: (language: string) => void;
@@ -178,6 +180,7 @@ export type VeChainKitConfig = {
     allowCustomTokens?: boolean;
     allowCommunityTokens: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
+    hiddenQuickActions: AccountQuickAction[];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
     theme?: VechainKitThemeConfig;
@@ -364,6 +367,7 @@ export const VeChainKitProvider = (
         allowCustomTokens,
         allowCommunityTokens = false,
         legalDocuments,
+        hiddenQuickActions = [],
         defaultCurrency = 'usd',
         theme: customTheme,
         onLanguageChange,
@@ -646,6 +650,7 @@ export const VeChainKitProvider = (
                         allowCustomTokens,
                         allowCommunityTokens,
                         legalDocuments,
+                        hiddenQuickActions,
                         currentCurrency,
                         theme: customTheme,
                         setLanguage,

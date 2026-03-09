@@ -15,6 +15,7 @@ import {
     LuArrowLeftRight,
     LuArrowUpFromLine,
 } from 'react-icons/lu';
+import { AccountQuickAction, useVeChainKitConfig } from '@/providers';
 
 type Props = {
     mt?: number;
@@ -24,6 +25,7 @@ type Props = {
 };
 
 type QuickAction = {
+    id: AccountQuickAction;
     icon: React.ElementType;
     label: string;
     onClick: (setCurrentContent: Props['setCurrentContent']) => void;
@@ -32,6 +34,7 @@ type QuickAction = {
 
 const QUICK_ACTIONS: QuickAction[] = [
     {
+        id: 'send',
         icon: LuArrowUpFromLine,
         label: 'Send',
         onClick: (setCurrentContent) =>
@@ -44,6 +47,7 @@ const QUICK_ACTIONS: QuickAction[] = [
         isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
     {
+        id: 'swap',
         icon: LuArrowLeftRight,
         label: 'Swap',
         onClick: (setCurrentContent) => {
@@ -52,6 +56,7 @@ const QUICK_ACTIONS: QuickAction[] = [
         isDisabled: (hasAnyBalance) => !hasAnyBalance,
     },
     {
+        id: 'receive',
         icon: LuArrowDownToLine,
         label: 'Receive',
         onClick: (setCurrentContent) => {
@@ -116,6 +121,7 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
+    const { hiddenQuickActions } = useVeChainKitConfig();
     const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });
@@ -127,12 +133,24 @@ export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     );
 
     const showRedDot = connection.isConnectedWithPrivy && upgradeRequired;
+    const visibleQuickActions = QUICK_ACTIONS.filter(
+        (action) => !hiddenQuickActions.includes(action.id),
+    );
+
+    if (!visibleQuickActions.length) {
+        return null;
+    }
 
     return (
-        <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full" mt={mt}>
-            {QUICK_ACTIONS.map((action) => (
+        <Grid
+            templateColumns={`repeat(${visibleQuickActions.length}, 1fr)`}
+            gap={2}
+            w="full"
+            mt={mt}
+        >
+            {visibleQuickActions.map((action) => (
                 <QuickActionButton
-                    key={action.label}
+                    key={action.id}
                     icon={action.icon}
                     label={action.label}
                     onClick={() => action.onClick(setCurrentContent)}
