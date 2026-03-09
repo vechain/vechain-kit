@@ -121,7 +121,7 @@ const QuickActionButton = ({
 
 export const QuickActionsSection = ({ mt, setCurrentContent }: Props) => {
     const { account, smartAccount, connectedWallet, connection } = useWallet();
-    const { hiddenQuickActions } = useVeChainKitConfig();
+    const { hiddenQuickActions = [] } = useVeChainKitConfig();
     const { hasAnyBalance } = useTotalBalance({
         address: account?.address ?? '',
     });

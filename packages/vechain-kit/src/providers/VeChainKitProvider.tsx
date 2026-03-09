@@ -180,7 +180,7 @@ export type VeChainKitConfig = {
     allowCustomTokens?: boolean;
     allowCommunityTokens: boolean;
     legalDocuments?: VechainKitProviderProps['legalDocuments'];
-    hiddenQuickActions: AccountQuickAction[];
+    hiddenQuickActions?: AccountQuickAction[];
     /** Current runtime currency value. Reflects the active currency in VeChainKit. */
     currentCurrency: CURRENCY;
     theme?: VechainKitThemeConfig;
