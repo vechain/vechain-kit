@@ -21,10 +21,9 @@ type Props = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<ConnectModalContentsTypes>
     >;
-    onClose: () => void;
 };
 
-export const MainContent = ({ setCurrentContent, onClose }: Props) => {
+export const MainContent = ({ setCurrentContent }: Props) => {
     const { t } = useTranslation();
 
     const { loginModalUI, darkMode: isDark } = useVeChainKitConfig();

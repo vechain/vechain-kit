@@ -75,7 +75,6 @@ export const ConnectModal = ({
                 return (
                     <MainContent
                         setCurrentContent={setCurrentContent}
-                        onClose={onClose}
                         />
                 );
         }
@@ -85,7 +84,6 @@ export const ConnectModal = ({
                 return (
                     <MainContent
                         setCurrentContent={setCurrentContent}
-                        onClose={onClose}
                         />
                 );
             case 'faq':
@@ -140,7 +138,6 @@ export const ConnectModal = ({
         const fallbackContent = (
             <MainContent
                 setCurrentContent={setCurrentContent}
-                onClose={onClose}
             />
         );
         return (
