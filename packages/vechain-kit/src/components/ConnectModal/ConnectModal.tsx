@@ -6,6 +6,7 @@ import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
 import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
 import { PrivyAppInfo } from '@/types';
+import { useWallet } from '@/hooks';
 
 type Props = {
     isOpen: boolean;
@@ -48,6 +49,7 @@ export const ConnectModal = ({
     initialContent = 'main',
     preventAutoClose = false,
 }: Props) => {
+    const { connection } = useWallet();
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>(initialContent);
 
@@ -58,6 +60,15 @@ export const ConnectModal = ({
         }
     }, [isOpen, initialContent, setCurrentContent]);
 
+    // Auto-close modal when connection is established (e.g., after social login)
+    // This must live here rather than in MainContent because social login flows
+    // switch to LoadingContent, which unmounts MainContent and its close effect.
+    useEffect(() => {
+        if (connection.isConnected && isOpen && !preventAutoClose) {
+            onClose();
+        }
+    }, [connection.isConnected, isOpen, onClose, preventAutoClose]);
+
     const renderContent = () => {
         // Ensure displayContent is valid
         if (!currentContent) {
@@ -65,8 +76,7 @@ export const ConnectModal = ({
                     <MainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        preventAutoClose={preventAutoClose}
-                    />
+                        />
                 );
         }
 
@@ -76,8 +86,7 @@ export const ConnectModal = ({
                     <MainContent
                         setCurrentContent={setCurrentContent}
                         onClose={onClose}
-                        preventAutoClose={preventAutoClose}
-                    />
+                        />
                 );
             case 'faq':
                 return (
