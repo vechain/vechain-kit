@@ -3,6 +3,7 @@ import { useThor } from '@vechain/dapp-kit-react';
 import { Address } from '@vechain/sdk-core';
 import { ThorClient } from '@vechain/sdk-network';
 import { formatEther } from 'viem';
+import { VECHAIN_KIT_QUERY_KEYS } from '@/constants/queryKeys';
 
 export const getAccountBalance = async (thor: ThorClient, address?: string) => {
     if (!address) throw new Error('Address is required');
@@ -13,10 +14,8 @@ export const getAccountBalance = async (thor: ThorClient, address?: string) => {
         energy: formatEther(BigInt(account.energy)).toString(),
     };
 };
-export const getAccountBalanceQueryKey = (address?: string) => [
-    'VECHAIN_KIT_BALANCE',
-    address,
-];
+export const getAccountBalanceQueryKey = (address?: string) =>
+    VECHAIN_KIT_QUERY_KEYS.balance.native(address);
 
 /**
  *  Get the account balance for the given address
