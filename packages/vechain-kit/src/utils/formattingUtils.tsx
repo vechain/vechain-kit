@@ -93,7 +93,9 @@ function roundDownSignificantDigits(numbers: number, decimals: number = 0) {
  * @returns the formatted balance in the form of {@link TokenBalance} (original, scaled down and formatted)
  */
 export const formatTokenBalance = (balance: bigint, decimals: number = 18) => {
-    const scaled = formatUnits(balance, decimals);
+    const safeDecimals =
+        Number.isInteger(decimals) && decimals >= 0 ? decimals : 18;
+    const scaled = formatUnits(balance, safeDecimals);
     const formatted = scaled === '0' ? '0' : humanNumber(scaled);
     return {
         original: balance.toString(),

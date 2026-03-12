@@ -6,14 +6,15 @@ import {
 } from '@vechain/contract-getters';
 import { TokenBalance } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
-import { formatTokenBalance } from '@/utils';
+import { formatTokenBalance, isValidAddress } from '@/utils';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;
 
 export const getCustomTokenBalanceQueryKey = (
     tokenAddress?: string,
     address?: string,
-) => ['VECHAIN_KIT_BALANCE', address, 'CUSTOM_TOKEN', tokenAddress];
+    decimals?: number,
+) => ['VECHAIN_KIT_BALANCE', address, 'CUSTOM_TOKEN', tokenAddress, decimals];
 
 export const useGetCustomTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();
@@ -21,7 +22,11 @@ export const useGetCustomTokenBalances = (address?: string) => {
 
     return useQueries({
         queries: customTokens.map((token) => ({
-            queryKey: getCustomTokenBalanceQueryKey(token.address, address),
+            queryKey: getCustomTokenBalanceQueryKey(
+                token.address,
+                address,
+                Number(token.decimals),
+            ),
             queryFn: async () => {
                 if (!token.address)
                     throw new Error('Token address is required');
@@ -46,6 +51,12 @@ export const useGetCustomTokenBalances = (address?: string) => {
                     ...formattedTokenBalance,
                 };
             },
+            enabled:
+                !!address &&
+                isValidAddress(address) &&
+                !!token.address &&
+                isValidAddress(token.address) &&
+                !!network.nodeUrl,
         })),
     });
 };
