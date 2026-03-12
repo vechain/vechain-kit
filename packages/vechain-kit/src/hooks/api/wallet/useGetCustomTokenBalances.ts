@@ -14,7 +14,13 @@ export const getCustomTokenBalanceQueryKey = (
     tokenAddress?: string,
     address?: string,
     decimals?: number,
-) => ['VECHAIN_KIT_BALANCE', address, 'CUSTOM_TOKEN', tokenAddress, decimals];
+) => [
+    'VECHAIN_KIT_BALANCE',
+    address,
+    'CUSTOM_TOKEN',
+    tokenAddress,
+    Number.isFinite(decimals) ? decimals : 18,
+];
 
 export const useGetCustomTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();
