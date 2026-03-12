@@ -128,6 +128,7 @@ export const SendTokenSummaryContent = ({
             transferERC20WaitingForWalletConfirmation,
         isTransactionPending: transferERC20Pending,
         clauses: erc20Clauses,
+        isLoadingTokenInfo,
     } = useTransferERC20({
         fromAddress: account?.address ?? '',
         receiverAddress: resolvedAddress || toAddressOrDomain,
@@ -166,6 +167,8 @@ export const SendTokenSummaryContent = ({
         transferVETWaitingForWalletConfirmation;
     const isSubmitting =
         isTxWaitingConfirmation || transferERC20Pending || transferVETPending;
+    const isTokenTransferLoading =
+        selectedToken.symbol !== 'VET' && isLoadingTokenInfo;
 
     // Track if we've already shown success to prevent duplicate calls
     const [hasShownSuccess, setHasShownSuccess] = React.useState(false);
@@ -372,7 +375,9 @@ export const SendTokenSummaryContent = ({
                     txReceipt={getTxReceipt()}
                     buttonText={t('Confirm')}
                     isDisabled={
-                        isSubmitting || disableConfirmButtonDuringEstimation
+                        isSubmitting ||
+                        isTokenTransferLoading ||
+                        disableConfirmButtonDuringEstimation
                     }
                     gasEstimationError={gasEstimationError}
                     hasEnoughGasBalance={hasEnoughBalance}

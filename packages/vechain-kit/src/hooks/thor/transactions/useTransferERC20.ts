@@ -3,10 +3,11 @@ import {
     useRefreshBalances,
     useSendTransaction,
 } from '@/hooks';
+import { useGetCustomTokenInfo } from '@/hooks/api/wallet/useGetCustomTokenInfo';
 import { IERC20__factory } from '@vechain/vechain-contract-types';
 import { useMemo } from 'react';
 import { humanAddress, isValidAddress } from '@/utils';
-import { parseEther } from 'viem';
+import { parseUnits } from 'viem';
 import { EnhancedClause } from '@/types';
 
 type useTransferERC20Props = {
@@ -15,6 +16,7 @@ type useTransferERC20Props = {
     amount: string;
     tokenAddress: string;
     tokenName: string;
+    tokenDecimals?: number;
     onSuccess?: () => void;
     onSuccessMessageTitle?: number;
     onError?: (error?: string) => void;
@@ -23,11 +25,18 @@ type useTransferERC20Props = {
 type useTransferERC20ReturnValue = {
     sendTransaction: () => Promise<void>;
     clauses: EnhancedClause[];
+    isLoadingTokenInfo: boolean;
 } & Omit<UseSendTransactionReturnValue, 'sendTransaction'>;
 
 const ERC20Interface = IERC20__factory.createInterface();
 
-export const buildERC20Clauses = (receiverAddress: string, amount: string, tokenAddress: string, tokenName: string): EnhancedClause[] => {
+export const buildERC20Clauses = (
+    receiverAddress: string,
+    amount: string,
+    tokenAddress: string,
+    tokenName: string,
+    tokenDecimals: number,
+): EnhancedClause[] => {
     if (!receiverAddress || !amount || !isValidAddress(receiverAddress))
         throw new Error('Invalid receiver address or amount');
 
@@ -38,7 +47,7 @@ export const buildERC20Clauses = (receiverAddress: string, amount: string, token
         value: '0x0',
         data: ERC20Interface.encodeFunctionData('transfer', [
             receiverAddress,
-            parseEther(amount),
+            parseUnits(amount, tokenDecimals),
         ]),
         comment: `Transfer ${amount} ${tokenName} to ${receiverAddress}`,
         abi: ERC20Interface.getFunction('transfer'),
@@ -52,13 +61,37 @@ export const useTransferERC20 = ({
     amount,
     tokenAddress,
     tokenName,
+    tokenDecimals,
     onSuccess,
     onError,
 }: useTransferERC20Props): useTransferERC20ReturnValue => {
     const { refresh } = useRefreshBalances();
+    const { data: tokenInfo, isLoading: isLoadingTokenInfo } =
+        useGetCustomTokenInfo(tokenDecimals === undefined ? tokenAddress : '');
+    const resolvedTokenDecimals = useMemo(() => {
+        const decimals = tokenDecimals ?? tokenInfo?.decimals;
+        return decimals != null ? Number(decimals) : undefined;
+    }, [tokenDecimals, tokenInfo?.decimals]);
 
-    // Memoize the clauses
-    const clauses = useMemo(() => buildERC20Clauses(receiverAddress, amount, tokenAddress, tokenName), [receiverAddress, amount, tokenAddress, tokenName]);
+    const clauses = useMemo(() => {
+        if (resolvedTokenDecimals === undefined) {
+            return [];
+        }
+
+        return buildERC20Clauses(
+            receiverAddress,
+            amount,
+            tokenAddress,
+            tokenName,
+            resolvedTokenDecimals,
+        );
+    }, [
+        receiverAddress,
+        amount,
+        tokenAddress,
+        tokenName,
+        resolvedTokenDecimals,
+    ]);
 
     const result = useSendTransaction({
         signerAccountAddress: fromAddress,
@@ -81,7 +114,12 @@ export const useTransferERC20 = ({
     return {
         ...result,
         clauses,
+        isLoadingTokenInfo,
         sendTransaction: async () => {
+            if (resolvedTokenDecimals === undefined) {
+                throw new Error('Token decimals are required');
+            }
+
             return result.sendTransaction(clauses);
         },
     };
