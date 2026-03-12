@@ -73,7 +73,12 @@ export const useTransferERC20 = ({
     } = useGetCustomTokenInfo(tokenDecimals === undefined ? tokenAddress : '');
     const resolvedTokenDecimals = useMemo(() => {
         const decimals = tokenDecimals ?? tokenInfo?.decimals;
-        return decimals != null ? Number(decimals) : undefined;
+        if (decimals == null) return undefined;
+
+        const normalized = Number(decimals);
+        return Number.isSafeInteger(normalized) && normalized >= 0
+            ? normalized
+            : undefined;
     }, [tokenDecimals, tokenInfo?.decimals]);
 
     const clauses = useMemo(() => {
