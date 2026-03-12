@@ -66,8 +66,11 @@ export const useTransferERC20 = ({
     onError,
 }: useTransferERC20Props): useTransferERC20ReturnValue => {
     const { refresh } = useRefreshBalances();
-    const { data: tokenInfo, isLoading: isLoadingTokenInfo } =
-        useGetCustomTokenInfo(tokenDecimals === undefined ? tokenAddress : '');
+    const {
+        data: tokenInfo,
+        isLoading: isLoadingTokenInfo,
+        error: tokenInfoError,
+    } = useGetCustomTokenInfo(tokenDecimals === undefined ? tokenAddress : '');
     const resolvedTokenDecimals = useMemo(() => {
         const decimals = tokenDecimals ?? tokenInfo?.decimals;
         return decimals != null ? Number(decimals) : undefined;
@@ -117,7 +120,11 @@ export const useTransferERC20 = ({
         isLoadingTokenInfo,
         sendTransaction: async () => {
             if (resolvedTokenDecimals === undefined) {
-                throw new Error('Token decimals are required');
+                const message = tokenInfoError
+                    ? `Failed to load token info: ${tokenInfoError.message}`
+                    : 'Token decimals are required';
+                onError?.(message);
+                return;
             }
 
             return result.sendTransaction(clauses);
