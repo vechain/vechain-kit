@@ -19,3 +19,4 @@ export {
 } from '@vechain/dapp-kit-react';
 export { ThorClient } from '@vechain/sdk-network';
 export { useLegalDocuments } from '../providers/LegalDocumentsProvider';
+export { VECHAIN_KIT_QUERY_KEYS } from '@/constants/queryKeys';

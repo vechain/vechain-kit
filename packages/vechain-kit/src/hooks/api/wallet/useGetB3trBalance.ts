@@ -2,12 +2,10 @@ import { useVeChainKitConfig } from '@/providers';
 import { formatTokenBalance } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { getB3trBalance } from '@vechain/contract-getters';
+import { VECHAIN_KIT_QUERY_KEYS } from '@/constants/queryKeys';
 
-export const getB3trBalanceQueryKey = (address?: string) => [
-    'VEBETTERDAO_BALANCE',
-    address,
-    'B3TR',
-];
+export const getB3trBalanceQueryKey = (address?: string) =>
+    VECHAIN_KIT_QUERY_KEYS.balance.b3tr(address);
 
 export const useGetB3trBalance = (address?: string) => {
     const { network } = useVeChainKitConfig();

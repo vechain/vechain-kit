@@ -6,6 +6,7 @@ import {
 } from '@vechain/contract-getters';
 import { TokenBalance } from '@/types';
 import { useVeChainKitConfig } from '@/providers';
+import { VECHAIN_KIT_QUERY_KEYS } from '@/constants/queryKeys';
 import { formatTokenBalance, isValidAddress } from '@/utils';
 
 export type TokenWithBalance = CustomTokenInfo & TokenBalance;
@@ -14,13 +15,12 @@ export const getCustomTokenBalanceQueryKey = (
     tokenAddress?: string,
     address?: string,
     decimals?: number,
-) => [
-    'VECHAIN_KIT_BALANCE',
-    address,
-    'CUSTOM_TOKEN',
-    tokenAddress,
-    Number.isFinite(decimals) ? decimals : 18,
-];
+) =>
+    VECHAIN_KIT_QUERY_KEYS.balance.customToken(
+        tokenAddress,
+        address,
+        Number.isFinite(decimals) ? decimals : 18,
+    );
 
 export const useGetCustomTokenBalances = (address?: string) => {
     const { network } = useVeChainKitConfig();

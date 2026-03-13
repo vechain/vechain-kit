@@ -6,6 +6,7 @@ import { getConfig } from '@/config';
 import { useVeChainKitConfig } from '@/providers';
 import { NETWORK_TYPE } from '@/config/network';
 import { ThorClient } from '@vechain/sdk-network';
+import { VECHAIN_KIT_QUERY_KEYS } from '@/constants/queryKeys';
 
 // Create an enum or object for supported price feed IDs
 export const PRICE_FEED_IDS = {
@@ -36,10 +37,8 @@ export const getTokenUsdPrice = async (
     return new BigNumber(res[0].toString()).div(1e12).toNumber() as number;
 };
 
-export const getTokenUsdPriceQueryKey = (token: SupportedToken) => [
-    'VECHAIN_KIT_PRICE',
-    token,
-];
+export const getTokenUsdPriceQueryKey = (token: SupportedToken) =>
+    VECHAIN_KIT_QUERY_KEYS.price.token(token);
 
 export const useGetTokenUsdPrice = (token: SupportedToken) => {
     const thor = useThor();
@@ -53,7 +52,10 @@ export const useGetTokenUsdPrice = (token: SupportedToken) => {
             // Don't retry on cancellation errors
             if (error instanceof Error) {
                 const errorMessage = error.message.toLowerCase();
-                if (errorMessage.includes('cancel') || errorMessage.includes('abort')) {
+                if (
+                    errorMessage.includes('cancel') ||
+                    errorMessage.includes('abort')
+                ) {
                     return false;
                 }
             }

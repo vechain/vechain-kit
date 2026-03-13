@@ -3,11 +3,12 @@ import { useVeChainKitConfig } from '@/providers';
 
 import { getErc20Balance } from '@vechain/contract-getters';
 import { formatTokenBalance } from '@/utils';
+import { VECHAIN_KIT_QUERY_KEYS } from '@/constants/queryKeys';
 
 export const getErc20BalanceQueryKey = (
     tokenAddress: string,
     address?: string,
-) => ['VECHAIN_KIT', 'BALANCE', 'ERC20', tokenAddress, address];
+) => VECHAIN_KIT_QUERY_KEYS.balance.erc20(tokenAddress, address);
 
 export type UseGetErc20BalanceOptions = {
     enabled?: boolean;
