@@ -47,6 +47,7 @@ export type AccountModalContentTypes =
     | 'add-custom-token'
     | 'assets'
     | 'change-currency'
+    | 'account-customization'
     | 'change-language'
     | 'gas-token-settings'
     | {

@@ -16,12 +16,17 @@ export const VECHAIN_KIT_QUERY_KEYS = {
             tokenAddress,
             address,
         ],
-        customToken: (tokenAddress?: string, address?: string) => [
+        customToken: (
+            tokenAddress?: string,
+            address?: string,
+            decimals: number = 18,
+        ) => [
             'VECHAIN_KIT',
             'BALANCE',
             'CUSTOM_TOKEN',
             tokenAddress,
             address,
+            decimals,
         ],
     },
     price: {

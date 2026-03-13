@@ -252,6 +252,12 @@ export const AccountModal = ({
                         setCurrentContent={setCurrentContent}
                     />
                 );
+            case 'account-customization':
+                return (
+                    <CustomizationContent
+                        setCurrentContent={setCurrentContent}
+                    />
+                );
             default:
                 return null;
         }

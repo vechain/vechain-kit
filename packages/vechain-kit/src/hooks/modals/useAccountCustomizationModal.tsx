@@ -1,21 +1,12 @@
-import { useModal } from '@/providers/ModalProvider';
+import { useModal, AccountModalOptions } from '@/providers/ModalProvider';
 import { ReactNode } from 'react';
 
 export const useAccountCustomizationModal = () => {
-    const {
-        openAccountModal,
-        closeAccountModal,
-        isAccountModalOpen,
-        setAccountModalContent,
-    } = useModal();
+    const { openAccountModal, closeAccountModal, isAccountModalOpen } =
+        useModal();
 
-    const open = () => {
-        openAccountModal({
-            type: 'account-customization',
-            props: {
-                setCurrentContent: setAccountModalContent,
-            },
-        });
+    const open = (options?: AccountModalOptions) => {
+        openAccountModal('account-customization', options);
     };
 
     const close = () => {
