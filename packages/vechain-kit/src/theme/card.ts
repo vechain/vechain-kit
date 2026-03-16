@@ -1,9 +1,14 @@
-import { cardAnatomy } from '@chakra-ui/anatomy';
-import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
 import { ThemeTokens } from './tokens';
 
-const { definePartsStyle, defineMultiStyleConfig } =
-    createMultiStyleConfigHelpers(cardAnatomy.keys);
+const CARD_ANATOMY_KEYS = ['container', 'header', 'body', 'footer'] as const;
+
+const definePartsStyle = <T>(config: T): T => config;
+const defineMultiStyleConfig = <T extends object>(
+    config: T,
+): T & { parts: readonly string[] } => ({
+    parts: CARD_ANATOMY_KEYS,
+    ...config,
+});
 
 const getCardVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({

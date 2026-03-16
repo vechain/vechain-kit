@@ -1,9 +1,22 @@
-import { modalAnatomy as parts } from '@chakra-ui/anatomy';
-import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
 import { ThemeTokens } from './tokens';
 
-const { definePartsStyle, defineMultiStyleConfig } =
-    createMultiStyleConfigHelpers(parts.keys);
+const MODAL_ANATOMY_KEYS = [
+    'overlay',
+    'dialogContainer',
+    'dialog',
+    'header',
+    'closeButton',
+    'body',
+    'footer',
+] as const;
+
+const definePartsStyle = <T>(config: T): T => config;
+const defineMultiStyleConfig = <T extends object>(
+    config: T,
+): T & { parts: readonly string[] } => ({
+    parts: MODAL_ANATOMY_KEYS,
+    ...config,
+});
 
 const getModalVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({
