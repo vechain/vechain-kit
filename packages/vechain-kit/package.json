@@ -1,6 +1,6 @@
 {
     "name": "@vechain/vechain-kit",
-    "version": "2.6.7",
+    "version": "2.6.8",
     "author": "VeChain Foundation",
     "homepage": "https://github.com/vechain/vechain-kit",
     "repository": {
@@ -56,6 +56,7 @@
     },
     "dependencies": {
         "@adraffy/ens-normalize": "^1.11.0",
+        "@chakra-ui/anatomy": "^2.3.6",
         "@chakra-ui/react": "^2.8.2",
         "@emotion/styled": "^11.14.1",
         "@privy-io/cross-app-connect": "0.2.2",
