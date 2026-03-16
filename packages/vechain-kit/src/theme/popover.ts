@@ -1,9 +1,22 @@
-import { popoverAnatomy as parts } from '@chakra-ui/anatomy';
-import { createMultiStyleConfigHelpers } from '@chakra-ui/react';
 import { ThemeTokens } from './tokens';
 
-const { definePartsStyle, defineMultiStyleConfig } =
-    createMultiStyleConfigHelpers(parts.keys);
+const POPOVER_ANATOMY_KEYS = [
+    'content',
+    'header',
+    'body',
+    'footer',
+    'popper',
+    'arrow',
+    'closeButton',
+] as const;
+
+const definePartsStyle = <T>(config: T): T => config;
+const defineMultiStyleConfig = <T extends object>(
+    config: T,
+): T & { parts: readonly string[] } => ({
+    parts: POPOVER_ANATOMY_KEYS,
+    ...config,
+});
 
 const getPopoverVariants = (tokens: ThemeTokens) => ({
     vechainKitBase: definePartsStyle({
