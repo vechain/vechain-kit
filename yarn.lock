@@ -532,7 +532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/anatomy@npm:2.3.6, @chakra-ui/anatomy@npm:^2.3.6":
+"@chakra-ui/anatomy@npm:2.3.6":
   version: 2.3.6
   resolution: "@chakra-ui/anatomy@npm:2.3.6"
   checksum: 10c0/36a6ffb4014d19e2db5893b43a3ca24868791a51dcb7c8ef872a81da97513a6b58162d66caf7271eb467d48b3582bd44ef3670668637709560317a59ff0ad219
@@ -7633,7 +7633,6 @@ __metadata:
   resolution: "@vechain/vechain-kit@workspace:packages/vechain-kit"
   dependencies:
     "@adraffy/ens-normalize": "npm:^1.11.0"
-    "@chakra-ui/anatomy": "npm:^2.3.6"
     "@chakra-ui/react": "npm:^2.8.2"
     "@emotion/styled": "npm:^11.14.1"
     "@privy-io/cross-app-connect": "npm:0.2.2"
