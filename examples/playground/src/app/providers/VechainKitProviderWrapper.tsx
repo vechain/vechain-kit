@@ -226,12 +226,12 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
-            contractAddresses={{
-                b3trContractAddress:
-                    '0x026771d1be764467f8bdb78bb230df10c924b00d',
-                vot3ContractAddress:
-                    '0xf7a08af15cb3501feee53ebe11f4428a966fa459',
-            }}
+            // contractAddresses={{
+            //     b3trContractAddress:
+            //         '0x026771d1be764467f8bdb78bb230df10c924b00d',
+            //     vot3ContractAddress:
+            //         '0xf7a08af15cb3501feee53ebe11f4428a966fa459',
+            // }}
         >
             <LanguageSync>{children}</LanguageSync>
         </VeChainKitProvider>
