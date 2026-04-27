@@ -110,10 +110,13 @@ export function VechainKitProviderWrapper({ children }: Props) {
     }, [kitLanguage]);
 
     // Transform resources to match I18n type (extract translation objects)
-    const playgroundTranslations = Object.keys(resources).reduce((acc, lang) => {
-        acc[lang] = resources[lang as keyof typeof resources].translation;
-        return acc;
-    }, {} as Record<string, Record<string, string>>);
+    const playgroundTranslations = Object.keys(resources).reduce(
+        (acc, lang) => {
+            acc[lang] = resources[lang as keyof typeof resources].translation;
+            return acc;
+        },
+        {} as Record<string, Record<string, string>>,
+    );
 
     const theme = isDarkMode
         ? {
@@ -219,10 +222,16 @@ export function VechainKitProviderWrapper({ children }: Props) {
             ]}
             darkMode={isDarkMode}
             network={{
-                type: 'main',
+                type: 'test',
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
+            contractAddresses={{
+                b3trContractAddress:
+                    '0x026771d1be764467f8bdb78bb230df10c924b00d',
+                vot3ContractAddress:
+                    '0xf7a08af15cb3501feee53ebe11f4428a966fa459',
+            }}
         >
             <LanguageSync>{children}</LanguageSync>
         </VeChainKitProvider>
