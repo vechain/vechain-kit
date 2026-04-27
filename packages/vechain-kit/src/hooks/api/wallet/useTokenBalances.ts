@@ -6,8 +6,7 @@ import {
     useGetErc20Balance,
     useGetCustomTokenBalances,
 } from '@/hooks';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { useAppConfig, useVeChainKitConfig } from '@/providers';
 
 export type WalletTokenBalance = {
     address: string;
@@ -17,7 +16,7 @@ export type WalletTokenBalance = {
 
 export const useTokenBalances = (address?: string) => {
     const { network, allowCommunityTokens } = useVeChainKitConfig();
-    const config = getConfig(network.type);
+    const config = useAppConfig();
 
     // Base token balances
     const { data: vetData, isLoading: vetLoading } = useAccountBalance(address);

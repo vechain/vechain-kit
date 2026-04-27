@@ -1,7 +1,6 @@
 import { LocalStorageKey, useLocalStorage } from '@/hooks';
 import { compareAddresses } from '@/utils';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { useAppConfig, useVeChainKitConfig } from '@/providers';
 import { type CustomTokenInfo } from '@vechain/contract-getters';
 
 import {  getTokenInfo } from './useGetCustomTokenInfo';
@@ -12,6 +11,7 @@ export const useCustomTokens = () => {
         [],
     );
     const { network } = useVeChainKitConfig();
+    const config = useAppConfig();
 
     const addToken = async (address: CustomTokenInfo['address']) => {
         if (!isTokenIncluded(address) && !isDefaultToken(address)) {
@@ -41,15 +41,15 @@ export const useCustomTokens = () => {
 
     const isDefaultToken = (address: string) => {
         // Get contract addresses from config
-        const contractAddresses = {
+        const defaultAddresses = {
             vet: '0x', // VET has no contract address since it's the native token
-            vtho: getConfig(network.type).vthoContractAddress,
-            b3tr: getConfig(network.type).b3trContractAddress,
-            vot3: getConfig(network.type).vot3ContractAddress,
-            veDelegate: getConfig(network.type).veDelegate,
+            vtho: config.vthoContractAddress,
+            b3tr: config.b3trContractAddress,
+            vot3: config.vot3ContractAddress,
+            veDelegate: config.veDelegate,
         };
 
-        return Object.values(contractAddresses).includes(address);
+        return Object.values(defaultAddresses).includes(address);
     };
 
     return {

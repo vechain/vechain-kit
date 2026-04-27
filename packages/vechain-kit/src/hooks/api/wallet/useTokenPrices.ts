@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-import { useVeChainKitConfig } from '@/providers';
-import { getConfig } from '@/config';
+import { useAppConfig, useVeChainKitConfig } from '@/providers';
 import { useGetTokenUsdPrice } from './useGetTokenUsdPrice';
 
 export type ExchangeRates = {
@@ -10,7 +9,7 @@ export type ExchangeRates = {
 
 export const useTokenPrices = () => {
     const { network } = useVeChainKitConfig();
-    const config = getConfig(network.type);
+    const config = useAppConfig();
 
     // Fetch base token prices
     const { data: vetUsdPrice, isLoading: vetUsdPriceLoading } =

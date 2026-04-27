@@ -1,4 +1,4 @@
-import { getConfig } from '@/config';
+import { AppConfig, getConfig } from '@/config';
 import { NETWORK_TYPE } from '@/config/network';
 import { CURRENCY, PrivyLoginMethod } from '@/types';
 import { isValidUrl } from '@/utils';
@@ -146,6 +146,23 @@ export type VechainKitProviderProps = {
     allowCustomTokens?: boolean;
     /** When true, community tokens (e.g. SASS) are included in token lists and balances. */
     allowCommunityTokens?: boolean;
+    /**
+     * Override default contract addresses for the selected network.
+     * Useful when deploying custom contract instances (e.g., on solo or testnet).
+     * Only the provided fields are overridden; the rest use the network defaults.
+     *
+     * @example
+     * ```tsx
+     * <VeChainKitProvider
+     *   network={{ type: 'solo' }}
+     *   contractAddresses={{
+     *     b3trContractAddress: '0x...',
+     *     vot3ContractAddress: '0x...',
+     *   }}
+     * >
+     * ```
+     */
+    contractAddresses?: Partial<AppConfig>;
     legalDocuments?: LegalDocumentOptions;
     hiddenQuickActions?: AccountQuickAction[];
     defaultCurrency?: CURRENCY;
@@ -166,6 +183,8 @@ export type VeChainKitConfig = {
     loginMethods?: VechainKitProviderProps['loginMethods'];
     darkMode: boolean;
     i18n?: VechainKitProviderProps['i18n'];
+    /** The full app config for the current network, with any contractAddresses overrides applied. */
+    appConfig: AppConfig;
     network: {
         type: NETWORK_TYPE;
         nodeUrl: string;
@@ -219,6 +238,21 @@ export const useVeChainKitConfig = () => {
         throw new Error('useVeChainKitConfig must be used within VeChainKit');
     }
     return context;
+};
+
+/**
+ * Hook to get the merged app config for the current network.
+ * Returns the base network config with any contractAddresses overrides applied.
+ *
+ * @example
+ * ```tsx
+ * const config = useAppConfig();
+ * const b3trAddress = config.b3trContractAddress;
+ * ```
+ */
+export const useAppConfig = (): AppConfig => {
+    const { appConfig } = useVeChainKitConfig();
+    return appConfig;
 };
 
 const validateConfig = (
@@ -372,6 +406,7 @@ export const VeChainKitProvider = (
         theme: customTheme,
         onLanguageChange,
         onCurrencyChange,
+        contractAddresses,
     } = validatedProps;
 
     // After validation, network and dappKit are guaranteed to be defined
@@ -386,6 +421,15 @@ export const VeChainKitProvider = (
         type: networkType,
         nodeUrl,
     };
+
+    // Merge base config with any contract address overrides
+    const appConfig = useMemo(
+        () => ({
+            ...getConfig(networkType),
+            ...contractAddresses,
+        }),
+        [networkType, contractAddresses],
+    );
 
     const dappKit = _dappKit ?? {
         allowedWallets: ['veworld'] as DAppKitWalletSource[],
@@ -645,6 +689,7 @@ export const VeChainKitProvider = (
                         loginMethods: validatedLoginMethods,
                         darkMode,
                         i18n: i18nConfig,
+                        appConfig,
                         currentLanguage,
                         network,
                         allowCustomTokens,
