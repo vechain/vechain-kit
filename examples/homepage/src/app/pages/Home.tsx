@@ -21,6 +21,7 @@ import { FAQSection } from '../components/features/FAQSection';
 import { QuickStartSection } from '../components/features/QuickStartSection';
 import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetStartedButton/FloatingGetStartedButton';
+import { SigningExample } from '@/app/components/features/Signing';
 
 export default function Home(): ReactElement {
     const { colorMode } = useColorMode();
@@ -77,6 +78,16 @@ export default function Home(): ReactElement {
             />
 
             <AppShowcase />
+
+            <Card
+                variant="section"
+                py={{ base: 8, md: 12 }}
+                px={{ base: 4, md: 8 }}
+            >
+                <VStack spacing={4} align="center" maxW="4xl" mx="auto" w="full">
+                    <SigningExample />
+                </VStack>
+            </Card>
 
             <QuickStartSection />
 

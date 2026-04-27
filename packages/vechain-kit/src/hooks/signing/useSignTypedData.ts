@@ -1,5 +1,6 @@
 'use client';
 
+// TODO: investigate signTypedData support in VeWorld in-app browser
 import { useCallback, useState } from 'react';
 import { SignTypedDataParams } from '@privy-io/react-auth';
 import { usePrivyWalletProvider } from '@/providers';

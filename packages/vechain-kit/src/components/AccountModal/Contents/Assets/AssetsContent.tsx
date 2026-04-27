@@ -1,14 +1,14 @@
 import {
-    Button,
     Container,
-    Icon,
+    HStack,
+    IconButton,
     Input,
     InputGroup,
     InputLeftElement,
     ModalBody,
     ModalCloseButton,
-    ModalFooter,
     ModalHeader,
+    Tooltip,
     VStack,
     useToken,
 } from '@chakra-ui/react';
@@ -76,23 +76,42 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
 
             <Container h={['540px', 'auto']} p={0}>
                 <ModalBody>
-                    <InputGroup size="lg">
-                        <Input
-                            placeholder="Search token"
-                            bg={darkMode ? '#00000038' : 'gray.50'}
-                            borderRadius="xl"
-                            height="56px"
-                            pl={12}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            data-testid="search-token-input"
-                        />
-                        <InputLeftElement h="56px" w="56px" pl={4}>
-                            <LuSearch
-                                color={textTertiary}
+                    <HStack spacing={2}>
+                        <InputGroup size="lg" flex={1}>
+                            <Input
+                                placeholder="Search token"
+                                bg={darkMode ? '#00000038' : 'gray.50'}
+                                borderRadius="xl"
+                                height="56px"
+                                pl={12}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                data-testid="search-token-input"
                             />
-                        </InputLeftElement>
-                    </InputGroup>
+                            <InputLeftElement h="56px" w="56px" pl={4}>
+                                <LuSearch
+                                    color={textTertiary}
+                                />
+                            </InputLeftElement>
+                        </InputGroup>
+                        {allowCustomTokens && (
+                            <Tooltip label={t('Manage Custom Tokens')}>
+                                <IconButton
+                                    aria-label={t('Manage Custom Tokens')}
+                                    icon={<LuPencil />}
+                                    variant="vechainKitSecondary"
+                                    size="lg"
+                                    height="56px"
+                                    width="56px"
+                                    minW="56px"
+                                    borderRadius="xl"
+                                    onClick={() =>
+                                        setCurrentContent('add-custom-token')
+                                    }
+                                />
+                            </Tooltip>
+                        )}
+                    </HStack>
 
                     <VStack spacing={2} align="stretch" mt={2}>
                         {filteredTokens.map((token) => {
@@ -118,19 +137,6 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                         })}
                     </VStack>
                 </ModalBody>
-                <ModalFooter>
-                    {allowCustomTokens && (
-                        <Button
-                            variant="vechainKitSecondary"
-                            leftIcon={<Icon as={LuPencil} boxSize={4} />}
-                            onClick={() =>
-                                setCurrentContent('add-custom-token')
-                            }
-                        >
-                            {t('Manage Custom Tokens')}
-                        </Button>
-                    )}
-                </ModalFooter>
             </Container>
         </>
     );

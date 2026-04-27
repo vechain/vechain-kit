@@ -41,7 +41,6 @@ import { SwapQuote } from '@/types/swap';
 import { useVeChainKitConfig } from '@/providers';
 import { TOKEN_LOGOS, TOKEN_LOGO_COMPONENTS } from '@/utils';
 import { formatUnits, parseUnits } from 'viem';
-import { getConfig } from '@/config';
 import { compareAddresses, NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
 import { SelectTokenContent } from '../SendToken/SelectTokenContent';
 import { formatCompactCurrency } from '@/utils/currencyUtils';
@@ -77,7 +76,7 @@ export const SwapTokenContent = ({
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
-    const { network, feeDelegation, darkMode: isDark } = useVeChainKitConfig();
+    const { network, feeDelegation, darkMode: isDark, appConfig } = useVeChainKitConfig();
     const { isolatedView, closeAccountModal } = useAccountModalOptions();
 
     const cardBg = useToken('colors', 'vechain-kit-card');
@@ -174,8 +173,7 @@ export const SwapTokenContent = ({
             // If not found by symbol, try finding by address from config
             if (!b3trToken) {
                 try {
-                    const config = getConfig(network.type);
-                    const b3trAddress = config.b3trContractAddress;
+                    const b3trAddress = appConfig.b3trContractAddress;
                     if (b3trAddress) {
                         b3trToken = sortedTokens.find((t) =>
                             compareAddresses(t.address, b3trAddress),
@@ -552,8 +550,7 @@ export const SwapTokenContent = ({
                 // If not found by symbol, try finding by address from config
                 if (!b3trToken) {
                     try {
-                        const config = getConfig(network.type);
-                        const b3trAddress = config.b3trContractAddress;
+                        const b3trAddress = appConfig.b3trContractAddress;
                         if (b3trAddress) {
                             b3trToken = sortedTokens.find((t) =>
                                 compareAddresses(t.address, b3trAddress),
