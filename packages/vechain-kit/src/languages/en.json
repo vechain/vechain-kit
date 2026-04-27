@@ -423,5 +423,7 @@
     "unavailable": "unavailable",
     "utilities": "Utilities",
     "vebetter": "VeBetter",
-    "your@email.com": "your@email.com"
+    "your@email.com": "your@email.com",
+    "Paste a token contract address to track its balance in your wallet.": "Paste a token contract address to track its balance in your wallet.",
+    "No custom tokens added yet.": "No custom tokens added yet."
 }
