@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useAppConfig } from '@/providers';
 import { useGetTokenUsdPrice } from './useGetTokenUsdPrice';
+import { useOraclePriceChanges24h } from './useOraclePriceChanges24h';
 
 export type ExchangeRates = {
     eurUsdPrice: number;
@@ -21,6 +22,7 @@ export const useTokenPrices = () => {
         useGetTokenUsdPrice('EUR');
     const { data: gbpUsdPrice, isLoading: gbpToUsdLoading } =
         useGetTokenUsdPrice('GBP');
+    const { data: priceChanges24h } = useOraclePriceChanges24h();
 
     // Get all prices as a map
     const prices = useMemo(() => {
@@ -70,6 +72,41 @@ export const useTokenPrices = () => {
         config.vvetContractAddress,
     ]);
 
+    const priceChanges = useMemo(() => {
+        const map: Record<string, number> = {};
+        if (!priceChanges24h) return map;
+        const vetChange = priceChanges24h.VET;
+        const vthoChange = priceChanges24h.VTHO;
+        const b3trChange = priceChanges24h.B3TR;
+        if (vetChange !== undefined) map['0x'] = vetChange;
+        if (vthoChange !== undefined)
+            map[config.vthoContractAddress] = vthoChange;
+        if (b3trChange !== undefined) {
+            map[config.b3trContractAddress] = b3trChange;
+            // VOT3 and veDelegate share the same price feed as B3TR.
+            map[config.vot3ContractAddress] = b3trChange;
+            map[config.veDelegate] = b3trChange;
+        }
+        if (vetChange !== undefined && config.vvetContractAddress) {
+            map[config.vvetContractAddress] = vetChange;
+        }
+        // Mirror with lowercase keys.
+        for (const key of Object.keys(map)) {
+            const lower = key.toLowerCase();
+            if (lower !== key && map[lower] === undefined) {
+                map[lower] = map[key];
+            }
+        }
+        return map;
+    }, [
+        priceChanges24h,
+        config.vthoContractAddress,
+        config.b3trContractAddress,
+        config.vot3ContractAddress,
+        config.veDelegate,
+        config.vvetContractAddress,
+    ]);
+
     const exchangeRates: ExchangeRates = useMemo(
         () => ({
             eurUsdPrice: eurUsdPrice || 1,
@@ -87,6 +124,7 @@ export const useTokenPrices = () => {
 
     return {
         prices,
+        priceChanges,
         exchangeRates,
         isLoading,
     };

@@ -85,6 +85,7 @@ export const TokensTab = ({ onSelect, onManageTokens }: Props) => {
                             currentCurrency as SupportedCurrency
                         }
                         onClick={() => onSelect(token)}
+                        priceChange24hPct={token.priceChange24hPct}
                     />
                 ))}
             </VStack>

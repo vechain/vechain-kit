@@ -18,6 +18,7 @@ import {
     useTotalBalance,
     useWallet,
 } from '@/hooks';
+import { PriceChangeBadge } from '@/components/common';
 
 type Props = {
     onSend: () => void;
@@ -66,20 +67,34 @@ export const AssetsHeader = ({
     hideHistory,
 }: Props) => {
     const { account } = useWallet();
-    const { formattedBalance, hasAnyBalance, isLoading } = useTotalBalance({
+    const {
+        formattedBalance,
+        hasAnyBalance,
+        isLoading,
+        priceChange24hPct,
+    } = useTotalBalance({
         address: account?.address ?? '',
     });
     const [showAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     return (
         <VStack w="full" spacing={4} align="stretch">
-            <Heading size="2xl" fontWeight="700">
-                {isLoading
-                    ? '...'
-                    : showAssets
-                    ? formattedBalance
-                    : '$****'}
-            </Heading>
+            <HStack spacing={3} align="baseline">
+                <Heading size="2xl" fontWeight="700">
+                    {isLoading
+                        ? '...'
+                        : showAssets
+                        ? formattedBalance
+                        : '$****'}
+                </Heading>
+                {showAssets && (
+                    <PriceChangeBadge
+                        valuePct={priceChange24hPct}
+                        showSuffix
+                        fontSize="sm"
+                    />
+                )}
+            </HStack>
 
             <HStack spacing={2} w="full">
                 <ActionButton

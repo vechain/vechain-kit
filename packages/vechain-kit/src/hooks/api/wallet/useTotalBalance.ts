@@ -41,6 +41,21 @@ export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
         [tokensWithBalance],
     );
 
+    // Weighted 24h change across liquid holdings with a known change.
+    // Staking positions inherit the same per-token change (Stargate ~ VET,
+    // Navigators ~ B3TR, BetterSwap LP averaged via its underlying pair).
+    const priceChange24hPct = useMemo(() => {
+        let valueWeighted = 0;
+        let valueCovered = 0;
+        for (const token of tokensWithBalance) {
+            if (typeof token.priceChange24hPct !== 'number') continue;
+            valueWeighted += token.valueUsd * token.priceChange24hPct;
+            valueCovered += token.valueUsd;
+        }
+        if (valueCovered === 0) return undefined;
+        return valueWeighted / valueCovered;
+    }, [tokensWithBalance]);
+
     const stakingInCurrency =
         stargate.totalValueInCurrency +
         navigator.totalValueInCurrency +
@@ -74,6 +89,7 @@ export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
         liquidBalanceUsd,
         stakingInCurrency,
         stakingUsd,
+        priceChange24hPct,
         formattedBalance,
         isLoading,
         hasAnyBalance,

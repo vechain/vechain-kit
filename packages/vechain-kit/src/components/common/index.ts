@@ -15,3 +15,4 @@ export * from './GasFeeSummary';
 export * from './GasFeeTokenSelector';
 export * from './InlineFeedback';
 export * from './WalletSwitchFeedback';
+export * from './PriceChangeBadge';

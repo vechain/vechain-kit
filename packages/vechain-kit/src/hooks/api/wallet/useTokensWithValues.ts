@@ -11,6 +11,7 @@ export type TokenWithValue = WalletTokenBalance & {
     priceUsd: number;
     valueUsd: number;
     valueInCurrency: number;
+    priceChange24hPct?: number;
 };
 
 type UseTokensWithValuesProps = {
@@ -23,6 +24,7 @@ export const useTokensWithValues = ({
     const { balances, isLoading: balancesLoading } = useTokenBalances(address);
     const {
         prices,
+        priceChanges,
         exchangeRates,
         isLoading: pricesLoading,
     } = useTokenPrices();
@@ -37,15 +39,17 @@ export const useTokensWithValues = ({
                 currentCurrency as SupportedCurrency,
                 exchangeRates,
             );
+            const priceChange24hPct = priceChanges?.[token.address];
 
             return {
                 ...token,
                 priceUsd,
                 valueUsd,
                 valueInCurrency,
+                priceChange24hPct,
             };
         });
-    }, [balances, prices, currentCurrency, exchangeRates]);
+    }, [balances, prices, priceChanges, currentCurrency, exchangeRates]);
 
     // Get sorted tokens (by value)
     const sortedTokens = useMemo(() => {
