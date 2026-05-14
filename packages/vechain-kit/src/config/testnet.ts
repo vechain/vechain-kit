@@ -94,5 +94,7 @@ const config: AppConfig = {
         '0x91bdc3ca7228bc28f14990039cab813f98ea1d40',
     // dex (testnet factory not confirmed yet)
     betterSwapFactoryAddress: '',
+    // lending — not deployed on testnet
+    juicyPoolAddress: '',
 };
 export default config;

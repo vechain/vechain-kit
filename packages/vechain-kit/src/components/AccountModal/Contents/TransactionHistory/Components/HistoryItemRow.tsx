@@ -52,7 +52,7 @@ export const HistoryItemRow = ({ item, onClick }: Props) => {
             isDisabled={!onClick}
             _disabled={{ cursor: 'default', opacity: 1 }}
         >
-            <HStack spacing={3}>
+            <HStack spacing={3} flex={1} minW={0}>
                 {fromZero ? (
                     <Box
                         boxSize="32px"
@@ -61,6 +61,7 @@ export const HistoryItemRow = ({ item, onClick }: Props) => {
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        flexShrink={0}
                     >
                         <Icon
                             as={LuSparkles}
@@ -74,18 +75,24 @@ export const HistoryItemRow = ({ item, onClick }: Props) => {
                         alt={item.tokenSymbol}
                         boxSize="32px"
                         borderRadius="full"
+                        flexShrink={0}
                         fallback={
                             <Box boxSize="32px" borderRadius="full" bg="whiteAlpha.300" />
                         }
                     />
                 ) : (
-                    <Box boxSize="32px" borderRadius="full" bg="whiteAlpha.300" />
+                    <Box
+                        boxSize="32px"
+                        borderRadius="full"
+                        bg="whiteAlpha.300"
+                        flexShrink={0}
+                    />
                 )}
-                <VStack spacing={0} align="flex-start">
+                <VStack spacing={0} align="flex-start" minW={0}>
                     <Text fontWeight="600" color={textPrimary}>
                         {sent ? t('Sent') : t('Received')}
                     </Text>
-                    <HStack spacing={1} align="baseline">
+                    <HStack spacing={1} align="baseline" maxW="full">
                         <Text fontSize="xs" color={textSecondary}>
                             {sent ? t('To') : t('From')}
                         </Text>
@@ -97,10 +104,28 @@ export const HistoryItemRow = ({ item, onClick }: Props) => {
                     </HStack>
                 </VStack>
             </HStack>
-            <VStack spacing={0} align="flex-end">
-                <Text fontWeight="600" color={amountColor}>
+            <VStack
+                spacing={0}
+                align="flex-end"
+                maxW="45%"
+                flexShrink={0}
+            >
+                <Text
+                    fontWeight="600"
+                    color={amountColor}
+                    lineHeight="short"
+                >
                     {sign}
-                    {formattedAmount} {item.tokenSymbol}
+                    {formattedAmount}
+                </Text>
+                <Text
+                    fontSize="xs"
+                    color={textSecondary}
+                    lineHeight="short"
+                    maxW="full"
+                    isTruncated
+                >
+                    {item.tokenSymbol}
                 </Text>
             </VStack>
         </Button>

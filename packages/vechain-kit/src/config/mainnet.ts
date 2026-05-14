@@ -98,5 +98,7 @@ const config: AppConfig = {
         '0xef238e33fc78ecc79beaf8386254a0fc67d048e0',
     // dex
     betterSwapFactoryAddress: '0x5970DcBeBAc33e75eFf315C675f1d2654f7bF1f5',
+    // lending
+    juicyPoolAddress: '0x00Bd212704A8816264607a7110cCabe70219D5aB',
 };
 export default config;

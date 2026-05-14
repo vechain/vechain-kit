@@ -40,6 +40,7 @@ export type AppConfig = {
     stargateNftContractAddress: string;
     navigatorRegistryContractAddress: string;
     betterSwapFactoryAddress: string;
+    juicyPoolAddress: string;
     vetDomainAvatarUrl: string;
     nodeUrl: string;
     indexerUrl: string;

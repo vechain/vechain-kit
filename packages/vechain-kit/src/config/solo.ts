@@ -87,5 +87,7 @@ const config: AppConfig = {
     navigatorRegistryContractAddress: '',
     // dex
     betterSwapFactoryAddress: '',
+    // lending
+    juicyPoolAddress: '',
 };
 export default config;

@@ -8,6 +8,7 @@ import { useCurrency } from '../../utils/useCurrency';
 import { useStargatePositions } from '../staking/useStargatePositions';
 import { useNavigatorPosition } from '../staking/useNavigatorPosition';
 import { useBetterSwapLpPositions } from '../staking/useBetterSwapLpPositions';
+import { useJuicyPosition } from '../staking/useJuicyPosition';
 
 type UseTotalBalanceProps = {
     address?: string;
@@ -22,6 +23,7 @@ export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
     const stargate = useStargatePositions(address);
     const navigator = useNavigatorPosition(address);
     const lp = useBetterSwapLpPositions(address);
+    const juicy = useJuicyPosition(address);
 
     const liquidBalanceInCurrency = useMemo(
         () =>
@@ -59,9 +61,13 @@ export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
     const stakingInCurrency =
         stargate.totalValueInCurrency +
         navigator.totalValueInCurrency +
-        lp.totalValueInCurrency;
+        lp.totalValueInCurrency +
+        juicy.netValueInCurrency;
     const stakingUsd =
-        stargate.totalValueUsd + navigator.totalValueUsd + lp.totalValueUsd;
+        stargate.totalValueUsd +
+        navigator.totalValueUsd +
+        lp.totalValueUsd +
+        juicy.netValueUsd;
 
     const totalBalanceInCurrency = liquidBalanceInCurrency + stakingInCurrency;
     const totalBalanceUsd = liquidBalanceUsd + stakingUsd;
@@ -78,7 +84,8 @@ export const useTotalBalance = ({ address = '' }: UseTotalBalanceProps) => {
         tokensLoading ||
         stargate.isLoading ||
         navigator.isLoading ||
-        lp.isLoading;
+        lp.isLoading ||
+        juicy.isLoading;
 
     const hasAnyBalance = tokensWithBalance.length > 0 || stakingUsd > 0;
 

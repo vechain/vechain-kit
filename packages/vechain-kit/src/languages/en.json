@@ -478,5 +478,8 @@
   "navigator": "navigator",
   "Loading": "Loading",
   "{{symbol}} history": "{{symbol}} history",
-  "Search token": "Search token"
+  "Search token": "Search token",
+  "Borrowing": "Borrowing",
+  "Borrowed": "Borrowed",
+  "Health rate": "Health rate"
 }
