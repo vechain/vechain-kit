@@ -121,8 +121,11 @@ export const ConnectPopover = ({
                                 setCurrentContent={handleSetContent}
                             />
                         </PopoverBody>
-                        <PopoverFooter borderTop={'none'} pb={'15px'}>
-                            {showEcosystemButton && (
+                        {/* Only render the footer when there's actually
+                            something to show — an empty PopoverFooter adds
+                            ~15px of dead space below the More-options link. */}
+                        {showEcosystemButton && (
+                            <PopoverFooter borderTop={'none'} pt={1} pb={3}>
                                 <HStack justify={'center'} w={'full'}>
                                     <EcosystemButton
                                         isDark={isDark}
@@ -131,8 +134,8 @@ export const ConnectPopover = ({
                                         setCurrentContent={handleSetContent}
                                     />
                                 </HStack>
-                            )}
-                        </PopoverFooter>
+                            </PopoverFooter>
+                        )}
                     </PopoverContent>
                 </>
             )}

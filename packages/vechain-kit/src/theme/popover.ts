@@ -29,10 +29,13 @@ const getPopoverVariants = (tokens: ThemeTokens) => ({
             backgroundColor: tokens.colors.background.modal,
             backdropFilter: tokens.effects.backdropFilter.modal,
             boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.12)',
-            minWidth: '380px',
+            // Tighter than the modal — popovers anchor next to a trigger and
+            // don't need the full 380px the modal uses.
+            width: '320px',
+            minWidth: '320px',
         },
         body: {
-            padding: '16px',
+            padding: '12px',
         },
     }),
 });
