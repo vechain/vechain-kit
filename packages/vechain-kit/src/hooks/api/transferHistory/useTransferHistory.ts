@@ -93,7 +93,13 @@ export const useTransferHistory = (
                 limit: String(PAGE_SIZE),
                 offset: String(pageParam),
             });
-            if (tokenAddress && !filteringByVet) {
+            if (filteringByVet) {
+                // Indexer doesn't accept the VET sentinel as a tokenAddress;
+                // use the dedicated eventType filter so we don't have to
+                // post-filter a mixed page client-side (which would yield
+                // very few rows).
+                params.set('eventType', 'VET');
+            } else if (tokenAddress) {
                 params.set('tokenAddress', tokenAddress.toLowerCase());
             }
 
