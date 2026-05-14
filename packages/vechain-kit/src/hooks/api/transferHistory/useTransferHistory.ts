@@ -134,17 +134,12 @@ export const useTransferHistory = (
                 );
                 results.forEach((r, i) => {
                     if (r.status !== 'fulfilled' || !r.value) return;
-                    const info = r.value as {
-                        symbol?: string;
-                        decimals?: number;
-                    };
+                    const info = r.value;
                     if (!info.symbol) return;
+                    const parsed = Number(info.decimals);
                     symbolByAddress.set(addrs[i], {
                         symbol: info.symbol,
-                        decimals:
-                            typeof info.decimals === 'number'
-                                ? info.decimals
-                                : 18,
+                        decimals: Number.isFinite(parsed) ? parsed : 18,
                     });
                 });
             }

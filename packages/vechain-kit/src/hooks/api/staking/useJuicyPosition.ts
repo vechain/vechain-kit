@@ -186,16 +186,14 @@ export const useJuicyPosition = (address?: string): JuicyPositionResult => {
             await Promise.all(
                 interestingAssets.map(async (addr) => {
                     try {
-                        const info = (await getTokenInfo(
+                        const info = await getTokenInfo(
                             addr,
                             network.nodeUrl,
-                        )) as { symbol?: string; decimals?: number };
+                        );
+                        const parsed = Number(info.decimals);
                         tokenMeta.set(addr, {
                             symbol: info.symbol ?? addr.slice(0, 6),
-                            decimals:
-                                typeof info.decimals === 'number'
-                                    ? info.decimals
-                                    : 18,
+                            decimals: Number.isFinite(parsed) ? parsed : 18,
                         });
                     } catch {
                         tokenMeta.set(addr, {

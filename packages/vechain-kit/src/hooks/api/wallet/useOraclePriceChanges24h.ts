@@ -55,7 +55,9 @@ export const useOraclePriceChanges24h = () => {
             const latestEntries = await Promise.all(
                 feedEntries.map(async ([token, feedId]) => {
                     try {
-                        const res = await oracle.read.getLatestValue(feedId);
+                        const res = await oracle.read.getLatestValue(
+                            feedId as `0x${string}`,
+                        );
                         const raw = (res as readonly bigint[])[0];
                         return [token, raw] as const;
                     } catch {
@@ -77,6 +79,7 @@ export const useOraclePriceChanges24h = () => {
             // for an event whose `id` field is non-indexed.
             const events = await getEventLogs({
                 thor,
+                nodeUrl: network.nodeUrl,
                 from: fromBlock,
                 to: toBlock,
                 order: 'desc',
