@@ -53,20 +53,21 @@ const ActionIconButton = ({
     isDisabled?: boolean;
 }) => {
     const { t } = useTranslation();
+    const translatedLabel = t(label, label);
     return (
         <IconButton
             variant="vechainKitSecondary"
             h="44px"
             flex={1}
             borderRadius="lg"
-            aria-label={label}
+            aria-label={translatedLabel}
             isDisabled={isDisabled}
             onClick={onClick}
             icon={
                 <HStack spacing={1.5}>
                     <Icon as={icon} boxSize={3.5} opacity={0.85} />
                     <Text fontSize="sm" fontWeight="600">
-                        {t(label, label)}
+                        {translatedLabel}
                     </Text>
                 </HStack>
             }

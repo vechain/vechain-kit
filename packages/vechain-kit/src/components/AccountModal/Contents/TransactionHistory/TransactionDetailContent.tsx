@@ -58,6 +58,7 @@ const Row = ({
     value: React.ReactNode;
     copyValue?: string;
 }) => {
+    const { t } = useTranslation();
     const labelColor = useToken('colors', 'vechain-kit-text-secondary');
     const valueColor = useToken('colors', 'vechain-kit-text-primary');
     return (
@@ -76,7 +77,7 @@ const Row = ({
                 {copyValue && (
                     <CopyIconButton
                         value={copyValue}
-                        ariaLabel={`Copy ${label}`}
+                        ariaLabel={`${t('Copy')} ${label}`}
                     />
                 )}
             </HStack>
