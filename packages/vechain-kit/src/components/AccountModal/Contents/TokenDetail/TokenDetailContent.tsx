@@ -228,6 +228,7 @@ export const TokenDetailContent = ({
                                 points={sparklinePoints}
                                 tone={sparkTone}
                                 chartHeight={72}
+                                interactive
                             />
                         )}
 

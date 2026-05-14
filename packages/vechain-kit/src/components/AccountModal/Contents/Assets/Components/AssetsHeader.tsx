@@ -14,12 +14,17 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
     LocalStorageKey,
+    useCurrency,
     useLocalStorage,
     usePortfolioPriceHistory24h,
     useTotalBalance,
     useWallet,
 } from '@/hooks';
 import { PriceChangeBadge, PriceChart } from '@/components/common';
+import {
+    formatCompactCurrency,
+    SupportedCurrency,
+} from '@/utils/currencyUtils';
 
 type Props = {
     onSend: () => void;
@@ -80,6 +85,7 @@ export const AssetsHeader = ({
     const { points: chartPoints } = usePortfolioPriceHistory24h(
         account?.address,
     );
+    const { currentCurrency } = useCurrency();
     const chartTone: 'up' | 'down' | 'neutral' =
         typeof priceChange24hPct === 'number'
             ? priceChange24hPct > 0
@@ -114,20 +120,26 @@ export const AssetsHeader = ({
                     points={chartPoints}
                     tone={chartTone}
                     chartHeight={72}
+                    interactive
+                    formatValue={(v) =>
+                        formatCompactCurrency(v, {
+                            currency: currentCurrency as SupportedCurrency,
+                        })
+                    }
                 />
             )}
 
             <HStack spacing={2} w="full">
                 <ActionButton
-                    icon={LuArrowUpFromLine}
-                    label="Send"
-                    onClick={onSend}
-                    isDisabled={!hasAnyBalance}
-                />
-                <ActionButton
                     icon={LuArrowLeftRight}
                     label="Swap"
                     onClick={onSwap}
+                    isDisabled={!hasAnyBalance}
+                />
+                <ActionButton
+                    icon={LuArrowUpFromLine}
+                    label="Send"
+                    onClick={onSend}
                     isDisabled={!hasAnyBalance}
                 />
                 {!hideHistory && (
