@@ -12,3 +12,5 @@ export * from './KitSettings';
 export * from './TermsAndPrivacy';
 export * from './DisconnectConfirmation';
 export * from './SelectWallet';
+export * from './TokenDetail';
+export * from './TransactionHistory';

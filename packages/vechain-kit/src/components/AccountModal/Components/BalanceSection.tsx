@@ -7,7 +7,14 @@ import {
     Button,
     useToken,
 } from '@chakra-ui/react';
-import { useRefreshBalances, useWallet, useTotalBalance, LocalStorageKey, useLocalStorage } from '@/hooks';
+import {
+    useRefreshBalances,
+    useWallet,
+    useTotalBalance,
+    LocalStorageKey,
+    useLocalStorage,
+} from '@/hooks';
+import { PriceChangeBadge } from '@/components/common';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LuRefreshCw } from 'react-icons/lu';
@@ -26,7 +33,7 @@ export const BalanceSection = ({
 }) => {
     const { t } = useTranslation();
     const { account } = useWallet();
-    const { formattedBalance, isLoading } = useTotalBalance({
+    const { formattedBalance, isLoading, priceChange24hPct } = useTotalBalance({
         address: account?.address ?? '',
     });
 
@@ -109,9 +116,18 @@ export const BalanceSection = ({
                     mt={4}
                     mb={4}
                 >
-                    <Heading size={'2xl'} fontWeight={'700'}>
-                        {showAssets ? formattedBalance : '$****'}
-                    </Heading>
+                    <HStack spacing={3} align="baseline">
+                        <Heading size={'2xl'} fontWeight={'700'}>
+                            {showAssets ? formattedBalance : '$****'}
+                        </Heading>
+                        {showAssets && (
+                            <PriceChangeBadge
+                                valuePct={priceChange24hPct}
+                                showSuffix
+                                fontSize="sm"
+                            />
+                        )}
+                    </HStack>
 
                     <HStack
                         w={'full'}

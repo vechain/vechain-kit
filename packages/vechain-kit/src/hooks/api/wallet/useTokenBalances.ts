@@ -26,6 +26,11 @@ export const useTokenBalances = (address?: string) => {
         useGetVot3Balance(address);
     const { data: veDelegateBalance, isLoading: veDelegateLoading } =
         useGetErc20Balance(config.veDelegateTokenContractAddress, address);
+    const { data: vvetBalance, isLoading: vvetLoading } = useGetErc20Balance(
+        config.vvetContractAddress,
+        address,
+        { enabled: !!config.vvetContractAddress },
+    );
     const { data: sassBalance, isLoading: sassLoading } = useGetErc20Balance(
         config.sassContractAddress,
         address,
@@ -52,6 +57,7 @@ export const useTokenBalances = (address?: string) => {
             b3tr: config.b3trContractAddress,
             vot3: config.vot3ContractAddress,
             veDelegate: config.veDelegate,
+            vvet: config.vvetContractAddress,
         };
 
         // Base tokens
@@ -83,6 +89,14 @@ export const useTokenBalances = (address?: string) => {
             },
         ];
 
+        if (contractAddresses.vvet) {
+            baseTokens.push({
+                address: contractAddresses.vvet,
+                symbol: 'VVET',
+                balance: vvetBalance?.scaled ?? '0',
+            });
+        }
+
         // Add custom tokens
         const customTokens: WalletTokenBalance[] = customTokenBalances.map(
             (token) => ({
@@ -109,10 +123,12 @@ export const useTokenBalances = (address?: string) => {
         b3trBalance,
         vot3Balance,
         veDelegateBalance,
+        vvetBalance,
         customTokenBalances,
         allowCommunityTokens,
         sassBalance,
         config.sassContractAddress,
+        config.vvetContractAddress,
         network.type,
     ]);
 
@@ -121,6 +137,7 @@ export const useTokenBalances = (address?: string) => {
         b3trLoading ||
         vot3Loading ||
         veDelegateLoading ||
+        (!!config.vvetContractAddress && vvetLoading) ||
         (allowCommunityTokens && sassLoading) ||
         customTokensLoading;
 

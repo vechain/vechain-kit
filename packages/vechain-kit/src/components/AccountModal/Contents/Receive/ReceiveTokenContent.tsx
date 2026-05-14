@@ -19,13 +19,17 @@ import { useWallet } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
-type Props = {
+export type ReceiveTokenContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
+    onBack?: () => void;
 };
 
-export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
+export const ReceiveTokenContent = ({
+    setCurrentContent,
+    onBack,
+}: ReceiveTokenContentProps) => {
     const { t } = useTranslation();
     const { account } = useWallet();
     const { isolatedView } = useAccountModalOptions();
@@ -33,14 +37,14 @@ export const ReceiveTokenContent = ({ setCurrentContent }: Props) => {
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
     const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
 
+    const handleBack = onBack ?? (() => setCurrentContent('main'));
+
     return (
         <>
             <StickyHeaderContainer>
                 <ModalHeader>{t('Receive')}</ModalHeader>
                 {!isolatedView && (
-                    <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
-                    />
+                    <ModalBackButton onClick={handleBack} />
                 )}
                 <ModalCloseButton />
             </StickyHeaderContainer>

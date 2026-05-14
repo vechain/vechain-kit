@@ -89,5 +89,16 @@ const config: AppConfig = {
     vnsResolverAddress: '0xA11413086e163e41901bb81fdc5617c975Fa5a1A',
     vetDomainAvatarUrl: 'https://vet.domains/api/avatar',
     sassContractAddress: '0x84b0caf6436aace4e21d10f126963fdd53ac31ea',
+    // wrapped VET
+    vvetContractAddress: '0x45429A2255e7248e57fce99E7239aED3f84B7a53',
+    // staking
+    stargateContractAddress: '0x03C557bE98123fdb6faD325328AC6eB77de7248C',
+    stargateNftContractAddress: '0x1856c533ac2d94340aaa8544d35a5c1d4a21dee7',
+    navigatorRegistryContractAddress:
+        '0xef238e33fc78Ecc79BeaF8386254A0fC67D048E0',
+    // dex
+    betterSwapFactoryAddress: '0x5970DcBeBAc33e75eFf315C675f1d2654f7bF1f5',
+    // lending
+    juicyPoolAddress: '0x00Bd212704A8816264607a7110cCabe70219D5aB',
 };
 export default config;

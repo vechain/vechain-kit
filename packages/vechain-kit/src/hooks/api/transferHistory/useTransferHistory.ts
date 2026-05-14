@@ -1,0 +1,220 @@
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { formatUnits } from 'ethers';
+import { useAppConfig, useVeChainKitConfig } from '@/providers';
+import { useTokenBalances } from '../wallet/useTokenBalances';
+import { getTokenInfo } from '../wallet/useGetCustomTokenInfo';
+import {
+    IndexerTransfer,
+    TransferHistoryItem,
+    VET_TOKEN_SENTINEL,
+    VTHO_TOKEN_ADDRESS,
+} from './types';
+
+type IndexerResponse = {
+    data: IndexerTransfer[];
+    pagination?: { hasNext?: boolean };
+};
+
+const eqLower = (a?: string | null, b?: string | null) =>
+    (a ?? '').toLowerCase() === (b ?? '').toLowerCase();
+
+export const getTransferHistoryQueryKey = (
+    address?: string,
+    networkType?: string,
+    tokenAddress?: string | null,
+) => [
+    'VECHAIN_KIT',
+    'TRANSFER_HISTORY',
+    networkType,
+    address?.toLowerCase(),
+    tokenAddress ? tokenAddress.toLowerCase() : 'all',
+];
+
+type UseTransferHistoryOptions = {
+    tokenAddress?: string | null;
+    enabled?: boolean;
+};
+
+export const useTransferHistory = (
+    address?: string,
+    { tokenAddress, enabled = true }: UseTransferHistoryOptions = {},
+) => {
+    const { network } = useVeChainKitConfig();
+    const config = useAppConfig();
+    const { balances } = useTokenBalances(address);
+
+    const symbolByAddress = new Map<string, { symbol: string; decimals: number }>();
+    // Pre-fill only tokens we know to be 18-decimal. Custom tokens (which may
+    // not be 18-decimal) flow through the lazy on-chain getTokenInfo lookup
+    // in the queryFn so amounts are formatted with their real decimals.
+    const known18 = new Set(
+        [
+            VET_TOKEN_SENTINEL,
+            VTHO_TOKEN_ADDRESS,
+            config.b3trContractAddress,
+            config.vot3ContractAddress,
+            config.veDelegateTokenContractAddress,
+            config.vvetContractAddress,
+        ]
+            .filter(Boolean)
+            .map((a) => a.toLowerCase()),
+    );
+    symbolByAddress.set(VET_TOKEN_SENTINEL.toLowerCase(), {
+        symbol: 'VET',
+        decimals: 18,
+    });
+    symbolByAddress.set(VTHO_TOKEN_ADDRESS.toLowerCase(), {
+        symbol: 'VTHO',
+        decimals: 18,
+    });
+    for (const b of balances) {
+        if (!b.address || !b.symbol) continue;
+        if (!known18.has(b.address.toLowerCase())) continue;
+        symbolByAddress.set(b.address.toLowerCase(), {
+            symbol: b.symbol,
+            decimals: 18,
+        });
+    }
+
+    const indexerUrl = config.indexerUrl;
+    // Only treat this as a VET-specific filter when the caller actually
+    // passed the VET sentinel — an undefined tokenAddress means "all".
+    const filteringByVet = tokenAddress === VET_TOKEN_SENTINEL;
+    const supportsHistory = !!indexerUrl && network.type !== 'solo';
+
+    type TransferPage = {
+        items: TransferHistoryItem[];
+        hasNext: boolean;
+    };
+
+    const query = useInfiniteQuery<TransferPage, Error>({
+        queryKey: getTransferHistoryQueryKey(
+            address,
+            network.type,
+            tokenAddress ?? null,
+        ),
+        initialPageParam: 0,
+        // The indexer is 0-indexed and ignores limit/offset; it only honors
+        // a `page` parameter and returns ~20 items per page.
+        getNextPageParam: (lastPage, allPages) =>
+            lastPage.hasNext ? allPages.length : undefined,
+        queryFn: async ({ pageParam = 0 }): Promise<TransferPage> => {
+            if (!address) {
+                return { items: [] as TransferHistoryItem[], hasNext: false };
+            }
+
+            const params = new URLSearchParams({
+                address: address.toLowerCase(),
+                page: String(pageParam),
+            });
+            if (filteringByVet) {
+                // Indexer doesn't accept the VET sentinel as a tokenAddress;
+                // use the dedicated eventType filter so we don't have to
+                // post-filter a mixed page client-side (which would yield
+                // very few rows).
+                params.set('eventType', 'VET');
+            } else if (tokenAddress) {
+                params.set('tokenAddress', tokenAddress.toLowerCase());
+            }
+
+            const res = await fetch(`${indexerUrl}/transfers?${params.toString()}`);
+            if (!res.ok) {
+                throw new Error(`Indexer request failed: ${res.status}`);
+            }
+            const body = (await res.json()) as IndexerResponse;
+
+            const filtered = (body.data ?? [])
+                .filter((t) => t.eventType !== 'NFT')
+                .filter((t) => {
+                    if (!tokenAddress) return true;
+                    if (filteringByVet) {
+                        return t.eventType === 'VET';
+                    }
+                    return eqLower(t.tokenAddress, tokenAddress);
+                });
+
+            // Fetch on-chain metadata for ERC-20 addresses we don't yet
+            // recognise so the row shows the real symbol and the amount
+            // uses the correct decimals (the indexer reports raw wei).
+            const unknownTokens = new Set<string>();
+            for (const t of filtered) {
+                if (t.eventType !== 'FUNGIBLE_TOKEN' || !t.tokenAddress) continue;
+                const key = t.tokenAddress.toLowerCase();
+                if (!symbolByAddress.has(key)) unknownTokens.add(key);
+            }
+            if (unknownTokens.size && network.nodeUrl) {
+                const addrs = Array.from(unknownTokens);
+                const results = await Promise.allSettled(
+                    addrs.map((addr) => getTokenInfo(addr, network.nodeUrl)),
+                );
+                results.forEach((r, i) => {
+                    if (r.status !== 'fulfilled' || !r.value) return;
+                    const info = r.value;
+                    if (!info.symbol) return;
+                    const parsed = Number(info.decimals);
+                    symbolByAddress.set(addrs[i], {
+                        symbol: info.symbol,
+                        decimals: Number.isFinite(parsed) ? parsed : 18,
+                    });
+                });
+            }
+
+            const items: TransferHistoryItem[] = filtered.map((t) => {
+                const isVet = t.eventType === 'VET';
+                const tokenAddrKey = isVet
+                    ? VET_TOKEN_SENTINEL.toLowerCase()
+                    : (t.tokenAddress ?? '').toLowerCase();
+                const meta = symbolByAddress.get(tokenAddrKey);
+                const decimals = meta?.decimals ?? 18;
+                const symbol =
+                    meta?.symbol ??
+                    (isVet ? 'VET' : t.tokenAddress?.slice(0, 6) ?? '');
+                const direction = eqLower(t.from, address)
+                    ? 'sent'
+                    : 'received';
+                let amount = 0;
+                try {
+                    amount = Number(formatUnits(BigInt(t.value), decimals));
+                } catch {
+                    amount = 0;
+                }
+                return {
+                    id: t.id,
+                    txId: t.txId,
+                    blockNumber: t.blockNumber,
+                    timestamp: t.blockTimestamp,
+                    direction,
+                    from: t.from,
+                    to: t.to,
+                    tokenAddress: isVet ? null : (t.tokenAddress ?? null),
+                    tokenSymbol: symbol,
+                    tokenDecimals: decimals,
+                    rawValue: t.value,
+                    amount,
+                    eventType: t.eventType,
+                } satisfies TransferHistoryItem;
+            });
+
+            return {
+                items,
+                hasNext: !!body.pagination?.hasNext,
+            };
+        },
+        enabled: enabled && !!address && supportsHistory,
+        staleTime: 30_000,
+    });
+
+    const transfers: TransferHistoryItem[] =
+        query.data?.pages.flatMap((p) => p.items) ?? [];
+
+    return {
+        transfers,
+        isLoading: query.isLoading,
+        isFetching: query.isFetching,
+        isFetchingNextPage: query.isFetchingNextPage,
+        hasNextPage: !!query.hasNextPage,
+        fetchNextPage: query.fetchNextPage,
+        isUnsupportedNetwork: !supportsHistory,
+        error: query.error,
+    };
+};

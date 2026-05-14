@@ -1,33 +1,27 @@
 import {
     Container,
-    HStack,
-    IconButton,
-    Input,
-    InputGroup,
-    InputLeftElement,
     ModalBody,
     ModalCloseButton,
     ModalHeader,
-    Tooltip,
     VStack,
-    useToken,
 } from '@chakra-ui/react';
-import { useWallet, useTokensWithValues, TokenWithValue } from '@/hooks';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-    AssetButton,
     ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
 import { useVeChainKitConfig } from '@/providers';
-import { useTranslation } from 'react-i18next';
-import { LuPencil } from 'react-icons/lu';
-import { AccountModalContentTypes } from '../../Types';
-import { LuSearch } from 'react-icons/lu';
-import { useState } from 'react';
-import { useCurrency } from '@/hooks';
-import { SupportedCurrency } from '@/utils/currencyUtils';
-import { NON_TRANSFERABLE_TOKEN_SYMBOLS } from '@/utils';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
+import { TokenWithValue } from '@/hooks';
+import { AccountModalContentTypes } from '../../Types';
+import { AssetsHeader } from './Components/AssetsHeader';
+import {
+    AssetsTabIndex,
+    AssetsTabs,
+} from './Components/AssetsTabs';
+import { TokensTab } from './Components/TokensTab';
+import { StakingTab } from './Components/StakingTab';
 
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -36,31 +30,44 @@ export type AssetsContentProps = {
 };
 
 export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
-    const { account } = useWallet();
-    const { sortedTokens } = useTokensWithValues({ address: account?.address });
-    const { allowCustomTokens, darkMode } = useVeChainKitConfig();
-    const { currentCurrency } = useCurrency();
-    
-    const textTertiary = useToken('colors', 'vechain-kit-text-tertiary');
     const { t } = useTranslation();
+    const { allowCustomTokens } = useVeChainKitConfig();
     const { isolatedView } = useAccountModalOptions();
-    const [searchQuery, setSearchQuery] = useState('');
+    const [tabIndex, setTabIndex] = useState<AssetsTabIndex>(0);
 
     const handleTokenSelect = (token: TokenWithValue) => {
+        setCurrentContent({
+            type: 'token-detail',
+            props: { setCurrentContent, token },
+        });
+    };
+
+    const handleSend = () => {
         setCurrentContent({
             type: 'send-token',
             props: {
                 setCurrentContent,
-                preselectedToken: token,
                 onBack: () => setCurrentContent('assets'),
             },
         });
     };
 
-    // Filter tokens by search query
-    const filteredTokens = sortedTokens.filter(({ symbol }) =>
-        symbol.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    const handleSwap = () => {
+        setCurrentContent({
+            type: 'swap-token',
+            props: {
+                setCurrentContent,
+                onBack: () => setCurrentContent('assets'),
+            },
+        });
+    };
+
+    const handleHistory = () => {
+        setCurrentContent({
+            type: 'transaction-history',
+            props: { setCurrentContent },
+        });
+    };
 
     return (
         <>
@@ -76,65 +83,31 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
 
             <Container h={['540px', 'auto']} p={0}>
                 <ModalBody>
-                    <HStack spacing={2}>
-                        <InputGroup size="lg" flex={1}>
-                            <Input
-                                placeholder="Search token"
-                                bg={darkMode ? '#00000038' : 'gray.50'}
-                                borderRadius="xl"
-                                height="56px"
-                                pl={12}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                data-testid="search-token-input"
-                            />
-                            <InputLeftElement h="56px" w="56px" pl={4}>
-                                <LuSearch
-                                    color={textTertiary}
-                                />
-                            </InputLeftElement>
-                        </InputGroup>
-                        {allowCustomTokens && (
-                            <Tooltip label={t('Manage Custom Tokens')}>
-                                <IconButton
-                                    aria-label={t('Manage Custom Tokens')}
-                                    icon={<LuPencil />}
-                                    variant="vechainKitSecondary"
-                                    size="lg"
-                                    height="56px"
-                                    width="56px"
-                                    minW="56px"
-                                    borderRadius="xl"
-                                    onClick={() =>
-                                        setCurrentContent('add-custom-token')
+                    <VStack spacing={6} align="stretch" w="full">
+                        <AssetsHeader
+                            onSend={handleSend}
+                            onSwap={handleSwap}
+                            onHistory={handleHistory}
+                        />
+
+                        <AssetsTabs
+                            tabIndex={tabIndex}
+                            onTabChange={setTabIndex}
+                            tokenPanel={
+                                <TokensTab
+                                    onSelect={handleTokenSelect}
+                                    onManageTokens={
+                                        allowCustomTokens
+                                            ? () =>
+                                                  setCurrentContent(
+                                                      'add-custom-token',
+                                                  )
+                                            : undefined
                                     }
                                 />
-                            </Tooltip>
-                        )}
-                    </HStack>
-
-                    <VStack spacing={2} align="stretch" mt={2}>
-                        {filteredTokens.map((token) => {
-                            const hasBalance = Number(token.balance) > 0;
-                            const isNonTransferable =
-                                NON_TRANSFERABLE_TOKEN_SYMBOLS.includes(
-                                    token.symbol,
-                                );
-
-                            return (
-                                <AssetButton
-                                    key={token.address}
-                                    symbol={token.symbol}
-                                    amount={Number(token.balance)}
-                                    currencyValue={token.valueInCurrency}
-                                    currentCurrency={
-                                        currentCurrency as SupportedCurrency
-                                    }
-                                    onClick={() => handleTokenSelect(token)}
-                                    isDisabled={!hasBalance || isNonTransferable}
-                                />
-                            );
-                        })}
+                            }
+                            stakingPanel={<StakingTab />}
+                        />
                     </VStack>
                 </ModalBody>
             </Container>

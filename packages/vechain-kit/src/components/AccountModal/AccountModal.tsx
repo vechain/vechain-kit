@@ -15,6 +15,9 @@ import {
     FAQContent,
     ProfileContent,
     AssetsContent,
+    TokenDetailContent,
+    TransactionHistoryContent,
+    TransactionDetailContent,
     LanguageSettingsContent,
     TermsAndPrivacyContent,
     GasTokenSettingsContent,
@@ -74,8 +77,20 @@ export const AccountModal = ({
                     return (
                         <SendTokenSummaryContent {...currentContent.props} />
                     );
+                case 'token-detail':
+                    return <TokenDetailContent {...currentContent.props} />;
+                case 'transaction-history':
+                    return (
+                        <TransactionHistoryContent {...currentContent.props} />
+                    );
+                case 'transaction-detail':
+                    return (
+                        <TransactionDetailContent {...currentContent.props} />
+                    );
                 case 'swap-token':
                     return <SwapTokenContent {...currentContent.props} />;
+                case 'receive-token':
+                    return <ReceiveTokenContent {...currentContent.props} />;
                 case 'choose-name':
                     return <ChooseNameContent {...currentContent.props} />;
                 case 'choose-name-search':

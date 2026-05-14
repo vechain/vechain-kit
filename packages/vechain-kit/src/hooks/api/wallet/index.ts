@@ -6,6 +6,8 @@ export * from './useGetCustomTokenBalances';
 export * from './useGetCustomTokenInfo';
 export * from './useGetErc20Balance';
 export * from './useGetTokenUsdPrice';
+export * from './useOraclePriceChanges24h';
+export * from './usePortfolioPriceHistory24h';
 export * from './useGetVot3Balance';
 export * from './useIsPerson';
 export * from './useMostVotedAppsInRound';
