@@ -60,10 +60,15 @@ export const useConnectWithDappKitSource = (
             type: 'loading',
             props: {
                 title: `${t('Connecting with')} ${displayName}`,
+                // Hint copy below the "Waiting for signature…" headline.
+                // Different message for WC since the wallet may live on a
+                // different device — user has to scan first.
                 loadingText:
                     source === 'wallet-connect'
-                        ? t('Scan the QR code with your wallet to continue...')
-                        : t('Waiting for signature...'),
+                        ? t('Scan the QR code with your wallet to continue.')
+                        : t(
+                              'Open your wallet and confirm the connection request.',
+                          ),
                 onTryAgain: tryAgain,
             },
         });

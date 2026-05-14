@@ -436,6 +436,8 @@
     "Couldn't connect": "Couldn't connect",
     "Back": "Back",
     "Scan the QR code with your wallet to continue...": "Scan the QR code with your wallet to continue...",
+    "Scan the QR code with your wallet to continue.": "Scan the QR code with your wallet to continue.",
+    "Open your wallet and confirm the connection request.": "Open your wallet and confirm the connection request.",
     "More options": "More options",
     "Other wallets": "Other wallets",
     "Other sign-in": "Other sign-in",
