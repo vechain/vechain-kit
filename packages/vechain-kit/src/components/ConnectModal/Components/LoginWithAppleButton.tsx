@@ -1,5 +1,5 @@
-import { GridItem } from '@chakra-ui/react';
-import { FcGoogle } from 'react-icons/fc';
+import { GridItem, Icon } from '@chakra-ui/react';
+import { FaApple } from 'react-icons/fa';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
@@ -10,7 +10,7 @@ type Props = {
 };
 
 /** Secondary outline button per spec — transparent fill, subtle stroke. */
-export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
+export const LoginWithAppleButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
@@ -25,11 +25,17 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={async () => {
-                    await initOAuth({ provider: 'google' });
+                    await initOAuth({ provider: 'apple' });
                 }}
-                icon={FcGoogle}
-                iconWidth={'24px'}
-                text={t('Continue with Google')}
+                customIcon={
+                    <Icon
+                        as={FaApple}
+                        w={'24px'}
+                        h={'24px'}
+                        color={isDark ? '#ffffff' : '#0E0D18'}
+                    />
+                }
+                text={t('Continue with Apple')}
                 style={{
                     bg: 'transparent',
                     border: `1px solid ${stroke}`,

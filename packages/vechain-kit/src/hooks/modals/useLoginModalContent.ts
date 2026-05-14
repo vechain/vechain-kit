@@ -4,10 +4,14 @@ import { useMemo } from 'react';
 
 type LoginModalContentConfig = {
     showGoogleLogin: boolean;
+    showAppleLogin: boolean;
     showEmailLogin: boolean;
     showPasskey: boolean;
     showVeChainLogin: boolean;
     showDappKit: boolean;
+    showVeWorld: boolean;
+    showSync2: boolean;
+    showWalletConnect: boolean;
     showEcosystem: boolean;
     showMoreLogin: boolean;
     showGithubLogin: boolean;
@@ -15,8 +19,9 @@ type LoginModalContentConfig = {
 };
 
 export const useLoginModalContent = (): LoginModalContentConfig => {
-    const { privy, loginMethods } = useVeChainKitConfig();
+    const { privy, loginMethods, dappKit } = useVeChainKitConfig();
     const isVeChainApp = privy?.appId === VECHAIN_PRIVY_APP_ID;
+    const allowedWallets = dappKit?.allowedWallets;
 
     // Helper function to check if a login method is enabled
     const isLoginMethodEnabled = (method: string | string[]) => {
@@ -56,6 +61,10 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         () => isLoginMethodEnabled('google'),
         [loginMethods],
     );
+    const showLoginWithApple = useMemo(
+        () => isLoginMethodEnabled('apple'),
+        [loginMethods],
+    );
     const showMoreLogin = useMemo(
         () => isLoginMethodEnabled('more'),
         [loginMethods],
@@ -65,13 +74,37 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         [loginMethods],
     );
 
+    // Granular wallet methods. When the dev configured `dappKit.allowedWallets`,
+    // also honor that gate so a method can never bypass it via `loginMethods`.
+    const showLoginWithVeWorld = useMemo(() => {
+        if (!isLoginMethodEnabled('veworld')) return false;
+        if (!allowedWallets) return true;
+        return allowedWallets.includes('veworld');
+    }, [loginMethods, allowedWallets]);
+
+    const showLoginWithSync2 = useMemo(() => {
+        if (!isLoginMethodEnabled('sync2')) return false;
+        if (!allowedWallets) return true;
+        return allowedWallets.includes('sync2');
+    }, [loginMethods, allowedWallets]);
+
+    const showLoginWithWalletConnect = useMemo(() => {
+        if (!isLoginMethodEnabled('wallet-connect')) return false;
+        if (!allowedWallets) return true;
+        return allowedWallets.includes('wallet-connect');
+    }, [loginMethods, allowedWallets]);
+
     // Base configuration that's common across all cases
     const baseConfig: LoginModalContentConfig = {
         showGoogleLogin: showLoginWithGoogle,
+        showAppleLogin: showLoginWithApple,
         showEmailLogin: showLoginWithEmail,
         showPasskey: showLoginWithPasskey,
         showVeChainLogin: showLoginWithVeChain,
         showDappKit: showLoginWithDappKit,
+        showVeWorld: showLoginWithVeWorld,
+        showSync2: showLoginWithSync2,
+        showWalletConnect: showLoginWithWalletConnect,
         showEcosystem: showEcosystemLogin,
         showMoreLogin: showMoreLogin,
         showGithubLogin: showLoginWithGithub,
@@ -83,9 +116,11 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
         return {
             ...baseConfig,
             showGoogleLogin: false,
+            showAppleLogin: false,
             showEmailLogin: false,
             showPasskey: false,
             showMoreLogin: false,
+            showGithubLogin: false,
         };
     }
 

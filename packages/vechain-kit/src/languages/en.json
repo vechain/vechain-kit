@@ -425,5 +425,21 @@
     "vebetter": "VeBetter",
     "your@email.com": "your@email.com",
     "Paste a token contract address to track its balance in your wallet.": "Paste a token contract address to track its balance in your wallet.",
-    "No custom tokens added yet.": "No custom tokens added yet."
+    "No custom tokens added yet.": "No custom tokens added yet.",
+    "Continue with Apple": "Continue with Apple",
+    "Continue with VeWorld": "Continue with VeWorld",
+    "Continue with Sync2": "Continue with Sync2",
+    "Continue with WalletConnect": "Continue with WalletConnect",
+    "Please sign the certificate in your wallet to continue...": "Please sign the certificate in your wallet to continue...",
+    "Waiting for signature...": "Waiting for signature...",
+    "or": "or",
+    "Couldn't connect": "Couldn't connect",
+    "Back": "Back",
+    "Scan the QR code with your wallet to continue...": "Scan the QR code with your wallet to continue...",
+    "More options": "More options",
+    "Other wallets": "Other wallets",
+    "Other sign-in": "Other sign-in",
+    "Ecosystem apps": "Ecosystem apps",
+    "No additional login options available.": "No additional login options available.",
+    "Failed to connect, please try again later.": "Failed to connect, please try again later."
 }

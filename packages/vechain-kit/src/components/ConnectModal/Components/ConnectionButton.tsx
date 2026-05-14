@@ -14,6 +14,13 @@ interface ConnectionButtonProps {
     iconWidth?: string;
 }
 
+/**
+ * Login provider button — uses the three-slot layout from the design spec:
+ *   [ 24px icon ] [ label flex=1 ] [ optional trailing slot ]
+ *
+ * - Height ~52px, padding 14px 18px, gap 14px
+ * - Icon-only mode (no `text`) keeps the legacy compact layout
+ */
 export const ConnectionButton = ({
     onClick,
     text,
@@ -22,9 +29,8 @@ export const ConnectionButton = ({
     rightIcon,
     style,
     variant = 'loginIn',
-    iconWidth = '25px',
+    iconWidth = '24px',
 }: ConnectionButtonProps) => {
-    // If text not provided we just show a button with an icon
     if (!text) {
         return (
             <Button {...style} variant={variant} w={'full'} onClick={onClick}>
@@ -37,21 +43,40 @@ export const ConnectionButton = ({
         );
     }
 
-    if (text) {
-        return (
-            <Button {...style} variant={variant} w={'full'} onClick={onClick}>
-                <HStack w={'full'} justify={'flex-start'} gap={2}>
-                    {customIcon ? (
-                        customIcon
-                    ) : (
-                        <Icon as={icon} w={iconWidth} h={iconWidth} />
-                    )}
-                    <Text opacity={0.9}>{text}</Text>
-                </HStack>
+    return (
+        <Button
+            {...style}
+            variant={variant}
+            w={'full'}
+            h={'52px'}
+            px={'18px'}
+            py={'14px'}
+            onClick={onClick}
+            _active={{ transform: 'scale(0.99)' }}
+        >
+            <HStack
+                w={'full'}
+                spacing={'14px'}
+                justify={'flex-start'}
+                align={'center'}
+            >
+                {customIcon ? (
+                    customIcon
+                ) : (
+                    <Icon as={icon} w={iconWidth} h={iconWidth} flexShrink={0} />
+                )}
+                <Text
+                    flex={1}
+                    textAlign={'left'}
+                    fontSize={'15px'}
+                    fontWeight={600}
+                    letterSpacing={'-0.005em'}
+                    noOfLines={1}
+                >
+                    {text}
+                </Text>
                 {rightIcon}
-            </Button>
-        );
-    }
-
-    return null;
+            </HStack>
+        </Button>
+    );
 };
