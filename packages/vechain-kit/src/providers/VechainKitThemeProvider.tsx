@@ -1,9 +1,7 @@
 import {
     ChakraProvider,
     createStandaloneToast,
-    ColorModeScript,
     Box,
-    useColorMode,
 } from '@chakra-ui/react';
 import { CacheProvider, Global, css } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -11,12 +9,10 @@ import {
     createContext,
     ReactNode,
     useContext,
-    useEffect,
     useMemo,
     useRef,
 } from 'react';
 import { getVechainKitTheme } from '@/theme';
-import { safeQuerySelector } from '@/utils/ssrUtils';
 import type { VechainKitThemeConfig } from '../theme/tokens';
 import { VeChainKitContext } from './VeChainKitProvider';
 import { ThemeTokens } from '@/theme/tokens';
@@ -138,11 +134,13 @@ const EnsureChakraProvider = ({
     theme,
     bodyFont,
     headingFont,
+    colorModeManager,
 }: {
     children: ReactNode;
     theme: any;
     bodyFont: string;
     headingFont: string;
+    colorModeManager: any;
 }) => {
     const cache = useMemo(() => createVeChainKitCache(), []);
 
@@ -157,26 +155,12 @@ const EnsureChakraProvider = ({
                 // Undefined portal z-index allows host apps to control their own z-index hierarchy
                 // instead of Chakra forcing high values (1500+) that might conflict
                 portalZIndex={undefined}
+                colorModeManager={colorModeManager}
             >
                 {children}
             </ChakraProvider>
         </CacheProvider>
     );
-};
-
-const EnsureColorModeScript = ({ darkMode }: { darkMode: boolean }) => {
-    try {
-        // Check if ColorModeScript already exists by looking for its data attribute
-        const existingScript = safeQuerySelector('[data-chakra-color-mode]');
-        if (existingScript) {
-            return null; // Don't render another one if it exists
-        }
-    } catch (e) {
-        console.error(e);
-    }
-
-    // If no ColorModeScript exists, provide one
-    return <ColorModeScript initialColorMode={darkMode ? 'dark' : 'light'} />;
 };
 
 const VechainKitThemeContext = createContext<{
@@ -197,18 +181,6 @@ export const useVechainKitThemeConfig = () => {
         );
     }
     return context;
-};
-
-export const ColorModeSync = ({ darkMode = false }: { darkMode: boolean }) => {
-    const { setColorMode, colorMode: currentColorMode } = useColorMode();
-
-    useEffect(() => {
-        const colorMode = darkMode ? 'dark' : 'light';
-
-        if (currentColorMode !== colorMode) setColorMode(colorMode);
-    }, [darkMode]);
-
-    return <></>;
 };
 
 export const VechainKitThemeProvider = ({
@@ -244,17 +216,32 @@ export const VechainKitThemeProvider = ({
         [darkMode, effectiveTheme],
     );
 
+    // The `darkMode` prop is the single source of truth for the kit's color
+    // mode. We feed Chakra's ColorModeProvider a manager that always reports
+    // the current prop value and ignores writes, so it never reads or writes
+    // localStorage. Without this, Chakra's mount-time effect reads a stale
+    // `chakra-ui-color-mode` value and overrides the prop — visible as the
+    // kit being stuck in dark mode when the host is light.
+    const colorModeManager = useMemo(
+        () => ({
+            type: 'localStorage' as const,
+            ssr: false,
+            get: () => (darkMode ? 'dark' : 'light'),
+            set: () => {},
+        }),
+        [darkMode],
+    );
+
     return (
         <VechainKitThemeContext.Provider
             value={{ portalRootRef, tokens, themeConfig: effectiveTheme }}
         >
-            <EnsureColorModeScript darkMode={darkMode} />
             <EnsureChakraProvider
                 theme={theme}
                 bodyFont={tokens.fonts.body}
                 headingFont={tokens.fonts.heading}
+                colorModeManager={colorModeManager}
             >
-                <ColorModeSync darkMode={darkMode} />
                 <Box
                     id="vechain-kit-root"
                     ref={portalRootRef}
