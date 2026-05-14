@@ -1,4 +1,4 @@
-import { GridItem, useToken } from '@chakra-ui/react';
+import { GridItem } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { ConnectionButton } from '@/components';
@@ -16,10 +16,13 @@ type Props = {
 };
 
 /**
- * Primary CTA — filled with the theme's primary-button surface.
- * Devs that customise `theme.buttons.primaryButton.{bg,color}` automatically
- * restyle this button too.
- * Recommended-provider green dot in the trailing slot.
+ * Primary CTA — VeWorld brand-locked surface. Always inverted contrast
+ * against the modal: dark in light mode, white in dark mode.
+ *
+ * Intentionally does NOT consume `theme.buttons.primaryButton.{bg,color}`
+ * — devs who themed their primary button (e.g. brand blue) shouldn't end
+ * up with a blue VeWorld button. The VeWorld logo + label have to stay
+ * recognisable.
  */
 export const VeWorldButton = ({
     isDark,
@@ -29,12 +32,8 @@ export const VeWorldButton = ({
     const { t } = useTranslation();
     const { connect } = useConnectWithDappKitSource('veworld', setCurrentContent);
 
-    const [bg, color] = useToken('colors', [
-        'vechain-kit-button-primary-bg',
-        'vechain-kit-button-primary-color',
-    ]);
-    // VeWorld uses the inverted-contrast logo. In dark mode the primary
-    // surface is light, so we want the dark logo (and vice versa).
+    const bg = isDark ? '#ffffff' : '#0E0D18';
+    const color = isDark ? '#0E0D18' : '#ffffff';
     const Logo = isDark ? VeWorldLogoDark : VeWorldLogoLight;
 
     return (

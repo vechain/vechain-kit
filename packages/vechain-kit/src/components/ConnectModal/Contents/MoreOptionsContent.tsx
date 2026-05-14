@@ -192,8 +192,19 @@ export const MoreOptionsContent = ({
     showBackButton = true,
 }: Props) => {
     const { t } = useTranslation();
-    const { privy, privyEcosystemAppIDS, dappKit, loginMethods } =
-        useVeChainKitConfig();
+    const {
+        privy,
+        privyEcosystemAppIDS,
+        dappKit,
+        loginMethods,
+        darkMode: isDark,
+    } = useVeChainKitConfig();
+    // Brand-locked inverted-contrast surface used by the VeWorld and Apple
+    // icon tiles. Intentionally not theme-driven — devs that customised
+    // `theme.buttons.primaryButton` shouldn't end up with a tinted VeWorld
+    // logo tile.
+    const brandInverseBg = isDark ? '#ffffff' : '#0E0D18';
+    const brandInverseFg = isDark ? '#0E0D18' : '#ffffff';
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
 
@@ -361,19 +372,10 @@ export const MoreOptionsContent = ({
         }
     };
 
-    const [
-        stroke,
-        accent,
-        textPrimary,
-        primaryBg,
-        primaryColor,
-        secondaryBg,
-    ] = useToken('colors', [
+    const [stroke, accent, textPrimary, secondaryBg] = useToken('colors', [
         'vechain-kit-border-button',
         'vechain-kit-accent',
         'vechain-kit-text-primary',
-        'vechain-kit-button-primary-bg',
-        'vechain-kit-button-primary-color',
         'vechain-kit-button-secondary-bg',
     ]);
 
@@ -405,10 +407,10 @@ export const MoreOptionsContent = ({
                                             <VeWorldLogoLight
                                                 w={'20px'}
                                                 h={'20px'}
-                                                color={primaryColor}
+                                                color={brandInverseFg}
                                             />
                                         }
-                                        iconBg={primaryBg}
+                                        iconBg={brandInverseBg}
                                         setCurrentContent={setCurrentContent}
                                     />
                                 )}
@@ -459,8 +461,8 @@ export const MoreOptionsContent = ({
                                         onClick={() =>
                                             initOAuth({ provider: 'apple' })
                                         }
-                                        iconBg={primaryBg}
-                                        iconColor={primaryColor}
+                                        iconBg={brandInverseBg}
+                                        iconColor={brandInverseFg}
                                     />
                                 )}
                                 {showGithubHere && (
