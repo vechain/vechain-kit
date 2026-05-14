@@ -38,7 +38,6 @@ export const StakingCard = ({
     const { t } = useTranslation();
     const { currentCurrency } = useCurrency();
     const textPrimary = useToken('colors', 'vechain-kit-text-primary');
-    const textSecondary = useToken('colors', 'vechain-kit-text-secondary');
     const cardBg = useToken('colors', 'vechain-kit-card');
 
     return (
@@ -59,30 +58,25 @@ export const StakingCard = ({
                             boxSize="24px"
                             borderRadius="full"
                             fallback={
-                                <Box boxSize="24px" borderRadius="full" bg="whiteAlpha.300" />
+                                <Box
+                                    boxSize="24px"
+                                    borderRadius="full"
+                                    bg="whiteAlpha.300"
+                                />
                             }
                         />
                     ) : (
                         logoFallback ?? (
-                            <Box boxSize="24px" borderRadius="full" bg="whiteAlpha.300" />
+                            <Box
+                                boxSize="24px"
+                                borderRadius="full"
+                                bg="whiteAlpha.300"
+                            />
                         )
                     )}
                     <Heading size="sm" color={textPrimary}>
                         {name}
                     </Heading>
-                    {platformUrl && (
-                        <Box
-                            as="a"
-                            href={platformUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            color={textSecondary}
-                            opacity={0.7}
-                            _hover={{ opacity: 1 }}
-                        >
-                            <LuExternalLink size={14} />
-                        </Box>
-                    )}
                 </HStack>
                 <Text fontWeight="600" color={textPrimary}>
                     {formatCompactCurrency(totalValueInCurrency, {
@@ -112,8 +106,11 @@ export const StakingCard = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     variant="vechainKitSecondary"
-                    size="sm"
-                    leftIcon={<LuExternalLink />}
+                    size="xs"
+                    leftIcon={<LuExternalLink size={11} />}
+                    fontSize="xs"
+                    h="40px"
+                    px={3}
                     mt={1}
                 >
                     {t('Go to platform')}
@@ -154,7 +151,11 @@ export const StakingRow = ({
                         boxSize="20px"
                         borderRadius="full"
                         fallback={
-                            <Box boxSize="20px" borderRadius="full" bg="whiteAlpha.300" />
+                            <Box
+                                boxSize="20px"
+                                borderRadius="full"
+                                bg="whiteAlpha.300"
+                            />
                         }
                     />
                 ) : (

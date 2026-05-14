@@ -24,7 +24,7 @@ export const NavigatorsCard = () => {
 
     return (
         <StakingCard
-            name="Navigators"
+            name="VeBetter"
             logoSrc={TOKEN_LOGOS['B3TR']}
             totalValueInCurrency={totalValueInCurrency}
             tag={isNavigator ? t('Navigator') : t('Delegating')}

@@ -94,15 +94,19 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                             tabIndex={tabIndex}
                             onTabChange={setTabIndex}
                             tokenPanel={
-                                <TokensTab onSelect={handleTokenSelect} />
+                                <TokensTab
+                                    onSelect={handleTokenSelect}
+                                    onManageTokens={
+                                        allowCustomTokens
+                                            ? () =>
+                                                  setCurrentContent(
+                                                      'add-custom-token',
+                                                  )
+                                            : undefined
+                                    }
+                                />
                             }
                             stakingPanel={<StakingTab />}
-                            onManageTokens={
-                                allowCustomTokens
-                                    ? () =>
-                                          setCurrentContent('add-custom-token')
-                                    : undefined
-                            }
                         />
                     </VStack>
                 </ModalBody>

@@ -4,7 +4,7 @@ import { useStargatePositions, useWallet } from '@/hooks';
 import { TOKEN_LOGOS } from '@/utils/constants';
 import { StakingCard, StakingRow } from './StakingCard';
 
-const STARGATE_LOGO = 'https://app.stargate.vechain.org/favicon.ico';
+const STARGATE_LOGO = 'https://app.stargate.vechain.org/stargate-icon.png';
 const STARGATE_URL = 'https://app.stargate.vechain.org/';
 
 export const StargateCard = () => {

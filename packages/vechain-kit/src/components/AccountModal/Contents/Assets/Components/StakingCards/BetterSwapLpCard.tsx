@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useBetterSwapLpPositions, useWallet } from '@/hooks';
+import { BetterSwapLogo } from '@/assets/icons/BetterSwapLogo';
 import { StakingCard, StakingRow } from './StakingCard';
 
-const BETTERSWAP_URL = 'https://betterswap.vet/';
+const BETTERSWAP_URL = 'https://www.betterswap.io/';
 
 export const BetterSwapLpCard = () => {
     const { t } = useTranslation();
@@ -15,6 +16,7 @@ export const BetterSwapLpCard = () => {
     return (
         <StakingCard
             name="BetterSwap"
+            logoFallback={<BetterSwapLogo boxSize="24px" />}
             totalValueInCurrency={totalValueInCurrency}
             tag={t('Liquidity')}
             platformUrl={BETTERSWAP_URL}
