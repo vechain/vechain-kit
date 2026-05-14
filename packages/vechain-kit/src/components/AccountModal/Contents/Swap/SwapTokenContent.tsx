@@ -54,12 +54,13 @@ import { TransactionClause } from '@vechain/sdk-core';
 import { extractSwapAmounts } from '@/utils/swap/extractSwapAmounts';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
 
-type Props = {
+export type SwapTokenContentProps = {
     setCurrentContent: React.Dispatch<
         React.SetStateAction<AccountModalContentTypes>
     >;
     fromTokenAddress?: string;
     toTokenAddress?: string;
+    onBack?: () => void;
 };
 
 type SwapStep =
@@ -72,7 +73,8 @@ export const SwapTokenContent = ({
     setCurrentContent,
     fromTokenAddress,
     toTokenAddress,
-}: Props) => {
+    onBack,
+}: SwapTokenContentProps) => {
     const { t } = useTranslation();
     const { account, connection } = useWallet();
     const { currentCurrency } = useCurrency();
@@ -656,7 +658,9 @@ export const SwapTokenContent = ({
                 <ModalHeader>{t('Swap')}</ModalHeader>
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={() => setCurrentContent('main')}
+                        onClick={
+                            onBack ?? (() => setCurrentContent('main'))
+                        }
                         isDisabled={
                             isTransactionPending ||
                             isWaitingForWalletConfirmation

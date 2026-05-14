@@ -85,5 +85,14 @@ const config: AppConfig = {
         },
     },
     explorerUrl: 'https://explore-testnet.vechain.org/transactions',
+    // wrapped VET — not deployed on testnet
+    vvetContractAddress: '',
+    // staking
+    stargateContractAddress: '0x7826315bb82d91a7a90230690731e7eb95192b58',
+    stargateNftContractAddress: '0xceaa3b8961229f2aab8bb205fd8a4f9ff9f7c933',
+    navigatorRegistryContractAddress:
+        '0x91bdc3ca7228bc28f14990039cab813f98ea1d40',
+    // dex (testnet factory not confirmed yet)
+    betterSwapFactoryAddress: '',
 };
 export default config;

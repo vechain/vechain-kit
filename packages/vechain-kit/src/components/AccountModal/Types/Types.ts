@@ -13,6 +13,10 @@ import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterS
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
+import { ReceiveTokenContentProps } from '../Contents/Receive/ReceiveTokenContent';
+import { TokenDetailContentProps } from '../Contents/TokenDetail/TokenDetailContent';
+import { TransactionHistoryContentProps } from '../Contents/TransactionHistory/TransactionHistoryContent';
+import { TransactionDetailContentProps } from '../Contents/TransactionHistory/TransactionDetailContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
 import { FailedOperationContentProps } from '../Contents/FailedOperation/FailedOperationContent';
 import { TermsAndPrivacyContentProps } from '../Contents/TermsAndPrivacy/TermsAndPrivacyContent';
@@ -69,7 +73,12 @@ export type AccountModalContentTypes =
               >;
               fromTokenAddress?: string;
               toTokenAddress?: string;
+              onBack?: () => void;
           };
+      }
+    | {
+          type: 'receive-token';
+          props: ReceiveTokenContentProps;
       }
     | {
           type: 'account-customization';
@@ -104,6 +113,15 @@ export type AccountModalContentTypes =
     | {
           type: 'send-token-summary';
           props: SendTokenSummaryContentProps;
+      }
+    | { type: 'token-detail'; props: TokenDetailContentProps }
+    | {
+          type: 'transaction-history';
+          props: TransactionHistoryContentProps;
+      }
+    | {
+          type: 'transaction-detail';
+          props: TransactionDetailContentProps;
       }
     | { type: 'choose-name'; props: ChooseNameContentProps }
     | {

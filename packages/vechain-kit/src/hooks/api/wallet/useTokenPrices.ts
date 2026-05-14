@@ -31,17 +31,33 @@ export const useTokenPrices = () => {
             vot3: config.vot3ContractAddress,
             veDelegate: config.veDelegate,
             SASS: config.sassContractAddress,
+            vvet: config.vvetContractAddress,
         };
 
-        return {
+        // Original-cased keys (used by useTokensWithValues against the
+        // balances' contract addresses, which are also the raw config values).
+        const map: Record<string, number> = {
             [contractAddresses.vet]: vetUsdPrice || 0,
             [contractAddresses.vtho]: vthoUsdPrice || 0,
             [contractAddresses.b3tr]: b3trUsdPrice || 0,
             // VOT3 and veDelegate share the same price feed as B3TR
             [contractAddresses.vot3]: b3trUsdPrice || 0,
             [contractAddresses.veDelegate]: b3trUsdPrice || 0,
-            [contractAddresses.SASS]: 0, // No price feed available
+            [contractAddresses.SASS]: 0,
         };
+        // VVET (wrapped VET) is priced 1:1 with VET
+        if (contractAddresses.vvet) {
+            map[contractAddresses.vvet] = vetUsdPrice || 0;
+        }
+        // Mirror with lowercase keys so callers that normalize addresses
+        // (e.g. indexer responses) can still resolve a price.
+        for (const key of Object.keys(map)) {
+            const lower = key.toLowerCase();
+            if (lower !== key && map[lower] === undefined) {
+                map[lower] = map[key];
+            }
+        }
+        return map;
     }, [
         vetUsdPrice,
         vthoUsdPrice,
@@ -51,6 +67,7 @@ export const useTokenPrices = () => {
         config.vot3ContractAddress,
         config.veDelegate,
         config.sassContractAddress,
+        config.vvetContractAddress,
     ]);
 
     const exchangeRates: ExchangeRates = useMemo(

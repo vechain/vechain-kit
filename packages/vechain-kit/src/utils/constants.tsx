@@ -29,6 +29,10 @@ export const TOKEN_LOGOS: Record<string, string> = {
         '/static/img/coins/64x64/3077.png',
         COINMARKETCAP_STATIC_BASE_URL,
     ).toString(),
+    VVET: new URL(
+        '/static/img/coins/64x64/3077.png',
+        COINMARKETCAP_STATIC_BASE_URL,
+    ).toString(),
     VTHO: new URL(
         '/static/img/coins/64x64/3012.png',
         COINMARKETCAP_STATIC_BASE_URL,

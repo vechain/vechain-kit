@@ -35,6 +35,11 @@ export type AppConfig = {
     vetDomainsReverseRegistrarAddress: string;
     vnsResolverAddress: string;
     sassContractAddress: string;
+    vvetContractAddress: string;
+    stargateContractAddress: string;
+    stargateNftContractAddress: string;
+    navigatorRegistryContractAddress: string;
+    betterSwapFactoryAddress: string;
     vetDomainAvatarUrl: string;
     nodeUrl: string;
     indexerUrl: string;

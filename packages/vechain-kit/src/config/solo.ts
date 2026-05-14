@@ -79,5 +79,13 @@ const config: AppConfig = {
         },
     },
     explorerUrl: 'https://explore-testnet.vechain.org',
+    // wrapped VET
+    vvetContractAddress: '',
+    // staking — not deployed on solo
+    stargateContractAddress: '',
+    stargateNftContractAddress: '',
+    navigatorRegistryContractAddress: '',
+    // dex
+    betterSwapFactoryAddress: '',
 };
 export default config;
