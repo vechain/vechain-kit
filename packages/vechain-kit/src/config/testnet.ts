@@ -88,10 +88,10 @@ const config: AppConfig = {
     // wrapped VET — not deployed on testnet
     vvetContractAddress: '',
     // staking
-    stargateContractAddress: '0x7826315bb82d91a7a90230690731e7eb95192b58',
-    stargateNftContractAddress: '0xceaa3b8961229f2aab8bb205fd8a4f9ff9f7c933',
+    stargateContractAddress: '0x7826315bB82d91a7a90230690731e7Eb95192B58',
+    stargateNftContractAddress: '0xCEaA3B8961229F2aaB8Bb205Fd8A4f9FF9F7C933',
     navigatorRegistryContractAddress:
-        '0x91bdc3ca7228bc28f14990039cab813f98ea1d40',
+        '0x91BdC3ca7228BC28f14990039CAb813f98eA1d40',
     // dex (testnet factory not confirmed yet)
     betterSwapFactoryAddress: '',
     // lending — not deployed on testnet

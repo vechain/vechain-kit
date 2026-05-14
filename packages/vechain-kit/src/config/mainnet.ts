@@ -95,7 +95,7 @@ const config: AppConfig = {
     stargateContractAddress: '0x03C557bE98123fdb6faD325328AC6eB77de7248C',
     stargateNftContractAddress: '0x1856c533ac2d94340aaa8544d35a5c1d4a21dee7',
     navigatorRegistryContractAddress:
-        '0xef238e33fc78ecc79beaf8386254a0fc67d048e0',
+        '0xef238e33fc78Ecc79BeaF8386254A0fC67D048E0',
     // dex
     betterSwapFactoryAddress: '0x5970DcBeBAc33e75eFf315C675f1d2654f7bF1f5',
     // lending

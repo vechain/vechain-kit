@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { formatUnits } from 'ethers';
+import { isAddress } from 'viem';
 import {
     UniswapV2Factory__factory,
     UniswapV2Pair__factory,
@@ -87,7 +88,19 @@ export const useBetterSwapLpPositions = (address?: string) => {
     const { data: pairs = [], isLoading: pairsLoading } =
         usePairList(factoryAddress);
 
-    const enabled = !!address && !!factoryAddress && !!thor && pairs.length > 0;
+    const enabled =
+        !!address &&
+        isAddress(address) &&
+        !!factoryAddress &&
+        isAddress(factoryAddress) &&
+        !!thor &&
+        pairs.length > 0;
+
+    // Fingerprint includes the first and last pair plus the length so two
+    // pair sets with the same length still produce distinct cache entries.
+    const pairsFingerprint = pairs.length
+        ? `${pairs[0]}-${pairs[pairs.length - 1]}-${pairs.length}`
+        : 'empty';
 
     const query = useQuery({
         queryKey: [
@@ -95,7 +108,7 @@ export const useBetterSwapLpPositions = (address?: string) => {
             'BETTERSWAP_LP_POSITIONS',
             network.type,
             address?.toLowerCase(),
-            pairs.length,
+            pairsFingerprint,
         ],
         enabled,
         staleTime: 60_000,
@@ -103,10 +116,12 @@ export const useBetterSwapLpPositions = (address?: string) => {
             if (!address || !pairs.length) return [];
 
             const pairAbi = UniswapV2Pair__factory.abi;
+            const validPairs = pairs.filter((p) => isAddress(p));
+            if (!validPairs.length) return [];
 
             const balRes = await executeMultipleClausesCall({
                 thor,
-                calls: pairs.map((p) => ({
+                calls: validPairs.map((p) => ({
                     abi: pairAbi,
                     functionName: 'balanceOf' as const,
                     address: p as `0x${string}`,
@@ -125,7 +140,7 @@ export const useBetterSwapLpPositions = (address?: string) => {
             const detailRes = await executeMultipleClausesCall({
                 thor,
                 calls: ownedIndexes.flatMap((i) => {
-                    const pair = pairs[i] as `0x${string}`;
+                    const pair = validPairs[i] as `0x${string}`;
                     return [
                         {
                             abi: pairAbi,
@@ -184,7 +199,7 @@ export const useBetterSwapLpPositions = (address?: string) => {
             const positions: LpPosition[] = [];
             for (let i = 0; i < ownedIndexes.length; i++) {
                 const pairIndex = ownedIndexes[i];
-                const pairAddress = pairs[pairIndex];
+                const pairAddress = validPairs[pairIndex];
                 const lpBal = balRes[pairIndex] as unknown as bigint;
                 const totalSupply = detailRes[i * 4] as unknown as bigint;
                 const reservesTuple = detailRes[

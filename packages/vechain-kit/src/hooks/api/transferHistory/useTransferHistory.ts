@@ -44,6 +44,21 @@ export const useTransferHistory = (
     const { balances } = useTokenBalances(address);
 
     const symbolByAddress = new Map<string, { symbol: string; decimals: number }>();
+    // Pre-fill only tokens we know to be 18-decimal. Custom tokens (which may
+    // not be 18-decimal) flow through the lazy on-chain getTokenInfo lookup
+    // in the queryFn so amounts are formatted with their real decimals.
+    const known18 = new Set(
+        [
+            VET_TOKEN_SENTINEL,
+            VTHO_TOKEN_ADDRESS,
+            config.b3trContractAddress,
+            config.vot3ContractAddress,
+            config.veDelegateTokenContractAddress,
+            config.vvetContractAddress,
+        ]
+            .filter(Boolean)
+            .map((a) => a.toLowerCase()),
+    );
     symbolByAddress.set(VET_TOKEN_SENTINEL.toLowerCase(), {
         symbol: 'VET',
         decimals: 18,
@@ -53,12 +68,12 @@ export const useTransferHistory = (
         decimals: 18,
     });
     for (const b of balances) {
-        if (b.address && b.symbol) {
-            symbolByAddress.set(b.address.toLowerCase(), {
-                symbol: b.symbol,
-                decimals: 18,
-            });
-        }
+        if (!b.address || !b.symbol) continue;
+        if (!known18.has(b.address.toLowerCase())) continue;
+        symbolByAddress.set(b.address.toLowerCase(), {
+            symbol: b.symbol,
+            decimals: 18,
+        });
     }
 
     const indexerUrl = config.indexerUrl;
