@@ -15,6 +15,8 @@ import {
 import { LuExternalLink } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
+    AddressOrDomainLabel,
+    CopyIconButton,
     ModalBackButton,
     StickyHeaderContainer,
 } from '@/components/common';
@@ -46,7 +48,15 @@ const formatFullDate = (timestamp: number, locale: string) =>
         minute: '2-digit',
     }).format(new Date(timestamp * 1000));
 
-const Row = ({ label, value }: { label: string; value: React.ReactNode }) => {
+const Row = ({
+    label,
+    value,
+    copyValue,
+}: {
+    label: string;
+    value: React.ReactNode;
+    copyValue?: string;
+}) => {
     const labelColor = useToken('colors', 'vechain-kit-text-secondary');
     const valueColor = useToken('colors', 'vechain-kit-text-primary');
     return (
@@ -54,9 +64,21 @@ const Row = ({ label, value }: { label: string; value: React.ReactNode }) => {
             <Text fontSize="sm" color={labelColor}>
                 {label}
             </Text>
-            <Text fontSize="sm" color={valueColor} fontWeight="500">
-                {value}
-            </Text>
+            <HStack spacing={1} align="center">
+                {typeof value === 'string' ? (
+                    <Text fontSize="sm" color={valueColor} fontWeight="500">
+                        {value}
+                    </Text>
+                ) : (
+                    value
+                )}
+                {copyValue && (
+                    <CopyIconButton
+                        value={copyValue}
+                        ariaLabel={`Copy ${label}`}
+                    />
+                )}
+            </HStack>
         </HStack>
     );
 };
@@ -181,15 +203,34 @@ export const TransactionDetailContent = ({
                             />
                             <Row
                                 label={t('From')}
-                                value={humanAddress(item.from, 6, 6)}
+                                value={
+                                    <AddressOrDomainLabel
+                                        address={item.from}
+                                        headLen={6}
+                                        tailLen={6}
+                                        fontSize="sm"
+                                        fontWeight="500"
+                                    />
+                                }
+                                copyValue={item.from}
                             />
                             <Row
                                 label={t('To')}
-                                value={humanAddress(item.to, 6, 6)}
+                                value={
+                                    <AddressOrDomainLabel
+                                        address={item.to}
+                                        headLen={6}
+                                        tailLen={6}
+                                        fontSize="sm"
+                                        fontWeight="500"
+                                    />
+                                }
+                                copyValue={item.to}
                             />
                             <Row
                                 label={t('Hash')}
                                 value={humanAddress(item.txId, 6, 6)}
+                                copyValue={item.txId}
                             />
                         </VStack>
 

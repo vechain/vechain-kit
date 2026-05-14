@@ -16,3 +16,5 @@ export * from './GasFeeTokenSelector';
 export * from './InlineFeedback';
 export * from './WalletSwitchFeedback';
 export * from './PriceChangeBadge';
+export * from './AddressOrDomainLabel';
+export * from './CopyIconButton';

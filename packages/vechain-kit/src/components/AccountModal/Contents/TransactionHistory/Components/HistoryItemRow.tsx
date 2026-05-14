@@ -12,7 +12,7 @@ import { LuSparkles } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import { TransferHistoryItem } from '@/hooks';
 import { TOKEN_LOGOS } from '@/utils/constants';
-import { humanAddress } from '@/utils/formattingUtils';
+import { AddressOrDomainLabel } from '@/components/common';
 
 type Props = {
     item: TransferHistoryItem;
@@ -85,10 +85,16 @@ export const HistoryItemRow = ({ item, onClick }: Props) => {
                     <Text fontWeight="600" color={textPrimary}>
                         {sent ? t('Sent') : t('Received')}
                     </Text>
-                    <Text fontSize="xs" color={textSecondary}>
-                        {sent ? t('To') : t('From')}{' '}
-                        {humanAddress(counterparty, 4, 4)}
-                    </Text>
+                    <HStack spacing={1} align="baseline">
+                        <Text fontSize="xs" color={textSecondary}>
+                            {sent ? t('To') : t('From')}
+                        </Text>
+                        <AddressOrDomainLabel
+                            address={counterparty}
+                            fontSize="xs"
+                            color={textSecondary}
+                        />
+                    </HStack>
                 </VStack>
             </HStack>
             <VStack spacing={0} align="flex-end">
