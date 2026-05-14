@@ -9,8 +9,6 @@ import {
     VTHO_TOKEN_ADDRESS,
 } from './types';
 
-const PAGE_SIZE = 25;
-
 type IndexerResponse = {
     data: IndexerTransfer[];
     pagination?: { hasNext?: boolean };
@@ -81,8 +79,10 @@ export const useTransferHistory = (
             tokenAddress ?? null,
         ),
         initialPageParam: 0,
+        // The indexer is 0-indexed and ignores limit/offset; it only honors
+        // a `page` parameter and returns ~20 items per page.
         getNextPageParam: (lastPage, allPages) =>
-            lastPage.hasNext ? allPages.length * PAGE_SIZE : undefined,
+            lastPage.hasNext ? allPages.length : undefined,
         queryFn: async ({ pageParam = 0 }): Promise<TransferPage> => {
             if (!address) {
                 return { items: [] as TransferHistoryItem[], hasNext: false };
@@ -90,8 +90,7 @@ export const useTransferHistory = (
 
             const params = new URLSearchParams({
                 address: address.toLowerCase(),
-                limit: String(PAGE_SIZE),
-                offset: String(pageParam),
+                page: String(pageParam),
             });
             if (filteringByVet) {
                 // Indexer doesn't accept the VET sentinel as a tokenAddress;
