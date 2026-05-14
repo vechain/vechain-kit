@@ -20,10 +20,16 @@ import { useTranslation } from 'react-i18next';
 import {
     ModalBackButton,
     PriceChangeBadge,
+    PriceChart,
     StickyHeaderContainer,
 } from '@/components/common';
 import { useAccountModalOptions } from '@/hooks/modals/useAccountModalOptions';
-import { TokenWithValue, useCurrency } from '@/hooks';
+import {
+    TokenWithValue,
+    useCurrency,
+    useTokenPriceHistory24h,
+} from '@/hooks';
+import { SupportedToken } from '@/hooks/api/wallet/useGetTokenUsdPrice';
 import {
     formatCompactCurrency,
     SupportedCurrency,
@@ -91,6 +97,32 @@ export const TokenDetailContent = ({
     const balanceText = amountNumber.toLocaleString(undefined, {
         maximumFractionDigits: 4,
     });
+
+    // Sparkline: VVET / VOT3 / veDelegate piggy-back on VET / B3TR / B3TR.
+    const sparklineToken: SupportedToken | undefined = (() => {
+        switch (token.symbol) {
+            case 'VET':
+            case 'VVET':
+                return 'VET';
+            case 'VTHO':
+                return 'VTHO';
+            case 'B3TR':
+            case 'VOT3':
+            case 'veDelegate':
+                return 'B3TR';
+            default:
+                return undefined;
+        }
+    })();
+    const { points: sparklinePoints } = useTokenPriceHistory24h(sparklineToken);
+    const sparkTone: 'up' | 'down' | 'neutral' =
+        typeof token.priceChange24hPct === 'number'
+            ? token.priceChange24hPct > 0
+                ? 'up'
+                : token.priceChange24hPct < 0
+                ? 'down'
+                : 'neutral'
+            : 'neutral';
 
     const backToDetail = () =>
         setCurrentContent({
@@ -190,6 +222,14 @@ export const TokenDetailContent = ({
                                 />
                             </HStack>
                         </VStack>
+
+                        {sparklinePoints.length > 1 && (
+                            <PriceChart
+                                points={sparklinePoints}
+                                tone={sparkTone}
+                                chartHeight={72}
+                            />
+                        )}
 
                         <HStack spacing={2} w="full">
                             <ActionIconButton

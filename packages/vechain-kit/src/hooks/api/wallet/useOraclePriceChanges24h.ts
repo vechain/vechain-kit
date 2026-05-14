@@ -10,25 +10,40 @@ import { PRICE_FEED_IDS, SupportedToken } from './useGetTokenUsdPrice';
 
 // VeChain block time is ~10s → 8640 blocks/day.
 const BLOCKS_PER_DAY = 8640;
-// Window of blocks to scan around 24h ago. With ~5 feeds updating every few
-// minutes this stays well below the indexer's per-query limit.
-const WINDOW_BLOCKS = 1800; // ~5h
-
-const SCALE = new BigNumber('1e12');
+const PRICE_SCALE_DECIMALS = 12;
 
 type Topics = [] | [signature: ViemHex, ...args: ViemHex[]];
 
+export type PricePoint = { timestamp: number; value: number };
+
+export type OracleHistory24h = {
+    /** All emitted ValueUpdate observations per token, ascending by time. */
+    history: Partial<Record<SupportedToken, PricePoint[]>>;
+    /** Current spot value per token (USD). */
+    latest: Partial<Record<SupportedToken, number>>;
+};
+
 export type PriceChanges24h = Partial<Record<SupportedToken, number>>;
 
-export const useOraclePriceChanges24h = () => {
+const scaleToUsd = (raw: bigint) =>
+    new BigNumber(raw.toString()).shiftedBy(-PRICE_SCALE_DECIMALS).toNumber();
+
+/**
+ * Shared 24h oracle scan: fetches every `ValueUpdate` emitted by
+ * `OracleVechainEnergy` over the last day plus the current spot for each
+ * supported feed. Multiple downstream hooks (`useOraclePriceChanges24h`,
+ * `useTokenPriceHistory24h`, the portfolio chart) all derive from this single
+ * query so we never run the same RPC scan twice in a session.
+ */
+export const useOracleHistory24h = () => {
     const thor = useThor();
     const { network } = useVeChainKitConfig();
     const oracleAddress = getConfig(network.type).oracleContractAddress;
 
-    return useQuery<PriceChanges24h>({
+    return useQuery<OracleHistory24h>({
         queryKey: [
             'VECHAIN_KIT',
-            'ORACLE_PRICE_CHANGES_24H',
+            'ORACLE_HISTORY_24H',
             network.type,
             oracleAddress,
         ],
@@ -37,21 +52,19 @@ export const useOraclePriceChanges24h = () => {
         gcTime: 30 * 60 * 1000,
         retry: 1,
         queryFn: async () => {
-            // `getHeadBlock()` is a synchronous cache that can be null before
-            // the SDK has polled. Use the explicit RPC call instead so we
-            // always have a current block height.
             const head = await thor.blocks.getBestBlockExpanded();
-            if (!head) return {};
+            if (!head) return { history: {}, latest: {} };
 
             const oracle = thor.contracts.load(
                 oracleAddress,
                 OracleVechainEnergy__factory.abi,
             );
 
-            // Snapshot of latest values for the feeds we care about.
             const feedEntries = Object.entries(PRICE_FEED_IDS) as Array<
                 [SupportedToken, string]
             >;
+
+            // Spot values for the latest point on every chart.
             const latestEntries = await Promise.all(
                 feedEntries.map(async ([token, feedId]) => {
                     try {
@@ -59,30 +72,27 @@ export const useOraclePriceChanges24h = () => {
                             feedId as `0x${string}`,
                         );
                         const raw = (res as readonly bigint[])[0];
-                        return [token, raw] as const;
+                        return [token, scaleToUsd(raw)] as const;
                     } catch {
                         return [token, null] as const;
                     }
                 }),
             );
-            const latestByToken = new Map(latestEntries);
+            const latest: OracleHistory24h['latest'] = {};
+            for (const [token, value] of latestEntries) {
+                if (value != null) latest[token] = value;
+            }
 
-            // Look for ValueUpdate events in a window centered ~24h ago.
-            const targetBlock = Math.max(0, head.number - BLOCKS_PER_DAY);
-            const toBlock = Math.min(head.number, targetBlock + WINDOW_BLOCKS / 2);
-            const fromBlock = Math.max(0, targetBlock - WINDOW_BLOCKS / 2);
-
+            // Scan ValueUpdate over the past 24h. Density is low enough
+            // (~30 events across all feeds per day) that 256 is plenty.
+            const fromBlock = Math.max(0, head.number - BLOCKS_PER_DAY);
             const eventAbi = oracle.getEventAbi('ValueUpdate');
-
-            // OracleVechainEnergy only emits ValueUpdate, so filtering by
-            // contract address is enough — avoids relying on topic encoding
-            // for an event whose `id` field is non-indexed.
             const events = await getEventLogs({
                 thor,
                 nodeUrl: network.nodeUrl,
                 from: fromBlock,
-                to: toBlock,
-                order: 'desc',
+                to: head.number,
+                order: 'asc',
                 limit: 256,
                 filterCriteria: [
                     {
@@ -92,9 +102,7 @@ export const useOraclePriceChanges24h = () => {
                 ],
             });
 
-            // Walk events from newest → oldest in the window; keep the first
-            // (most recent at-or-before targetBlock) observation per feedId.
-            const pastByFeedId = new Map<string, bigint>();
+            const byFeedId = new Map<string, PricePoint[]>();
             for (const event of events) {
                 try {
                     const decoded = viemDecodeEventLog({
@@ -107,34 +115,60 @@ export const useOraclePriceChanges24h = () => {
                         id: string;
                         value: bigint;
                     };
-                    const idKey = args.id.toLowerCase();
-                    if (!pastByFeedId.has(idKey)) {
-                        pastByFeedId.set(idKey, args.value);
-                    }
+                    const key = args.id.toLowerCase();
+                    const list = byFeedId.get(key) ?? [];
+                    list.push({
+                        timestamp: Number(event.meta.blockTimestamp),
+                        value: scaleToUsd(args.value),
+                    });
+                    byFeedId.set(key, list);
                 } catch {
                     // ignore malformed entries
                 }
             }
 
-            const result: PriceChanges24h = {};
+            const history: OracleHistory24h['history'] = {};
+            const now = Math.floor(Date.now() / 1000);
             for (const [token, feedId] of feedEntries) {
-                const latest = latestByToken.get(token);
-                const past = pastByFeedId.get(feedId.toLowerCase());
-                if (!latest || !past || past === 0n) continue;
-                const change = new BigNumber(latest.toString())
-                    .minus(past.toString())
-                    .div(past.toString())
-                    .multipliedBy(100)
-                    .toNumber();
-                if (Number.isFinite(change)) {
-                    result[token] = change;
-                }
-                // Keep both raw values around in case future callers want them;
-                // for now the percentage is what we expose.
-                void SCALE;
+                const points = byFeedId.get(feedId.toLowerCase()) ?? [];
+                // Pin the current value as the closing point so the chart
+                // always extends to "now" even if there hasn't been an
+                // event for hours.
+                const latestValue = latest[token];
+                const closing: PricePoint | null =
+                    latestValue != null
+                        ? { timestamp: now, value: latestValue }
+                        : null;
+                const merged = closing ? [...points, closing] : points;
+                if (merged.length) history[token] = merged;
             }
 
-            return result;
+            return { history, latest };
         },
     });
+};
+
+export const useOraclePriceChanges24h = () => {
+    const { data } = useOracleHistory24h();
+    const result: PriceChanges24h = {};
+    if (data?.history) {
+        for (const [token, points] of Object.entries(data.history) as Array<
+            [SupportedToken, PricePoint[]]
+        >) {
+            if (!points || points.length < 2) continue;
+            const first = points[0].value;
+            const last = points[points.length - 1].value;
+            if (!first) continue;
+            const change = ((last - first) / first) * 100;
+            if (Number.isFinite(change)) result[token] = change;
+        }
+    }
+    return { data: result };
+};
+
+/** Per-token sparkline points (ascending by timestamp). */
+export const useTokenPriceHistory24h = (token?: SupportedToken) => {
+    const { data, isLoading } = useOracleHistory24h();
+    const points = token ? (data?.history?.[token] ?? []) : [];
+    return { points, isLoading };
 };
