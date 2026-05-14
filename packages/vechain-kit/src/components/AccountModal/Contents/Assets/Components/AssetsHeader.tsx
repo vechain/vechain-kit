@@ -15,10 +15,11 @@ import { useTranslation } from 'react-i18next';
 import {
     LocalStorageKey,
     useLocalStorage,
+    usePortfolioPriceHistory24h,
     useTotalBalance,
     useWallet,
 } from '@/hooks';
-import { PriceChangeBadge } from '@/components/common';
+import { PriceChangeBadge, PriceChart } from '@/components/common';
 
 type Props = {
     onSend: () => void;
@@ -76,6 +77,17 @@ export const AssetsHeader = ({
     } = useTotalBalance({
         address: account?.address ?? '',
     });
+    const { points: chartPoints } = usePortfolioPriceHistory24h(
+        account?.address,
+    );
+    const chartTone: 'up' | 'down' | 'neutral' =
+        typeof priceChange24hPct === 'number'
+            ? priceChange24hPct > 0
+                ? 'up'
+                : priceChange24hPct < 0
+                ? 'down'
+                : 'neutral'
+            : 'neutral';
     const [showAssets] = useLocalStorage(LocalStorageKey.SHOW_ASSETS, true);
 
     return (
@@ -96,6 +108,14 @@ export const AssetsHeader = ({
                     />
                 )}
             </HStack>
+
+            {showAssets && chartPoints.length > 1 && (
+                <PriceChart
+                    points={chartPoints}
+                    tone={chartTone}
+                    chartHeight={72}
+                />
+            )}
 
             <HStack spacing={2} w="full">
                 <ActionButton
