@@ -56,12 +56,31 @@ export const PriceChart = ({
             return [x, y] as const;
         });
 
-        const line = coords
-            .map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`)
-            .join(' ');
-        const fill = `${line} L${coords[coords.length - 1][0].toFixed(
-            2,
-        )} ${chartHeight} L${coords[0][0].toFixed(2)} ${chartHeight} Z`;
+        // Catmull-Rom-to-Bezier smoothing. For each segment between
+        // coords[i] and coords[i+1] derive control points from the
+        // surrounding points so the line glides through every data point
+        // without overshooting.
+        const fmt = (n: number) => n.toFixed(2);
+        const segments: string[] = [`M${fmt(coords[0][0])} ${fmt(coords[0][1])}`];
+        for (let i = 0; i < coords.length - 1; i++) {
+            const p0 = coords[i === 0 ? 0 : i - 1];
+            const p1 = coords[i];
+            const p2 = coords[i + 1];
+            const p3 = coords[i + 2 < coords.length ? i + 2 : i + 1];
+            const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+            const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+            const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+            const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+            segments.push(
+                `C${fmt(c1x)} ${fmt(c1y)}, ${fmt(c2x)} ${fmt(c2y)}, ${fmt(
+                    p2[0],
+                )} ${fmt(p2[1])}`,
+            );
+        }
+        const line = segments.join(' ');
+        const fill = `${line} L${fmt(coords[coords.length - 1][0])} ${chartHeight} L${fmt(
+            coords[0][0],
+        )} ${chartHeight} Z`;
         return { line, fill };
     }, [points, chartHeight]);
 
