@@ -1,4 +1,4 @@
-import { GridItem, Icon } from '@chakra-ui/react';
+import { GridItem, Icon, useToken } from '@chakra-ui/react';
 import { FaApple } from 'react-icons/fa';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -9,16 +9,18 @@ type Props = {
     gridColumn?: number;
 };
 
-/** Secondary outline button per spec — transparent fill, subtle stroke. */
+/** Secondary outline button — theme-driven stroke + row hover. Apple glyph
+ *  flips to match the modal's text color so it stays legible across themes. */
 export const LoginWithAppleButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
-    const stroke = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(14,13,24,0.12)';
-    const strokeStrong = isDark
-        ? 'rgba(255,255,255,0.24)'
-        : 'rgba(14,13,24,0.24)';
-    const hoverBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(14,13,24,0.04)';
+    const [stroke, strokeStrong, hoverBg, textPrimary] = useToken('colors', [
+        'vechain-kit-border-button',
+        'vechain-kit-border-hover',
+        'vechain-kit-button-secondary-bg',
+        'vechain-kit-text-primary',
+    ]);
 
     return (
         <GridItem colSpan={gridColumn ?? 4} w={'full'}>
@@ -32,7 +34,7 @@ export const LoginWithAppleButton = ({ isDark, gridColumn }: Props) => {
                         as={FaApple}
                         w={'24px'}
                         h={'24px'}
-                        color={isDark ? '#ffffff' : '#0E0D18'}
+                        color={textPrimary}
                     />
                 }
                 text={t('Continue with Apple')}

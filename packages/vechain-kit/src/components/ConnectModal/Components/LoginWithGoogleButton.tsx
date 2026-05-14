@@ -1,4 +1,4 @@
-import { GridItem } from '@chakra-ui/react';
+import { GridItem, useToken } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
@@ -9,16 +9,16 @@ type Props = {
     gridColumn?: number;
 };
 
-/** Secondary outline button per spec — transparent fill, subtle stroke. */
+/** Secondary outline button — theme-driven stroke + row hover. */
 export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
-    const stroke = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(14,13,24,0.12)';
-    const strokeStrong = isDark
-        ? 'rgba(255,255,255,0.24)'
-        : 'rgba(14,13,24,0.24)';
-    const hoverBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(14,13,24,0.04)';
+    const [stroke, strokeStrong, hoverBg] = useToken('colors', [
+        'vechain-kit-border-button',
+        'vechain-kit-border-hover',
+        'vechain-kit-button-secondary-bg',
+    ]);
 
     return (
         <GridItem colSpan={gridColumn ?? 4} w={'full'}>

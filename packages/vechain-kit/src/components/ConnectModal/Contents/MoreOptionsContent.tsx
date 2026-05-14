@@ -89,7 +89,6 @@ const ProviderRow = ({
     onClick,
     iconBg,
     iconColor,
-    isDark,
 }: {
     icon?: IconType;
     customIcon?: React.ReactElement;
@@ -97,9 +96,8 @@ const ProviderRow = ({
     onClick: () => void;
     iconBg?: string;
     iconColor?: string;
-    isDark: boolean;
 }) => {
-    const hoverBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(14,13,24,0.05)';
+    const hoverBg = useToken('colors', 'vechain-kit-button-secondary-bg');
     return (
         <Button
             variant={'ghost'}
@@ -157,7 +155,6 @@ const WalletRow = ({
     customIcon,
     iconBg,
     iconColor,
-    isDark,
     setCurrentContent,
 }: {
     source: WalletSource;
@@ -166,7 +163,6 @@ const WalletRow = ({
     customIcon?: React.ReactElement;
     iconBg?: string;
     iconColor?: string;
-    isDark: boolean;
     setCurrentContent: React.Dispatch<
         React.SetStateAction<ConnectModalContentsTypes>
     >;
@@ -180,7 +176,6 @@ const WalletRow = ({
             onClick={connect}
             iconBg={iconBg}
             iconColor={iconColor}
-            isDark={isDark}
         />
     );
 };
@@ -191,13 +186,8 @@ export const MoreOptionsContent = ({
     showBackButton = true,
 }: Props) => {
     const { t } = useTranslation();
-    const {
-        privy,
-        privyEcosystemAppIDS,
-        dappKit,
-        loginMethods,
-        darkMode: isDark,
-    } = useVeChainKitConfig();
+    const { privy, privyEcosystemAppIDS, dappKit, loginMethods } =
+        useVeChainKitConfig();
     const { data: appsInfo, isLoading: isEcosystemAppsLoading } =
         useFetchAppInfo(privyEcosystemAppIDS);
 
@@ -333,8 +323,21 @@ export const MoreOptionsContent = ({
         emailVerification.onOpen();
     };
 
-    const stroke = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(14,13,24,0.12)';
-    const accent = '#3b82f6';
+    const [
+        stroke,
+        accent,
+        textPrimary,
+        primaryBg,
+        primaryColor,
+        secondaryBg,
+    ] = useToken('colors', [
+        'vechain-kit-border-button',
+        'vechain-kit-accent',
+        'vechain-kit-text-primary',
+        'vechain-kit-button-primary-bg',
+        'vechain-kit-button-primary-color',
+        'vechain-kit-button-secondary-bg',
+    ]);
 
     return (
         <Box>
@@ -364,12 +367,10 @@ export const MoreOptionsContent = ({
                                             <VeWorldLogoLight
                                                 w={'20px'}
                                                 h={'20px'}
+                                                color={primaryColor}
                                             />
                                         }
-                                        iconBg={
-                                            isDark ? '#ffffff' : '#0E0D18'
-                                        }
-                                        isDark={isDark}
+                                        iconBg={primaryBg}
                                         setCurrentContent={setCurrentContent}
                                     />
                                 )}
@@ -378,13 +379,8 @@ export const MoreOptionsContent = ({
                                         source={'sync2'}
                                         label={t('Continue with Sync2')}
                                         icon={LuWallet}
-                                        iconBg={
-                                            isDark
-                                                ? 'rgba(255,255,255,0.08)'
-                                                : 'rgba(14,13,24,0.08)'
-                                        }
-                                        iconColor={isDark ? '#fff' : '#0E0D18'}
-                                        isDark={isDark}
+                                        iconBg={secondaryBg}
+                                        iconColor={textPrimary}
                                         setCurrentContent={setCurrentContent}
                                     />
                                 )}
@@ -397,7 +393,6 @@ export const MoreOptionsContent = ({
                                         icon={LuQrCode}
                                         iconBg={'#3B99FC'}
                                         iconColor={'#ffffff'}
-                                        isDark={isDark}
                                         setCurrentContent={setCurrentContent}
                                     />
                                 )}
@@ -417,7 +412,6 @@ export const MoreOptionsContent = ({
                                             initOAuth({ provider: 'google' })
                                         }
                                         iconBg={'#ffffff'}
-                                        isDark={isDark}
                                     />
                                 )}
                                 {showAppleHere && (
@@ -427,11 +421,8 @@ export const MoreOptionsContent = ({
                                         onClick={() =>
                                             initOAuth({ provider: 'apple' })
                                         }
-                                        iconBg={isDark ? '#ffffff' : '#0E0D18'}
-                                        iconColor={
-                                            isDark ? '#0E0D18' : '#ffffff'
-                                        }
-                                        isDark={isDark}
+                                        iconBg={primaryBg}
+                                        iconColor={primaryColor}
                                     />
                                 )}
                                 {showGithubHere && (
@@ -443,7 +434,6 @@ export const MoreOptionsContent = ({
                                         }
                                         iconBg={'#24292e'}
                                         iconColor={'#ffffff'}
-                                        isDark={isDark}
                                     />
                                 )}
                                 {showPasskeyHere && (
@@ -451,13 +441,8 @@ export const MoreOptionsContent = ({
                                         icon={LuFingerprint}
                                         label={t('Passkey')}
                                         onClick={handleLoginWithPasskey}
-                                        iconBg={
-                                            isDark
-                                                ? 'rgba(255,255,255,0.08)'
-                                                : 'rgba(14,13,24,0.08)'
-                                        }
-                                        iconColor={isDark ? '#fff' : '#0E0D18'}
-                                        isDark={isDark}
+                                        iconBg={secondaryBg}
+                                        iconColor={textPrimary}
                                     />
                                 )}
                                 {showEmailHere && (
@@ -580,12 +565,7 @@ export const MoreOptionsContent = ({
                                                         appInfo.name,
                                                     )
                                                 }
-                                                _hover={{
-                                                    bg:
-                                                        isDark
-                                                            ? 'rgba(255,255,255,0.04)'
-                                                            : 'rgba(14,13,24,0.04)',
-                                                }}
+                                                _hover={{ bg: secondaryBg }}
                                                 borderRadius={'12px'}
                                             >
                                                 <VStack

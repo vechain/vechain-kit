@@ -1,4 +1,4 @@
-import { GridItem } from '@chakra-ui/react';
+import { GridItem, useToken } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { ConnectionButton } from '@/components';
@@ -16,9 +16,9 @@ type Props = {
 };
 
 /**
- * Primary CTA — filled, inverted contrast against the modal surface.
- *   Light → dark fill, white logo + label
- *   Dark  → white fill, dark logo + label
+ * Primary CTA — filled with the theme's primary-button surface.
+ * Devs that customise `theme.buttons.primaryButton.{bg,color}` automatically
+ * restyle this button too.
  * Recommended-provider green dot in the trailing slot.
  */
 export const VeWorldButton = ({
@@ -29,9 +29,12 @@ export const VeWorldButton = ({
     const { t } = useTranslation();
     const { connect } = useConnectWithDappKitSource('veworld', setCurrentContent);
 
-    const bg = isDark ? '#ffffff' : '#0E0D18';
-    const hoverBg = isDark ? '#f0f0f0' : '#1f1d2c';
-    const color = isDark ? '#0E0D18' : '#ffffff';
+    const [bg, color] = useToken('colors', [
+        'vechain-kit-button-primary-bg',
+        'vechain-kit-button-primary-color',
+    ]);
+    // VeWorld uses the inverted-contrast logo. In dark mode the primary
+    // surface is light, so we want the dark logo (and vice versa).
     const Logo = isDark ? VeWorldLogoDark : VeWorldLogoLight;
 
     return (
@@ -48,7 +51,7 @@ export const VeWorldButton = ({
                     bg,
                     color,
                     border: 'none',
-                    _hover: { bg: hoverBg, opacity: 1 },
+                    _hover: { bg, opacity: 0.92 },
                 }}
             />
         </GridItem>

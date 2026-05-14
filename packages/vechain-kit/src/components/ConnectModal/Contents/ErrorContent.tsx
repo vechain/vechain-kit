@@ -9,6 +9,7 @@ import {
     ModalHeader,
     Text,
     VStack,
+    useToken,
 } from '@chakra-ui/react';
 import { StickyHeaderContainer, ModalBackButton } from '@/components/common';
 import { LuCircleAlert } from 'react-icons/lu';
@@ -36,8 +37,10 @@ export const ErrorContent = ({
 }: ErrorContentProps) => {
     const { t } = useTranslation();
 
-    const errorRed = '#ef4444';
-    const errorBg = 'rgba(239, 68, 68, 0.12)';
+    const [errorRed, errorBg] = useToken('colors', [
+        'vechain-kit-error',
+        'vechain-kit-error-bg',
+    ]);
 
     return (
         <>

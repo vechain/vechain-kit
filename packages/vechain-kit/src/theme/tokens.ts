@@ -32,6 +32,10 @@ export interface ThemeTokens {
         success: string;
         error: string;
         warning: string;
+        /** Brand accent. Used by the connect flow's spinner top arc, focus
+         *  rings, "Waiting for signature…" headline, and the email submit
+         *  link when the address is valid. */
+        accent: string;
     };
     // Button-specific tokens - use these for button variants
     buttons: {
@@ -114,6 +118,10 @@ export interface ThemeTokens {
  */
 export interface VechainKitThemeConfig {
     textColor?: string;
+    /** Brand accent. Used by the connect modal's spinner, focus rings, the
+     *  "Waiting for signature…" headline, and the email submit link when the
+     *  address is valid. Default: blue (`#3b82f6` light / `#60a5fa` dark). */
+    accent?: string;
     overlay?: {
         backgroundColor?: string; // Customize overlay background color
         blur?: string; // Customize overlay blur effect (e.g., "blur(10px)")
@@ -541,6 +549,7 @@ const defaultLightTokens: ThemeTokens = {
         success: '#10ba3e',
         error: '#ef4444',
         warning: '#F6AD55',
+        accent: '#3b82f6',
     },
     buttons: {
         button: {
@@ -635,6 +644,7 @@ const defaultDarkTokens: ThemeTokens = {
         success: '#00ff45de',
         error: '#ef4444',
         warning: '#F6AD55',
+        accent: '#60a5fa',
     },
     buttons: {
         button: {
@@ -879,7 +889,8 @@ export function convertThemeConfigToTokens(
         config.textColor ||
         overlayBgColor ||
         config.buttons ||
-        config.modal
+        config.modal ||
+        config.accent
     ) {
         tokens.colors = {} as ThemeTokens['colors'];
 
@@ -927,6 +938,9 @@ export function convertThemeConfigToTokens(
         tokens.colors.error = defaultTokens.colors.error;
         tokens.colors.success = defaultTokens.colors.success;
         tokens.colors.warning = defaultTokens.colors.warning;
+        // Accent: dev override wins, otherwise fall back to mode default.
+        tokens.colors.accent =
+            config.accent ?? defaultTokens.colors.accent;
     }
 
     // Handle modal border radius (support both borderRadius for backward compatibility and rounded)

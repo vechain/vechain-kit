@@ -7,6 +7,7 @@ import {
     ModalHeader,
     Text,
     VStack,
+    useToken,
 } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
 import { ModalBackButton, StickyHeaderContainer } from '@/components/common';
@@ -49,12 +50,10 @@ export const LoadingContent = ({
 }: LoadingContentProps) => {
     const { t } = useTranslation();
     const [showTimeout, setShowTimeout] = React.useState(false);
-    // Brand accent — also used by the focus ring and the "Waiting for
-    // signature…" headline. No semantic token exists for it yet.
-    const accent = '#3b82f6';
-    // Spinner track — neutral gray that reads on both modal surfaces. No
-    // semantic token exists for this either, so use a literal.
-    const ringTrack = 'rgba(127,127,127,0.2)';
+    const [accent, ringTrack] = useToken('colors', [
+        'vechain-kit-accent',
+        'vechain-kit-border-button',
+    ]);
 
     React.useEffect(() => {
         const timer = setTimeout(() => setShowTimeout(true), 7000);
@@ -85,7 +84,7 @@ export const LoadingContent = ({
                             inset={0}
                             borderRadius={'full'}
                             border={'3px solid'}
-                            borderColor={ringTrack || 'rgba(127,127,127,0.2)'}
+                            borderColor={ringTrack}
                         />
                         <Box
                             position={'absolute'}
