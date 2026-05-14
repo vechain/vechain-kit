@@ -8,7 +8,8 @@ An all-in-one SDK for building frontend applications on VeChain, supporting wall
 
 VeChain Kit is a comprehensive SDK designed to make building frontend applications on VeChain fast and straightforward. It offers:
 
--   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, and social logins.
+-   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, and social logins (Google, Apple, GitHub, email, passkey via Privy).
+-   <b>Custom Connection UI:</b> A built-in, themeable connect modal owns the VeWorld and Sync2 flows end-to-end (no dapp-kit modal hand-off). WalletConnect's QR modal is preserved.
 -   <b>Developer-Friendly Hooks:</b> Easy-to-use React Hooks that let you read and write data on the VeChainThor blockchain.
 -   <b>Token Operations:</b> Send and swap tokens, check balances, manage VET domains, and more—all in one place.
 -   <b>Pre-Built UI Components:</b> Ready-to-use components (e.g., TransactionModal) to simplify wallet operations and enhance your users’ experience.
@@ -70,6 +71,27 @@ export function Page() {
 }
 ```
 
+
+#### Customize the login modal
+
+The connect modal renders a grid of login methods. Reorder, hide, or swap them via `loginMethods` on the provider:
+
+```tsx
+<VeChainKitProvider
+    privy={{ appId: '...', clientId: '...', loginMethods: ['google', 'apple', 'email'], appearance: {...} }}
+    dappKit={{ allowedWallets: ['veworld', 'sync2', 'wallet-connect'], walletConnectOptions: {...} }}
+    loginMethods={[
+        { method: 'veworld', gridColumn: 4 },         // primary CTA (filled, recommended)
+        { method: 'google',  gridColumn: 4 },
+        { method: 'apple',   gridColumn: 4 },
+        { method: 'more',    gridColumn: 4 },         // opens an in-modal sub-view with overflow socials, wallets, ecosystem apps
+    ]}
+    // Optional: theme the brand accent (spinner, focus rings, "Waiting for signature…" headline)
+    theme={{ accent: '#3b82f6' }}
+>
+```
+
+Available `method` values: `veworld`, `sync2`, `wallet-connect`, `google`, `apple`, `github`, `email`, `passkey`, `vechain` (cross-app), `ecosystem`, `more`, and the legacy `dappkit` (which still opens dapp-kit's native modal for backwards compatibility).
 
 For complete configuration options, check the [full documentation](https://docs.vechainkit.vechain.org/).
 

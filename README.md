@@ -12,7 +12,8 @@ VeChain Kit is a comprehensive library designed to make building VeChain applica
 
 It offers:
 
--   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, and social logins (powered by Privy).
+-   <b>Seamless Wallet Integration:</b> Support for VeWorld, Sync2, WalletConnect, VeChain Embedded Wallet, and social logins (Google, Apple, GitHub, email, passkey — powered by Privy).
+-   <b>Custom Connection UI:</b> Vechain-kit's own connect modal handles the VeWorld and Sync2 flows directly, with a built-in “Waiting for signature…” view and a fully themeable layout. WalletConnect's QR modal is preserved.
 -   <b>Unified Ecosystem Accounts:</b> Leverage Privy’s Ecosystem feature to give users a single wallet across multiple dApps, providing a consistent identity within the VeChain network.
 -   <b>Developer-Friendly Hooks:</b> Easy-to-use React Hooks that let you read and write data on the VeChainThor blockchain.
 -   <b>Pre-Built UI Components:</b> Ready-to-use components (e.g., TransactionModal) to simplify wallet operations and enhance your users’ experience.
