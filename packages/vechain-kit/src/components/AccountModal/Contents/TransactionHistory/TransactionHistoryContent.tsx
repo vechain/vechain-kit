@@ -40,18 +40,23 @@ const formatDayLabel = (timestamp: number, locale: string) =>
     }).format(new Date(timestamp * 1000));
 
 const groupByDay = (items: TransferHistoryItem[], locale: string) => {
-    const groups: { label: string; items: TransferHistoryItem[] }[] = [];
-    let lastKey = '';
+    // Dedupe (same item can re-appear across pages if the indexer shifts
+    // between calls) and aggregate by day with a Map so non-contiguous
+    // same-day items still collapse into one group.
+    const seen = new Set<string>();
+    const map = new Map<string, TransferHistoryItem[]>();
     for (const item of items) {
+        if (seen.has(item.id)) continue;
+        seen.add(item.id);
         const label = formatDayLabel(item.timestamp, locale);
-        if (label !== lastKey) {
-            groups.push({ label, items: [item] });
-            lastKey = label;
-        } else {
-            groups[groups.length - 1].items.push(item);
-        }
+        const list = map.get(label);
+        if (list) list.push(item);
+        else map.set(label, [item]);
     }
-    return groups;
+    return Array.from(map, ([label, groupItems]) => ({
+        label,
+        items: groupItems,
+    }));
 };
 
 export const TransactionHistoryContent = ({
