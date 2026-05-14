@@ -30,6 +30,7 @@ export type TransactionHistoryContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     tokenFilter?: { address: string; symbol: string };
+    onBack?: () => void;
 };
 
 const formatDayLabel = (timestamp: number, locale: string) =>
@@ -62,6 +63,7 @@ const groupByDay = (items: TransferHistoryItem[], locale: string) => {
 export const TransactionHistoryContent = ({
     setCurrentContent,
     tokenFilter,
+    onBack,
 }: TransactionHistoryContentProps) => {
     const { t, i18n } = useTranslation();
     const { account } = useWallet();
@@ -84,10 +86,20 @@ export const TransactionHistoryContent = ({
         [transfers, i18n.language],
     );
 
+    const goBackToHistory = () =>
+        setCurrentContent({
+            type: 'transaction-history',
+            props: { setCurrentContent, tokenFilter, onBack },
+        });
+
     const handleItemClick = (item: TransferHistoryItem) => {
         setCurrentContent({
             type: 'transaction-detail',
-            props: { setCurrentContent, item },
+            props: {
+                setCurrentContent,
+                item,
+                onBack: goBackToHistory,
+            },
         });
     };
 
@@ -101,7 +113,9 @@ export const TransactionHistoryContent = ({
                 <ModalHeader>{headerTitle}</ModalHeader>
                 {!isolatedView && (
                     <ModalBackButton
-                        onClick={() => setCurrentContent('assets')}
+                        onClick={
+                            onBack ?? (() => setCurrentContent('assets'))
+                        }
                     />
                 )}
                 <ModalCloseButton />

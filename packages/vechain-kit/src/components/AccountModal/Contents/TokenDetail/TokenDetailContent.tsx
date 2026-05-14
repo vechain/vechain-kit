@@ -133,7 +133,11 @@ export const TokenDetailContent = ({
     const handleHistoryItem = (item: import('@/hooks').TransferHistoryItem) => {
         setCurrentContent({
             type: 'transaction-detail',
-            props: { setCurrentContent, item },
+            props: {
+                setCurrentContent,
+                item,
+                onBack: backToDetail,
+            },
         });
     };
 
@@ -146,6 +150,7 @@ export const TokenDetailContent = ({
                     address: token.address || VET_SENTINEL,
                     symbol: token.symbol,
                 },
+                onBack: backToDetail,
             },
         });
     };

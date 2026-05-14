@@ -38,6 +38,7 @@ export type TransactionDetailContentProps = {
         React.SetStateAction<AccountModalContentTypes>
     >;
     item: TransferHistoryItem;
+    onBack?: () => void;
 };
 
 const formatFullDate = (timestamp: number, locale: string) =>
@@ -88,6 +89,7 @@ const Row = ({
 export const TransactionDetailContent = ({
     setCurrentContent,
     item,
+    onBack,
 }: TransactionDetailContentProps) => {
     const { t, i18n } = useTranslation();
     const { isolatedView } = useAccountModalOptions();
@@ -120,11 +122,13 @@ export const TransactionDetailContent = ({
 
     const explorerUrl = `${config.explorerUrl}/${item.txId}`;
 
-    const handleBack = () =>
-        setCurrentContent({
-            type: 'transaction-history',
-            props: { setCurrentContent },
-        });
+    const handleBack =
+        onBack ??
+        (() =>
+            setCurrentContent({
+                type: 'transaction-history',
+                props: { setCurrentContent },
+            }));
 
     return (
         <>
