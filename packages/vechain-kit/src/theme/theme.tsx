@@ -16,10 +16,10 @@ import {
 } from './tokens';
 
 /**
- * Best-effort RGBA helper that handles hex (`#rrggbb`), `rgb(...)` and
- * `rgba(...)` inputs. Mirrors the logic in `tokens.ts:applyOpacity` (kept
- * inline so theme.tsx doesn't pull in the heavier helper that depends on
- * `window`).
+ * Opacity helper that handles hex / rgb(a) literals directly and falls back to
+ * `color-mix` for anything else (CSS var refs, named colors, etc.) so the
+ * resolved color tracks host theme changes at paint time. Mirrors
+ * `tokens.ts:applyOpacity`.
  */
 const applyOpacityHelper = (color: string, opacity: number): string => {
     const rgba = color.match(
@@ -35,7 +35,8 @@ const applyOpacityHelper = (color: string, opacity: number): string => {
         const b = parseInt(hex.slice(4, 6), 16);
         return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     }
-    return color;
+    const percent = Math.round(opacity * 10000) / 100;
+    return `color-mix(in srgb, ${color} ${percent}%, transparent)`;
 };
 
 // minimal theme that completely disables global styles

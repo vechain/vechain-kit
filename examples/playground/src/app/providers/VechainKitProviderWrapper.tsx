@@ -226,7 +226,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
             ]}
             darkMode={isDarkMode}
             network={{
-                type: 'test',
+                type: 'main',
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}

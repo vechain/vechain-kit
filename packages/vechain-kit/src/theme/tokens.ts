@@ -230,36 +230,14 @@ function applyOpacity(color: string, opacity: number): string {
         return hexToRgba(color, opacity);
     }
 
-    // Try to parse named colors or other formats by creating a temporary element
-    // This handles CSS named colors like 'red', 'blue', etc.
-    // Only works in browser environment (not SSR)
-    if (
-        typeof window !== 'undefined' &&
-        typeof document !== 'undefined' &&
-        document.body
-    ) {
-        try {
-            const tempEl = document.createElement('div');
-            tempEl.style.color = color;
-            document.body.appendChild(tempEl);
-            const computedColor = window.getComputedStyle(tempEl).color;
-            document.body.removeChild(tempEl);
-
-            // If we got a valid rgb/rgba color, extract and apply opacity
-            const computedMatch = computedColor.match(
-                /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/,
-            );
-            if (computedMatch) {
-                return `rgba(${computedMatch[1]}, ${computedMatch[2]}, ${computedMatch[3]}, ${opacity})`;
-            }
-        } catch {
-            // Fall through to fallback
-        }
-    }
-
-    // Fallback: return as-is (for SSR or unsupported formats)
-    // In practice, users should use hex or rgba colors
-    return color;
+    // For CSS var() references, named colors, or any other format, emit a
+    // color-mix expression so the browser resolves the underlying color at
+    // paint time. This keeps the result reactive to host theme changes (e.g.
+    // next-themes toggling html.dark) — snapshotting via a temporary DOM
+    // element here would freeze whichever value the host had applied at
+    // render time, leaving downstream tokens one toggle behind.
+    const percent = Math.round(opacity * 10000) / 100;
+    return `color-mix(in srgb, ${color} ${percent}%, transparent)`;
 }
 
 /**
