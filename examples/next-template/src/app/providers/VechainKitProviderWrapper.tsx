@@ -94,18 +94,17 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 },
             }}
             loginMethods={[
-                // { method: 'email', gridColumn: 4 },
-                // { method: 'google', gridColumn: 4 },
-                { method: 'vechain', gridColumn: 4 },
-                { method: 'dappkit', gridColumn: 4 },
-                { method: 'ecosystem', gridColumn: 4 },
-                // { method: 'passkey', gridColumn: 1 },
-                // { method: 'more', gridColumn: 1 },
+                { method: 'veworld', gridColumn: 4 },
+                { method: 'google', gridColumn: 4 },
+                { method: 'apple', gridColumn: 4 },
+                { method: 'more', gridColumn: 4 },
             ]}
-            loginModalUI={{
-                description:
-                    'Choose between social login through VeChain or by connecting your wallet.',
-            }}
+            loginModalUI={
+                {
+                    //description:
+                    //   'Choose between social login through VeChain or by connecting your wallet.',
+                }
+            }
             darkMode={isDarkMode}
             onLanguageChange={handleLanguageChange}
             onCurrencyChange={handleCurrencyChange}

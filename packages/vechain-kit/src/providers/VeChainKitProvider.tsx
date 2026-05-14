@@ -54,8 +54,20 @@ import { Certificate, CertificateData } from '@vechain/sdk-core';
 import { PrivyCrossAppProvider } from './PrivyCrossAppProvider';
 import { PrivyWalletProvider } from './PrivyWalletProvider';
 
-type AlwaysAvailableMethods = 'vechain' | 'dappkit' | 'ecosystem';
-type PrivyDependentMethods = 'email' | 'google' | 'github' | 'passkey' | 'more';
+type AlwaysAvailableMethods =
+    | 'vechain'
+    | 'dappkit'
+    | 'ecosystem'
+    | 'veworld'
+    | 'sync2'
+    | 'wallet-connect';
+type PrivyDependentMethods =
+    | 'email'
+    | 'google'
+    | 'apple'
+    | 'github'
+    | 'passkey'
+    | 'more';
 export type AccountQuickAction = 'send' | 'swap' | 'receive';
 
 type LoginMethodOrder = {
@@ -308,13 +320,21 @@ const validateConfig = (
         }
     }
 
-    // Set default login methods if not provided
+    // Set default login methods if not provided.
+    // The no-Privy default mirrors `dappKit.allowedWallets` default
+    // (`['veworld']`), so that opt-out devs see VeWorld out of the box.
+    // To surface Sync2 or WalletConnect, the dev must opt in via both
+    // `dappKit.allowedWallets` AND `loginMethods` (WalletConnect also needs a
+    // `walletConnectOptions.projectId`).
     if (!validatedProps.loginMethods) {
-        validatedProps.loginMethods = [
-            { method: 'vechain', gridColumn: 4 },
-            { method: 'ecosystem', gridColumn: 4 },
-            { method: 'dappkit', gridColumn: 4 },
-        ];
+        validatedProps.loginMethods = validatedProps.privy
+            ? [
+                  { method: 'veworld', gridColumn: 4 },
+                  { method: 'google', gridColumn: 4 },
+                  { method: 'apple', gridColumn: 4 },
+                  { method: 'more', gridColumn: 4 },
+              ]
+            : [{ method: 'veworld', gridColumn: 4 }];
     }
 
     // Validate login methods if Privy is not configured
@@ -322,9 +342,14 @@ const validateConfig = (
         if (!validatedProps.privy) {
             const invalidMethods = validatedProps.loginMethods.filter(
                 (method) =>
-                    ['email', 'google', 'passkey', 'more'].includes(
-                        method.method,
-                    ),
+                    [
+                        'email',
+                        'google',
+                        'apple',
+                        'github',
+                        'passkey',
+                        'more',
+                    ].includes(method.method),
             );
 
             if (invalidMethods.length > 0) {

@@ -15,6 +15,29 @@ import {
     mergeTokens,
 } from './tokens';
 
+/**
+ * Best-effort RGBA helper that handles hex (`#rrggbb`), `rgb(...)` and
+ * `rgba(...)` inputs. Mirrors the logic in `tokens.ts:applyOpacity` (kept
+ * inline so theme.tsx doesn't pull in the heavier helper that depends on
+ * `window`).
+ */
+const applyOpacityHelper = (color: string, opacity: number): string => {
+    const rgba = color.match(
+        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/,
+    );
+    if (rgba) {
+        return `rgba(${rgba[1]}, ${rgba[2]}, ${rgba[3]}, ${opacity})`;
+    }
+    const hex = color.replace('#', '');
+    if (/^[0-9a-fA-F]{6}$/.test(hex)) {
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+    return color;
+};
+
 // minimal theme that completely disables global styles
 const getThemeConfig = (
     darkMode: boolean,
@@ -64,9 +87,16 @@ const getThemeConfig = (
             'vechain-kit-border': tokens.colors.border.default,
             'vechain-kit-border-hover': tokens.colors.border.hover,
             'vechain-kit-border-focus': tokens.colors.border.focus,
+            'vechain-kit-border-button': tokens.colors.border.button,
             'vechain-kit-success': tokens.colors.success,
             'vechain-kit-error': tokens.colors.error,
+            // Soft red surface used by the connect modal's error circle and
+            // any other "muted error" backgrounds. Derived from the error
+            // color at 12% alpha so it tracks dev overrides automatically.
+            'vechain-kit-error-bg': applyOpacityHelper(tokens.colors.error, 0.12),
             'vechain-kit-warning': tokens.colors.warning,
+            'vechain-kit-accent': tokens.colors.accent,
+            'vechain-kit-button-secondary-bg': tokens.buttons.button.bg,
             'vechain-kit-button-primary-bg': tokens.buttons.primaryButton.bg,
             'vechain-kit-button-primary-color':
                 tokens.buttons.primaryButton.color,

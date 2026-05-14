@@ -1,10 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { Box } from '@chakra-ui/react';
+import { keyframes } from '@emotion/react';
 import { MainContent } from './Contents/MainContent';
 import { BaseModal } from '@/components/common';
 import { FAQContent } from '../AccountModal';
-import { EcosystemContent, LoadingContent, ErrorContent } from './Contents';
+import {
+    EcosystemContent,
+    LoadingContent,
+    ErrorContent,
+    MoreOptionsContent,
+} from './Contents';
 import { PrivyAppInfo } from '@/types';
 import { useWallet } from '@/hooks';
 
@@ -41,7 +48,26 @@ export type ConnectModalContentsTypes =
               error: string;
               onTryAgain: () => void;
           };
+      }
+    | {
+          type: 'more';
+          props: {
+              showBackButton?: boolean;
+          };
       };
+
+// Stable key derived from a content value, used to retrigger the cross-fade
+// animation when the user transitions between views.
+const contentKey = (c: ConnectModalContentsTypes | undefined): string => {
+    if (!c) return 'main';
+    if (typeof c === 'string') return c;
+    return c.type;
+};
+
+const fadeIn = keyframes`
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+`;
 
 export const ConnectModal = ({
     isOpen,
@@ -53,16 +79,12 @@ export const ConnectModal = ({
     const [currentContent, setCurrentContent] =
         useState<ConnectModalContentsTypes>(initialContent);
 
-    // Sync currentContent with initialContent when it changes (e.g., when opening from popover)
     useEffect(() => {
         if (isOpen) {
             setCurrentContent(initialContent);
         }
     }, [isOpen, initialContent, setCurrentContent]);
 
-    // Auto-close modal when connection is established (e.g., after social login)
-    // This must live here rather than in MainContent because social login flows
-    // switch to LoadingContent, which unmounts MainContent and its close effect.
     useEffect(() => {
         if (connection.isConnected && isOpen && !preventAutoClose) {
             onClose();
@@ -70,22 +92,13 @@ export const ConnectModal = ({
     }, [connection.isConnected, isOpen, onClose, preventAutoClose]);
 
     const renderContent = () => {
-        // Ensure displayContent is valid
         if (!currentContent) {
-                return (
-                    <MainContent
-                        setCurrentContent={setCurrentContent}
-                        />
-                );
+            return <MainContent setCurrentContent={setCurrentContent} />;
         }
 
         switch (currentContent) {
             case 'main':
-                return (
-                    <MainContent
-                        setCurrentContent={setCurrentContent}
-                        />
-                );
+                return <MainContent setCurrentContent={setCurrentContent} />;
             case 'faq':
                 return (
                     <FAQContent onGoBack={() => setCurrentContent('main')} />
@@ -112,7 +125,9 @@ export const ConnectModal = ({
                             onTryAgain={currentContent.props.onTryAgain}
                             onClose={onClose}
                             onGoBack={() => setCurrentContent('main')}
-                            showBackButton={currentContent.props.showBackButton}
+                            showBackButton={
+                                currentContent.props.showBackButton
+                            }
                         />
                     );
                 case 'error':
@@ -124,37 +139,28 @@ export const ConnectModal = ({
                             onGoBack={() => setCurrentContent('main')}
                         />
                     );
+                case 'more':
+                    return (
+                        <MoreOptionsContent
+                            onClose={onClose}
+                            setCurrentContent={setCurrentContent}
+                            showBackButton={
+                                currentContent.props.showBackButton
+                            }
+                        />
+                    );
             }
         }
 
         return null;
     };
 
-    const content = renderContent();
+    const rendered = renderContent();
+    const key = useMemo(() => contentKey(currentContent), [currentContent]);
 
-    // Ensure we have valid content before rendering
-    if (!content) {
-        // Fallback to main content if renderContent returns null
-        const fallbackContent = (
-            <MainContent
-                setCurrentContent={setCurrentContent}
-            />
-        );
-        return (
-            <BaseModal
-                isOpen={isOpen}
-                onClose={onClose}
-                allowExternalFocus={true}
-                blockScrollOnMount={true}
-                mobileMinHeight={'260px'}
-                mobileMaxHeight={'400px'}
-                desktopMinHeight={'250px'}
-                desktopMaxHeight={'400px'}
-            >
-                {fallbackContent}
-            </BaseModal>
-        );
-    }
+    const content = rendered ?? (
+        <MainContent setCurrentContent={setCurrentContent} />
+    );
 
     return (
         <BaseModal
@@ -163,11 +169,18 @@ export const ConnectModal = ({
             allowExternalFocus={true}
             blockScrollOnMount={true}
             mobileMinHeight={'260px'}
-            mobileMaxHeight={'400px'}
+            mobileMaxHeight={'520px'}
             desktopMinHeight={'250px'}
-            desktopMaxHeight={'400px'}
+            desktopMaxHeight={'520px'}
         >
-            {content}
+            {/* 250ms fade + 4px translate cross-fade between views.
+                `key` retriggers the animation on each transition. */}
+            <Box
+                key={key}
+                animation={`${fadeIn} 250ms cubic-bezier(0.4, 0, 0.2, 1)`}
+            >
+                {content}
+            </Box>
         </BaseModal>
     );
 };

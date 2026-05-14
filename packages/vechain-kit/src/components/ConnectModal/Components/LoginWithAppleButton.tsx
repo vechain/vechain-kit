@@ -1,5 +1,5 @@
-import { GridItem, useToken } from '@chakra-ui/react';
-import { FcGoogle } from 'react-icons/fc';
+import { GridItem, Icon, useToken } from '@chakra-ui/react';
+import { FaApple } from 'react-icons/fa';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithOAuth } from '@/hooks';
@@ -9,15 +9,17 @@ type Props = {
     gridColumn?: number;
 };
 
-/** Secondary outline button — theme-driven stroke + row hover. */
-export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
+/** Secondary outline button — theme-driven stroke + row hover. Apple glyph
+ *  flips to match the modal's text color so it stays legible across themes. */
+export const LoginWithAppleButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
     const { initOAuth } = useLoginWithOAuth();
 
-    const [stroke, strokeStrong, hoverBg] = useToken('colors', [
+    const [stroke, strokeStrong, hoverBg, textPrimary] = useToken('colors', [
         'vechain-kit-border-button',
         'vechain-kit-border-hover',
         'vechain-kit-button-secondary-bg',
+        'vechain-kit-text-primary',
     ]);
 
     return (
@@ -25,11 +27,17 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={async () => {
-                    await initOAuth({ provider: 'google' });
+                    await initOAuth({ provider: 'apple' });
                 }}
-                icon={FcGoogle}
-                iconWidth={'24px'}
-                text={t('Continue with Google')}
+                customIcon={
+                    <Icon
+                        as={FaApple}
+                        w={'24px'}
+                        h={'24px'}
+                        color={textPrimary}
+                    />
+                }
+                text={t('Continue with Apple')}
                 style={{
                     bg: 'transparent',
                     border: `1px solid ${stroke}`,

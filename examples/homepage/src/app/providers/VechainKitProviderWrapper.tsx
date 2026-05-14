@@ -185,11 +185,15 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // { method: 'email', gridColumn: 4 },
                 // { method: 'google', gridColumn: 4 },
                 // { method: 'github', gridColumn: 4 },
-                { method: 'vechain', gridColumn: 4 },
-                { method: 'dappkit', gridColumn: 4 },
-                { method: 'ecosystem', gridColumn: 4 },
+                // { method: 'vechain', gridColumn: 4 },
+                // { method: 'dappkit', gridColumn: 4 },
+                // { method: 'ecosystem', gridColumn: 4 },
                 // { method: 'passkey', gridColumn: 4 },
                 // { method: 'more', gridColumn: 1 },
+                { method: 'veworld', gridColumn: 4 },
+                { method: 'google', gridColumn: 4 },
+                { method: 'apple', gridColumn: 4 },
+                { method: 'more', gridColumn: 4 },
             ]}
             darkMode={false}
             network={{
