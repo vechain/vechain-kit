@@ -1,5 +1,4 @@
 import {
-    Box,
     Heading,
     VStack,
     HStack,
@@ -12,11 +11,10 @@ import {
     useRefreshBalances,
     useWallet,
     useTotalBalance,
-    usePortfolioPriceHistory24h,
     LocalStorageKey,
     useLocalStorage,
 } from '@/hooks';
-import { PriceChangeBadge, PriceChart } from '@/components/common';
+import { PriceChangeBadge } from '@/components/common';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LuRefreshCw } from 'react-icons/lu';
@@ -38,17 +36,6 @@ export const BalanceSection = ({
     const { formattedBalance, isLoading, priceChange24hPct } = useTotalBalance({
         address: account?.address ?? '',
     });
-    const { points: chartPoints } = usePortfolioPriceHistory24h(
-        account?.address,
-    );
-    const chartTone: 'up' | 'down' | 'neutral' =
-        typeof priceChange24hPct === 'number'
-            ? priceChange24hPct > 0
-                ? 'up'
-                : priceChange24hPct < 0
-                ? 'down'
-                : 'neutral'
-            : 'neutral';
 
     const { refresh } = useRefreshBalances();
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -120,26 +107,7 @@ export const BalanceSection = ({
                 onClick={onAssetsClick}
                 h="fit-content"
                 variant="vechainKitSecondary"
-                position="relative"
-                overflow="hidden"
             >
-                {showAssets && chartPoints.length > 1 && (
-                    <Box
-                        position="absolute"
-                        inset={0}
-                        zIndex={0}
-                        pointerEvents="none"
-                    >
-                        <PriceChart
-                            points={chartPoints}
-                            tone={chartTone}
-                            chartHeight={120}
-                            chartOpacity={0.18}
-                            strokeWidth={1.5}
-                            h="100%"
-                        />
-                    </Box>
-                )}
                 <VStack
                     spacing={2}
                     w="full"
@@ -147,8 +115,6 @@ export const BalanceSection = ({
                     alignItems="flex-start"
                     mt={4}
                     mb={4}
-                    position="relative"
-                    zIndex={1}
                 >
                     <HStack spacing={3} align="baseline">
                         <Heading size={'2xl'} fontWeight={'700'}>
