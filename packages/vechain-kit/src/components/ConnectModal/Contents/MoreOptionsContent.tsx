@@ -19,8 +19,14 @@ import {
     useToken,
 } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
-import { LuChevronRight, LuFingerprint, LuMail, LuQrCode } from 'react-icons/lu';
-import { LuWallet } from 'react-icons/lu';
+import {
+    LuChevronRight,
+    LuEllipsis,
+    LuFingerprint,
+    LuMail,
+    LuQrCode,
+    LuWallet,
+} from 'react-icons/lu';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoginWithEmail } from '@privy-io/react-auth';
@@ -209,8 +215,12 @@ export const MoreOptionsContent = ({
         allowedWallets.includes('veworld') && !onMainGrid('veworld');
     const showSync2Here =
         allowedWallets.includes('sync2') && !onMainGrid('sync2');
+    // WalletConnect also needs a `walletConnectOptions.projectId` — without
+    // one the WC SDK rejects at connect time, so advertising the option in
+    // the More-options sub-view is misleading.
     const showWalletConnectHere =
         allowedWallets.includes('wallet-connect') &&
+        !!dappKit?.walletConnectOptions?.projectId &&
         !onMainGrid('wallet-connect');
     const showWalletsSection =
         showVeWorldHere || showSync2Here || showWalletConnectHere;
@@ -548,16 +558,13 @@ export const MoreOptionsContent = ({
                                     </Box>
                                 )}
                                 {hasNonNativePrivyMethod && (
-                                    <Button
-                                        variant={'link'}
-                                        size={'sm'}
-                                        fontWeight={500}
+                                    <ProviderRow
+                                        icon={LuEllipsis}
+                                        label={t('More options')}
                                         onClick={viewMoreLogin}
-                                        alignSelf={'center'}
-                                        mt={2}
-                                    >
-                                        {t('More options')}
-                                    </Button>
+                                        iconBg={secondaryBg}
+                                        iconColor={textPrimary}
+                                    />
                                 )}
                             </VStack>
                         </Box>
