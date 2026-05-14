@@ -4,6 +4,7 @@ import {
     Container,
     HStack,
     Heading,
+    Icon,
     Image,
     ModalBody,
     ModalCloseButton,
@@ -12,7 +13,7 @@ import {
     VStack,
     useToken,
 } from '@chakra-ui/react';
-import { LuExternalLink } from 'react-icons/lu';
+import { LuExternalLink, LuSparkles } from 'react-icons/lu';
 import { useTranslation } from 'react-i18next';
 import {
     AddressOrDomainLabel,
@@ -98,6 +99,10 @@ export const TransactionDetailContent = ({
     const sent = item.direction === 'sent';
     const sign = sent ? '-' : '+';
     const amountColor = sent ? errorColor : successColor;
+    const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+    const fromZero =
+        !sent && item.from.toLowerCase() === ZERO_ADDRESS;
+    const placeholderColor = useToken('colors', 'vechain-kit-text-secondary');
 
     const priceKey = (item.tokenAddress ?? '0x').toLowerCase();
     const priceUsd = prices[priceKey] ?? 0;
@@ -132,7 +137,22 @@ export const TransactionDetailContent = ({
                 <ModalBody>
                     <VStack spacing={6} align="stretch" w="full">
                         <HStack spacing={3}>
-                            {TOKEN_LOGOS[item.tokenSymbol] ? (
+                            {fromZero ? (
+                                <Box
+                                    boxSize="40px"
+                                    borderRadius="full"
+                                    bg="whiteAlpha.300"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <Icon
+                                        as={LuSparkles}
+                                        boxSize={5}
+                                        color={placeholderColor}
+                                    />
+                                </Box>
+                            ) : TOKEN_LOGOS[item.tokenSymbol] ? (
                                 <Image
                                     src={TOKEN_LOGOS[item.tokenSymbol]}
                                     alt={item.tokenSymbol}

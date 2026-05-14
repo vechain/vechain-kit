@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatUnits } from 'ethers';
 import { useAppConfig, useVeChainKitConfig } from '@/providers';
 import { useTokenBalances } from '../wallet/useTokenBalances';
+import { getTokenInfo } from '../wallet/useGetCustomTokenInfo';
 import {
     IndexerTransfer,
     TransferHistoryItem,
@@ -107,7 +108,7 @@ export const useTransferHistory = (
             }
             const body = (await res.json()) as IndexerResponse;
 
-            const items: TransferHistoryItem[] = (body.data ?? [])
+            const filtered = (body.data ?? [])
                 .filter((t) => t.eventType !== 'NFT')
                 .filter((t) => {
                     if (!tokenAddress) return true;
@@ -115,41 +116,74 @@ export const useTransferHistory = (
                         return t.eventType === 'VET';
                     }
                     return eqLower(t.tokenAddress, tokenAddress);
-                })
-                .map((t) => {
-                    const isVet = t.eventType === 'VET';
-                    const tokenAddrKey = isVet
-                        ? VET_TOKEN_SENTINEL.toLowerCase()
-                        : (t.tokenAddress ?? '').toLowerCase();
-                    const meta = symbolByAddress.get(tokenAddrKey);
-                    const decimals = meta?.decimals ?? 18;
-                    const symbol =
-                        meta?.symbol ??
-                        (isVet ? 'VET' : t.tokenAddress?.slice(0, 6) ?? '');
-                    const direction =
-                        eqLower(t.from, address) ? 'sent' : 'received';
-                    let amount = 0;
-                    try {
-                        amount = Number(formatUnits(BigInt(t.value), decimals));
-                    } catch {
-                        amount = 0;
-                    }
-                    return {
-                        id: t.id,
-                        txId: t.txId,
-                        blockNumber: t.blockNumber,
-                        timestamp: t.blockTimestamp,
-                        direction,
-                        from: t.from,
-                        to: t.to,
-                        tokenAddress: isVet ? null : (t.tokenAddress ?? null),
-                        tokenSymbol: symbol,
-                        tokenDecimals: decimals,
-                        rawValue: t.value,
-                        amount,
-                        eventType: t.eventType,
-                    } satisfies TransferHistoryItem;
                 });
+
+            // Fetch on-chain metadata for ERC-20 addresses we don't yet
+            // recognise so the row shows the real symbol and the amount
+            // uses the correct decimals (the indexer reports raw wei).
+            const unknownTokens = new Set<string>();
+            for (const t of filtered) {
+                if (t.eventType !== 'FUNGIBLE_TOKEN' || !t.tokenAddress) continue;
+                const key = t.tokenAddress.toLowerCase();
+                if (!symbolByAddress.has(key)) unknownTokens.add(key);
+            }
+            if (unknownTokens.size && network.nodeUrl) {
+                const addrs = Array.from(unknownTokens);
+                const results = await Promise.allSettled(
+                    addrs.map((addr) => getTokenInfo(addr, network.nodeUrl)),
+                );
+                results.forEach((r, i) => {
+                    if (r.status !== 'fulfilled' || !r.value) return;
+                    const info = r.value as {
+                        symbol?: string;
+                        decimals?: number;
+                    };
+                    if (!info.symbol) return;
+                    symbolByAddress.set(addrs[i], {
+                        symbol: info.symbol,
+                        decimals:
+                            typeof info.decimals === 'number'
+                                ? info.decimals
+                                : 18,
+                    });
+                });
+            }
+
+            const items: TransferHistoryItem[] = filtered.map((t) => {
+                const isVet = t.eventType === 'VET';
+                const tokenAddrKey = isVet
+                    ? VET_TOKEN_SENTINEL.toLowerCase()
+                    : (t.tokenAddress ?? '').toLowerCase();
+                const meta = symbolByAddress.get(tokenAddrKey);
+                const decimals = meta?.decimals ?? 18;
+                const symbol =
+                    meta?.symbol ??
+                    (isVet ? 'VET' : t.tokenAddress?.slice(0, 6) ?? '');
+                const direction = eqLower(t.from, address)
+                    ? 'sent'
+                    : 'received';
+                let amount = 0;
+                try {
+                    amount = Number(formatUnits(BigInt(t.value), decimals));
+                } catch {
+                    amount = 0;
+                }
+                return {
+                    id: t.id,
+                    txId: t.txId,
+                    blockNumber: t.blockNumber,
+                    timestamp: t.blockTimestamp,
+                    direction,
+                    from: t.from,
+                    to: t.to,
+                    tokenAddress: isVet ? null : (t.tokenAddress ?? null),
+                    tokenSymbol: symbol,
+                    tokenDecimals: decimals,
+                    rawValue: t.value,
+                    amount,
+                    eventType: t.eventType,
+                } satisfies TransferHistoryItem;
+            });
 
             return {
                 items,
