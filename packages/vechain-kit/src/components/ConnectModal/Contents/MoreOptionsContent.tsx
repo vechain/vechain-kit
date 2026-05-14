@@ -223,7 +223,10 @@ export const MoreOptionsContent = ({
         privyLoginMethods.includes('email') && !onMainGrid('email');
     const showGithubHere =
         privyLoginMethods.includes('github') && !onMainGrid('github');
-    const showPasskeyHere = !!privy && !onMainGrid('passkey');
+    const showPasskeyHere =
+        !!privy &&
+        privyLoginMethods.includes('passkey') &&
+        !onMainGrid('passkey');
     const hasNonNativePrivyMethod = privyLoginMethods.some(
         (m) => !NATIVE_PRIVY_METHODS.has(m),
     );
@@ -291,7 +294,13 @@ export const MoreOptionsContent = ({
         } catch (error) {
             const errorMsg = (error as { message?: string })?.message;
             if (errorMsg && isRejectionError(errorMsg)) {
-                setCurrentContent({ type: 'more', props: {} });
+                // Carry forward the same showBackButton flag we were rendered
+                // with, so popover-launched flows (where showBackButton=false)
+                // don't suddenly grow a back arrow after a rejection.
+                setCurrentContent({
+                    type: 'more',
+                    props: { showBackButton },
+                });
                 return;
             }
             const errorToShow =
@@ -319,8 +328,27 @@ export const MoreOptionsContent = ({
     const isEmailValid = EMAIL_RE.test(email);
     const submitEmail = async () => {
         if (!isEmailValid) return;
-        await sendCode({ email });
-        emailVerification.onOpen();
+        try {
+            await sendCode({ email });
+            emailVerification.onOpen();
+        } catch (err) {
+            // sendCode rejections were previously swallowed. Surface the
+            // failure in the modal's error sub-view so the user can retry.
+            const message =
+                err instanceof Error
+                    ? err.message
+                    : t('Failed to connect, please try again later.');
+            console.error('sendCode failed', err);
+            setCurrentContent({
+                type: 'error',
+                props: {
+                    error: message,
+                    onTryAgain: () => {
+                        void submitEmail();
+                    },
+                },
+            });
+        }
     };
 
     const [

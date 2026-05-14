@@ -320,7 +320,12 @@ const validateConfig = (
         }
     }
 
-    // Set default login methods if not provided
+    // Set default login methods if not provided.
+    // The no-Privy default mirrors `dappKit.allowedWallets` default
+    // (`['veworld']`), so that opt-out devs see VeWorld out of the box.
+    // To surface Sync2 or WalletConnect, the dev must opt in via both
+    // `dappKit.allowedWallets` AND `loginMethods` (WalletConnect also needs a
+    // `walletConnectOptions.projectId`).
     if (!validatedProps.loginMethods) {
         validatedProps.loginMethods = validatedProps.privy
             ? [
@@ -329,11 +334,7 @@ const validateConfig = (
                   { method: 'apple', gridColumn: 4 },
                   { method: 'more', gridColumn: 4 },
               ]
-            : [
-                  { method: 'veworld', gridColumn: 4 },
-                  { method: 'sync2', gridColumn: 2 },
-                  { method: 'wallet-connect', gridColumn: 2 },
-              ];
+            : [{ method: 'veworld', gridColumn: 4 }];
     }
 
     // Validate login methods if Privy is not configured

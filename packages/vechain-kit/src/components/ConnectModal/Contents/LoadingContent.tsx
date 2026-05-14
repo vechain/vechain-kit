@@ -42,7 +42,9 @@ const spin = keyframes`
 export const LoadingContent = ({
     loadingText,
     title,
-    onTryAgain,
+    // onTryAgain is part of the props shape but unused — Cancel only goes
+    // back. Kept on the type so callers don't have to remove it from the
+    // ConnectModalContentsTypes.loading.props discriminated union.
     onClose,
     onGoBack,
     showBackButton = true,
@@ -147,7 +149,10 @@ export const LoadingContent = ({
                     textTransform={'uppercase'}
                     letterSpacing={'0.08em'}
                     color={'vechain-kit-text-secondary'}
-                    onClick={onTryAgain ?? onGoBack}
+                    // Cancel returns to where the user came from. Falling back
+                    // to onTryAgain would re-trigger the wallet prompt, which
+                    // is the opposite of cancelling.
+                    onClick={onGoBack}
                 >
                     {t('Cancel')}
                 </Button>
