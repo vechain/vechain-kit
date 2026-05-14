@@ -423,5 +423,6 @@
     "utilities": "Yardımcı programlar",
     "vebetter": "VeBetter",
     "your@email.com": "your@email.com",
-    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Gizliliğiniz önemlidir.</bold> Kontrol sizde, deneyiminizi geliştirmemize yardımcı olan çerezler gibi isteğe bağlı özellikleri etkinleştirmek için kabul edin."
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Gizliliğiniz önemlidir.</bold> Kontrol sizde, deneyiminizi geliştirmemize yardımcı olan çerezler gibi isteğe bağlı özellikleri etkinleştirmek için kabul edin.",
+    "Login with social": "Sosyal ile giriş yap"
 }

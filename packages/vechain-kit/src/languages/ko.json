@@ -423,5 +423,6 @@
     "utilities": "유틸리티",
     "vebetter": "VeBetter",
     "your@email.com": "your@email.com",
-    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>개인정보는 중요합니다.</bold> 당신이 통제합니다. 쿠키와 같은 선택적 기능을 활성화하려면 수락하세요."
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>개인정보는 중요합니다.</bold> 당신이 통제합니다. 쿠키와 같은 선택적 기능을 활성화하려면 수락하세요.",
+    "Login with social": "소셜로 로그인"
 }

@@ -27,7 +27,7 @@ export const VeChainWithPrivyLoginButton = ({ isDark, gridColumn }: Props) => {
                         ? (VechainLogoLight as IconType)
                         : (VechainLogoDark as IconType)
                 }
-                text={t('Use social login with VeChain')}
+                text={t('Login with social')}
                 variant={'loginWithVechain'}
                 rightIcon={<SocialIcons />}
             />

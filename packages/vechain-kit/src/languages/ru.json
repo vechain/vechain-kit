@@ -423,5 +423,6 @@
     "utilities": "Утилиты",
     "vebetter": "VeBetter",
     "your@email.com": "your@email.com",
-    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Ваша конфиденциальность важна.</bold> Вы контролируете ситуацию, примите, чтобы включить дополнительные функции, такие как файлы cookie, которые помогают улучшить ваш опыт."
+    "<bold>Your privacy matters.</bold> You’re in control, accept to enable optional features like cookies that help us enhance your experience.": "<bold>Ваша конфиденциальность важна.</bold> Вы контролируете ситуацию, примите, чтобы включить дополнительные функции, такие как файлы cookie, которые помогают улучшить ваш опыт.",
+    "Login with social": "Войти через соцсети"
 }
