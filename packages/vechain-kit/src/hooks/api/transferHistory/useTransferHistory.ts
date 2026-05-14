@@ -14,9 +14,6 @@ type IndexerResponse = {
     pagination?: { hasNext?: boolean };
 };
 
-const isVetTokenAddress = (address?: string | null) =>
-    !address || address === VET_TOKEN_SENTINEL;
-
 const eqLower = (a?: string | null, b?: string | null) =>
     (a ?? '').toLowerCase() === (b ?? '').toLowerCase();
 
@@ -64,7 +61,9 @@ export const useTransferHistory = (
     }
 
     const indexerUrl = config.indexerUrl;
-    const filteringByVet = isVetTokenAddress(tokenAddress);
+    // Only treat this as a VET-specific filter when the caller actually
+    // passed the VET sentinel — an undefined tokenAddress means "all".
+    const filteringByVet = tokenAddress === VET_TOKEN_SENTINEL;
     const supportsHistory = !!indexerUrl && network.type !== 'solo';
 
     type TransferPage = {
