@@ -21,8 +21,8 @@ export function ColorModeToggle() {
             icon={colorMode === 'dark' ? <LuSun /> : <LuMoon />}
             onClick={toggleColorMode}
             position="fixed"
-            bottom={4}
-            right={4}
+            top={4}
+            left={4}
             zIndex={9999}
             size="md"
             isRound
