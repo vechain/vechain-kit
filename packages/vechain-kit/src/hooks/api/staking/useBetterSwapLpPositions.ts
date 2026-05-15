@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { formatUnits } from 'ethers';
@@ -30,6 +31,8 @@ export type LpPosition = {
     valueUsd: number;
     valueInCurrency: number;
 };
+
+type LpRawPosition = Omit<LpPosition, 'valueUsd' | 'valueInCurrency'>;
 
 const ERC20_MINI_ABI = [
     {
@@ -112,7 +115,7 @@ export const useBetterSwapLpPositions = (address?: string) => {
         ],
         enabled,
         staleTime: 60_000,
-        queryFn: async (): Promise<LpPosition[]> => {
+        queryFn: async (): Promise<LpRawPosition[]> => {
             if (!address || !pairs.length) return [];
 
             const pairAbi = UniswapV2Pair__factory.abi;
@@ -196,7 +199,7 @@ export const useBetterSwapLpPositions = (address?: string) => {
                 });
             }
 
-            const positions: LpPosition[] = [];
+            const rawPositions: LpRawPosition[] = [];
             for (let i = 0; i < ownedIndexes.length; i++) {
                 const pairIndex = ownedIndexes[i];
                 const pairAddress = validPairs[pairIndex];
@@ -219,16 +222,7 @@ export const useBetterSwapLpPositions = (address?: string) => {
                 const amount0 = Number(formatUnits(reserve0, 18)) * share;
                 const amount1 = Number(formatUnits(reserve1, 18)) * share;
 
-                const price0 = prices[token0Addr.toLowerCase()] || 0;
-                const price1 = prices[token1Addr.toLowerCase()] || 0;
-                const valueUsd = amount0 * price0 + amount1 * price1;
-                const valueInCurrency = convertToSelectedCurrency(
-                    valueUsd,
-                    currentCurrency as SupportedCurrency,
-                    exchangeRates,
-                );
-
-                positions.push({
+                rawPositions.push({
                     pairAddress,
                     lpBalance: lpBalanceFormatted,
                     sharePct: share * 100,
@@ -244,16 +238,34 @@ export const useBetterSwapLpPositions = (address?: string) => {
                             symbolByAddr.get(token1Addr.toLowerCase()) ?? '',
                         amount: amount1,
                     },
-                    valueUsd,
-                    valueInCurrency,
                 });
             }
 
-            return positions;
+            return rawPositions;
         },
     });
 
-    const positions = query.data ?? [];
+    // USD/currency derived from live prices so a late-arriving price query
+    // repopulates values without re-running the on-chain query.
+    const positions = useMemo<LpPosition[]>(() => {
+        const raw = query.data ?? [];
+        return raw.map((p) => {
+            const price0 = prices[p.token0.address.toLowerCase()] || 0;
+            const price1 = prices[p.token1.address.toLowerCase()] || 0;
+            const valueUsd =
+                p.token0.amount * price0 + p.token1.amount * price1;
+            return {
+                ...p,
+                valueUsd,
+                valueInCurrency: convertToSelectedCurrency(
+                    valueUsd,
+                    currentCurrency as SupportedCurrency,
+                    exchangeRates,
+                ),
+            };
+        });
+    }, [query.data, prices, currentCurrency, exchangeRates]);
+
     const totalValueUsd = positions.reduce((acc, p) => acc + p.valueUsd, 0);
     const totalValueInCurrency = positions.reduce(
         (acc, p) => acc + p.valueInCurrency,

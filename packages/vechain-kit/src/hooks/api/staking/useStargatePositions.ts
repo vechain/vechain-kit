@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { formatUnits } from 'ethers';
@@ -23,6 +24,11 @@ export type StargatePosition = {
     valueInCurrency: number;
     isDelegated: boolean;
 };
+
+type StargateRawPosition = Omit<
+    StargatePosition,
+    'valueUsd' | 'valueInCurrency'
+>;
 
 export type StargatePositionsResult = {
     positions: StargatePosition[];
@@ -60,7 +66,7 @@ export const useStargatePositions = (
         ],
         enabled,
         staleTime: 60_000,
-        queryFn: async (): Promise<StargatePosition[]> => {
+        queryFn: async (): Promise<StargateRawPosition[]> => {
             if (!address) return [];
 
             const nftAbi = StargateNFT__factory.abi;
@@ -108,7 +114,7 @@ export const useStargatePositions = (
                 ]),
             });
 
-            const positions: StargatePosition[] = [];
+            const rawPositions: StargateRawPosition[] = [];
             for (let i = 0; i < tokenIds.length; i++) {
                 const tokenStruct = detailsRes[i * 2] as unknown as {
                     tokenId: bigint;
@@ -120,30 +126,41 @@ export const useStargatePositions = (
                 );
 
                 const vetAmountStaked = tokenStruct.vetAmountStaked.toString();
-                const vetFormatted = Number(formatUnits(tokenStruct.vetAmountStaked, 18));
-                const valueUsd = vetFormatted * vetPriceUsd;
-                const valueInCurrency = convertToSelectedCurrency(
-                    valueUsd,
-                    currentCurrency as SupportedCurrency,
-                    exchangeRates,
+                const vetFormatted = Number(
+                    formatUnits(tokenStruct.vetAmountStaked, 18),
                 );
 
-                positions.push({
+                rawPositions.push({
                     tokenId: tokenStruct.tokenId.toString(),
                     levelId: Number(tokenStruct.levelId),
                     vetAmountStaked,
                     vetAmountFormatted: vetFormatted,
-                    valueUsd,
-                    valueInCurrency,
                     isDelegated: delegationStatus !== 0,
                 });
             }
 
-            return positions;
+            return rawPositions;
         },
     });
 
-    const positions = query.data ?? [];
+    // USD/currency are derived from live prices so a late-arriving price
+    // query repopulates values without re-running the on-chain query.
+    const positions = useMemo<StargatePosition[]>(() => {
+        const raw = query.data ?? [];
+        return raw.map((p) => {
+            const valueUsd = p.vetAmountFormatted * vetPriceUsd;
+            return {
+                ...p,
+                valueUsd,
+                valueInCurrency: convertToSelectedCurrency(
+                    valueUsd,
+                    currentCurrency as SupportedCurrency,
+                    exchangeRates,
+                ),
+            };
+        });
+    }, [query.data, vetPriceUsd, currentCurrency, exchangeRates]);
+
     const totalVet = positions.reduce((acc, p) => acc + p.vetAmountFormatted, 0);
     const totalValueUsd = positions.reduce((acc, p) => acc + p.valueUsd, 0);
     const totalValueInCurrency = positions.reduce(

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useThor } from '@vechain/dapp-kit-react';
 import { formatUnits } from 'ethers';
@@ -30,6 +31,11 @@ export type JuicyAssetPosition = {
     valueUsd: number;
     valueInCurrency: number;
 };
+
+type JuicyRawAssetPosition = Omit<
+    JuicyAssetPosition,
+    'valueUsd' | 'valueInCurrency'
+>;
 
 export type JuicyPositionResult = {
     supplied: JuicyAssetPosition[];
@@ -71,8 +77,8 @@ export const useJuicyPosition = (address?: string): JuicyPositionResult => {
         queryFn: async () => {
             if (!address || !poolAddress) {
                 return {
-                    supplied: [] as JuicyAssetPosition[],
-                    borrowed: [] as JuicyAssetPosition[],
+                    supplied: [] as JuicyRawAssetPosition[],
+                    borrowed: [] as JuicyRawAssetPosition[],
                     healthFactor: null as number | null,
                 };
             }
@@ -87,8 +93,8 @@ export const useJuicyPosition = (address?: string): JuicyPositionResult => {
 
             if (!reserveList.length) {
                 return {
-                    supplied: [] as JuicyAssetPosition[],
-                    borrowed: [] as JuicyAssetPosition[],
+                    supplied: [] as JuicyRawAssetPosition[],
+                    borrowed: [] as JuicyRawAssetPosition[],
                     healthFactor: null as number | null,
                 };
             }
@@ -204,8 +210,8 @@ export const useJuicyPosition = (address?: string): JuicyPositionResult => {
                 }),
             );
 
-            const supplied: JuicyAssetPosition[] = [];
-            const borrowed: JuicyAssetPosition[] = [];
+            const supplied: JuicyRawAssetPosition[] = [];
+            const borrowed: JuicyRawAssetPosition[] = [];
 
             for (let i = 0; i < tokens.length; i++) {
                 const asset = tokens[i].asset;
@@ -214,43 +220,24 @@ export const useJuicyPosition = (address?: string): JuicyPositionResult => {
                     symbol: asset.slice(0, 6),
                     decimals: 18,
                 };
-                const priceUsd = prices[lower] ?? prices[asset] ?? 0;
 
                 const aBal = supplyRaw[i];
                 if (aBal > 0n) {
-                    const amount = Number(formatUnits(aBal, meta.decimals));
-                    const valueUsd = amount * priceUsd;
                     supplied.push({
                         asset,
                         symbol: meta.symbol,
                         decimals: meta.decimals,
-                        amount,
-                        valueUsd,
-                        valueInCurrency: convertToSelectedCurrency(
-                            valueUsd,
-                            currentCurrency as SupportedCurrency,
-                            exchangeRates,
-                        ),
+                        amount: Number(formatUnits(aBal, meta.decimals)),
                     });
                 }
 
                 const debtRaw = variableDebtRaw[i] + stableDebtRaw[i];
                 if (debtRaw > 0n) {
-                    const amount = Number(
-                        formatUnits(debtRaw, meta.decimals),
-                    );
-                    const valueUsd = amount * priceUsd;
                     borrowed.push({
                         asset,
                         symbol: meta.symbol,
                         decimals: meta.decimals,
-                        amount,
-                        valueUsd,
-                        valueInCurrency: convertToSelectedCurrency(
-                            valueUsd,
-                            currentCurrency as SupportedCurrency,
-                            exchangeRates,
-                        ),
+                        amount: Number(formatUnits(debtRaw, meta.decimals)),
                     });
                 }
             }
@@ -272,8 +259,31 @@ export const useJuicyPosition = (address?: string): JuicyPositionResult => {
     });
 
     const data = query.data;
-    const supplied = data?.supplied ?? [];
-    const borrowed = data?.borrowed ?? [];
+
+    // USD/currency derived from live prices so a late-arriving price query
+    // repopulates values without re-running the on-chain query.
+    const { supplied, borrowed } = useMemo(() => {
+        const enrich = (raw: JuicyRawAssetPosition[]): JuicyAssetPosition[] =>
+            raw.map((p) => {
+                const lower = p.asset.toLowerCase();
+                const priceUsd = prices[lower] ?? prices[p.asset] ?? 0;
+                const valueUsd = p.amount * priceUsd;
+                return {
+                    ...p,
+                    valueUsd,
+                    valueInCurrency: convertToSelectedCurrency(
+                        valueUsd,
+                        currentCurrency as SupportedCurrency,
+                        exchangeRates,
+                    ),
+                };
+            });
+        return {
+            supplied: enrich(data?.supplied ?? []),
+            borrowed: enrich(data?.borrowed ?? []),
+        };
+    }, [data, prices, currentCurrency, exchangeRates]);
+
     const totalSuppliedUsd = supplied.reduce((s, p) => s + p.valueUsd, 0);
     const totalSuppliedInCurrency = supplied.reduce(
         (s, p) => s + p.valueInCurrency,
