@@ -15,13 +15,28 @@ import {
     Divider,
     Heading,
     HStack,
+    Icon,
     Input,
     PinInput,
     PinInputField,
+    SimpleGrid,
     Spinner,
     Stack,
     Text,
 } from '@chakra-ui/react';
+import { FcGoogle } from 'react-icons/fc';
+import {
+    FaApple,
+    FaDiscord,
+    FaGithub,
+    FaInstagram,
+    FaLine,
+    FaLinkedin,
+    FaSpotify,
+    FaTiktok,
+} from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import type { IconType } from 'react-icons';
 import {
     useLoginWithEmail,
     useLoginWithOAuth,
@@ -35,18 +50,25 @@ type ConnectionRequest = ReturnType<
 >;
 
 const OAUTH_PROVIDERS = [
-    { id: 'google', label: 'Continue with Google' },
-    { id: 'apple', label: 'Continue with Apple' },
-    { id: 'twitter', label: 'Continue with X' },
-    { id: 'discord', label: 'Continue with Discord' },
-] as const;
+    { id: 'google', label: 'Continue with Google', Icon: FcGoogle },
+    { id: 'apple', label: 'Continue with Apple', Icon: FaApple },
+    { id: 'twitter', label: 'Continue with X', Icon: FaXTwitter },
+    { id: 'discord', label: 'Continue with Discord', Icon: FaDiscord },
+    { id: 'github', label: 'Continue with GitHub', Icon: FaGithub },
+    { id: 'spotify', label: 'Continue with Spotify', Icon: FaSpotify },
+    { id: 'instagram', label: 'Continue with Instagram', Icon: FaInstagram },
+    { id: 'tiktok', label: 'Continue with TikTok', Icon: FaTiktok },
+    { id: 'line', label: 'Continue with LINE', Icon: FaLine },
+    { id: 'linkedin', label: 'Continue with LinkedIn', Icon: FaLinkedin },
+] as const satisfies ReadonlyArray<{
+    id: string;
+    label: string;
+    Icon: IconType;
+}>;
 type OAuthProvider = (typeof OAUTH_PROVIDERS)[number]['id'];
 
 const INTENT_METHODS = [
-    'google',
-    'apple',
-    'twitter',
-    'discord',
+    ...OAUTH_PROVIDERS.map((p) => p.id),
     'email',
 ] as const;
 type IntentMethod = (typeof INTENT_METHODS)[number];
@@ -376,21 +398,26 @@ function SignInPanel({
 
                     {!showEmail && (
                         <Stack spacing={2}>
-                            {OAUTH_PROVIDERS.map((p) => (
-                                <Button
-                                    key={p.id}
-                                    onClick={() => onOAuth(p.id)}
-                                    isDisabled={oauthLoading}
-                                    variant="outline"
-                                    justifyContent="flex-start"
-                                >
-                                    {p.label}
-                                </Button>
-                            ))}
+                            <SimpleGrid columns={2} spacing={2}>
+                                {OAUTH_PROVIDERS.map((p) => (
+                                    <Button
+                                        key={p.id}
+                                        onClick={() => onOAuth(p.id)}
+                                        isDisabled={oauthLoading}
+                                        variant="outline"
+                                        leftIcon={
+                                            <Icon as={p.Icon} boxSize="20px" />
+                                        }
+                                        justifyContent="flex-start"
+                                    >
+                                        {p.label.replace(/^Continue with /, '')}
+                                    </Button>
+                                ))}
+                            </SimpleGrid>
                             <Button
                                 onClick={() => setShowEmail(true)}
                                 variant="outline"
-                                justifyContent="flex-start"
+                                justifyContent="center"
                             >
                                 Continue with Email
                             </Button>
