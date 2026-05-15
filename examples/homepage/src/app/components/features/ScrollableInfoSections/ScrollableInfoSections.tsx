@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { InfoSection } from '@/app/components/features/InfoSection';
 import { LoginMethodsSection } from '../LoginMethodsSection';
 import { LanguagesSection } from '../LanguagesSection';
+import { AISection } from '../AISection';
+import { BoostedDevSection } from '../BoostedDevSection';
 
 interface ScrollableSection {
     bg?: string;
@@ -17,6 +19,8 @@ interface ScrollableSection {
     mobileImageSrc?: string;
     isLoginMethods?: boolean;
     isLanguages?: boolean;
+    isAi?: boolean;
+    isBoosted?: boolean;
 }
 
 export function ScrollableInfoSections() {
@@ -41,10 +45,19 @@ export function ScrollableInfoSections() {
             content: t(
                 'Use our hooks and components to speed up your development and interact with the blockchain.',
             ),
-            imageSrc:
-                'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/My-App+(1).png',
+            imageSrc: '',
             imageAlt: t('VeChain Kit'),
-            imageWidth: '750px',
+            isBoosted: true,
+        },
+        {
+            bg: '#e8e0d3',
+            title: t('AI-native development'),
+            content: t(
+                'Install VeChain AI Skills into your coding agent and ship dApps faster. Domain knowledge for VeChain Kit, smart contracts, VeBetterDAO and more — built into Claude Code, Cursor, and other agents.',
+            ),
+            imageSrc: '',
+            imageAlt: t('VeChain AI Skills'),
+            isAi: true,
         },
         {
             bg: '#eae3d1',
@@ -189,6 +202,18 @@ export function ScrollableInfoSections() {
                             />
                         ) : section.isLanguages ? (
                             <LanguagesSection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                            />
+                        ) : section.isAi ? (
+                            <AISection
+                                bg={section.bg}
+                                title={section.title}
+                                content={section.content}
+                            />
+                        ) : section.isBoosted ? (
+                            <BoostedDevSection
                                 bg={section.bg}
                                 title={section.title}
                                 content={section.content}
