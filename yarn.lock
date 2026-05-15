@@ -11192,6 +11192,7 @@ __metadata:
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
     "@vechain/dapp-kit-react": "npm:2.1.0-rc.5"
+    "@vechain/sdk-core": "npm:2.0.7"
     "@vechain/sdk-network": "npm:2.0.7"
     "@vechain/vechain-kit": "workspace:*"
     eslint: "npm:^9.12.0"
