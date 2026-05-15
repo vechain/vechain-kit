@@ -21,13 +21,13 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import {
-    LuArrowUpRight,
     LuChevronDown,
     LuChevronUp,
-    LuCircleAlert,
-    LuCircleHelp,
+    LuShieldAlert,
     LuShieldCheck,
+    LuShieldX,
 } from 'react-icons/lu';
+import type { IconType } from 'react-icons';
 import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
 import {
     useSmartAccount,
@@ -41,10 +41,27 @@ import { VechainHeader } from '../../components/VechainHeader';
 import { AddressTag } from '../../components/AddressTag';
 import { AccountChip } from '../../components/AccountChip';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
-import { humanPrimaryType, summarizeActions } from '../_lib/labels';
+import {
+    computeRisk,
+    continueLabel,
+    humanPrimaryType,
+    summarizeActions,
+    titleForActions,
+    uniqueTokensFromDecoded,
+    type Risk,
+} from '../_lib/labels';
 import type { NETWORK_TYPE } from '../_lib/network-tokens';
 import { formatUnits } from 'viem';
 import type { AppConfig } from '@vechain/vechain-kit';
+
+const RISK_SHIELD: Record<
+    Risk,
+    { Icon: IconType; color: string }
+> = {
+    safe: { Icon: LuShieldCheck, color: 'accent' },
+    caution: { Icon: LuShieldAlert, color: 'orange.400' },
+    danger: { Icon: LuShieldX, color: 'red.400' },
+};
 
 const SUPPORTED_METHODS = ['eth_signTypedData_v4'] as const;
 const SUPPORTED_PRIMARY_TYPES = [
@@ -398,12 +415,18 @@ export default function CrossAppTransactPage() {
         decoded?.some(
             (d) => d.kind === 'token_approve' && d.unlimited,
         ) ?? false;
+    const risk = computeRisk(decoded, blocked);
+    const { Icon: ShieldIcon, color: shieldColor } = RISK_SHIELD[risk];
+    const title = titleForActions(decoded, blocked);
+    const ctaLabel = continueLabel(risk);
+    const relevantTokens = uniqueTokensFromDecoded(decoded);
 
     return (
         <PageShell>
             <VechainHeader
-                title="Confirm action"
-                titleIcon={LuShieldCheck}
+                title={title}
+                titleIcon={ShieldIcon}
+                titleIconColor={shieldColor}
                 subtitle={
                     decoded
                         ? summarizeActions(decoded)
@@ -418,6 +441,7 @@ export default function CrossAppTransactPage() {
                             <AccountChip
                                 address={smartAccount.address}
                                 thor={thor ?? null}
+                                relevantTokens={relevantTokens}
                             />
                         )}
                         {stillDecoding ? (
@@ -496,7 +520,7 @@ export default function CrossAppTransactPage() {
                             }
                             w="full"
                         >
-                            {hasUnknown ? 'Continue anyway' : 'Continue'}
+                            {ctaLabel}
                         </Button>
                         <Button
                             variant="ghost"
@@ -588,41 +612,32 @@ function ActionRow({
     appConfig?: AppConfig;
     self?: string;
 }) {
-    const icon =
-        action.kind === 'native_transfer' || action.kind === 'token_transfer'
-            ? LuArrowUpRight
-            : action.kind === 'token_approve'
-            ? LuShieldCheck
-            : LuCircleHelp;
+    // Strong type carries the action -- no leading icon needed. A subtle
+    // left border tinted by risk gives at-a-glance scanning without the
+    // round icon container reading as decorative chrome.
     const accent =
         action.kind === 'unknown'
             ? 'orange.400'
             : action.kind === 'token_approve' &&
               (action as { unlimited: boolean }).unlimited
             ? 'orange.400'
-            : 'text-strong';
+            : 'card-border';
     return (
-        <HStack spacing={3} align="flex-start">
-            <Box
-                p={2}
-                rounded="full"
-                bg="login-btn-hover-bg"
-                color={accent}
-                mt="2px"
-            >
-                <Icon as={icon} boxSize="16px" />
-            </Box>
-            <Stack spacing={0} flex={1} minW={0}>
-                <Text fontWeight={600} color="text-strong">
-                    {action.summary}
-                </Text>
-                <ActionRowDetail
-                    action={action}
-                    appConfig={appConfig}
-                    self={self}
-                />
-            </Stack>
-        </HStack>
+        <Stack
+            spacing={0}
+            pl={3}
+            borderLeftWidth="2px"
+            borderLeftColor={accent}
+        >
+            <Text fontWeight={600} color="text-strong">
+                {action.summary}
+            </Text>
+            <ActionRowDetail
+                action={action}
+                appConfig={appConfig}
+                self={self}
+            />
+        </Stack>
     );
 }
 

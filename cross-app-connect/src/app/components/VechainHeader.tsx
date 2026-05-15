@@ -8,9 +8,16 @@ type Props = {
     title?: string;
     /**
      * Optional icon rendered alongside the title. Used on the transact
-     * screen to anchor a security framing (LuShieldCheck).
+     * screen to anchor a security framing (LuShieldCheck / LuShieldAlert /
+     * LuShieldX depending on risk).
      */
     titleIcon?: IconType;
+    /**
+     * Color token for the title icon. Defaults to 'accent'. The transact
+     * screen passes 'orange.400' / 'red.400' on cautioned / dangerous
+     * transactions so the icon swaps in tandem with the verb.
+     */
+    titleIconColor?: string;
     subtitle?: string;
     /**
      * Requester dApp's callbackUrl. When provided, renders a chip with the
@@ -23,6 +30,7 @@ type Props = {
 export function VechainHeader({
     title = 'Log in to VeChain',
     titleIcon,
+    titleIconColor = 'accent',
     subtitle,
     requesterUrl,
 }: Props) {
@@ -60,7 +68,7 @@ export function VechainHeader({
                     {titleIcon && (
                         <Icon
                             as={titleIcon}
-                            color="accent"
+                            color={titleIconColor}
                             boxSize="18px"
                             aria-hidden
                         />

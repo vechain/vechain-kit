@@ -48,11 +48,30 @@ export function AddressTag({
     const { data: avatar } = useGetAvatarOfAddress(address);
     const resolved = resolveContractLabel(address, appConfig, self);
 
-    // Verified VeChain-maintained contract: label + check, no avatar (the
-    // entity's branding is implicit in the name).
+    // Verified VeChain-maintained contract: avatar (Picasso identicon)
+    // + friendly label + check. Avatar is here for visual consistency with
+    // unresolved addresses -- otherwise verified contracts feel like a
+    // different family.
     if (resolved) {
         return (
-            <HStack spacing={1} align="center">
+            <HStack spacing={2} align="center">
+                {avatar && (
+                    <Image
+                        src={avatar}
+                        alt=""
+                        boxSize={`${avatarSize}px`}
+                        rounded="full"
+                        draggable={false}
+                        fallback={
+                            <span
+                                style={{
+                                    width: avatarSize,
+                                    height: avatarSize,
+                                }}
+                            />
+                        }
+                    />
+                )}
                 <Text fontWeight={500} color="text-strong">
                     {resolved.label}
                 </Text>

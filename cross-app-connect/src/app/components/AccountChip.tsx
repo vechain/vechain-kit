@@ -19,11 +19,30 @@ import {
     useGetAvatarOfAddress,
     useVechainDomain,
 } from '@vechain/vechain-kit';
-import { formatUnits } from 'viem';
+import { executeCallClause } from '@vechain/vechain-kit/utils';
+import { formatUnits, parseAbi } from 'viem';
+import type { TokenInfo } from '../cross-app/_lib/decoder';
+
+const ERC20_BALANCE_ABI = parseAbi([
+    'function balanceOf(address owner) view returns (uint256)',
+]);
 
 type Props = {
     address: string;
     thor: ThorClient | null;
+    /**
+     * Additional tokens (beyond native VET) to display the user's balance
+     * for. Typically the tokens the current transaction touches.
+     */
+    relevantTokens?: TokenInfo[];
+};
+
+type LiveBalance = { token: TokenInfo; raw: bigint };
+
+const VET_TOKEN: TokenInfo = {
+    address: 'VET',
+    symbol: 'VET',
+    decimals: 18,
 };
 
 function truncate(addr: string): string {
@@ -44,30 +63,63 @@ function formatVET(raw: bigint): string {
  * its VeChain domain (if any) plus the avatar (custom for .vet domains,
  * Picasso identicon as fallback), a copy button, and the live VET balance.
  */
-export function AccountChip({ address, thor }: Props) {
+export function AccountChip({ address, thor, relevantTokens }: Props) {
     const { onCopy, hasCopied } = useClipboard(address);
-    const [balance, setBalance] = useState<bigint | null>(null);
+    const [balances, setBalances] = useState<LiveBalance[] | null>(null);
     const { data: domainInfo } = useVechainDomain(address);
     const { data: avatar } = useGetAvatarOfAddress(address);
+
+    const tokenKey = (relevantTokens ?? [])
+        .map((t) => t.address.toLowerCase())
+        .sort()
+        .join(',');
 
     useEffect(() => {
         if (!thor || !address) return;
         let cancelled = false;
         (async () => {
             try {
-                const acc = await thor.accounts.getAccount(
-                    Address.of(address),
-                );
-                if (!cancelled) setBalance(BigInt(acc.balance.toString()));
+                // VET always shown first; then any tokens the transaction
+                // touches. Single Thor batch via Promise.all -- each is its
+                // own request but they fire in parallel.
+                const vetTask = thor.accounts
+                    .getAccount(Address.of(address))
+                    .then((acc) => ({
+                        token: VET_TOKEN,
+                        raw: BigInt(acc.balance.toString()),
+                    }));
+                const erc20Tasks = (relevantTokens ?? [])
+                    .filter(
+                        (t) => t.address !== 'VET' && t.address !== 'vet',
+                    )
+                    .map(async (token) => {
+                        const res = await executeCallClause({
+                            thor,
+                            contractAddress: token.address,
+                            abi: ERC20_BALANCE_ABI,
+                            method: 'balanceOf' as const,
+                            args: [address as `0x${string}`],
+                        });
+                        return {
+                            token,
+                            raw: BigInt(
+                                (res as unknown as [bigint])[0],
+                            ),
+                        };
+                    });
+                const results = await Promise.all([
+                    vetTask,
+                    ...erc20Tasks,
+                ]);
+                if (!cancelled) setBalances(results);
             } catch {
-                // Network hiccup — leave balance null and let the chip render
-                // without it.
+                if (!cancelled) setBalances(null);
             }
         })();
         return () => {
             cancelled = true;
         };
-    }, [thor, address]);
+    }, [thor, address, tokenKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const domain = domainInfo?.domain;
 
@@ -155,19 +207,24 @@ export function AccountChip({ address, thor }: Props) {
                     </Tooltip>
                 </HStack>
             </Stack>
-            {balance !== null && (
+            {balances && balances.length > 0 && (
                 <Stack spacing={0} align="flex-end">
                     <Text fontSize="xs" color="text-subtle">
                         Balance
                     </Text>
-                    <Text
-                        fontSize="sm"
-                        fontWeight={600}
-                        color="text-strong"
-                        fontFamily="mono"
-                    >
-                        {formatVET(balance)} VET
-                    </Text>
+                    <Stack spacing={0} align="flex-end">
+                        {balances.map((b) => (
+                            <Text
+                                key={b.token.address}
+                                fontSize="sm"
+                                fontWeight={600}
+                                color="text-strong"
+                                fontFamily="mono"
+                            >
+                                {formatVET(b.raw)} {b.token.symbol}
+                            </Text>
+                        ))}
+                    </Stack>
                 </Stack>
             )}
         </HStack>
