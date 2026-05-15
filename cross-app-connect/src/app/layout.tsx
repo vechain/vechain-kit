@@ -3,6 +3,7 @@
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import { vechainTheme } from './theme';
+import { ColorModeToggle } from './components/ColorModeToggle';
 import './globals.css';
 
 const VechainKitProviderWrapper = dynamic(
@@ -36,13 +37,14 @@ export default function RootLayout({
                     rel="stylesheet"
                 />
             </head>
-            <body>
+            <body suppressHydrationWarning>
                 <ColorModeScript
                     initialColorMode={vechainTheme.config.initialColorMode}
                 />
                 <ChakraProvider theme={vechainTheme}>
                     <VechainKitProviderWrapper>
                         {children}
+                        <ColorModeToggle />
                     </VechainKitProviderWrapper>
                 </ChakraProvider>
             </body>
