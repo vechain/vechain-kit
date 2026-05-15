@@ -4913,6 +4913,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@privy-io/cross-app-provider@npm:^0.3.4":
+  version: 0.3.4
+  resolution: "@privy-io/cross-app-provider@npm:0.3.4"
+  dependencies:
+    "@noble/curves": "npm:^1.5.0"
+    "@privy-io/encoding": "npm:0.1.3"
+    "@privy-io/web-storage": "npm:0.0.4"
+    "@scure/base": "npm:^1.2.6"
+    fflate: "npm:^0.8.2"
+  checksum: 10c0/904e09d68780e7c71f432ca8f098d7069c0d622e860f1c7ad5cd9093f36e04a3f44bb5755e14a589ba7b7d20d01f336216d2075e18e93f96aa367053f94c9b4a
+  languageName: node
+  linkType: hard
+
+"@privy-io/encoding@npm:0.1.3":
+  version: 0.1.3
+  resolution: "@privy-io/encoding@npm:0.1.3"
+  dependencies:
+    "@scure/base": "npm:^1.2.6"
+  checksum: 10c0/3b5732af08e339a260201f8b8dda63cad1c223c77bdca567ba4782c7467d4d6e4843703e1a78eb4b11ad02c6ec385a8d578f8d622932cbcda77c1d4b7c143137
+  languageName: node
+  linkType: hard
+
 "@privy-io/ethereum@npm:0.0.2":
   version: 0.0.2
   resolution: "@privy-io/ethereum@npm:0.0.2"
@@ -5098,6 +5120,13 @@ __metadata:
     viem:
       optional: true
   checksum: 10c0/9dd5525c66eb3d36bdaa9312e381fe5963587909a0fcf5270267a33e6168a40bdf7f5637afcab4db43840ee0df82ec438f62ff65b7062363e83d5df6f94a9290
+  languageName: node
+  linkType: hard
+
+"@privy-io/web-storage@npm:0.0.4":
+  version: 0.0.4
+  resolution: "@privy-io/web-storage@npm:0.0.4"
+  checksum: 10c0/5b6245c70052470962e3bb09b2ba561fe4a94dffc4a22c5546e8d66f997848b259bd6a12731a1bcaa6b455f6e841c353cf672181ffc3a6c438dd025ea36f4240
   languageName: node
   linkType: hard
 
@@ -11139,6 +11168,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-app-connect@workspace:cross-app-connect":
+  version: 0.0.0-use.local
+  resolution: "cross-app-connect@workspace:cross-app-connect"
+  dependencies:
+    "@chakra-ui/react": "npm:2.8.2"
+    "@emotion/react": "npm:^11.13.5"
+    "@emotion/styled": "npm:^11.13.5"
+    "@next/eslint-plugin-next": "npm:^14.1.4"
+    "@privy-io/cross-app-provider": "npm:^0.3.4"
+    "@privy-io/react-auth": "npm:2.25.0"
+    "@tanstack/react-query": "npm:^5.64.2"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^18"
+    "@types/react-dom": "npm:^18"
+    "@vechain/vechain-kit": "workspace:*"
+    eslint: "npm:^9.12.0"
+    eslint-config-next: "npm:14.1.4"
+    next: "npm:~16.2.3"
+    react: "npm:^18"
+    react-dom: "npm:^18"
+    typescript: "npm:5.3.3"
+  languageName: unknown
+  linkType: soft
+
 "cross-env@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-env@npm:7.0.3"
@@ -12787,7 +12840,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fflate@npm:0.8.2":
+"fflate@npm:0.8.2, fflate@npm:^0.8.2":
   version: 0.8.2
   resolution: "fflate@npm:0.8.2"
   checksum: 10c0/03448d630c0a583abea594835a9fdb2aaf7d67787055a761515bf4ed862913cfd693b4c4ffd5c3f3b355a70cf1e19033e9ae5aedcca103188aaff91b8bd6e293
