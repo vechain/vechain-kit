@@ -37,6 +37,7 @@ import type { IconType } from 'react-icons';
 import {
     useLoginWithEmail,
     useLoginWithOAuth,
+    useLogout,
     usePrivy,
     useWallets,
 } from '@privy-io/react-auth';
@@ -75,10 +76,13 @@ function isIntent(value: string | null): value is IntentMethod {
     return !!value && (INTENT_METHODS as readonly string[]).includes(value);
 }
 
+const OAUTH_ATTEMPTED_STORAGE_KEY = 'vk-cross-app-connect:oauth-attempted';
+
 export default function CrossAppConnectPage() {
     const client = useCrossAppClient();
     const { ready, authenticated, user, getAccessToken } = usePrivy();
     const { wallets } = useWallets();
+    const { logout } = useLogout();
 
     const [request, setRequest] = useState<ConnectionRequest | null>(null);
     const [parseError, setParseError] = useState<
@@ -156,17 +160,36 @@ export default function CrossAppConnectPage() {
         }
     }, [client, request, getAccessToken]);
 
-    // Once the user authenticates in this popup session (OAuth/email flow),
-    // accept the connection automatically -- they already opted in by clicking
-    // the login button on the requester dApp, so a separate Accept click is
-    // redundant.
+    // If the popup opens with ?intent=<provider> but the user is already
+    // authenticated (likely from a previous popup session in the same
+    // browser), logout first so the requested provider's OAuth flow runs
+    // cleanly. Otherwise the user would see their old session and the intent
+    // would be silently ignored.
     //
-    // If the user was *already* authenticated when the popup opened (returning
-    // user with a live Privy session), don't auto-accept: snapping the popup
-    // open-and-shut with no visible step is jarring, and a returning user
-    // deserves an explicit confirmation that they're connecting to this
-    // requester. The manual Accept button stays available in both cases as a
-    // fallback for retries after errors.
+    // Guard: skip the logout if sessionStorage shows we've already initiated
+    // an OAuth attempt for this intent. That means we're back from the OAuth
+    // redirect and the current session IS the one the user just authenticated
+    // with -- logging out again would loop.
+    const logoutForIntentRef = useRef(false);
+    useEffect(() => {
+        if (!ready) return;
+        if (!intent || intent === 'email') return;
+        if (!authenticated) return;
+        if (logoutForIntentRef.current) return;
+        if (typeof sessionStorage !== 'undefined') {
+            if (
+                sessionStorage.getItem(OAUTH_ATTEMPTED_STORAGE_KEY) === intent
+            ) {
+                return;
+            }
+        }
+        logoutForIntentRef.current = true;
+        logout().catch((e) => console.error('Failed to logout:', e));
+    }, [ready, intent, authenticated, logout]);
+
+    // Capture initial auth state so the no-intent flow can distinguish
+    // returning users (who get a manual Connect button) from users who
+    // authenticated during this popup session (auto-accept).
     const initialAuthRef = useRef<boolean | undefined>(undefined);
     useEffect(() => {
         if (!ready) return;
@@ -174,15 +197,32 @@ export default function CrossAppConnectPage() {
         initialAuthRef.current = authenticated;
     }, [ready, authenticated]);
 
+    // Auto-accept when:
+    //   - the user came with an explicit intent (they already consented by
+    //     clicking the provider's button on the requester dApp), OR
+    //   - the user just authenticated in this popup session via the
+    //     all-providers picker (initialAuth was false).
+    // Returning users with no intent get the manual Accept button so they
+    // can confirm the requester.
     const autoAcceptedRef = useRef(false);
     useEffect(() => {
         if (autoAcceptedRef.current) return;
-        if (initialAuthRef.current !== false) return;
         if (!authenticated || !embedded || !request) return;
         if (submitting || submitError) return;
+        const cameWithIntent = intent !== null;
+        const justAuthenticatedFresh = initialAuthRef.current === false;
+        if (!cameWithIntent && !justAuthenticatedFresh) return;
         autoAcceptedRef.current = true;
         onAccept();
-    }, [authenticated, embedded, request, submitting, submitError, onAccept]);
+    }, [
+        authenticated,
+        embedded,
+        request,
+        submitting,
+        submitError,
+        intent,
+        onAccept,
+    ]);
 
     if (parseError?.kind === 'no_params') {
         return (
@@ -330,16 +370,15 @@ function SignInPanel({
         if (!intent || intent === 'email') return;
         if (oauthLoading) return;
         if (autoLoginAttempted) return;
-        const STORAGE_KEY = 'vk-cross-app-connect:oauth-attempted';
         if (
             typeof sessionStorage !== 'undefined' &&
-            sessionStorage.getItem(STORAGE_KEY) === intent
+            sessionStorage.getItem(OAUTH_ATTEMPTED_STORAGE_KEY) === intent
         ) {
             setAutoLoginAttempted(true);
             return;
         }
         if (typeof sessionStorage !== 'undefined') {
-            sessionStorage.setItem(STORAGE_KEY, intent);
+            sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
         }
         setAutoLoginAttempted(true);
         initOAuth({ provider: intent as OAuthProvider }).catch((e) =>
