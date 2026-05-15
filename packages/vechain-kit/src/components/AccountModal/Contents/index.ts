@@ -13,4 +13,7 @@ export * from './TermsAndPrivacy';
 export * from './DisconnectConfirmation';
 export * from './SelectWallet';
 export * from './TokenDetail';
+export * from './NftDetail';
+export * from './NftCollection';
+export * from './SendNft';
 export * from './TransactionHistory';

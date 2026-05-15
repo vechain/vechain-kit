@@ -41,6 +41,7 @@ export type AppConfig = {
     navigatorRegistryContractAddress: string;
     betterSwapFactoryAddress: string;
     juicyPoolAddress: string;
+    nftBlacklistContractAddress?: string;
     vetDomainAvatarUrl: string;
     nodeUrl: string;
     indexerUrl: string;

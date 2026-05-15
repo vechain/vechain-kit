@@ -16,6 +16,10 @@ import {
     ProfileContent,
     AssetsContent,
     TokenDetailContent,
+    NftDetailContent,
+    NftCollectionContent,
+    SendNftContent,
+    SendNftSummaryContent,
     TransactionHistoryContent,
     TransactionDetailContent,
     LanguageSettingsContent,
@@ -79,6 +83,18 @@ export const AccountModal = ({
                     );
                 case 'token-detail':
                     return <TokenDetailContent {...currentContent.props} />;
+                case 'nft-collection':
+                    return (
+                        <NftCollectionContent {...currentContent.props} />
+                    );
+                case 'nft-detail':
+                    return <NftDetailContent {...currentContent.props} />;
+                case 'send-nft':
+                    return <SendNftContent {...currentContent.props} />;
+                case 'send-nft-summary':
+                    return (
+                        <SendNftSummaryContent {...currentContent.props} />
+                    );
                 case 'transaction-history':
                     return (
                         <TransactionHistoryContent {...currentContent.props} />

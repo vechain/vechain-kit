@@ -8,13 +8,14 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
-export type AssetsTabIndex = 0 | 1;
+export type AssetsTabIndex = 0 | 1 | 2;
 
 type Props = {
     tabIndex: AssetsTabIndex;
     onTabChange: (index: AssetsTabIndex) => void;
     tokenPanel: React.ReactNode;
     stakingPanel: React.ReactNode;
+    nftsPanel: React.ReactNode;
 };
 
 export const AssetsTabs = ({
@@ -22,6 +23,7 @@ export const AssetsTabs = ({
     onTabChange,
     tokenPanel,
     stakingPanel,
+    nftsPanel,
 }: Props) => {
     const { t } = useTranslation();
 
@@ -39,6 +41,9 @@ export const AssetsTabs = ({
                 <Tab fontWeight="600" fontSize="md">
                     {t('Staking')}
                 </Tab>
+                <Tab fontWeight="600" fontSize="md">
+                    {t('NFTs')}
+                </Tab>
             </TabList>
             <TabIndicator mt="-2px" height="2px" bg="vechain-kit-accent" />
 
@@ -48,6 +53,9 @@ export const AssetsTabs = ({
                 </TabPanel>
                 <TabPanel px={0} pt={4}>
                     {stakingPanel}
+                </TabPanel>
+                <TabPanel px={0} pt={4}>
+                    {nftsPanel}
                 </TabPanel>
             </TabPanels>
         </Tabs>

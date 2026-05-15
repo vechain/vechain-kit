@@ -100,5 +100,7 @@ const config: AppConfig = {
     betterSwapFactoryAddress: '0x5970DcBeBAc33e75eFf315C675f1d2654f7bF1f5',
     // lending
     juicyPoolAddress: '0x00Bd212704A8816264607a7110cCabe70219D5aB',
+    // nft blacklist (VeWorld scam protection)
+    nftBlacklistContractAddress: '0x0f9b01618cd5e0030f8e26ff61bc1349cb9eb8d5',
 };
 export default config;

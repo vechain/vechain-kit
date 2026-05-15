@@ -22,6 +22,7 @@ import {
 } from './Components/AssetsTabs';
 import { TokensTab } from './Components/TokensTab';
 import { StakingTab } from './Components/StakingTab';
+import { NftsTab } from './Components/NftsTab';
 
 export type AssetsContentProps = {
     setCurrentContent: React.Dispatch<
@@ -39,6 +40,17 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
         setCurrentContent({
             type: 'token-detail',
             props: { setCurrentContent, token },
+        });
+    };
+
+    const handleCollectionSelect = (collectionAddress: string) => {
+        setCurrentContent({
+            type: 'nft-collection',
+            props: {
+                setCurrentContent,
+                collectionAddress,
+                onBack: () => setCurrentContent('assets'),
+            },
         });
     };
 
@@ -107,6 +119,11 @@ export const AssetsContent = ({ setCurrentContent }: AssetsContentProps) => {
                                 />
                             }
                             stakingPanel={<StakingTab />}
+                            nftsPanel={
+                                <NftsTab
+                                    onSelectCollection={handleCollectionSelect}
+                                />
+                            }
                         />
                     </VStack>
                 </ModalBody>

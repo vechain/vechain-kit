@@ -5,3 +5,4 @@ export * from './ipfs';
 export * from './swap';
 export * from './transferHistory';
 export * from './staking';
+export * from './nfts';
