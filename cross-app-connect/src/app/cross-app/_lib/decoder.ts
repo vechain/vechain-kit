@@ -22,12 +22,19 @@ import {
     parseAbi,
     isAddress,
 } from 'viem';
+import type { ThorClient } from '@vechain/sdk-network';
+import { executeCallClause } from '@vechain/vechain-kit/utils';
 import { type NETWORK_TYPE, getConfig } from './network-tokens';
 
 const ERC20_ABI = parseAbi([
     'function transfer(address to, uint256 amount)',
     'function approve(address spender, uint256 amount)',
     'function transferFrom(address from, address to, uint256 amount)',
+]);
+
+const ERC20_METADATA_ABI = parseAbi([
+    'function symbol() view returns (string)',
+    'function decimals() view returns (uint8)',
 ]);
 
 const SELECTOR_TRANSFER = '0xa9059cbb';
@@ -80,6 +87,7 @@ export type DecodedClause =
 
 export async function decodeClause(
     clause: Clause,
+    thor: ThorClient | null,
     network: NETWORK_TYPE,
 ): Promise<DecodedClause> {
     const data = (clause.data ?? '0x').toLowerCase();
@@ -114,7 +122,11 @@ export async function decodeClause(
                     abi: ERC20_ABI,
                     data: data as `0x${string}`,
                 });
-                const token = lookupToken(clause.to, network);
+                const token = await lookupToken(
+                    clause.to,
+                    network,
+                    thor,
+                );
                 if (decoded.functionName === 'transfer') {
                     const [recipient, raw] = decoded.args as [
                         string,
@@ -225,14 +237,60 @@ async function fetchB32Signature(selector: string): Promise<string | null> {
     }
 }
 
+const tokenInfoCache = new Map<string, TokenInfo>();
+
 /**
- * Static address-book lookup. Covers VET / VTHO / B3TR / VOT3 across
- * mainnet, testnet, and solo. Unknown ERC-20s render as a generic "tokens"
- * label with 18 decimals as a best guess; a future iteration can resolve
- * symbol/decimals from Thor for arbitrary tokens.
+ * Resolve a token's symbol + decimals. Order:
+ *   1. Static address book (VET, VTHO, B3TR, VOT3 — instant).
+ *   2. In-memory cache from a previous live lookup.
+ *   3. Live Thor read of `symbol()` + `decimals()` on the contract.
+ *   4. Generic "tokens" / 18-decimals fallback if the contract doesn't
+ *      implement the standard interface or Thor is unreachable.
  */
-function lookupToken(address: string, network: NETWORK_TYPE): TokenInfo {
-    const known = getConfig(network)[address.toLowerCase()];
+async function lookupToken(
+    address: string,
+    network: NETWORK_TYPE,
+    thor: ThorClient | null,
+): Promise<TokenInfo> {
+    const lower = address.toLowerCase();
+    const known = getConfig(network)[lower];
     if (known) return known;
-    return { address, symbol: 'tokens', decimals: 18 };
+    const cached = tokenInfoCache.get(lower);
+    if (cached) return cached;
+    if (!thor) {
+        return { address, symbol: 'tokens', decimals: 18 };
+    }
+    try {
+        const [symbolRes, decimalsRes] = await Promise.all([
+            executeCallClause({
+                thor,
+                contractAddress: address,
+                abi: ERC20_METADATA_ABI,
+                method: 'symbol' as const,
+                args: [],
+            }),
+            executeCallClause({
+                thor,
+                contractAddress: address,
+                abi: ERC20_METADATA_ABI,
+                method: 'decimals' as const,
+                args: [],
+            }),
+        ]);
+        const info: TokenInfo = {
+            address,
+            symbol: String((symbolRes as unknown as [string])[0]),
+            decimals: Number((decimalsRes as unknown as [number])[0]),
+        };
+        tokenInfoCache.set(lower, info);
+        return info;
+    } catch {
+        const fallback: TokenInfo = {
+            address,
+            symbol: 'tokens',
+            decimals: 18,
+        };
+        tokenInfoCache.set(lower, fallback);
+        return fallback;
+    }
 }

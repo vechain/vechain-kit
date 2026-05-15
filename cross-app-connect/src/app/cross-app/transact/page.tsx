@@ -34,6 +34,7 @@ import {
     useGetChainId,
     useVeChainKitConfig,
 } from '@vechain/vechain-kit';
+import { useThor } from '@vechain/dapp-kit-react';
 import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/connect';
 import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
@@ -110,6 +111,7 @@ export default function CrossAppTransactPage() {
     const { data: smartAccount } = useSmartAccount(embedded?.address);
     const { data: kitChainId } = useGetChainId();
     const { network } = useVeChainKitConfig();
+    const thor = useThor();
 
     const [verified, setVerified] = useState<VerifiedTransactionRequest | null>(
         null,
@@ -236,7 +238,11 @@ export default function CrossAppTransactPage() {
         (async () => {
             const results = await Promise.all(
                 parsed.clauses.map((c) =>
-                    decodeClause(c, network.type as NETWORK_TYPE),
+                    decodeClause(
+                        c,
+                        thor ?? null,
+                        network.type as NETWORK_TYPE,
+                    ),
                 ),
             );
             if (!cancelled) setDecoded(results);
@@ -244,7 +250,7 @@ export default function CrossAppTransactPage() {
         return () => {
             cancelled = true;
         };
-    }, [parsed, network.type]);
+    }, [parsed, thor, network.type]);
 
     const onApprove = useCallback(async () => {
         if (!verified || !parsed) return;
