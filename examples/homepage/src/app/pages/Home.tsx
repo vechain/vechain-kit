@@ -4,7 +4,6 @@ import { type ReactElement, useRef } from 'react';
 import {
     VStack,
     Text,
-    Link,
     Card,
     useColorMode,
     Box,
@@ -19,6 +18,7 @@ import { TestimonialSection } from '@/app/components/features/TestimonialSection
 import { AppShowcase } from '@/app/components/features/AppShowcase';
 import { FAQSection } from '../components/features/FAQSection';
 import { QuickStartSection } from '../components/features/QuickStartSection';
+import { AISkillsSection } from '../components/features/AISkillsSection';
 import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetStartedButton/FloatingGetStartedButton';
 
@@ -27,6 +27,13 @@ export default function Home(): ReactElement {
     const { t } = useTranslation();
     const heroSectionRef = useRef<HTMLDivElement>(null);
     const scrollableSectionsRef = useRef<HTMLDivElement>(null);
+
+    const scrollToAiSkills = () => {
+        const el = document.getElementById('ai-skills');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
 
     return (
         <VStack spacing={0} align="stretch" minH="100vh">
@@ -40,16 +47,14 @@ export default function Home(): ReactElement {
                         py={10}
                         px={4}
                     >
-                        🎉​ {t('Version 2 has been released!')}
+                        🎉​ {t('Introducing VeChain AI Skills')}
                     </Heading>
 
                     <Button
-                        as={Link}
-                        href="https://github.com/vechain/vechain-kit/releases"
-                        isExternal
+                        onClick={scrollToAiSkills}
                         variant="homepageSecondary"
                     >
-                        {t('View Release Notes')} 👇​
+                        {t('Explore the skills')} 👇​
                     </Button>
                 </VStack>
             </Box>
@@ -72,13 +77,15 @@ export default function Home(): ReactElement {
             <TestimonialSection
                 mt={10}
                 quote={t(
-                    'The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components.',
+                    'The VeKit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components.',
                 )}
             />
 
             <AppShowcase />
 
             <QuickStartSection />
+
+            <AISkillsSection />
 
             <FAQSection />
 

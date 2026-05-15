@@ -50,7 +50,7 @@ export default function RootLayout({
                 <title>VeKit</title>
                 <meta
                     name="description"
-                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
+                    content="VeKit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta
                     name="viewport"
@@ -81,9 +81,9 @@ export default function RootLayout({
                 />
                 <meta
                     property="og:description"
-                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
+                    content="VeKit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
-                <meta property="og:site_name" content="VeChain Kit" />
+                <meta property="og:site_name" content="VeKit" />
                 <meta
                     property="og:image"
                     content={`https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png`}
@@ -91,20 +91,20 @@ export default function RootLayout({
                 <meta property="og:image:type" content="image/png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
-                <meta property="og:image:alt" content="VeChain Kit" />
+                <meta property="og:image:alt" content="VeKit" />
 
                 {/* Twitter Metadata */}
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="VeChain Kit" />
+                <meta name="twitter:title" content="VeKit" />
                 <meta
                     name="twitter:description"
-                    content="VeChain Kit - Forget about the underlying blockchain infrastructure. We handle it for you."
+                    content="VeKit - Forget about the underlying blockchain infrastructure. We handle it for you."
                 />
                 <meta
                     name="twitter:image"
                     content={`https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner-kit.png`}
                 />
-                <meta name="twitter:image:alt" content="VeChain Kit" />
+                <meta name="twitter:image:alt" content="VeKit" />
 
                 {/* Fonts */}
                 <link rel="preconnect" href="https://fonts.googleapis.com" />

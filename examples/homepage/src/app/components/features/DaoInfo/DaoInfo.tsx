@@ -22,7 +22,7 @@ export function DaoInfo() {
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
-                    VeChain Kit provides hooks to easily interact with popular
+                    VeKit provides hooks to easily interact with popular
                     VeChain contracts. Here's how to use them in your
                     application.
                 </Text>

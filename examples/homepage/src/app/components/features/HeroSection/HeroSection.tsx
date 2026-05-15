@@ -7,6 +7,13 @@ export function HeroSection() {
     const { colorMode } = useColorMode();
     const { t } = useTranslation();
 
+    const scrollToQuickStart = () => {
+        const el = document.getElementById('quick-start');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <VStack
             spacing={8}
@@ -36,18 +43,16 @@ export function HeroSection() {
                 lineHeight="1.6"
             >
                 {t(
-                    'VeChain Kit is a toolkit for building applications on VeChain, supporting wallet integration, developer hooks, pre-built UI components, and more.',
+                    'React hooks, pre-built UI, wallet integration, and social login — everything you need to ship a VeChain dApp.',
                 )}
             </Text>
 
             <Button
-                as="a"
-                href="https://docs.vechainkit.vechain.org/quickstart/installation"
-                rel="noopener noreferrer"
+                onClick={scrollToQuickStart}
                 variant="homepagePrimary"
                 size="lg"
             >
-                {t('Get Started Now')} 🚀
+                {t('Get Started')} 🚀
             </Button>
         </VStack>
     );

@@ -75,7 +75,7 @@ function TerminalCodeBlock() {
                     ? Select template ›
                 </Text>
                 <Text color={textColor} fontSize="sm" ml={4} textAlign="left">
-                    ❯ VeChain Kit Next.js Template (Chakra, React Query, SDK)
+                    ❯ VeKit Next.js Template (Chakra, React Query, SDK)
                 </Text>
             </Box>
         </Box>
@@ -88,6 +88,7 @@ export function QuickStartSection() {
 
     return (
         <Card
+            id="quick-start"
             variant="section"
             py={{ base: 16, md: 20 }}
             px={{ base: 4, md: 8 }}
@@ -114,7 +115,7 @@ export function QuickStartSection() {
                         color={colorMode === 'dark' ? 'gray.300' : 'gray.600'}
                         fontWeight="medium"
                     >
-                        {t('Only one command to setup')}
+                        {t('One command, full stack.')}
                     </Text>
                 </VStack>
 
@@ -128,7 +129,7 @@ export function QuickStartSection() {
                     maxW="2xl"
                 >
                     {t(
-                        'Includes VeChain Kit, Chakra UI, React Query, SDK and more',
+                        'Next.js, VeKit, Chakra UI, React Query, VeChain SDK, and more.',
                     )}
                 </Text>
             </VStack>
