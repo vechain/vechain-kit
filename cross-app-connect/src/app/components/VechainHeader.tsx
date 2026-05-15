@@ -28,7 +28,7 @@ type Props = {
 };
 
 export function VechainHeader({
-    title = 'Log in to VeChain',
+    title = 'Log in to your wallet',
     titleIcon,
     titleIconColor = 'accent',
     subtitle,
