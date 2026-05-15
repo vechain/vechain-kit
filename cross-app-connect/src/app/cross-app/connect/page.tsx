@@ -13,6 +13,7 @@ import {
     Container,
     HStack,
     Icon,
+    Image,
     Input,
     PinInput,
     PinInputField,
@@ -41,6 +42,11 @@ import {
     usePrivy,
     useWallets,
 } from '@privy-io/react-auth';
+import {
+    useGetAvatarOfAddress,
+    useSmartAccount,
+    useVechainDomain,
+} from '@vechain/vechain-kit';
 import { useCrossAppClient } from '../_lib/client';
 import { getRecentProvider, setRecentProvider } from '../_lib/recent';
 import { VechainHeader } from '../../components/VechainHeader';
@@ -168,6 +174,7 @@ export default function CrossAppConnectPage() {
     }, []);
 
     const embedded = wallets.find((w) => w.walletClientType === 'privy');
+    const { data: smartAccount } = useSmartAccount(embedded?.address);
 
     const onAccept = useCallback(async () => {
         if (!request || !embedded || !user) return;
@@ -343,26 +350,18 @@ export default function CrossAppConnectPage() {
             <Card>
                 <CardBody>
                     <Stack spacing={4}>
-                        <Box>
-                            <Text fontSize="xs" color="text-subtle">
-                                Signed in as
-                            </Text>
-                            <Text fontWeight={600} color="text-strong">
-                                {user?.email?.address ??
-                                    user?.google?.email ??
-                                    user?.id}
-                            </Text>
-                        </Box>
-                        <Box>
-                            <Text fontSize="xs" color="text-subtle">
-                                Wallet
-                            </Text>
-                            <Text fontFamily="mono" fontSize="sm" color="text-muted">
-                                {embedded?.address
-                                    ? truncateAddress(embedded.address)
-                                    : 'creating…'}
-                            </Text>
-                        </Box>
+                        <IdentityRow
+                            walletAddress={smartAccount?.address}
+                            user={user}
+                            onSwitchAccount={() =>
+                                logout().catch((e) =>
+                                    console.error(
+                                        'Failed to switch account:',
+                                        e,
+                                    ),
+                                )
+                            }
+                        />
                         {submitError && (
                             <Alert status="error" rounded="md">
                                 <AlertIcon />
@@ -799,6 +798,181 @@ function RecentDot() {
             />
         </Tooltip>
     );
+}
+
+function IdentityRow({
+    walletAddress,
+    user,
+    onSwitchAccount,
+}: {
+    walletAddress?: string;
+    user: ReturnType<typeof usePrivy>['user'];
+    onSwitchAccount: () => void;
+}) {
+    const { data: domainInfo } = useVechainDomain(walletAddress);
+    const { data: avatar } = useGetAvatarOfAddress(walletAddress);
+    const domain = domainInfo?.domain;
+    const email = user?.email?.address ?? user?.google?.email ?? user?.id;
+    const linked = linkedSocials(user);
+
+    return (
+        <Stack spacing={3}>
+            <HStack
+                spacing={3}
+                p={3}
+                rounded="md"
+                bg="card-elevated-bg"
+                borderWidth="1px"
+                borderColor="card-border"
+                align="center"
+            >
+                {avatar ? (
+                    <Image
+                        src={avatar}
+                        alt=""
+                        boxSize="40px"
+                        rounded="full"
+                        draggable={false}
+                        fallback={
+                            <Box
+                                boxSize="40px"
+                                rounded="full"
+                                bg="login-btn-hover-bg"
+                            />
+                        }
+                    />
+                ) : (
+                    <Box
+                        boxSize="40px"
+                        rounded="full"
+                        bg="login-btn-hover-bg"
+                    />
+                )}
+                <Stack spacing={0} flex={1} minW={0}>
+                    {walletAddress ? (
+                        <>
+                            <Text
+                                fontWeight={600}
+                                color="text-strong"
+                                lineHeight="1.2"
+                                noOfLines={1}
+                            >
+                                {domain ?? truncateAddress(walletAddress)}
+                            </Text>
+                            {domain && (
+                                <Text
+                                    fontFamily="mono"
+                                    fontSize="xs"
+                                    color="text-subtle"
+                                    lineHeight="1.2"
+                                >
+                                    {truncateAddress(walletAddress)}
+                                </Text>
+                            )}
+                        </>
+                    ) : (
+                        <Text fontSize="sm" color="text-muted">
+                            Creating your VeChain account…
+                        </Text>
+                    )}
+                </Stack>
+            </HStack>
+            <HStack
+                justify="space-between"
+                align="center"
+                spacing={3}
+                flexWrap="wrap"
+            >
+                <HStack spacing={2} minW={0}>
+                    <Text fontSize="xs" color="text-subtle">
+                        Signed in as
+                    </Text>
+                    <Text
+                        fontSize="sm"
+                        color="text-muted"
+                        noOfLines={1}
+                        title={email ?? undefined}
+                    >
+                        {email}
+                    </Text>
+                    {linked.length > 0 && (
+                        <HStack spacing={1}>
+                            {linked.map((s) => (
+                                <Tooltip
+                                    key={s.id}
+                                    label={s.label}
+                                    placement="top"
+                                    hasArrow
+                                    openDelay={150}
+                                    fontSize="xs"
+                                >
+                                    <span
+                                        style={{ display: 'inline-flex' }}
+                                    >
+                                        <Icon
+                                            as={s.Icon}
+                                            boxSize="14px"
+                                            color={s.color}
+                                            aria-label={s.label}
+                                        />
+                                    </span>
+                                </Tooltip>
+                            ))}
+                        </HStack>
+                    )}
+                </HStack>
+                <Button
+                    variant="link"
+                    size="sm"
+                    onClick={onSwitchAccount}
+                >
+                    Use another account
+                </Button>
+            </HStack>
+        </Stack>
+    );
+}
+
+type LinkedSocialBadge = {
+    id: string;
+    label: string;
+    Icon: IconType;
+    color?: string;
+};
+
+function linkedSocials(
+    user: ReturnType<typeof usePrivy>['user'],
+): LinkedSocialBadge[] {
+    if (!user) return [];
+    const u = user as unknown as Record<string, unknown>;
+    const badges: LinkedSocialBadge[] = [];
+    for (const p of OAUTH_PROVIDERS) {
+        if (u[p.id]) {
+            badges.push({
+                id: p.id,
+                label: p.label,
+                Icon: p.Icon,
+                color: BRAND_GLYPH_COLOR[p.id],
+            });
+        }
+    }
+    if (u.phone) {
+        badges.push({
+            id: 'phone',
+            label: 'Phone',
+            Icon: LuPhone,
+            color: PHONE_GLYPH_COLOR,
+        });
+    }
+    if (u.farcaster) {
+        badges.push({
+            id: 'farcaster',
+            label: 'Farcaster',
+            Icon: SiFarcaster,
+            color: '#8A63D2',
+        });
+    }
+    return badges;
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {

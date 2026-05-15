@@ -1,9 +1,11 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 import { tokens } from './brand';
 
+// Force light mode for now. To re-enable system / dark, switch
+// initialColorMode back to 'system' and useSystemColorMode to true.
 const config: ThemeConfig = {
-    initialColorMode: 'system',
-    useSystemColorMode: true,
+    initialColorMode: 'light',
+    useSystemColorMode: false,
     cssVarPrefix: 'vc',
 };
 
