@@ -9,9 +9,9 @@ import { LuMoon, LuSun } from 'react-icons/lu';
  */
 export function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode();
-    const show =
-        process.env.NEXT_PUBLIC_SHOW_COLOR_MODE_TOGGLE === 'true' ||
-        process.env.NODE_ENV !== 'production';
+    // Hidden by default. Set NEXT_PUBLIC_SHOW_COLOR_MODE_TOGGLE=true to
+    // surface it (in dev or prod) when you need to debug theme swaps.
+    const show = process.env.NEXT_PUBLIC_SHOW_COLOR_MODE_TOGGLE === 'true';
     if (!show) return null;
     return (
         <IconButton
