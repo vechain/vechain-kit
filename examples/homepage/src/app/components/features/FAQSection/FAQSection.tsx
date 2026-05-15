@@ -19,13 +19,13 @@ export function FAQSection() {
         {
             question: t('Is the kit free to use?'),
             answer: t(
-                "Yes. VeChain Kit is free to use. If you want full control over the login experience, you can connect your own Privy account (Privy pricing applies). If you use the shared VeChain + Privy integration, you don't pay anything to get started.",
+                'Yes — free for the shared VeChain + Privy integration. Bring your own Privy account if you want full control over the login UX (Privy pricing applies).',
             ),
         },
         {
             question: t('Are there any limitations?'),
             answer: t(
-                "Yes. You need to use the kit's own hooks (useSendTransaction and useSignMessage) to support all login methods. And, to fully customize the login experience, you need to open your own Privy account, since with the shared VeChain + Privy integration you cannot target only specific social login methods and users' signatures are always requested when doing transactions.",
+                "Yes. To support all login methods, use the kit's hooks (useSendTransaction, useSignMessage). For full control over the login UX, bring your own Privy account — the shared VeChain + Privy integration can't target specific social methods and always prompts for signatures.",
             ),
         },
         {

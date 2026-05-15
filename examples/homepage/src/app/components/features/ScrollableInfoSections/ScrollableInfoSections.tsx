@@ -28,9 +28,9 @@ export function ScrollableInfoSections() {
     const sections: ScrollableSection[] = [
         {
             bg: '#e0daea',
-            title: t('Out of the box'),
+            title: t('No blockchain plumbing'),
             content: t(
-                'Forget about the underlying blockchain infrastructure. We handle it for you.',
+                'RPC endpoints, chain configs, connection handlers — pre-wired with sensible defaults so you can focus on your app.',
             ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
@@ -41,9 +41,9 @@ export function ScrollableInfoSections() {
         },
         {
             bg: '#dae8fb',
-            title: t('Boosted Development'),
+            title: t('Hooks, not boilerplate'),
             content: t(
-                'Use our hooks and components to speed up your development and interact with the blockchain.',
+                'Type-safe React hooks for wallets, balances, transactions, and contracts.',
             ),
             imageSrc: '',
             imageAlt: t('VeChain Kit'),
@@ -53,7 +53,7 @@ export function ScrollableInfoSections() {
             bg: '#e8e0d3',
             title: t('AI-native development'),
             content: t(
-                'Install VeChain AI Skills into your coding agent and ship dApps faster. Domain knowledge for VeChain Kit, smart contracts, VeBetterDAO and more — built into Claude Code, Cursor, and other agents.',
+                'Plug VeChain expertise into your coding agent. Claude Code, Cursor, and any MCP-compatible agent get deep context on VeChain Kit, smart contracts, VeBetterDAO, and more.',
             ),
             imageSrc: '',
             imageAlt: t('VeChain AI Skills'),
@@ -61,9 +61,9 @@ export function ScrollableInfoSections() {
         },
         {
             bg: '#eae3d1',
-            title: t('Customizable'),
+            title: t('Yours to shape'),
             content: t(
-                "The kit is designed to be customizable to your needs. Decide what features you want to use and which ones you don't. Add call-to-action buttons to your app to guide your users to the features they need.",
+                'Theme it, override it, or build on top — every screen, modal, and button is opt-in.',
             ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/image1+4.png',
@@ -72,9 +72,9 @@ export function ScrollableInfoSections() {
         },
         {
             bg: '#dae8fb',
-            title: t('Multiple Login Methods'),
+            title: t('Login your way'),
             content: t(
-                "Choose from a wide variety of login methods to suit your users' preferences. Support for VeWorld, WalletConnect, social logins (Google, Apple, Twitter, GitHub), passkeys, and more. Give your users the flexibility they need.",
+                'VeWorld, WalletConnect, social logins (Google, Apple, X, GitHub), passkeys, and more — pick what fits your users.',
             ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/kit1.png',
@@ -84,9 +84,9 @@ export function ScrollableInfoSections() {
         },
         {
             bg: '#e1e5e4',
-            title: t('Multi-language'),
+            title: t('Speaks 15 languages'),
             content: t(
-                'The kit supports multiple languages out of the box allowing bidirectional sync between the kit and the host app.',
+                'Built-in translations sync both ways with your app — switch locale once, the kit follows.',
             ),
             imageSrc:
                 'https://cdn.prod.website-files.com/685387e21f37b28674efb768/685c258fb5b73e62bd8de0c0_0e9040e92251da2f7c363a4f48682fee_5-4.webp',

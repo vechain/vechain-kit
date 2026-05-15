@@ -43,7 +43,7 @@ export function HeroSection() {
                 lineHeight="1.6"
             >
                 {t(
-                    'VeChain Kit is a toolkit for building applications on VeChain, supporting wallet integration, developer hooks, pre-built UI components, and more.',
+                    'React hooks, pre-built UI, wallet integration, and social login — everything you need to ship a VeChain dApp.',
                 )}
             </Text>
 
@@ -52,7 +52,7 @@ export function HeroSection() {
                 variant="homepagePrimary"
                 size="lg"
             >
-                {t('Get Started Now')} 🚀
+                {t('Get Started')} 🚀
             </Button>
         </VStack>
     );

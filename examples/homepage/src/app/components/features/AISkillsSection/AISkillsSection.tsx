@@ -31,10 +31,10 @@ const SKILLS: { name: string; descKey: string }[] = [
     { name: 'stargate', descKey: 'NFT staking, validators, delegation.' },
     { name: 'create-vechain-dapp', descKey: 'Scaffold a VeChain dApp in seconds.' },
     { name: 'vechain-react-native-dev', descKey: 'VeWorld deep-link integration.' },
-    { name: 'indexer-core', descKey: 'IndexerFactory, LogsIndexer, BlockIndexer.' },
+    { name: 'indexer-core', descKey: 'Index VeChain events and blocks for apps or analytics.' },
     { name: 'auto-voting-relayers', descKey: 'Auto-voting & relayer system.' },
     { name: 'translate', descKey: 'i18n translation management across locales.' },
-    { name: 'grill-me', descKey: 'Relentless plan interviewer.' },
+    { name: 'grill-me', descKey: 'Pressure-tests your plan before you write code.' },
 ];
 
 function TerminalBlock({
@@ -161,7 +161,7 @@ function PromptExample() {
                     pl={8}
                 >
                     {t(
-                        '→ Your agent picks create-vechain-dapp, vechain-kit, and vebetterdao automatically.',
+                        '→ Agent picks the right skills automatically: create-vechain-dapp + vechain-kit + vebetterdao.',
                     )}
                 </Text>
             </VStack>
@@ -256,7 +256,7 @@ export function AISkillsSection() {
                         fontWeight="bold"
                         color={colorMode === 'dark' ? 'white' : 'gray.900'}
                     >
-                        {t('Build with AI, faster than ever')}
+                        {t('Ship VeChain dApps with AI')}
                     </Heading>
                     <Text
                         fontSize={{ base: 'lg', md: 'xl' }}

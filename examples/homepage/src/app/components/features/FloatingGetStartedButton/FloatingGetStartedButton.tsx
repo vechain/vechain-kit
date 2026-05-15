@@ -104,7 +104,7 @@ export function FloatingGetStartedButton({
                         _hover={{ transform: 'translateY(-2px)' }}
                         onClick={scrollToQuickStart}
                     >
-                        {t('Get Started Now')} 🚀
+                        {t('Get Started')} 🚀
                     </Button>
                 )}
             </Box>

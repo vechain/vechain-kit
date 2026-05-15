@@ -115,7 +115,7 @@ export function QuickStartSection() {
                         color={colorMode === 'dark' ? 'gray.300' : 'gray.600'}
                         fontWeight="medium"
                     >
-                        {t('Only one command to setup')}
+                        {t('One command, full stack.')}
                     </Text>
                 </VStack>
 
@@ -129,7 +129,7 @@ export function QuickStartSection() {
                     maxW="2xl"
                 >
                     {t(
-                        'Includes VeChain Kit, Chakra UI, React Query, SDK and more',
+                        'Next.js, VeChain Kit, Chakra UI, React Query, VeChain SDK, and more.',
                     )}
                 </Text>
             </VStack>
