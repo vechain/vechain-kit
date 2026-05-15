@@ -43,11 +43,11 @@ export function Introduction() {
         >
             <VStack spacing={6} align="stretch">
                 <Heading as="h1" size="lg" textAlign="center">
-                    Welcome to VeChain Kit!
+                    Welcome to VeKit!
                 </Heading>
 
                 <Text textAlign="center">
-                    VeChain Kit is a comprehensive library, for React and
+                    VeKit is a comprehensive library, for React and
                     NextJs, designed to make building VeChain applications fast
                     and straightforward. Learn how to integrate VeChain in your
                     dApp using our resources below.
@@ -132,7 +132,7 @@ export function Introduction() {
             </VStack>
 
             <CollapsibleCard
-                title="Learn More About VeChain Kit Features"
+                title="Learn More About VeKit Features"
                 icon={LuFileText}
                 defaultIsOpen={!connection.isConnected}
                 style={{ mt: 8, borderRadius: 'lg' }}
@@ -221,7 +221,7 @@ export function Introduction() {
                                     Assets, Profile, and Wallet Management
                                 </Text>
                                 <Text>
-                                    Use VeChain Kit to allow your users to have
+                                    Use VeKit to allow your users to have
                                     asset management, profile management, social
                                     login, wallet backup, mfa, and more. All out
                                     of the box, so you can focus on building
@@ -272,10 +272,10 @@ export function Introduction() {
 
                     <VStack mt={8} spacing={4} align="stretch">
                         <Heading size="sm" textAlign="center">
-                            Explore some of the apps built with VeChain Kit
+                            Explore some of the apps built with VeKit
                         </Heading>
                         <Text textAlign="center" fontSize="xs">
-                            (This website is built with VeChain Kit as well!)
+                            (This website is built with VeKit as well!)
                         </Text>
                         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
                             {[

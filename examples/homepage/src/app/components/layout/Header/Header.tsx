@@ -47,7 +47,7 @@ export function Header() {
                     >
                         <Image
                             src={`${basePath}/images/logo.png`}
-                            alt="VeChain Kit"
+                            alt="VeKit"
                             height={8}
                             width="auto"
                         />

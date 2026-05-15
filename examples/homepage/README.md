@@ -1,6 +1,6 @@
 # `vechain-kit-homepage`
 
-This is the homepage of VeChain Kit, a library for building dApps on the VeChainThor blockchain.
+This is the homepage of VeKit, a library for building dApps on the VeChainThor blockchain.
 
 ## Setup
 

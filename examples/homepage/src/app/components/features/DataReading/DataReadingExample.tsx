@@ -43,7 +43,7 @@ export function DataReadingExample(): ReactElement {
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
-                    VeChain Kit provides hooks to easily read data from the
+                    VeKit provides hooks to easily read data from the
                     blockchain. Here are some examples using built-in hooks.
                 </Text>
 

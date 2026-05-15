@@ -77,7 +77,7 @@ export default function Home(): ReactElement {
             <TestimonialSection
                 mt={10}
                 quote={t(
-                    'The VeChain Kit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components.',
+                    'The VeKit is a fantastic foundation for building on VeChain, especially with its clean hooks and UI components.',
                 )}
             />
 

@@ -113,7 +113,7 @@ export function FeaturesToTry() {
             </Text>
             <Text fontSize="sm" opacity={0.5}>
                 The following features are available for your users and for you
-                both accessible by using the VeChain Kit main modal or by adding
+                both accessible by using the VeKit main modal or by adding
                 custom call to action buttons to your app and opening the
                 content you need on demand. Try them out by clicking on the
                 cards below.

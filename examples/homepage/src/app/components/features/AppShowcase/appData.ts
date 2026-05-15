@@ -18,7 +18,7 @@ export const getApps = (t: TFunction): AppData[] => [
         image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeigtlombd3jplbq33k2m2p5cbrbniznv4fnr3bbh2hxxackh5bpcqy/media/ve_world_banner.png',
         tag: t('Gaming'),
         description: t(
-            'Uses VeChain Kit end-to-end: login, wallet, hooks, and transaction components.',
+            'Uses VeKit end-to-end: login, wallet, hooks, and transaction components.',
         ),
         url: 'https://velottery.vet/',
     },
@@ -29,7 +29,7 @@ export const getApps = (t: TFunction): AppData[] => [
         image: 'https://governance.vebetterdao.org/assets/images/platform_page.webp',
         tag: t('DAO'),
         description: t(
-            'VeChain Kit UI is fully integrated into the app, using a bottom sheet UX on mobile to enhance the user experience.',
+            'VeKit UI is fully integrated into the app, using a bottom sheet UX on mobile to enhance the user experience.',
         ),
         url: 'https://governance.vebetterdao.org/',
     },
@@ -51,7 +51,7 @@ export const getApps = (t: TFunction): AppData[] => [
         image: 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/banner.png',
         tag: t('Staking'),
         description: t(
-            'Supports only VeWorld, WalletConnect, and Sync2 wallets, and fully integrates VeChain Kit UI into the app to enhance the user experience Profile and Wallet modals.',
+            'Supports only VeWorld, WalletConnect, and Sync2 wallets, and fully integrates VeKit UI into the app to enhance the user experience Profile and Wallet modals.',
         ),
         url: 'https://app.stargate.vechain.org/',
     },
@@ -63,7 +63,7 @@ export const getApps = (t: TFunction): AppData[] => [
         image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeifqy6ojar5aryglbbpvsm7pqz4tn76ruf5nh4vwsb4lc6um5ehvfi/media/ve_world_featured_image.png',
         tag: t('DeFi'),
         description: t(
-            'Uses VeChain Kit to allow social login users to trade on the platform.',
+            'Uses VeKit to allow social login users to trade on the platform.',
         ),
         url: 'https://www.betterswap.io',
     },
@@ -74,7 +74,7 @@ export const getApps = (t: TFunction): AppData[] => [
         image: 'https://api.gateway-proxy.vechain.org/ipfs/bafybeihgqfn2fjdjg5pcfdygwbhl5e56vmkvj6rm3dzw4fqfxz6v5njf2u/media/ve_world_banner.jpeg',
         tag: t('Trading'),
         description: t(
-            'Uses VeChain Kit only for the login flow and for the hooks to manage transactions.',
+            'Uses VeKit only for the login flow and for the hooks to manage transactions.',
         ),
         url: 'https://vetrade.vet/',
     },

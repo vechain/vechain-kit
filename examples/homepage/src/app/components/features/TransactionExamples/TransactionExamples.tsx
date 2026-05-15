@@ -72,7 +72,7 @@ export function TransactionExamples() {
     return (
         <VStack spacing={6} align="stretch">
             <Text textAlign="center">
-                VeChain Kit provides built-in transaction handling with UI
+                VeKit provides built-in transaction handling with UI
                 components. Try these examples to see the transaction flow in
                 action.
             </Text>

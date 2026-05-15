@@ -35,7 +35,7 @@ export function FAQSection() {
         {
             question: t('Can I customize the login methods shown to users?'),
             answer: t(
-                'Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeChain Kit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.',
+                'Yes. You can decide to use only veworld, or only social login methods. To maximize flexibility, you can also use your own Privy account and connect it to VeKit, allowing you to use OAuth2-based login methods like Google, Apple, Twitter, GitHub, etc. and completely customize the login experience.',
             ),
         },
         {

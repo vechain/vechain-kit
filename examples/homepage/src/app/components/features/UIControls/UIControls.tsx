@@ -17,7 +17,7 @@ export function UIControls() {
         >
             <VStack spacing={6} align="stretch" w={'full'}>
                 <Text textAlign="center">
-                    VeChain Kit provides multiple ways to customize the UI
+                    VeKit provides multiple ways to customize the UI
                     components. Here are some examples of different button
                     styles and variants.
                 </Text>

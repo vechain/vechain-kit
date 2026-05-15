@@ -75,7 +75,7 @@ function TerminalCodeBlock() {
                     ? Select template ›
                 </Text>
                 <Text color={textColor} fontSize="sm" ml={4} textAlign="left">
-                    ❯ VeChain Kit Next.js Template (Chakra, React Query, SDK)
+                    ❯ VeKit Next.js Template (Chakra, React Query, SDK)
                 </Text>
             </Box>
         </Box>
@@ -129,7 +129,7 @@ export function QuickStartSection() {
                     maxW="2xl"
                 >
                     {t(
-                        'Next.js, VeChain Kit, Chakra UI, React Query, VeChain SDK, and more.',
+                        'Next.js, VeKit, Chakra UI, React Query, VeChain SDK, and more.',
                     )}
                 </Text>
             </VStack>

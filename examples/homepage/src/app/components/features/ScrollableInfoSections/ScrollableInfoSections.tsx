@@ -36,7 +36,7 @@ export function ScrollableInfoSections() {
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/out.webm',
             mobileImageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/previewed+(4).png',
-            imageAlt: t('VeChain Kit'),
+            imageAlt: t('VeKit'),
             imageWidth: '950px',
         },
         {
@@ -46,14 +46,14 @@ export function ScrollableInfoSections() {
                 'Type-safe React hooks for wallets, balances, transactions, and contracts.',
             ),
             imageSrc: '',
-            imageAlt: t('VeChain Kit'),
+            imageAlt: t('VeKit'),
             isBoosted: true,
         },
         {
             bg: '#e8e0d3',
             title: t('AI-native development'),
             content: t(
-                'Plug VeChain expertise into your coding agent. Claude Code, Cursor, and any MCP-compatible agent get deep context on VeChain Kit, smart contracts, VeBetterDAO, and more.',
+                'Plug VeChain expertise into your coding agent. Claude Code, Cursor, and any MCP-compatible agent get deep context on VeKit, smart contracts, VeBetterDAO, and more.',
             ),
             imageSrc: '',
             imageAlt: t('VeChain AI Skills'),
@@ -67,7 +67,7 @@ export function ScrollableInfoSections() {
             ),
             imageSrc:
                 'https://prod-vechainkit-docs-images-bucket.s3.eu-west-1.amazonaws.com/image1+4.png',
-            imageAlt: t('VeChain Kit'),
+            imageAlt: t('VeKit'),
             imageWidth: '600px',
         },
         {

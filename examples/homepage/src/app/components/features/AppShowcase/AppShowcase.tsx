@@ -17,12 +17,12 @@ export function AppShowcase() {
         >
             <VStack spacing={8} align="stretch" maxW="7xl" mx="auto" w="full">
                 <Heading as="h2" size="lg" textAlign="center">
-                    {t('Apps Built with VeChain Kit')}
+                    {t('Apps Built with VeKit')}
                 </Heading>
 
                 <Text textAlign="center" fontSize="lg" color="gray.500">
                     {t(
-                        'Discover all the possible ways to use the VeChain Kit to build your next dApp.',
+                        'Discover all the possible ways to use the VeKit to build your next dApp.',
                     )}
                 </Text>
 

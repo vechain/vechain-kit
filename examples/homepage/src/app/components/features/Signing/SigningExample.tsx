@@ -125,7 +125,7 @@ export function SigningExample(): ReactElement {
         >
             <VStack spacing={6} align="stretch">
                 <Text textAlign="center">
-                    VeChain Kit provides hooks for signing messages and typed
+                    VeKit provides hooks for signing messages and typed
                     data. Try these examples to see signing in action.
                 </Text>
 
