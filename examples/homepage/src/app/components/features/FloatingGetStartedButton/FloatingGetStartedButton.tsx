@@ -17,6 +17,13 @@ export function FloatingGetStartedButton({
     const [isVisible, setIsVisible] = useState(false);
     const buttonRef = useRef<HTMLDivElement>(null);
 
+    const scrollToQuickStart = () => {
+        const el = document.getElementById('quick-start');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     useEffect(() => {
         const handleScroll = () => {
             if (!heroSectionRef.current || !scrollableSectionsRef.current) {
@@ -73,9 +80,7 @@ export function FloatingGetStartedButton({
                 _hover={{
                     transform: 'translateY(-2px)',
                 }}
-                as="a"
-                href="https://docs.vechainkit.vechain.org/quickstart/installation"
-                rel="noopener noreferrer"
+                onClick={scrollToQuickStart}
             >
                 {t('Get Started Now')} 🚀
             </Button>

@@ -7,6 +7,13 @@ export function HeroSection() {
     const { colorMode } = useColorMode();
     const { t } = useTranslation();
 
+    const scrollToQuickStart = () => {
+        const el = document.getElementById('quick-start');
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <VStack
             spacing={8}
@@ -41,9 +48,7 @@ export function HeroSection() {
             </Text>
 
             <Button
-                as="a"
-                href="https://docs.vechainkit.vechain.org/quickstart/installation"
-                rel="noopener noreferrer"
+                onClick={scrollToQuickStart}
                 variant="homepagePrimary"
                 size="lg"
             >

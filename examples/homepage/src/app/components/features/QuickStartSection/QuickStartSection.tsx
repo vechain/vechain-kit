@@ -88,6 +88,7 @@ export function QuickStartSection() {
 
     return (
         <Card
+            id="quick-start"
             variant="section"
             py={{ base: 16, md: 20 }}
             px={{ base: 4, md: 8 }}
