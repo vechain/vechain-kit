@@ -9,6 +9,21 @@ type Props = {
     address: string;
     appConfig?: AppConfig;
     self?: string;
+    /**
+     * Distinguishes "contract this user is calling" (`'contract'` — default)
+     * from "address receiving funds" (`'recipient'`).
+     *
+     * `'contract'` shows an "Unverified contract" warning when the address
+     * isn't in the kit's appConfig — that's the phishing-defence path.
+     *
+     * `'recipient'` is for token transfer destinations (a 2nd-leg argument
+     * to `transfer(address,uint256)` — typically just a wallet address, not
+     * a contract at all). Showing "Unverified contract" there would be
+     * scary noise. Instead: if the address happens to resolve to a known
+     * VeChain entity (e.g. you're sending to the treasury), label it;
+     * otherwise just render the truncated hex with no badge.
+     */
+    kind?: 'contract' | 'recipient';
 };
 
 function truncate(addr: string): string {
@@ -16,13 +31,12 @@ function truncate(addr: string): string {
     return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
-/**
- * Render an Ethereum address with phishing-defence affordances: a green
- * check + label for VeChain-maintained contracts, an orange warning + raw
- * hex for everything else. Users can't tell a real contract from a spoof
- * by hex alone, so the explicit "Unverified" treatment is the point.
- */
-export function AddressTag({ address, appConfig, self }: Props) {
+export function AddressTag({
+    address,
+    appConfig,
+    self,
+    kind = 'contract',
+}: Props) {
     const resolved = resolveContractLabel(address, appConfig, self);
     if (resolved) {
         return (
@@ -56,22 +70,24 @@ export function AddressTag({ address, appConfig, self }: Props) {
             <Text fontFamily="mono" fontSize="sm" color="text-muted">
                 {truncate(address)}
             </Text>
-            <Tooltip
-                label="Unverified contract — make sure you trust it before continuing"
-                placement="top"
-                hasArrow
-                openDelay={200}
-                fontSize="xs"
-            >
-                <span style={{ display: 'inline-flex' }}>
-                    <Icon
-                        as={LuTriangleAlert}
-                        color="orange.400"
-                        boxSize="14px"
-                        aria-label="Unverified"
-                    />
-                </span>
-            </Tooltip>
+            {kind === 'contract' && (
+                <Tooltip
+                    label="Unverified contract — make sure you trust it before continuing"
+                    placement="top"
+                    hasArrow
+                    openDelay={200}
+                    fontSize="xs"
+                >
+                    <span style={{ display: 'inline-flex' }}>
+                        <Icon
+                            as={LuTriangleAlert}
+                            color="orange.400"
+                            boxSize="14px"
+                            aria-label="Unverified"
+                        />
+                    </span>
+                </Tooltip>
+            )}
         </HStack>
     );
 }

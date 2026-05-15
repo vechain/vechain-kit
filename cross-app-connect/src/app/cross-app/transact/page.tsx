@@ -39,8 +39,10 @@ import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/co
 import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
 import { AddressTag } from '../../components/AddressTag';
+import { AccountChip } from '../../components/AccountChip';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
 import { simulateClauses, type Simulation } from '../_lib/simulate';
+import { humanPrimaryType, summarizeActions } from '../_lib/labels';
 import type { NETWORK_TYPE } from '../_lib/network-tokens';
 import { formatUnits } from 'viem';
 import type { AppConfig } from '@vechain/vechain-kit';
@@ -425,11 +427,10 @@ export default function CrossAppTransactPage() {
         <PageShell>
             <VechainHeader
                 title="Confirm action"
+                titleIcon={LuShieldCheck}
                 subtitle={
                     decoded
-                        ? decoded.length === 1
-                            ? 'This app wants to:'
-                            : `This app wants to do ${decoded.length} things:`
+                        ? summarizeActions(decoded)
                         : 'Checking what this does…'
                 }
                 requesterUrl={verified.connection.callbackUrl}
@@ -437,6 +438,12 @@ export default function CrossAppTransactPage() {
             <Card>
                 <CardBody>
                     <Stack spacing={5}>
+                        {smartAccount?.address && (
+                            <AccountChip
+                                address={smartAccount.address}
+                                thor={thor ?? null}
+                            />
+                        )}
                         {stillDecoding ? (
                             <Center py={6}>
                                 <Spinner color="accent" size="sm" />
@@ -568,7 +575,9 @@ export default function CrossAppTransactPage() {
                                     />
                                     <DetailRow
                                         label="Type"
-                                        value={parsed.typedData.primaryType}
+                                        value={humanPrimaryType(
+                                            parsed.typedData.primaryType,
+                                        )}
                                     />
                                     <Stack spacing={2}>
                                         <Text
@@ -667,6 +676,7 @@ function ActionRowDetail({
                         address={action.recipient}
                         appConfig={appConfig}
                         self={self}
+                        kind="recipient"
                     />
                 </HStack>
             );
@@ -678,6 +688,7 @@ function ActionRowDetail({
                         address={action.spender}
                         appConfig={appConfig}
                         self={self}
+                        kind="contract"
                     />
                 </HStack>
             );
