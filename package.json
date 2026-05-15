@@ -47,7 +47,8 @@
         "dev:homepage": "yarn workspace @vechain/vechain-kit watch & yarn workspace vechain-kit-homepage dev",
         "dev:homepage:build": "yarn workspace @vechain/vechain-kit build & yarn workspace vechain-kit-homepage build",
         "dev:next-template": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-template dev",
-        "dev:next-template:build": "yarn workspace @vechain/vechain-kit build & yarn workspace next-template build"
+        "dev:next-template:build": "yarn workspace @vechain/vechain-kit build & yarn workspace next-template build",
+        "dev:next-chakra-v3": "yarn workspace @vechain/vechain-kit watch & yarn workspace next-chakra-v3 dev"
     },
     "husky": {
         "hooks": {
