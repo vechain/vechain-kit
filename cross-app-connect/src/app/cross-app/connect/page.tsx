@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Alert,
     AlertDescription,
@@ -135,6 +135,20 @@ export default function CrossAppConnectPage() {
             window.close();
         }
     }, [client, request, getAccessToken]);
+
+    // Once the user is authenticated and we have everything we need, accept
+    // the connection automatically. The user already opted in by clicking
+    // the login button in the requester dApp -- showing a separate Accept
+    // button would just add a redundant click. Skipped after a failure so
+    // the manual Accept button stays usable as a fallback.
+    const autoAcceptedRef = useRef(false);
+    useEffect(() => {
+        if (autoAcceptedRef.current) return;
+        if (!authenticated || !embedded || !request) return;
+        if (submitting || submitError) return;
+        autoAcceptedRef.current = true;
+        onAccept();
+    }, [authenticated, embedded, request, submitting, submitError, onAccept]);
 
     if (parseError?.kind === 'no_params') {
         return (
