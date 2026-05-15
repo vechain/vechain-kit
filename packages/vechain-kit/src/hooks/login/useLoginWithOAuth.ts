@@ -20,6 +20,12 @@ const CROSS_APP_INTENT_PROVIDERS = new Set<OAuthProviderType>([
     'apple',
     'twitter',
     'discord',
+    'github',
+    'spotify',
+    'instagram',
+    'tiktok',
+    'line',
+    'linkedin',
 ]);
 
 export const useLoginWithOAuth = () => {

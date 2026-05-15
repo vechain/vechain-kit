@@ -25,13 +25,20 @@ import {
 /**
  * Login methods that requester apps can pre-select on the whitelabel
  * cross-app-connect host. When passed, the host skips its provider picker
- * and jumps straight into the matching flow.
+ * and jumps straight into the matching flow. Covers all of Privy's
+ * supported OAuth providers plus email.
  */
 export type CrossAppLoginIntent =
     | 'google'
     | 'apple'
     | 'twitter'
     | 'discord'
+    | 'github'
+    | 'spotify'
+    | 'instagram'
+    | 'tiktok'
+    | 'line'
+    | 'linkedin'
     | 'email';
 
 export type LoginWithCrossAppOptions = {
