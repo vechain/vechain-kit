@@ -69,6 +69,18 @@ const OAUTH_PROVIDERS = [
 }>;
 type OAuthProvider = (typeof OAUTH_PROVIDERS)[number]['id'];
 
+// Brand hexes for providers whose glyph reads better in their official
+// color rather than the kit's monochrome text color. Discord blurple,
+// TikTok pink, LINE green. Phone (not OAuth) uses iMessage-style green.
+// Google keeps its own multi-color glyph (FcGoogle is already colored);
+// Apple, GitHub, X are intentionally monochrome.
+const BRAND_GLYPH_COLOR: Partial<Record<OAuthProvider, string>> = {
+    discord: '#5865F2',
+    tiktok: '#FE2C55',
+    line: '#06C755',
+};
+const PHONE_GLYPH_COLOR = '#34C759';
+
 const INTENT_METHODS = [
     ...OAUTH_PROVIDERS.map((p) => p.id),
     'phone',
@@ -683,13 +695,18 @@ function ProviderRow({
     isDisabled?: boolean;
     colorMode: 'light' | 'dark';
 }) {
-    // Some monochrome glyphs need to flip with the color mode to stay legible.
+    // Apple / GitHub / X are intentionally monochrome -- their wordmarks
+    // are black/white by brand. Flip them with the color mode for legibility.
+    // Everyone else gets their brand hex so the picker has the same
+    // chromatic feel as Privy's hosted UI.
+    const brandColor = BRAND_GLYPH_COLOR[provider.id];
     const monoFlip =
         provider.id === 'apple' ||
         provider.id === 'github' ||
-        provider.id === 'tiktok' ||
         provider.id === 'twitter';
-    const iconColor = monoFlip
+    const iconColor = brandColor
+        ? brandColor
+        : monoFlip
         ? colorMode === 'dark'
             ? 'white'
             : 'text-strong'
@@ -726,7 +743,9 @@ function PhoneRow({
         <Button
             variant="row"
             onClick={onClick}
-            leftIcon={<Icon as={LuPhone} boxSize="22px" />}
+            leftIcon={
+                <Icon as={LuPhone} boxSize="22px" color={PHONE_GLYPH_COLOR} />
+            }
             rightIcon={isRecent ? <RecentDot /> : undefined}
         >
             <Text flex={1} textAlign="left">
