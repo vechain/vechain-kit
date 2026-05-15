@@ -24,13 +24,7 @@ import {
     useColorMode,
 } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
-import {
-    FaApple,
-    FaDiscord,
-    FaGithub,
-    FaLine,
-    FaTiktok,
-} from 'react-icons/fa';
+import { FaApple, FaDiscord, FaGithub, FaLine, FaTiktok } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { SiFarcaster } from 'react-icons/si';
 import { LuPhone } from 'react-icons/lu';
@@ -48,6 +42,7 @@ import {
     useVechainDomain,
 } from '@vechain/vechain-kit';
 import { useCrossAppClient } from '../_lib/client';
+import { lookupAppByUrl } from '../_lib/app-hub';
 import { getRecentProvider, setRecentProvider } from '../_lib/recent';
 import { VechainHeader } from '../../components/VechainHeader';
 
@@ -253,9 +248,7 @@ export default function CrossAppConnectPage() {
             sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
         }
         setRecentProvider(intent);
-        initOAuth({ provider: intent }).catch((e) =>
-            setSubmitError(String(e)),
-        );
+        initOAuth({ provider: intent }).catch((e) => setSubmitError(String(e)));
     }, [phase, intent, oauthLoading, initOAuth]);
 
     const initialAuthRef = useRef<boolean | undefined>(undefined);
@@ -283,8 +276,8 @@ export default function CrossAppConnectPage() {
                 <Card>
                     <CardBody>
                         <Text color="text-muted" textAlign="center">
-                            This page handles cross-app connection requests
-                            from other VeChain dApps. It can&apos;t be opened
+                            This page handles cross-app connection requests from
+                            other VeChain dApps. It can&apos;t be opened
                             directly &mdash; the requesting app will open it
                             with the parameters it needs.
                         </Text>
@@ -341,10 +334,21 @@ export default function CrossAppConnectPage() {
         );
     }
 
+    const appHubEntry = lookupAppByUrl(request?.callbackUrl);
+    const verifiedApp = Boolean(appHubEntry);
     return (
         <PageShell>
             <VechainHeader
-                subtitle="Confirm connection to"
+                title={
+                    appHubEntry
+                        ? `Connect to ${appHubEntry.name}`
+                        : 'Confirm connection'
+                }
+                subtitle={
+                    appHubEntry
+                        ? undefined
+                        : 'You haven’t connected here before'
+                }
                 requesterUrl={request?.callbackUrl}
             />
             <Card>
@@ -353,15 +357,21 @@ export default function CrossAppConnectPage() {
                         <IdentityRow
                             walletAddress={smartAccount?.address}
                             user={user}
-                            onSwitchAccount={() =>
-                                logout().catch((e) =>
-                                    console.error(
-                                        'Failed to switch account:',
-                                        e,
-                                    ),
-                                )
-                            }
                         />
+                        {!verifiedApp && (
+                            <Alert
+                                status="warning"
+                                rounded="md"
+                                variant="left-accent"
+                            >
+                                <AlertIcon fontSize="sm" />
+                                <AlertDescription fontSize="sm">
+                                    This app isn’t listed in the VeChain App
+                                    Hub. Only continue if you trust the site in
+                                    the chip above.
+                                </AlertDescription>
+                            </Alert>
+                        )}
                         {submitError && (
                             <Alert status="error" rounded="md">
                                 <AlertIcon />
@@ -378,7 +388,7 @@ export default function CrossAppConnectPage() {
                             w="full"
                             h="48px"
                         >
-                            Continue
+                            {verifiedApp ? 'Continue' : 'Continue anyway'}
                         </Button>
                         <Button
                             variant="ghost"
@@ -388,6 +398,30 @@ export default function CrossAppConnectPage() {
                         >
                             Cancel
                         </Button>
+                        <HStack
+                            justify="center"
+                            align="center"
+                            spacing={1}
+                            pt={1}
+                        >
+                            <Text fontSize="xs" color="text-subtle">
+                                Not you?
+                            </Text>
+                            <Button
+                                variant="link"
+                                size="sm"
+                                onClick={() =>
+                                    logout().catch((e) =>
+                                        console.error(
+                                            'Failed to switch account:',
+                                            e,
+                                        ),
+                                    )
+                                }
+                            >
+                                Use another account
+                            </Button>
+                        </HStack>
                     </Stack>
                 </CardBody>
             </Card>
@@ -409,11 +443,7 @@ function SignInPanel({
     const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
         onError: (e) => setError(String(e)),
     });
-    const {
-        state: smsState,
-        sendCode,
-        loginWithCode,
-    } = useLoginWithSms();
+    const { state: smsState, sendCode, loginWithCode } = useLoginWithSms();
 
     const [view, setView] = useState<PanelView>(() =>
         intent === 'phone'
@@ -526,9 +556,7 @@ function SignInPanel({
                                             <ProviderRow
                                                 key={p.id}
                                                 provider={p}
-                                                onClick={() =>
-                                                    onOAuth(p.id)
-                                                }
+                                                onClick={() => onOAuth(p.id)}
                                                 isDisabled={oauthLoading}
                                                 isRecent={isRecent(p.id)}
                                                 colorMode={colorMode}
@@ -544,9 +572,7 @@ function SignInPanel({
                                             <ProviderRow
                                                 key={p.id}
                                                 provider={p}
-                                                onClick={() =>
-                                                    onOAuth(p.id)
-                                                }
+                                                onClick={() => onOAuth(p.id)}
                                                 isDisabled={oauthLoading}
                                                 isRecent={isRecent(p.id)}
                                                 colorMode={colorMode}
@@ -557,110 +583,105 @@ function SignInPanel({
                         </Stack>
                     )}
 
-                    {view === 'phone' &&
-                        !awaitingCode &&
-                        !submittingCode && (
-                            <Stack spacing={2}>
-                                <Input
-                                    type="tel"
-                                    placeholder="+1 555 555 5555"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    autoFocus
-                                    h="48px"
-                                    bg="card-bg"
-                                    borderColor="card-border"
-                                    color="text-strong"
-                                    _placeholder={{ color: 'text-subtle' }}
-                                    _focusVisible={{
-                                        borderColor: 'accent',
-                                        boxShadow: 'none',
-                                    }}
-                                />
-                                <Text fontSize="xs" color="text-subtle">
-                                    Include the country code, e.g. +1 for US,
-                                    +44 for UK.
-                                </Text>
-                                <Button
-                                    variant="brand"
-                                    onClick={onSendCode}
-                                    isLoading={sendingCode}
-                                    isDisabled={!phone}
-                                    h="48px"
-                                >
-                                    Send code
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => setView('picker')}
-                                >
-                                    Back
-                                </Button>
-                            </Stack>
-                        )}
+                    {view === 'phone' && !awaitingCode && !submittingCode && (
+                        <Stack spacing={2}>
+                            <Input
+                                type="tel"
+                                placeholder="+1 555 555 5555"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                autoFocus
+                                h="48px"
+                                bg="card-bg"
+                                borderColor="card-border"
+                                color="text-strong"
+                                _placeholder={{ color: 'text-subtle' }}
+                                _focusVisible={{
+                                    borderColor: 'accent',
+                                    boxShadow: 'none',
+                                }}
+                            />
+                            <Text fontSize="xs" color="text-subtle">
+                                Include the country code, e.g. +1 for US, +44
+                                for UK.
+                            </Text>
+                            <Button
+                                variant="brand"
+                                onClick={onSendCode}
+                                isLoading={sendingCode}
+                                isDisabled={!phone}
+                                h="48px"
+                            >
+                                Send code
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setView('picker')}
+                            >
+                                Back
+                            </Button>
+                        </Stack>
+                    )}
 
-                    {view === 'phone' &&
-                        (awaitingCode || submittingCode) && (
-                            <Stack spacing={3}>
-                                <Text fontSize="sm" color="text-muted">
-                                    We sent a 6-digit code to{' '}
-                                    <Text as="span" color="text-strong">
-                                        {phone}
-                                    </Text>
-                                    .
+                    {view === 'phone' && (awaitingCode || submittingCode) && (
+                        <Stack spacing={3}>
+                            <Text fontSize="sm" color="text-muted">
+                                We sent a 6-digit code to{' '}
+                                <Text as="span" color="text-strong">
+                                    {phone}
                                 </Text>
-                                <HStack justify="center">
-                                    <PinInput
-                                        value={code}
-                                        onChange={setCode}
-                                        onComplete={(v) => {
-                                            setCode(v);
-                                            loginWithCode({
-                                                code: v,
-                                            }).catch((e) =>
-                                                setError(String(e)),
-                                            );
-                                        }}
-                                        otp
-                                    >
-                                        <PinInputField />
-                                        <PinInputField />
-                                        <PinInputField />
-                                        <PinInputField />
-                                        <PinInputField />
-                                        <PinInputField />
-                                    </PinInput>
-                                </HStack>
-                                <Button
-                                    variant="brand"
-                                    onClick={onSubmitCode}
-                                    isLoading={submittingCode}
-                                    isDisabled={code.length !== 6}
-                                    h="48px"
-                                >
-                                    Verify
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => {
-                                        setCode('');
-                                        setView('picker');
+                                .
+                            </Text>
+                            <HStack justify="center">
+                                <PinInput
+                                    value={code}
+                                    onChange={setCode}
+                                    onComplete={(v) => {
+                                        setCode(v);
+                                        loginWithCode({
+                                            code: v,
+                                        }).catch((e) => setError(String(e)));
                                     }}
+                                    otp
                                 >
-                                    Back
-                                </Button>
-                            </Stack>
-                        )}
+                                    <PinInputField />
+                                    <PinInputField />
+                                    <PinInputField />
+                                    <PinInputField />
+                                    <PinInputField />
+                                    <PinInputField />
+                                </PinInput>
+                            </HStack>
+                            <Button
+                                variant="brand"
+                                onClick={onSubmitCode}
+                                isLoading={submittingCode}
+                                isDisabled={code.length !== 6}
+                                h="48px"
+                            >
+                                Verify
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                    setCode('');
+                                    setView('picker');
+                                }}
+                            >
+                                Back
+                            </Button>
+                        </Stack>
+                    )}
 
                     {view === 'farcaster' && (
                         <Stack spacing={3} pt={2}>
                             <Text fontSize="sm" color="text-muted">
                                 Farcaster sign-in is coming soon. It uses Sign
-                                In With Farcaster (SIWF), which needs a
-                                Warpcast scan and isn&apos;t wired up here
-                                yet. Please choose another option for now.
+                                In With Farcaster (SIWF), which needs a Warpcast
+                                scan and isn&apos;t wired up here yet. Please
+                                choose another option for now.
                             </Text>
                             <Button
                                 size="sm"
@@ -716,11 +737,7 @@ function ProviderRow({
             onClick={onClick}
             isDisabled={isDisabled}
             leftIcon={
-                <Icon
-                    as={provider.Icon}
-                    boxSize="22px"
-                    color={iconColor}
-                />
+                <Icon as={provider.Icon} boxSize="22px" color={iconColor} />
             }
             rightIcon={isRecent ? <RecentDot /> : undefined}
         >
@@ -803,11 +820,9 @@ function RecentDot() {
 function IdentityRow({
     walletAddress,
     user,
-    onSwitchAccount,
 }: {
     walletAddress?: string;
     user: ReturnType<typeof usePrivy>['user'];
-    onSwitchAccount: () => void;
 }) {
     const { data: domainInfo } = useVechainDomain(walletAddress);
     const { data: avatar } = useGetAvatarOfAddress(walletAddress);
@@ -816,87 +831,46 @@ function IdentityRow({
     const linked = linkedSocials(user);
 
     return (
-        <Stack spacing={3}>
-            <HStack
-                spacing={3}
-                p={3}
-                rounded="md"
-                bg="card-elevated-bg"
-                borderWidth="1px"
-                borderColor="card-border"
-                align="center"
-            >
-                {avatar ? (
-                    <Image
-                        src={avatar}
-                        alt=""
-                        boxSize="40px"
-                        rounded="full"
-                        draggable={false}
-                        fallback={
-                            <Box
-                                boxSize="40px"
-                                rounded="full"
-                                bg="login-btn-hover-bg"
-                            />
-                        }
-                    />
-                ) : (
-                    <Box
-                        boxSize="40px"
-                        rounded="full"
-                        bg="login-btn-hover-bg"
-                    />
-                )}
-                <Stack spacing={0} flex={1} minW={0}>
-                    {walletAddress ? (
-                        <>
-                            <Text
-                                fontWeight={600}
-                                color="text-strong"
-                                lineHeight="1.2"
-                                noOfLines={1}
-                            >
-                                {domain ?? truncateAddress(walletAddress)}
-                            </Text>
-                            {domain && (
-                                <Text
-                                    fontFamily="mono"
-                                    fontSize="xs"
-                                    color="text-subtle"
-                                    lineHeight="1.2"
-                                >
-                                    {truncateAddress(walletAddress)}
-                                </Text>
-                            )}
-                        </>
-                    ) : (
-                        <Text fontSize="sm" color="text-muted">
-                            Creating your VeChain account…
-                        </Text>
-                    )}
-                </Stack>
-            </HStack>
-            <HStack
-                justify="space-between"
-                align="center"
-                spacing={3}
-                flexWrap="wrap"
-            >
-                <HStack spacing={2} minW={0}>
-                    <Text fontSize="xs" color="text-subtle">
-                        Signed in as
-                    </Text>
+        <HStack
+            spacing={3}
+            p={3}
+            rounded="md"
+            bg="card-elevated-bg"
+            borderWidth="1px"
+            borderColor="card-border"
+            align="center"
+        >
+            {avatar ? (
+                <Image
+                    src={avatar}
+                    alt=""
+                    boxSize="44px"
+                    rounded="full"
+                    draggable={false}
+                    fallback={
+                        <Box
+                            boxSize="44px"
+                            rounded="full"
+                            bg="login-btn-hover-bg"
+                        />
+                    }
+                />
+            ) : (
+                <Box boxSize="44px" rounded="full" bg="login-btn-hover-bg" />
+            )}
+            <Stack spacing={1} flex={1} minW={0}>
+                <HStack spacing={2} align="center" minW={0}>
                     <Text
-                        fontSize="sm"
-                        color="text-muted"
+                        fontWeight={600}
+                        color="text-strong"
+                        lineHeight="1.2"
                         noOfLines={1}
                         title={email ?? undefined}
                     >
-                        {email}
+                        {email ?? 'Signed in'}
                     </Text>
                     {linked.length > 0 && (
-                        <HStack spacing={1}>
+                        <HStack spacing={1} flexShrink={0}>
                             {linked.map((s) => (
                                 <Tooltip
                                     key={s.id}
@@ -906,9 +880,7 @@ function IdentityRow({
                                     openDelay={150}
                                     fontSize="xs"
                                 >
-                                    <span
-                                        style={{ display: 'inline-flex' }}
-                                    >
+                                    <span style={{ display: 'inline-flex' }}>
                                         <Icon
                                             as={s.Icon}
                                             boxSize="14px"
@@ -921,15 +893,25 @@ function IdentityRow({
                         </HStack>
                     )}
                 </HStack>
-                <Button
-                    variant="link"
-                    size="sm"
-                    onClick={onSwitchAccount}
-                >
-                    Use another account
-                </Button>
-            </HStack>
-        </Stack>
+                {walletAddress ? (
+                    <Text
+                        fontFamily="mono"
+                        fontSize="xs"
+                        color="text-subtle"
+                        lineHeight="1.2"
+                        noOfLines={1}
+                    >
+                        {domain
+                            ? `${domain} · ${truncateAddress(walletAddress)}`
+                            : truncateAddress(walletAddress)}
+                    </Text>
+                ) : (
+                    <Text fontSize="xs" color="text-subtle">
+                        Creating your VeChain account…
+                    </Text>
+                )}
+            </Stack>
+        </HStack>
     );
 }
 

@@ -41,24 +41,10 @@ export function VechainHeader({
         <Stack spacing={4} align="center" pt={6} pb={2}>
             <Box boxSize="48px" display="flex" alignItems="center">
                 <Image
-                    src="/brand/vechain-logomark-dark.png"
-                    alt="VeChain"
-                    boxSize="48px"
-                    draggable={false}
-                    sx={{
-                        _light: { display: 'block' },
-                        _dark: { display: 'none' },
-                    }}
-                />
-                <Image
                     src="/brand/vechain-logomark-light.png"
                     alt="VeChain"
                     boxSize="48px"
                     draggable={false}
-                    sx={{
-                        _light: { display: 'none' },
-                        _dark: { display: 'block' },
-                    }}
                 />
             </Box>
             <Stack spacing={2} align="center" textAlign="center" maxW="sm">

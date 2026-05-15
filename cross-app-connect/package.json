@@ -6,6 +6,7 @@
         "build": "next build",
         "clean": "rm -rf .next dist .turbo",
         "dev": "next dev --turbopack",
+        "generate-app-hub": "node scripts/fetch-app-hub.mjs",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {

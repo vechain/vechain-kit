@@ -57,7 +57,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     : undefined,
             }}
             loginMethods={[{ method: 'veworld', gridColumn: 4 }]}
-            darkMode
+            darkMode={false}
             network={{
                 type:
                     process.env.NEXT_PUBLIC_NETWORK_TYPE ?? 'main',
