@@ -136,14 +136,28 @@ export default function CrossAppConnectPage() {
         }
     }, [client, request, getAccessToken]);
 
-    // Once the user is authenticated and we have everything we need, accept
-    // the connection automatically. The user already opted in by clicking
-    // the login button in the requester dApp -- showing a separate Accept
-    // button would just add a redundant click. Skipped after a failure so
-    // the manual Accept button stays usable as a fallback.
+    // Once the user authenticates in this popup session (OAuth/email flow),
+    // accept the connection automatically -- they already opted in by clicking
+    // the login button on the requester dApp, so a separate Accept click is
+    // redundant.
+    //
+    // If the user was *already* authenticated when the popup opened (returning
+    // user with a live Privy session), don't auto-accept: snapping the popup
+    // open-and-shut with no visible step is jarring, and a returning user
+    // deserves an explicit confirmation that they're connecting to this
+    // requester. The manual Accept button stays available in both cases as a
+    // fallback for retries after errors.
+    const initialAuthRef = useRef<boolean | undefined>(undefined);
+    useEffect(() => {
+        if (!ready) return;
+        if (initialAuthRef.current !== undefined) return;
+        initialAuthRef.current = authenticated;
+    }, [ready, authenticated]);
+
     const autoAcceptedRef = useRef(false);
     useEffect(() => {
         if (autoAcceptedRef.current) return;
+        if (initialAuthRef.current !== false) return;
         if (!authenticated || !embedded || !request) return;
         if (submitting || submitError) return;
         autoAcceptedRef.current = true;
