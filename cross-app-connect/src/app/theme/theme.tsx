@@ -86,6 +86,20 @@ export const vechainTheme = extendTheme({
                     w: 'full',
                     fontWeight: 500,
                 },
+                // Override Chakra's default ghost so it reads against the
+                // VeChain dark-purple / almost-white surfaces. The default
+                // uses gray.700 / whiteAlpha.700 which all but disappear
+                // on our backgrounds.
+                ghost: {
+                    bg: 'transparent',
+                    color: 'text-muted',
+                    _hover: {
+                        bg: 'btn-row-hover-bg',
+                        color: 'text-strong',
+                    },
+                    _active: { bg: 'btn-row-hover-bg' },
+                    _disabled: { opacity: 0.4 },
+                },
             },
         },
         Card: {
