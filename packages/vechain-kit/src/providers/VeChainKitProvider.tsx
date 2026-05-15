@@ -337,19 +337,16 @@ const validateConfig = (
             : [{ method: 'veworld', gridColumn: 4 }];
     }
 
-    // Validate login methods if Privy is not configured
+    // Validate login methods if Privy is not configured.
+    // Methods 'google' | 'apple' | 'email' fall back to the VeChain whitelabel
+    // cross-app flow (via useLoginWithVeChain({ intent })) when no privy prop
+    // is set, so they are allowed without Privy configuration. Methods that
+    // have no cross-app fallback still require Privy.
     if (validatedProps.loginMethods) {
         if (!validatedProps.privy) {
             const invalidMethods = validatedProps.loginMethods.filter(
                 (method) =>
-                    [
-                        'email',
-                        'google',
-                        'apple',
-                        'github',
-                        'passkey',
-                        'more',
-                    ].includes(method.method),
+                    ['github', 'passkey', 'more'].includes(method.method),
             );
 
             if (invalidMethods.length > 0) {

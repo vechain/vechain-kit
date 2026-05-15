@@ -2,7 +2,8 @@ import { GridItem, Icon, useToken } from '@chakra-ui/react';
 import { FaApple } from 'react-icons/fa';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
-import { useLoginWithOAuth } from '@/hooks';
+import { useLoginWithOAuth, useLoginWithVeChain } from '@/hooks';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     isDark: boolean;
@@ -13,7 +14,9 @@ type Props = {
  *  flips to match the modal's text color so it stays legible across themes. */
 export const LoginWithAppleButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
+    const { privy } = useVeChainKitConfig();
     const { initOAuth } = useLoginWithOAuth();
+    const { login: loginViaCrossApp } = useLoginWithVeChain();
 
     const [stroke, strokeStrong, hoverBg, textPrimary] = useToken('colors', [
         'vechain-kit-border-button',
@@ -27,7 +30,11 @@ export const LoginWithAppleButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={async () => {
-                    await initOAuth({ provider: 'apple' });
+                    if (privy) {
+                        await initOAuth({ provider: 'apple' });
+                    } else {
+                        await loginViaCrossApp({ intent: 'apple' });
+                    }
                 }}
                 customIcon={
                     <Icon

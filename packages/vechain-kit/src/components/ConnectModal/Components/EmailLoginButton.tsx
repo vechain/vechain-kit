@@ -6,6 +6,7 @@ import {
     InputGroup,
     InputLeftElement,
     useDisclosure,
+    useToken,
     VStack,
 } from '@chakra-ui/react';
 import { useLoginWithEmail } from '@privy-io/react-auth';
@@ -14,12 +15,22 @@ import { LuMail } from 'react-icons/lu';
 import { EmailCodeVerificationModal } from '../../EmailCodeVerificationModal/EmailCodeVerificationModal';
 import { useTranslation } from 'react-i18next';
 import { useVeChainKitConfig } from '@/providers';
+import { useLoginWithVeChain } from '@/hooks';
+import { ConnectionButton } from '@/components';
 
 export const EmailLoginButton = () => {
+    const { privy } = useVeChainKitConfig();
+    if (!privy) {
+        return <EmailLoginCrossAppButton />;
+    }
+    return <EmailLoginPrivyButton />;
+};
+
+/** Inline email input -> OTP modal flow, powered by the host app's Privy. */
+const EmailLoginPrivyButton = () => {
     const { t } = useTranslation();
     const { darkMode: isDark } = useVeChainKitConfig();
 
-    // Email login
     const [email, setEmail] = useState('');
 
     const { sendCode, state: emailState } = useLoginWithEmail({});
@@ -28,7 +39,6 @@ export const EmailLoginButton = () => {
 
     const handleSendCode = async () => {
         await sendCode({ email });
-        // onClose();
         emailCodeVerificationModal.onOpen();
     };
 
@@ -94,5 +104,42 @@ export const EmailLoginButton = () => {
                 isLoading={emailState.status === 'sending-code'}
             />
         </>
+    );
+};
+
+/** Button that hands the email/OTP flow off to the VeChain whitelabel
+ *  cross-app host (used when the consumer dApp has no Privy config). */
+const EmailLoginCrossAppButton = () => {
+    const { t } = useTranslation();
+    const { darkMode: isDark } = useVeChainKitConfig();
+    const { login: loginViaCrossApp } = useLoginWithVeChain();
+
+    const [stroke, strokeStrong, hoverBg] = useToken('colors', [
+        'vechain-kit-border-button',
+        'vechain-kit-border-hover',
+        'vechain-kit-button-secondary-bg',
+    ]);
+
+    return (
+        <GridItem colSpan={4} w={'full'}>
+            <ConnectionButton
+                isDark={isDark}
+                onClick={async () => {
+                    await loginViaCrossApp({ intent: 'email' });
+                }}
+                icon={LuMail}
+                iconWidth={'24px'}
+                text={t('Continue with Email')}
+                style={{
+                    bg: 'transparent',
+                    border: `1px solid ${stroke}`,
+                    _hover: {
+                        bg: hoverBg,
+                        borderColor: strokeStrong,
+                        opacity: 1,
+                    },
+                }}
+            />
+        </GridItem>
     );
 };

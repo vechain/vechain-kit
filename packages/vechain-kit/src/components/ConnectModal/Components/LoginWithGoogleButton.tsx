@@ -2,7 +2,8 @@ import { GridItem, useToken } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
 import { ConnectionButton } from '@/components';
 import { useTranslation } from 'react-i18next';
-import { useLoginWithOAuth } from '@/hooks';
+import { useLoginWithOAuth, useLoginWithVeChain } from '@/hooks';
+import { useVeChainKitConfig } from '@/providers';
 
 type Props = {
     isDark: boolean;
@@ -12,7 +13,9 @@ type Props = {
 /** Secondary outline button — theme-driven stroke + row hover. */
 export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
     const { t } = useTranslation();
+    const { privy } = useVeChainKitConfig();
     const { initOAuth } = useLoginWithOAuth();
+    const { login: loginViaCrossApp } = useLoginWithVeChain();
 
     const [stroke, strokeStrong, hoverBg] = useToken('colors', [
         'vechain-kit-border-button',
@@ -25,7 +28,11 @@ export const LoginWithGoogleButton = ({ isDark, gridColumn }: Props) => {
             <ConnectionButton
                 isDark={isDark}
                 onClick={async () => {
-                    await initOAuth({ provider: 'google' });
+                    if (privy) {
+                        await initOAuth({ provider: 'google' });
+                    } else {
+                        await loginViaCrossApp({ intent: 'google' });
+                    }
                 }}
                 icon={FcGoogle}
                 iconWidth={'24px'}
