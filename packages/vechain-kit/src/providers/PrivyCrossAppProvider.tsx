@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { toPrivyWalletConnector } from '@privy-io/cross-app-connect/rainbow-kit';
+import { createPrivyCrossAppClient } from '@privy-io/cross-app-connect';
 import {
     useConnect,
     useDisconnect,
@@ -20,6 +21,37 @@ import {
     VECHAIN_MAINNET_NODE_BASE_URL,
     VECHAINSTATS_BASE_URL,
 } from '@/constants';
+
+/**
+ * Login methods that requester apps can pre-select on the whitelabel
+ * cross-app-connect host. When passed, the host skips its provider picker
+ * and jumps straight into the matching flow.
+ */
+export type CrossAppLoginIntent =
+    | 'google'
+    | 'apple'
+    | 'twitter'
+    | 'discord'
+    | 'email';
+
+export type LoginWithCrossAppOptions = {
+    /** Pre-select a login method on the provider's connect page. */
+    intent?: CrossAppLoginIntent;
+};
+
+const appendIntent = (url: string, intent: CrossAppLoginIntent) => {
+    const parsed = new URL(url);
+    parsed.searchParams.set('intent', intent);
+    return parsed.toString();
+};
+
+const resolveProviderConnectUrl = async (appID: string) => {
+    const client = createPrivyCrossAppClient({
+        providerAppId: appID,
+        chains: [vechain],
+    });
+    return client.getProviderConnectUrl();
+};
 
 export const vechain = defineChain({
     id: '1176455790972829965191905223412607679856028701100105089447013101863' as unknown as number,
@@ -115,22 +147,44 @@ export const usePrivyCrossAppSdk = () => {
     }, [disconnectAsync, isConnected]);
 
     const login = useCallback(
-        async (appID: string) => {
+        async (appID: string, options?: LoginWithCrossAppOptions) => {
             try {
                 setIsConnecting(true);
                 setConnectionError(null);
 
-                const connector = connectors.find(
-                    (c) => c.id === (appID || VECHAIN_PRIVY_APP_ID),
-                );
+                const resolvedAppId = appID || VECHAIN_PRIVY_APP_ID;
 
+                if (options?.intent) {
+                    // Resolve the registered whitelabel connect URL via the
+                    // Privy backend and append intent. This avoids hardcoding
+                    // the whitelabel domain in the kit.
+                    const baseUrl = await resolveProviderConnectUrl(
+                        resolvedAppId,
+                    );
+                    const overrideConnectUrl = appendIntent(
+                        baseUrl,
+                        options.intent,
+                    );
+                    const customConnector = toPrivyWalletConnector({
+                        id: resolvedAppId,
+                        name:
+                            resolvedAppId === VECHAIN_PRIVY_APP_ID
+                                ? 'VeChain'
+                                : '',
+                        iconUrl: '',
+                        overrideConnectUrl,
+                    });
+                    return await connectAsync({ connector: customConnector });
+                }
+
+                const connector = connectors.find(
+                    (c) => c.id === resolvedAppId,
+                );
                 if (!connector) {
                     throw new Error('Connector not found');
                 }
 
-                const result = await connectAsync({ connector });
-
-                return result;
+                return await connectAsync({ connector });
             } catch (error) {
                 setConnectionError(error as Error);
                 throw error;
