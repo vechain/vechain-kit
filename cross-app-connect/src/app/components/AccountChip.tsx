@@ -6,14 +6,19 @@ import {
     HStack,
     Icon,
     IconButton,
+    Image,
     Stack,
     Text,
     Tooltip,
     useClipboard,
 } from '@chakra-ui/react';
-import { LuCheck, LuCopy, LuWallet } from 'react-icons/lu';
+import { LuCheck, LuCopy } from 'react-icons/lu';
 import { Address } from '@vechain/sdk-core';
 import type { ThorClient } from '@vechain/sdk-network';
+import {
+    useGetAvatarOfAddress,
+    useVechainDomain,
+} from '@vechain/vechain-kit';
 import { formatUnits } from 'viem';
 
 type Props = {
@@ -35,20 +40,24 @@ function formatVET(raw: bigint): string {
 }
 
 /**
- * Header row identifying the account that will sign. Shows the truncated
- * address, a copy button, and the live VET balance so the user can sanity
- * check ("yep, that's my wallet, and it has the funds it'll need").
+ * Header row identifying the account that will sign. Shows the address with
+ * its VeChain domain (if any) plus the avatar (custom for .vet domains,
+ * Picasso identicon as fallback), a copy button, and the live VET balance.
  */
 export function AccountChip({ address, thor }: Props) {
     const { onCopy, hasCopied } = useClipboard(address);
     const [balance, setBalance] = useState<bigint | null>(null);
+    const { data: domainInfo } = useVechainDomain(address);
+    const { data: avatar } = useGetAvatarOfAddress(address);
 
     useEffect(() => {
         if (!thor || !address) return;
         let cancelled = false;
         (async () => {
             try {
-                const acc = await thor.accounts.getAccount(Address.of(address));
+                const acc = await thor.accounts.getAccount(
+                    Address.of(address),
+                );
                 if (!cancelled) setBalance(BigInt(acc.balance.toString()));
             } catch {
                 // Network hiccup — leave balance null and let the chip render
@@ -60,6 +69,8 @@ export function AccountChip({ address, thor }: Props) {
         };
     }, [thor, address]);
 
+    const domain = domainInfo?.domain;
+
     return (
         <HStack
             spacing={3}
@@ -70,27 +81,51 @@ export function AccountChip({ address, thor }: Props) {
             borderColor="card-border"
             align="center"
         >
-            <Box
-                p={2}
-                rounded="full"
-                bg="login-btn-hover-bg"
-                color="text-strong"
-            >
-                <Icon as={LuWallet} boxSize="16px" />
-            </Box>
+            {avatar ? (
+                <Image
+                    src={avatar}
+                    alt=""
+                    boxSize="36px"
+                    rounded="full"
+                    draggable={false}
+                    fallback={<Box boxSize="36px" rounded="full" bg="login-btn-hover-bg" />}
+                />
+            ) : (
+                <Box boxSize="36px" rounded="full" bg="login-btn-hover-bg" />
+            )}
             <Stack spacing={0} flex={1} minW={0}>
                 <Text fontSize="xs" color="text-subtle">
                     Your account
                 </Text>
                 <HStack spacing={2} align="center">
-                    <Text
-                        fontFamily="mono"
-                        fontSize="sm"
-                        fontWeight={500}
-                        color="text-strong"
-                    >
-                        {truncate(address)}
-                    </Text>
+                    {domain ? (
+                        <Stack spacing={0}>
+                            <Text
+                                fontWeight={600}
+                                color="text-strong"
+                                lineHeight="1.2"
+                            >
+                                {domain}
+                            </Text>
+                            <Text
+                                fontFamily="mono"
+                                fontSize="xs"
+                                color="text-subtle"
+                                lineHeight="1.2"
+                            >
+                                {truncate(address)}
+                            </Text>
+                        </Stack>
+                    ) : (
+                        <Text
+                            fontFamily="mono"
+                            fontSize="sm"
+                            fontWeight={500}
+                            color="text-strong"
+                        >
+                            {truncate(address)}
+                        </Text>
+                    )}
                     <Tooltip
                         label={hasCopied ? 'Copied' : 'Copy address'}
                         placement="top"
@@ -118,22 +153,23 @@ export function AccountChip({ address, thor }: Props) {
                             }}
                         />
                     </Tooltip>
-                    {balance !== null && (
-                        <>
-                            <Text fontSize="sm" color="text-subtle">
-                                ·
-                            </Text>
-                            <Text
-                                fontSize="sm"
-                                color="text-muted"
-                                fontFamily="mono"
-                            >
-                                {formatVET(balance)} VET
-                            </Text>
-                        </>
-                    )}
                 </HStack>
             </Stack>
+            {balance !== null && (
+                <Stack spacing={0} align="flex-end">
+                    <Text fontSize="xs" color="text-subtle">
+                        Balance
+                    </Text>
+                    <Text
+                        fontSize="sm"
+                        fontWeight={600}
+                        color="text-strong"
+                        fontFamily="mono"
+                    >
+                        {formatVET(balance)} VET
+                    </Text>
+                </Stack>
+            )}
         </HStack>
     );
 }
