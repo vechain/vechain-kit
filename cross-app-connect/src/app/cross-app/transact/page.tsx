@@ -39,7 +39,9 @@ import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/co
 import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
+import { simulateClauses, type Simulation } from '../_lib/simulate';
 import type { NETWORK_TYPE } from '../_lib/network-tokens';
+import { formatUnits } from 'viem';
 
 const SUPPORTED_METHODS = ['eth_signTypedData_v4'] as const;
 const SUPPORTED_PRIMARY_TYPES = [
@@ -123,6 +125,7 @@ export default function CrossAppTransactPage() {
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [decoded, setDecoded] = useState<DecodedClause[] | null>(null);
+    const [simulation, setSimulation] = useState<Simulation | null>(null);
     const inspect = useDisclosure();
 
     useEffect(() => {
@@ -251,6 +254,28 @@ export default function CrossAppTransactPage() {
             cancelled = true;
         };
     }, [parsed, thor, network.type]);
+
+    // Simulate balance changes once we've decoded the clauses and resolved
+    // the smart-account address. Async so the UI can show "Checking balance
+    // changes..." while the Thor reads are in flight.
+    useEffect(() => {
+        if (!decoded || !thor || !smartAccount?.address) {
+            setSimulation(null);
+            return;
+        }
+        let cancelled = false;
+        (async () => {
+            const result = await simulateClauses(
+                decoded,
+                smartAccount.address,
+                thor,
+            );
+            if (!cancelled) setSimulation(result);
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [decoded, thor, smartAccount?.address]);
 
     const onApprove = useCallback(async () => {
         if (!verified || !parsed) return;
@@ -420,6 +445,13 @@ export default function CrossAppTransactPage() {
                                     <ActionRow key={i} action={d} />
                                 ))}
                             </Stack>
+                        )}
+
+                        {decoded && (
+                            <BalanceChangeSection
+                                simulation={simulation}
+                                hasUnknownAction={hasUnknown}
+                            />
                         )}
 
                         {blocked && (
@@ -649,6 +681,123 @@ function ActionRow({ action }: { action: DecodedClause }) {
             </Stack>
         </HStack>
     );
+}
+
+function BalanceChangeSection({
+    simulation,
+    hasUnknownAction,
+}: {
+    simulation: Simulation | null;
+    hasUnknownAction: boolean;
+}) {
+    if (!simulation) {
+        return (
+            <Box
+                p={3}
+                rounded="md"
+                bg="card-elevated-bg"
+                borderWidth="1px"
+                borderColor="card-border"
+            >
+                <HStack spacing={2}>
+                    <Spinner size="xs" color="accent" />
+                    <Text fontSize="sm" color="text-muted">
+                        Checking how this affects your balance…
+                    </Text>
+                </HStack>
+            </Box>
+        );
+    }
+    if (simulation.changes.length === 0 && !simulation.unpredictable) {
+        // Pure approval / pure read-only call -- nothing to preview.
+        return null;
+    }
+    return (
+        <Box
+            p={3}
+            rounded="md"
+            bg="card-elevated-bg"
+            borderWidth="1px"
+            borderColor="card-border"
+        >
+            <Stack spacing={2}>
+                <Text
+                    fontSize="xs"
+                    color="text-subtle"
+                    textTransform="uppercase"
+                    letterSpacing="0.05em"
+                >
+                    Your wallet will
+                </Text>
+                {simulation.changes.length === 0 && (
+                    <Text fontSize="sm" color="text-muted">
+                        We couldn&apos;t predict what this changes in your
+                        wallet. Only continue if you trust this app.
+                    </Text>
+                )}
+                {simulation.changes.map((c) => (
+                    <BalanceChangeRow
+                        key={c.token.address}
+                        change={c}
+                    />
+                ))}
+                {simulation.unpredictable && simulation.changes.length > 0 && (
+                    <Text fontSize="xs" color="text-subtle">
+                        Other changes are possible — this app called
+                        something we couldn&apos;t simulate.
+                    </Text>
+                )}
+                {!hasUnknownAction && (
+                    <Text fontSize="xs" color="text-subtle">
+                        Network fees are covered for you.
+                    </Text>
+                )}
+            </Stack>
+        </Box>
+    );
+}
+
+function BalanceChangeRow({ change }: { change: Simulation['changes'][number] }) {
+    const { token, before, after, delta } = change;
+    const sign = delta < BigInt(0) ? '-' : '+';
+    const absDelta = delta < BigInt(0) ? -delta : delta;
+    const deltaColor = delta < BigInt(0) ? 'red.400' : 'green.400';
+    return (
+        <HStack justify="space-between" align="center">
+            <Text fontSize="sm" fontWeight={600} color="text-strong">
+                {token.symbol}
+            </Text>
+            <HStack spacing={2} color="text-muted">
+                <Text fontSize="sm" fontFamily="mono">
+                    {formatAmount(before, token.decimals)}
+                </Text>
+                <Text fontSize="sm" color="text-subtle">
+                    →
+                </Text>
+                <Text fontSize="sm" fontFamily="mono">
+                    {formatAmount(after, token.decimals)}
+                </Text>
+                <Text
+                    fontSize="xs"
+                    fontWeight={600}
+                    color={deltaColor}
+                    minW="56px"
+                    textAlign="right"
+                >
+                    {sign}
+                    {formatAmount(absDelta, token.decimals)}
+                </Text>
+            </HStack>
+        </HStack>
+    );
+}
+
+function formatAmount(raw: bigint, decimals: number): string {
+    const str = formatUnits(raw, decimals);
+    if (!str.includes('.')) return str;
+    const [whole, frac] = str.split('.');
+    const trimmed = frac.replace(/0+$/, '').slice(0, 4);
+    return trimmed.length === 0 ? whole : `${whole}.${trimmed}`;
 }
 
 function describeDetail(action: DecodedClause): string | null {

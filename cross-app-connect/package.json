@@ -16,6 +16,7 @@
         "@privy-io/react-auth": "2.25.0",
         "@tanstack/react-query": "^5.64.2",
         "@vechain/dapp-kit-react": "2.1.0-rc.5",
+        "@vechain/sdk-core": "2.0.7",
         "@vechain/sdk-network": "2.0.7",
         "@vechain/vechain-kit": "workspace:*",
         "next": "~16.2.3",
