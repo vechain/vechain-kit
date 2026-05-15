@@ -19,7 +19,6 @@ import { AppShowcase } from '@/app/components/features/AppShowcase';
 import { FAQSection } from '../components/features/FAQSection';
 import { QuickStartSection } from '../components/features/QuickStartSection';
 import { AISkillsSection } from '../components/features/AISkillsSection';
-import { DocsEmbedSection } from '../components/features/DocsEmbedSection';
 import { ScrollableInfoSections } from '@/app/components/features/ScrollableInfoSections';
 import { FloatingGetStartedButton } from '@/app/components/features/FloatingGetStartedButton/FloatingGetStartedButton';
 
@@ -87,8 +86,6 @@ export default function Home(): ReactElement {
             <QuickStartSection />
 
             <AISkillsSection />
-
-            <DocsEmbedSection />
 
             <FAQSection />
 
