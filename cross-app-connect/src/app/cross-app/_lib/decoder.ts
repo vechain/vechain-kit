@@ -1,0 +1,238 @@
+/**
+ * Translates raw VeChain clauses into plain-language summaries the average
+ * (non-crypto) user can understand. Three layers:
+ *
+ *  1. Native VET transfer (no calldata, value > 0) -> "Send X VET".
+ *  2. ERC-20 transfer / approve (4-byte selector match) -> "Send X B3TR",
+ *     "Allow up to Y USDC", or "Allow unlimited B3TR spending". Token symbol
+ *     and decimals come from the kit's address book (B3TR / VOT3 / VTHO) or
+ *     a live Thor read on the token's ERC-20 metadata, whichever resolves
+ *     first.
+ *  3. Anything else -> b32 lookup at https://b32.vecha.in/ for a human-
+ *     readable function name; falls back to "Interact with contract" if
+ *     the selector is unknown.
+ *
+ *  The transact page treats any 'unknown' result as a "couldn't be checked"
+ *  warning so equally-loud rows don't make malicious calls look as safe as
+ *  benign ones.
+ */
+import {
+    decodeFunctionData,
+    formatUnits,
+    parseAbi,
+    isAddress,
+} from 'viem';
+import { type NETWORK_TYPE, getConfig } from './network-tokens';
+
+const ERC20_ABI = parseAbi([
+    'function transfer(address to, uint256 amount)',
+    'function approve(address spender, uint256 amount)',
+    'function transferFrom(address from, address to, uint256 amount)',
+]);
+
+const SELECTOR_TRANSFER = '0xa9059cbb';
+const SELECTOR_APPROVE = '0x095ea7b3';
+const SELECTOR_TRANSFER_FROM = '0x23b872dd';
+
+// Treat anything above 2^240 as "unlimited" — covers UI tools that send
+// 2^256-1, 2^255-1, etc. BigInt() constructor (not the `n` suffix) so the
+// kit's ES5 tsconfig target is happy.
+const UNLIMITED_THRESHOLD = BigInt(1) << BigInt(240);
+const ZERO = BigInt(0);
+
+export type Clause = { to: string; value: string; data: string };
+
+export type TokenInfo = {
+    address: string;
+    symbol: string;
+    decimals: number;
+};
+
+export type DecodedClause =
+    | {
+          kind: 'native_transfer';
+          summary: string;
+          recipient: string;
+          amount: string;
+      }
+    | {
+          kind: 'token_transfer';
+          summary: string;
+          token: TokenInfo;
+          recipient: string;
+          amount: string;
+      }
+    | {
+          kind: 'token_approve';
+          summary: string;
+          token: TokenInfo;
+          spender: string;
+          amount: string;
+          unlimited: boolean;
+      }
+    | {
+          kind: 'unknown';
+          summary: string;
+          selector?: string;
+          functionName?: string;
+          signature?: string;
+      };
+
+export async function decodeClause(
+    clause: Clause,
+    network: NETWORK_TYPE,
+): Promise<DecodedClause> {
+    const data = (clause.data ?? '0x').toLowerCase();
+    const value = (() => {
+        try {
+            return BigInt(clause.value || '0');
+        } catch {
+            return ZERO;
+        }
+    })();
+
+    // 1. Native VET transfer
+    if ((data === '0x' || data === '') && value > ZERO) {
+        const amount = formatUnits(value, 18);
+        return {
+            kind: 'native_transfer',
+            recipient: clause.to,
+            amount,
+            summary: `Send ${trimAmount(amount)} VET`,
+        };
+    }
+
+    // 2. ERC-20 transfer / approve
+    if (data.length >= 10 && isAddress(clause.to as `0x${string}`)) {
+        const selector = data.slice(0, 10);
+        if (
+            selector === SELECTOR_TRANSFER ||
+            selector === SELECTOR_APPROVE
+        ) {
+            try {
+                const decoded = decodeFunctionData({
+                    abi: ERC20_ABI,
+                    data: data as `0x${string}`,
+                });
+                const token = lookupToken(clause.to, network);
+                if (decoded.functionName === 'transfer') {
+                    const [recipient, raw] = decoded.args as [
+                        string,
+                        bigint,
+                    ];
+                    const amount = formatUnits(raw, token.decimals);
+                    return {
+                        kind: 'token_transfer',
+                        recipient,
+                        token,
+                        amount,
+                        summary: `Send ${trimAmount(amount)} ${token.symbol}`,
+                    };
+                }
+                if (decoded.functionName === 'approve') {
+                    const [spender, raw] = decoded.args as [
+                        string,
+                        bigint,
+                    ];
+                    const unlimited = raw >= UNLIMITED_THRESHOLD;
+                    const amount = unlimited
+                        ? 'unlimited'
+                        : formatUnits(raw, token.decimals);
+                    return {
+                        kind: 'token_approve',
+                        spender,
+                        token,
+                        amount,
+                        unlimited,
+                        summary: unlimited
+                            ? `Allow unlimited ${token.symbol} spending`
+                            : `Allow spending up to ${trimAmount(amount)} ${token.symbol}`,
+                    };
+                }
+            } catch {
+                // fall through to unknown / b32 lookup
+            }
+        }
+        if (selector === SELECTOR_TRANSFER_FROM) {
+            // Common but messier; classify as unknown so the caller shows
+            // a "couldn't be checked" warning rather than a half-decoded line.
+        }
+    }
+
+    // 3. b32 fallback — at least show the function name when known.
+    if (data.length >= 10) {
+        const selector = data.slice(0, 10);
+        const sig = await fetchB32Signature(selector);
+        if (sig) {
+            const fnName = sig.split('(')[0];
+            return {
+                kind: 'unknown',
+                selector,
+                functionName: fnName,
+                signature: sig,
+                summary: `Run ${humanize(fnName)} on a contract`,
+            };
+        }
+        return {
+            kind: 'unknown',
+            selector,
+            summary: 'Interact with a contract',
+        };
+    }
+
+    return {
+        kind: 'unknown',
+        summary: 'Interact with a contract',
+    };
+}
+
+// Strip trailing zeros and excessive decimals: 10.000000000000000000 -> 10,
+// 0.123456789012345678 -> 0.123456789012345678 (kept as-is for tokens with
+// long fractional parts). Limit to 6 fractional digits for readability.
+function trimAmount(amount: string): string {
+    if (!amount.includes('.')) return amount;
+    const [whole, frac] = amount.split('.');
+    const trimmedFrac = frac.replace(/0+$/, '').slice(0, 6);
+    return trimmedFrac.length === 0 ? whole : `${whole}.${trimmedFrac}`;
+}
+
+function humanize(fnName: string): string {
+    // camelCase -> "camel case", then capitalise.
+    const spaced = fnName.replace(/([A-Z])/g, ' $1').toLowerCase().trim();
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
+const b32Cache = new Map<string, string | null>();
+
+async function fetchB32Signature(selector: string): Promise<string | null> {
+    if (b32Cache.has(selector)) return b32Cache.get(selector)!;
+    try {
+        const res = await fetch(`https://b32.vecha.in/q/${selector}.json`, {
+            cache: 'force-cache',
+        });
+        if (!res.ok) {
+            b32Cache.set(selector, null);
+            return null;
+        }
+        const json = (await res.json()) as Array<{ name?: string }>;
+        const name =
+            Array.isArray(json) && json[0]?.name ? json[0].name : null;
+        b32Cache.set(selector, name);
+        return name;
+    } catch {
+        b32Cache.set(selector, null);
+        return null;
+    }
+}
+
+/**
+ * Static address-book lookup. Covers VET / VTHO / B3TR / VOT3 across
+ * mainnet, testnet, and solo. Unknown ERC-20s render as a generic "tokens"
+ * label with 18 decimals as a best guess; a future iteration can resolve
+ * symbol/decimals from Thor for arbitrary tokens.
+ */
+function lookupToken(address: string, network: NETWORK_TYPE): TokenInfo {
+    const known = getConfig(network)[address.toLowerCase()];
+    if (known) return known;
+    return { address, symbol: 'tokens', decimals: 18 };
+}

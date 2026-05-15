@@ -5,25 +5,40 @@ import {
     Alert,
     AlertDescription,
     AlertIcon,
-    Badge,
     Box,
     Button,
     Card,
     CardBody,
     Center,
     Code,
+    Collapse,
     Container,
-    Divider,
     HStack,
+    Icon,
     Spinner,
     Stack,
     Text,
+    useDisclosure,
 } from '@chakra-ui/react';
+import {
+    LuArrowUpRight,
+    LuChevronDown,
+    LuChevronUp,
+    LuCircleAlert,
+    LuCircleHelp,
+    LuShieldCheck,
+} from 'react-icons/lu';
 import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
-import { useSmartAccount, useGetChainId } from '@vechain/vechain-kit';
+import {
+    useSmartAccount,
+    useGetChainId,
+    useVeChainKitConfig,
+} from '@vechain/vechain-kit';
 import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/connect';
 import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
+import { decodeClause, type DecodedClause } from '../_lib/decoder';
+import type { NETWORK_TYPE } from '../_lib/network-tokens';
 
 const SUPPORTED_METHODS = ['eth_signTypedData_v4'] as const;
 const SUPPORTED_PRIMARY_TYPES = [
@@ -94,6 +109,7 @@ export default function CrossAppTransactPage() {
     const embedded = wallets.find((w) => w.walletClientType === 'privy');
     const { data: smartAccount } = useSmartAccount(embedded?.address);
     const { data: kitChainId } = useGetChainId();
+    const { network } = useVeChainKitConfig();
 
     const [verified, setVerified] = useState<VerifiedTransactionRequest | null>(
         null,
@@ -104,6 +120,8 @@ export default function CrossAppTransactPage() {
     const [block, setBlock] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [decoded, setDecoded] = useState<DecodedClause[] | null>(null);
+    const inspect = useDisclosure();
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -204,6 +222,29 @@ export default function CrossAppTransactPage() {
         }
         setBlock(null);
     }, [verified, parsed, smartAccount?.address, kitChainId]);
+
+    // Decode each clause to a human-readable summary. Fires once whenever
+    // the parsed clauses change. Results cached in module-level Maps inside
+    // decoder.ts so a re-render or a returning user doesn't re-fetch b32
+    // signatures.
+    useEffect(() => {
+        if (!parsed) {
+            setDecoded(null);
+            return;
+        }
+        let cancelled = false;
+        (async () => {
+            const results = await Promise.all(
+                parsed.clauses.map((c) =>
+                    decodeClause(c, network.type as NETWORK_TYPE),
+                ),
+            );
+            if (!cancelled) setDecoded(results);
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [parsed, network.type]);
 
     const onApprove = useCallback(async () => {
         if (!verified || !parsed) return;
@@ -339,87 +380,81 @@ export default function CrossAppTransactPage() {
     }
 
     const blocked = block !== null;
+    const stillDecoding = decoded === null;
+    const hasUnknown =
+        decoded?.some((d) => d.kind === 'unknown') ?? false;
+    const hasUnlimitedApprove =
+        decoded?.some(
+            (d) => d.kind === 'token_approve' && d.unlimited,
+        ) ?? false;
 
     return (
         <PageShell>
-            <VechainHeader title="Review transaction" />
+            <VechainHeader
+                title="Confirm action"
+                subtitle={
+                    decoded
+                        ? decoded.length === 1
+                            ? 'This app wants to:'
+                            : `This app wants to do ${decoded.length} things:`
+                        : 'Checking what this does…'
+                }
+                requesterUrl={verified.connection.callbackUrl}
+            />
             <Card>
                 <CardBody>
-                    <Stack spacing={4}>
-                        <HStack justify="space-between">
-                            <Text fontSize="xs" color="text-subtle">
-                                Smart account
-                            </Text>
-                            <Badge bg="chip-bg" color="chip-text">
-                                {parsed.typedData.primaryType}
-                            </Badge>
-                        </HStack>
-                        <Text
-                            fontFamily="mono"
-                            fontSize="sm"
-                            color="text-muted"
-                        >
-                            {smartAccount?.address
-                                ? truncate(smartAccount.address)
-                                : 'resolving…'}
-                        </Text>
+                    <Stack spacing={5}>
+                        {stillDecoding ? (
+                            <Center py={6}>
+                                <Spinner color="accent" size="sm" />
+                            </Center>
+                        ) : (
+                            <Stack spacing={3}>
+                                {decoded!.map((d, i) => (
+                                    <ActionRow key={i} action={d} />
+                                ))}
+                            </Stack>
+                        )}
+
                         {blocked && (
                             <Alert status="error" rounded="md">
                                 <AlertIcon />
                                 <AlertDescription>{block}</AlertDescription>
                             </Alert>
                         )}
-                        <Divider borderColor="card-border" />
-                        <Stack spacing={3}>
-                            {parsed.clauses.map((c, i) => (
-                                <Box
-                                    key={i}
-                                    p={3}
+
+                        {!blocked && hasUnknown && (
+                            <Alert
+                                status="warning"
+                                rounded="md"
+                                variant="left-accent"
+                            >
+                                <AlertIcon />
+                                <AlertDescription fontSize="sm">
+                                    We couldn&apos;t double-check every step
+                                    here. Only continue if you trust this
+                                    app.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
+                        {!blocked &&
+                            !hasUnknown &&
+                            hasUnlimitedApprove && (
+                                <Alert
+                                    status="warning"
                                     rounded="md"
-                                    borderWidth="1px"
-                                    borderColor="card-border"
+                                    variant="left-accent"
                                 >
-                                    <Stack spacing={1}>
-                                        <HStack justify="space-between">
-                                            <Text fontSize="xs" color="text-subtle">
-                                                Clause {i + 1} · to
-                                            </Text>
-                                            <Code fontSize="xs" bg="transparent" color="text-muted">
-                                                {truncate(c.to)}
-                                            </Code>
-                                        </HStack>
-                                        {c.value && c.value !== '0' && (
-                                            <HStack justify="space-between">
-                                                <Text fontSize="xs" color="text-subtle">
-                                                    value
-                                                </Text>
-                                                <Code fontSize="xs" bg="transparent" color="text-muted">
-                                                    {c.value}
-                                                </Code>
-                                            </HStack>
-                                        )}
-                                        {c.data && c.data !== '0x' && (
-                                            <Box>
-                                                <Text fontSize="xs" color="text-subtle">
-                                                    data
-                                                </Text>
-                                                <Code
-                                                    fontSize="xs"
-                                                    bg="transparent"
-                                                    color="text-muted"
-                                                    whiteSpace="pre-wrap"
-                                                    wordBreak="break-all"
-                                                >
-                                                    {c.data.length > 80
-                                                        ? `${c.data.slice(0, 80)}…`
-                                                        : c.data}
-                                                </Code>
-                                            </Box>
-                                        )}
-                                    </Stack>
-                                </Box>
-                            ))}
-                        </Stack>
+                                    <AlertIcon />
+                                    <AlertDescription fontSize="sm">
+                                        This app is asking for unlimited
+                                        access to one of your tokens. Make
+                                        sure you trust it.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+
                         {submitError && (
                             <Alert status="error" rounded="md">
                                 <AlertIcon />
@@ -428,15 +463,19 @@ export default function CrossAppTransactPage() {
                                 </AlertDescription>
                             </Alert>
                         )}
+
                         <Button
                             variant="brand"
                             onClick={onApprove}
                             isLoading={submitting}
-                            isDisabled={blocked || !smartAccount?.address}
+                            isDisabled={
+                                blocked ||
+                                !smartAccount?.address ||
+                                stillDecoding
+                            }
                             w="full"
-                            h="48px"
                         >
-                            Approve
+                            {hasUnknown ? 'Continue anyway' : 'Continue'}
                         </Button>
                         <Button
                             variant="ghost"
@@ -444,13 +483,221 @@ export default function CrossAppTransactPage() {
                             isDisabled={submitting}
                             w="full"
                         >
-                            Reject
+                            Cancel
                         </Button>
+
+                        <Box pt={2}>
+                            <Button
+                                variant="link"
+                                onClick={inspect.onToggle}
+                                rightIcon={
+                                    <Icon
+                                        as={
+                                            inspect.isOpen
+                                                ? LuChevronUp
+                                                : LuChevronDown
+                                        }
+                                        boxSize="14px"
+                                    />
+                                }
+                            >
+                                {inspect.isOpen
+                                    ? 'Hide details'
+                                    : 'Inspect details'}
+                            </Button>
+                            <Collapse in={inspect.isOpen} animateOpacity>
+                                <Stack spacing={3} mt={3}>
+                                    <DetailRow
+                                        label="Your account"
+                                        value={
+                                            smartAccount?.address
+                                                ? truncate(
+                                                      smartAccount.address,
+                                                  )
+                                                : 'resolving…'
+                                        }
+                                    />
+                                    <DetailRow
+                                        label="Network"
+                                        value={networkLabel(network.type)}
+                                    />
+                                    <DetailRow
+                                        label="Type"
+                                        value={parsed.typedData.primaryType}
+                                    />
+                                    <Stack spacing={2}>
+                                        <Text
+                                            fontSize="xs"
+                                            color="text-subtle"
+                                            textTransform="uppercase"
+                                            letterSpacing="0.05em"
+                                        >
+                                            Raw clauses
+                                        </Text>
+                                        {parsed.clauses.map((c, i) => (
+                                            <Box
+                                                key={i}
+                                                p={3}
+                                                rounded="md"
+                                                bg="card-elevated-bg"
+                                                borderWidth="1px"
+                                                borderColor="card-border"
+                                            >
+                                                <Stack spacing={1}>
+                                                    <DetailRow
+                                                        label={`Clause ${i + 1} · to`}
+                                                        value={
+                                                            <Code
+                                                                fontSize="xs"
+                                                                bg="transparent"
+                                                                color="text-muted"
+                                                            >
+                                                                {truncate(c.to)}
+                                                            </Code>
+                                                        }
+                                                    />
+                                                    {c.value && c.value !== '0' && (
+                                                        <DetailRow
+                                                            label="value"
+                                                            value={
+                                                                <Code
+                                                                    fontSize="xs"
+                                                                    bg="transparent"
+                                                                    color="text-muted"
+                                                                >
+                                                                    {c.value}
+                                                                </Code>
+                                                            }
+                                                        />
+                                                    )}
+                                                    {c.data && c.data !== '0x' && (
+                                                        <Box>
+                                                            <Text
+                                                                fontSize="xs"
+                                                                color="text-subtle"
+                                                            >
+                                                                data
+                                                            </Text>
+                                                            <Code
+                                                                fontSize="xs"
+                                                                bg="transparent"
+                                                                color="text-muted"
+                                                                whiteSpace="pre-wrap"
+                                                                wordBreak="break-all"
+                                                            >
+                                                                {c.data.length > 80
+                                                                    ? `${c.data.slice(0, 80)}…`
+                                                                    : c.data}
+                                                            </Code>
+                                                        </Box>
+                                                    )}
+                                                </Stack>
+                                            </Box>
+                                        ))}
+                                    </Stack>
+                                </Stack>
+                            </Collapse>
+                        </Box>
                     </Stack>
                 </CardBody>
             </Card>
         </PageShell>
     );
+}
+
+function ActionRow({ action }: { action: DecodedClause }) {
+    const icon =
+        action.kind === 'native_transfer' || action.kind === 'token_transfer'
+            ? LuArrowUpRight
+            : action.kind === 'token_approve'
+            ? LuShieldCheck
+            : LuCircleHelp;
+    const accent =
+        action.kind === 'unknown'
+            ? 'orange.400'
+            : action.kind === 'token_approve' &&
+              (action as { unlimited: boolean }).unlimited
+            ? 'orange.400'
+            : 'text-strong';
+    const detail = describeDetail(action);
+    return (
+        <HStack spacing={3} align="flex-start">
+            <Box
+                p={2}
+                rounded="full"
+                bg="login-btn-hover-bg"
+                color={accent}
+                mt="2px"
+            >
+                <Icon as={icon} boxSize="16px" />
+            </Box>
+            <Stack spacing={0} flex={1} minW={0}>
+                <Text fontWeight={600} color="text-strong">
+                    {action.summary}
+                </Text>
+                {detail && (
+                    <Text fontSize="sm" color="text-muted">
+                        {detail}
+                    </Text>
+                )}
+            </Stack>
+        </HStack>
+    );
+}
+
+function describeDetail(action: DecodedClause): string | null {
+    switch (action.kind) {
+        case 'native_transfer':
+            return `To ${truncate(action.recipient)}`;
+        case 'token_transfer':
+            return `To ${truncate(action.recipient)}`;
+        case 'token_approve':
+            return `Spender: ${truncate(action.spender)}`;
+        case 'unknown':
+            return action.signature
+                ? `Function: ${action.signature}`
+                : action.selector
+                ? `Selector: ${action.selector}`
+                : null;
+        default:
+            return null;
+    }
+}
+
+function DetailRow({
+    label,
+    value,
+}: {
+    label: string;
+    value: React.ReactNode;
+}) {
+    return (
+        <HStack justify="space-between" align="center">
+            <Text fontSize="xs" color="text-subtle">
+                {label}
+            </Text>
+            {typeof value === 'string' ? (
+                <Text fontFamily="mono" fontSize="xs" color="text-muted">
+                    {value}
+                </Text>
+            ) : (
+                value
+            )}
+        </HStack>
+    );
+}
+
+function networkLabel(type: string): string {
+    switch (type) {
+        case 'main':
+            return 'VeChain Mainnet';
+        case 'test':
+            return 'VeChain Testnet';
+        case 'solo':
+            return 'Local Thor Solo';
+        default:
+            return type;
+    }
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
