@@ -479,5 +479,16 @@
   "Your smart account needs to be upgraded to the latest version (v3).": "Your smart account needs to be upgraded to the latest version (v3).",
   "Your tokens": "Your tokens",
   "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.": "Your wallet security depends on how you access it. With self-custody options like the VeWorld extension, mobile app, or hardware wallet, you have complete control over your private keys. This extension itself has no access to your private keys. When logging in with social accounts or VeChain, your wallet is created and secured by Privy and managed by VeChain, providing an easier onboarding experience while maintaining security.",
-  "your@email.com": "your@email.com"
+  "your@email.com": "your@email.com",
+  "NFTs": "NFTs",
+  "No NFTs yet": "No NFTs yet",
+  "NFTs are not available on this network": "NFTs are not available on this network",
+  "Collection": "Collection",
+  "ID": "ID",
+  "Last transfer on": "Last transfer on",
+  "Attributes": "Attributes",
+  "Trait": "Trait",
+  "Send NFT": "Send NFT",
+  "{{count}} item": "{{count}} item",
+  "{{count}} items": "{{count}} items"
 }

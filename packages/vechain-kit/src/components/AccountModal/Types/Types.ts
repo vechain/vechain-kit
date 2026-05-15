@@ -13,8 +13,12 @@ import { CategoryFilter } from '../Contents/Ecosystem/Components/CategoryFilterS
 import { FAQContentProps } from '../Contents/FAQ/FAQContent';
 import { SendTokenContentProps } from '../Contents/SendToken/SendTokenContent';
 import { SendTokenSummaryContentProps } from '../Contents/SendToken/SendTokenSummaryContent';
+import { SendNftContentProps } from '../Contents/SendNft/SendNftContent';
+import { SendNftSummaryContentProps } from '../Contents/SendNft/SendNftSummaryContent';
 import { ReceiveTokenContentProps } from '../Contents/Receive/ReceiveTokenContent';
 import { TokenDetailContentProps } from '../Contents/TokenDetail/TokenDetailContent';
+import { NftDetailContentProps } from '../Contents/NftDetail/NftDetailContent';
+import { NftCollectionContentProps } from '../Contents/NftCollection/NftCollectionContent';
 import { TransactionHistoryContentProps } from '../Contents/TransactionHistory/TransactionHistoryContent';
 import { TransactionDetailContentProps } from '../Contents/TransactionHistory/TransactionDetailContent';
 import { SuccessfulOperationContentProps } from '../Contents/SuccessfulOperation/SuccessfulOperationContent';
@@ -114,7 +118,14 @@ export type AccountModalContentTypes =
           type: 'send-token-summary';
           props: SendTokenSummaryContentProps;
       }
+    | { type: 'send-nft'; props: SendNftContentProps }
+    | {
+          type: 'send-nft-summary';
+          props: SendNftSummaryContentProps;
+      }
     | { type: 'token-detail'; props: TokenDetailContentProps }
+    | { type: 'nft-detail'; props: NftDetailContentProps }
+    | { type: 'nft-collection'; props: NftCollectionContentProps }
     | {
           type: 'transaction-history';
           props: TransactionHistoryContentProps;
