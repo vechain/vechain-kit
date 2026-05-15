@@ -112,12 +112,12 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
     };
 
     if (!privy) {
-        // External apps (no self hosted privy)
+        // External apps (no self hosted privy). Google / Apple / Email are
+        // still allowed because they fall back to the VeChain whitelabel
+        // cross-app flow via useLoginWithVeChain({ intent }). Passkey,
+        // Github, and 'more' have no fallback yet, so stay hidden.
         return {
             ...baseConfig,
-            showGoogleLogin: false,
-            showAppleLogin: false,
-            showEmailLogin: false,
             showPasskey: false,
             showMoreLogin: false,
             showGithubLogin: false,
