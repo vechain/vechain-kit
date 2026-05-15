@@ -313,7 +313,7 @@ export default function CrossAppConnectPage() {
         return (
             <PageShell>
                 <VechainHeader
-                    title="Log in to VeChain"
+                    title="Log in to your wallet"
                     subtitle="Connecting…"
                     requesterUrl={request?.callbackUrl}
                 />
