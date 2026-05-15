@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     Alert,
     AlertDescription,
-    AlertIcon,
     Box,
     Button,
     Card,
@@ -389,9 +388,10 @@ export default function CrossAppTransactPage() {
         return (
             <PageShell>
                 <VechainHeader title="Couldn't load request" />
-                <Alert status="error" rounded="md">
-                    <AlertIcon />
-                    <AlertDescription>{parseError.message}</AlertDescription>
+                <Alert status="error" rounded="md" variant="left-accent">
+                    <AlertDescription fontSize="xs" lineHeight="1.3">
+                        {parseError.message}
+                    </AlertDescription>
                 </Alert>
             </PageShell>
         );
@@ -437,7 +437,7 @@ export default function CrossAppTransactPage() {
             />
             <Card>
                 <CardBody>
-                    <Stack spacing={5}>
+                    <Stack spacing={4}>
                         {smartAccount?.address && (
                             <AccountChip
                                 address={smartAccount.address}
@@ -465,9 +465,17 @@ export default function CrossAppTransactPage() {
                         )}
 
                         {blocked && (
-                            <Alert status="error" rounded="md">
-                                <AlertIcon />
-                                <AlertDescription>{block}</AlertDescription>
+                            <Alert
+                                status="error"
+                                rounded="md"
+                                variant="left-accent"
+                            >
+                                <AlertDescription
+                                    fontSize="xs"
+                                    lineHeight="1.3"
+                                >
+                                    {block}
+                                </AlertDescription>
                             </Alert>
                         )}
 
@@ -477,11 +485,12 @@ export default function CrossAppTransactPage() {
                                 rounded="md"
                                 variant="left-accent"
                             >
-                                <AlertIcon />
-                                <AlertDescription fontSize="sm">
-                                    We couldn&apos;t double-check every step
-                                    here. Only continue if you trust this
-                                    app.
+                                <AlertDescription
+                                    fontSize="xs"
+                                    lineHeight="1.3"
+                                >
+                                    We couldn’t double-check every step, so
+                                    only continue if you trust this app.
                                 </AlertDescription>
                             </Alert>
                         )}
@@ -494,19 +503,27 @@ export default function CrossAppTransactPage() {
                                     rounded="md"
                                     variant="left-accent"
                                 >
-                                    <AlertIcon />
-                                    <AlertDescription fontSize="sm">
+                                    <AlertDescription
+                                        fontSize="xs"
+                                        lineHeight="1.3"
+                                    >
                                         This app is asking for unlimited
-                                        access to one of your tokens. Make
+                                        access to one of your tokens — make
                                         sure you trust it.
                                     </AlertDescription>
                                 </Alert>
                             )}
 
                         {submitError && (
-                            <Alert status="error" rounded="md">
-                                <AlertIcon />
-                                <AlertDescription>
+                            <Alert
+                                status="error"
+                                rounded="md"
+                                variant="left-accent"
+                            >
+                                <AlertDescription
+                                    fontSize="xs"
+                                    lineHeight="1.3"
+                                >
                                     {submitError}
                                 </AlertDescription>
                             </Alert>
@@ -522,6 +539,7 @@ export default function CrossAppTransactPage() {
                                 stillDecoding
                             }
                             w="full"
+                            h="48px"
                         >
                             {ctaLabel}
                         </Button>
@@ -534,9 +552,18 @@ export default function CrossAppTransactPage() {
                             Cancel
                         </Button>
 
-                        <Box pt={2}>
+                        <HStack
+                            justify="center"
+                            align="center"
+                            spacing={1}
+                            pt={1}
+                        >
+                            <Text fontSize="xs" color="text-subtle">
+                                Want the technical details?
+                            </Text>
                             <Button
                                 variant="link"
+                                size="sm"
                                 onClick={inspect.onToggle}
                                 rightIcon={
                                     <Icon
@@ -545,60 +572,58 @@ export default function CrossAppTransactPage() {
                                                 ? LuChevronUp
                                                 : LuChevronDown
                                         }
-                                        boxSize="14px"
+                                        boxSize="12px"
                                     />
                                 }
                             >
-                                {inspect.isOpen
-                                    ? 'Hide details'
-                                    : 'Inspect details'}
+                                {inspect.isOpen ? 'Hide' : 'Inspect'}
                             </Button>
-                            <Collapse in={inspect.isOpen} animateOpacity>
-                                <Stack spacing={3} mt={3}>
-                                    <DetailRow
-                                        label="Your account"
-                                        value={
-                                            smartAccount?.address
-                                                ? truncate(
-                                                      smartAccount.address,
-                                                  )
-                                                : 'resolving…'
-                                        }
-                                    />
-                                    <DetailRow
-                                        label="Network"
-                                        value={networkLabel(network.type)}
-                                    />
-                                    <DetailRow
-                                        label="Type"
-                                        value={humanPrimaryType(
-                                            parsed.typedData.primaryType,
-                                        )}
-                                    />
-                                    <Stack spacing={2}>
-                                        <Text
-                                            fontSize="xs"
-                                            color="text-subtle"
-                                            textTransform="uppercase"
-                                            letterSpacing="0.05em"
-                                        >
-                                            {parsed.clauses.length === 1
-                                                ? 'Clause'
-                                                : `Clauses (${parsed.clauses.length})`}
-                                        </Text>
-                                        {parsed.clauses.map((c, i) => (
-                                            <RawClauseRow
-                                                key={i}
-                                                clause={c}
-                                                index={i}
-                                                total={parsed.clauses.length}
-                                                appConfig={appConfig}
-                                            />
-                                        ))}
-                                    </Stack>
+                        </HStack>
+                        <Collapse in={inspect.isOpen} animateOpacity>
+                            <Stack spacing={3} mt={2}>
+                                <DetailRow
+                                    label="Your account"
+                                    value={
+                                        smartAccount?.address
+                                            ? truncate(
+                                                  smartAccount.address,
+                                              )
+                                            : 'resolving…'
+                                    }
+                                />
+                                <DetailRow
+                                    label="Network"
+                                    value={networkLabel(network.type)}
+                                />
+                                <DetailRow
+                                    label="Type"
+                                    value={humanPrimaryType(
+                                        parsed.typedData.primaryType,
+                                    )}
+                                />
+                                <Stack spacing={2}>
+                                    <Text
+                                        fontSize="xs"
+                                        color="text-subtle"
+                                        textTransform="uppercase"
+                                        letterSpacing="0.05em"
+                                    >
+                                        {parsed.clauses.length === 1
+                                            ? 'Clause'
+                                            : `Clauses (${parsed.clauses.length})`}
+                                    </Text>
+                                    {parsed.clauses.map((c, i) => (
+                                        <RawClauseRow
+                                            key={i}
+                                            clause={c}
+                                            index={i}
+                                            total={parsed.clauses.length}
+                                            appConfig={appConfig}
+                                        />
+                                    ))}
                                 </Stack>
-                            </Collapse>
-                        </Box>
+                            </Stack>
+                        </Collapse>
                     </Stack>
                 </CardBody>
             </Card>
