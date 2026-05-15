@@ -63,8 +63,11 @@ const RISK_SHIELD: Record<
     danger: { Icon: LuShieldX, color: 'red.400' },
 };
 
-const SUPPORTED_METHODS = ['eth_signTypedData_v4'] as const;
-const SUPPORTED_PRIMARY_TYPES = [
+const SUPPORTED_METHODS = [
+    'eth_signTypedData_v4',
+    'personal_sign',
+] as const;
+const SMART_ACCOUNT_PRIMARY_TYPES = [
     'ExecuteWithAuthorization',
     'ExecuteBatchWithAuthorization',
 ] as const;
@@ -75,30 +78,63 @@ type Clause = {
     data: string;
 };
 
-type ParsedRequest = {
-    typedData: {
-        domain: {
-            name: string;
-            version: string;
-            chainId: string | number;
-            verifyingContract: string;
-        };
-        types: Record<string, Array<{ name: string; type: string }>>;
-        primaryType: string;
-        message: Record<string, unknown> & {
-            to: string | string[];
-            value: string | string[];
-            data: string | string[];
-            validAfter: string | number;
-            validBefore: string | number;
-        };
+type SmartAccountTypedData = {
+    domain: {
+        name: string;
+        version: string;
+        chainId: string | number;
+        verifyingContract: string;
     };
-    clauses: Clause[];
+    types: Record<string, Array<{ name: string; type: string }>>;
+    primaryType: string;
+    message: Record<string, unknown> & {
+        to: string | string[];
+        value: string | string[];
+        data: string | string[];
+        validAfter: string | number;
+        validBefore: string | number;
+    };
 };
 
-function parseClauses(
-    typedData: ParsedRequest['typedData'],
-): Clause[] {
+type GenericTypedData = {
+    domain: {
+        name?: string;
+        version?: string;
+        chainId?: string | number;
+        verifyingContract?: string;
+    };
+    types: Record<string, Array<{ name: string; type: string }>>;
+    primaryType: string;
+    message: Record<string, unknown>;
+};
+
+type ParsedRequest =
+    | {
+          kind: 'smart_account';
+          typedData: SmartAccountTypedData;
+          clauses: Clause[];
+      }
+    | { kind: 'typed_data'; typedData: GenericTypedData }
+    | { kind: 'message'; message: string; raw: string };
+
+// Decode hex-encoded message payloads back to UTF-8 so the user sees the
+// actual text being signed, not 0x6f6e6c79... For non-hex strings, pass
+// through as-is.
+function decodePersonalSignMessage(raw: string): string {
+    if (typeof raw !== 'string') return '';
+    if (!raw.startsWith('0x')) return raw;
+    try {
+        const hex = raw.slice(2);
+        const bytes = new Uint8Array(
+            hex.match(/.{1,2}/g)?.map((b) => parseInt(b, 16)) ?? [],
+        );
+        return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+    } catch {
+        return raw;
+    }
+}
+
+function parseClauses(typedData: SmartAccountTypedData): Clause[] {
     const { to, value, data } = typedData.message;
     if (Array.isArray(to)) {
         const values = (value as string[]) ?? [];
@@ -125,8 +161,14 @@ function truncate(addr: string): string {
 
 export default function CrossAppTransactPage() {
     const client = useCrossAppClient();
-    const { ready, authenticated, user, signTypedData, getAccessToken } =
-        usePrivy();
+    const {
+        ready,
+        authenticated,
+        user,
+        signTypedData,
+        signMessage,
+        getAccessToken,
+    } = usePrivy();
     const { wallets } = useWallets();
     const { login } = useLogin();
     const embedded = wallets.find((w) => w.walletClientType === 'privy');
@@ -183,51 +225,83 @@ export default function CrossAppTransactPage() {
     const parsed = useMemo<ParsedRequest | null>(() => {
         if (!verified) return null;
         const { method, params } = verified.request;
-        if (!SUPPORTED_METHODS.includes(method as 'eth_signTypedData_v4')) {
-            return null;
+
+        if (method === 'personal_sign') {
+            // wagmi sends params as [message, address]. Some libs reverse
+            // them; accept either order by picking the first string-looking
+            // entry that isn't a 20-byte address.
+            const args = Array.isArray(params) ? params : [];
+            const rawMessage = args.find(
+                (p) =>
+                    typeof p === 'string' &&
+                    !/^0x[a-fA-F0-9]{40}$/.test(p),
+            );
+            if (typeof rawMessage !== 'string') return null;
+            return {
+                kind: 'message',
+                message: decodePersonalSignMessage(rawMessage),
+                raw: rawMessage,
+            };
         }
-        const raw = Array.isArray(params) ? params[1] : undefined;
-        const typedData =
-            typeof raw === 'string' ? JSON.parse(raw) : raw;
-        if (!typedData?.domain || !typedData?.message) return null;
-        return {
-            typedData,
-            clauses: parseClauses(typedData),
-        };
+
+        if (method === 'eth_signTypedData_v4') {
+            const raw = Array.isArray(params) ? params[1] : undefined;
+            const typedData =
+                typeof raw === 'string' ? JSON.parse(raw) : raw;
+            if (!typedData?.domain || !typedData?.message) return null;
+            const primaryType = typedData.primaryType;
+            const isSmartAccountAuth =
+                SMART_ACCOUNT_PRIMARY_TYPES.includes(
+                    primaryType as 'ExecuteWithAuthorization',
+                ) &&
+                typedData.domain?.name === 'Wallet' &&
+                typedData.domain?.version === '1';
+            if (isSmartAccountAuth) {
+                return {
+                    kind: 'smart_account',
+                    typedData,
+                    clauses: parseClauses(typedData),
+                };
+            }
+            return { kind: 'typed_data', typedData };
+        }
+
+        return null;
     }, [verified]);
 
     useEffect(() => {
-        if (!verified || !parsed || !smartAccount?.address || !kitChainId) {
+        if (!verified) {
             setBlock(null);
             return;
         }
-        const { method } = verified.request;
-        if (!SUPPORTED_METHODS.includes(method as 'eth_signTypedData_v4')) {
+        const method = verified.request?.method;
+        if (
+            !SUPPORTED_METHODS.includes(
+                method as (typeof SUPPORTED_METHODS)[number],
+            )
+        ) {
             setBlock(`Unsupported method: ${method}`);
             return;
         }
+        if (!parsed) {
+            setBlock(null);
+            return;
+        }
+        // Only the smart-account ExecuteWithAuthorization path is subject to
+        // the deep chain-id / verifyingContract safety gates. Plain
+        // personal_sign and generic eth_signTypedData_v4 just need the user
+        // to recognise what they're signing -- handled at the UI level.
+        if (parsed.kind !== 'smart_account') {
+            setBlock(null);
+            return;
+        }
+        if (!smartAccount?.address || !kitChainId) {
+            setBlock(null);
+            return;
+        }
         const { typedData } = parsed;
-        if (
-            !SUPPORTED_PRIMARY_TYPES.includes(
-                typedData.primaryType as
-                    | 'ExecuteWithAuthorization'
-                    | 'ExecuteBatchWithAuthorization',
-            )
-        ) {
-            setBlock(`Unsupported primaryType: ${typedData.primaryType}`);
-            return;
-        }
-        if (
-            typedData.domain.name !== 'Wallet' ||
-            typedData.domain.version !== '1'
-        ) {
-            setBlock('Unexpected EIP-712 domain');
-            return;
-        }
         try {
-            if (
-                BigInt(typedData.domain.chainId) !== BigInt(kitChainId)
-            ) {
+            if (BigInt(typedData.domain.chainId) !== BigInt(kitChainId)) {
                 setBlock('Chain id mismatch');
                 return;
             }
@@ -250,9 +324,9 @@ export default function CrossAppTransactPage() {
     // Decode each clause to a human-readable summary. Fires once whenever
     // the parsed clauses change. Results cached in module-level Maps inside
     // decoder.ts so a re-render or a returning user doesn't re-fetch b32
-    // signatures.
+    // signatures. Only smart-account requests have clauses to decode.
     useEffect(() => {
-        if (!parsed) {
+        if (parsed?.kind !== 'smart_account') {
             setDecoded(null);
             return;
         }
@@ -279,15 +353,33 @@ export default function CrossAppTransactPage() {
         setSubmitting(true);
         setSubmitError(null);
         try {
-            const { signature } = await signTypedData(
-                parsed.typedData as Parameters<typeof signTypedData>[0],
-                {
-                    uiOptions: {
-                        title: 'Approve VeChain transaction',
-                        buttonText: 'Sign',
+            let signature: string;
+            if (parsed.kind === 'message') {
+                const result = await signMessage(
+                    { message: parsed.message },
+                    {
+                        uiOptions: {
+                            title: 'Sign message',
+                            buttonText: 'Sign',
+                        },
                     },
-                },
-            );
+                );
+                signature = result.signature;
+            } else {
+                const result = await signTypedData(
+                    parsed.typedData as Parameters<typeof signTypedData>[0],
+                    {
+                        uiOptions: {
+                            title:
+                                parsed.kind === 'smart_account'
+                                    ? 'Approve VeChain transaction'
+                                    : 'Sign structured data',
+                            buttonText: 'Sign',
+                        },
+                    },
+                );
+                signature = result.signature;
+            }
             const accessToken = await getAccessToken();
             await client.handleRequestResult({
                 accessToken: accessToken ?? undefined,
@@ -313,7 +405,14 @@ export default function CrossAppTransactPage() {
         } finally {
             setSubmitting(false);
         }
-    }, [client, verified, parsed, signTypedData, getAccessToken]);
+    }, [
+        client,
+        verified,
+        parsed,
+        signMessage,
+        signTypedData,
+        getAccessToken,
+    ]);
 
     const onReject = useCallback(async () => {
         if (!verified) {
@@ -409,18 +508,44 @@ export default function CrossAppTransactPage() {
     }
 
     const blocked = block !== null;
-    const stillDecoding = decoded === null;
+    const isSmartAccount = parsed.kind === 'smart_account';
+    const stillDecoding = isSmartAccount && decoded === null;
     const hasUnknown =
-        decoded?.some((d) => d.kind === 'unknown') ?? false;
+        isSmartAccount && (decoded?.some((d) => d.kind === 'unknown') ?? false);
     const hasUnlimitedApprove =
-        decoded?.some(
+        isSmartAccount &&
+        (decoded?.some(
             (d) => d.kind === 'token_approve' && d.unlimited,
-        ) ?? false;
-    const risk = computeRisk(decoded, blocked);
+        ) ?? false);
+    const risk: Risk = isSmartAccount
+        ? computeRisk(decoded, blocked)
+        : 'safe';
     const { Icon: ShieldIcon, color: shieldColor } = RISK_SHIELD[risk];
-    const title = titleForActions(decoded, blocked);
-    const ctaLabel = continueLabel(risk);
-    const relevantTokens = uniqueTokensFromDecoded(decoded);
+    const title = isSmartAccount
+        ? titleForActions(decoded, blocked)
+        : parsed.kind === 'message'
+        ? 'Sign a message'
+        : 'Sign data';
+    const subtitle = isSmartAccount
+        ? decoded
+            ? summarizeActions(decoded)
+            : 'Checking what this does…'
+        : parsed.kind === 'message'
+        ? 'Review the message this app wants you to sign.'
+        : 'Review the data this app wants you to sign.';
+    const ctaLabel = isSmartAccount
+        ? continueLabel(risk)
+        : 'Sign';
+    const relevantTokens = isSmartAccount
+        ? uniqueTokensFromDecoded(decoded)
+        : [];
+    const accountChipAddress = isSmartAccount
+        ? smartAccount?.address
+        : embedded?.address;
+    const continueDisabled =
+        blocked ||
+        submitting ||
+        (isSmartAccount && (!smartAccount?.address || stillDecoding));
 
     return (
         <PageShell>
@@ -428,40 +553,43 @@ export default function CrossAppTransactPage() {
                 title={title}
                 titleIcon={ShieldIcon}
                 titleIconColor={shieldColor}
-                subtitle={
-                    decoded
-                        ? summarizeActions(decoded)
-                        : 'Checking what this does…'
-                }
+                subtitle={subtitle}
                 requesterUrl={verified.connection.callbackUrl}
             />
             <Card>
                 <CardBody>
                     <Stack spacing={4}>
-                        {smartAccount?.address && (
+                        {accountChipAddress && (
                             <AccountChip
-                                address={smartAccount.address}
+                                address={accountChipAddress}
                                 thor={thor ?? null}
                                 relevantTokens={relevantTokens}
                             />
                         )}
-                        {stillDecoding ? (
-                            <Stack spacing={3}>
-                                {parsed.clauses.map((_, i) => (
-                                    <ActionRowSkeleton key={i} />
-                                ))}
-                            </Stack>
-                        ) : (
-                            <Stack spacing={3}>
-                                {decoded!.map((d, i) => (
-                                    <ActionRow
-                                        key={i}
-                                        action={d}
-                                        appConfig={appConfig}
-                                        self={smartAccount?.address}
-                                    />
-                                ))}
-                            </Stack>
+                        {parsed.kind === 'smart_account' &&
+                            (stillDecoding ? (
+                                <Stack spacing={3}>
+                                    {parsed.clauses.map((_, i) => (
+                                        <ActionRowSkeleton key={i} />
+                                    ))}
+                                </Stack>
+                            ) : (
+                                <Stack spacing={3}>
+                                    {decoded!.map((d, i) => (
+                                        <ActionRow
+                                            key={i}
+                                            action={d}
+                                            appConfig={appConfig}
+                                            self={smartAccount?.address}
+                                        />
+                                    ))}
+                                </Stack>
+                            ))}
+                        {parsed.kind === 'message' && (
+                            <MessageView message={parsed.message} />
+                        )}
+                        {parsed.kind === 'typed_data' && (
+                            <TypedDataView typedData={parsed.typedData} />
                         )}
 
                         {blocked && (
@@ -533,11 +661,7 @@ export default function CrossAppTransactPage() {
                             variant="brand"
                             onClick={onApprove}
                             isLoading={submitting}
-                            isDisabled={
-                                blocked ||
-                                !smartAccount?.address ||
-                                stillDecoding
-                            }
+                            isDisabled={continueDisabled}
                             w="full"
                             h="48px"
                         >
@@ -584,10 +708,8 @@ export default function CrossAppTransactPage() {
                                 <DetailRow
                                     label="Your account"
                                     value={
-                                        smartAccount?.address
-                                            ? truncate(
-                                                  smartAccount.address,
-                                              )
+                                        accountChipAddress
+                                            ? truncate(accountChipAddress)
                                             : 'resolving…'
                                     }
                                 />
@@ -595,39 +717,176 @@ export default function CrossAppTransactPage() {
                                     label="Network"
                                     value={networkLabel(network.type)}
                                 />
-                                <DetailRow
-                                    label="Type"
-                                    value={humanPrimaryType(
-                                        parsed.typedData.primaryType,
-                                    )}
-                                />
-                                <Stack spacing={2}>
-                                    <Text
-                                        fontSize="xs"
-                                        color="text-subtle"
-                                        textTransform="uppercase"
-                                        letterSpacing="0.05em"
-                                    >
-                                        {parsed.clauses.length === 1
-                                            ? 'Clause'
-                                            : `Clauses (${parsed.clauses.length})`}
-                                    </Text>
-                                    {parsed.clauses.map((c, i) => (
-                                        <RawClauseRow
-                                            key={i}
-                                            clause={c}
-                                            index={i}
-                                            total={parsed.clauses.length}
-                                            appConfig={appConfig}
+                                {parsed.kind === 'smart_account' && (
+                                    <>
+                                        <DetailRow
+                                            label="Type"
+                                            value={humanPrimaryType(
+                                                parsed.typedData.primaryType,
+                                            )}
                                         />
-                                    ))}
-                                </Stack>
+                                        <Stack spacing={2}>
+                                            <Text
+                                                fontSize="xs"
+                                                color="text-subtle"
+                                                textTransform="uppercase"
+                                                letterSpacing="0.05em"
+                                            >
+                                                {parsed.clauses.length === 1
+                                                    ? 'Clause'
+                                                    : `Clauses (${parsed.clauses.length})`}
+                                            </Text>
+                                            {parsed.clauses.map((c, i) => (
+                                                <RawClauseRow
+                                                    key={i}
+                                                    clause={c}
+                                                    index={i}
+                                                    total={
+                                                        parsed.clauses.length
+                                                    }
+                                                    appConfig={appConfig}
+                                                />
+                                            ))}
+                                        </Stack>
+                                    </>
+                                )}
+                                {parsed.kind === 'typed_data' && (
+                                    <>
+                                        <DetailRow
+                                            label="Type"
+                                            value={humanPrimaryType(
+                                                parsed.typedData.primaryType,
+                                            )}
+                                        />
+                                        {parsed.typedData.domain.name && (
+                                            <DetailRow
+                                                label="Domain"
+                                                value={
+                                                    parsed.typedData.domain
+                                                        .name
+                                                }
+                                            />
+                                        )}
+                                        <RawJsonBlock
+                                            label="Raw data"
+                                            value={JSON.stringify(
+                                                parsed.typedData,
+                                                null,
+                                                2,
+                                            )}
+                                        />
+                                    </>
+                                )}
+                                {parsed.kind === 'message' && (
+                                    <RawJsonBlock
+                                        label="Raw hex"
+                                        value={parsed.raw}
+                                    />
+                                )}
                             </Stack>
                         </Collapse>
                     </Stack>
                 </CardBody>
             </Card>
         </PageShell>
+    );
+}
+
+function MessageView({ message }: { message: string }) {
+    return (
+        <Box
+            p={3}
+            rounded="md"
+            bg="card-elevated-bg"
+            borderWidth="1px"
+            borderColor="card-border"
+        >
+            <Text
+                fontSize="xs"
+                color="text-subtle"
+                textTransform="uppercase"
+                letterSpacing="0.05em"
+                mb={2}
+            >
+                Message
+            </Text>
+            <Text
+                fontSize="sm"
+                color="text-strong"
+                whiteSpace="pre-wrap"
+                wordBreak="break-word"
+            >
+                {message || '(empty message)'}
+            </Text>
+        </Box>
+    );
+}
+
+function TypedDataView({ typedData }: { typedData: GenericTypedData }) {
+    return (
+        <Box
+            p={3}
+            rounded="md"
+            bg="card-elevated-bg"
+            borderWidth="1px"
+            borderColor="card-border"
+        >
+            <Stack spacing={2}>
+                <Text
+                    fontSize="xs"
+                    color="text-subtle"
+                    textTransform="uppercase"
+                    letterSpacing="0.05em"
+                >
+                    {humanPrimaryType(typedData.primaryType)}
+                </Text>
+                {typedData.domain.name && (
+                    <Text fontSize="xs" color="text-muted">
+                        From: {typedData.domain.name}
+                    </Text>
+                )}
+                <Code
+                    fontSize="xs"
+                    bg="transparent"
+                    color="text-strong"
+                    whiteSpace="pre-wrap"
+                    wordBreak="break-word"
+                    display="block"
+                    p={0}
+                >
+                    {JSON.stringify(typedData.message, null, 2)}
+                </Code>
+            </Stack>
+        </Box>
+    );
+}
+
+function RawJsonBlock({ label, value }: { label: string; value: string }) {
+    return (
+        <Stack spacing={2}>
+            <Text
+                fontSize="xs"
+                color="text-subtle"
+                textTransform="uppercase"
+                letterSpacing="0.05em"
+            >
+                {label}
+            </Text>
+            <Code
+                fontSize="xs"
+                bg="card-elevated-bg"
+                color="text-muted"
+                whiteSpace="pre-wrap"
+                wordBreak="break-all"
+                display="block"
+                p={3}
+                rounded="md"
+                borderWidth="1px"
+                borderColor="card-border"
+            >
+                {value}
+            </Code>
+        </Stack>
     );
 }
 
