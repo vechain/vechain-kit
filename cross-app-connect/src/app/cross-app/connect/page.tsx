@@ -19,6 +19,7 @@ import {
     Spinner,
     Stack,
     Text,
+    Tooltip,
     useColorMode,
 } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
@@ -31,7 +32,7 @@ import {
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { SiFarcaster } from 'react-icons/si';
-import { LuChevronDown, LuChevronUp, LuPhone } from 'react-icons/lu';
+import { LuPhone } from 'react-icons/lu';
 import type { IconType } from 'react-icons';
 import {
     useLoginWithOAuth,
@@ -109,15 +110,6 @@ function isOAuthIntent(value: IntentMethod | null): value is OAuthProvider {
 function truncateAddress(addr?: string): string {
     if (!addr) return '';
     return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
-}
-
-function originFromCallback(callbackUrl?: string): string {
-    if (!callbackUrl) return '';
-    try {
-        return new URL(callbackUrl).origin;
-    } catch {
-        return callbackUrl;
-    }
 }
 
 export default function CrossAppConnectPage() {
@@ -265,8 +257,6 @@ export default function CrossAppConnectPage() {
         onAccept();
     }, [phase, embedded, user, submitting, submitError, onAccept]);
 
-    const requesterOrigin = originFromCallback(request?.callbackUrl);
-
     if (phase === 'no_params') {
         return (
             <PageShell>
@@ -310,11 +300,8 @@ export default function CrossAppConnectPage() {
             <PageShell>
                 <VechainHeader
                     title="Log in to VeChain"
-                    subtitle={
-                        requesterOrigin
-                            ? `Connecting to ${requesterOrigin}`
-                            : undefined
-                    }
+                    subtitle="Connecting…"
+                    requesterUrl={request?.callbackUrl}
                 />
                 <Center py={10}>
                     <Spinner color="accent" />
@@ -327,11 +314,8 @@ export default function CrossAppConnectPage() {
         return (
             <PageShell>
                 <VechainHeader
-                    subtitle={
-                        requesterOrigin
-                            ? `Sign in to your VeChain wallet to grant ${requesterOrigin} access.`
-                            : 'Sign in to your VeChain wallet.'
-                    }
+                    subtitle="Sign in to grant access to"
+                    requesterUrl={request?.callbackUrl}
                 />
                 <SignInPanel intent={intent} onCancel={onReject} />
             </PageShell>
@@ -341,11 +325,8 @@ export default function CrossAppConnectPage() {
     return (
         <PageShell>
             <VechainHeader
-                subtitle={
-                    requesterOrigin
-                        ? `Connect to ${requesterOrigin}`
-                        : undefined
-                }
+                subtitle="Confirm connection to"
+                requesterUrl={request?.callbackUrl}
             />
             <Card>
                 <CardBody>
@@ -507,25 +488,19 @@ function SignInPanel({
                                 onClick={() => setView('phone')}
                                 isRecent={isRecent('phone')}
                             />
-                            {/* Other socials expandable */}
-                            <Button
-                                variant="row"
-                                onClick={() => setShowOther((v) => !v)}
-                                rightIcon={
-                                    <Icon
-                                        as={
-                                            showOther
-                                                ? LuChevronUp
-                                                : LuChevronDown
-                                        }
-                                        boxSize="18px"
-                                    />
-                                }
-                            >
-                                <Text flex={1} textAlign="left">
-                                    Other socials
-                                </Text>
-                            </Button>
+                            {/* Other socials: render either the "show more"
+                                link or the expanded list, never both. Avoids
+                                the chevron-row inside a button stack pattern. */}
+                            {!showOther && rows.other.length > 0 && (
+                                <Box pt={1} textAlign="center">
+                                    <Button
+                                        variant="link"
+                                        onClick={() => setShowOther(true)}
+                                    >
+                                        + {rows.other.length + 1} more options
+                                    </Button>
+                                </Box>
+                            )}
                             {showOther && (
                                 <Stack spacing={2}>
                                     {/* Discord, GitHub, TikTok, Farcaster, LINE */}
@@ -731,10 +706,10 @@ function ProviderRow({
                     color={iconColor}
                 />
             }
-            rightIcon={isRecent ? <RecentBadge /> : undefined}
+            rightIcon={isRecent ? <RecentDot /> : undefined}
         >
             <Text flex={1} textAlign="left">
-                {provider.label}
+                Continue with {provider.label}
             </Text>
         </Button>
     );
@@ -752,10 +727,10 @@ function PhoneRow({
             variant="row"
             onClick={onClick}
             leftIcon={<Icon as={LuPhone} boxSize="22px" />}
-            rightIcon={isRecent ? <RecentBadge /> : undefined}
+            rightIcon={isRecent ? <RecentDot /> : undefined}
         >
             <Text flex={1} textAlign="left">
-                Phone
+                Continue with Phone
             </Text>
         </Button>
     );
@@ -773,29 +748,37 @@ function FarcasterRow({
             variant="row"
             onClick={onClick}
             leftIcon={<Icon as={SiFarcaster} boxSize="22px" color="#8A63D2" />}
-            rightIcon={isRecent ? <RecentBadge /> : undefined}
+            rightIcon={isRecent ? <RecentDot /> : undefined}
         >
             <Text flex={1} textAlign="left">
-                Farcaster
+                Continue with Farcaster
             </Text>
         </Button>
     );
 }
 
-function RecentBadge() {
+/**
+ * Quiet "Recent" indicator -- a small green dot with a tooltip. Lets a
+ * returning user spot the previously used provider at a glance without a
+ * loud chip stealing attention from the recommended path.
+ */
+function RecentDot() {
     return (
-        <Text
-            as="span"
-            bg="chip-bg"
-            color="chip-text"
+        <Tooltip
+            label="Last used"
+            placement="left"
+            hasArrow
+            openDelay={200}
             fontSize="xs"
-            fontWeight={600}
-            px={2}
-            py="2px"
-            borderRadius="full"
         >
-            Recent
-        </Text>
+            <Box
+                boxSize="8px"
+                rounded="full"
+                bg="green.400"
+                aria-label="Last used"
+                role="img"
+            />
+        </Tooltip>
     );
 }
 

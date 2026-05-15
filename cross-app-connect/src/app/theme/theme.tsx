@@ -117,11 +117,17 @@ export const vechainTheme = extendTheme({
                     _active: { transform: 'scale(0.99)' },
                     transition: 'all 0.2s',
                 },
-                // Ghost: same intent as kit's ghost -- transparent, text-color,
-                // light hover bg.
+                // Ghost: pill-shaped outlined button so it reads as a real
+                // action at rest, not stray text. Border matches the login
+                // row border so they nest visually.
                 ghost: {
                     bg: 'transparent',
                     color: 'text-muted',
+                    border: '1px solid',
+                    borderColor: 'login-btn-border',
+                    rounded: tokens.radius.full,
+                    h: '48px',
+                    px: 6,
                     _hover: {
                         bg: 'login-btn-hover-bg',
                         color: 'text-strong',
@@ -129,6 +135,19 @@ export const vechainTheme = extendTheme({
                     _active: { bg: 'login-btn-hover-bg' },
                     _disabled: { opacity: 0.4 },
                     transition: 'all 0.2s',
+                },
+                // Subtle text link, used for "show more" type affordances.
+                link: {
+                    bg: 'transparent',
+                    color: 'text-muted',
+                    fontWeight: 500,
+                    fontSize: 'sm',
+                    h: 'auto',
+                    p: 0,
+                    _hover: {
+                        color: 'text-strong',
+                        textDecoration: 'underline',
+                    },
                 },
             },
         },

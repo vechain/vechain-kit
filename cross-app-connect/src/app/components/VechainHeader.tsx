@@ -1,15 +1,23 @@
 'use client';
 
 import { Box, Image, Stack, Text } from '@chakra-ui/react';
+import { RequesterChip } from './RequesterChip';
 
 type Props = {
     title?: string;
     subtitle?: string;
+    /**
+     * Requester dApp's callbackUrl. When provided, renders a chip with the
+     * site's favicon + hostname under the title to identify who's asking
+     * to connect.
+     */
+    requesterUrl?: string;
 };
 
 export function VechainHeader({
     title = 'Log in to VeChain',
     subtitle,
+    requesterUrl,
 }: Props) {
     // Render BOTH wordmarks and toggle via Chakra's _light / _dark CSS
     // pseudo selectors. Avoids the React-state flicker we'd get if we
@@ -40,7 +48,7 @@ export function VechainHeader({
                     }}
                 />
             </Box>
-            <Stack spacing={1} align="center" textAlign="center" maxW="sm">
+            <Stack spacing={2} align="center" textAlign="center" maxW="sm">
                 <Text
                     fontFamily="heading"
                     fontWeight={600}
@@ -54,6 +62,7 @@ export function VechainHeader({
                         {subtitle}
                     </Text>
                 )}
+                {requesterUrl && <RequesterChip url={requesterUrl} />}
             </Stack>
         </Stack>
     );
