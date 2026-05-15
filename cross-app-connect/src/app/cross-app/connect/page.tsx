@@ -275,15 +275,35 @@ function SignInPanel({
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
 
+    // Persist the "already attempted" marker in sessionStorage so the OAuth
+    // redirect back from Google (which preserves ?intent=google in the URL)
+    // doesn't bounce the user straight back to Google again.
     useEffect(() => {
+        if (!intent || intent === 'email') return;
+        if (oauthLoading) return;
         if (autoLoginAttempted) return;
-        if (!intent) return;
-        if (intent === 'email') return;
+        const STORAGE_KEY = 'vk-cross-app-connect:oauth-attempted';
+        if (
+            typeof sessionStorage !== 'undefined' &&
+            sessionStorage.getItem(STORAGE_KEY) === intent
+        ) {
+            setAutoLoginAttempted(true);
+            return;
+        }
+        if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem(STORAGE_KEY, intent);
+        }
         setAutoLoginAttempted(true);
         initOAuth({ provider: intent as OAuthProvider }).catch((e) =>
             setError(String(e)),
         );
-    }, [intent, autoLoginAttempted, setAutoLoginAttempted, initOAuth]);
+    }, [
+        intent,
+        oauthLoading,
+        autoLoginAttempted,
+        setAutoLoginAttempted,
+        initOAuth,
+    ]);
 
     const onOAuth = (provider: OAuthProvider) => {
         setError(null);
