@@ -9,20 +9,17 @@ import {
     Button,
     Card,
     CardBody,
-    CardHeader,
     Center,
     Container,
-    Divider,
-    Heading,
     HStack,
     Icon,
     Input,
     PinInput,
     PinInputField,
-    SimpleGrid,
     Spinner,
     Stack,
     Text,
+    useColorMode,
 } from '@chakra-ui/react';
 import { FcGoogle } from 'react-icons/fc';
 import {
@@ -33,6 +30,7 @@ import {
     FaTiktok,
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import { LuChevronDown, LuChevronUp, LuMail } from 'react-icons/lu';
 import type { IconType } from 'react-icons';
 import {
     useLoginWithEmail,
@@ -42,6 +40,8 @@ import {
     useWallets,
 } from '@privy-io/react-auth';
 import { useCrossAppClient } from '../_lib/client';
+import { getRecentProvider, setRecentProvider } from '../_lib/recent';
+import { VechainHeader } from '../../components/VechainHeader';
 
 type ConnectionRequest = ReturnType<
     ReturnType<typeof useCrossAppClient>['getConnectionRequestFromUrlParams']
@@ -52,17 +52,18 @@ type ConnectionRequest = ReturnType<
 // enabled in the dashboard but use different login flows and aren't wired
 // up here yet.
 const OAUTH_PROVIDERS = [
-    { id: 'google', label: 'Continue with Google', Icon: FcGoogle },
-    { id: 'apple', label: 'Continue with Apple', Icon: FaApple },
-    { id: 'twitter', label: 'Continue with X', Icon: FaXTwitter },
-    { id: 'discord', label: 'Continue with Discord', Icon: FaDiscord },
-    { id: 'github', label: 'Continue with GitHub', Icon: FaGithub },
-    { id: 'tiktok', label: 'Continue with TikTok', Icon: FaTiktok },
-    { id: 'line', label: 'Continue with LINE', Icon: FaLine },
+    { id: 'google', label: 'Google', Icon: FcGoogle, tier: 'primary' },
+    { id: 'twitter', label: 'X', Icon: FaXTwitter, tier: 'primary' },
+    { id: 'discord', label: 'Discord', Icon: FaDiscord, tier: 'primary' },
+    { id: 'apple', label: 'Apple', Icon: FaApple, tier: 'other' },
+    { id: 'github', label: 'GitHub', Icon: FaGithub, tier: 'other' },
+    { id: 'tiktok', label: 'TikTok', Icon: FaTiktok, tier: 'other' },
+    { id: 'line', label: 'LINE', Icon: FaLine, tier: 'other' },
 ] as const satisfies ReadonlyArray<{
     id: string;
     label: string;
     Icon: IconType;
+    tier: 'primary' | 'other';
 }>;
 type OAuthProvider = (typeof OAUTH_PROVIDERS)[number]['id'];
 
@@ -79,13 +80,13 @@ function isIntent(value: string | null): value is IntentMethod {
 const OAUTH_ATTEMPTED_STORAGE_KEY = 'vk-cross-app-connect:oauth-attempted';
 
 type Phase =
-    | 'loading' // waiting on Privy / request / user object
-    | 'no_params' // direct hit without URL params
-    | 'parse_error' // bad URL params
-    | 'switching_provider' // logout in flight (stale session, intent mismatch)
-    | 'auth_pending' // OAuth redirect about to happen or in flight
-    | 'show_picker' // no intent, no auth -> pick a provider
-    | 'show_connect'; // ready to accept the connection request
+    | 'loading'
+    | 'no_params'
+    | 'parse_error'
+    | 'switching_provider'
+    | 'auth_pending'
+    | 'show_picker'
+    | 'show_connect';
 
 type PrivyUser = ReturnType<typeof usePrivy>['user'];
 
@@ -95,10 +96,21 @@ function hasLinkedProvider(
 ): boolean {
     if (!user || !intent) return false;
     if (intent === 'email') return Boolean(user.email);
-    // user.google / user.apple / user.github / etc. are populated when the
-    // account is linked. Cast through `unknown` because IntentMethod is a
-    // narrower union than the keys typed on User.
     return Boolean((user as unknown as Record<string, unknown>)[intent]);
+}
+
+function truncateAddress(addr?: string): string {
+    if (!addr) return '';
+    return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+}
+
+function originFromCallback(callbackUrl?: string): string {
+    if (!callbackUrl) return '';
+    try {
+        return new URL(callbackUrl).origin;
+    } catch {
+        return callbackUrl;
+    }
 }
 
 export default function CrossAppConnectPage() {
@@ -183,10 +195,6 @@ export default function CrossAppConnectPage() {
         }
     }, [client, request, getAccessToken]);
 
-    // Single source of truth for what the page should be doing right now.
-    // Computed up-front so we can render one unified loading/spinner UI
-    // during transitions (logout-then-OAuth, post-OAuth-callback) instead
-    // of briefly flashing the wrong panel.
     const phase: Phase = useMemo(() => {
         if (parseError?.kind === 'no_params') return 'no_params';
         if (parseError?.kind === 'invalid') return 'parse_error';
@@ -204,11 +212,6 @@ export default function CrossAppConnectPage() {
         return 'show_connect';
     }, [parseError, ready, request, intent, authenticated, user]);
 
-    // When the popup loads with an explicit intent and a stale session for a
-    // DIFFERENT provider, logout so the requested provider's OAuth flow runs
-    // cleanly. Guarded by phase so it fires at most once per stale-session
-    // detection (after logout, phase flips to 'auth_pending' and this effect
-    // exits).
     const logoutForIntentRef = useRef(false);
     useEffect(() => {
         if (phase !== 'switching_provider') return;
@@ -217,10 +220,6 @@ export default function CrossAppConnectPage() {
         logout().catch((e) => console.error('Failed to logout:', e));
     }, [phase, logout]);
 
-    // Auto-trigger the intent's OAuth when phase enters 'auth_pending'
-    // (either fresh load with ?intent, or post-logout transition). The
-    // sessionStorage marker survives the OAuth redirect so the
-    // post-callback page load doesn't re-bounce the user to the provider.
     useEffect(() => {
         if (phase !== 'auth_pending') return;
         if (!intent || intent === 'email') return;
@@ -233,14 +232,12 @@ export default function CrossAppConnectPage() {
             }
             sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
         }
+        setRecentProvider(intent);
         initOAuth({ provider: intent as OAuthProvider }).catch((e) =>
             setSubmitError(String(e)),
         );
     }, [phase, intent, oauthLoading, initOAuth]);
 
-    // Capture initial auth state so the no-intent flow can distinguish
-    // returning users (who get a manual Connect button) from users who
-    // authenticated during this popup session (auto-accept).
     const initialAuthRef = useRef<boolean | undefined>(undefined);
     useEffect(() => {
         if (!ready) return;
@@ -248,10 +245,6 @@ export default function CrossAppConnectPage() {
         initialAuthRef.current = authenticated;
     }, [ready, authenticated]);
 
-    // Auto-accept only when the user authenticated during this popup
-    // session (initialAuth was false). Returning users with a matching
-    // provider get the manual Accept button so they can confirm the
-    // requester before connecting.
     const autoAcceptedRef = useRef(false);
     useEffect(() => {
         if (autoAcceptedRef.current) return;
@@ -263,17 +256,17 @@ export default function CrossAppConnectPage() {
         onAccept();
     }, [phase, embedded, user, submitting, submitError, onAccept]);
 
+    const requesterOrigin = originFromCallback(request?.callbackUrl);
+
     if (phase === 'no_params') {
         return (
             <PageShell>
-                <Card variant="filled">
-                    <CardHeader>
-                        <Heading size="md">No connection request</Heading>
-                    </CardHeader>
+                <VechainHeader title="VeChain Cross-App Connect" />
+                <Card>
                     <CardBody>
-                        <Text>
+                        <Text color="text-muted" textAlign="center">
                             This page handles cross-app connection requests
-                            from other VeChain dApps. It cannot be opened
+                            from other VeChain dApps. It can&apos;t be opened
                             directly &mdash; the requesting app will open it
                             with the parameters it needs.
                         </Text>
@@ -286,6 +279,7 @@ export default function CrossAppConnectPage() {
     if (phase === 'parse_error') {
         return (
             <PageShell>
+                <VechainHeader title="Couldn't load request" />
                 <Alert status="error" rounded="md">
                     <AlertIcon />
                     <AlertDescription>
@@ -305,8 +299,16 @@ export default function CrossAppConnectPage() {
     ) {
         return (
             <PageShell>
+                <VechainHeader
+                    title="Log in to VeChain"
+                    subtitle={
+                        requesterOrigin
+                            ? `Connecting to ${requesterOrigin}`
+                            : undefined
+                    }
+                />
                 <Center py={10}>
-                    <Spinner />
+                    <Spinner color="brand-accent" />
                 </Center>
             </PageShell>
         );
@@ -315,6 +317,13 @@ export default function CrossAppConnectPage() {
     if (phase === 'show_picker') {
         return (
             <PageShell>
+                <VechainHeader
+                    subtitle={
+                        requesterOrigin
+                            ? `Sign in to your VeChain wallet to grant ${requesterOrigin} access.`
+                            : 'Sign in to your VeChain wallet.'
+                    }
+                />
                 <SignInPanel intent={intent} onCancel={onReject} />
             </PageShell>
         );
@@ -322,28 +331,34 @@ export default function CrossAppConnectPage() {
 
     return (
         <PageShell>
-            <Card variant="filled">
-                <CardHeader>
-                    <Heading size="md">Connect to VeChain</Heading>
-                </CardHeader>
+            <VechainHeader
+                subtitle={
+                    requesterOrigin
+                        ? `Connect to ${requesterOrigin}`
+                        : undefined
+                }
+            />
+            <Card>
                 <CardBody>
                     <Stack spacing={4}>
                         <Box>
-                            <Text fontSize="sm" color="gray.400">
+                            <Text fontSize="xs" color="text-subtle">
                                 Signed in as
                             </Text>
-                            <Text fontWeight="semibold">
+                            <Text fontWeight={600} color="text-strong">
                                 {user?.email?.address ??
                                     user?.google?.email ??
                                     user?.id}
                             </Text>
                         </Box>
                         <Box>
-                            <Text fontSize="sm" color="gray.400">
+                            <Text fontSize="xs" color="text-subtle">
                                 Wallet
                             </Text>
-                            <Text fontFamily="mono" fontSize="sm">
-                                {embedded?.address ?? 'creating...'}
+                            <Text fontFamily="mono" fontSize="sm" color="text-muted">
+                                {embedded?.address
+                                    ? truncateAddress(embedded.address)
+                                    : 'creating…'}
                             </Text>
                         </Box>
                         {submitError && (
@@ -354,25 +369,24 @@ export default function CrossAppConnectPage() {
                                 </AlertDescription>
                             </Alert>
                         )}
-                        <HStack pt={2}>
-                            <Button
-                                colorScheme="blue"
-                                onClick={onAccept}
-                                isLoading={submitting}
-                                isDisabled={!embedded}
-                                flex={1}
-                            >
-                                Connect
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                onClick={onReject}
-                                isDisabled={submitting}
-                                flex={1}
-                            >
-                                Cancel
-                            </Button>
-                        </HStack>
+                        <Button
+                            variant="brand"
+                            onClick={onAccept}
+                            isLoading={submitting}
+                            isDisabled={!embedded}
+                            w="full"
+                            h="48px"
+                        >
+                            Continue
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            onClick={onReject}
+                            isDisabled={submitting}
+                            w="full"
+                        >
+                            Cancel
+                        </Button>
                     </Stack>
                 </CardBody>
             </Card>
@@ -387,6 +401,7 @@ function SignInPanel({
     intent: IntentMethod | null;
     onCancel: () => void;
 }) {
+    const { colorMode } = useColorMode();
     const [error, setError] = useState<string | null>(null);
     const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
         onError: (e) => setError(String(e)),
@@ -398,11 +413,31 @@ function SignInPanel({
     } = useLoginWithEmail();
 
     const [showEmail, setShowEmail] = useState<boolean>(intent === 'email');
+    const [showOther, setShowOther] = useState<boolean>(false);
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
+    const [recent, setRecent] = useState<string | null>(null);
+
+    useEffect(() => {
+        setRecent(getRecentProvider());
+    }, []);
+
+    const orderedRows = useMemo(() => {
+        const recentRow = recent
+            ? OAUTH_PROVIDERS.find((p) => p.id === recent)
+            : null;
+        const primary = OAUTH_PROVIDERS.filter(
+            (p) => p.tier === 'primary' && p.id !== recent,
+        );
+        const other = OAUTH_PROVIDERS.filter(
+            (p) => p.tier === 'other' && p.id !== recent,
+        );
+        return { recentRow, primary, other };
+    }, [recent]);
 
     const onOAuth = (provider: OAuthProvider) => {
         setError(null);
+        setRecentProvider(provider);
         initOAuth({ provider }).catch((e) => setError(String(e)));
     };
 
@@ -410,6 +445,7 @@ function SignInPanel({
         setError(null);
         try {
             await sendCode({ email });
+            setRecentProvider('email');
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to send code');
         }
@@ -429,10 +465,7 @@ function SignInPanel({
     const submittingCode = emailState.status === 'submitting-code';
 
     return (
-        <Card variant="filled">
-            <CardHeader>
-                <Heading size="md">Sign in to VeChain</Heading>
-            </CardHeader>
+        <Card>
             <CardBody>
                 <Stack spacing={3}>
                     {error && (
@@ -444,29 +477,62 @@ function SignInPanel({
 
                     {!showEmail && (
                         <Stack spacing={2}>
-                            <SimpleGrid columns={2} spacing={2}>
-                                {OAUTH_PROVIDERS.map((p) => (
-                                    <Button
-                                        key={p.id}
-                                        onClick={() => onOAuth(p.id)}
-                                        isDisabled={oauthLoading}
-                                        variant="outline"
-                                        leftIcon={
-                                            <Icon as={p.Icon} boxSize="20px" />
-                                        }
-                                        justifyContent="flex-start"
-                                    >
-                                        {p.label.replace(/^Continue with /, '')}
-                                    </Button>
-                                ))}
-                            </SimpleGrid>
-                            <Button
+                            {orderedRows.recentRow && (
+                                <ProviderRow
+                                    provider={orderedRows.recentRow}
+                                    isRecent
+                                    onClick={() =>
+                                        onOAuth(orderedRows.recentRow!.id)
+                                    }
+                                    isDisabled={oauthLoading}
+                                    colorMode={colorMode}
+                                />
+                            )}
+                            <EmailRow
                                 onClick={() => setShowEmail(true)}
-                                variant="outline"
-                                justifyContent="center"
-                            >
-                                Continue with Email
-                            </Button>
+                                isRecent={recent === 'email'}
+                            />
+                            {orderedRows.primary.map((p) => (
+                                <ProviderRow
+                                    key={p.id}
+                                    provider={p}
+                                    onClick={() => onOAuth(p.id)}
+                                    isDisabled={oauthLoading}
+                                    colorMode={colorMode}
+                                />
+                            ))}
+                            {orderedRows.other.length > 0 && (
+                                <>
+                                    <Button
+                                        variant="row"
+                                        onClick={() =>
+                                            setShowOther((v) => !v)
+                                        }
+                                        rightIcon={
+                                            <Icon
+                                                as={
+                                                    showOther
+                                                        ? LuChevronUp
+                                                        : LuChevronDown
+                                                }
+                                                boxSize="18px"
+                                            />
+                                        }
+                                    >
+                                        Other socials
+                                    </Button>
+                                    {showOther &&
+                                        orderedRows.other.map((p) => (
+                                            <ProviderRow
+                                                key={p.id}
+                                                provider={p}
+                                                onClick={() => onOAuth(p.id)}
+                                                isDisabled={oauthLoading}
+                                                colorMode={colorMode}
+                                            />
+                                        ))}
+                                </>
+                            )}
                         </Stack>
                     )}
 
@@ -478,12 +544,20 @@ function SignInPanel({
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 autoFocus
+                                h="48px"
+                                bg="card-bg"
+                                borderColor="card-border"
+                                _focusVisible={{
+                                    borderColor: 'brand-accent',
+                                    boxShadow: 'none',
+                                }}
                             />
                             <Button
-                                colorScheme="blue"
+                                variant="brand"
                                 onClick={onSendCode}
                                 isLoading={sendingCode}
                                 isDisabled={!email}
+                                h="48px"
                             >
                                 Send code
                             </Button>
@@ -499,9 +573,9 @@ function SignInPanel({
 
                     {(awaitingCode || submittingCode) && (
                         <Stack spacing={3}>
-                            <Text fontSize="sm" color="gray.400">
+                            <Text fontSize="sm" color="text-muted">
                                 We sent a 6-digit code to{' '}
-                                <Text as="span" color="white">
+                                <Text as="span" color="text-strong">
                                     {email}
                                 </Text>
                                 .
@@ -527,10 +601,11 @@ function SignInPanel({
                                 </PinInput>
                             </HStack>
                             <Button
-                                colorScheme="blue"
+                                variant="brand"
                                 onClick={onSubmitCode}
                                 isLoading={submittingCode}
                                 isDisabled={code.length !== 6}
+                                h="48px"
                             >
                                 Verify
                             </Button>
@@ -547,8 +622,7 @@ function SignInPanel({
                         </Stack>
                     )}
 
-                    <Divider />
-                    <Button variant="ghost" onClick={onCancel}>
+                    <Button variant="ghost" onClick={onCancel} mt={2}>
                         Cancel
                     </Button>
                 </Stack>
@@ -557,10 +631,93 @@ function SignInPanel({
     );
 }
 
+function ProviderRow({
+    provider,
+    isRecent,
+    onClick,
+    isDisabled,
+    colorMode,
+}: {
+    provider: (typeof OAUTH_PROVIDERS)[number];
+    isRecent?: boolean;
+    onClick: () => void;
+    isDisabled?: boolean;
+    colorMode: 'light' | 'dark';
+}) {
+    // Some monochrome glyphs need to flip with the color mode to stay legible.
+    const monoFlip =
+        provider.id === 'apple' ||
+        provider.id === 'github' ||
+        provider.id === 'tiktok' ||
+        provider.id === 'twitter';
+    const iconColor = monoFlip
+        ? colorMode === 'dark'
+            ? 'white'
+            : 'text-strong'
+        : undefined;
+    return (
+        <Button
+            variant="row"
+            onClick={onClick}
+            isDisabled={isDisabled}
+            leftIcon={
+                <Icon
+                    as={provider.Icon}
+                    boxSize="22px"
+                    color={iconColor}
+                />
+            }
+            rightIcon={isRecent ? <RecentBadge /> : undefined}
+        >
+            <Text flex={1} textAlign="left">
+                {provider.label}
+            </Text>
+        </Button>
+    );
+}
+
+function EmailRow({
+    onClick,
+    isRecent,
+}: {
+    onClick: () => void;
+    isRecent?: boolean;
+}) {
+    return (
+        <Button
+            variant="row"
+            onClick={onClick}
+            leftIcon={<Icon as={LuMail} boxSize="22px" />}
+            rightIcon={isRecent ? <RecentBadge /> : undefined}
+        >
+            <Text flex={1} textAlign="left">
+                Continue with Email
+            </Text>
+        </Button>
+    );
+}
+
+function RecentBadge() {
+    return (
+        <Text
+            as="span"
+            bg="chip-bg"
+            color="chip-text"
+            fontSize="xs"
+            fontWeight={600}
+            px={2}
+            py="2px"
+            borderRadius="full"
+        >
+            Recent
+        </Text>
+    );
+}
+
 function PageShell({ children }: { children: React.ReactNode }) {
     return (
-        <Container maxW="md" py={12}>
-            {children}
+        <Container maxW="sm" py={8}>
+            <Stack spacing={6}>{children}</Stack>
         </Container>
     );
 }

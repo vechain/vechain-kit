@@ -10,22 +10,26 @@ import {
     Text,
     UnorderedList,
 } from '@chakra-ui/react';
+import { VechainHeader } from './components/VechainHeader';
 
 export default function LandingPage() {
     return (
-        <Container maxW="2xl" py={16}>
-            <Stack spacing={6}>
-                <Heading size="lg">VeChain Cross-App Connect</Heading>
-                <Text>
-                    Whitelabel host for Privy cross-app connection and
-                    transaction flows. This page is not opened directly by
-                    users.
-                </Text>
+        <Container maxW="2xl" py={12}>
+            <Stack spacing={8}>
+                <VechainHeader
+                    title="VeChain Cross-App Connect"
+                    subtitle="Whitelabel host for Privy cross-app connection and transaction flows."
+                />
                 <Box>
-                    <Heading size="sm" mb={2}>
+                    <Heading
+                        size="sm"
+                        mb={2}
+                        color="text-strong"
+                        fontFamily="heading"
+                    >
                         Routes
                     </Heading>
-                    <UnorderedList spacing={1}>
+                    <UnorderedList spacing={1} color="text-muted">
                         <ListItem>
                             <Code>/cross-app/connect</Code> &mdash; handles
                             connection requests
@@ -36,6 +40,9 @@ export default function LandingPage() {
                         </ListItem>
                     </UnorderedList>
                 </Box>
+                <Text fontSize="sm" color="text-subtle" textAlign="center">
+                    This page isn&apos;t opened directly by users.
+                </Text>
             </Stack>
         </Container>
     );
