@@ -36,20 +36,11 @@ const c = (t: string): Token => ({ t, c: COLORS.comment });
 const x = (t: string): Token => ({ t, c: COLORS.text });
 
 const LINES: Token[][] = [
-    [
-        k('import'),
-        x(' { '),
-        v('useWallet'),
-        x(', '),
-        v('useThor'),
-        x(', '),
-        v('useBuildTransaction'),
-        x(' } '),
-        k('from'),
-        x(' '),
-        s('"@vechain/vechain-kit"'),
-        x(';'),
-    ],
+    [k('import'), x(' {')],
+    [x('  '), v('useWallet'), x(',')],
+    [x('  '), v('useThor'), x(',')],
+    [x('  '), v('useBuildTransaction'), x(',')],
+    [x('} '), k('from'), x(' '), s('"@vechain/vechain-kit"'), x(';')],
     [],
     [k('function'), x(' '), fn('MyComponent'), x('() {')],
     [x('  '), c('// Manage the wallet')],
@@ -165,10 +156,14 @@ export function BoostedDevSection({
             justifyContent={'center'}
         >
             <Grid
-                templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
+                templateColumns={[
+                    'minmax(0, 1fr)',
+                    'repeat(2, minmax(0, 1fr))',
+                ]}
                 gap={4}
                 placeItems={'center center'}
                 alignItems={'center'}
+                w="full"
             >
                 <VStack spacing={4} align="start" p={10}>
                     <Heading

@@ -94,10 +94,14 @@ export function AISection({
             justifyContent={'center'}
         >
             <Grid
-                templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)']}
+                templateColumns={[
+                    'minmax(0, 1fr)',
+                    'repeat(2, minmax(0, 1fr))',
+                ]}
                 gap={4}
                 placeItems={'center center'}
                 alignItems={'center'}
+                w="full"
             >
                 <VStack spacing={4} align="start" p={10}>
                     <HStack spacing={2}>
