@@ -364,11 +364,12 @@ export default function CrossAppConnectPage() {
                                 rounded="md"
                                 variant="left-accent"
                             >
-                                <AlertIcon fontSize="sm" />
-                                <AlertDescription fontSize="sm">
+                                <AlertDescription
+                                    fontSize="xs"
+                                    lineHeight="1.3"
+                                >
                                     This app isn’t listed in the VeChain App
-                                    Hub. Only continue if you trust the site in
-                                    the chip above.
+                                    Hub, so only continue if you trust the site.
                                 </AlertDescription>
                             </Alert>
                         )}
