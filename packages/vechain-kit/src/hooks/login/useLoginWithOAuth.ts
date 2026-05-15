@@ -15,17 +15,19 @@ interface OAuthOptions {
 // Module-level variable shared across all hook instances
 let hasCreatedWallet = false;
 
+// Providers enabled in VeChain's Privy app that the whitelabel
+// cross-app-connect host can handle via `useLoginWithOAuth`. Spotify /
+// Instagram / LinkedIn are NOT in this set because they are disabled in
+// the VeChain Privy dashboard; calling them would 4xx at the provider.
+// Farcaster and WhatsApp are enabled but use different login flows.
 const CROSS_APP_INTENT_PROVIDERS = new Set<OAuthProviderType>([
     'google',
     'apple',
     'twitter',
     'discord',
     'github',
-    'spotify',
-    'instagram',
     'tiktok',
     'line',
-    'linkedin',
 ]);
 
 export const useLoginWithOAuth = () => {

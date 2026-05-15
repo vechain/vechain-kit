@@ -29,10 +29,7 @@ import {
     FaApple,
     FaDiscord,
     FaGithub,
-    FaInstagram,
     FaLine,
-    FaLinkedin,
-    FaSpotify,
     FaTiktok,
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -49,17 +46,18 @@ type ConnectionRequest = ReturnType<
     ReturnType<typeof useCrossAppClient>['getConnectionRequestFromUrlParams']
 >;
 
+// Providers enabled in VeChain's Privy dashboard that go through Privy's
+// headless useLoginWithOAuth. Farcaster (SIWF) and WhatsApp (OTP) are also
+// enabled in the dashboard but use different login flows and aren't wired
+// up here yet.
 const OAUTH_PROVIDERS = [
     { id: 'google', label: 'Continue with Google', Icon: FcGoogle },
     { id: 'apple', label: 'Continue with Apple', Icon: FaApple },
     { id: 'twitter', label: 'Continue with X', Icon: FaXTwitter },
     { id: 'discord', label: 'Continue with Discord', Icon: FaDiscord },
     { id: 'github', label: 'Continue with GitHub', Icon: FaGithub },
-    { id: 'spotify', label: 'Continue with Spotify', Icon: FaSpotify },
-    { id: 'instagram', label: 'Continue with Instagram', Icon: FaInstagram },
     { id: 'tiktok', label: 'Continue with TikTok', Icon: FaTiktok },
     { id: 'line', label: 'Continue with LINE', Icon: FaLine },
-    { id: 'linkedin', label: 'Continue with LinkedIn', Icon: FaLinkedin },
 ] as const satisfies ReadonlyArray<{
     id: string;
     label: string;

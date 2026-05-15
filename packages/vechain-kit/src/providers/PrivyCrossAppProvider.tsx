@@ -25,8 +25,12 @@ import {
 /**
  * Login methods that requester apps can pre-select on the whitelabel
  * cross-app-connect host. When passed, the host skips its provider picker
- * and jumps straight into the matching flow. Covers all of Privy's
- * supported OAuth providers plus email.
+ * and jumps straight into the matching flow.
+ *
+ * This list matches the providers enabled in VeChain's Privy app *and*
+ * supported by Privy's headless `useLoginWithOAuth` hook. Farcaster and
+ * WhatsApp are enabled in the dashboard too but use different flows
+ * (SIWF / OTP) that haven't been wired into the whitelabel host yet.
  */
 export type CrossAppLoginIntent =
     | 'google'
@@ -34,11 +38,8 @@ export type CrossAppLoginIntent =
     | 'twitter'
     | 'discord'
     | 'github'
-    | 'spotify'
-    | 'instagram'
     | 'tiktok'
     | 'line'
-    | 'linkedin'
     | 'email';
 
 export type LoginWithCrossAppOptions = {

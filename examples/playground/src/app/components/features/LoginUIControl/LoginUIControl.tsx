@@ -21,15 +21,14 @@ import {
     FaApple,
     FaDiscord,
     FaGithub,
-    FaInstagram,
     FaLine,
-    FaLinkedin,
-    FaSpotify,
     FaTiktok,
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import type { IconType } from 'react-icons';
 
+// OAuth providers enabled in VeChain's Privy dashboard. Farcaster and
+// WhatsApp are also enabled but use non-OAuth login flows.
 const OAUTH_PROVIDERS: ReadonlyArray<{
     id:
         | 'google'
@@ -37,11 +36,8 @@ const OAUTH_PROVIDERS: ReadonlyArray<{
         | 'twitter'
         | 'discord'
         | 'github'
-        | 'spotify'
-        | 'instagram'
         | 'tiktok'
-        | 'line'
-        | 'linkedin';
+        | 'line';
     label: string;
     icon: IconType;
 }> = [
@@ -50,11 +46,8 @@ const OAUTH_PROVIDERS: ReadonlyArray<{
     { id: 'twitter', label: 'X', icon: FaXTwitter },
     { id: 'discord', label: 'Discord', icon: FaDiscord },
     { id: 'github', label: 'GitHub', icon: FaGithub },
-    { id: 'spotify', label: 'Spotify', icon: FaSpotify },
-    { id: 'instagram', label: 'Instagram', icon: FaInstagram },
     { id: 'tiktok', label: 'TikTok', icon: FaTiktok },
     { id: 'line', label: 'LINE', icon: FaLine },
-    { id: 'linkedin', label: 'LinkedIn', icon: FaLinkedin },
 ];
 
 export const LoginUIControl = () => {
