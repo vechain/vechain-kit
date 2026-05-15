@@ -78,11 +78,35 @@ function isIntent(value: string | null): value is IntentMethod {
 
 const OAUTH_ATTEMPTED_STORAGE_KEY = 'vk-cross-app-connect:oauth-attempted';
 
+type Phase =
+    | 'loading' // waiting on Privy / request / user object
+    | 'no_params' // direct hit without URL params
+    | 'parse_error' // bad URL params
+    | 'switching_provider' // logout in flight (stale session, intent mismatch)
+    | 'auth_pending' // OAuth redirect about to happen or in flight
+    | 'show_picker' // no intent, no auth -> pick a provider
+    | 'show_connect'; // ready to accept the connection request
+
+type PrivyUser = ReturnType<typeof usePrivy>['user'];
+
+function hasLinkedProvider(
+    user: PrivyUser,
+    intent: IntentMethod | null,
+): boolean {
+    if (!user || !intent) return false;
+    if (intent === 'email') return Boolean(user.email);
+    // user.google / user.apple / user.github / etc. are populated when the
+    // account is linked. Cast through `unknown` because IntentMethod is a
+    // narrower union than the keys typed on User.
+    return Boolean((user as unknown as Record<string, unknown>)[intent]);
+}
+
 export default function CrossAppConnectPage() {
     const client = useCrossAppClient();
     const { ready, authenticated, user, getAccessToken } = usePrivy();
     const { wallets } = useWallets();
     const { logout } = useLogout();
+    const { initOAuth, loading: oauthLoading } = useLoginWithOAuth();
 
     const [request, setRequest] = useState<ConnectionRequest | null>(null);
     const [parseError, setParseError] = useState<
@@ -90,7 +114,6 @@ export default function CrossAppConnectPage() {
     >(null);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
-    const [autoLoginAttempted, setAutoLoginAttempted] = useState(false);
 
     useEffect(() => {
         const hasRequesterKey =
@@ -160,32 +183,60 @@ export default function CrossAppConnectPage() {
         }
     }, [client, request, getAccessToken]);
 
-    // If the popup opens with ?intent=<provider> but the user is already
-    // authenticated (likely from a previous popup session in the same
-    // browser), logout first so the requested provider's OAuth flow runs
-    // cleanly. Otherwise the user would see their old session and the intent
-    // would be silently ignored.
-    //
-    // Guard: skip the logout if sessionStorage shows we've already initiated
-    // an OAuth attempt for this intent. That means we're back from the OAuth
-    // redirect and the current session IS the one the user just authenticated
-    // with -- logging out again would loop.
+    // Single source of truth for what the page should be doing right now.
+    // Computed up-front so we can render one unified loading/spinner UI
+    // during transitions (logout-then-OAuth, post-OAuth-callback) instead
+    // of briefly flashing the wrong panel.
+    const phase: Phase = useMemo(() => {
+        if (parseError?.kind === 'no_params') return 'no_params';
+        if (parseError?.kind === 'invalid') return 'parse_error';
+        if (!ready || !request) return 'loading';
+
+        if (intent && intent !== 'email') {
+            if (!authenticated) return 'auth_pending';
+            if (!user) return 'loading';
+            return hasLinkedProvider(user, intent)
+                ? 'show_connect'
+                : 'switching_provider';
+        }
+
+        if (!authenticated) return 'show_picker';
+        return 'show_connect';
+    }, [parseError, ready, request, intent, authenticated, user]);
+
+    // When the popup loads with an explicit intent and a stale session for a
+    // DIFFERENT provider, logout so the requested provider's OAuth flow runs
+    // cleanly. Guarded by phase so it fires at most once per stale-session
+    // detection (after logout, phase flips to 'auth_pending' and this effect
+    // exits).
     const logoutForIntentRef = useRef(false);
     useEffect(() => {
-        if (!ready) return;
-        if (!intent || intent === 'email') return;
-        if (!authenticated) return;
+        if (phase !== 'switching_provider') return;
         if (logoutForIntentRef.current) return;
+        logoutForIntentRef.current = true;
+        logout().catch((e) => console.error('Failed to logout:', e));
+    }, [phase, logout]);
+
+    // Auto-trigger the intent's OAuth when phase enters 'auth_pending'
+    // (either fresh load with ?intent, or post-logout transition). The
+    // sessionStorage marker survives the OAuth redirect so the
+    // post-callback page load doesn't re-bounce the user to the provider.
+    useEffect(() => {
+        if (phase !== 'auth_pending') return;
+        if (!intent || intent === 'email') return;
+        if (oauthLoading) return;
         if (typeof sessionStorage !== 'undefined') {
             if (
                 sessionStorage.getItem(OAUTH_ATTEMPTED_STORAGE_KEY) === intent
             ) {
                 return;
             }
+            sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
         }
-        logoutForIntentRef.current = true;
-        logout().catch((e) => console.error('Failed to logout:', e));
-    }, [ready, intent, authenticated, logout]);
+        initOAuth({ provider: intent as OAuthProvider }).catch((e) =>
+            setSubmitError(String(e)),
+        );
+    }, [phase, intent, oauthLoading, initOAuth]);
 
     // Capture initial auth state so the no-intent flow can distinguish
     // returning users (who get a manual Connect button) from users who
@@ -197,34 +248,22 @@ export default function CrossAppConnectPage() {
         initialAuthRef.current = authenticated;
     }, [ready, authenticated]);
 
-    // Auto-accept when:
-    //   - the user came with an explicit intent (they already consented by
-    //     clicking the provider's button on the requester dApp), OR
-    //   - the user just authenticated in this popup session via the
-    //     all-providers picker (initialAuth was false).
-    // Returning users with no intent get the manual Accept button so they
-    // can confirm the requester.
+    // Auto-accept only when the user authenticated during this popup
+    // session (initialAuth was false). Returning users with a matching
+    // provider get the manual Accept button so they can confirm the
+    // requester before connecting.
     const autoAcceptedRef = useRef(false);
     useEffect(() => {
         if (autoAcceptedRef.current) return;
-        if (!authenticated || !embedded || !request) return;
+        if (phase !== 'show_connect') return;
+        if (!embedded || !user) return;
         if (submitting || submitError) return;
-        const cameWithIntent = intent !== null;
-        const justAuthenticatedFresh = initialAuthRef.current === false;
-        if (!cameWithIntent && !justAuthenticatedFresh) return;
+        if (initialAuthRef.current !== false) return;
         autoAcceptedRef.current = true;
         onAccept();
-    }, [
-        authenticated,
-        embedded,
-        request,
-        submitting,
-        submitError,
-        intent,
-        onAccept,
-    ]);
+    }, [phase, embedded, user, submitting, submitError, onAccept]);
 
-    if (parseError?.kind === 'no_params') {
+    if (phase === 'no_params') {
         return (
             <PageShell>
                 <Card variant="filled">
@@ -244,18 +283,26 @@ export default function CrossAppConnectPage() {
         );
     }
 
-    if (parseError?.kind === 'invalid') {
+    if (phase === 'parse_error') {
         return (
             <PageShell>
                 <Alert status="error" rounded="md">
                     <AlertIcon />
-                    <AlertDescription>{parseError.message}</AlertDescription>
+                    <AlertDescription>
+                        {parseError?.kind === 'invalid'
+                            ? parseError.message
+                            : 'Invalid connection request'}
+                    </AlertDescription>
                 </Alert>
             </PageShell>
         );
     }
 
-    if (!ready || !request) {
+    if (
+        phase === 'loading' ||
+        phase === 'switching_provider' ||
+        phase === 'auth_pending'
+    ) {
         return (
             <PageShell>
                 <Center py={10}>
@@ -265,15 +312,10 @@ export default function CrossAppConnectPage() {
         );
     }
 
-    if (!authenticated) {
+    if (phase === 'show_picker') {
         return (
             <PageShell>
-                <SignInPanel
-                    intent={intent}
-                    autoLoginAttempted={autoLoginAttempted}
-                    setAutoLoginAttempted={setAutoLoginAttempted}
-                    onCancel={onReject}
-                />
+                <SignInPanel intent={intent} onCancel={onReject} />
             </PageShell>
         );
     }
@@ -340,15 +382,12 @@ export default function CrossAppConnectPage() {
 
 function SignInPanel({
     intent,
-    autoLoginAttempted,
-    setAutoLoginAttempted,
     onCancel,
 }: {
     intent: IntentMethod | null;
-    autoLoginAttempted: boolean;
-    setAutoLoginAttempted: (v: boolean) => void;
     onCancel: () => void;
 }) {
+    const [error, setError] = useState<string | null>(null);
     const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
         onError: (e) => setError(String(e)),
     });
@@ -358,39 +397,9 @@ function SignInPanel({
         loginWithCode,
     } = useLoginWithEmail();
 
-    const [error, setError] = useState<string | null>(null);
     const [showEmail, setShowEmail] = useState<boolean>(intent === 'email');
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
-
-    // Persist the "already attempted" marker in sessionStorage so the OAuth
-    // redirect back from Google (which preserves ?intent=google in the URL)
-    // doesn't bounce the user straight back to Google again.
-    useEffect(() => {
-        if (!intent || intent === 'email') return;
-        if (oauthLoading) return;
-        if (autoLoginAttempted) return;
-        if (
-            typeof sessionStorage !== 'undefined' &&
-            sessionStorage.getItem(OAUTH_ATTEMPTED_STORAGE_KEY) === intent
-        ) {
-            setAutoLoginAttempted(true);
-            return;
-        }
-        if (typeof sessionStorage !== 'undefined') {
-            sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
-        }
-        setAutoLoginAttempted(true);
-        initOAuth({ provider: intent as OAuthProvider }).catch((e) =>
-            setError(String(e)),
-        );
-    }, [
-        intent,
-        oauthLoading,
-        autoLoginAttempted,
-        setAutoLoginAttempted,
-        initOAuth,
-    ]);
 
     const onOAuth = (provider: OAuthProvider) => {
         setError(null);
