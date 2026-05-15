@@ -38,10 +38,12 @@ import { useThor } from '@vechain/dapp-kit-react';
 import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/connect';
 import { useCrossAppClient } from '../_lib/client';
 import { VechainHeader } from '../../components/VechainHeader';
+import { AddressTag } from '../../components/AddressTag';
 import { decodeClause, type DecodedClause } from '../_lib/decoder';
 import { simulateClauses, type Simulation } from '../_lib/simulate';
 import type { NETWORK_TYPE } from '../_lib/network-tokens';
 import { formatUnits } from 'viem';
+import type { AppConfig } from '@vechain/vechain-kit';
 
 const SUPPORTED_METHODS = ['eth_signTypedData_v4'] as const;
 const SUPPORTED_PRIMARY_TYPES = [
@@ -112,7 +114,7 @@ export default function CrossAppTransactPage() {
     const embedded = wallets.find((w) => w.walletClientType === 'privy');
     const { data: smartAccount } = useSmartAccount(embedded?.address);
     const { data: kitChainId } = useGetChainId();
-    const { network } = useVeChainKitConfig();
+    const { network, appConfig } = useVeChainKitConfig();
     const thor = useThor();
 
     const [verified, setVerified] = useState<VerifiedTransactionRequest | null>(
@@ -442,7 +444,12 @@ export default function CrossAppTransactPage() {
                         ) : (
                             <Stack spacing={3}>
                                 {decoded!.map((d, i) => (
-                                    <ActionRow key={i} action={d} />
+                                    <ActionRow
+                                        key={i}
+                                        action={d}
+                                        appConfig={appConfig}
+                                        self={smartAccount?.address}
+                                    />
                                 ))}
                             </Stack>
                         )}
@@ -570,67 +577,18 @@ export default function CrossAppTransactPage() {
                                             textTransform="uppercase"
                                             letterSpacing="0.05em"
                                         >
-                                            Raw clauses
+                                            {parsed.clauses.length === 1
+                                                ? 'Clause'
+                                                : `Clauses (${parsed.clauses.length})`}
                                         </Text>
                                         {parsed.clauses.map((c, i) => (
-                                            <Box
+                                            <RawClauseRow
                                                 key={i}
-                                                p={3}
-                                                rounded="md"
-                                                bg="card-elevated-bg"
-                                                borderWidth="1px"
-                                                borderColor="card-border"
-                                            >
-                                                <Stack spacing={1}>
-                                                    <DetailRow
-                                                        label={`Clause ${i + 1} · to`}
-                                                        value={
-                                                            <Code
-                                                                fontSize="xs"
-                                                                bg="transparent"
-                                                                color="text-muted"
-                                                            >
-                                                                {truncate(c.to)}
-                                                            </Code>
-                                                        }
-                                                    />
-                                                    {c.value && c.value !== '0' && (
-                                                        <DetailRow
-                                                            label="value"
-                                                            value={
-                                                                <Code
-                                                                    fontSize="xs"
-                                                                    bg="transparent"
-                                                                    color="text-muted"
-                                                                >
-                                                                    {c.value}
-                                                                </Code>
-                                                            }
-                                                        />
-                                                    )}
-                                                    {c.data && c.data !== '0x' && (
-                                                        <Box>
-                                                            <Text
-                                                                fontSize="xs"
-                                                                color="text-subtle"
-                                                            >
-                                                                data
-                                                            </Text>
-                                                            <Code
-                                                                fontSize="xs"
-                                                                bg="transparent"
-                                                                color="text-muted"
-                                                                whiteSpace="pre-wrap"
-                                                                wordBreak="break-all"
-                                                            >
-                                                                {c.data.length > 80
-                                                                    ? `${c.data.slice(0, 80)}…`
-                                                                    : c.data}
-                                                            </Code>
-                                                        </Box>
-                                                    )}
-                                                </Stack>
-                                            </Box>
+                                                clause={c}
+                                                index={i}
+                                                total={parsed.clauses.length}
+                                                appConfig={appConfig}
+                                            />
                                         ))}
                                     </Stack>
                                 </Stack>
@@ -643,7 +601,15 @@ export default function CrossAppTransactPage() {
     );
 }
 
-function ActionRow({ action }: { action: DecodedClause }) {
+function ActionRow({
+    action,
+    appConfig,
+    self,
+}: {
+    action: DecodedClause;
+    appConfig?: AppConfig;
+    self?: string;
+}) {
     const icon =
         action.kind === 'native_transfer' || action.kind === 'token_transfer'
             ? LuArrowUpRight
@@ -657,7 +623,6 @@ function ActionRow({ action }: { action: DecodedClause }) {
               (action as { unlimited: boolean }).unlimited
             ? 'orange.400'
             : 'text-strong';
-    const detail = describeDetail(action);
     return (
         <HStack spacing={3} align="flex-start">
             <Box
@@ -673,14 +638,68 @@ function ActionRow({ action }: { action: DecodedClause }) {
                 <Text fontWeight={600} color="text-strong">
                     {action.summary}
                 </Text>
-                {detail && (
-                    <Text fontSize="sm" color="text-muted">
-                        {detail}
-                    </Text>
-                )}
+                <ActionRowDetail
+                    action={action}
+                    appConfig={appConfig}
+                    self={self}
+                />
             </Stack>
         </HStack>
     );
+}
+
+function ActionRowDetail({
+    action,
+    appConfig,
+    self,
+}: {
+    action: DecodedClause;
+    appConfig?: AppConfig;
+    self?: string;
+}) {
+    switch (action.kind) {
+        case 'native_transfer':
+        case 'token_transfer':
+            return (
+                <HStack spacing={1.5} fontSize="sm" color="text-muted">
+                    <Text>To</Text>
+                    <AddressTag
+                        address={action.recipient}
+                        appConfig={appConfig}
+                        self={self}
+                    />
+                </HStack>
+            );
+        case 'token_approve':
+            return (
+                <HStack spacing={1.5} fontSize="sm" color="text-muted">
+                    <Text>Spender:</Text>
+                    <AddressTag
+                        address={action.spender}
+                        appConfig={appConfig}
+                        self={self}
+                    />
+                </HStack>
+            );
+        case 'unknown':
+            if (action.signature) {
+                return (
+                    <Text fontSize="sm" color="text-muted">
+                        Function: {action.signature}
+                    </Text>
+                );
+            }
+            if (action.selector) {
+                return (
+                    <Text fontSize="sm" color="text-muted">
+                        Selector: {action.selector}
+                    </Text>
+                );
+            }
+            return null;
+        default:
+            return null;
+    }
 }
 
 function BalanceChangeSection({
@@ -800,23 +819,97 @@ function formatAmount(raw: bigint, decimals: number): string {
     return trimmed.length === 0 ? whole : `${whole}.${trimmed}`;
 }
 
-function describeDetail(action: DecodedClause): string | null {
-    switch (action.kind) {
-        case 'native_transfer':
-            return `To ${truncate(action.recipient)}`;
-        case 'token_transfer':
-            return `To ${truncate(action.recipient)}`;
-        case 'token_approve':
-            return `Spender: ${truncate(action.spender)}`;
-        case 'unknown':
-            return action.signature
-                ? `Function: ${action.signature}`
-                : action.selector
-                ? `Selector: ${action.selector}`
-                : null;
-        default:
-            return null;
+function parseValueOrZero(value: string): bigint {
+    if (!value) return BigInt(0);
+    try {
+        return BigInt(value);
+    } catch {
+        return BigInt(0);
     }
+}
+
+function RawClauseRow({
+    clause,
+    index,
+    total,
+    appConfig,
+}: {
+    clause: { to: string; value: string; data: string };
+    index: number;
+    total: number;
+    appConfig?: AppConfig;
+}) {
+    const showRaw = useDisclosure();
+    const valueWei = parseValueOrZero(clause.value);
+    const hasValue = valueWei > BigInt(0);
+    const hasData = Boolean(clause.data) && clause.data !== '0x';
+    return (
+        <Box
+            p={3}
+            rounded="md"
+            bg="card-elevated-bg"
+            borderWidth="1px"
+            borderColor="card-border"
+        >
+            <Stack spacing={2}>
+                <HStack justify="space-between" align="center">
+                    <Text fontSize="xs" color="text-subtle">
+                        Clause {index + 1} of {total} · to
+                    </Text>
+                    <AddressTag
+                        address={clause.to}
+                        appConfig={appConfig}
+                    />
+                </HStack>
+                {hasValue && (
+                    <DetailRow
+                        label="Value"
+                        value={
+                            <Text fontSize="xs" color="text-muted">
+                                {formatAmount(valueWei, 18)} VET
+                            </Text>
+                        }
+                    />
+                )}
+                {hasData && (
+                    <Box>
+                        <Button
+                            variant="link"
+                            size="sm"
+                            onClick={showRaw.onToggle}
+                            rightIcon={
+                                <Icon
+                                    as={
+                                        showRaw.isOpen
+                                            ? LuChevronUp
+                                            : LuChevronDown
+                                    }
+                                    boxSize="12px"
+                                />
+                            }
+                        >
+                            {showRaw.isOpen
+                                ? 'Hide raw calldata'
+                                : 'Show raw calldata'}
+                        </Button>
+                        <Collapse in={showRaw.isOpen} animateOpacity>
+                            <Code
+                                mt={2}
+                                fontSize="xs"
+                                bg="transparent"
+                                color="text-muted"
+                                whiteSpace="pre-wrap"
+                                wordBreak="break-all"
+                                display="block"
+                            >
+                                {clause.data}
+                            </Code>
+                        </Collapse>
+                    </Box>
+                )}
+            </Stack>
+        </Box>
+    );
 }
 
 function DetailRow({
