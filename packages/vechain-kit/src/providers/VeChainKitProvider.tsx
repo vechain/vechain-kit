@@ -48,6 +48,7 @@ import { ModalProvider } from './ModalProvider';
 import {
     VECHAIN_KIT_STORAGE_KEYS,
     DEFAULT_PRIVY_ECOSYSTEM_APPS,
+    VECHAIN_PRIVY_APP_ID,
     getGenericDelegatorUrl,
 } from '@/utils/constants';
 import { Certificate, CertificateData } from '@vechain/sdk-core';
@@ -498,9 +499,19 @@ export const VeChainKitProvider = (
 
     let privyAppId: string, privyClientId: string;
     if (!privy) {
-        // We set dummy values for the appId and clientId so that the PrivyProvider doesn't throw an error
-        privyAppId = 'clzdb5k0b02b9qvzjm6jpknsc';
-        privyClientId = 'client-WY2oy87y6KNrHFnpXuwVsiFMkwPZKTYpExtjvUQuMbCMF';
+        // No host-supplied Privy config -- fall back to VeChain's own
+        // Privy app so PrivyProvider mounts cleanly. The previous dummy
+        // (`clzdb5k0b02b9qvzjm6jpknsc`) only allowed a handful of origins,
+        // so any deploy outside that list 403'd /api/v1/sessions on
+        // mount and stalled the connect button forever. VeChain's real
+        // app (VECHAIN_PRIVY_APP_ID) has the full kit-ecosystem allow
+        // list and is the same app the whitelabel cross-app host serves,
+        // so the requester and host stay consistent. The cross-app
+        // OAuth fallback in useLoginWithOAuth is gated on the `privy`
+        // prop, not on which app id is mounted, so logging in via this
+        // path still routes through the whitelabel host.
+        privyAppId = VECHAIN_PRIVY_APP_ID;
+        privyClientId = '';
     } else {
         privyAppId = privy.appId;
         privyClientId = privy.clientId;
