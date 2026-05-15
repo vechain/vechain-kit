@@ -44,8 +44,8 @@ export default function RootLayout({
                 <ChakraProvider theme={vechainTheme}>
                     <VechainKitProviderWrapper>
                         {children}
-                        <ColorModeToggle />
                     </VechainKitProviderWrapper>
+                    <ColorModeToggle />
                 </ChakraProvider>
             </body>
         </html>

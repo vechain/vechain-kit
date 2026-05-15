@@ -24,13 +24,12 @@ export function ColorModeToggle() {
             bottom={4}
             right={4}
             zIndex={9999}
-            size="sm"
-            variant="ghost"
-            bg="card-bg"
-            color="text-strong"
-            borderWidth="1px"
-            borderColor="card-border"
-            _hover={{ bg: 'btn-row-hover-bg' }}
+            size="md"
+            isRound
+            bg="brand-accent"
+            color="white"
+            boxShadow="0 8px 24px rgba(0,0,0,0.25)"
+            _hover={{ bg: 'brand-accent-hover' }}
         />
     );
 }
