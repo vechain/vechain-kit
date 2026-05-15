@@ -34,17 +34,16 @@ export function VechainHeader({
     subtitle,
     requesterUrl,
 }: Props) {
-    // Render BOTH wordmarks and toggle via Chakra's _light / _dark CSS
+    // Render BOTH logomarks and toggle via Chakra's _light / _dark CSS
     // pseudo selectors. Avoids the React-state flicker we'd get if we
     // picked the src from useColorMode() (SSR default vs client value).
     return (
         <Stack spacing={4} align="center" pt={6} pb={2}>
-            <Box height="32px" display="flex" alignItems="center">
+            <Box boxSize="48px" display="flex" alignItems="center">
                 <Image
-                    src="/brand/vechain-wordmark-dark.svg"
+                    src="/brand/vechain-logomark-dark.png"
                     alt="VeChain"
-                    height="32px"
-                    width="auto"
+                    boxSize="48px"
                     draggable={false}
                     sx={{
                         _light: { display: 'block' },
@@ -52,10 +51,9 @@ export function VechainHeader({
                     }}
                 />
                 <Image
-                    src="/brand/vechain-wordmark-light.svg"
+                    src="/brand/vechain-logomark-light.png"
                     alt="VeChain"
-                    height="32px"
-                    width="auto"
+                    boxSize="48px"
                     draggable={false}
                     sx={{
                         _light: { display: 'none' },
