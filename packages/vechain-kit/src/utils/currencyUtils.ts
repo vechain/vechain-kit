@@ -25,6 +25,7 @@ export const formatCurrencyValue = (
 ): string => {
     const defaultOptions: Intl.NumberFormatOptions = {
         style: 'currency',
+        currencyDisplay: 'narrowSymbol',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
         currency: options?.currency ?? 'usd',
