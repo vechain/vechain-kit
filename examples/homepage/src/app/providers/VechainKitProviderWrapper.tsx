@@ -139,31 +139,32 @@ export function VechainKitProviderWrapper({ children }: Props) {
                     },
                 },
             }}
-            privy={{
-                appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
-                clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
-                loginMethods: [
-                    'google',
-                    'apple',
-                    'twitter',
-                    'github',
-                    'farcaster',
-                    // 'email',
-                    'discord',
-                    'tiktok',
-                    // 'rabby_wallet',
-                    // 'coinbase_wallet',
-                    // 'rainbow',
-                    // 'metamask',
-                ],
-                appearance: {
-                    loginMessage: 'Select a login method',
-                    logo: logo,
-                },
-                embeddedWallets: {
-                    createOnLogin: 'all-users',
-                },
-            }}
+            // privy={{
+            //     appId: process.env.NEXT_PUBLIC_PRIVY_APP_ID!,
+            //     clientId: process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID!,
+            //     loginMethods: [
+            //         'google',
+            //         'apple',
+            //         'twitter',
+            //         'github',
+            //         'farcaster',
+            //         // 'email',
+            //         'discord',
+            //         'tiktok',
+            //         // 'rabby_wallet',
+            //         // 'coinbase_wallet',
+            //         // 'rainbow',
+            //         // 'metamask',
+            //     ],
+            //     appearance: {
+            //         loginMessage: 'Select a login method',
+            //         logo: logo,
+            //     },
+            //     embeddedWallets: {
+            //         createOnLogin: 'all-users',
+            //     },
+            // }}
+
             dappKit={{
                 allowedWallets: ['veworld', 'wallet-connect'],
                 walletConnectOptions: {
@@ -201,6 +202,9 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 // nodeUrl: 'http://localhost:8669',
             }}
             allowCustomTokens={true}
+            feeDelegation={{
+                delegatorUrl: process.env.NEXT_PUBLIC_DELEGATOR_URL!,
+            }}
         >
             <LanguageSync>{children}</LanguageSync>
         </VeChainKitProvider>
