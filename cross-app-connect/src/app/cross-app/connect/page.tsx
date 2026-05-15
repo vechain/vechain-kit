@@ -30,11 +30,12 @@ import {
     FaTiktok,
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
-import { LuChevronDown, LuChevronUp, LuMail } from 'react-icons/lu';
+import { SiFarcaster } from 'react-icons/si';
+import { LuChevronDown, LuChevronUp, LuPhone } from 'react-icons/lu';
 import type { IconType } from 'react-icons';
 import {
-    useLoginWithEmail,
     useLoginWithOAuth,
+    useLoginWithSms,
     useLogout,
     usePrivy,
     useWallets,
@@ -48,14 +49,14 @@ type ConnectionRequest = ReturnType<
 >;
 
 // Providers enabled in VeChain's Privy dashboard that go through Privy's
-// headless useLoginWithOAuth. Farcaster (SIWF) and WhatsApp (OTP) are also
-// enabled in the dashboard but use different login flows and aren't wired
-// up here yet.
+// headless useLoginWithOAuth. Phone (SMS) and Farcaster (SIWF) are enabled
+// too but use different flows: phone has its own inline form; Farcaster
+// would need a Warpcast QR/deeplink integration (TODO).
 const OAUTH_PROVIDERS = [
     { id: 'google', label: 'Google', Icon: FcGoogle, tier: 'primary' },
+    { id: 'apple', label: 'Apple', Icon: FaApple, tier: 'primary' },
     { id: 'twitter', label: 'X', Icon: FaXTwitter, tier: 'primary' },
-    { id: 'discord', label: 'Discord', Icon: FaDiscord, tier: 'primary' },
-    { id: 'apple', label: 'Apple', Icon: FaApple, tier: 'other' },
+    { id: 'discord', label: 'Discord', Icon: FaDiscord, tier: 'other' },
     { id: 'github', label: 'GitHub', Icon: FaGithub, tier: 'other' },
     { id: 'tiktok', label: 'TikTok', Icon: FaTiktok, tier: 'other' },
     { id: 'line', label: 'LINE', Icon: FaLine, tier: 'other' },
@@ -69,7 +70,8 @@ type OAuthProvider = (typeof OAUTH_PROVIDERS)[number]['id'];
 
 const INTENT_METHODS = [
     ...OAUTH_PROVIDERS.map((p) => p.id),
-    'email',
+    'phone',
+    'farcaster',
 ] as const;
 type IntentMethod = (typeof INTENT_METHODS)[number];
 
@@ -95,8 +97,13 @@ function hasLinkedProvider(
     intent: IntentMethod | null,
 ): boolean {
     if (!user || !intent) return false;
-    if (intent === 'email') return Boolean(user.email);
+    if (intent === 'phone') return Boolean(user.phone);
+    if (intent === 'farcaster') return Boolean(user.farcaster);
     return Boolean((user as unknown as Record<string, unknown>)[intent]);
+}
+
+function isOAuthIntent(value: IntentMethod | null): value is OAuthProvider {
+    return !!value && OAUTH_PROVIDERS.some((p) => p.id === value);
 }
 
 function truncateAddress(addr?: string): string {
@@ -200,7 +207,9 @@ export default function CrossAppConnectPage() {
         if (parseError?.kind === 'invalid') return 'parse_error';
         if (!ready || !request) return 'loading';
 
-        if (intent && intent !== 'email') {
+        // Only OAuth intents auto-redirect. Phone (inline SMS OTP form) and
+        // Farcaster (SIWF placeholder) live inside the picker.
+        if (intent && isOAuthIntent(intent)) {
             if (!authenticated) return 'auth_pending';
             if (!user) return 'loading';
             return hasLinkedProvider(user, intent)
@@ -222,7 +231,7 @@ export default function CrossAppConnectPage() {
 
     useEffect(() => {
         if (phase !== 'auth_pending') return;
-        if (!intent || intent === 'email') return;
+        if (!intent || !isOAuthIntent(intent)) return;
         if (oauthLoading) return;
         if (typeof sessionStorage !== 'undefined') {
             if (
@@ -233,7 +242,7 @@ export default function CrossAppConnectPage() {
             sessionStorage.setItem(OAUTH_ATTEMPTED_STORAGE_KEY, intent);
         }
         setRecentProvider(intent);
-        initOAuth({ provider: intent as OAuthProvider }).catch((e) =>
+        initOAuth({ provider: intent }).catch((e) =>
             setSubmitError(String(e)),
         );
     }, [phase, intent, oauthLoading, initOAuth]);
@@ -394,6 +403,8 @@ export default function CrossAppConnectPage() {
     );
 }
 
+type PanelView = 'picker' | 'phone' | 'farcaster';
+
 function SignInPanel({
     intent,
     onCancel,
@@ -407,14 +418,20 @@ function SignInPanel({
         onError: (e) => setError(String(e)),
     });
     const {
-        state: emailState,
+        state: smsState,
         sendCode,
         loginWithCode,
-    } = useLoginWithEmail();
+    } = useLoginWithSms();
 
-    const [showEmail, setShowEmail] = useState<boolean>(intent === 'email');
+    const [view, setView] = useState<PanelView>(() =>
+        intent === 'phone'
+            ? 'phone'
+            : intent === 'farcaster'
+            ? 'farcaster'
+            : 'picker',
+    );
     const [showOther, setShowOther] = useState<boolean>(false);
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [code, setCode] = useState('');
     const [recent, setRecent] = useState<string | null>(null);
 
@@ -422,18 +439,14 @@ function SignInPanel({
         setRecent(getRecentProvider());
     }, []);
 
-    const orderedRows = useMemo(() => {
-        const recentRow = recent
-            ? OAUTH_PROVIDERS.find((p) => p.id === recent)
-            : null;
-        const primary = OAUTH_PROVIDERS.filter(
-            (p) => p.tier === 'primary' && p.id !== recent,
-        );
-        const other = OAUTH_PROVIDERS.filter(
-            (p) => p.tier === 'other' && p.id !== recent,
-        );
-        return { recentRow, primary, other };
-    }, [recent]);
+    // Build the visible row order. Recent provider (if any) jumps to the top
+    // regardless of tier; everything else respects the OAUTH_PROVIDERS array
+    // order plus Phone in the primary row and Farcaster in the other group.
+    const rows = useMemo(() => {
+        const primary = OAUTH_PROVIDERS.filter((p) => p.tier === 'primary');
+        const other = OAUTH_PROVIDERS.filter((p) => p.tier === 'other');
+        return { primary, other };
+    }, []);
 
     const onOAuth = (provider: OAuthProvider) => {
         setError(null);
@@ -444,8 +457,8 @@ function SignInPanel({
     const onSendCode = async () => {
         setError(null);
         try {
-            await sendCode({ email });
-            setRecentProvider('email');
+            await sendCode({ phoneNumber: phone });
+            setRecentProvider('phone');
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to send code');
         }
@@ -460,9 +473,11 @@ function SignInPanel({
         }
     };
 
-    const awaitingCode = emailState.status === 'awaiting-code-input';
-    const sendingCode = emailState.status === 'sending-code';
-    const submittingCode = emailState.status === 'submitting-code';
+    const awaitingCode = smsState.status === 'awaiting-code-input';
+    const sendingCode = smsState.status === 'sending-code';
+    const submittingCode = smsState.status === 'submitting-code';
+
+    const isRecent = (id: string) => recent === id;
 
     return (
         <Card>
@@ -475,147 +490,196 @@ function SignInPanel({
                         </Alert>
                     )}
 
-                    {!showEmail && (
+                    {view === 'picker' && (
                         <Stack spacing={2}>
-                            {orderedRows.recentRow && (
-                                <ProviderRow
-                                    provider={orderedRows.recentRow}
-                                    isRecent
-                                    onClick={() =>
-                                        onOAuth(orderedRows.recentRow!.id)
-                                    }
-                                    isDisabled={oauthLoading}
-                                    colorMode={colorMode}
-                                />
-                            )}
-                            <EmailRow
-                                onClick={() => setShowEmail(true)}
-                                isRecent={recent === 'email'}
-                            />
-                            {orderedRows.primary.map((p) => (
+                            {/* Primary row: Google, Apple, X, Phone */}
+                            {rows.primary.map((p) => (
                                 <ProviderRow
                                     key={p.id}
                                     provider={p}
                                     onClick={() => onOAuth(p.id)}
                                     isDisabled={oauthLoading}
+                                    isRecent={isRecent(p.id)}
                                     colorMode={colorMode}
                                 />
                             ))}
-                            {orderedRows.other.length > 0 && (
-                                <>
-                                    <Button
-                                        variant="row"
-                                        onClick={() =>
-                                            setShowOther((v) => !v)
+                            <PhoneRow
+                                onClick={() => setView('phone')}
+                                isRecent={isRecent('phone')}
+                            />
+                            {/* Other socials expandable */}
+                            <Button
+                                variant="row"
+                                onClick={() => setShowOther((v) => !v)}
+                                rightIcon={
+                                    <Icon
+                                        as={
+                                            showOther
+                                                ? LuChevronUp
+                                                : LuChevronDown
                                         }
-                                        rightIcon={
-                                            <Icon
-                                                as={
-                                                    showOther
-                                                        ? LuChevronUp
-                                                        : LuChevronDown
-                                                }
-                                                boxSize="18px"
-                                            />
-                                        }
-                                    >
-                                        Other socials
-                                    </Button>
-                                    {showOther &&
-                                        orderedRows.other.map((p) => (
+                                        boxSize="18px"
+                                    />
+                                }
+                            >
+                                <Text flex={1} textAlign="left">
+                                    Other socials
+                                </Text>
+                            </Button>
+                            {showOther && (
+                                <Stack spacing={2}>
+                                    {/* Discord, GitHub, TikTok, Farcaster, LINE */}
+                                    {rows.other
+                                        .filter(
+                                            (p) =>
+                                                p.id === 'discord' ||
+                                                p.id === 'github' ||
+                                                p.id === 'tiktok',
+                                        )
+                                        .map((p) => (
                                             <ProviderRow
                                                 key={p.id}
                                                 provider={p}
-                                                onClick={() => onOAuth(p.id)}
+                                                onClick={() =>
+                                                    onOAuth(p.id)
+                                                }
                                                 isDisabled={oauthLoading}
+                                                isRecent={isRecent(p.id)}
                                                 colorMode={colorMode}
                                             />
                                         ))}
-                                </>
+                                    <FarcasterRow
+                                        onClick={() => setView('farcaster')}
+                                        isRecent={isRecent('farcaster')}
+                                    />
+                                    {rows.other
+                                        .filter((p) => p.id === 'line')
+                                        .map((p) => (
+                                            <ProviderRow
+                                                key={p.id}
+                                                provider={p}
+                                                onClick={() =>
+                                                    onOAuth(p.id)
+                                                }
+                                                isDisabled={oauthLoading}
+                                                isRecent={isRecent(p.id)}
+                                                colorMode={colorMode}
+                                            />
+                                        ))}
+                                </Stack>
                             )}
                         </Stack>
                     )}
 
-                    {showEmail && !awaitingCode && !submittingCode && (
-                        <Stack spacing={2}>
-                            <Input
-                                type="email"
-                                placeholder="you@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                autoFocus
-                                h="48px"
-                                bg="card-bg"
-                                borderColor="card-border"
-                                _focusVisible={{
-                                    borderColor: 'brand-accent',
-                                    boxShadow: 'none',
-                                }}
-                            />
-                            <Button
-                                variant="brand"
-                                onClick={onSendCode}
-                                isLoading={sendingCode}
-                                isDisabled={!email}
-                                h="48px"
-                            >
-                                Send code
-                            </Button>
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => setShowEmail(false)}
-                            >
-                                Back
-                            </Button>
-                        </Stack>
-                    )}
-
-                    {(awaitingCode || submittingCode) && (
-                        <Stack spacing={3}>
-                            <Text fontSize="sm" color="text-muted">
-                                We sent a 6-digit code to{' '}
-                                <Text as="span" color="text-strong">
-                                    {email}
-                                </Text>
-                                .
-                            </Text>
-                            <HStack justify="center">
-                                <PinInput
-                                    value={code}
-                                    onChange={setCode}
-                                    onComplete={(v) => {
-                                        setCode(v);
-                                        loginWithCode({ code: v }).catch((e) =>
-                                            setError(String(e)),
-                                        );
+                    {view === 'phone' &&
+                        !awaitingCode &&
+                        !submittingCode && (
+                            <Stack spacing={2}>
+                                <Input
+                                    type="tel"
+                                    placeholder="+1 555 555 5555"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    autoFocus
+                                    h="48px"
+                                    bg="card-bg"
+                                    borderColor="card-border"
+                                    color="text-strong"
+                                    _placeholder={{ color: 'text-subtle' }}
+                                    _focusVisible={{
+                                        borderColor: 'brand-accent',
+                                        boxShadow: 'none',
                                     }}
-                                    otp
+                                />
+                                <Text fontSize="xs" color="text-subtle">
+                                    Include the country code, e.g. +1 for US,
+                                    +44 for UK.
+                                </Text>
+                                <Button
+                                    variant="brand"
+                                    onClick={onSendCode}
+                                    isLoading={sendingCode}
+                                    isDisabled={!phone}
+                                    h="48px"
                                 >
-                                    <PinInputField />
-                                    <PinInputField />
-                                    <PinInputField />
-                                    <PinInputField />
-                                    <PinInputField />
-                                    <PinInputField />
-                                </PinInput>
-                            </HStack>
-                            <Button
-                                variant="brand"
-                                onClick={onSubmitCode}
-                                isLoading={submittingCode}
-                                isDisabled={code.length !== 6}
-                                h="48px"
-                            >
-                                Verify
-                            </Button>
+                                    Send code
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => setView('picker')}
+                                >
+                                    Back
+                                </Button>
+                            </Stack>
+                        )}
+
+                    {view === 'phone' &&
+                        (awaitingCode || submittingCode) && (
+                            <Stack spacing={3}>
+                                <Text fontSize="sm" color="text-muted">
+                                    We sent a 6-digit code to{' '}
+                                    <Text as="span" color="text-strong">
+                                        {phone}
+                                    </Text>
+                                    .
+                                </Text>
+                                <HStack justify="center">
+                                    <PinInput
+                                        value={code}
+                                        onChange={setCode}
+                                        onComplete={(v) => {
+                                            setCode(v);
+                                            loginWithCode({
+                                                code: v,
+                                            }).catch((e) =>
+                                                setError(String(e)),
+                                            );
+                                        }}
+                                        otp
+                                    >
+                                        <PinInputField />
+                                        <PinInputField />
+                                        <PinInputField />
+                                        <PinInputField />
+                                        <PinInputField />
+                                        <PinInputField />
+                                    </PinInput>
+                                </HStack>
+                                <Button
+                                    variant="brand"
+                                    onClick={onSubmitCode}
+                                    isLoading={submittingCode}
+                                    isDisabled={code.length !== 6}
+                                    h="48px"
+                                >
+                                    Verify
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => {
+                                        setCode('');
+                                        setView('picker');
+                                    }}
+                                >
+                                    Back
+                                </Button>
+                            </Stack>
+                        )}
+
+                    {view === 'farcaster' && (
+                        <Stack spacing={3} pt={2}>
+                            <Text fontSize="sm" color="text-muted">
+                                Farcaster sign-in is coming soon. It uses Sign
+                                In With Farcaster (SIWF), which needs a
+                                Warpcast scan and isn&apos;t wired up here
+                                yet. Please choose another option for now.
+                            </Text>
                             <Button
                                 size="sm"
                                 variant="ghost"
-                                onClick={() => {
-                                    setCode('');
-                                    setShowEmail(false);
-                                }}
+                                onClick={() => setView('picker')}
                             >
                                 Back
                             </Button>
@@ -676,7 +740,7 @@ function ProviderRow({
     );
 }
 
-function EmailRow({
+function PhoneRow({
     onClick,
     isRecent,
 }: {
@@ -687,11 +751,32 @@ function EmailRow({
         <Button
             variant="row"
             onClick={onClick}
-            leftIcon={<Icon as={LuMail} boxSize="22px" />}
+            leftIcon={<Icon as={LuPhone} boxSize="22px" />}
             rightIcon={isRecent ? <RecentBadge /> : undefined}
         >
             <Text flex={1} textAlign="left">
-                Continue with Email
+                Phone
+            </Text>
+        </Button>
+    );
+}
+
+function FarcasterRow({
+    onClick,
+    isRecent,
+}: {
+    onClick: () => void;
+    isRecent?: boolean;
+}) {
+    return (
+        <Button
+            variant="row"
+            onClick={onClick}
+            leftIcon={<Icon as={SiFarcaster} boxSize="22px" color="#8A63D2" />}
+            rightIcon={isRecent ? <RecentBadge /> : undefined}
+        >
+            <Text flex={1} textAlign="left">
+                Farcaster
             </Text>
         </Button>
     );
