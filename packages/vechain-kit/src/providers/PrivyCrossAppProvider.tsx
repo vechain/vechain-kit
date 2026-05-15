@@ -27,10 +27,10 @@ import {
  * cross-app-connect host. When passed, the host skips its provider picker
  * and jumps straight into the matching flow.
  *
- * This list matches the providers enabled in VeChain's Privy app *and*
- * supported by Privy's headless `useLoginWithOAuth` hook. Farcaster and
- * WhatsApp are enabled in the dashboard too but use different flows
- * (SIWF / OTP) that haven't been wired into the whitelabel host yet.
+ * Matches the providers enabled in VeChain's Privy dashboard. Email is
+ * intentionally excluded -- VeChain has email disabled, so the host
+ * doesn't surface it. Farcaster is included but currently shows a
+ * "coming soon" placeholder on the host (SIWF flow not yet wired).
  */
 export type CrossAppLoginIntent =
     | 'google'
@@ -40,7 +40,8 @@ export type CrossAppLoginIntent =
     | 'github'
     | 'tiktok'
     | 'line'
-    | 'email';
+    | 'phone'
+    | 'farcaster';
 
 export type LoginWithCrossAppOptions = {
     /** Pre-select a login method on the provider's connect page. */

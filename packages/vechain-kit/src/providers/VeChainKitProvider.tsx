@@ -338,14 +338,16 @@ const validateConfig = (
     }
 
     // Validate login methods if Privy is not configured.
-    // Most OAuth providers and email fall back to the VeChain whitelabel
-    // cross-app flow (via useLoginWithVeChain({ intent })) when no privy
-    // prop is set. Only methods with no cross-app fallback yet
-    // ('passkey', 'more') still require Privy.
+    // Most OAuth providers fall back to the VeChain whitelabel cross-app
+    // flow (via useLoginWithVeChain({ intent })) when no privy prop is set.
+    // Email, passkey, and 'more' have no cross-app fallback -- VeChain
+    // has email disabled in its Privy app, so cross-app-connect doesn't
+    // surface it either.
     if (validatedProps.loginMethods) {
         if (!validatedProps.privy) {
             const invalidMethods = validatedProps.loginMethods.filter(
-                (method) => ['passkey', 'more'].includes(method.method),
+                (method) =>
+                    ['email', 'passkey', 'more'].includes(method.method),
             );
 
             if (invalidMethods.length > 0) {

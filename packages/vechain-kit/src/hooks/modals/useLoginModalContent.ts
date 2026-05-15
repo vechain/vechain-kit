@@ -112,12 +112,13 @@ export const useLoginModalContent = (): LoginModalContentConfig => {
     };
 
     if (!privy) {
-        // External apps (no self hosted privy). Most OAuth methods + email
-        // fall back to the VeChain whitelabel cross-app flow via
-        // useLoginWithVeChain({ intent }). Only Passkey and 'more' have no
-        // fallback yet, so stay hidden.
+        // External apps (no self hosted privy). Most OAuth methods fall
+        // back to the VeChain whitelabel cross-app flow via
+        // useLoginWithVeChain({ intent }). Email / Passkey / 'more' have
+        // no fallback (VeChain has email disabled), so they stay hidden.
         return {
             ...baseConfig,
+            showEmailLogin: false,
             showPasskey: false,
             showMoreLogin: false,
         };
