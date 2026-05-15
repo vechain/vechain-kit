@@ -74,17 +74,19 @@ export function VechainHeader({
                     <Text
                         fontFamily="heading"
                         fontWeight={600}
-                        fontSize="lg"
+                        fontSize="2xl"
                         color="text-strong"
                     >
                         {title}
                     </Text>
                 </HStack>
+
                 {subtitle && (
-                    <Text fontSize="sm" color="text-muted">
+                    <Text fontSize="lg" color="text-muted">
                         {subtitle}
                     </Text>
                 )}
+
                 {requesterUrl && <RequesterChip url={requesterUrl} />}
             </Stack>
         </Stack>

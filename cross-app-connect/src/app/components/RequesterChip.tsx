@@ -34,8 +34,8 @@ export function RequesterChip({ url }: Props) {
     return (
         <HStack
             spacing={2}
-            px={3}
-            py="6px"
+            px={2}
+            py="3px"
             rounded="full"
             bg="card-bg"
             borderWidth="1px"
@@ -47,7 +47,9 @@ export function RequesterChip({ url }: Props) {
                 as={isSecure ? LuLockKeyhole : LuGlobe}
                 boxSize="14px"
                 color={isSecure ? 'green.500' : 'text-subtle'}
-                aria-label={isSecure ? 'Secure (HTTPS)' : 'Not encrypted (HTTP)'}
+                aria-label={
+                    isSecure ? 'Secure (HTTPS)' : 'Not encrypted (HTTP)'
+                }
             />
             {!iconBroken && (
                 <Image
