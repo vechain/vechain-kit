@@ -15,6 +15,7 @@ import {
     Container,
     HStack,
     Icon,
+    Skeleton,
     Spinner,
     Stack,
     Text,
@@ -445,9 +446,11 @@ export default function CrossAppTransactPage() {
                             />
                         )}
                         {stillDecoding ? (
-                            <Center py={6}>
-                                <Spinner color="accent" size="sm" />
-                            </Center>
+                            <Stack spacing={3}>
+                                {parsed.clauses.map((_, i) => (
+                                    <ActionRowSkeleton key={i} />
+                                ))}
+                            </Stack>
                         ) : (
                             <Stack spacing={3}>
                                 {decoded!.map((d, i) => (
@@ -600,6 +603,32 @@ export default function CrossAppTransactPage() {
                 </CardBody>
             </Card>
         </PageShell>
+    );
+}
+
+function ActionRowSkeleton() {
+    return (
+        <Stack
+            spacing={1}
+            pl={3}
+            borderLeftWidth="2px"
+            borderLeftColor="card-border"
+        >
+            <Skeleton
+                height="16px"
+                width="55%"
+                rounded="sm"
+                startColor="login-btn-hover-bg"
+                endColor="card-border"
+            />
+            <Skeleton
+                height="12px"
+                width="35%"
+                rounded="sm"
+                startColor="login-btn-hover-bg"
+                endColor="card-border"
+            />
+        </Stack>
     );
 }
 

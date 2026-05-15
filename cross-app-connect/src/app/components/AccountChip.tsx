@@ -7,6 +7,8 @@ import {
     Icon,
     IconButton,
     Image,
+    Skeleton,
+    SkeletonCircle,
     Stack,
     Text,
     Tooltip,
@@ -66,8 +68,11 @@ function formatVET(raw: bigint): string {
 export function AccountChip({ address, thor, relevantTokens }: Props) {
     const { onCopy, hasCopied } = useClipboard(address);
     const [balances, setBalances] = useState<LiveBalance[] | null>(null);
-    const { data: domainInfo } = useVechainDomain(address);
-    const { data: avatar } = useGetAvatarOfAddress(address);
+    const { data: domainInfo, isPending: domainPending } =
+        useVechainDomain(address);
+    const { data: avatar, isPending: avatarPending } =
+        useGetAvatarOfAddress(address);
+    const balancesPending = balances === null;
 
     const tokenKey = (relevantTokens ?? [])
         .map((t) => t.address.toLowerCase())
@@ -133,51 +138,75 @@ export function AccountChip({ address, thor, relevantTokens }: Props) {
             borderColor="card-border"
             align="center"
         >
-            {avatar ? (
-                <Image
-                    src={avatar}
-                    alt=""
-                    boxSize="36px"
-                    rounded="full"
-                    draggable={false}
-                    fallback={<Box boxSize="36px" rounded="full" bg="login-btn-hover-bg" />}
-                />
-            ) : (
-                <Box boxSize="36px" rounded="full" bg="login-btn-hover-bg" />
-            )}
+            <SkeletonCircle
+                size="36px"
+                isLoaded={!avatarPending}
+                startColor="login-btn-hover-bg"
+                endColor="card-border"
+            >
+                {avatar ? (
+                    <Image
+                        src={avatar}
+                        alt=""
+                        boxSize="36px"
+                        rounded="full"
+                        draggable={false}
+                        fallback={
+                            <Box
+                                boxSize="36px"
+                                rounded="full"
+                                bg="login-btn-hover-bg"
+                            />
+                        }
+                    />
+                ) : (
+                    <Box
+                        boxSize="36px"
+                        rounded="full"
+                        bg="login-btn-hover-bg"
+                    />
+                )}
+            </SkeletonCircle>
             <Stack spacing={0} flex={1} minW={0}>
                 <Text fontSize="xs" color="text-subtle">
                     Your account
                 </Text>
                 <HStack spacing={2} align="center">
-                    {domain ? (
-                        <Stack spacing={0}>
-                            <Text
-                                fontWeight={600}
-                                color="text-strong"
-                                lineHeight="1.2"
-                            >
-                                {domain}
-                            </Text>
+                    <Skeleton
+                        isLoaded={!domainPending}
+                        startColor="login-btn-hover-bg"
+                        endColor="card-border"
+                        rounded="sm"
+                    >
+                        {domain ? (
+                            <Stack spacing={0}>
+                                <Text
+                                    fontWeight={600}
+                                    color="text-strong"
+                                    lineHeight="1.2"
+                                >
+                                    {domain}
+                                </Text>
+                                <Text
+                                    fontFamily="mono"
+                                    fontSize="xs"
+                                    color="text-subtle"
+                                    lineHeight="1.2"
+                                >
+                                    {truncate(address)}
+                                </Text>
+                            </Stack>
+                        ) : (
                             <Text
                                 fontFamily="mono"
-                                fontSize="xs"
-                                color="text-subtle"
-                                lineHeight="1.2"
+                                fontSize="sm"
+                                fontWeight={500}
+                                color="text-strong"
                             >
                                 {truncate(address)}
                             </Text>
-                        </Stack>
-                    ) : (
-                        <Text
-                            fontFamily="mono"
-                            fontSize="sm"
-                            fontWeight={500}
-                            color="text-strong"
-                        >
-                            {truncate(address)}
-                        </Text>
-                    )}
+                        )}
+                    </Skeleton>
                     <Tooltip
                         label={hasCopied ? 'Copied' : 'Copy address'}
                         placement="top"
@@ -207,13 +236,21 @@ export function AccountChip({ address, thor, relevantTokens }: Props) {
                     </Tooltip>
                 </HStack>
             </Stack>
-            {balances && balances.length > 0 && (
-                <Stack spacing={0} align="flex-end">
-                    <Text fontSize="xs" color="text-subtle">
-                        Balance
-                    </Text>
+            <Stack spacing={0} align="flex-end">
+                <Text fontSize="xs" color="text-subtle">
+                    Balance
+                </Text>
+                {balancesPending ? (
+                    <Skeleton
+                        height="14px"
+                        width="70px"
+                        rounded="sm"
+                        startColor="login-btn-hover-bg"
+                        endColor="card-border"
+                    />
+                ) : (
                     <Stack spacing={0} align="flex-end">
-                        {balances.map((b) => (
+                        {balances!.map((b) => (
                             <Text
                                 key={b.token.address}
                                 fontSize="sm"
@@ -225,8 +262,8 @@ export function AccountChip({ address, thor, relevantTokens }: Props) {
                             </Text>
                         ))}
                     </Stack>
-                </Stack>
-            )}
+                )}
+            </Stack>
         </HStack>
     );
 }

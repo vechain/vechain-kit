@@ -17,6 +17,8 @@ import {
     Input,
     PinInput,
     PinInputField,
+    Skeleton,
+    SkeletonCircle,
     Spinner,
     Stack,
     Text,
@@ -825,11 +827,14 @@ function IdentityRow({
     walletAddress?: string;
     user: ReturnType<typeof usePrivy>['user'];
 }) {
-    const { data: domainInfo } = useVechainDomain(walletAddress);
-    const { data: avatar } = useGetAvatarOfAddress(walletAddress);
+    const { data: domainInfo, isPending: domainPending } =
+        useVechainDomain(walletAddress);
+    const { data: avatar, isPending: avatarPending } =
+        useGetAvatarOfAddress(walletAddress);
     const domain = domainInfo?.domain;
     const email = user?.email?.address ?? user?.google?.email ?? user?.id;
     const linked = linkedSocials(user);
+    const walletPending = !walletAddress || domainPending;
 
     return (
         <HStack
@@ -841,24 +846,35 @@ function IdentityRow({
             borderColor="card-border"
             align="center"
         >
-            {avatar ? (
-                <Image
-                    src={avatar}
-                    alt=""
-                    boxSize="44px"
-                    rounded="full"
-                    draggable={false}
-                    fallback={
-                        <Box
-                            boxSize="44px"
-                            rounded="full"
-                            bg="login-btn-hover-bg"
-                        />
-                    }
-                />
-            ) : (
-                <Box boxSize="44px" rounded="full" bg="login-btn-hover-bg" />
-            )}
+            <SkeletonCircle
+                size="44px"
+                isLoaded={!avatarPending && !!walletAddress}
+                startColor="login-btn-hover-bg"
+                endColor="card-border"
+            >
+                {avatar ? (
+                    <Image
+                        src={avatar}
+                        alt=""
+                        boxSize="44px"
+                        rounded="full"
+                        draggable={false}
+                        fallback={
+                            <Box
+                                boxSize="44px"
+                                rounded="full"
+                                bg="login-btn-hover-bg"
+                            />
+                        }
+                    />
+                ) : (
+                    <Box
+                        boxSize="44px"
+                        rounded="full"
+                        bg="login-btn-hover-bg"
+                    />
+                )}
+            </SkeletonCircle>
             <Stack spacing={1} flex={1} minW={0}>
                 <HStack spacing={2} align="center" minW={0}>
                     <Text
@@ -894,23 +910,31 @@ function IdentityRow({
                         </HStack>
                     )}
                 </HStack>
-                {walletAddress ? (
-                    <Text
-                        fontFamily="mono"
-                        fontSize="xs"
-                        color="text-subtle"
-                        lineHeight="1.2"
-                        noOfLines={1}
-                    >
-                        {domain
-                            ? `${domain} · ${truncateAddress(walletAddress)}`
-                            : truncateAddress(walletAddress)}
-                    </Text>
-                ) : (
-                    <Text fontSize="xs" color="text-subtle">
-                        Creating your VeChain account…
-                    </Text>
-                )}
+                <Skeleton
+                    isLoaded={!walletPending}
+                    startColor="login-btn-hover-bg"
+                    endColor="card-border"
+                    rounded="sm"
+                    minH="14px"
+                >
+                    {walletAddress ? (
+                        <Text
+                            fontFamily="mono"
+                            fontSize="xs"
+                            color="text-subtle"
+                            lineHeight="1.2"
+                            noOfLines={1}
+                        >
+                            {domain
+                                ? `${domain} · ${truncateAddress(walletAddress)}`
+                                : truncateAddress(walletAddress)}
+                        </Text>
+                    ) : (
+                        <Text fontSize="xs" color="text-subtle">
+                            Creating your VeChain account…
+                        </Text>
+                    )}
+                </Skeleton>
             </Stack>
         </HStack>
     );
