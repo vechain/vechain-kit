@@ -10,12 +10,10 @@ import {
     Button,
     Card,
     CardBody,
-    CardHeader,
     Center,
     Code,
     Container,
     Divider,
-    Heading,
     HStack,
     Spinner,
     Stack,
@@ -25,6 +23,7 @@ import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
 import { useSmartAccount, useGetChainId } from '@vechain/vechain-kit';
 import type { VerifiedTransactionRequest } from '@privy-io/cross-app-provider/connect';
 import { useCrossAppClient } from '../_lib/client';
+import { VechainHeader } from '../../components/VechainHeader';
 
 const SUPPORTED_METHODS = ['eth_signTypedData_v4'] as const;
 const SUPPORTED_PRIMARY_TYPES = [
@@ -267,14 +266,12 @@ export default function CrossAppTransactPage() {
     if (parseError?.kind === 'no_params') {
         return (
             <PageShell>
-                <Card variant="filled">
-                    <CardHeader>
-                        <Heading size="md">No transaction request</Heading>
-                    </CardHeader>
+                <VechainHeader title="No transaction request" />
+                <Card>
                     <CardBody>
-                        <Text>
+                        <Text color="text-muted" textAlign="center">
                             This page handles cross-app transaction requests
-                            from other VeChain dApps. It cannot be opened
+                            from other VeChain dApps. It can&apos;t be opened
                             directly &mdash; the requesting app will open it
                             with the parameters it needs.
                         </Text>
@@ -287,8 +284,9 @@ export default function CrossAppTransactPage() {
     if (!ready) {
         return (
             <PageShell>
+                <VechainHeader title="Review transaction" />
                 <Center py={10}>
-                    <Spinner />
+                    <Spinner color="brand-accent" />
                 </Center>
             </PageShell>
         );
@@ -297,23 +295,20 @@ export default function CrossAppTransactPage() {
     if (!authenticated) {
         return (
             <PageShell>
-                <Card variant="filled">
-                    <CardHeader>
-                        <Heading size="md">Sign in to continue</Heading>
-                    </CardHeader>
+                <VechainHeader
+                    title="Sign in to continue"
+                    subtitle="A signing request is waiting. Sign in to review it."
+                />
+                <Card>
                     <CardBody>
-                        <Stack spacing={4}>
-                            <Text>
-                                A signing request is waiting. Sign in to
-                                review it.
-                            </Text>
-                            <Button
-                                colorScheme="blue"
-                                onClick={() => login()}
-                            >
-                                Continue
-                            </Button>
-                        </Stack>
+                        <Button
+                            variant="brand"
+                            onClick={() => login()}
+                            w="full"
+                            h="48px"
+                        >
+                            Continue
+                        </Button>
                     </CardBody>
                 </Card>
             </PageShell>
@@ -323,6 +318,7 @@ export default function CrossAppTransactPage() {
     if (parseError?.kind === 'invalid') {
         return (
             <PageShell>
+                <VechainHeader title="Couldn't load request" />
                 <Alert status="error" rounded="md">
                     <AlertIcon />
                     <AlertDescription>{parseError.message}</AlertDescription>
@@ -334,8 +330,9 @@ export default function CrossAppTransactPage() {
     if (!verified || !parsed) {
         return (
             <PageShell>
+                <VechainHeader title="Review transaction" />
                 <Center py={10}>
-                    <Spinner />
+                    <Spinner color="brand-accent" />
                 </Center>
             </PageShell>
         );
@@ -345,32 +342,34 @@ export default function CrossAppTransactPage() {
 
     return (
         <PageShell>
-            <Card variant="filled">
-                <CardHeader>
-                    <HStack justify="space-between">
-                        <Heading size="md">Review transaction</Heading>
-                        <Badge colorScheme="purple">
-                            {parsed.typedData.primaryType}
-                        </Badge>
-                    </HStack>
-                </CardHeader>
+            <VechainHeader title="Review transaction" />
+            <Card>
                 <CardBody>
                     <Stack spacing={4}>
+                        <HStack justify="space-between">
+                            <Text fontSize="xs" color="text-subtle">
+                                Smart account
+                            </Text>
+                            <Badge bg="chip-bg" color="chip-text">
+                                {parsed.typedData.primaryType}
+                            </Badge>
+                        </HStack>
+                        <Text
+                            fontFamily="mono"
+                            fontSize="sm"
+                            color="text-muted"
+                        >
+                            {smartAccount?.address
+                                ? truncate(smartAccount.address)
+                                : 'resolving…'}
+                        </Text>
                         {blocked && (
                             <Alert status="error" rounded="md">
                                 <AlertIcon />
                                 <AlertDescription>{block}</AlertDescription>
                             </Alert>
                         )}
-                        <Box>
-                            <Text fontSize="sm" color="gray.400">
-                                Smart account
-                            </Text>
-                            <Text fontFamily="mono" fontSize="sm">
-                                {smartAccount?.address ?? 'resolving…'}
-                            </Text>
-                        </Box>
-                        <Divider />
+                        <Divider borderColor="card-border" />
                         <Stack spacing={3}>
                             {parsed.clauses.map((c, i) => (
                                 <Box
@@ -378,40 +377,36 @@ export default function CrossAppTransactPage() {
                                     p={3}
                                     rounded="md"
                                     borderWidth="1px"
-                                    borderColor="whiteAlpha.200"
+                                    borderColor="card-border"
                                 >
                                     <Stack spacing={1}>
                                         <HStack justify="space-between">
-                                            <Text fontSize="sm" color="gray.400">
+                                            <Text fontSize="xs" color="text-subtle">
                                                 Clause {i + 1} · to
                                             </Text>
-                                            <Code fontSize="xs">
+                                            <Code fontSize="xs" bg="transparent" color="text-muted">
                                                 {truncate(c.to)}
                                             </Code>
                                         </HStack>
                                         {c.value && c.value !== '0' && (
                                             <HStack justify="space-between">
-                                                <Text
-                                                    fontSize="sm"
-                                                    color="gray.400"
-                                                >
+                                                <Text fontSize="xs" color="text-subtle">
                                                     value
                                                 </Text>
-                                                <Code fontSize="xs">
+                                                <Code fontSize="xs" bg="transparent" color="text-muted">
                                                     {c.value}
                                                 </Code>
                                             </HStack>
                                         )}
                                         {c.data && c.data !== '0x' && (
                                             <Box>
-                                                <Text
-                                                    fontSize="sm"
-                                                    color="gray.400"
-                                                >
+                                                <Text fontSize="xs" color="text-subtle">
                                                     data
                                                 </Text>
                                                 <Code
                                                     fontSize="xs"
+                                                    bg="transparent"
+                                                    color="text-muted"
                                                     whiteSpace="pre-wrap"
                                                     wordBreak="break-all"
                                                 >
@@ -433,25 +428,24 @@ export default function CrossAppTransactPage() {
                                 </AlertDescription>
                             </Alert>
                         )}
-                        <HStack pt={2}>
-                            <Button
-                                colorScheme="blue"
-                                onClick={onApprove}
-                                isLoading={submitting}
-                                isDisabled={blocked || !smartAccount?.address}
-                                flex={1}
-                            >
-                                Approve
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                onClick={onReject}
-                                isDisabled={submitting}
-                                flex={1}
-                            >
-                                Reject
-                            </Button>
-                        </HStack>
+                        <Button
+                            variant="brand"
+                            onClick={onApprove}
+                            isLoading={submitting}
+                            isDisabled={blocked || !smartAccount?.address}
+                            w="full"
+                            h="48px"
+                        >
+                            Approve
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            onClick={onReject}
+                            isDisabled={submitting}
+                            w="full"
+                        >
+                            Reject
+                        </Button>
                     </Stack>
                 </CardBody>
             </Card>
@@ -461,8 +455,8 @@ export default function CrossAppTransactPage() {
 
 function PageShell({ children }: { children: React.ReactNode }) {
     return (
-        <Container maxW="lg" py={12}>
-            {children}
+        <Container maxW="md" py={8}>
+            <Stack spacing={6}>{children}</Stack>
         </Container>
     );
 }
