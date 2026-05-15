@@ -16,6 +16,15 @@ const sourceDisplayName: Record<WalletSource, string> = {
     'wallet-connect': 'WalletConnect',
 };
 
+/**
+ * VeWorld Universal Link entry point. Hitting this URL on a phone with
+ * VeWorld installed opens the dApp inside VeWorld's in-app browser; on
+ * desktop or on a phone without the app it lands on the install page.
+ * Mirrors the fallback used by dapp-kit-ui's ConnectModal when
+ * `window.vechain` is missing.
+ */
+const VEWORLD_UNIVERSAL_LINK = 'https://www.veworld.com/discover/browser/ul/';
+
 const extractErrorMessage = (err: unknown): string => {
     if (typeof err === 'string') return err;
     if (err instanceof Error) return err.message;
@@ -55,6 +64,22 @@ export const useConnectWithDappKitSource = (
         const tryAgain = () => {
             void connect();
         };
+
+        // When VeWorld is selected but the extension isn't injected, fall
+        // back to the Universal Link — opens the dApp inside VeWorld mobile
+        // on phones, the install page on desktop. Same behavior as
+        // dapp-kit-ui's ConnectModal.
+        if (
+            source === 'veworld' &&
+            typeof window !== 'undefined' &&
+            !window.vechain
+        ) {
+            window.open(
+                `${VEWORLD_UNIVERSAL_LINK}${encodeURIComponent(window.location.href)}`,
+                '_self',
+            );
+            return;
+        }
 
         setCurrentContent({
             type: 'loading',
