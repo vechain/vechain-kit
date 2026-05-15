@@ -194,7 +194,7 @@ export function VechainKitProviderWrapper({ children }: Props) {
                 { method: 'veworld', gridColumn: 4 },
                 { method: 'google', gridColumn: 4 },
                 { method: 'apple', gridColumn: 4 },
-                { method: 'more', gridColumn: 4 },
+                // { method: 'more', gridColumn: 4 },
             ]}
             darkMode={false}
             network={{
