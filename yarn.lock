@@ -11191,6 +11191,8 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
+    "@vechain/dapp-kit-react": "npm:2.1.0-rc.5"
+    "@vechain/sdk-network": "npm:2.0.7"
     "@vechain/vechain-kit": "workspace:*"
     eslint: "npm:^9.12.0"
     eslint-config-next: "npm:14.1.4"
@@ -11198,6 +11200,7 @@ __metadata:
     react: "npm:^18"
     react-dom: "npm:^18"
     typescript: "npm:5.3.3"
+    viem: "npm:^2.22.0"
   languageName: unknown
   linkType: soft
 
@@ -16306,6 +16309,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ox@npm:0.14.20":
+  version: 0.14.20
+  resolution: "ox@npm:0.14.20"
+  dependencies:
+    "@adraffy/ens-normalize": "npm:^1.11.0"
+    "@noble/ciphers": "npm:^1.3.0"
+    "@noble/curves": "npm:1.9.1"
+    "@noble/hashes": "npm:^1.8.0"
+    "@scure/bip32": "npm:^1.7.0"
+    "@scure/bip39": "npm:^1.6.0"
+    abitype: "npm:^1.2.3"
+    eventemitter3: "npm:5.0.1"
+  peerDependencies:
+    typescript: ">=5.4.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/fe1c34577536aea3bda5ec47e083be9069d99cb35a270527921f1c7b406283f12bc4b7e9348b46aa3ba88555fc8abc963129c6b5b8b3b375d5e1549f65f2ce9a
+  languageName: node
+  linkType: hard
+
 "ox@npm:0.6.7":
   version: 0.6.7
   resolution: "ox@npm:0.6.7"
@@ -20123,6 +20147,27 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/51512f329335244a97d2051030fc2aef9042f78b5d7d11012adde5f50d03fd3f5fec58bba69cc3129f2ebf48fa58dd600589cd5403dbd01c080a82b12ef83b66
+  languageName: node
+  linkType: hard
+
+"viem@npm:^2.22.0":
+  version: 2.49.2
+  resolution: "viem@npm:2.49.2"
+  dependencies:
+    "@noble/curves": "npm:1.9.1"
+    "@noble/hashes": "npm:1.8.0"
+    "@scure/bip32": "npm:1.7.0"
+    "@scure/bip39": "npm:1.6.0"
+    abitype: "npm:1.2.3"
+    isows: "npm:1.0.7"
+    ox: "npm:0.14.20"
+    ws: "npm:8.18.3"
+  peerDependencies:
+    typescript: ">=5.0.4"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/216bb08cc0d3022d68a7452832130e86a853bc00cb846a22329c47483e9bccfba65cb5d2625c1ceb7f2ce03564ee8885ccd088c03109088a6ba935e6a7615893
   languageName: node
   linkType: hard
 
