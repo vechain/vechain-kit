@@ -317,7 +317,7 @@ export default function CrossAppConnectPage() {
                     }
                 />
                 <Center py={10}>
-                    <Spinner color="brand-accent" />
+                    <Spinner color="accent" />
                 </Center>
             </PageShell>
         );
@@ -587,7 +587,7 @@ function SignInPanel({
                                     color="text-strong"
                                     _placeholder={{ color: 'text-subtle' }}
                                     _focusVisible={{
-                                        borderColor: 'brand-accent',
+                                        borderColor: 'accent',
                                         boxShadow: 'none',
                                     }}
                                 />

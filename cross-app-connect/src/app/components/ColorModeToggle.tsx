@@ -26,10 +26,10 @@ export function ColorModeToggle() {
             zIndex={9999}
             size="md"
             isRound
-            bg="brand-accent"
+            bg="accent"
             color="white"
             boxShadow="0 8px 24px rgba(0,0,0,0.25)"
-            _hover={{ bg: 'brand-accent-hover' }}
+            _hover={{ bg: 'accent' }}
         />
     );
 }

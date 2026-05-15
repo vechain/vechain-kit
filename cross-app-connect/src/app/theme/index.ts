@@ -1,2 +1,2 @@
 export { vechainTheme } from './theme';
-export { brand } from './brand';
+export { tokens } from './brand';

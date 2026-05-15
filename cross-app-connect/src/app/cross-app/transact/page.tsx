@@ -286,7 +286,7 @@ export default function CrossAppTransactPage() {
             <PageShell>
                 <VechainHeader title="Review transaction" />
                 <Center py={10}>
-                    <Spinner color="brand-accent" />
+                    <Spinner color="accent" />
                 </Center>
             </PageShell>
         );
@@ -332,7 +332,7 @@ export default function CrossAppTransactPage() {
             <PageShell>
                 <VechainHeader title="Review transaction" />
                 <Center py={10}>
-                    <Spinner color="brand-accent" />
+                    <Spinner color="accent" />
                 </Center>
             </PageShell>
         );

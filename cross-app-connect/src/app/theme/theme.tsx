@@ -1,5 +1,5 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
-import { brand } from './brand';
+import { tokens } from './brand';
 
 const config: ThemeConfig = {
     initialColorMode: 'system',
@@ -10,95 +10,125 @@ const config: ThemeConfig = {
 export const vechainTheme = extendTheme({
     config,
     fonts: {
-        heading: brand.fontHeading,
-        body: brand.fontBody,
+        heading: tokens.fontHeading,
+        body: tokens.fontBody,
     },
     semanticTokens: {
         colors: {
-            'page-bg': { _light: brand.almostWhite, _dark: brand.darkPurple },
+            'page-bg': {
+                _light: tokens.light.modalBg,
+                _dark: tokens.dark.modalBg,
+            },
             'card-bg': {
-                _light: '#FFFFFF',
-                _dark: 'rgba(252,252,253,0.04)',
+                _light: tokens.light.cardBg,
+                _dark: tokens.dark.cardBg,
+            },
+            'card-elevated-bg': {
+                _light: tokens.light.cardElevatedBg,
+                _dark: tokens.dark.cardElevatedBg,
             },
             'card-border': {
-                _light: brand.coolGray,
-                _dark: 'rgba(252,252,253,0.10)',
+                _light: 'transparent',
+                _dark: tokens.dark.borderDefault,
             },
             'text-strong': {
-                _light: brand.darkPurple,
-                _dark: brand.almostWhite,
+                _light: tokens.light.textPrimary,
+                _dark: tokens.dark.textPrimary,
             },
             'text-muted': {
-                _light: 'rgba(12,10,31,0.6)',
-                _dark: 'rgba(252,252,253,0.65)',
+                _light: tokens.light.textSecondary,
+                _dark: tokens.dark.textSecondary,
             },
             'text-subtle': {
-                _light: 'rgba(12,10,31,0.45)',
-                _dark: 'rgba(252,252,253,0.45)',
+                _light: tokens.light.textTertiary,
+                _dark: tokens.dark.textTertiary,
             },
-            'btn-row-bg': {
-                _light: '#FFFFFF',
-                _dark: 'rgba(252,252,253,0.04)',
+            'login-btn-bg': {
+                _light: tokens.light.loginBtnBg,
+                _dark: tokens.dark.loginBtnBg,
             },
-            'btn-row-border': {
-                _light: brand.coolGray,
-                _dark: 'rgba(252,252,253,0.12)',
+            'login-btn-color': {
+                _light: tokens.light.loginBtnColor,
+                _dark: tokens.dark.loginBtnColor,
             },
-            'btn-row-hover-bg': {
-                _light: brand.coolGray,
-                _dark: 'rgba(252,252,253,0.08)',
+            'login-btn-border': {
+                _light: tokens.light.borderButton,
+                _dark: tokens.dark.borderButton,
             },
-            'chip-bg': {
-                _light: brand.purpleSoft,
-                _dark: 'rgba(114,102,255,0.18)',
+            'login-btn-hover-bg': {
+                _light: tokens.light.loginBtnHoverBg,
+                _dark: tokens.dark.loginBtnHoverBg,
             },
-            'chip-text': { _light: brand.purple, _dark: '#B9B0FF' },
-            'brand-accent': { _light: brand.purple, _dark: brand.purple },
-            'brand-accent-hover': {
-                _light: brand.purpleDeep,
-                _dark: '#8B82FF',
+            'primary-btn-bg': {
+                _light: tokens.light.primaryBtnBg,
+                _dark: tokens.dark.primaryBtnBg,
             },
+            'primary-btn-color': {
+                _light: tokens.light.primaryBtnColor,
+                _dark: tokens.dark.primaryBtnColor,
+            },
+            'chip-bg': { _light: tokens.light.chipBg, _dark: tokens.dark.chipBg },
+            'chip-text': {
+                _light: tokens.light.chipText,
+                _dark: tokens.dark.chipText,
+            },
+            accent: { _light: tokens.light.accent, _dark: tokens.dark.accent },
         },
     },
     components: {
         Button: {
             baseStyle: {
-                fontFamily: brand.fontBody,
+                fontFamily: tokens.fontBody,
                 fontWeight: 500,
-                borderRadius: brand.radius.button,
+                letterSpacing: '-0.005em',
             },
             variants: {
+                // Primary CTA: kit's vechainKitPrimary look -- pill shape,
+                // 60px tall, monochrome (dark on light bg / white on dark).
                 brand: {
-                    bg: 'brand-accent',
-                    color: 'white',
-                    _hover: { bg: 'brand-accent-hover' },
-                    _disabled: { opacity: 0.6 },
-                },
-                row: {
-                    bg: 'btn-row-bg',
-                    color: 'text-strong',
-                    border: '1px solid',
-                    borderColor: 'btn-row-border',
-                    _hover: { bg: 'btn-row-hover-bg' },
-                    justifyContent: 'flex-start',
+                    bg: 'primary-btn-bg',
+                    color: 'primary-btn-color',
+                    rounded: tokens.radius.full,
+                    h: '60px',
                     px: 4,
-                    h: '52px',
-                    w: 'full',
                     fontWeight: 500,
+                    _hover: { opacity: 0.8 },
+                    _disabled: { opacity: 0.5, cursor: 'not-allowed' },
+                    transition: 'all 0.2s',
                 },
-                // Override Chakra's default ghost so it reads against the
-                // VeChain dark-purple / almost-white surfaces. The default
-                // uses gray.700 / whiteAlpha.700 which all but disappear
-                // on our backgrounds.
+                // Provider row: kit's loginIn look -- 52px tall, large radius,
+                // subtle border, label left-aligned.
+                row: {
+                    bg: 'login-btn-bg',
+                    color: 'login-btn-color',
+                    border: '1px solid',
+                    borderColor: 'login-btn-border',
+                    rounded: tokens.radius.lg,
+                    h: '52px',
+                    px: '18px',
+                    w: 'full',
+                    justifyContent: 'flex-start',
+                    fontWeight: 600,
+                    fontSize: '15px',
+                    _hover: {
+                        bg: 'login-btn-hover-bg',
+                        borderColor: 'login-btn-border',
+                    },
+                    _active: { transform: 'scale(0.99)' },
+                    transition: 'all 0.2s',
+                },
+                // Ghost: same intent as kit's ghost -- transparent, text-color,
+                // light hover bg.
                 ghost: {
                     bg: 'transparent',
                     color: 'text-muted',
                     _hover: {
-                        bg: 'btn-row-hover-bg',
+                        bg: 'login-btn-hover-bg',
                         color: 'text-strong',
                     },
-                    _active: { bg: 'btn-row-hover-bg' },
+                    _active: { bg: 'login-btn-hover-bg' },
                     _disabled: { opacity: 0.4 },
+                    transition: 'all 0.2s',
                 },
             },
         },
@@ -106,9 +136,8 @@ export const vechainTheme = extendTheme({
             baseStyle: {
                 container: {
                     bg: 'card-bg',
-                    borderRadius: brand.radius.card,
-                    border: '1px solid',
-                    borderColor: 'card-border',
+                    borderRadius: tokens.radius.md,
+                    border: 'none',
                 },
             },
         },
@@ -118,7 +147,7 @@ export const vechainTheme = extendTheme({
             'html, body': {
                 bg: 'page-bg',
                 color: 'text-strong',
-                fontFamily: brand.fontBody,
+                fontFamily: tokens.fontBody,
             },
         },
     },
