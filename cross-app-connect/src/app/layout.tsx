@@ -1,4 +1,5 @@
 import { PrivyProviderWrapper } from './providers/PrivyProviderWrapper';
+import { I18nProvider } from './i18n/I18nProvider';
 import './globals.css';
 
 // Pre-paint script: set `data-color-mode` on <html> from
@@ -38,7 +39,9 @@ export default function RootLayout({
                 />
             </head>
             <body suppressHydrationWarning>
-                <PrivyProviderWrapper>{children}</PrivyProviderWrapper>
+                <I18nProvider>
+                    <PrivyProviderWrapper>{children}</PrivyProviderWrapper>
+                </I18nProvider>
             </body>
         </html>
     );

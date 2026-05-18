@@ -16,9 +16,11 @@
         "@vechain/picasso": "^2.1.1",
         "@vechain/sdk-core": "2.0.7",
         "@vechain/sdk-network": "2.0.7",
+        "i18next": "^23.16.8",
         "next": "~16.2.3",
         "react": "^18",
         "react-dom": "^18",
+        "react-i18next": "^15.4.0",
         "react-icons": "^5.4.0",
         "viem": "^2.22.0"
     },
