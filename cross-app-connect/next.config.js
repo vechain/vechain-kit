@@ -24,17 +24,18 @@ const nextConfig = {
 
     experimental: {
         webpackBuildWorker: true,
-        optimizePackageImports: ['@chakra-ui/react', '@vechain/vechain-kit'],
     },
+
+    // Allow HMR / dev-resource requests from cloudflared tunnels.
+    // trycloudflare.com generates a random subdomain per session, so a
+    // wildcard avoids editing this file every time the tunnel restarts.
+    allowedDevOrigins: ['*.trycloudflare.com'],
 
     images: {
         unoptimized: true,
     },
     env: {
         basePath,
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
     },
 
     poweredByHeader: false,
