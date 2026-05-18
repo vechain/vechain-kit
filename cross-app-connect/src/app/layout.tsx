@@ -1,18 +1,15 @@
-'use client';
-
-import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
-import dynamic from 'next/dynamic';
-import { vechainTheme } from './theme';
-import { ColorModeToggle } from './components/ColorModeToggle';
-import { ForceColorMode } from './components/ForceColorMode';
+import { PrivyProviderWrapper } from './providers/PrivyProviderWrapper';
 import './globals.css';
 
-const VechainKitProviderWrapper = dynamic(
-    async () =>
-        (await import('./providers/VechainKitProviderWrapper'))
-            .VechainKitProviderWrapper,
-    { ssr: false },
-);
+// Pre-paint script: set `data-color-mode` on <html> from
+// `prefers-color-scheme` so CSS vars resolve before first paint and we don't
+// flash light → dark on cold load. Defaults to 'light' if matchMedia isn't
+// available (older browsers).
+const colorModeScript = `(function(){try{var d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.colorMode=d?'dark':'light';}catch(e){document.documentElement.dataset.colorMode='light';}})();`;
+
+export const metadata = {
+    title: 'VeChain Cross-App Connect',
+};
 
 export default function RootLayout({
     children,
@@ -20,9 +17,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning={true}>
+        <html lang="en" suppressHydrationWarning data-color-mode="light">
             <head>
-                <title>VeChain Cross-App Connect</title>
                 <meta
                     name="viewport"
                     content="width=device-width, initial-scale=1"
@@ -37,18 +33,12 @@ export default function RootLayout({
                     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
                     rel="stylesheet"
                 />
+                <script
+                    dangerouslySetInnerHTML={{ __html: colorModeScript }}
+                />
             </head>
             <body suppressHydrationWarning>
-                <ColorModeScript
-                    initialColorMode={vechainTheme.config.initialColorMode}
-                />
-                <ChakraProvider theme={vechainTheme}>
-                    <ForceColorMode mode="light" />
-                    <VechainKitProviderWrapper>
-                        {children}
-                    </VechainKitProviderWrapper>
-                    <ColorModeToggle />
-                </ChakraProvider>
+                <PrivyProviderWrapper>{children}</PrivyProviderWrapper>
             </body>
         </html>
     );

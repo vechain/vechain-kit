@@ -10,19 +10,16 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@chakra-ui/react": "2.8.2",
-        "@emotion/react": "^11.13.5",
-        "@emotion/styled": "^11.13.5",
         "@privy-io/cross-app-provider": "^0.3.4",
         "@privy-io/react-auth": "2.25.0",
-        "@tanstack/react-query": "^5.64.2",
-        "@vechain/dapp-kit-react": "2.1.0-rc.5",
+        "@vechain/contract-getters": "^1.3.0",
+        "@vechain/picasso": "^2.1.1",
         "@vechain/sdk-core": "2.0.7",
         "@vechain/sdk-network": "2.0.7",
-        "@vechain/vechain-kit": "workspace:*",
         "next": "~16.2.3",
         "react": "^18",
         "react-dom": "^18",
+        "react-icons": "^5.4.0",
         "viem": "^2.22.0"
     },
     "devDependencies": {

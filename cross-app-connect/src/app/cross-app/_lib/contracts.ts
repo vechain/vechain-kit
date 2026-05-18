@@ -1,21 +1,21 @@
 /**
  * Resolve a raw address into a human-readable contract label so the user
- * can tell a real contract from a phishing spoof. The registry walks the
- * kit's `appConfig` (which already has every VeChain-maintained contract
- * address keyed by name) and maps each field to a friendly label.
+ * can tell a real contract from a phishing spoof. The registry walks a
+ * known-contracts map (inlined from the kit's mainnet config) and labels
+ * each entry.
  *
- * Verified = present in the kit's appConfig. Anything else gets an
+ * Verified = present in `knownContracts`. Anything else gets an
  * "Unverified" treatment so the UI shows a warning rather than silently
  * rendering a truncated hex string.
  */
-import type { AppConfig } from '@vechain/vechain-kit';
+import { knownContracts, type KnownContracts } from './appConfig';
 
 export type ContractLabel = {
     label: string;
     verified: boolean;
 };
 
-const APP_CONFIG_LABELS: Partial<Record<keyof AppConfig, string>> = {
+const APP_CONFIG_LABELS: Partial<Record<keyof KnownContracts, string>> = {
     vthoContractAddress: 'VTHO Token',
     b3trContractAddress: 'B3TR Token',
     vot3ContractAddress: 'VOT3 Token',
@@ -52,7 +52,6 @@ const APP_CONFIG_LABELS: Partial<Record<keyof AppConfig, string>> = {
 
 export function resolveContractLabel(
     address: string | undefined,
-    appConfig: AppConfig | undefined,
     self?: string,
 ): ContractLabel | null {
     if (!address) return null;
@@ -62,12 +61,10 @@ export function resolveContractLabel(
         return { label: 'Your account', verified: true };
     }
 
-    if (!appConfig) return null;
-
     for (const [field, label] of Object.entries(APP_CONFIG_LABELS) as Array<
-        [keyof AppConfig, string]
+        [keyof KnownContracts, string]
     >) {
-        const value = appConfig[field];
+        const value = knownContracts[field];
         if (typeof value === 'string' && value.toLowerCase() === lower) {
             return { label, verified: true };
         }

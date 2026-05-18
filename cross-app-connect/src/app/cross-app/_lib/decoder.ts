@@ -23,7 +23,6 @@ import {
     isAddress,
 } from 'viem';
 import type { ThorClient } from '@vechain/sdk-network';
-import { executeCallClause } from '@vechain/vechain-kit/utils';
 import { type NETWORK_TYPE, getConfig } from './network-tokens';
 
 const ERC20_ABI = parseAbi([
@@ -261,21 +260,10 @@ async function lookupToken(
         return { address, symbol: 'tokens', decimals: 18 };
     }
     try {
+        const contract = thor.contracts.load(address, ERC20_METADATA_ABI);
         const [symbolRes, decimalsRes] = await Promise.all([
-            executeCallClause({
-                thor,
-                contractAddress: address,
-                abi: ERC20_METADATA_ABI,
-                method: 'symbol' as const,
-                args: [],
-            }),
-            executeCallClause({
-                thor,
-                contractAddress: address,
-                abi: ERC20_METADATA_ABI,
-                method: 'decimals' as const,
-                args: [],
-            }),
+            contract.read.symbol(),
+            contract.read.decimals(),
         ]);
         const info: TokenInfo = {
             address,

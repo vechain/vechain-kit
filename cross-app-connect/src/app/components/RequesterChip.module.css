@@ -1,0 +1,57 @@
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    background: var(--bg-card);
+    border: 1px solid var(--border-button);
+    max-width: 100%;
+}
+
+.chipVerified {
+    border-color: var(--success);
+}
+
+.icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.iconSecure {
+    color: var(--success);
+}
+
+.iconInsecure {
+    color: var(--text-subtle);
+}
+
+.iconVerified {
+    color: var(--success);
+}
+
+.iconUnverified {
+    color: var(--warn);
+}
+
+.favicon {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-strong);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fallback {
+    font-size: 14px;
+    color: var(--text-muted);
+}

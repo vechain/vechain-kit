@@ -1,0 +1,30 @@
+.row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell {
+    width: 40px;
+    height: 48px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    background: var(--bg-card);
+    color: var(--text-strong);
+    border: 1px solid var(--border-button);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cell:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.cellFilled {
+    border-color: var(--text-strong);
+}
