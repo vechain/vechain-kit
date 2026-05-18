@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "Thor Solo cục bộ"
         },
-        "noRequestBody": "Trang này xử lý các yêu cầu giao dịch xuyên ứng dụng từ các dApp VeChain khác. Không thể mở trực tiếp — ứng dụng yêu cầu sẽ mở nó với các tham số cần thiết."
+        "noRequestBody": "Trang này xử lý các yêu cầu giao dịch xuyên ứng dụng từ các dApp VeChain khác. Không thể mở trực tiếp — ứng dụng yêu cầu sẽ mở nó với các tham số cần thiết.",
+        "block": {
+            "unsupportedMethod": "Phương thức không được hỗ trợ: {{method}}",
+            "chainIdMismatch": "Chain id không khớp",
+            "invalidChainId": "Chain id không hợp lệ trong yêu cầu",
+            "smartAccountMismatch": "Smart account không khớp: yêu cầu đang ký cho một smart account khác."
+        },
+        "error": {
+            "failedToRead": "Không thể đọc yêu cầu",
+            "failedToSign": "Không thể ký yêu cầu"
+        },
+        "privyUi": {
+            "signMessage": "Ký tin nhắn",
+            "signButton": "Ký",
+            "approveVeChainTx": "Phê duyệt giao dịch VeChain",
+            "signStructuredData": "Ký dữ liệu có cấu trúc"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "Ứng dụng này không có trong VeChain App Hub, vì vậy chỉ tiếp tục nếu bạn tin tưởng trang web này."
+        },
+        "error": {
+            "failedToAccept": "Không thể chấp nhận kết nối",
+            "failedToSendCode": "Không thể gửi mã",
+            "failedToVerifyCode": "Không thể xác minh mã",
+            "missingAccessToken": "Thiếu token truy cập"
         }
     },
     "landing": {

@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "Lokale Thor Solo"
         },
-        "noRequestBody": "Deze pagina behandelt cross-app transactieverzoeken van andere VeChain-dApps. Hij kan niet rechtstreeks worden geopend — de aanvragende app opent hem met de benodigde parameters."
+        "noRequestBody": "Deze pagina behandelt cross-app transactieverzoeken van andere VeChain-dApps. Hij kan niet rechtstreeks worden geopend — de aanvragende app opent hem met de benodigde parameters.",
+        "block": {
+            "unsupportedMethod": "Methode niet ondersteund: {{method}}",
+            "chainIdMismatch": "Chain-id komt niet overeen",
+            "invalidChainId": "Ongeldige chain-id in verzoek",
+            "smartAccountMismatch": "Smart account komt niet overeen: het verzoek tekent voor een andere smart account."
+        },
+        "error": {
+            "failedToRead": "Verzoek kon niet worden gelezen",
+            "failedToSign": "Verzoek kon niet worden ondertekend"
+        },
+        "privyUi": {
+            "signMessage": "Bericht ondertekenen",
+            "signButton": "Ondertekenen",
+            "approveVeChainTx": "VeChain-transactie goedkeuren",
+            "signStructuredData": "Gestructureerde data ondertekenen"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "Deze app staat niet in de VeChain App Hub, dus ga alleen door als je de site vertrouwt."
+        },
+        "error": {
+            "failedToAccept": "Verbinding kon niet worden geaccepteerd",
+            "failedToSendCode": "Code kon niet worden verzonden",
+            "failedToVerifyCode": "Code kon niet worden geverifieerd",
+            "missingAccessToken": "Toegangstoken ontbreekt"
         }
     },
     "landing": {

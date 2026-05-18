@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "Thor Solo local"
         },
-        "noRequestBody": "Esta página gestiona solicitudes de transacción entre apps de otras dApps de VeChain. No se puede abrir directamente — la app solicitante la abrirá con los parámetros que necesita."
+        "noRequestBody": "Esta página gestiona solicitudes de transacción entre apps de otras dApps de VeChain. No se puede abrir directamente — la app solicitante la abrirá con los parámetros que necesita.",
+        "block": {
+            "unsupportedMethod": "Método no admitido: {{method}}",
+            "chainIdMismatch": "Chain id no coincide",
+            "invalidChainId": "Chain id inválido en la solicitud",
+            "smartAccountMismatch": "Smart account no coincide: la solicitud está firmando para otra smart account."
+        },
+        "error": {
+            "failedToRead": "No se pudo leer la solicitud",
+            "failedToSign": "No se pudo firmar la solicitud"
+        },
+        "privyUi": {
+            "signMessage": "Firmar mensaje",
+            "signButton": "Firmar",
+            "approveVeChainTx": "Aprobar transacción VeChain",
+            "signStructuredData": "Firmar datos estructurados"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "Esta app no está listada en el VeChain App Hub, así que continúa solo si confías en el sitio."
+        },
+        "error": {
+            "failedToAccept": "No se pudo aceptar la conexión",
+            "failedToSendCode": "No se pudo enviar el código",
+            "failedToVerifyCode": "No se pudo verificar el código",
+            "missingAccessToken": "Token de acceso ausente"
         }
     },
     "landing": {

@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "Lokales Thor Solo"
         },
-        "noRequestBody": "Diese Seite bearbeitet App-übergreifende Transaktionsanfragen anderer VeChain-dApps. Sie kann nicht direkt geöffnet werden — die anfragende App öffnet sie mit den nötigen Parametern."
+        "noRequestBody": "Diese Seite bearbeitet App-übergreifende Transaktionsanfragen anderer VeChain-dApps. Sie kann nicht direkt geöffnet werden — die anfragende App öffnet sie mit den nötigen Parametern.",
+        "block": {
+            "unsupportedMethod": "Methode nicht unterstützt: {{method}}",
+            "chainIdMismatch": "Chain-ID stimmt nicht überein",
+            "invalidChainId": "Ungültige Chain-ID in der Anfrage",
+            "smartAccountMismatch": "Smart Account stimmt nicht überein: Die Anfrage signiert für einen anderen Smart Account."
+        },
+        "error": {
+            "failedToRead": "Anfrage konnte nicht gelesen werden",
+            "failedToSign": "Anfrage konnte nicht signiert werden"
+        },
+        "privyUi": {
+            "signMessage": "Nachricht signieren",
+            "signButton": "Signieren",
+            "approveVeChainTx": "VeChain-Transaktion bestätigen",
+            "signStructuredData": "Strukturierte Daten signieren"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "Diese App ist nicht im VeChain App Hub gelistet, fahre also nur fort, wenn du der Seite vertraust."
+        },
+        "error": {
+            "failedToAccept": "Verbindung konnte nicht akzeptiert werden",
+            "failedToSendCode": "Code konnte nicht gesendet werden",
+            "failedToVerifyCode": "Code konnte nicht überprüft werden",
+            "missingAccessToken": "Zugriffstoken fehlt"
         }
     },
     "landing": {

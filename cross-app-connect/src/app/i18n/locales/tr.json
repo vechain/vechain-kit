@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "Yerel Thor Solo"
         },
-        "noRequestBody": "Bu sayfa, diğer VeChain dApp'lerinden gelen uygulamalar arası işlem isteklerini yönetir. Doğrudan açılamaz — isteği yapan uygulama gerekli parametrelerle açacaktır."
+        "noRequestBody": "Bu sayfa, diğer VeChain dApp'lerinden gelen uygulamalar arası işlem isteklerini yönetir. Doğrudan açılamaz — isteği yapan uygulama gerekli parametrelerle açacaktır.",
+        "block": {
+            "unsupportedMethod": "Desteklenmeyen yöntem: {{method}}",
+            "chainIdMismatch": "Chain id eşleşmiyor",
+            "invalidChainId": "İstekteki Chain id geçersiz",
+            "smartAccountMismatch": "Smart account eşleşmiyor: istek başka bir smart account için imzalanıyor."
+        },
+        "error": {
+            "failedToRead": "İstek okunamadı",
+            "failedToSign": "İstek imzalanamadı"
+        },
+        "privyUi": {
+            "signMessage": "Mesajı imzala",
+            "signButton": "İmzala",
+            "approveVeChainTx": "VeChain işlemini onayla",
+            "signStructuredData": "Yapılandırılmış veriyi imzala"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "Bu uygulama VeChain App Hub'da listelenmemiş — yalnızca siteye güveniyorsan devam et."
+        },
+        "error": {
+            "failedToAccept": "Bağlantı kabul edilemedi",
+            "failedToSendCode": "Kod gönderilemedi",
+            "failedToVerifyCode": "Kod doğrulanamadı",
+            "missingAccessToken": "Erişim belirteci eksik"
         }
     },
     "landing": {

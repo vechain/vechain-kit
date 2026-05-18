@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "लोकल Thor Solo"
         },
-        "noRequestBody": "यह पेज अन्य VeChain dApps से क्रॉस-ऐप ट्रांज़ैक्शन अनुरोधों को संभालता है। इसे सीधे नहीं खोला जा सकता — अनुरोध करने वाला ऐप इसे ज़रूरी पैरामीटर के साथ खोलेगा।"
+        "noRequestBody": "यह पेज अन्य VeChain dApps से क्रॉस-ऐप ट्रांज़ैक्शन अनुरोधों को संभालता है। इसे सीधे नहीं खोला जा सकता — अनुरोध करने वाला ऐप इसे ज़रूरी पैरामीटर के साथ खोलेगा।",
+        "block": {
+            "unsupportedMethod": "असमर्थित मेथड: {{method}}",
+            "chainIdMismatch": "Chain id मेल नहीं खाता",
+            "invalidChainId": "अनुरोध में अमान्य Chain id",
+            "smartAccountMismatch": "Smart account मेल नहीं खाता: यह अनुरोध किसी अन्य smart account के लिए साइन कर रहा है।"
+        },
+        "error": {
+            "failedToRead": "अनुरोध पढ़ने में विफल",
+            "failedToSign": "अनुरोध साइन करने में विफल"
+        },
+        "privyUi": {
+            "signMessage": "संदेश साइन करें",
+            "signButton": "साइन करें",
+            "approveVeChainTx": "VeChain लेन-देन स्वीकृत करें",
+            "signStructuredData": "संरचित डेटा साइन करें"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "यह ऐप VeChain App Hub में सूचीबद्ध नहीं है, इसलिए केवल तभी जारी रखें जब आप इस साइट पर भरोसा करते हों।"
+        },
+        "error": {
+            "failedToAccept": "कनेक्शन स्वीकार करने में विफल",
+            "failedToSendCode": "कोड भेजने में विफल",
+            "failedToVerifyCode": "कोड सत्यापित करने में विफल",
+            "missingAccessToken": "एक्सेस टोकन गायब है"
         }
     },
     "landing": {

@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "Thor Solo local"
         },
-        "noRequestBody": "Această pagină gestionează cereri de tranzacții cross-app de la alte dApp-uri VeChain. Nu poate fi deschisă direct — aplicația solicitantă o va deschide cu parametrii de care are nevoie."
+        "noRequestBody": "Această pagină gestionează cereri de tranzacții cross-app de la alte dApp-uri VeChain. Nu poate fi deschisă direct — aplicația solicitantă o va deschide cu parametrii de care are nevoie.",
+        "block": {
+            "unsupportedMethod": "Metodă neacceptată: {{method}}",
+            "chainIdMismatch": "Chain id nu se potrivește",
+            "invalidChainId": "Chain id invalid în cerere",
+            "smartAccountMismatch": "Smart account nu se potrivește: cererea semnează pentru un alt smart account."
+        },
+        "error": {
+            "failedToRead": "Nu s-a putut citi cererea",
+            "failedToSign": "Nu s-a putut semna cererea"
+        },
+        "privyUi": {
+            "signMessage": "Semnează mesajul",
+            "signButton": "Semnează",
+            "approveVeChainTx": "Aprobă tranzacția VeChain",
+            "signStructuredData": "Semnează datele structurate"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "Această aplicație nu este listată în VeChain App Hub — continuă doar dacă ai încredere în site."
+        },
+        "error": {
+            "failedToAccept": "Nu s-a putut accepta conexiunea",
+            "failedToSendCode": "Nu s-a putut trimite codul",
+            "failedToVerifyCode": "Nu s-a putut verifica codul",
+            "missingAccessToken": "Token de acces lipsă"
         }
     },
     "landing": {

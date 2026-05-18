@@ -196,7 +196,23 @@
             "testnet": "VeChain Testnet",
             "solo": "本機 Thor Solo"
         },
-        "noRequestBody": "此頁面處理其他 VeChain dApp 發起的跨應用交易請求。它無法被直接開啟 — 請求方應用程式會帶上所需參數開啟此頁面。"
+        "noRequestBody": "此頁面處理其他 VeChain dApp 發起的跨應用交易請求。它無法被直接開啟 — 請求方應用程式會帶上所需參數開啟此頁面。",
+        "block": {
+            "unsupportedMethod": "不支援的方法:{{method}}",
+            "chainIdMismatch": "Chain id 不相符",
+            "invalidChainId": "請求中的 Chain id 無效",
+            "smartAccountMismatch": "Smart account 不相符:此請求正在為另一個 smart account 簽名。"
+        },
+        "error": {
+            "failedToRead": "無法讀取請求",
+            "failedToSign": "無法簽名請求"
+        },
+        "privyUi": {
+            "signMessage": "簽名訊息",
+            "signButton": "簽名",
+            "approveVeChainTx": "核准 VeChain 交易",
+            "signStructuredData": "簽名結構化資料"
+        }
     },
     "connect": {
         "title": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "此應用程式未列於 VeChain App Hub，請僅在信任此網站時繼續。"
+        },
+        "error": {
+            "failedToAccept": "無法接受連線",
+            "failedToSendCode": "無法傳送驗證碼",
+            "failedToVerifyCode": "無法驗證驗證碼",
+            "missingAccessToken": "缺少存取權杖"
         }
     },
     "landing": {

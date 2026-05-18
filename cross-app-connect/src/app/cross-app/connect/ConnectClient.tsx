@@ -146,7 +146,7 @@ export function ConnectClient() {
         setSubmitError(null);
         try {
             const accessToken = await getAccessToken();
-            if (!accessToken) throw new Error('Missing access token');
+            if (!accessToken) throw new Error(t('connect.error.missingAccessToken'));
             await client.acceptConnection({
                 accessToken,
                 address: embedded.address,
@@ -156,7 +156,7 @@ export function ConnectClient() {
             window.close();
         } catch (e) {
             setSubmitError(
-                e instanceof Error ? e.message : 'Failed to accept connection',
+                e instanceof Error ? e.message : t('connect.error.failedToAccept'),
             );
         } finally {
             setSubmitting(false);
@@ -421,7 +421,7 @@ function SignInPanel({
             await sendCode({ phoneNumber: phone });
             setRecentProvider('phone');
         } catch (e) {
-            setError(e instanceof Error ? e.message : 'Failed to send code');
+            setError(e instanceof Error ? e.message : t('connect.error.failedToSendCode'));
         }
     };
 
@@ -430,7 +430,7 @@ function SignInPanel({
         try {
             await loginWithCode({ code });
         } catch (e) {
-            setError(e instanceof Error ? e.message : 'Failed to verify code');
+            setError(e instanceof Error ? e.message : t('connect.error.failedToVerifyCode'));
         }
     };
 

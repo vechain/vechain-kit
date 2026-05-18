@@ -223,7 +223,7 @@ export function TransactClient() {
                         message:
                             e instanceof Error
                                 ? e.message
-                                : 'Failed to read request',
+                                : t('transact.error.failedToRead'),
                     });
             }
         })();
@@ -287,7 +287,7 @@ export function TransactClient() {
                 method as (typeof SUPPORTED_METHODS)[number],
             )
         ) {
-            setBlock(`Unsupported method: ${method}`);
+            setBlock(t('transact.block.unsupportedMethod', { method }));
             return;
         }
         if (!parsed) {
@@ -305,24 +305,22 @@ export function TransactClient() {
         const { typedData } = parsed;
         try {
             if (BigInt(typedData.domain.chainId) !== BigInt(chainId)) {
-                setBlock('Chain id mismatch');
+                setBlock(t('transact.block.chainIdMismatch'));
                 return;
             }
         } catch {
-            setBlock('Invalid chain id in request');
+            setBlock(t('transact.block.invalidChainId'));
             return;
         }
         if (
             typedData.domain.verifyingContract.toLowerCase() !==
             smartAccount.address.toLowerCase()
         ) {
-            setBlock(
-                'Smart account mismatch: the request is signing for a different smart account.',
-            );
+            setBlock(t('transact.block.smartAccountMismatch'));
             return;
         }
         setBlock(null);
-    }, [verified, parsed, smartAccount?.address, chainId]);
+    }, [verified, parsed, smartAccount?.address, chainId, t]);
 
     // Decode each clause to a human-readable summary.
     useEffect(() => {
@@ -356,8 +354,8 @@ export function TransactClient() {
                     { message: parsed.message },
                     {
                         uiOptions: {
-                            title: 'Sign message',
-                            buttonText: 'Sign',
+                            title: t('transact.privyUi.signMessage'),
+                            buttonText: t('transact.privyUi.signButton'),
                         },
                     },
                 );
@@ -369,9 +367,9 @@ export function TransactClient() {
                         uiOptions: {
                             title:
                                 parsed.kind === 'smart_account'
-                                    ? 'Approve VeChain transaction'
-                                    : 'Sign structured data',
-                            buttonText: 'Sign',
+                                    ? t('transact.privyUi.approveVeChainTx')
+                                    : t('transact.privyUi.signStructuredData'),
+                            buttonText: t('transact.privyUi.signButton'),
                         },
                     },
                 );
@@ -386,7 +384,7 @@ export function TransactClient() {
             window.close();
         } catch (e) {
             const message =
-                e instanceof Error ? e.message : 'Failed to sign request';
+                e instanceof Error ? e.message : t('transact.error.failedToSign');
             setSubmitError(message);
             try {
                 const accessToken = await getAccessToken();

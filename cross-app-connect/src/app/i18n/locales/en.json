@@ -196,6 +196,22 @@
             "testnet": "VeChain Testnet",
             "solo": "Local Thor Solo"
         },
+        "block": {
+            "unsupportedMethod": "Unsupported method: {{method}}",
+            "chainIdMismatch": "Chain id mismatch",
+            "invalidChainId": "Invalid chain id in request",
+            "smartAccountMismatch": "Smart account mismatch: the request is signing for a different smart account."
+        },
+        "error": {
+            "failedToRead": "Failed to read request",
+            "failedToSign": "Failed to sign request"
+        },
+        "privyUi": {
+            "signMessage": "Sign message",
+            "signButton": "Sign",
+            "approveVeChainTx": "Approve VeChain transaction",
+            "signStructuredData": "Sign structured data"
+        },
         "noRequestBody": "This page handles cross-app transaction requests from other VeChain dApps. It can't be opened directly — the requesting app will open it with the parameters it needs."
     },
     "connect": {
@@ -240,6 +256,12 @@
         },
         "alert": {
             "notListed": "This app isn't listed in the VeChain App Hub, so only continue if you trust the site."
+        },
+        "error": {
+            "failedToAccept": "Failed to accept connection",
+            "failedToSendCode": "Failed to send code",
+            "failedToVerifyCode": "Failed to verify code",
+            "missingAccessToken": "Missing access token"
         }
     },
     "landing": {
