@@ -742,7 +742,18 @@ function MessageView({ message }: { message: string }) {
     );
 }
 
+/**
+ * Render a typed-data message as labelled key/value rows instead of a raw
+ * JSON dump. Uses the EIP-712 `types` schema to drive per-field rendering:
+ *   - `address` → AddressTag (avatar, domain, truncated hex)
+ *   - `bool` → Yes / No
+ *   - bytes / numbers → monospace
+ *   - nested struct types → recurse with a left-bar indent
+ *   - arrays → bullet list
+ * The full raw JSON is still available in the Inspect panel below.
+ */
 function TypedDataView({ typedData }: { typedData: GenericTypedData }) {
+    const fields = typedData.types[typedData.primaryType] ?? [];
     return (
         <div className={styles.subPanel}>
             <p className={styles.typedHead}>
@@ -751,11 +762,126 @@ function TypedDataView({ typedData }: { typedData: GenericTypedData }) {
             {typedData.domain.name && (
                 <p className={styles.typedFrom}>From: {typedData.domain.name}</p>
             )}
-            <pre className={styles.code}>
-                {JSON.stringify(typedData.message, null, 2)}
-            </pre>
+            <div className={styles.typedFields}>
+                {fields.length > 0 ? (
+                    fields.map((f) => (
+                        <TypedField
+                            key={f.name}
+                            label={f.name}
+                            type={f.type}
+                            value={(typedData.message as Record<string, unknown>)[f.name]}
+                            types={typedData.types}
+                        />
+                    ))
+                ) : (
+                    // No schema → fall back to JSON so we don't render nothing.
+                    <pre className={styles.code}>
+                        {JSON.stringify(typedData.message, null, 2)}
+                    </pre>
+                )}
+            </div>
         </div>
     );
+}
+
+function TypedField({
+    label,
+    type,
+    value,
+    types,
+}: {
+    label: string;
+    type: string;
+    value: unknown;
+    types: Record<string, Array<{ name: string; type: string }>>;
+}) {
+    return (
+        <div className={styles.typedField}>
+            <span className={styles.typedFieldLabel}>
+                {humanizeFieldName(label)}
+            </span>
+            <div className={styles.typedFieldValue}>
+                {renderTypedValue(type, value, types)}
+            </div>
+        </div>
+    );
+}
+
+function renderTypedValue(
+    type: string,
+    value: unknown,
+    types: Record<string, Array<{ name: string; type: string }>>,
+): React.ReactNode {
+    // Array type: render each entry recursively.
+    if (type.endsWith('[]')) {
+        const elemType = type.slice(0, -2);
+        const arr = Array.isArray(value) ? value : [];
+        if (arr.length === 0) {
+            return <span style={{ color: 'var(--text-subtle)' }}>(empty)</span>;
+        }
+        return (
+            <ul className={styles.typedFieldList}>
+                {arr.map((entry, i) => (
+                    <li key={i}>{renderTypedValue(elemType, entry, types)}</li>
+                ))}
+            </ul>
+        );
+    }
+
+    // Nested struct: recurse into its fields with an indented sub-block.
+    const nestedFields = types[type];
+    if (nestedFields && typeof value === 'object' && value !== null) {
+        return (
+            <div className={styles.typedFieldNested}>
+                {nestedFields.map((f) => (
+                    <TypedField
+                        key={f.name}
+                        label={f.name}
+                        type={f.type}
+                        value={(value as Record<string, unknown>)[f.name]}
+                        types={types}
+                    />
+                ))}
+            </div>
+        );
+    }
+
+    // Primitives.
+    if (type === 'address' && typeof value === 'string') {
+        return <AddressTag address={value} kind="recipient" />;
+    }
+    if (type === 'bool') {
+        return <span>{value ? 'Yes' : 'No'}</span>;
+    }
+    if (type === 'string') {
+        return <span>{String(value)}</span>;
+    }
+    if (
+        type.startsWith('bytes') ||
+        type.startsWith('uint') ||
+        type.startsWith('int')
+    ) {
+        return (
+            <span className={styles.typedFieldMono}>
+                {value === undefined || value === null ? '' : String(value)}
+            </span>
+        );
+    }
+    // Unknown type — stringify but flag visually.
+    return (
+        <span className={styles.typedFieldMono}>{JSON.stringify(value)}</span>
+    );
+}
+
+// "myFieldName" → "My field name". Leaves abbreviations and snake_case alone
+// where possible; the goal is to read as a label, not a variable identifier.
+function humanizeFieldName(name: string): string {
+    if (!name) return '';
+    const spaced = name
+        .replace(/_/g, ' ')
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .toLowerCase();
+    return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
 function RawJsonBlock({ label, value }: { label: string; value: string }) {
